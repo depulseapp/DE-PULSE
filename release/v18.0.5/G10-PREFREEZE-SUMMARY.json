@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.0.5 TEST",
+  "gate": "G10",
+  "status": "PASS",
+  "sourceFingerprint": "dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0",
+  "incomingStable": {
+    "version": "18.0.4",
+    "commit": "9b725526d2749e14ec3fcd41fd64ca75eed0770d",
+    "sourceSha256": "a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a"
+  },
+  "qualificationJobs": {
+    "content": "PASS",
+    "data_health": "PASS",
+    "data_utility": "PASS",
+    "documentation": "PASS",
+    "fingerprint_portability": "PASS",
+    "release_identity": "PASS",
+    "renderer": "PASS",
+    "source_health": "PASS",
+    "v1805_scope": "PASS",
+    "v1805_ui": "PASS",
+    "v18_baseline": "PASS",
+    "v18_typography": "PASS",
+    "version": "PASS",
+    "cgo_fallback": "PASS",
+    "full_go": "PASS",
+    "go_vet": "PASS",
+    "v1801_smart_router_rapid": "PASS",
+    "v1805_symbols": "PASS",
+    "v180_security": "PASS",
+    "windows_compile": "PASS",
+    "http_workflow": "PASS",
+    "deterministic": "PASS",
+    "professional_trader": "PASS",
+    "responsive": "PASS"
+  },
+  "decision": "READY_FOR_G11_FREEZE",
+  "note": "This summary records the completed pre-freeze qualification for the exact fingerprint above. GitHub candidate certification independently reconstructs and revalidates the source before native qualification."
+}
