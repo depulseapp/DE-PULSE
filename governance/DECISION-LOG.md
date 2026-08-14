@@ -77,6 +77,34 @@ Full scope: `governance/APPROVED-SCOPE.md` INT-006 through INT-016 and `governan
 
 ---
 
+## DEC-2026-08-14-004 — 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence
+
+**Status:** APPROVED  
+**Date:** 2026-08-14  
+**Affects:** Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Day/Swing/Long, ASBI, Research, Opportunity Radar, Decision Queue, Historical Validation
+**Placement:** v18/v19 evidence/data foundation; v20 major adaptive implementation/validation
+
+### Decision
+Adopt **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI)** as a permanent 10/10 AI/LLM-style decision-intelligence contract.
+
+For each eligible ticker/horizon, DE.PULSE evaluates Long and Short as competing theses from the same canonical point-in-time evidence rather than mirroring a long plan into a short plan. Valid outputs include LONG THESIS, SHORT THESIS, BOTH DEVELOPING, and NO RELIABLE EDGE.
+
+The system must distinguish Direction Probability, Thesis Strength, Confidence, Opportunity Quality / Decision Utility, and Readiness. Long planning includes Entry, Trim/Target, structural Invalidation and R:R. Short planning includes Short Entry, Cover/Trim, downside targets, structural Short Invalidation and R:R, plus short-specific squeeze/extension/catalyst/liquidity/crowding/borrow/shortability/SSR context only where trustworthy and available.
+
+TDTI integrates ASBI behavioral states/path transitions, probability momentum, regime/sector/catalyst context, evidence independence/contradictions, cross-horizon reasoning, immutable point-in-time thesis/trade-plan lineage, side-aware outcome measurement, Champion/Challenger learning and ABSTAIN / NO RELIABLE EDGE.
+
+The product should feel AI/LLM-style through concise synthesis of `WHY / CONFIRMS / INVALIDATES / WHAT CHANGES THE VIEW / WHAT TO WATCH NEXT`, while LLMs remain grounded research/synthesis components rather than canonical market-truth owners. No unsupported level invention, no silent formula/model self-modification, and no duplicate Long/Short data or execution engines.
+
+TDTI does not create a Short Desk by default and does not change the permanent No Execution Boundary. Trade plans remain research/decision-support outputs only.
+
+Production adaptive influence remains:
+
+**SHADOW → VALIDATED → APPROVED → PRODUCTION**
+
+Full scope: `governance/APPROVED-SCOPE.md` TDTI-001 through TDTI-023, `governance/ROADMAP.md` Two-Sided Directional Thesis & Trade Plan Intelligence placement, and `governance/ADAPTIVE-OPERATING-CONTRACT.md` section 20.
+
+---
+
 ## DEC-2026-08-13-001 — Four-Layer Adaptive Operating Model
 
 **Status:** APPROVED / CARRIED FORWARD
