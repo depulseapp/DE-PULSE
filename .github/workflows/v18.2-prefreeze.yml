@@ -1,3 +1,4 @@
+# qualification trigger: documentation-aligned v18.2 candidate
 name: DE.PULSE v18.2 G4-G10 Pre-Freeze
 
 on:
@@ -35,6 +36,7 @@ jobs:
           python3 data_utility_gate.py
           python3 data_health_policy_gate.py
           python3 documentation_governance_gate.py
+          git fetch --depth=1 origin 4b48c61ee103897e834f4ff7d24af07d4275a62c
           test "$(git merge-base HEAD 4b48c61ee103897e834f4ff7d24af07d4275a62c)" = "4b48c61ee103897e834f4ff7d24af07d4275a62c"
       - name: Focused and inherited Go qualification
         run: |
