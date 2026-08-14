@@ -1,0 +1,416 @@
+name: DE.PULSE v18.0.6 Candidate Certification
+
+on:
+  push:
+    branches: [v18.0.6-development]
+    paths:
+      - 'release/v18.0.6/**'
+      - '.github/workflows/v18.0.6-candidate-certification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-v1806-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  BASE_SOURCE: 'De-Pulse-v18.0.5-STABLE-Source.zip'
+  BASE_SHA: 'a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd'
+  EXPECTED_FP: '3103eda861aa1c882c24d944a52221f87f6204cdc24bc1f98c9c5495e2a29a00'
+  BUILD_ID: 'v18.0.6-test-smart-provider-router-rapid-move-market-shock-hardening-20260814'
+  PATCH_PREFIX: 'release/v18.0.6/v18.0.6-final-source.patch.gz.b64.part'
+  PATCH_SHA: 'efedbc2588e6ec36e80740b11d72f527112ecc9daf1669051f45658edd49d905'
+  TRANSPORT_SHA: 'ad3f8473e52a77e3a961aa846044d7470183e56ba1f11ca2b67d6388d802a2dc'
+  RC_SOURCE: 'De-Pulse-v18.0.6-RC-Source.zip'
+
+jobs:
+  g11-freeze:
+    name: G11 Immutable RC Freeze
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.GO_VERSION }}'
+          cache: false
+
+      - name: Reconstruct exact v18.0.6 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$BASE_SHA  $BASE_SOURCE" | sha256sum -c -
+          rm -rf work && mkdir -p work/candidate
+          unzip -q "$BASE_SOURCE" -d work/candidate
+          cat "${PATCH_PREFIX}00" "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" \
+              "${PATCH_PREFIX}04" "${PATCH_PREFIX}05" "${PATCH_PREFIX}06" "${PATCH_PREFIX}07" \
+              "${PATCH_PREFIX}08" "${PATCH_PREFIX}09" "${PATCH_PREFIX}10" "${PATCH_PREFIX}11" \
+              | tr -d '\r\n' > work/v18.0.6.patch.gz.b64
+          test "$(sha256sum work/v18.0.6.patch.gz.b64 | awk '{print $1}')" = "$TRANSPORT_SHA"
+          base64 -d work/v18.0.6.patch.gz.b64 | gunzip > work/v18.0.6.patch
+          test "$(sha256sum work/v18.0.6.patch | awk '{print $1}')" = "$PATCH_SHA"
+          (
+            cd work/candidate
+            git init -q
+            git apply --whitespace=nowarn --exclude='__pycache__/*' --exclude='*/__pycache__/*' ../v18.0.6.patch
+            actual="$(python3 ci_pipeline.py --fingerprint)"
+            echo "candidate fingerprint=$actual"
+            test "$actual" = "$EXPECTED_FP"
+            python3 release_identity.py --verify
+            python3 version_consistency_test.py
+            python3 v18_0_6_scope_gate.py
+            python3 v18_0_6_principal_engineer_gate.py
+          )
+
+      - name: Provision responsive-test browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check playwright
+          python3 -m playwright install --with-deps chromium
+          CHROMIUM_PATH="$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              print(p.chromium.executable_path)
+          PY
+          )"
+          test -x "$CHROMIUM_PATH"
+          sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
+
+      - name: Qualify environment-sensitive gates serially
+        working-directory: work/candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          fp="$(python3 ci_pipeline.py --fingerprint)"
+          test "$fp" = "$EXPECTED_FP"
+          out="../.depulse-prefreeze-${fp:0:12}"
+          mkdir -p "$out"
+          run_and_record() {
+            jid="$1"; shift
+            started="$(python3 -c 'import time; print(time.time())')"
+            "$@" 2>&1 | tee "$out/$jid.log"
+            ended="$(python3 -c 'import time; print(time.time())')"
+            python3 - "$out/$jid.json" "$jid" "$started" "$ended" "$@" <<'PY'
+          import json,sys
+          from pathlib import Path
+          path,jid,started,ended,*cmd=sys.argv[1:]
+          Path(path).write_text(json.dumps({
+              'id':jid,'status':'PASS','returncode':0,
+              'duration_seconds':round(float(ended)-float(started),3),
+              'command':cmd,'log':str(Path(path).with_suffix('.log')),'reused':False
+          },indent=2)+'\n')
+          PY
+          }
+          PYTHON="$(python3 -c 'import sys; print(sys.executable)')"
+          run_and_record http_workflow "$PYTHON" http_workflow_test.py
+          run_and_record responsive "$PYTHON" responsive_ui_sharded_gate.py
+
+      - name: G10 replay on exact candidate
+        working-directory: work/candidate
+        run: python3 prefreeze_qualification.py
+
+      - name: Principal engineer / scope freeze checks
+        working-directory: work/candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 v18_0_6_scope_gate.py
+          python3 v18_0_6_principal_engineer_gate.py
+          python3 release_identity.py --verify
+          python3 version_consistency_test.py
+          python3 documentation_governance_gate.py
+          python3 data_utility_gate.py
+          python3 data_health_policy_gate.py
+          python3 source_health_architecture_gate.py
+
+      - name: Freeze immutable RC source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf work/candidate/.git work/candidate/__pycache__
+          find work/candidate -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          actual="$(cd work/candidate && python3 ci_pipeline.py --fingerprint)"
+          test "$actual" = "$EXPECTED_FP"
+          python3 - <<'PYZIP'
+          from pathlib import Path
+          import zipfile
+          root=Path('work/candidate')
+          out=Path('De-Pulse-v18.0.6-RC-Source.zip')
+          fixed=(2026,8,14,0,0,0)
+          with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for f in sorted(p for p in root.rglob('*') if p.is_file()):
+                  if '__pycache__' in f.parts or f.suffix=='.pyc':
+                      continue
+                  rel=f.relative_to(root).as_posix()
+                  info=zipfile.ZipInfo(rel,fixed)
+                  info.create_system=3
+                  info.external_attr=((0o100755 if f.name.endswith('.sh') else 0o100644) << 16)
+                  z.writestr(info,f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          PYZIP
+          sha256sum "$RC_SOURCE" | tee "$RC_SOURCE.sha256"
+          printf '%s\n' "$EXPECTED_FP" > source-fingerprint.txt
+          cp "work/.depulse-prefreeze-${EXPECTED_FP:0:12}/summary.json" G10-prefreeze-summary.json
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.6-G11-Immutable-RC
+          path: |
+            De-Pulse-v18.0.6-RC-Source.zip
+            De-Pulse-v18.0.6-RC-Source.zip.sha256
+            source-fingerprint.txt
+            G10-prefreeze-summary.json
+          if-no-files-found: error
+          retention-days: 90
+
+  g12-certification:
+    name: G12 Full Certification
+    needs: [g11-freeze]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.GO_VERSION }}'
+          cache: false
+
+      - name: Verify immutable RC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd rc && sha256sum -c "$RC_SOURCE.sha256")
+          mkdir candidate
+          unzip -q "rc/$RC_SOURCE" -d candidate
+          test "$(cd candidate && python3 ci_pipeline.py --fingerprint)" = "$EXPECTED_FP"
+          test "$(cat rc/source-fingerprint.txt)" = "$EXPECTED_FP"
+
+      - name: Governance / architecture / data / adaptive intelligence
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 v18_baseline_gate.py
+          python3 v18_0_6_scope_gate.py
+          python3 v18_0_6_principal_engineer_gate.py
+          python3 release_identity.py --verify
+          python3 version_consistency_test.py
+          python3 documentation_governance_gate.py
+          python3 data_utility_gate.py
+          python3 data_health_policy_gate.py
+          python3 source_health_architecture_gate.py
+
+      - name: Full Go, race, vet, and vulnerability suites
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=1 ./...
+          go test -race -count=1 ./...
+          go vet ./...
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          "$(go env GOPATH)/bin/govulncheck" ./...
+
+      - name: Provision responsive-test browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check playwright
+          python3 -m playwright install --with-deps chromium
+          CHROMIUM_PATH="$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              print(p.chromium.executable_path)
+          PY
+          )"
+          sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
+
+      - name: Deterministic / trader / renderer / workflow qualification
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 randomized_order_gate.py
+          python3 extreme_30_gate.py
+          go test -count=1 -run '^TestV1806' ./...
+          node renderer_logic_test.js
+          node v18_0_5_renderer_test.js
+          node deterministic_equivalence_test.js
+          node trader_acceptance_test.js
+          python3 http_workflow_test.py
+          python3 responsive_ui_sharded_gate.py
+
+      - name: Write G12 evidence
+        shell: bash
+        run: |
+          sha="$(awk '{print $1}' rc/$RC_SOURCE.sha256)"
+          python3 - "$sha" "$EXPECTED_FP" "$BUILD_ID" > G12-CERTIFICATION.json <<'PY'
+          import json,sys,datetime
+          sha,fp,build=sys.argv[1:]
+          print(json.dumps({
+            'schemaVersion':1,'gate':'G12','status':'PASS','release':'v18.0.6 TEST',
+            'buildId':build,'sourceSha256':sha,'sourceFingerprint':fp,
+            'checks':{
+              'goFull':True,'race':True,'vet':True,'govulncheck':True,
+              'randomized':True,'extreme30':True,'v1806Focused':True,
+              'rendererRegression':True,'deterministic':True,'professionalTrader':True,
+              'httpWorkflow':True,'responsive':True,'documentation':True,
+              'dataUtility':True,'dataHealth':True,'sourceHealth':True,
+              'releaseIdentity':True,'routerV2Reuse':True,'marketShock':True,
+              'hysteresis':True,'outcomeAnchor':True,'adaptiveGovernance':True
+            },
+            'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          },indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.6-G12-Certification
+          path: G12-CERTIFICATION.json
+          if-no-files-found: error
+          retention-days: 90
+
+  macos-apple-silicon:
+    name: G13/G14 macOS Apple Silicon
+    needs: [g12-certification]
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.GO_VERSION }}'
+          cache: false
+      - name: Parameterize proven G14 macOS harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input
+          cp "rc/$RC_SOURCE" "input/$RC_SOURCE"
+          SRC_SHA="$(awk '{print $1}' "rc/$RC_SOURCE.sha256")"
+          python3 - "$SRC_SHA" <<'PY'
+          from pathlib import Path
+          import sys
+          sha=sys.argv[1]
+          p=Path('scripts/build-macos-arm64.sh').read_text()
+          repl={
+            'De-Pulse-v18.0.4-TEST-Source.zip':'De-Pulse-v18.0.6-RC-Source.zip',
+            '69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f':sha,
+            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':'3103eda861aa1c882c24d944a52221f87f6204cdc24bc1f98c9c5495e2a29a00',
+            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':'v18.0.6-test-smart-provider-router-rapid-move-market-shock-hardening-20260814',
+            'rapid-move-v1.0.0':'rapid-move-v1.1.0',
+            'v1804test':'v1806test','18004':'18006','18.0.4':'18.0.6'
+          }
+          for a,b in repl.items(): p=p.replace(a,b)
+          out=Path('scripts/build-v18.0.6-macos-arm64.sh'); out.write_text(p); out.chmod(0o755)
+          PY
+          bash ./scripts/build-v18.0.6-macos-arm64.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.6-G14-macOS-Apple-Silicon
+          path: out/macos-arm64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  windows-x64:
+    name: G13/G14 Windows x64
+    needs: [g12-certification]
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '${{ env.GO_VERSION }}'
+          cache: false
+      - name: Parameterize proven G14 Windows harness
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path input | Out-Null
+          Copy-Item -LiteralPath (Join-Path 'rc' $env:RC_SOURCE) -Destination (Join-Path 'input' $env:RC_SOURCE) -Force
+          $Sha=((Get-Content (Join-Path 'rc' ($env:RC_SOURCE+'.sha256')) -Raw).Split()[0]).Trim()
+          $P=Get-Content -LiteralPath 'scripts/build-windows-x64.ps1' -Raw
+          $P=$P.Replace('De-Pulse-v18.0.4-TEST-Source.zip','De-Pulse-v18.0.6-RC-Source.zip')
+          $P=$P.Replace('69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f',$Sha)
+          $P=$P.Replace('a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b',$env:EXPECTED_FP)
+          $P=$P.Replace('v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813',$env:BUILD_ID)
+          $P=$P.Replace('rapid-move-v1.0.0','rapid-move-v1.1.0')
+          $P=$P.Replace('v1804test','v1806test').Replace('18004','18006').Replace('18.0.4','18.0.6')
+          Set-Content -LiteralPath 'scripts/build-v18.0.6-windows-x64.ps1' -Value $P -Encoding utf8
+          pwsh -NoProfile -File ./scripts/build-v18.0.6-windows-x64.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.6-G14-Windows-x64
+          path: out/windows-x64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  g15-assurance:
+    name: G15 Candidate Release Assurance
+    needs: [g12-certification, macos-apple-silicon, windows-x64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G11-Immutable-RC
+          path: rc
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G14-macOS-Apple-Silicon
+          path: collected/macos
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.6-G14-Windows-x64
+          path: collected/windows
+      - name: Verify native artifacts and exact source provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC_SHA="$(awk '{print $1}' rc/$RC_SOURCE.sha256)"
+          test "$(cat rc/source-fingerprint.txt)" = "$EXPECTED_FP"
+          python3 - "$SRC_SHA" "$EXPECTED_FP" "$BUILD_ID" > G15-CANDIDATE-RELEASE-ASSURANCE.json <<'PY'
+          import datetime,hashlib,json,pathlib,sys
+          source_sha,fp,build=sys.argv[1:]
+          expected={'macos-arm64':pathlib.Path('collected/macos'),'windows-x64':pathlib.Path('collected/windows')}
+          native={}
+          for platform,root in expected.items():
+              ev=json.loads((root/'g14-evidence.json').read_text(encoding='utf-8-sig'))
+              assert ev['gate']=='G14' and ev['status']=='PASS'
+              assert ev['release']=='v18.0.6 TEST' and ev['platform']==platform
+              assert ev['sourceSha256']==source_sha and ev['sourceFingerprint']==fp and ev['buildId']==build
+              for k in ['sourceSha','sourceFingerprint','nativeCompile','packageLauncherExecution','releaseIdentity','stableProfileMigration','stableSecretsMigration','stableIsolation','bootstrapOwner','csrfPasswordSetup','restartPersistence','credentialLoginAfterRestart','smartRouterV2Runtime','rapidMoveRuntime','coverageTruth']:
+                  assert ev.get('checks',{}).get(k) is True, (platform,k)
+              artifact=root/ev['artifact']['name']
+              assert artifact.is_file(), artifact
+              h=hashlib.sha256(artifact.read_bytes()).hexdigest()
+              assert h==ev['artifact']['sha256'], (platform,h,ev['artifact']['sha256'])
+              native[platform]={'status':'PASS','artifact':artifact.name,'sha256':h}
+          print(json.dumps({
+            'schemaVersion':1,'gate':'G15','status':'PASS','decision':'READY_FOR_STABLE_CONVERSION',
+            'release':'v18.0.6 TEST','buildId':build,'sourceSha256':source_sha,'sourceFingerprint':fp,
+            'nativeTargets':native,'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'note':'Exact v18.0.6 TEST RC passed G12 and both required native G14 runtime audits; Stable conversion may proceed under existing authorization.'
+          },indent=2))
+          PY
+          echo 'PASS: G15 v18.0.6 TEST release assurance — READY_FOR_STABLE_CONVERSION'
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.6-G15-Release-Assurance
+          path: G15-CANDIDATE-RELEASE-ASSURANCE.json
+          if-no-files-found: error
+          retention-days: 90
