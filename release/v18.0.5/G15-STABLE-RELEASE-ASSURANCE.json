@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "gate": "G15",
+  "status": "PASS",
+  "decision": "STABLE_CERTIFIED",
+  "release": "v18.0.5 STABLE",
+  "buildId": "v18.0.5-stable-ui-ux-symbol-management-hardening-20260814",
+  "sourceSha256": "a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd",
+  "sourceFingerprint": "6328baedc2358acb8280a1da4243f2ad02fe0694d3504a3a80c276e139eb268e",
+  "nativeTargets": {
+    "macos-arm64": {
+      "status": "PASS",
+      "artifact": "De-Pulse-v18.0.5-STABLE-macOS-Apple-Silicon.zip",
+      "sha256": "95cfcc0813058c1ff6c7c5b20f7201d0e2daa420bb101e89e6598d80e84b682a"
+    },
+    "windows-x64": {
+      "status": "PASS",
+      "artifact": "De-Pulse-v18.0.5-STABLE-Windows-x64.zip",
+      "sha256": "28cacc7d3b3ab0a53e7b8553202188b22ecb124bc47b031fa670cd65fad43bf1"
+    }
+  },
+  "generatedAt": "2026-08-14T08:59:52.230681+00:00",
+  "note": "User-authorized v18.0.5 Stable promotion. Both required native targets passed G14 against the exact Stable source fingerprint."
+}

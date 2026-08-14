@@ -1,11 +1,14 @@
 {
   "schemaVersion": 1,
-  "release": "v18.0.4 STABLE",
-  "buildId": "v18.0.4-stable-native-cross-platform-closure-20260813",
-  "sourceFile": "De-Pulse-v18.0.4-STABLE-Source.zip",
-  "sourceSha256": "a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a",
-  "sourceFingerprint": "9fa0e285cc90d7848aa7676a6169091a540601942f18422a31243b9ba6a8bee8",
-  "requiredNativeTargets": ["macos-arm64", "windows-x64"],
+  "release": "v18.0.5 STABLE",
+  "buildId": "v18.0.5-stable-ui-ux-symbol-management-hardening-20260814",
+  "sourceFile": "De-Pulse-v18.0.5-STABLE-Source.zip",
+  "sourceSha256": "a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd",
+  "sourceFingerprint": "6328baedc2358acb8280a1da4243f2ad02fe0694d3504a3a80c276e139eb268e",
+  "requiredNativeTargets": [
+    "macos-arm64",
+    "windows-x64"
+  ],
   "goVersion": "1.26.6",
   "runtimeConfig": "PersonalMarketTerminal",
   "applicationBundle": "De-Pulse.app",
@@ -14,6 +17,6 @@
     "Stable source is immutable during certification",
     "Both native G14 targets must pass",
     "G15 must verify artifact and source provenance",
-    "v17.5.1 Stable remains untouched until v18.0.4 Stable artifact is installed by the user"
+    "v18.0.4 Stable remains immutable historical provenance through its tag/release"
   ]
 }

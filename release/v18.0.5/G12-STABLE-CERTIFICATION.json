@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "gate": "G12",
+  "status": "PASS",
+  "release": "v18.0.5 STABLE",
+  "buildId": "v18.0.5-stable-ui-ux-symbol-management-hardening-20260814",
+  "sourceSha256": "a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd",
+  "sourceFingerprint": "6328baedc2358acb8280a1da4243f2ad02fe0694d3504a3a80c276e139eb268e",
+  "checks": {
+    "stablePromotion": true,
+    "goFull": true,
+    "race": true,
+    "vet": true,
+    "govulncheck": true,
+    "randomized": true,
+    "extreme30": true,
+    "renderer": true,
+    "deterministic": true,
+    "professionalTrader": true,
+    "httpWorkflow": true,
+    "responsive": true,
+    "documentation": true,
+    "dataUtility": true,
+    "dataHealth": true,
+    "sourceHealth": true,
+    "releaseIdentity": true
+  },
+  "generatedAt": "2026-08-14T08:52:45.447003+00:00"
+}
