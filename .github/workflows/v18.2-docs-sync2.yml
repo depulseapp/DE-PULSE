@@ -15,12 +15,12 @@ jobs:
           python3 v18_2_docs_sync.py
           python3 version_consistency_test.py
           python3 documentation_governance_gate.py
-      - name: Commit synchronized docs
+      - name: Commit synchronized docs and QA evidence
         run: |
-          if ! git diff --quiet -- README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md; then
+          if ! git diff --quiet -- README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md renderer/qa/manifest.json renderer/qa/v18.2.0.txt renderer/qa/v18.2.0-g0-g3-admin-presence-sessions.md; then
             git config user.name github-actions[bot]
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-            git add README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md
+            git add README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md renderer/qa/manifest.json renderer/qa/v18.2.0.txt renderer/qa/v18.2.0-g0-g3-admin-presence-sessions.md
             git commit -m 'v18.2 align current documentation'
             git push origin HEAD:v18.2-development
           fi
