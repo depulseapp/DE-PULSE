@@ -457,7 +457,293 @@ Major implementation/validation belongs in **v20 Adaptive Intelligence & Decisio
 
 ---
 
-# F. Release / Governance Scope
+# F. 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI)
+
+## TDTI-001 — Purpose / AI-Style Decision Intelligence
+For each eligible ticker and relevant Day / Swing / Long horizon, DE.PULSE must reason about **both** a Long Thesis and a Short Thesis from the same canonical point-in-time evidence and return the strongest truthful decision support possible.
+
+The goal is not to mirror `BUY` into `SELL`. The goal is an AI/LLM-style research process that understands structure, context, competing scenarios, evidence conflict, behavior state, opportunity quality, timing, and what would change the view.
+
+Canonical outcomes are:
+
+**LONG THESIS / SHORT THESIS / BOTH DEVELOPING / NO RELIABLE EDGE**
+
+A ticker is never required to have an actionable side.
+
+## TDTI-002 — One Canonical Evidence Snapshot / No Duplicate Engines
+Long and Short theses must consume the **same frozen canonical evidence snapshot** for a ticker/horizon. Do not create independent long-data and short-data silos, duplicate provider fetchers, or unrelated scoring engines.
+
+Reuse existing Day/Swing/Long canonical plan/evidence ownership, ASBI, Market/sector regime, Event Intelligence, SEC/news/earnings, liquidity, relative strength, options context, Smart-Money/13F and Historical Validation where relevant.
+
+If implementation needs directional components, they remain coordinated children of the same canonical horizon intelligence owner.
+
+## TDTI-003 — Competing Thesis Model
+Evaluate the Long and Short theses independently but comparatively. Each side may have:
+- thesis state;
+- directional probability where validated;
+- thesis strength;
+- confidence/data sufficiency;
+- opportunity quality / decision utility;
+- readiness;
+- supporting evidence;
+- contradictory evidence;
+- trigger / confirmation;
+- structural invalidation;
+- expected path(s);
+- expected magnitude/distribution;
+- time-to-resolution;
+- horizon relevance;
+- freshness / provenance.
+
+A stronger directional thesis does **not** automatically imply an attractive trade plan.
+
+## TDTI-004 — Probability, Strength, Confidence, Quality & Readiness Are Different
+Keep these concepts separate:
+
+1. **Direction Probability** — estimated chance of the relevant directional/path outcome when validated.
+2. **Thesis Strength** — coherence and materiality of supporting vs opposing evidence.
+3. **Confidence** — data sufficiency, freshness, sample/analogue quality, independence, provider agreement and calibration.
+4. **Opportunity Quality / Decision Utility** — whether expected reward justifies adverse excursion, spread/liquidity, volatility, event risk, uncertainty, squeeze/gap risk and opportunity cost.
+5. **Readiness** — whether the current price/structure has reached a valid actionable research zone and confirmation state.
+
+Never present Setup Score as win probability.
+
+## TDTI-005 — Long Trade Plan Contract
+Where a Long Thesis is supportable, provide applicable:
+- **Entry Zone**;
+- Entry trigger / confirmation;
+- **Trim / Target Zone**;
+- optional Target 1 / Target 2 / extension target where defensible;
+- **Long Invalidation** based on structural thesis failure, not an arbitrary mirrored percentage;
+- Long Risk / Reward;
+- Long Readiness;
+- extension / chase risk;
+- expected favorable/adverse excursion;
+- key catalyst/regime/liquidity risks;
+- concise `WHY LONG`, `WHAT CONFIRMS`, and `WHAT CHANGES THE VIEW`.
+
+## TDTI-006 — Short Trade Plan Contract
+Where a Short Thesis is supportable, provide applicable:
+- **Short Entry Zone**;
+- short trigger / confirmation;
+- **Cover / Trim Zone**;
+- optional Cover 1 / Cover 2 / downside targets where defensible;
+- **Short Invalidation** based on structural bearish-thesis failure;
+- Short Risk / Reward;
+- Short Readiness;
+- downside extension / short-chase risk;
+- expected favorable/adverse excursion from the short perspective;
+- squeeze/gap/catalyst/liquidity risks;
+- concise `WHY SHORT`, `WHAT CONFIRMS`, and `WHAT CHANGES THE VIEW`.
+
+Do not infer borrow availability or execution feasibility from price structure alone.
+
+## TDTI-007 — Directional Readiness Lifecycle
+Use a truthful lifecycle per side, for example:
+
+**NOT READY → APPROACHING → IN ZONE → CONFIRMING → CONFIRMED → EXTENDED → RESOLVED / INVALIDATED**
+
+Readiness transitions should be material-change driven. A price entering a zone without required confirmation can remain `IN ZONE / NOT CONFIRMED`.
+
+## TDTI-008 — Structural Confirmation & Invalidation
+Levels must express the thesis, not just arithmetic.
+
+Examples include support/resistance failure or reclaim, VWAP/opening-range behavior where horizon-appropriate, failed breakout/breakdown, lower-high/higher-low structure, volume participation/absorption, relative-strength change, catalyst reaction, moving-average/trend structure, or other validated evidence.
+
+A short thesis should generally invalidate when bearish structure is meaningfully reclaimed; a long thesis should generally invalidate when bullish structure fails. Handle gap/corporate-action/volatility exceptions explicitly.
+
+## TDTI-009 — ASBI State / Path Integration
+ASBI behavior states and competing paths must inform thesis quality and timing.
+
+Examples:
+- `SELLING ACCELERATION → SELLER EXHAUSTION → BOUNCE ATTEMPT` may keep the broader Short Thesis bearish while reducing immediate Short Opportunity Quality.
+- `BOUNCE FAILURE → CONTINUATION LOWER` may strengthen Short Readiness.
+- `FAILED BREAKDOWN → RECLAIM → STABILIZATION` may weaken the Short Thesis and strengthen a Long rebound thesis.
+
+Do not let a static trend label override a material behavior-state transition.
+
+## TDTI-010 — Thesis Probability Momentum / View Change
+Track how Long/Short scenario probability, strength, confidence, quality and readiness change over time.
+
+A rapid change such as `SHORT 72% → 54%` while rebound probability rises can itself be material intelligence.
+
+Prefer alerts for **meaningful thesis/readiness change** over noisy simple price thresholds.
+
+## TDTI-011 — Expected Paths, Magnitude & Timing
+Where evidence supports it, model multiple directional paths rather than a single target:
+- breakout/retest/continuation;
+- rejection/continuation lower;
+- flush/stabilize/rebound;
+- failed breakdown/reclaim;
+- squeeze/failed squeeze;
+- catalyst repricing/mean reversion;
+- consolidation before resolution.
+
+Track expected move distributions, target/level probabilities, MFE/MAE, tail risk and time-to-resolution rather than only binary success/failure.
+
+## TDTI-012 — Long-Specific Risk Intelligence
+Long-side opportunity quality should consider applicable:
+- bull-trap / failed-breakout risk;
+- overhead supply/resistance;
+- gap-down/catalyst/earnings risk;
+- deteriorating relative strength;
+- distribution/weak participation;
+- excessive upside extension/chase risk;
+- liquidity/spread/volatility;
+- valuation/fundamental risk where horizon-relevant;
+- market/sector regime contradiction;
+- ASBI transition toward distribution/continuation lower.
+
+## TDTI-013 — Short-Specific Risk Intelligence
+Short-side opportunity quality should consider applicable reliable evidence such as:
+- short-squeeze / violent-reversal risk;
+- already-extended downside / short-chase risk;
+- positive catalyst / gap-up risk;
+- failed breakdown / reclaim risk;
+- abnormal upside volume or relative-strength improvement;
+- market/sector reversal against the short;
+- earnings/event risk;
+- liquidity/spread/volatility;
+- short interest / days-to-cover / crowding where trustworthy;
+- shortability / borrow availability/cost where lawfully and reliably available;
+- SSR or other market-structure restriction context where useful.
+
+Unavailable borrow/short-interest data must be `UNKNOWN`, never guessed.
+
+## TDTI-014 — Cross-Horizon Intelligence
+Day, Swing and Long can legitimately disagree because their horizons differ.
+
+DE.PULSE should explain relationships such as:
+- Day Long rebound inside a Swing Short trend;
+- Swing Long pullback opportunity inside a Long-Term bullish thesis;
+- Day Short setup while Long-Term remains bullish;
+- no actionable Day edge despite a strong Long-Term thesis.
+
+Do not flatten cross-horizon disagreement into one opaque direction.
+
+## TDTI-015 — Evidence Conflict / Independence / Cause
+Preserve bullish and bearish evidence separately. Do not average away contradictions or count correlated sources as independent confirmation.
+
+Interpret **why** the move exists: technical/liquidity dislocation, earnings/guidance, SEC filing, macro/regime shock, sector sympathy, institutional/insider context, or other material cause.
+
+Old evidence such as lagged 13F accumulation cannot automatically overrule fresher contradictory price/catalyst behavior.
+
+## TDTI-016 — AI/LLM Synthesis Boundary
+DE.PULSE should feel AI/LLM-style by synthesizing structured evidence into concise, context-aware reasoning:
+- strongest thesis now;
+- competing thesis;
+- why now;
+- what is already priced/extended;
+- what confirms;
+- what invalidates;
+- what contradicts;
+- what would change the view;
+- what to watch next;
+- uncertainty / missing evidence.
+
+However, an LLM is not the canonical owner of market truth and must not silently invent unsupported price levels, overwrite frozen deterministic outputs, or self-modify protected production formulas. Learned/AI-derived directional influence follows normal SHADOW → VALIDATED → APPROVED → PRODUCTION governance.
+
+## TDTI-017 — ABSTAIN / NO RELIABLE EDGE
+`NO RELIABLE EDGE` is a first-class successful output when:
+- Long and Short evidence is balanced/contradictory;
+- expected magnitude is insufficient;
+- price is too extended on both sides;
+- catalyst uncertainty dominates;
+- liquidity/data quality is inadequate;
+- analogue/sample quality is weak;
+- risk/reward is unattractive;
+- thesis confidence or independence is insufficient.
+
+The system must not manufacture actionability to fill a UI field.
+
+## TDTI-018 — Immutable Thesis / Trade-Plan Ledger
+Before outcomes are known, preserve applicable point-in-time records for both sides:
+- ticker/horizon;
+- evidence snapshot ID/time;
+- canonical source fingerprint / model/rule version;
+- Long and Short thesis states/probabilities/strength/confidence/quality/readiness;
+- Entry or Short Entry Zone;
+- Trim/Target or Cover/Downside Targets;
+- structural invalidation;
+- R:R;
+- ASBI state/scenarios;
+- relevant regime/catalyst/liquidity/Smart-Money evidence;
+- contradictions/missing evidence;
+- explanation fingerprint.
+
+Never rewrite an old thesis after seeing the outcome.
+
+## TDTI-019 — Side-Aware Outcome Learning / Calibration
+Evaluate Long and Short separately by symbol, horizon, setup/state, regime, sector, catalyst, liquidity and relevant behavior fingerprint.
+
+Track applicable:
+- did Entry / Short Entry occur;
+- did confirmation occur;
+- target/trim/cover vs invalidation ordering;
+- first material outcome;
+- MFE/MAE anchored to the actual eligible entry event where measurable;
+- elapsed time / time-to-resolution;
+- 1D/3D/5D/10D and horizon-appropriate outcome distributions;
+- false positives/misses;
+- short-squeeze/bounce failure and bull-trap/failed-breakout outcomes;
+- calibration / Decision Utility;
+- ABSTAIN quality;
+- drift and regime robustness.
+
+Target-before-entry or cover-before-short-entry must never count as a valid successful plan outcome.
+
+## TDTI-020 — Champion / Challenger & Adaptive Promotion
+Production thesis logic is the Champion. New directional models/rules/weights/prompts are Challengers in SHADOW on the same future observations.
+
+Compare calibration, decision utility, false-positive/miss costs, MFE/MAE, lead time, regime robustness, side-specific failure modes, latency/stability, explainability and Professional Trader/Investor usefulness.
+
+Promotion remains:
+
+**SHADOW → VALIDATED → APPROVED → PRODUCTION**
+
+No silent production self-modification.
+
+## TDTI-021 — UI / Surface Integration
+Do not create a separate Short Desk or duplicate Long/Short app architecture by default.
+
+Use the existing Day/Swing/Long master-detail experience and contextual surfaces. Prefer:
+- stronger thesis + concise competing thesis;
+- clear Long vs Short labels;
+- Entry / Short Entry;
+- Trim/Target / Cover/Downside Target;
+- Invalidation;
+- R:R;
+- readiness;
+- thesis probability/strength/confidence/quality only when validated and useful;
+- ASBI behavior state/probability momentum;
+- concise evidence/contradiction/risk/why.
+
+Research can expose deeper Bull/Base/Bear or Long/Short evidence. Opportunity Radar and Decision Queue should rank material directional opportunities without duplicating plan computation.
+
+## TDTI-022 — No Execution Boundary
+Long/Short Trade Plans are **research plans**, not orders.
+
+This scope does not add:
+- short-sale order entry;
+- share borrowing;
+- broker routing;
+- position sizing/position management;
+- live/paper execution;
+- portfolio/P&L;
+- automated trading.
+
+Any future execution capability would require a separate explicit product-boundary decision.
+
+## TDTI-023 — Roadmap Placement
+The older approved direction already included `entry / short-entry zone context when supportable`. This 10/10 contract hardens that direction into a full two-sided intelligent thesis system.
+
+v18/v19 should preserve/build the point-in-time evidence, trade-plan/outcome lineage, short-relevant data quality/provenance and historical depth needed for validation without forcing the mature adaptive engine into v18.2–v18.5.
+
+Major adaptive two-sided thesis implementation/validation belongs in **v20 Adaptive Intelligence & Decision Research**, integrated with ASBI rather than as a competing intelligence silo.
+
+---
+
+# G. Release / Governance Scope
 
 ## GOV-001 — Canonical G0–G16 Only
 The permanent release gate model is defined in `governance/ADAPTIVE-OPERATING-CONTRACT.md`. Do not invent G17+ gates; add checks inside G0–G16.
@@ -479,7 +765,7 @@ Autonomous work through v18.5 is authorized subject to the stop conditions in th
 
 ---
 
-# G. Roadmap Reference
+# H. Roadmap Reference
 
 Canonical placement is maintained in `governance/ROADMAP.md`.
 
@@ -489,11 +775,11 @@ Current approved major sequence:
 → **v18.5 Mandatory Major Closure**  
 → **v19 Professional Data Infrastructure**  
 → **v19 Major Closure**  
-→ **v20 Adaptive Intelligence & Decision Research + ASBI**
+→ **v20 Adaptive Intelligence & Decision Research + ASBI + Two-Sided Thesis Intelligence**
 
 ---
 
-# H. Scope Lookup Rule
+# I. Scope Lookup Rule
 
 When a new idea is discussed, do not ask only “is this exact phrase present?”
 
