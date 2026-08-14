@@ -127,3 +127,30 @@ The v18.3 entry workstream includes:
 - regression coverage proving no material intelligence, protected deterministic logic or authorized operational visibility is lost.
 
 v18.3 cannot treat this workstream as optional backlog. G1/G2/G3 must either implement the recorded remediation or produce a stronger audited replacement disposition before hosted implementation advances.
+
+## Permanent Governance-to-Implementation Closure Direction
+
+From v18.2 onward, DE.PULSE distinguishes **governance adopted** from **implementation closed**. A roadmap item is not complete merely because the rule exists in governance documents.
+
+Permanent lifecycle:
+
+**Governed → Implemented → Enforced → Evidenced → Delivered → Learned.**
+
+Every new permanent rule must be classified as `CURRENT_RELEASE_BLOCKER`, `CURRENT_RELEASE_PROCESS_HARDENING`, `NEXT_RELEASE_MANDATORY_ENTRY`, or `FUTURE_STRATEGIC`. Ambiguous documented-but-unimplemented state is forbidden.
+
+### v18.2 mandatory closure
+
+Before v18.2 Stable promotion, the roadmap requires closure of:
+
+- explicit capability-based ADMIN authorization rather than blanket `ADMIN` power;
+- the justified capability-scoped **Administration** tab/composition rather than permanent embedding in Settings;
+- full role × tab × viewport audit across SUPER_OWNER/OWNER, full-capability ADMIN, limited ADMIN, USER and DEMO;
+- an authoritative auto/deterministically reconciled Build State Ledger v2 rather than a stale manual checkpoint;
+- one actual Build Coordinator/orchestration owner with overlapping/self-triggering release workflows consolidated or subordinated;
+- repo-wide canonical naming migration for active gates/workflows/jobs/artifacts/capabilities, with obsolete ambiguous names removed or explicitly deprecated.
+
+These items cannot be treated as optional backlog merely because their governing contracts already exist. Process-hardening items must close before the affected evidence is trusted; product/security blockers must close before freeze/promotion.
+
+The v18.3 functionality-consolidation workstream above remains mandatory `NEXT_RELEASE_MANDATORY_ENTRY`, preserving v18.2 immutable product scope while preventing the audit findings from being lost.
+
+Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
