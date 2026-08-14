@@ -1,12 +1,19 @@
 {
-  "version": "18.0.4",
-  "channel": "TEST",
-  "buildId": "v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813",
-  "sourceSha256": "69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f",
-  "sourceFingerprint": "a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b",
-  "requiredTargets": ["macos-arm64", "windows-x64"],
+  "schemaVersion": 1,
+  "release": "v18.0.4 STABLE",
+  "buildId": "v18.0.4-stable-native-cross-platform-closure-20260813",
+  "sourceFile": "De-Pulse-v18.0.4-STABLE-Source.zip",
+  "sourceSha256": "a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a",
+  "sourceFingerprint": "9fa0e285cc90d7848aa7676a6169091a540601942f18422a31243b9ba6a8bee8",
+  "requiredNativeTargets": ["macos-arm64", "windows-x64"],
   "goVersion": "1.26.6",
-  "g14Required": true,
-  "g15Required": true,
-  "nativeRuntimeChecks": ["exact-source-sha", "canonical-source-fingerprint", "native-compile", "native-sqlite", "packaged-launch", "release-identity", "stable-profile-and-secrets-migration", "stable-isolation", "bootstrap-owner", "csrf-password-setup", "restart-persistence", "credential-login", "smart-router-v2", "rapid-move", "coverage-truth"]
+  "runtimeConfig": "PersonalMarketTerminal",
+  "applicationBundle": "De-Pulse.app",
+  "promotionAuthorized": true,
+  "rules": [
+    "Stable source is immutable during certification",
+    "Both native G14 targets must pass",
+    "G15 must verify artifact and source provenance",
+    "v17.5.1 Stable remains untouched until v18.0.4 Stable artifact is installed by the user"
+  ]
 }
