@@ -743,7 +743,182 @@ Major adaptive two-sided thesis implementation/validation belongs in **v20 Adapt
 
 ---
 
-# G. Release / Governance Scope
+# G. 10/10 Adaptive Opportunity Discovery & Recommendations (AODR)
+
+## AODR-001 — Purpose / AI-Style Opportunity Prioritization
+DE.PULSE must convert the market intelligence it already lawfully and efficiently understands into concise, continuously refreshed opportunity discovery for users rather than leaving useful cross-market intelligence hidden.
+
+The goal is not to produce a generic stock leaderboard or force recommendations. The goal is an AI/LLM-style research assistant that identifies **what is worth the user's attention now, what is worth watching next, and when there is no reliable opportunity**.
+
+## AODR-002 — Canonical Composition / No Duplicate Recommendation Engine
+AODR is a productization and ranking layer over existing canonical capabilities, not a new scanner, symbol store, chart engine, or independent recommendation silo.
+
+Canonical responsibilities remain:
+- **Global Symbol Registry** — identity, eligibility and instrument truth;
+- **Reliable Actionable Universe** — promotion eligibility/quality boundary;
+- **Shared Symbol Intelligence** — canonical reusable symbol evidence/intelligence;
+- **Opportunity Radar** — broad observation, candidate discovery, PROMOTE/DEMOTE lifecycle;
+- **ASBI** — behavior state/path/outlook intelligence;
+- **TDTI** — Long/Short thesis, opportunity quality, readiness and research trade-plan intelligence;
+- **ADR-GDI** — data/reliability truth and graceful degradation;
+- **AODR** — cross-candidate prioritization, bucket placement, relevance, explanation and recommendation/outcome learning.
+
+Reuse existing evidence and calculations. Do not refetch/recalculate equivalent symbol intelligence merely because a candidate is being ranked for recommendations.
+
+## AODR-003 — Two User-Facing Opportunity Buckets
+Provide two clearly separated opportunity views:
+
+1. **My Market Opportunities** — strongest material opportunities among symbols already in the user's watchlists/My Market.
+2. **Global Opportunities** — strongest material opportunities from the eligible broader market universe that are **not currently in that user's My Market/watchlists**.
+
+A symbol must not appear in both buckets for the same user at the same time. When the user adds a Global Opportunity to My Market, subsequent ranking should place it under My Market rather than continue presenting it as outside discovery.
+
+## AODR-004 — Shared Market Truth, Personalized Relevance
+Underlying symbol evidence, ASBI/TDTI outputs, freshness/provenance and canonical Opportunity Quality remain shared market truth where semantically valid.
+
+Per-user state may influence **relevance and presentation**, including applicable preferences such as horizon interest, volatility/liquidity tolerance, sectors/themes followed, Long/Short interest, symbols already followed, and prior dismissals/interactions.
+
+Personalization must not fabricate a different price, evidence state, thesis, probability, or market truth for each user. The model is:
+
+**shared canonical market truth → user-specific relevance/ranking/presentation**
+
+## AODR-005 — Eligibility / Quality Before Ranking
+Only symbols that satisfy the applicable Global Symbol Registry and Reliable Actionable Universe requirements may be promoted into normal Global Opportunities.
+
+Large percentage movement alone is insufficient. Exclude or heavily penalize unreliable, illiquid, bad-tick/corporate-action-distorted, stale, unmapped, rights-constrained, or otherwise low-quality candidates.
+
+## AODR-006 — Intelligent Opportunity Ranking
+Ranking should use validated, material, horizon-aware evidence rather than one opaque score. Applicable factors include:
+- TDTI Long/Short thesis and competing-thesis strength;
+- Opportunity Quality / Decision Utility;
+- Readiness and distance to a valid Entry/Short Entry condition;
+- ASBI state, path probabilities and probability momentum;
+- expected magnitude/distribution and time-to-resolution;
+- market/sector regime;
+- relative strength/weakness;
+- liquidity/spread/volatility;
+- catalyst/news/earnings/SEC context;
+- Smart-Money/13F/insider/congressional context where point-in-time valid and useful;
+- evidence independence/contradiction;
+- freshness/provenance/data sufficiency;
+- extension/chase or short-chase/squeeze risk;
+- historical setup/symbol/regime usefulness;
+- opportunity cost and materiality.
+
+A strong directional view with poor entry location, poor R:R, excessive extension, weak data or low decision utility must not rank as a top opportunity merely because its raw thesis score is high.
+
+## AODR-007 — NOW / WATCH / PASS / ABSTAIN Lifecycle
+AODR must support truthful candidate states such as:
+
+**NOW → WATCH → PASS**, with **ABSTAIN / NO RELIABLE EDGE** available whenever evidence or opportunity quality is insufficient.
+
+Interpretation:
+- **NOW** — material opportunity with sufficient quality/readiness for immediate research attention;
+- **WATCH** — promising but waiting for price, confirmation, catalyst resolution, data improvement or other condition;
+- **PASS** — evaluated but currently not worth surfacing prominently;
+- **ABSTAIN / NO RELIABLE EDGE** — evidence is insufficient, unreliable or too conflicted to rank responsibly.
+
+No UI quota requires DE.PULSE to manufacture a minimum number of recommendations.
+
+## AODR-008 — Readiness Over Chasing
+AODR must distinguish a good company/trend/thesis from a good **current opportunity**.
+
+If a candidate is already materially extended, outside its Entry/Short Entry Zone, exposed to poor R:R, or showing rising reversal/squeeze risk, ranking should fall or move to WATCH/PASS even when the broader thesis remains strong.
+
+Prefer `wait for <condition>` over `chase because score is high`.
+
+## AODR-009 — Scalable Broad-to-Deep Processing
+AODR must preserve the staged Opportunity Radar architecture:
+
+**broad low-cost observation → PROMOTE promising candidates → deeper shared analysis → rank/surface → DEMOTE when no longer material**
+
+Do not run expensive deep AI/LLM/provider analysis continuously across the entire Global Symbol Registry. Use bounded concurrency, shared caches/state, material-change propagation, background work, provider budgets and ADR-GDI workload protection.
+
+## AODR-010 — Correlation / Diversity-Aware Discovery
+The recommendation set should avoid presenting many highly correlated candidates as if they were independent opportunities.
+
+Where useful, recognize sector/thematic/common-catalyst/common-factor clustering and prefer the strongest representative or a small number of genuinely differentiated candidates unless several correlated names are independently exceptional.
+
+Diversity logic is a recommendation-quality feature, not portfolio construction or position management.
+
+## AODR-011 — Long / Short / Horizon Awareness
+AODR may surface Long or Short research opportunities across Day, Swing and Long horizons using TDTI truth.
+
+Different horizons may legitimately disagree. Ranking must preserve horizon labels and avoid flattening a Day rebound, Swing short trend and Long-Term bullish thesis into one opaque direction.
+
+## AODR-012 — AI/LLM-Style Synthesis Boundary
+Normal recommendation UX should explain concisely:
+- why this candidate matters now;
+- Long/Short/horizon state;
+- opportunity quality/readiness;
+- what confirms;
+- what invalidates;
+- key contradiction/risk;
+- whether the candidate is extended or still near a useful zone;
+- what to watch next;
+- why it outranks other available candidates when useful.
+
+LLMs may synthesize grounded structured evidence, but they are not canonical market-truth owners and must not invent unsupported recommendations, prices, levels, probabilities or catalysts.
+
+## AODR-013 — Immutable Recommendation / Outcome Ledger
+Record material surfaced recommendations point-in-time before outcomes are known, including applicable:
+- user-independent candidate/ranking snapshot ID;
+- symbol/horizon/direction;
+- My Market vs Global bucket;
+- NOW/WATCH state;
+- rank/relevance components and model/rule version;
+- canonical evidence/TDTI/ASBI fingerprints;
+- freshness/data sufficiency;
+- reason surfaced;
+- relevant Entry/Short Entry, invalidation and expected-path context;
+- correlation/diversity context;
+- subsequent state transitions and outcomes.
+
+Evaluate whether surfaced opportunities were timely, useful, overextended, missed, noisy, redundant, stale, or inferior to candidates that were not surfaced. Never rewrite old recommendation history after seeing outcomes.
+
+## AODR-014 — Adaptive Ranking / Personalization Learning
+Where sufficient evidence exists, learn which ranking features, opportunity states, horizons, candidate types and presentation choices improve decision utility.
+
+User-specific interaction learning may improve relevance, but must remain isolated from shared market truth and must not cause one user's preferences/outcomes to silently mutate another user's canonical analysis.
+
+Learned ranking/personalization changes follow:
+
+**SHADOW → VALIDATED → APPROVED → PRODUCTION**
+
+Use Champion/Challenger evaluation for material learned ranking changes and measure calibration/utility, false positives/misses, alert/recommendation usefulness, redundancy, diversity, staleness, lead time and user decision value.
+
+## AODR-015 — UI / Surface Integration
+Primary user-facing labels are:
+
+**My Market Opportunities**  
+**Global Opportunities**
+
+Opportunity Radar is the natural full discovery surface. Dashboard may show a concise summary such as actionable and developing counts plus the highest-value items. Decision Queue should receive only material candidates that become sufficiently ready rather than duplicating the recommendation engine.
+
+Prefer concise cards/synthesis over raw ranking tables. Deeper Research can expose evidence, scenarios, TDTI/ASBI detail and historical context.
+
+## AODR-016 — Reliability / Graceful Degradation
+AODR must consume ADR-GDI capability health and dependency truth.
+
+Optional missing context may reduce confidence/relevance without invalidating an otherwise well-supported opportunity. Missing/stale/unreliable decision-critical evidence must reduce rank, move the candidate to WATCH/PASS, or ABSTAIN as appropriate.
+
+Do not surface a candidate as `NOW` when required current evidence is materially degraded. Explain the smallest truthful impact rather than hiding or broadly overstating degradation.
+
+## AODR-017 — No Execution Boundary
+AODR recommendations are **research and decision-support prioritization**, not trade instructions or execution.
+
+AODR does not add order entry, broker routing, automated/semi-automated execution, share borrowing, position sizing/management, portfolio/P&L or a trading journal.
+
+## AODR-018 — Roadmap Placement
+Foundational AODR productization may begin during v18/v19 where dependency-compatible by reusing existing Global Symbol Registry, Shared Symbol Intelligence and Opportunity Radar outputs, implementing My Market vs Global bucketing, bounded ranking, point-in-time recommendation lineage and outcome collection without disrupting frozen v18.2 scope.
+
+v19 should harden ranking data quality, point-in-time outcome history, provider/rights/reliability dependencies, cross-user shared-state efficiency, diversity/correlation handling and recommendation observability.
+
+Major mature adaptive ranking, ASBI/TDTI-driven opportunity prioritization, personalized relevance learning and Champion/Challenger recommendation intelligence belong in **v20 Adaptive Intelligence & Decision Research**.
+
+---
+
+# H. Release / Governance Scope
 
 ## GOV-001 — Canonical G0–G16 Only
 The permanent release gate model is defined in `governance/ADAPTIVE-OPERATING-CONTRACT.md`. Do not invent G17+ gates; add checks inside G0–G16.
@@ -765,7 +940,7 @@ Autonomous work through v18.5 is authorized subject to the stop conditions in th
 
 ---
 
-# H. Roadmap Reference
+# I. Roadmap Reference
 
 Canonical placement is maintained in `governance/ROADMAP.md`.
 
@@ -775,11 +950,11 @@ Current approved major sequence:
 → **v18.5 Mandatory Major Closure**  
 → **v19 Professional Data Infrastructure**  
 → **v19 Major Closure**  
-→ **v20 Adaptive Intelligence & Decision Research + ASBI + Two-Sided Thesis Intelligence**
+→ **v20 Adaptive Intelligence & Decision Research + ASBI + Two-Sided Thesis Intelligence + Adaptive Opportunity Discovery & Recommendations**
 
 ---
 
-# I. Scope Lookup Rule
+# J. Scope Lookup Rule
 
 When a new idea is discussed, do not ask only “is this exact phrase present?”
 
