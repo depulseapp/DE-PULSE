@@ -21,4 +21,21 @@ Expensive tests and native audits may resume from exact-source evidence when sou
 
 No meaningful local-only work is accepted as a durable build-plan milestone. It must be committed to the active GitHub branch before it can be treated as resumable.
 
+## Permanent Adaptive CI planning requirements
+
+Every release plan must also define:
+
+- one logical Build Coordinator and the G0–G16 dependency graph;
+- which qualification lanes may safely run in parallel;
+- one canonical owner for each expensive test/gate responsibility;
+- preventative-learning preflight before expensive qualification;
+- mandatory CI failure classification;
+- Build State Ledger / Checkpoint v2 reconciliation against actual GitHub evidence;
+- metadata-only path isolation so checkpoint commits do not cause unnecessary recertification;
+- idempotent mutation behavior so no-change operations cannot create false red builds;
+- separate macOS Apple Silicon and Windows x64 native evidence;
+- explicit `User Delivery` completion for native TEST/RC/Stable deliveries as prescribed;
+- G16 CI-learning review and workflow/check consolidation.
+
 The detailed reconciliation and invalidation rules are mandatory from `adaptive-governance/BUILD_RESUME_PROTOCOL.md`.
+The CI learning/orchestration/delivery rules are mandatory from `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`.

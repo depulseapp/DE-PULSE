@@ -16,7 +16,7 @@ On every resume, use this order of authority:
 
 1. immutable incoming Stable tag/release and its provenance;
 2. active development/release branch and actual Git commit SHA;
-3. committed build checkpoint under `.depulse-certification/resume/`;
+3. committed Build State Ledger/checkpoint under `.depulse-certification/resume/`;
 4. GitHub Actions run state, CI evidence, retained artifacts and immutable RC/native hashes;
 5. chat/handoff narrative as advisory context only.
 
@@ -33,8 +33,9 @@ At the start of a continuation or after an interruption:
 5. Inspect the latest relevant CI runs and retained G10/G11/G12/G14/G15 artifacts.
 6. Compare the checkpoint source identity/fingerprint with the evidence source identity/fingerprint.
 7. Determine the **last trustworthy PASS**, not merely the last reported PASS.
-8. Resume at the next required step or earliest invalidated gate.
-9. Update the checkpoint after meaningful state transitions.
+8. Classify any blocking failure using the Adaptive CI failure taxonomy.
+9. Resume at the next required step or earliest invalidated gate.
+10. Update the Build State Ledger after meaningful state transitions.
 
 ## Fingerprint and evidence-reuse rule
 
@@ -62,15 +63,24 @@ Update durable recovery state at least after:
 
 No meaningful uncommitted local work is considered durable or resumable. Before leaving a material implementation phase, persist the work to the active GitHub branch and bind test/evidence state to that commit/fingerprint.
 
-## Two-level checkpoint model
+## Build State Ledger / Checkpoint v2
 
-### Build checkpoint
+`.depulse-certification/resume/build-checkpoint.json` is treated as a GitHub-reconciled Build State Ledger. At minimum it records release/branch/baseline, actual HEAD, source fingerprint state, G0–G16 states, evidence/reuse state, failure classification, last trustworthy PASS, earliest resume gate, exact blocker, exactly one next action, macOS/Windows package and G14 state, G15/G16 state, `userDelivery`, and linked release-learning incident where applicable.
 
-`.depulse-certification/resume/build-checkpoint.json` records current release/branch/baseline, source commit/fingerprint state, gate states, last trustworthy PASS, next required step, blocking issue and update time.
+Allowed failure classifications are:
+
+- `PRODUCT_FAIL`
+- `GATE_TEST_FAIL`
+- `CI_HARNESS_FAIL`
+- `INFRA_FAIL`
+- `EXPECTED_NOOP`
+- `SUPERSEDED`
+
+The ledger is corrected whenever actual GitHub evidence disagrees with it. `EXPECTED_NOOP` is successful idempotent behavior and must not create a false red release state.
 
 ### Release evidence checkpoint
 
-`.depulse-certification/resume/release-evidence-checkpoint.json` records immutable evidence as it becomes available: G10 fingerprint, G11 RC/source SHA, G12 evidence, native macOS/Windows package/runtime evidence, G15 assurance, Stable tag/release identity and G16 archive state.
+`.depulse-certification/resume/release-evidence-checkpoint.json` records immutable evidence as it becomes available: G10 fingerprint, G11 RC/source SHA, G12 evidence, native macOS/Windows package/runtime evidence, G15 assurance, Stable tag/release identity, native user-delivery state and G16 archive state.
 
 The evidence checkpoint may reference GitHub run/artifact IDs, hashes and immutable release identities; it must never claim an artifact PASS that does not exist.
 
@@ -80,6 +90,10 @@ If an interruption occurs after one platform or certification lane passed, exact
 
 If source or packaging identity changed, affected native evidence is invalidated and rerun.
 
+## Metadata isolation
+
+Checkpoint/evidence-only commits must not trigger unrelated full certification/native packaging. Workflows should use path filtering, concurrency/supersession and idempotent mutation guards where practical so checkpoint recording does not generate recursive CI noise.
+
 ## G16 closure and next build
 
 After Stable promotion:
@@ -88,7 +102,9 @@ After Stable promotion:
 2. archive the final checkpoint/evidence state;
 3. clean obsolete working branches/artifacts according to repository hygiene rules;
 4. create the next approved development branch from the exact Stable commit/tag;
-5. seed a new checkpoint for the next release at G0.
+5. seed a new checkpoint for the next release at G0;
+6. classify CI incidents, generalize genuinely new lessons and add durable prevention/regression where practical;
+7. verify required Mac/Windows assets were surfaced and `userDelivery = DELIVERED` for completed native delivery.
 
 ## User-interruption policy
 
@@ -97,3 +113,5 @@ Normal recovery must require no routine manual work from the user. Ask only for 
 ## Permanent safety rule
 
 **Resume means continue from the last trustworthy evidence, not from the last optimistic status.** GitHub branch state, immutable source identity and CI/artifact evidence control the decision.
+
+Adaptive CI operating rules: `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`.

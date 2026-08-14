@@ -24,8 +24,20 @@ Commit meaningful implementation work before leaving its phase. Update checkpoin
 
 Inspect current GitHub run/job state before launching replacements. Resume/retry only incomplete or failed lanes where exact-source reuse is valid. A stopped conversation does not justify rerunning a green G12 or native platform audit.
 
+## Permanent Adaptive CI execution
+
+The release uses one logical Build Coordinator across G0–G16. Jobs may be parallelized only when dependencies and resource limits allow it, while each responsibility retains one canonical owner.
+
+Before expensive qualification, run the preventative-learning preflight against known release-learning patterns. CI failures are classified as `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP`, or `SUPERSEDED` before candidate health is changed.
+
+Mutating workflows are idempotent: a clean/no-change commit attempt is successful no-op behavior, not a failed build. Checkpoint/evidence-only changes must not wake unrelated full certification/native workflows.
+
+The Build State Ledger is reconciled from actual branch HEAD, release identity, fingerprint, CI and artifact evidence. It is never trusted merely because a JSON checkpoint says PASS.
+
 ### Safety
 
-Checkpoint/resume never weakens G0–G16, native runtime requirements, Stable transformation/certification, source provenance, or the permanent No Execution Boundary.
+Checkpoint/resume and adaptive CI never weaken G0–G16, native runtime requirements, Stable transformation/certification, source provenance, or the permanent No Execution Boundary.
 
-Canonical protocol: `adaptive-governance/BUILD_RESUME_PROTOCOL.md`.
+Canonical protocols:
+- `adaptive-governance/BUILD_RESUME_PROTOCOL.md`
+- `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`
