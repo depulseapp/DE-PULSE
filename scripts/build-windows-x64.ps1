@@ -23,12 +23,46 @@ $StableBefore=(Get-FileHash -Algorithm SHA256 $Sentinel).Hash.ToLowerInvariant()
 $StableSecretsBefore=(Get-FileHash -Algorithm SHA256 $Secrets).Hash.ToLowerInvariant()
 $Password='G14-'+[Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(24)).Replace('/','A').Replace('+','B').Replace('=','C')
 $env:DEPULSE_HEADLESS='1'
+function Read-RuntimeLog([string]$Path) {
+  if(Test-Path $Path){ return (Get-Content -LiteralPath $Path -Raw -ErrorAction SilentlyContinue) }
+  return ''
+}
 function Start-Depulse([string]$Phase) {
-  $script:Proc=Start-Process -FilePath $Exe -PassThru -RedirectStandardOutput (Join-Path $Out "runtime-$Phase-stdout.log") -RedirectStandardError (Join-Path $Out "runtime-$Phase-stderr.log")
   $script:Instance=Join-Path $Target 'instance.json'
-  for($i=0;$i -lt 80 -and -not (Test-Path $script:Instance);$i++){Start-Sleep -Milliseconds 250}
-  if(-not (Test-Path $script:Instance)){throw "instance.json not created ($Phase)"}
-  $script:Url=(Get-Content $script:Instance -Raw | ConvertFrom-Json).url
+  Remove-Item -LiteralPath $script:Instance -Force -ErrorAction SilentlyContinue
+  $Stdout=Join-Path $Out "runtime-$Phase-stdout.log"
+  $Stderr=Join-Path $Out "runtime-$Phase-stderr.log"
+  $script:Proc=Start-Process -FilePath $Exe -PassThru -RedirectStandardOutput $Stdout -RedirectStandardError $Stderr
+  $lastError=''
+  for($i=0;$i -lt 120;$i++){
+    if($script:Proc.HasExited){
+      $outText=Read-RuntimeLog $Stdout; $errText=Read-RuntimeLog $Stderr
+      throw "DE.PULSE exited before readiness ($Phase), exit=$($script:Proc.ExitCode). stdout=$outText stderr=$errText"
+    }
+    if(Test-Path $script:Instance){
+      try {
+        $instanceData=Get-Content $script:Instance -Raw | ConvertFrom-Json
+        if(-not [string]::IsNullOrWhiteSpace($instanceData.url)){
+          $candidateUrl=$instanceData.url
+          try {
+            $health=Invoke-RestMethod -Uri ($candidateUrl+'api/health') -TimeoutSec 2
+            if($health.version -ne '18.0.4' -or $health.buildId -ne $BuildId){
+              throw "runtime release identity mismatch during readiness ($Phase): version=$($health.version) buildId=$($health.buildId)"
+            }
+            $script:Url=$candidateUrl
+            return
+          } catch {
+            $lastError=$_.Exception.Message
+          }
+        }
+      } catch {
+        $lastError=$_.Exception.Message
+      }
+    }
+    Start-Sleep -Milliseconds 250
+  }
+  $outText=Read-RuntimeLog $Stdout; $errText=Read-RuntimeLog $Stderr
+  throw "DE.PULSE readiness timeout ($Phase). lastError=$lastError stdout=$outText stderr=$errText"
 }
 function Stop-Depulse { if($script:Proc){Stop-Process -Id $script:Proc.Id -Force -ErrorAction SilentlyContinue; Wait-Process -Id $script:Proc.Id -ErrorAction SilentlyContinue; $script:Proc=$null} }
 try {
