@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "release": "v18.0.5 STABLE",
-  "buildId": "v18.0.5-stable-ui-ux-symbol-management-hardening-20260814",
-  "sourceFile": "De-Pulse-v18.0.5-STABLE-Source.zip",
-  "sourceSha256": "a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd",
-  "sourceFingerprint": "6328baedc2358acb8280a1da4243f2ad02fe0694d3504a3a80c276e139eb268e",
+  "release": "v18.0.6 STABLE",
+  "buildId": "v18.0.6-stable-smart-provider-router-rapid-move-market-shock-hardening-20260814",
+  "sourceFile": "De-Pulse-v18.0.6-STABLE-Source.zip",
+  "sourceSha256": "857c7999891225f5ac8dc26eaf1f2018dfd72ccbf64ef23b11a103e169679199",
+  "sourceFingerprint": "5f5285071f4a46ed6ab83026c158d58936eecdea38961940622faa8cfe4d7f90",
   "requiredNativeTargets": [
     "macos-arm64",
     "windows-x64"
@@ -17,6 +17,6 @@
     "Stable source is immutable during certification",
     "Both native G14 targets must pass",
     "G15 must verify artifact and source provenance",
-    "v18.0.4 Stable remains immutable historical provenance through its tag/release"
+    "v18.0.5 Stable remains immutable historical provenance through its tag/release"
   ]
 }
