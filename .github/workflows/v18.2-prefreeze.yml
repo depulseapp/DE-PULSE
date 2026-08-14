@@ -1,5 +1,5 @@
 # qualification trigger: governance-aware v18.2 candidate
-name: DE.PULSE v18.2 G4-G10 Pre-Freeze
+name: DE.PULSE v18.2 | G4–G10 | Pre-Freeze Qualification
 
 on:
   push:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   qualify:
+    name: G4–G10 · Candidate · Pre-Freeze Qualification
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     env:
@@ -27,11 +28,12 @@ jobs:
         with:
           go-version: '1.26.6'
           cache: false
-      - name: G0-G4 identity scope architecture and resume contract
+      - name: G0–G4 · Foundation · Identity, Scope, Architecture & Governance
         run: |
           set -euo pipefail
           python3 release_identity.py --verify
           python3 version_consistency_test.py
+          python3 canonical_naming_gate.py
           python3 adaptive_resume_gate.py
           python3 v18_2_scope_gate.py
           python3 v18_2_principal_engineer_gate.py
@@ -41,7 +43,7 @@ jobs:
           python3 data_health_policy_gate.py
           python3 documentation_governance_gate.py
           test "$(git merge-base HEAD 4b48c61ee103897e834f4ff7d24af07d4275a62c)" = "4b48c61ee103897e834f4ff7d24af07d4275a62c"
-      - name: Focused and inherited Go qualification
+      - name: G5–G6 · Go · Focused, Inherited & Full Qualification
         run: |
           set -euo pipefail
           go test -count=1 -run '^TestV182' ./...
@@ -49,11 +51,11 @@ jobs:
           go test -count=1 -run '^TestV1806' ./...
           go test -count=1 ./...
           go vet ./...
-      - name: CGO-disabled persistence fallback
+      - name: G6 · Persistence · CGO-Disabled Fallback
         run: CGO_ENABLED=0 go test -count=1 ./...
-      - name: Windows x64 compile
+      - name: G6 · Windows x64 · Compile Qualification
         run: CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -o /tmp/De-Pulse-v18.2.0-TEST.exe .
-      - name: Renderer and deterministic acceptance
+      - name: G9 · Renderer · Deterministic Acceptance
         run: |
           set -euo pipefail
           node renderer_logic_test.js
@@ -61,7 +63,7 @@ jobs:
           node v18_2_renderer_test.js
           node deterministic_equivalence_test.js
           node trader_acceptance_test.js
-      - name: Provision responsive browser
+      - name: G9 · Browser · Provision Responsive Test Runtime
         run: |
           python3 -m pip install --disable-pip-version-check playwright
           python3 -m playwright install --with-deps chromium
@@ -72,28 +74,28 @@ jobs:
           )"
           test -x "$P"
           sudo ln -sf "$P" /usr/bin/chromium
-      - name: HTTP workflow and responsive UI
+      - name: G6/G9 · Integration & UI · HTTP and Responsive Qualification
         run: |
           set -euo pipefail
           python3 http_workflow_test.py
           python3 responsive_ui_sharded_gate.py
-      - name: Randomized and extreme regressions
+      - name: G10 · Regression · Randomized & Extreme Qualification
         run: |
           set -euo pipefail
           python3 randomized_order_gate.py
           python3 extreme_30_gate.py
-      - name: Freeze G10 fingerprint evidence
+      - name: G10 · Evidence · Freeze Pre-Freeze Fingerprint
         run: |
           set -euo pipefail
           FP="$(python3 ci_pipeline.py --fingerprint)"
           printf '%s\n' "$FP" | tee v18.2-G10-source-fingerprint.txt
           python3 - "$FP" > v18.2-G10-PASS.json <<'PY'
           import json,sys,datetime
-          print(json.dumps({'schemaVersion':1,'gateRange':'G4-G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','resumeProtocol':'adaptive-governance/BUILD_RESUME_PROTOCOL.md','checks':{'resumeContract':True,'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'functionalityUtilityIntegration':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
+          print(json.dumps({'schemaVersion':1,'gateRange':'G4–G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','resumeProtocol':'adaptive-governance/BUILD_RESUME_PROTOCOL.md','namingContract':'adaptive-governance/NAMING_AND_IDENTITY_CONTRACT.md','checks':{'canonicalNaming':True,'resumeContract':True,'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'functionalityUtilityIntegration':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
           PY
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.2.0-G10-PreFreeze
+          name: De-Pulse-v18.2.0-TEST-G10-Pre-Freeze-Evidence
           path: |
             v18.2-G10-source-fingerprint.txt
             v18.2-G10-PASS.json
