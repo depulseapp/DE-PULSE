@@ -78,3 +78,23 @@ Permanent roadmap direction:
 This direction is enforced within G1/G2/G3/G7/G8/G9/G10/G16 and does not create a new G-gate.
 
 Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+
+## v18.2 Audit Carry-Forward — Mandatory v18.3 Entry Workstream
+
+The all-tab/functionality audit performed during v18.2 identified source-changing consolidation/removal work after the immutable v18.2.0 Admin/Presence/Sessions scope had already been frozen. To preserve G1 integrity, those unrelated source changes are not smuggled into the v18.2.0 candidate.
+
+They are mandatory inputs to **v18.3.0 G1–G3 before hosted-web/PostgreSQL implementation proceeds**. The authoritative item-by-item plan and acceptance criteria live in `functionality_utility_remediation.json`.
+
+The v18.3 entry workstream includes:
+
+- shared/coalesced broad snapshot acquisition for Discovery Scanner and Opportunity Radar while retaining distinct intelligence responsibilities;
+- Session Intelligence Coordinator ownership for Pre-Market Prep and Market Open Prep as temporal checkpoints over canonical state;
+- Event Intelligence lifecycle ownership for Earnings & Material Catalyst Reaction Watch;
+- Dashboard/context and Market Intelligence presentation consolidation;
+- Day/Swing/Long deep-evidence de-duplication with Research as the canonical ticker deep-evidence home;
+- Market Activity retained as a reusable discovery input but removed from unnecessary normal-user prominence;
+- legacy standalone News/Earnings/Filings evidence routes retired or redirected to canonical homes;
+- Maintenance preparation/event diagnostics consolidated without mixing operational truth into Settings;
+- regression coverage proving no material intelligence, protected deterministic logic or authorized operational visibility is lost.
+
+v18.3 cannot treat this workstream as optional backlog. G1/G2/G3 must either implement the recorded remediation or produce a stronger audited replacement disposition before hosted implementation advances.
