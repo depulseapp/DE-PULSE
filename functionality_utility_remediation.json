@@ -1,0 +1,99 @@
+{
+  "schema": "DE.PULSE-FUNCTIONALITY-REMEDIATION-1",
+  "auditVersion": "18.2.0",
+  "targetRelease": "v18.3.0",
+  "scopeRule": "v18.2.0 immutable Admin/Presence/Sessions scope is preserved. Source-changing utility remediations discovered after G1 are mandatory v18.3.0 G1-G3 inputs before hosted implementation proceeds.",
+  "items": [
+    {
+      "name": "Dashboard",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "HIGH",
+      "plan": "Merge overlapping Market Intelligence, alternative-context and options/context summary blocks into one compact Context Intelligence hierarchy while preserving Decision Queue and material risk priority.",
+      "acceptance": "Dashboard has one market/context summary hierarchy; deep evidence remains in canonical specialist surfaces; no lost material risk or decision input."
+    },
+    {
+      "name": "Market Intelligence",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "HIGH",
+      "plan": "Recompose into Market State, Leadership & Liquidity, Events & Risk, Context Intelligence, and supporting research/validation sections; move implementation-learning machinery deeper or to Maintenance where appropriate.",
+      "acceptance": "All useful canonical evidence remains accessible without multiple equal-priority context homes or normal-user implementation machinery."
+    },
+    {
+      "name": "Day Trade Desk",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "HIGH",
+      "plan": "Keep deterministic decision/plan/readiness and compact material event/risk context; move full repeated News/Earnings/SEC evidence to Research deep home.",
+      "acceptance": "Day workflow remains complete and faster to scan; protected formula unchanged; Research contains deep evidence."
+    },
+    {
+      "name": "Swing Desk",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "HIGH",
+      "plan": "Keep deterministic swing decision/readiness plus compact material context; remove repeated deep ticker evidence in favor of Research drill-down.",
+      "acceptance": "Swing workflow preserves all material decisions/risks with no duplicate deep-evidence home."
+    },
+    {
+      "name": "Long-Term Desk",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "MEDIUM",
+      "plan": "Retain horizon-relevant fundamental summary but route full SEC/ownership/catalyst evidence to Research.",
+      "acceptance": "Long-Term remains decision-complete while Research is the canonical detailed evidence destination."
+    },
+    {
+      "name": "Discovery Scanner",
+      "action": "CONSOLIDATE_ACQUISITION",
+      "priority": "HIGH",
+      "plan": "Introduce one bounded canonical broad-snapshot broker/cache with freshness and in-flight request coalescing shared by Scanner and Opportunity Radar; preserve distinct ranking logic.",
+      "acceptance": "A fresh equivalent Alpaca snapshot batch is not independently fetched by Scanner and Radar for the same symbols/window; ranking behavior remains distinct and tested."
+    },
+    {
+      "name": "Opportunity Radar",
+      "action": "CONSOLIDATE_ACQUISITION",
+      "priority": "HIGH",
+      "plan": "Consume the shared broad-snapshot broker/cache and canonical market-activity/event evidence; retain always-on promotion lifecycle and adaptive cadence.",
+      "acceptance": "Radar remains always-on/bounded but shares fresh acquisition with Scanner and records avoided duplicate calls."
+    },
+    {
+      "name": "Pre-Market Prep",
+      "action": "EXTEND_EXISTING_COORDINATOR",
+      "priority": "HIGH",
+      "plan": "Formalize a Session Intelligence Coordinator and model Pre-Market Prep as a temporal freshness/prewarm checkpoint over canonical state and shared refresh scheduler/router/cache.",
+      "acceptance": "Pre-Market Prep owns no parallel market-analysis or broad provider acquisition pipeline and produces a concise readiness/change outcome."
+    },
+    {
+      "name": "Market Open Prep",
+      "action": "EXTEND_EXISTING_COORDINATOR",
+      "priority": "HIGH",
+      "plan": "Place the 9:20–9:25 ET reconciliation checkpoint under the same Session Intelligence Coordinator, reusing canonical overnight/premarket evidence and only refreshing due material inputs.",
+      "acceptance": "Market Open Prep remains a distinct temporal checkpoint without duplicating Scanner/Radar/Event acquisition or analysis engines."
+    },
+    {
+      "name": "Earnings & Material Catalyst Reaction Watch",
+      "action": "EXTEND_EXISTING_OWNER",
+      "priority": "HIGH",
+      "plan": "Make Event Intelligence the explicit lifecycle owner for scheduled/material trigger → reaction → outcome tracking; reuse canonical Earnings/News/SEC/quote/liquidity evidence and Rapid Move correlation.",
+      "acceptance": "No separate broad polling engine; event lifecycle remains selective, correlated, deduplicated and outcome-tracked."
+    },
+    {
+      "name": "Market Activity Seeds",
+      "action": "REMOVE_PROMINENT_SURFACE",
+      "priority": "MEDIUM",
+      "plan": "Keep Market Activity as a reusable Discovery/Radar input and optional explanation/drill-down, but remove it as an equal/prominent normal-user decision surface.",
+      "acceptance": "Discovery still uses seeds; USER-facing hierarchy presents Radar/Scanner outcomes rather than raw acquisition ingredients."
+    },
+    {
+      "name": "Legacy standalone News/Earnings/Filings routes",
+      "action": "REMOVE_OR_RETIRE",
+      "priority": "HIGH",
+      "plan": "Retire or redirect legacy standalone evidence pages: ticker Earnings/SEC/News go to Research subviews; market-wide material events go to Market Intelligence/Event Intelligence.",
+      "acceptance": "No broken links; one canonical deep evidence home per workflow; legacy direct routes redirect safely or are removed with regression coverage."
+    },
+    {
+      "name": "Maintenance",
+      "action": "CONSOLIDATE_PRESENTATION",
+      "priority": "MEDIUM",
+      "plan": "Group preparation/event operational truth under Session & Event Intelligence diagnostics while preserving provider/runtime/cache/validation ownership; keep Settings as configuration only.",
+      "acceptance": "Operational visibility remains complete without repetitive equal-level job panels or user-facing intelligence duplication."
+    }
+  ]
+}
