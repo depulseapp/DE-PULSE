@@ -72,3 +72,30 @@ Planning rules:
 G9 is the main UI-composition enforcement point, with security/data authorization additionally verified in G7/G12 and final role-audit closure recorded at G16.
 
 Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+
+## Permanent Functionality Utility & Integration Planning Requirements
+
+Every release build plan must include a **Functionality Utility, Reuse, Correlation & Surface Checkpoint** before implementation exits G3.
+
+The plan must inventory every new or materially changed functionality, including tabs/sub-tabs/cards, engines, scanners, detectors, preparation jobs, watchers, schedulers, APIs/provider calls, datasets, derived metrics/models, alerts, persistence fields and administrative operations.
+
+For each item, planning must record:
+
+- purpose and active consumer/workflow;
+- canonical owner;
+- existing implementation/data that will be reused;
+- whether provider acquisition, computation, cache, persistence or in-flight work can be shared/coalesced;
+- functional overlap with existing engines/jobs/surfaces and the chosen consolidation/retirement decision;
+- required correlations with existing canonical evidence and outcome/learning state;
+- freshness/materiality, retention, rights/sensitivity and degraded behavior;
+- provider/runtime/storage/UI performance impact;
+- intended UI disposition: existing surface, compact contextual reuse, drill-down/internal-only, justified new surface, remove/retire, or defer;
+- explicit new-tab justification whenever a new primary/conditional tab is proposed;
+- role/capability visibility and backend authorization requirements;
+- obsolete implementation/surface/job that can be removed as part of the change.
+
+Planning default: **reuse and correlate before adding; consolidate before creating another owner; create no extra tab unless separation materially improves the product.**
+
+The release must maintain `functionality_utility_registry.json` and keep it aligned with current primary navigation and material background/intelligence capabilities. The plan must include `functionality_utility_checkpoint_gate.py` in pre-freeze qualification.
+
+Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
