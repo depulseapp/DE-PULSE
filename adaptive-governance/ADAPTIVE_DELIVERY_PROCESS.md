@@ -75,3 +75,24 @@ G16 must include role-aware delivery closure in the handoff: role/capability mat
 macOS and Windows deliverables must expose the same certified role/capability behavior. A platform package that diverges materially in authorization, navigation or composition cannot inherit the other platform's PASS.
 
 Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+
+## Permanent Functionality Utility Delivery Invariant
+
+A release is not delivery-complete if it introduces working but unnecessary or unintegrated product machinery.
+
+Before G15/Stable promotion, certified evidence must establish that the actual candidate passed the Functionality Utility, Reuse, Correlation & Surface Checkpoint and that:
+
+- every primary navigation tab is represented in the functionality utility registry;
+- every materially introduced/changed engine, job, watcher, scheduler, dataset-facing workflow and major surface has a canonical owner and active consumer;
+- existing data/computation/acquisition was reused where practical and known duplicate provider work is either consolidated or explicitly justified/bounded;
+- new data is correlated with relevant canonical evidence and has freshness/materiality/retention/governance behavior;
+- repeated deep-evidence presentation is consolidated into a canonical home with concise contextual reuse elsewhere;
+- supporting/operational data is not promoted into normal-user UI without material decision-support value;
+- any new tab has explicit documented separation justification;
+- obsolete or superseded routes/surfaces/jobs identified by the checkpoint are removed, redirected, scheduled for the current release, or explicitly carried as a known closure item rather than silently retained;
+- G9 performed an all-tab/major-function repetition and hierarchy audit, not only a changed-file visual check;
+- the delivered macOS and Windows packages preserve the same certified information hierarchy and utility dispositions.
+
+G16 must record the final reuse/consolidation/removal result and any remaining approved exceptions. A recurring duplication pattern must become a preventative regression or governance rule.
+
+Canonical checkpoint rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
