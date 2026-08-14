@@ -130,3 +130,33 @@ The current G0–G16 map is the default. If a recurring/material responsibility 
 A new gate may be proposed only after the Gate Utility Test proves distinct risk/responsibility, independent evidence, non-duplication, material value, canonical ownership, process-wide updates, migration clarity and planned G16 review. No release plan may introduce an isolated ad-hoc G-gate.
 
 Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+
+## Permanent Governance-to-Implementation Closure Planning
+
+Every build plan must distinguish **governance adoption** from **implementation closure**. Each new permanent rule receives an explicit implementation disposition before G3 exit:
+
+- `CURRENT_RELEASE_BLOCKER`;
+- `CURRENT_RELEASE_PROCESS_HARDENING`;
+- `NEXT_RELEASE_MANDATORY_ENTRY`;
+- `FUTURE_STRATEGIC`.
+
+For every applicable item, the plan records implementation owner, source/workflow targets, dependencies, evidence gate/checkpoint, naming, regression coverage, delivery impact, and exact completion criteria. A documented rule with no implementation/evidence plan is a planning defect.
+
+### v18.2 required plan closure
+
+The v18.2 build plan must explicitly schedule and evidence:
+
+- capability-based ADMIN authorization shared by UI and backend;
+- dedicated capability-scoped Administration navigation/composition;
+- all-tab/global-shell role × viewport audit for SUPER_OWNER/OWNER, full-capability ADMIN, limited ADMIN, USER and DEMO;
+- deterministic Build State Ledger v2 reconciliation from actual GitHub HEAD/fingerprint/CI/artifact truth using canonical evidence-state names;
+- consolidation/subordination of overlapping release workflows under one actual Build Coordinator;
+- canonical naming migration/cleanup for active workflows, jobs, artifacts, checkpoints and gate labels.
+
+These are not satisfied by documentation alone. Product/security items block the applicable product gates; process-hardening items block trust in the affected release evidence until closed.
+
+### v18.3 mandatory entry
+
+All source-changing utility/consolidation items in `functionality_utility_remediation.json` are mandatory G1–G3 inputs for v18.3. They may be replaced only by a stronger audited disposition, never silently dropped.
+
+Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
