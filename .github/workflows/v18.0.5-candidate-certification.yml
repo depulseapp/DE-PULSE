@@ -47,7 +47,7 @@ jobs:
           echo "$BASE_SHA  $BASE_SOURCE" | sha256sum -c -
           rm -rf work && mkdir -p work/candidate
           unzip -q "$BASE_SOURCE" -d work/candidate
-          cat "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" "${PATCH_PREFIX}04" "${PATCH_PREFIX}05" "${PATCH_PREFIX}06" | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
+          cat "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" "${PATCH_PREFIX}04" "${PATCH_PREFIX}05a" "${PATCH_PREFIX}05b" "${PATCH_PREFIX}06" | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
           (
             cd work/candidate
             git init -q
@@ -199,6 +199,21 @@ jobs:
           go vet ./...
           go install golang.org/x/vuln/cmd/govulncheck@latest
           "$(go env GOPATH)/bin/govulncheck" ./...
+      - name: Provision responsive-test browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check playwright
+          python3 -m playwright install --with-deps chromium
+          CHROMIUM_PATH="$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              print(p.chromium.executable_path)
+          PY
+          )"
+          test -x "$CHROMIUM_PATH"
+          sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
+
       - name: Deterministic / trader / renderer / workflow qualification
         working-directory: candidate
         shell: bash
