@@ -74,3 +74,28 @@ G9 acceptance includes:
 Permanent implementation rule: **compose from capabilities and canonical hierarchy; do not render the OWNER layout and subtract pieces afterward.**
 
 Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+
+## Permanent Functionality Utility, Reuse, Correlation & Surface Checkpoint
+
+Every release must run the **Functionality Utility, Reuse, Correlation & Surface Checkpoint** for every new or materially changed tab, sub-tab, panel, engine, job, scheduler, watcher, dataset-facing workflow, metric, model, alert, API/provider acquisition path, persistence field and administrative operation.
+
+This checkpoint is blocking inside existing G0–G16 and creates no additional gate.
+
+Required execution pattern:
+
+- **G1:** inventory every proposed change and record whether it should REUSE, EXTEND_EXISTING, CONSOLIDATE, remain INTERNAL/DRILLDOWN, justify a NEW_SURFACE, REMOVE/RETIRE an older owner, or DEFER.
+- **G2:** prove canonical ownership, existing-data reuse, fetch-once/calculate-once behavior, required correlations, freshness/materiality, retention, rights/sensitivity and provider/runtime cost.
+- **G3:** prove where the capability belongs in the existing product hierarchy. A new tab must have explicit workflow/security/clarity justification; organizational convenience is insufficient.
+- **G4:** implement the approved owner/disposition without introducing convenience duplication or parallel acquisition/computation.
+- **G7/G8:** verify data/evidence integrity, adaptive-governance boundaries, provider efficiency, capacity and bounded runtime/storage impact.
+- **G9:** audit every tab and major function for repeated information, overlapping workflow ownership, duplicated deep-evidence homes, orphan data, unnecessary user surfaces and hierarchy drift.
+- **G10:** rerun the machine-checkable registry gate against the actual candidate. Unresolved duplicate ownership, unjustified new surfaces or unowned/unconsumed functionality blocks freeze.
+- **G16:** record what was reused, consolidated, retired or simplified and convert recurring duplication patterns into preventative tests/governance.
+
+Permanent default: **one canonical intelligence owner → one deep-evidence home → concise contextual reuse elsewhere.**
+
+Background work follows the same rule. A temporal preparation job, event watcher or integrity task does not automatically become a separate engine or tab. It must first reuse the canonical scheduler/router/cache and coalesce the same provider/dataset work where practical.
+
+Every release maintains `functionality_utility_registry.json`; `functionality_utility_checkpoint_gate.py` verifies primary navigation coverage and required ownership/reuse/correlation/UI dispositions before G10.
+
+Canonical checkpoint rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
