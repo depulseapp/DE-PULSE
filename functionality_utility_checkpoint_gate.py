@@ -5,18 +5,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 REGISTRY = ROOT / "functionality_utility_registry.json"
+REMEDIATION = ROOT / "functionality_utility_remediation.json"
 INDEX = ROOT / "renderer" / "index.html"
 CONTRACT = ROOT / "adaptive-governance" / "FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md"
 DATA_REGISTRY = ROOT / "data_utility_registry.json"
 
 errors = []
 
-if not REGISTRY.exists():
-    errors.append("functionality_utility_registry.json missing")
-if not CONTRACT.exists():
-    errors.append("FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md missing")
-if not DATA_REGISTRY.exists():
-    errors.append("data_utility_registry.json missing")
+for path, label in (
+    (REGISTRY, "functionality_utility_registry.json"),
+    (REMEDIATION, "functionality_utility_remediation.json"),
+    (CONTRACT, "FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md"),
+    (DATA_REGISTRY, "data_utility_registry.json"),
+):
+    if not path.exists():
+        errors.append(label + " missing")
 
 if errors:
     print("Functionality Utility & Integration Checkpoint: FAIL")
@@ -30,6 +33,15 @@ if registry.get("schema") != "DE.PULSE-FUNCTIONALITY-UTILITY-1":
     errors.append("unexpected registry schema")
 if not items:
     errors.append("registry contains no functionality items")
+
+remediation = json.loads(REMEDIATION.read_text())
+if remediation.get("schema") != "DE.PULSE-FUNCTIONALITY-REMEDIATION-1":
+    errors.append("unexpected remediation schema")
+if not str(remediation.get("targetRelease", "")).strip():
+    errors.append("remediation targetRelease missing")
+remediation_by_name = {
+    str(x.get("name", "")).strip(): x for x in remediation.get("items", []) if str(x.get("name", "")).strip()
+}
 
 allowed_ui = {
     "EXISTING_SURFACE",
@@ -50,6 +62,14 @@ allowed_dup = {
     "REMOVE_OR_RETIRE",
 }
 allowed_status = {"ACTIVE", "CONSOLIDATE", "RETIRE", "DEFER"}
+actionable_dup = {
+    "CONSOLIDATE_PRESENTATION",
+    "CONSOLIDATE_ACQUISITION",
+    "EXTEND_EXISTING_COORDINATOR",
+    "EXTEND_EXISTING_OWNER",
+    "REMOVE_PROMINENT_SURFACE",
+    "REMOVE_OR_RETIRE",
+}
 
 names = set()
 surfaces = {}
@@ -81,6 +101,20 @@ for item in items:
         errors.append(f"{name}: invalid status {status}")
     if ui == "NEW_SURFACE_JUSTIFIED" and not str(item.get("newTabJustification", "")).strip():
         errors.append(f"{name}: NEW_SURFACE_JUSTIFIED requires newTabJustification")
+
+    # Any audit result that calls for consolidation, extension or removal must
+    # have a durable next-release remediation record. This prevents audit debt
+    # from being acknowledged once and then silently forgotten.
+    if dup in actionable_dup:
+        plan = remediation_by_name.get(name)
+        if not plan:
+            errors.append(f"{name}: actionable {dup} finding lacks durable remediation plan")
+        else:
+            if str(plan.get("action", "")) != dup:
+                errors.append(f"{name}: remediation action does not match registry disposition {dup}")
+            for field in ("priority", "plan", "acceptance"):
+                if not str(plan.get(field, "")).strip():
+                    errors.append(f"{name}: remediation {field} missing")
 
     sid = str(item.get("surfaceId", "")).strip()
     if sid:
@@ -165,5 +199,5 @@ if errors:
 print(
     "Functionality Utility & Integration Checkpoint: PASS · "
     f"{len(items)} audited items · {len(nav_surfaces)} static primary navigation surfaces covered · "
-    f"{len(required_data)} v18.2 identity/admin data classes governed"
+    f"{len(remediation_by_name)} durable remediation plans · {len(required_data)} v18.2 identity/admin data classes governed"
 )
