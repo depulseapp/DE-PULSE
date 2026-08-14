@@ -1,4 +1,4 @@
-# DE.PULSE — Adaptive Work Decomposition & Gate Evolution Contract
+# DE.PULSE — Adaptive Work Decomposition & G0–G16 Efficiency Contract
 
 Status: **Permanent governing contract**  
 Applies to: Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Adaptive CI Operating Contract  
@@ -6,118 +6,169 @@ Effective: **v18.2 and all later releases**
 
 ## Purpose
 
-DE.PULSE engineering work must follow the same adaptive-intelligence principle as the product itself. Large tasks, tests, certifications and delivery activities should not be forced through one monolithic execution unit when smaller independently verifiable units would improve reliability, speed, diagnosis, recovery, reuse or learning.
+DE.PULSE engineering work follows the same adaptive-intelligence principle as the product itself. Heavy implementation, qualification, audit and delivery work should be decomposed into the smallest independently meaningful evidence units when that improves speed, recovery, diagnosis, reuse or learning.
 
 Permanent execution loop:
 
-**Understand → decompose → map dependencies → reuse → execute → checkpoint → evaluate evidence → adapt next work → integrate → certify → learn.**
+**Understand → impact-map → decompose → reuse → execute → checkpoint → evaluate → adapt → integrate → certify → learn.**
 
-## 1. Adaptive decomposition is the default for heavy work
+This contract does **not** create or permit new top-level release gates. **G0–G16 is permanent.** New responsibilities must be represented as checkpoints, sub-stages, shards, bounded parallel lanes, or strengthened ownership inside an existing G0–G16 gate.
 
-Before a heavy task, gate or release phase begins, the Build Coordinator must decide whether it should remain one unit or be decomposed into smaller work packages, checkpoints, sub-stages, shards or parallel lanes.
+---
 
-Decomposition is preferred when it materially improves one or more of:
+## 1. Decompose heavy work only when useful
 
-- fault isolation and root-cause diagnosis;
-- exact-source evidence reuse after a partial failure;
-- safe parallel execution of independent work;
-- CI/runtime resource efficiency;
-- interruption recovery and resumability;
+Before a heavy task begins, the Build Coordinator decides whether it should remain one unit or be split into smaller work packages.
+
+Decomposition is preferred when it materially improves:
+- fault isolation/root-cause diagnosis;
+- exact-source evidence reuse after partial failure;
+- safe bounded parallel execution;
+- interruption recovery/resumability;
 - ownership clarity;
-- test evidence quality and traceability;
-- prevention of one slow/flaky responsibility blocking unrelated work;
+- test/evidence traceability;
+- avoidance of one slow/flaky responsibility blocking unrelated work;
 - reuse of already-qualified evidence;
 - ability to learn from intermediate outcomes and adapt the next action.
 
-Do not decompose merely for ceremony. A split that adds coordination cost without better evidence, reliability, recovery, speed or clarity should be rejected.
+Do not split work merely to create more jobs. A split that adds coordination, CPU, memory, provider/API, browser, DB or artifact load without better assurance is rejected.
+
+---
 
 ## 2. Dependency-aware execution
 
-Every decomposed work package must have:
-
+Every decomposed package has:
 - one canonical owner/responsibility;
-- explicit inputs and dependencies;
+- explicit inputs/dependencies;
 - source/fingerprint/artifact identity where relevant;
-- clear PASS/FAIL/BLOCKED or completion criteria;
-- evidence location;
+- PASS / FAIL / BLOCKED or completion criteria;
+- durable evidence location;
 - downstream consumers;
-- invalidation rules when its inputs change.
+- invalidation rules when inputs change.
 
-Independent packages may execute in parallel. Dependent packages remain ordered. The Build Coordinator owns the overall dependency graph and prevents multiple lanes from mutating the same canonical release state concurrently.
+Independent packages may execute in parallel. Dependent packages remain ordered. The Build Coordinator owns the dependency graph and prevents concurrent mutation of the same canonical release state.
 
-Parallelism must be bounded by runner/provider/runtime capacity and must not create duplicate expensive work, duplicate provider acquisition, conflicting writes or misleading evidence.
+Parallelism is always bounded by actual runner/provider/runtime/database/browser capacity.
 
-## 3. Checkpoint-first recovery
+---
+
+## 3. Delta-first impact model
+
+Before rerunning expensive work, classify what actually changed:
+
+**Git diff → canonical owner → dependency blast radius → affected surfaces/data/features/roles/providers → reusable evidence → smallest required rerun set.**
+
+Unchanged evidence may be inherited only when its relevant source fingerprint/artifact identity, dependency contract, test definition, role/security assumptions and input semantics remain equivalent.
+
+Metadata/checkpoint-only changes must not trigger product requalification when they are explicitly excluded from the candidate fingerprint and do not change the relevant test contract.
+
+---
+
+## 4. Checkpoint-first recovery
 
 A heavy phase should expose meaningful intermediate checkpoints whenever a later failure would otherwise force unnecessary repetition.
 
-A checkpoint is reusable only when its relevant source/fingerprint/artifact inputs remain unchanged and its dependencies still hold. A checkpoint is not a substitute for a required release gate; it is a smaller evidence boundary inside or between gates.
+A checkpoint is reusable only when its relevant inputs remain unchanged. It is not a substitute for a required G0–G16 conclusion.
 
-On failure or interruption:
+On failure/interruption:
 
-**inspect actual state → identify the smallest affected work package → preserve unrelated PASS evidence → repair → rerun only affected/dependent work → continue.**
+**inspect actual state → identify smallest affected package → preserve unrelated PASS evidence → repair → rerun affected/dependent work only → continue.**
 
-## 4. AI/LLM-style adaptive execution
+Conversation interruption alone never invalidates unchanged-source evidence.
 
-The build process should not behave like a fixed blind script when evidence shows a better next action. After each meaningful checkpoint, the coordinator may adapt sequencing, parallelism, test focus, consolidation work or remediation based on actual evidence while preserving immutable scope, product contracts and release assurance.
+---
 
-Examples:
+## 5. Three-depth review model
 
-- a performance hotspot discovered early may cause profiling/remediation to run before broader certification;
-- a platform-specific failure may rerun only that native lane when shared certified source is unchanged;
-- a repeated CI harness failure may become a preventative preflight and remove redundant downstream retries;
-- a new feature audit may redirect work toward reuse/consolidation rather than adding another tab/engine;
-- a large all-tab UI audit may be sharded by role × viewport × surface family and then recombined into one G9 conclusion.
+### Level 1 — Every meaningful build: Delta AIPLC
+Review changed/affected areas plus dependency sentinels only.
 
-Adaptive execution never means silent production-policy self-modification, arbitrary scope growth, weakened tests or bypassed evidence.
+### Level 2 — G10: Full coverage reconciliation
+Every required tab/feature/data/security/performance responsibility must be either:
+- freshly evidenced on the current candidate; or
+- explicitly inherited from equivalent trustworthy evidence.
 
-## 5. Gate evolution rule
+### Level 3 — G16 / Major Closure: Deep system review
+Perform broad cross-product learning, consolidation and process review.
 
-The current G0–G16 model remains the canonical release-gate map by default, but the gate model itself is allowed to evolve when evidence proves that the existing structure no longer provides a clean, non-duplicative assurance boundary.
+This prevents repeated brute-force audits after every small change while preserving complete release coverage.
 
-Before adding a new G-gate, the proposal must pass a **Gate Utility Test**:
+---
 
-1. **Distinct risk/responsibility** — it protects a materially different release concern that is not already owned cleanly by an existing gate.
-2. **Independent evidence** — it has clear inputs, PASS/FAIL criteria and durable evidence.
-3. **Non-duplication** — the need cannot be solved more cleanly as a checkpoint, sub-stage, parallel lane or strengthened existing gate.
-4. **Material value** — it improves correctness, safety, traceability, recovery or delivery assurance enough to justify additional process complexity.
-5. **Canonical ownership** — exactly one gate owns the responsibility after the change; overlapping old checks are consolidated or removed.
-6. **Process-wide update** — the Roadmap, Build Plan, Build Process, Delivery Process, CI contract, checkpoint/ledger schema and relevant automation are updated together.
-7. **Migration clarity** — in-flight and future releases know which gate map applies; historical Stable evidence is never retroactively rewritten.
-8. **G16 review** — the new gate is reviewed after use to confirm it reduced risk/duplication rather than adding ceremony.
+## 6. Efficient test/load rules
 
-No workflow may invent an ad-hoc `G17`, `G18`, etc. in isolation. A new release gate exists only after the canonical gate map is deliberately revised under this rule.
+Prefer:
+- G5 changed-area FAST tests;
+- G6 affected integration tests;
+- bounded independent G7/G8/G9 shards;
+- deterministic fixtures/replay/canonical cached evidence when live provider behavior is not the subject under test;
+- reusable evidence packages/fingerprints for AI/LLM grounding tests;
+- small bounded true-model/runtime samples only when actual LLM behavior must be certified;
+- independent macOS Apple Silicon and Windows x64 packaging/runtime lanes;
+- reuse of an unchanged platform PASS when the exact RC/package identity is unchanged.
 
-## 6. Preferred hierarchy of process change
+Do not:
+- rerun full G12 for checkpoint/documentation metadata only;
+- duplicate provider acquisition across test lanes when equivalent evidence can be shared;
+- rerun materially identical AI synthesis solely because another test/user opens the same symbol;
+- run full all-tab screenshot/manual-style review after every commit.
 
-When a heavy responsibility needs improvement, prefer in this order:
-
-**reuse existing evidence → split into checkpoints → shard/parallelize independent lanes → strengthen/reassign an existing gate → add a new canonical gate only when materially justified.**
-
-This mirrors DE.PULSE product development:
-
-**reuse → correlate → consolidate → add only when needed.**
+---
 
 ## 7. G0–G16 integration
 
-Under the current canonical map:
+- **G0:** exact baseline/repository/checkpoint truth.
+- **G1:** immutable release scope and applicable permanent governance.
+- **G2:** canonical ownership/data utility/impact graph.
+- **G3:** dependencies, evidence plan, decomposition and bounded lanes.
+- **G4:** implementation exit using independently testable packages where useful.
+- **G5:** FAST affected-area qualification.
+- **G6:** affected integration/MEDIUM qualification.
+- **G7:** data/security/adaptive-intelligence affected lanes.
+- **G8:** performance/capacity/stability affected lanes.
+- **G9:** cross-module/UI/UX affected lanes plus required coverage sentinels.
+- **G10:** authoritative full coverage reconciliation before freeze.
+- **G11:** immutable RC identity.
+- **G12:** full certification on immutable RC.
+- **G13/G14:** independent native packaging/runtime lanes.
+- **G15:** assurance/promotion consumes the complete evidence graph.
+- **G16:** deep retrospective, consolidation, learning and next-release handoff.
 
-- **G1/G2/G3:** plan decomposition, dependencies, ownership, evidence and expected parallel lanes before heavy implementation/qualification.
-- **G4:** implementation work may be split into independently testable work packages while preserving immutable scope.
-- **G5/G6:** use fast/medium qualification as early checkpoints rather than waiting for one giant full-suite result.
-- **G7/G8/G9:** shard data/security/adaptive, performance/capacity and cross-module/UI work where independence is real, then aggregate to one gate conclusion.
-- **G10:** verify every required sub-checkpoint/lane for the candidate is complete before freeze.
-- **G11/G12:** immutable RC identity binds downstream certification evidence; full certification may internally decompose but produces one authoritative G12 conclusion.
-- **G13/G14:** package/runtime work is naturally platform-separated; macOS and Windows retain independent artifact evidence.
-- **G15:** promotion consumes the complete dependency graph rather than assuming one monolithic prior task.
-- **G16:** audit whether decomposition/parallelism improved cycle time and reliability, whether any packages were redundant, and whether gate evolution is warranted.
+No G17+ may be introduced.
 
-## 8. Performance and load discipline
+---
 
-Breaking a heavy task into many jobs must not accidentally create a heavier system. The coordinator must consider total CPU, memory, runner minutes, provider/API calls, browser instances, artifact size, storage, database load and external rate limits.
+## 8. Adaptive execution without scope drift
 
-Prefer shared setup/artifacts, canonical data acquisition, cached dependencies, reusable evidence and bounded parallelism over duplicate work in multiple shards.
+The Build Coordinator may adapt sequencing, test focus, parallelism and remediation based on evidence, provided it preserves:
+- frozen G1 scope;
+- permanent product/architecture/security/data-rights contracts;
+- required G0–G16 assurance;
+- No Execution boundary;
+- truthful source/artifact provenance.
 
-## 9. Permanent rule
+AIPLC findings outside frozen scope are carried to a named next build/next compatible build unless they reveal a genuine correctness/security/reliability blocker that requires governed correction and requalification.
 
-**DE.PULSE should solve large engineering problems the way an adaptive intelligence system reasons: break complexity into meaningful parts, understand dependencies, reuse what is already known, execute independent work efficiently, inspect evidence, adapt the next step, integrate the result, and learn. The release process may evolve—including its gate structure—when measured evidence shows a simpler, safer or more reliable model, but it must never grow process machinery without proving utility.**
+---
+
+## 9. Success scorecard
+
+At G16, measure whether decomposition actually improved:
+- cycle time;
+- reruns avoided;
+- provider/model calls avoided;
+- runner/resource load;
+- failure isolation;
+- resumability;
+- evidence reuse;
+- duplicate work removed;
+- recurrence prevention;
+- clarity of ownership.
+
+Redundant packages/checks are consolidated or removed.
+
+---
+
+## 10. Permanent rule
+
+**DE.PULSE solves heavy engineering work by understanding what changed, reusing what is already trustworthy, splitting only where evidence benefits, executing independent work with bounded parallelism, rerunning the smallest affected set, integrating one authoritative result, and learning. G0–G16 remains the permanent top-level gate model.**
