@@ -186,6 +186,34 @@ Preferred process evolution order:
 
 Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
 
+## 12. Governance-to-Implementation CI Closure
+
+CI is responsible for proving that governance is executable rather than merely documented.
+
+### Build Coordinator closure
+
+The repository must converge from overlapping authoritative release workflows to one actual Build Coordinator/dependency graph. Separate workflow files are allowed only as reusable/subordinate lanes with one canonical upstream owner. No two workflows may independently own the same release mutation or authoritative gate conclusion.
+
+Before affected release evidence is trusted, CI must identify and consolidate, subordinate, path-scope, event-scope, disable or retire overlapping formalization/docs/pre-freeze/certification/promotion workflows that create duplicate work or self-triggering storms.
+
+### Build State Ledger closure
+
+The Build State Ledger must be generated or deterministically reconciled from actual GitHub state. CI must reject/correct stale source commits, noncanonical evidence-state labels, outdated gate evidence, artifact mismatches or contradictory next-step/blocker data before resume/certification consumes the ledger.
+
+A manual checkpoint may remain as a persisted representation, but it is never the source of truth and must be updated from authoritative branch/fingerprint/CI/artifact evidence.
+
+### Canonical naming closure
+
+`canonical_naming_gate.py` and the canonical naming registry apply to active CI/release machinery as well as documentation. Temporary numbered/ambiguous workflows, jobs and artifacts must be renamed/consolidated/retired where no compatibility need remains. One release responsibility has one canonical name and one canonical owner.
+
+### Governance implementation status
+
+Applicable governance requirements are tracked through:
+
+**Governed → Implemented → Enforced → Evidenced → Delivered → Learned.**
+
+CI may not turn `Governed` into PASS without corresponding implementation/evidence. Current-release blockers and process-hardening items are defined in `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
+
 ## Permanent rule
 
 **DE.PULSE does not merely recover from CI failures. It classifies them, learns from them, converts useful lessons into preventative controls, and reduces the probability of recurrence while preserving full release assurance. Product growth and engineering execution follow the same discipline: understand, decompose, reuse, correlate, execute, checkpoint, evaluate, adapt, integrate and learn; add new machinery or gates only when their utility is proven.**
