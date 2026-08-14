@@ -1,0 +1,304 @@
+name: DE.PULSE v18.0.5 Candidate Certification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'release/v18.0.5/**'
+      - '.github/workflows/v18.0.5-candidate-certification.yml'
+  push:
+    branches: [v18.0.5-development]
+    paths:
+      - 'release/v18.0.5/**'
+      - '.github/workflows/v18.0.5-candidate-certification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-v1805-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GO_VERSION: '1.26.6'
+  BASE_SOURCE: 'De-Pulse-v18.0.4-STABLE-Source.zip'
+  BASE_SHA: 'a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a'
+  EXPECTED_FP: 'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0'
+  BUILD_ID: 'v18.0.5-test-ui-ux-symbol-management-hardening-20260814'
+  PATCH_PREFIX: 'release/v18.0.5/v18.0.5-final-source.patch.gz.b64.part'
+  RC_SOURCE: 'De-Pulse-v18.0.5-RC-Source.zip'
+
+jobs:
+  g11-freeze:
+    name: G11 Immutable RC Freeze
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Reconstruct exact v18.0.5 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$BASE_SHA  $BASE_SOURCE" | sha256sum -c -
+          rm -rf work && mkdir -p work/candidate
+          unzip -q "$BASE_SOURCE" -d work/candidate
+          cat ${PATCH_PREFIX}* | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
+          (
+            cd work/candidate
+            git init -q
+            git apply --whitespace=nowarn ../v18.0.5.patch
+            actual="$(python3 ci_pipeline.py --fingerprint)"
+            echo "candidate fingerprint=$actual"
+            test "$actual" = "$EXPECTED_FP"
+          )
+      - name: G10 replay on exact candidate
+        working-directory: work/candidate
+        run: python3 prefreeze_qualification.py
+      - name: Principal engineer / scope freeze checks
+        working-directory: work/candidate
+        shell: bash
+        run: |
+          python3 v18_0_5_scope_gate.py
+          python3 v18_0_5_principal_engineer_gate.py
+          python3 release_identity.py --verify
+          python3 version_consistency_test.py
+      - name: Freeze immutable RC source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf work/candidate/.git work/candidate/__pycache__
+          find work/candidate -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          actual="$(cd work/candidate && python3 ci_pipeline.py --fingerprint)"
+          test "$actual" = "$EXPECTED_FP"
+          (cd work/candidate && zip -q -r "../../$RC_SOURCE" .)
+          sha256sum "$RC_SOURCE" | tee "$RC_SOURCE.sha256"
+          printf '%s\n' "$EXPECTED_FP" > source-fingerprint.txt
+          cp "work/.depulse-prefreeze-${EXPECTED_FP:0:12}/summary.json" G10-prefreeze-summary.json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.5-G11-Immutable-RC
+          path: |
+            De-Pulse-v18.0.5-RC-Source.zip
+            De-Pulse-v18.0.5-RC-Source.zip.sha256
+            source-fingerprint.txt
+            G10-prefreeze-summary.json
+            release/v18.0.5/G1-IMMUTABLE-SCOPE.md
+          if-no-files-found: error
+          retention-days: 90
+
+  g12-certification:
+    name: G12 Full Certification
+    needs: [g11-freeze]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Verify immutable RC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd rc
+          sha256sum -c "$RC_SOURCE.sha256"
+          cd ..
+          mkdir -p candidate
+          unzip -q "rc/$RC_SOURCE" -d candidate
+          actual="$(cd candidate && python3 ci_pipeline.py --fingerprint)"
+          test "$actual" = "$EXPECTED_FP"
+      - name: Governance / architecture / data gates
+        working-directory: candidate
+        shell: bash
+        run: |
+          python3 v18_baseline_gate.py
+          python3 v18_0_5_scope_gate.py
+          python3 v18_0_5_principal_engineer_gate.py
+          python3 release_identity.py --verify
+          python3 version_consistency_test.py
+          python3 documentation_governance_gate.py
+          python3 data_utility_gate.py
+          python3 data_health_policy_gate.py
+          python3 source_health_architecture_gate.py
+      - name: Full Go and race suites
+        working-directory: candidate
+        shell: bash
+        run: |
+          go test -count=1 ./...
+          go test -race -count=1 ./...
+          go vet ./...
+      - name: Deterministic / trader / renderer / workflow qualification
+        working-directory: candidate
+        shell: bash
+        run: |
+          python3 randomized_order_gate.py
+          python3 extreme_30_gate.py
+          node renderer_logic_test.js
+          node v18_0_5_renderer_test.js
+          node deterministic_equivalence_test.js
+          node trader_acceptance_test.js
+          python3 http_workflow_test.py
+          python3 responsive_ui_sharded_gate.py
+      - name: Write G12 evidence
+        shell: bash
+        run: |
+          sha="$(awk '{print $1}' rc/$RC_SOURCE.sha256)"
+          python3 - "$sha" "$EXPECTED_FP" "$BUILD_ID" > G12-CERTIFICATION.json <<'PY'
+          import json,sys,datetime
+          sha,fp,build=sys.argv[1:]
+          print(json.dumps({
+            'schemaVersion':1,'gate':'G12','status':'PASS','release':'v18.0.5 TEST',
+            'buildId':build,'sourceSha256':sha,'sourceFingerprint':fp,
+            'checks':{'goFull':True,'race':True,'vet':True,'randomized':True,'extreme30':True,
+                      'renderer':True,'v1805Scope':True,'deterministic':True,'professionalTrader':True,
+                      'httpWorkflow':True,'responsive':True,'documentation':True,'dataUtility':True,
+                      'dataHealth':True,'sourceHealth':True,'releaseIdentity':True},
+            'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          },indent=2))
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.5-G12-Certification
+          path: G12-CERTIFICATION.json
+          if-no-files-found: error
+          retention-days: 90
+
+  macos-apple-silicon:
+    name: G14 macOS Apple Silicon
+    needs: [g12-certification]
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Parameterize proven G14 macOS harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input
+          cp "rc/$RC_SOURCE" "input/$RC_SOURCE"
+          SRC_SHA="$(awk '{print $1}' "rc/$RC_SOURCE.sha256")"
+          python3 - "$SRC_SHA" <<'PY'
+          from pathlib import Path
+          import sys
+          sha=sys.argv[1]
+          p=Path('scripts/build-macos-arm64.sh').read_text()
+          repl={
+            'De-Pulse-v18.0.4-TEST-Source.zip':'De-Pulse-v18.0.5-RC-Source.zip',
+            '69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f':sha,
+            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0',
+            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':'v18.0.5-test-ui-ux-symbol-management-hardening-20260814',
+            'v1804test':'v1805test','18004':'18005','18.0.4':'18.0.5'
+          }
+          for a,b in repl.items(): p=p.replace(a,b)
+          out=Path('scripts/build-v18.0.5-macos-arm64.sh'); out.write_text(p); out.chmod(0o755)
+          PY
+          bash ./scripts/build-v18.0.5-macos-arm64.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.5-G14-macOS-Apple-Silicon
+          path: out/macos-arm64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  windows-x64:
+    name: G14 Windows x64
+    needs: [g12-certification]
+    runs-on: windows-2025
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G11-Immutable-RC
+          path: rc
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Parameterize proven G14 Windows harness
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path input | Out-Null
+          Copy-Item -LiteralPath (Join-Path 'rc' $env:RC_SOURCE) -Destination (Join-Path 'input' $env:RC_SOURCE) -Force
+          $Sha=((Get-Content (Join-Path 'rc' ($env:RC_SOURCE+'.sha256')) -Raw).Split()[0]).Trim()
+          $P=Get-Content -LiteralPath 'scripts/build-windows-x64.ps1' -Raw
+          $P=$P.Replace('De-Pulse-v18.0.4-TEST-Source.zip','De-Pulse-v18.0.5-RC-Source.zip')
+          $P=$P.Replace('69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f',$Sha)
+          $P=$P.Replace('a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b',$env:EXPECTED_FP)
+          $P=$P.Replace('v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813',$env:BUILD_ID)
+          $P=$P.Replace('v1804test','v1805test').Replace('18004','18005').Replace('18.0.4','18.0.5')
+          Set-Content -LiteralPath 'scripts/build-v18.0.5-windows-x64.ps1' -Value $P -Encoding utf8
+          pwsh -NoProfile -File ./scripts/build-v18.0.5-windows-x64.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.5-G14-Windows-x64
+          path: out/windows-x64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  g15-release-assurance:
+    name: G15 Candidate Release Assurance
+    needs: [g12-certification, macos-apple-silicon, windows-x64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G11-Immutable-RC
+          path: rc
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G14-macOS-Apple-Silicon
+          path: collected/macos
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.5-G14-Windows-x64
+          path: collected/windows
+      - name: Verify native evidence / source provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC_SHA="$(awk '{print $1}' "rc/$RC_SOURCE.sha256")"
+          cp scripts/verify-g14-g15.py scripts/verify-v18.0.5-g14-g15.py
+          python3 - "$SRC_SHA" <<'PY'
+          from pathlib import Path
+          import sys
+          sha=sys.argv[1]
+          f=Path('scripts/verify-v18.0.5-g14-g15.py')
+          p=f.read_text()
+          repl={
+            '69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f':sha,
+            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0',
+            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':'v18.0.5-test-ui-ux-symbol-management-hardening-20260814',
+            'v18.0.4 TEST':'v18.0.5 TEST','v18.0.4':'v18.0.5'
+          }
+          for a,b in repl.items(): p=p.replace(a,b)
+          f.write_text(p)
+          PY
+          python3 scripts/verify-v18.0.5-g14-g15.py --mac collected/macos --windows collected/windows --out assurance
+          cp "rc/$RC_SOURCE.sha256" assurance/
+          cp rc/source-fingerprint.txt assurance/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.5-G15-Release-Assurance
+          path: assurance/**
+          if-no-files-found: error
+          retention-days: 180
