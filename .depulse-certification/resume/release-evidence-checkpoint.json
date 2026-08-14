@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "protocolVersion": "1.0",
+  "release": "v18.2.0",
+  "channel": "TEST",
+  "branch": "v18.2-development",
+  "incomingStable": {
+    "version": "v18.1.0",
+    "tag": "v18.1.0-stable",
+    "commit": "4b48c61ee103897e834f4ff7d24af07d4275a62c"
+  },
+  "evidence": {
+    "G10": {"status": "PENDING", "sourceFingerprint": null, "artifact": null},
+    "G11": {"status": "PENDING", "sourceFingerprint": null, "sourceSha256": null, "artifact": null},
+    "G12": {"status": "PENDING", "artifact": null},
+    "G14-macos-arm64": {"status": "PENDING", "packageSha256": null, "artifact": null},
+    "G14-windows-x64": {"status": "PENDING", "packageSha256": null, "artifact": null},
+    "G15": {"status": "PENDING", "artifact": null, "decision": null},
+    "StablePromotion": {"status": "PENDING", "mainCommit": null, "tag": null, "release": null},
+    "G16": {"status": "PENDING", "archived": false, "nextBranch": null}
+  },
+  "supersededOrFailedEvidence": [
+    {
+      "runId": 31826250948,
+      "stage": "G4-G10",
+      "status": "FAIL",
+      "reason": "Documentation governance saw v18.1 as first QA manifest entry because generated v18.2 QA artifacts were not committed. Not reusable as PASS evidence."
+    }
+  ],
+  "updatedAt": "2026-08-14T18:02:00Z"
+}
