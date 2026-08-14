@@ -4,6 +4,7 @@
 
 Current canonical wording lives in:
 - `governance/APPROVED-SCOPE.md`
+- `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`
 - `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`
 - `governance/ROADMAP.md`
@@ -180,6 +181,46 @@ Material surfaced recommendations must be recorded point-in-time before outcomes
 AODR does not change the permanent No Execution Boundary. Recommendations are research/decision-support prioritization only.
 
 Full scope: `governance/APPROVED-SCOPE.md` AODR-001 through AODR-018 and `governance/ROADMAP.md` Adaptive Opportunity Discovery & Recommendations placement.
+
+---
+
+## DEC-2026-08-14-007 — 10/10 Seven-Day Continuity & Governance-to-Implementation Reconciliation
+
+**Status:** APPROVED  
+**Date:** 2026-08-14  
+**Affects:** all canonical governance, inherited Stable functionality, v18.2 active implementation, v18.3 mandatory carry-forward work, RBAC/ownership, documentation, native delivery, unresolved defects, G0–G16 traceability  
+**Placement:** permanent governance hardening; current v18.2 obligations preserved; specified source-changing remediation enters v18.3; inherited Stable capability remains protected across future releases
+
+### Decision
+Adopt `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md` as the permanent 10/10 continuity and governance-to-implementation closure contract.
+
+The reconciliation was explicitly audited as a quality problem rather than treated as a naming exercise. A simple “we remembered the features” pass was insufficient because it did not guarantee executable traceability, Stable inheritance, unresolved-defect continuity, ownership/RBAC/documentation continuity, platform truth or safe synchronization between newer canonical governance and unique active implementation.
+
+The permanent closure chain is:
+
+**DISCUSSED → EXPLICITLY APPROVED → CANONICALIZED → ROADMAP-PLACED → G1-FROZEN WHEN APPLICABLE → IMPLEMENTED → ENFORCED → EVIDENCED → PACKAGED/RUNTIME-PROVEN → DELIVERED → OUTCOME-MEASURED → LEARNED → ADAPTED**
+
+The contract explicitly carries forward previously approved/certified truth including:
+- U.S. Equities Processing Boundary and U.S.-listed actionable semantics;
+- U.S.-primary Economic Calendar/Event Intelligence with US_MARKET_CRITICAL / US_CONTEXT / GLOBAL_CONTEXT behavior;
+- Community Intelligence / Global Evidence Fusion Hub with rights, provenance, dedupe, corroboration and prompt-injection safeguards;
+- Unusual Volume & Volatility Intelligence as Opportunity Radar/Discovery capability rather than another scanner;
+- Historical Replay/point-in-time no-lookahead validation;
+- exactly 1 active SUPER OWNER + up to 5 OWNERs, with capability-based ADMIN authority;
+- Ownership Transfer / Transferable Asset Registry requirements;
+- role-aware Documentation and matching AI retrieval authorization;
+- required macOS Apple Silicon and Windows x64 native delivery, with hosted Linux/web when hosted architecture is delivered and no Intel-Mac investment unless explicitly re-approved;
+- governance-to-implementation disposition and traceability;
+- active v18.2 capability-based Administration, Administration composition, Role × Tab × Viewport audit, authoritative build-state ledger, Build Coordinator and canonical naming obligations;
+- v18.3 mandatory utility/remediation carry-forward for shared Discovery acquisition, Session Intelligence, Event Intelligence and information-architecture/deep-evidence consolidation;
+- unresolved Master Market Symbols layout and Prep `Requires Review` repetition defects, which remain OPEN_DEFECT / RECONCILE until actual closure evidence exists;
+- inherited Stable capability non-regression and branch/governance synchronization protections.
+
+`APPROVED` is not `IMPLEMENTED`. Documentation alone cannot close a requirement. At G10/G12/G14/G16 and Major Closure, applicable requirements must be traceable through owner/source/tests/package/runtime/outcomes or explicitly carried to a named future release.
+
+No new top-level gates or duplicate product engines are created. Existing canonical owners and G0–G16 remain authoritative.
+
+The reconciliation itself may be called 10/10 only when all ten continuity quality dimensions in the contract pass. This rating describes governance-continuity quality, not a claim that future ASBI/TDTI/AODR/ADR-GDI roadmap features are already implemented.
 
 ---
 
