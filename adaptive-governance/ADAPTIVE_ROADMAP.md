@@ -79,6 +79,35 @@ This direction is enforced within G1/G2/G3/G7/G8/G9/G10/G16 and does not create 
 
 Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
 
+## Permanent Adaptive Work Decomposition & Process Evolution Direction
+
+From v18.2 onward, the engineering roadmap follows the same AI/LLM-style adaptive reasoning pattern as the product:
+
+**Understand → decompose → map dependencies → reuse → execute → checkpoint → evaluate evidence → adapt next work → integrate → certify → learn.**
+
+Large roadmap items, implementation phases, qualification suites, all-tab audits, performance exercises and delivery work should be split into smaller independently verifiable units whenever that materially improves reliability, speed, recovery, fault isolation, evidence reuse, ownership or learning.
+
+Permanent direction:
+
+- do not force a heavy responsibility into one monolithic task when meaningful checkpoints or independent lanes are safer or more efficient;
+- use dependency-aware parallelism for genuinely independent work while preserving one logical Build Coordinator and one canonical owner per responsibility;
+- preserve exact-source PASS evidence across unrelated failures and rerun only affected/dependent work;
+- use intermediate evidence to adapt sequencing and remediation rather than blindly continuing a fixed script;
+- measure the total cost of decomposition so more jobs do not accidentally create more CPU/memory/provider/API/browser/database load than the original task;
+- remove redundant checkpoints/jobs when G16 evidence shows they add ceremony without assurance value.
+
+### Gate-model evolution
+
+G0–G16 remains the default canonical gate map. However, the release-gate model itself may evolve when accumulated evidence proves a materially distinct assurance responsibility cannot be represented cleanly as a checkpoint, sub-stage, parallel lane or strengthened existing gate.
+
+Any proposed new G-gate must pass the Gate Utility Test in `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md` and must update the complete governance/automation model coherently. Historical Stable releases keep the gate map under which they were certified; the process is never retroactively rewritten.
+
+Preferred evolution order:
+
+**reuse existing evidence → checkpoints → sharded/parallel lanes → strengthen/reassign an existing gate → add a new canonical gate only when materially justified.**
+
+Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+
 ## v18.2 Audit Carry-Forward — Mandatory v18.3 Entry Workstream
 
 The all-tab/functionality audit performed during v18.2 identified source-changing consolidation/removal work after the immutable v18.2.0 Admin/Presence/Sessions scope had already been frozen. To preserve G1 integrity, those unrelated source changes are not smuggled into the v18.2.0 candidate.
