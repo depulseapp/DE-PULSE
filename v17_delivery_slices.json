@@ -1,0 +1,100 @@
+{
+  "schema": "DE.PULSE-V17-DELIVERY-SLICES-1",
+  "rule": "Major scope remains frozen; implementation slices may adapt without losing approved scope.",
+  "slices": [
+    {
+      "id": "v17.0",
+      "name": "Runtime Foundation + Persistence Core",
+      "status": "SOURCE TEST CHECKPOINT \u00b7 WINDOWS SQLITE BLOCKER RESOLVED IN v17.1",
+      "items": [
+        "G0 runtime profiling and OPEN-003 root-cause baseline",
+        "repository abstraction",
+        "SQLite with schema migrations",
+        "PostgreSQL-ready storage contracts",
+        "Global Symbol Registry with inactive-history retention",
+        "persistent canonical quote warm start with re-derived freshness truth",
+        "asynchronous material-change persistence",
+        "initial runtime/provider/persistence observability",
+        "settings/watchlist/API-key/runtime-config continuity",
+        "v16.11 regression preservation"
+      ]
+    },
+    {
+      "id": "v17.1",
+      "name": "Runtime Load + Backpressure",
+      "status": "SOURCE TEST CHECKPOINT",
+      "items": [
+        "Tier 0-4 workload controls",
+        "bounded workers/queues",
+        "provider budgets",
+        "load shedding",
+        "background isolation",
+        "adaptive degradation reason codes"
+      ]
+    },
+    {
+      "id": "v17.2",
+      "name": "Canonical Intelligence + Data Efficiency",
+      "status": "SOURCE TEST CHECKPOINT",
+      "items": [
+        "one canonical symbol pipeline",
+        "material-change propagation",
+        "structured evidence/history",
+        "decision lineage",
+        "outcomes",
+        "derived feature store"
+      ]
+    },
+    {
+      "id": "v17.3",
+      "name": "Performance + Reliability Hardening",
+      "status": "SOURCE TEST CHECKPOINT",
+      "items": [
+        "freshness/latency SLOs",
+        "active-market load tests",
+        "CPU/memory/goroutine/GC budgets",
+        "warm-start/provider-call-avoidance/storage evidence",
+        "long-run/race/randomized testing"
+      ]
+    },
+    {
+      "id": "v17.4",
+      "name": "UX + Operational Hardening",
+      "status": "SOURCE TEST CHECKPOINT",
+      "items": [
+        "OPEN-001",
+        "OPEN-002",
+        "Data Engine diagnostics",
+        "responsive regression",
+        "source cleanup"
+      ]
+    },
+    {
+      "id": "v17-major-closure",
+      "name": "v17 Major Closure + Release Assurance",
+      "status": "STABLE",
+      "items": [
+        "full v17 scope reconstruction",
+        "fresh certification",
+        "Principal Engineer review",
+        "Professional Trader acceptance",
+        "Adaptive Retrospective",
+        "v18 GO/NO-GO"
+      ],
+      "version": "v17.5.0"
+    },
+    {
+      "id": "v17.5.1",
+      "name": "Stable Release Identity + Documentation Hardening",
+      "status": "IN DEVELOPMENT",
+      "items": [
+        "Stable runtime/renderer identity",
+        "complete v17.0-v17.5 documentation history",
+        "current Stable limitations truth",
+        "stale build-mismatch copy correction",
+        "release-governance regression protection"
+      ],
+      "version": "v17.5.1"
+    }
+  ]
+}

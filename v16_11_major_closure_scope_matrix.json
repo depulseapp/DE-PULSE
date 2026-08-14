@@ -1,0 +1,848 @@
+{
+  "schema": "DE.PULSE-V16-MAJOR-CLOSURE-MATRIX-1",
+  "closure_version": "16.11.0",
+  "baseline_version": "16.10.0",
+  "baseline_fingerprint": "68c28932a98236ec8f0572dea76ea3affff04b315d4f03475528e7e2e9b0eaa5",
+  "policy": "Fresh source inspection + executable evidence required; prior audit labels are corroboration only.",
+  "original_professional_roadmap": [
+    {
+      "id": 1,
+      "name": "Live News Intelligence upgrade",
+      "priority": "P0",
+      "acceptance": [
+        "Near-real-time/event-aware ingestion where providers permit it",
+        "Dedupe/materiality/ticker-sector mapping",
+        "Propagate to Catalyst Watch, Trade Readiness, Decision Queue, Research and relevant desks",
+        "Explicit source/timestamps; AI may summarize but not replace evidence"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "research_providers.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_2_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 2,
+      "name": "Macro Intelligence v2",
+      "priority": "P0",
+      "acceptance": [
+        "Release-aware CPI/Core CPI/PPI/NFP/jobs/unemployment/GDP/retail/ISM/Fed and other key releases",
+        "Track actual/forecast/previous/surprise",
+        "Track subsequent market reaction"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "macro_events.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_2_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 3,
+      "name": "Economic Calendar",
+      "priority": "P0",
+      "acceptance": [
+        "Canonical economic-event calendar",
+        "Sortable/filterable by High/Medium/Low impact",
+        "Filter by date",
+        "Filter by country/region",
+        "Filter by category",
+        "Preserve actual/forecast/previous/surprise/source truth",
+        "High-impact events feed Market/Desk Readiness and preparation jobs"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "macro_events.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_7_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 4,
+      "name": "FOMC / Fed Event Intelligence",
+      "priority": "P1",
+      "acceptance": [
+        "Upcoming FOMC meeting/decision, statement and press-conference countdown plus relevant Fed events",
+        "Integrate Dashboard context, Pre-Market/Open Prep and Trade Readiness without a separate major tab"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "macro_events.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_2_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 5,
+      "name": "Market Sentiment Composite",
+      "priority": "P2",
+      "acceptance": [
+        "Transparent DE.PULSE composite when no licensed third-party index",
+        "Inputs may include VIX, breadth, momentum, credit/risk and safe-haven behavior",
+        "Context only; missing evidence degrades confidence"
+      ],
+      "canonical_owner": "v16.5 Context & Alternative Intelligence",
+      "code_owners": [
+        "context_alternative_intelligence.go",
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_5_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 6,
+      "name": "Market / Sector Heat Map",
+      "priority": "P1",
+      "acceptance": [
+        "Heat map for S&P 500, sectors and watchlist where feasible",
+        "Reuse existing quote universe",
+        "Complement Market Regime and sector intelligence; no competing signal",
+        "Explicit freshness/coverage/missing truth"
+      ],
+      "canonical_owner": "v16.5 Context & Alternative Intelligence",
+      "code_owners": [
+        "context_alternative_intelligence.go",
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_8_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 7,
+      "name": "Deterministic Market-Structure State",
+      "priority": "P0",
+      "acceptance": [
+        "Canonical structure taxonomy per ticker/horizon",
+        "Same state across Dashboard/Research/desks",
+        "Does not replace deterministic score/action"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_1_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 8,
+      "name": "SPY / QQQ Seasonality Intelligence",
+      "priority": "P2",
+      "acceptance": [
+        "10-year monthly/seasonal context",
+        "Average, median, positive-period win rate, best/worst, sample size and current-year comparison",
+        "Context only; small samples not predictive"
+      ],
+      "canonical_owner": "v16.3 Professional Validation & Learning",
+      "code_owners": [
+        "validation_learning.go",
+        "history_providers.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_8_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 9,
+      "name": "Gamma Exposure / GEX Intelligence",
+      "priority": "P2/P3",
+      "acceptance": [
+        "Options Intelligence only when chain/OI quality sufficient",
+        "Gamma flip, zones and major strikes with clear methodology",
+        "No false precision or dealer-positioning claim",
+        "Context only; no options desk/execution"
+      ],
+      "canonical_owner": "v16.5 Context & Alternative Intelligence",
+      "code_owners": [
+        "options_intelligence.go",
+        "context_alternative_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_8_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 10,
+      "name": "Social & Community Intelligence pipeline",
+      "priority": "P1/P2",
+      "acceptance": [
+        "Normalize permitted/user-authorized X, Reddit, Telegram, Discord and WhatsApp inputs where supported",
+        "Official APIs/bots/connectors only; no scraping/bypass",
+        "Separate from verified news",
+        "Dedupe/ticker-map/credibility-source label",
+        "Always untrusted; prompt-injection defense"
+      ],
+      "canonical_owner": "v16.5 Context & Alternative Intelligence",
+      "code_owners": [
+        "community_evidence_fusion.go",
+        "community_intelligence_api.go",
+        "community_source_policy.json",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_9_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 11,
+      "name": "Oil / Energy Context",
+      "priority": "P1",
+      "acceptance": [
+        "WTI/CL and Brent/BZ contextual feeds",
+        "Trend/change/spread context",
+        "Truthful continuous-contract/roll/delay semantics",
+        "Context only; no futures execution"
+      ],
+      "canonical_owner": "v16.5 Context & Alternative Intelligence",
+      "code_owners": [
+        "context_alternative_intelligence.go",
+        "v14_0_3.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_9_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 12,
+      "name": "Market Tradeability / Sit on Hands",
+      "priority": "P0",
+      "acceptance": [
+        "Deterministic market-level state",
+        "Combine Regime, VIX, breadth, macro/event risk, liquidity/spreads, freshness, setup availability, extension and valid options context",
+        "Feed Dashboard, Prep, Decision Queue and desks",
+        "Not AI-generated and does not mutate deterministic desk scores"
+      ],
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability",
+      "code_owners": [
+        "market_intelligence.go",
+        "engine_core.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_7_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 13,
+      "name": "Market Breadth & Internals",
+      "priority": "P0",
+      "acceptance": [
+        "Advancers/decliners and participation",
+        "Percent above key moving averages",
+        "New highs/lows",
+        "Sector participation where reliable",
+        "Material input to Market Regime and Tradeability",
+        "Coverage/freshness/source limitations explicit"
+      ],
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability",
+      "code_owners": [
+        "market_intelligence.go",
+        "engine_core.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_7_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 14,
+      "name": "Relative Strength / Weakness Engine",
+      "priority": "P0",
+      "acceptance": [
+        "Ticker performance versus SPY, QQQ, sector and where feasible industry",
+        "Day and Swing horizons",
+        "Feed ranking, Research and Trade Readiness",
+        "Canonical owner; no deterministic score mutation"
+      ],
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability",
+      "code_owners": [
+        "market_intelligence.go",
+        "scanner.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_7_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 15,
+      "name": "Sector & Industry Regime Intelligence",
+      "priority": "P1",
+      "acceptance": [
+        "Sector trend and breadth",
+        "Leadership/lagging and relative strength",
+        "Correlate each ticker with sector/industry context",
+        "Canonical owner; explicit evidence coverage"
+      ],
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability",
+      "code_owners": [
+        "market_intelligence.go",
+        "global_context.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_7_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 16,
+      "name": "Data Conflict / Provenance Reconciliation",
+      "priority": "P1",
+      "acceptance": [
+        "Record provider conflicts, authoritative winner and reason",
+        "Surface material conflicts in Data Engine/Freshness",
+        "AI receives reconciled evidence plus unresolved conflicts"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "provider_reconciliation.go",
+        "provider_router.go",
+        "data_freshness.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "approved_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 17,
+      "name": "Corporate Actions & Symbol Lifecycle hardening",
+      "priority": "P1",
+      "acceptance": [
+        "Splits/reverse splits/dividends where relevant/ticker changes/mergers/delistings/IPOs/stale-symbol handling",
+        "Protect history/technical calculations from silent distortion"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "corporate_action_truth.go",
+        "market_activity_corporate.go",
+        "history_providers.go"
+      ],
+      "fresh_executable_evidence": [
+        "v16_0_4_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 18,
+      "name": "Signal Outcome Measurement",
+      "priority": "P0",
+      "acceptance": [
+        "Measure entry-zone touch, MFE, MAE, invalidation, target achievement and elapsed time",
+        "Freeze evidence snapshot by horizon",
+        "No Journal/Portfolio resurrection"
+      ],
+      "canonical_owner": "v16.3 Professional Validation & Learning",
+      "code_owners": [
+        "signal_validation.go",
+        "validation_learning.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_3_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 19,
+      "name": "Signal Calibration & Professional Validation",
+      "priority": "P0/P1",
+      "acceptance": [
+        "Compare measured setup combinations/states",
+        "Analytics first",
+        "Never auto-rewrite deterministic formulas; changes require explicit versioned approval"
+      ],
+      "canonical_owner": "v16.3 Professional Validation & Learning",
+      "code_owners": [
+        "signal_validation.go",
+        "validation_learning.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_3_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 20,
+      "name": "Market Replay / Historical Scenario Validation",
+      "priority": "P1",
+      "acceptance": [
+        "Replay historical evidence through deterministic engines",
+        "Reusable known scenarios including CPI/FOMC shocks, earnings gaps, high-VIX sessions and other known sessions",
+        "No lookahead; validation tool not mock-live mode"
+      ],
+      "canonical_owner": "v16.3 Professional Validation & Learning",
+      "code_owners": [
+        "validation_learning.go",
+        "signal_validation.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_9_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 21,
+      "name": "Smart Notifications",
+      "priority": "P1",
+      "acceptance": [
+        "Meaningful state changes only",
+        "Material news, insider purchase, readiness change, Entry Zone reached/lost, catalyst trigger, Tradeability deterioration and data degradation",
+        "No noisy standalone Alerts workspace by default"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_8_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 22,
+      "name": "AI Evidence Architecture v2",
+      "priority": "P0",
+      "acceptance": [
+        "Decision Brief/What Changed/Earnings/SEC-insider/Catalyst/Risk/technical/market-sector/Tradeability/macro/options/freshness provenance",
+        "Bull/Base/Bear, contradictions, missing evidence and invalidators"
+      ],
+      "canonical_owner": "v16.4 Professional Research AI",
+      "code_owners": [
+        "ai_research_v2.go",
+        "research_truth.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_4_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 23,
+      "name": "AI safety against bad external content",
+      "priority": "P0",
+      "acceptance": [
+        "Treat news/filings/social text as untrusted data",
+        "External content cannot override application/system rules",
+        "Require evidence/source IDs; stale/partial critical evidence degrades readiness"
+      ],
+      "canonical_owner": "v16.4 Professional Research AI",
+      "code_owners": [
+        "ai_research_v2.go",
+        "ai_clients.go",
+        "community_source_policy.json"
+      ],
+      "fresh_executable_evidence": [
+        "v16_4_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 24,
+      "name": "AI model routing / cost control",
+      "priority": "P1",
+      "acceptance": [
+        "Fast/low-cost models for simple work and stronger models for deep review",
+        "Cache by evidence snapshot",
+        "Do not rerun on trivial quote ticks; refresh on material evidence changes"
+      ],
+      "canonical_owner": "v16.4 Professional Research AI",
+      "code_owners": [
+        "ai_clients.go",
+        "ai_research_v2.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_4_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 25,
+      "name": "Research Package Freshness correction",
+      "priority": "P1",
+      "acceptance": [
+        "Page-level freshness represents the whole research evidence package",
+        "Dataset freshness remains visible inside sections"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "research_truth.go",
+        "data_freshness.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_0_4_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 26,
+      "name": "Correlation / Concentration Awareness",
+      "priority": "P1",
+      "acceptance": [
+        "Warn when active candidates/watchlists represent same factor/sector trade",
+        "Context/readiness only; do not restore Portfolio"
+      ],
+      "canonical_owner": "v16.3 Professional Validation & Learning",
+      "code_owners": [
+        "validation_learning.go",
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_3_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 27,
+      "name": "Liquidity & Slippage Intelligence",
+      "priority": "P1",
+      "acceptance": [
+        "Spread percent and relative-to-normal spread",
+        "Dollar volume",
+        "Opening liquidity",
+        "Volatility-adjusted slippage risk",
+        "Especially feeds Day Trade readiness"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "preparation_types_liquidity.go",
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_8_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 28,
+      "name": "Reaction Intelligence",
+      "priority": "P1",
+      "acceptance": [
+        "Extend reactions across earnings, SEC, CPI/FOMC and material news",
+        "Immediate and 5/15/30/60-minute reaction",
+        "Volume/RVOL, VWAP hold/fade, opening-range behavior, absorption/rejection"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "preparation_catalyst.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_2_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 29,
+      "name": "Event-to-Decision Correlation",
+      "priority": "P1",
+      "acceptance": [
+        "Correlate events through existing decision architecture",
+        "May change Tradeability/Readiness/Decision Queue",
+        "No isolated extra deterministic score"
+      ],
+      "canonical_owner": "v16.2 Professional Event Intelligence",
+      "code_owners": [
+        "event_intelligence.go",
+        "market_intelligence.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v16_2_scope_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    },
+    {
+      "id": 30,
+      "name": "Extreme Production validation",
+      "priority": "Permanent",
+      "acceptance": [
+        "Every new capability extends existing extreme/adversarial coverage",
+        "Failures/stale timestamps/duplicates/DST/provider conflicts/AI stale context/cross-module/deterministic regressions",
+        "No false Fresh/Ready/provider/source/classification and no lost canonical state"
+      ],
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates",
+      "code_owners": [
+        "extreme_30_matrix_test.go",
+        "extreme_30_gate.py"
+      ],
+      "fresh_executable_evidence": [
+        "extreme_30_gate.py",
+        "v16_6_scope_gate.py",
+        "v16_9_original_roadmap_audit.py"
+      ],
+      "final_status": "FULL_FRESHLY_VERIFIED"
+    }
+  ],
+  "major_family_milestones": [
+    {
+      "version": "16.1.0",
+      "scope_count": 7,
+      "scope_contract": "renderer/qa/v16.1.0-master-scope.json",
+      "fresh_gate": "v16_1_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.1.1",
+      "scope_count": 3,
+      "scope_contract": "renderer/qa/v16.1.1-master-scope.json",
+      "fresh_gate": "v16_1_1_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.2.0",
+      "scope_count": 7,
+      "scope_contract": "renderer/qa/v16.2.0-master-scope.json",
+      "fresh_gate": "v16_2_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.3.0",
+      "scope_count": 5,
+      "scope_contract": "renderer/qa/v16.3.0-master-scope.json",
+      "fresh_gate": "v16_3_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.4.0",
+      "scope_count": 3,
+      "scope_contract": "renderer/qa/v16.4.0-master-scope.json",
+      "fresh_gate": "v16_4_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.5.0",
+      "scope_count": 5,
+      "scope_contract": "renderer/qa/v16.5.0-master-scope.json",
+      "fresh_gate": "v16_5_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.6.0",
+      "scope_count": 30,
+      "scope_contract": "renderer/qa/v16.6.0-master-scope.json",
+      "fresh_gate": "v16_6_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.7.0",
+      "scope_count": 5,
+      "scope_contract": "renderer/qa/v16.7.0-master-scope.json",
+      "fresh_gate": "v16_7_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.8.0",
+      "scope_count": 5,
+      "scope_contract": "renderer/qa/v16.8.0-master-scope.json",
+      "fresh_gate": "v16_8_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.8.1",
+      "scope_count": 6,
+      "scope_contract": "renderer/qa/v16.8.1-master-scope.json",
+      "fresh_gate": "v16_8_1_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.9.0",
+      "scope_count": 3,
+      "scope_contract": "renderer/qa/v16.9.0-master-scope.json",
+      "fresh_gate": "v16_9_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    },
+    {
+      "version": "16.10.0",
+      "scope_count": 10,
+      "scope_contract": "renderer/qa/v16.10.0-master-scope.json",
+      "fresh_gate": "v16_10_scope_gate.py",
+      "status": "PASS_FRESH_CURRENT_SOURCE"
+    }
+  ],
+  "permanent_contracts": [
+    {
+      "contract": "No Execution Boundary",
+      "evidence": [
+        "professional_expert_gate.py",
+        "trader_acceptance_test.js",
+        "deterministic_equivalence_test.js"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "US Equities Processing Boundary",
+      "evidence": [
+        "v16_8_1_scope_gate.py",
+        "v16_8_1_professional_test.go"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Provider Router sole executable authority",
+      "evidence": [
+        "source_health_architecture_gate.py",
+        "provider_router.go"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Data Utility / No Orphan Data",
+      "evidence": [
+        "data_utility_gate.py",
+        "data_utility_registry.json"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Adaptive Data Health / Freshness / Cache",
+      "evidence": [
+        "data_health_policy_gate.py",
+        "data_health_policy.json",
+        "data_freshness.go"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Adaptive Build Process v2",
+      "evidence": [
+        "prefreeze_qualification.py",
+        "certification_runner.py",
+        "ci_pipeline_plan.json"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Shadow cannot mutate production",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "shadow_experiments.json",
+        "adaptive_data_policy.go"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Stable settings/credential continuity",
+      "evidence": [
+        "stable_promotion_gate.py",
+        "app_model.go"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Canonical documentation/release identity",
+      "evidence": [
+        "documentation_governance_gate.py",
+        "release_identity.py",
+        "release_identity.json"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    },
+    {
+      "contract": "Deterministic Day/Swing/Long protected logic",
+      "evidence": [
+        "deterministic_equivalence_test.js"
+      ],
+      "status": "PASS_CURRENT_SOURCE_OR_INDEPENDENT_FINAL_EVIDENCE"
+    }
+  ],
+  "summary": {
+    "original_items": 30,
+    "major_family_milestones": 12,
+    "permanent_contracts": 10,
+    "status": "FULL_FRESH_CURRENT_SOURCE_PENDING_FROZEN_CERTIFICATION",
+    "original_roadmap": "30 FULL / 0 PARTIAL / 0 MISSING",
+    "v16_10_scope": "10/10 PASS"
+  }
+}

@@ -1,0 +1,6 @@
+DE.PULSE v18.0.4 STABLE — Native Cross-Platform Closure
+Build: v18.0.4-stable-native-cross-platform-closure-20260813
+Status: STABLE
+Previous Stable: v17.5.1
+
+Promoted only after G0–G12 qualification, native macOS Apple Silicon G14 PASS, native Windows x64 G14 PASS, and G15 Native Release Assurance PASS. Stable promotion changes release identity/runtime target only; Smart Router v2, Rapid Move, provider logic, scoring, deterministic Day/Swing/Long formulas, and the No Execution Boundary are unchanged.

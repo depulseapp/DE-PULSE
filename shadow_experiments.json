@@ -1,0 +1,21 @@
+{
+  "schema": "DE.PULSE-SHADOW-EXPERIMENTS-1",
+  "version": "16.10.0",
+  "promotion_path": "SHADOW -> VALIDATED -> APPROVED -> PRODUCTION",
+  "experiments": [
+    {
+      "key": "opportunity-promotion-floor",
+      "stage": "SHADOW",
+      "production_value": 78,
+      "shadow_value": 72,
+      "can_mutate_production": false
+    },
+    {
+      "key": "adaptive-freshness-tightening",
+      "stage": "SHADOW",
+      "production_value": "bounded-v16.10",
+      "shadow_value": "more-aggressive-hot-symbol-cadence",
+      "can_mutate_production": false
+    }
+  ]
+}

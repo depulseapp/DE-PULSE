@@ -1,0 +1,28 @@
+{
+  "version": "16.1.1",
+  "count": 3,
+  "release_class": "PATCH / TRUTH HARDENING",
+  "requirements": [
+    {
+      "id": "V16.1.1-MI-HORIZON-01",
+      "name": "Exact Long-Term Market Structure horizon",
+      "rule": "Long structure requires canonical weekly evidence; insufficient weekly history is UNAVAILABLE; no daily substitution."
+    },
+    {
+      "id": "V16.1.1-MI-FRESH-01",
+      "name": "Historical context freshness truth",
+      "rule": "Market Structure and Relative Strength reject stale/future bars; UpdatedAt is evidence-derived."
+    },
+    {
+      "id": "V16.1.1-MI-LIQ-01",
+      "name": "Liquidity spread evidence truth",
+      "rule": "Missing/invalid/crossed bid-ask remains UNKNOWN; current last trade alone is never NORMAL/LOW RISK."
+    }
+  ],
+  "non_scope": [
+    "No v16.2 event intelligence",
+    "No deterministic Score/Action changes",
+    "No UI redesign",
+    "No new provider route"
+  ]
+}

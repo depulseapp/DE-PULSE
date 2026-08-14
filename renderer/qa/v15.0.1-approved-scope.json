@@ -1,0 +1,576 @@
+{
+  "version": "15.0.1",
+  "count": 53,
+  "items": [
+    {
+      "id": 1,
+      "title": "Protect v14.3.7 Stable baseline",
+      "evidence": [
+        {
+          "file": "README.md",
+          "contains": "v14.3.7 remains the frozen protected baseline"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Fix VIX stale handling",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "func (e *Engine) refreshVIXSnapshot"
+        },
+        {
+          "file": "v15_test.go",
+          "contains": "TestV15VIXDelayedFreshnessTruth"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Operational Data Freshness diagnostics",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "buildFreshnessDiagnostics"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "dataFreshnessV15Markup"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Central Provider Router",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "executeProviderRoute"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Approved provider routing chains",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "func routeChains()"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Feed Capability Registry",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "type ProviderCapabilityEntry struct"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Duplicate API request prevention",
+      "evidence": [
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501ExecutableRouterOrderAndNoDuplicateAttempt"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Intelligent provider failover",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "State       string"
+        },
+        {
+          "file": "v15_test.go",
+          "contains": "TestV15CircuitBreakerAndRecovery"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Provider circuit breakers",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "RateLimitedUntil"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "yfinance fallback/recovery only",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "refreshYahooVIX"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "CBOE VIX validation/delayed fallback",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "refreshCboeVIXOfficial"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Strengthen Twelve Data",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "refreshTwelveHistory"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Keep approved core providers",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "US Live Equities"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Demote/potentially remove Alpha Vantage",
+      "evidence": [
+        {
+          "file": "renderer/docs/limitations.md",
+          "contains": "Alpha Vantage"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Do not add Massive/FMP/general provider",
+      "evidence": [
+        {
+          "file": "renderer/docs/limitations.md",
+          "contains": "Massive"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Provider Router health in Data Engine",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "providerRouterMarkup"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "SPY/QQQ ticker typography",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "regimeQuotePill"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Right-align Market Regime/header panels",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".regime-live-strip"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Center Action / Score",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "Action / Score header and cells are center-aligned"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "title": "Fix table header/column alignment",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "table header / row column alignment"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "title": "Global Market Driver Last Updated",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "global-last-updated"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "title": "Desk clicks preserve scroll",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "captureSaveContext()"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "title": "Visible desk active/inactive state",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "aria-pressed"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "Cross-desk add controls",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "/api/desk/membership"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Canonical desk membership state",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "Canonical cross-desk membership state"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "Cross-module desk synchronization",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "a.broadcastState()"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "title": "Dashboard Master Market Symbols panel",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "masterMarketSymbolsPanel"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "title": "Priority-based Master Symbols placement",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "Master Market Symbols is priority-placed"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "title": "Truthful Master Symbols status dots",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "statusDot(st.light"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Global ticker removal from all desks",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "handleMasterSymbolRemove"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Undo global removal",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "data-master-undo"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "title": "Preserve context during global removal",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "restoreSaveContext(ctx)"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "Responsive Master Symbols panel",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".master-symbol-chip-list"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Data Freshness release-gate validation",
+      "evidence": [
+        {
+          "file": "v15_test.go",
+          "contains": "FreshnessDiagnosticsExposeReasonFallbackImpact"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Provider Router release-gate validation",
+      "evidence": [
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501ExecutableRouterOrderAndNoDuplicateAttempt"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501RateLimitCircuitMetadataAndRecovery"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "Expanded Cross-Module Integration gate",
+      "evidence": [
+        {
+          "file": "http_workflow_test.py",
+          "contains": "Provider Router survives workflow"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "title": "Blocking Layout Integrity audit",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "responsive UI matrix"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "title": "No overlap/clipping/panel collision",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "collision"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "title": "Difficult UI state testing",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "stale"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "title": "Supported device/layout validation",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "windows-125"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "title": "Ticker-row hover jitter fix",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "row-hover stability"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "Desk toggle/removal rules with final-desk protection",
+      "evidence": [
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501DeskMembershipAllSevenStatesAndTransitions"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501DeskMembershipExplicitRequestsAreIdempotent"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "SEC Form 4 BUY/SELL/OTHER visibility regression",
+      "evidence": [
+        {
+          "file": "v15_test.go",
+          "contains": "SECForm4OtherIncludedWithoutFalseBuy"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "title": "Independent truthful provider/received/cache timestamps",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "TimestampBasis"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "title": "Provider Router as single executable routing authority",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "single executable routing authority"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "title": "Executable Fundamentals Finnhub → SEC → yfinance route",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "refreshSECFundamentals"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501NoActiveLegacyTwelveFundamentalsRoute"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "title": "Expanded Feed Capability Registry operational metadata",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "FailureCount"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "title": "Expanded Data Engine provider diagnostics",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "provider-hop"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "title": "Explicit 429/latency/duplicate-call/failover router tests",
+      "evidence": [
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501RateLimitCircuitMetadataAndRecovery"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501ExecutableRouterOrderAndNoDuplicateAttempt"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "title": "Self-contained deterministic-equivalence baseline",
+      "evidence": [
+        {
+          "file": "deterministic_equivalence_test.js",
+          "contains": "baseline-v14.3.7-renderer.js"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "title": "Settings visibility for Twelve Data/yfinance/CBOE roles",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "yfinance · Automatic Recovery"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "CBOE · VIX Validation"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "title": "Desk Membership Reliability hardening and full transition matrix",
+      "evidence": [
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501DeskMembershipConcurrentAddNoDuplicatesAndPersists"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501DeskMembershipPersistsAcrossReload"
+        },
+        {
+          "file": "v15_0_1_test.go",
+          "contains": "TestV1501LegacyDeskAddRemoveUsesCanonicalRules"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "title": "Approved Scope Traceability & Implementation Completeness release gate",
+      "evidence": [
+        {
+          "file": "approved_scope_gate.py",
+          "contains": "Approved Scope Traceability & Implementation Completeness"
+        }
+      ]
+    }
+  ]
+}

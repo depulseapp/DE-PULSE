@@ -1,0 +1,47 @@
+{
+  "version": "16.0.2 TEST",
+  "build": "v16.0.2-test-professional-truth-hardening-20260811",
+  "count": 4,
+  "items": [
+    {
+      "id": 16,
+      "title": "Professional Provider Reconciliation Truth",
+      "evidence": [
+        {"file":"v16.go","contains":"func quoteEvidenceAges"},
+        {"file":"v16.go","contains":"No current provider observation is eligible for cross-provider reconciliation"},
+        {"file":"v16_0_2_professional_test.go","contains":"TestV1602ProfessionalMarketAgeAndReceiptAgeBothMustBeCurrent"},
+        {"file":"v16_0_2_professional_test.go","contains":"TestV1602ProfessionalSingleSourceIsNotCrossProviderAgreement"}
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Professional Corporate Actions / Raw-History Completeness Provenance",
+      "evidence": [
+        {"file":"v16.go","contains":"type RawHistoryCoverage struct"},
+        {"file":"v16.go","contains":"PaginationComplete"},
+        {"file":"v16_0_2_professional_test.go","contains":"TestV1602EdgeRawHistoryPartialFailureExposesCoverageAndRecovers"},
+        {"file":"renderer/renderer.js","contains":"raw-history coverage"}
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Selected-Ticker Research Package Truth / Evidence Snapshot",
+      "evidence": [
+        {"file":"v16.go","contains":"Absence of comparison evidence is never FRESH"},
+        {"file":"v16.go","contains":"CorporateHistoryCoverage"},
+        {"file":"v16_0_2_professional_test.go","contains":"TestV1602ProfessionalResearchSingleSourceDegradesConfidence"},
+        {"file":"professional_expert_runtime_test.js","contains":"active AI context drops Research Package truth"}
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Professional Expert + Extensive Edge-Case Blocking Release Gates",
+      "evidence": [
+        {"file":"professional_expert_gate.py","contains":"Professional Expert Trader / Investor Acceptance Gate"},
+        {"file":"extensive_edge_case_gate.py","contains":"Extensive Edge-Case / Failure-Mode Gate"},
+        {"file":"professional_expert_runtime_test.js","contains":"Professional Expert Trader/Investor Runtime Gate"},
+        {"file":"next_build_audit_gate.py","contains":"professional_expert_gate.py"}
+      ]
+    }
+  ]
+}

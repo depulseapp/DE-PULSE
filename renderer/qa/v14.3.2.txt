@@ -1,0 +1,14 @@
+DE.PULSE v14.3.2 — COMPLETION FINAL
+Build: v14.3.2-completion-ui-20260809
+Baseline: v14.3.1 completion source, preserving exact v14.2.2 Stable lineage
+
+Scope:
+- Preserve all v14.3.1 audited completion fixes.
+- Move transient Save/action/provider notifications into the existing global header center lane.
+- Keep header height unchanged; notification must truncate/overflow safely within its lane and never overlap header elements.
+- Add small contextual manual actions in the detailed side-panel Data Engine.
+- Manual actions call production pipelines for Pre-Market Prep, Market Open Prep, Catalyst Evaluate, Refresh Due Data, Global/FX Refresh, Provider Capability Recheck, conditional primary-stream Reconnect, and VIX refresh when needed.
+- No deterministic Day/Swing/Long Setup Score changes.
+- No UI compacting.
+
+Final gate results are recorded in the external v14.3.2 QA report generated from the exact frozen source.

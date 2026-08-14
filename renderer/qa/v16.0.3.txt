@@ -1,0 +1,61 @@
+DE.PULSE v16.0.3 TEST — PROFESSIONAL AUTHORIZATION HARDENING
+Build: v16.0.3-test-professional-authorization-hardening-20260811
+Status: TEST · NOT STABLE
+Protected baseline: DE.PULSE v15.1.2 STABLE · untouched
+
+PURPOSE
+- First DE.PULSE build produced with the Working Candidate → feature proof → professional expert audit → independent adversarial audit → RC heavy matrix → package/freeze process.
+- Close fresh-check/stale-data truth gaps before v16.1 Market Intelligence work begins.
+
+CLOSED SCOPE
+#16 Shared Quote Timestamp / Provider Reconciliation Truth
+- Shared timestamp-validity semantics separate provider/data age from receipt age.
+- Fresh receipt cannot rescue stale provider market data.
+- Material future provider or receipt timestamps cannot be treated as Fresh.
+- Research may apply its own documented freshness cadence only after timestamp validity passes.
+
+#17 Corporate Actions / Symbol Lifecycle
+- Historical backfill completion stamp is written only after natural pagination completion.
+- Repeated token, safety stop, HTTP failure, timeout or partial result remains retryable.
+- Existing proven backfill state is not corrupted by another symbol's partial refresh.
+- Raw-history completeness provenance remains persisted from v16.0.2.
+
+#25 Selected-Ticker Research Truth
+- Fundamentals now require both selected-ticker Check Age and underlying Data Age.
+- A recent route check cannot freshen an old FundamentalSnapshot.
+- Future-dated Fundamentals/Quote evidence is invalid rather than displayed as age zero.
+
+#30 Professional Build Authorization Process
+- Permanent Professional Expert Trader/Investor gate.
+- Permanent Extensive Edge-Case / Failure-Mode gate.
+- Independent authorization test family separate from implementation tests.
+- Professional truth fault-injection gate.
+- Reproducible randomized test seeds with per-run timeouts/reporting.
+- New minor builds require clean-source next-build authorization.
+
+VALIDATION
+- v16.0.3 committed scope: 4/4 CLOSED · PASS
+- Professional Expert Trader / Investor: PASS
+- Extensive Edge-Case / Failure-Mode: PASS
+- Professional Truth Fault Injection: PASS
+- Independent pre-freeze adversarial audit: PASS
+- Professional Build Authorization: PASS
+- Go full suite: PASS
+- Race: PASS across all 284 discovered Go tests in bounded shards; monolithic command exceeded the execution window and is not claimed as completed
+- go vet: PASS
+- Randomized order: PASS x10; seeds 1600301..1600310
+- Statement coverage: 52.9%
+- Inherited approved scope: 48/48 PASS
+- Extreme Production: 30/30 PASS
+- Deterministic Day/Swing/Long equivalence: 2403/2403 PASS
+- Professional Trader Acceptance: PASS
+- HTTP/cross-module: 127/127 PASS
+- Responsive/layout: 376/376 PASS · 15 viewports / 20 surfaces
+- Renderer logic: PASS
+- Version consistency: PASS
+- Content/copy consistency: PASS
+
+LIMITS
+- Authenticated live-provider acceptance still depends on user credentials/entitlements.
+- Physical native macOS/Windows launch, sleep/wake and side-by-side lifecycle remain host acceptance checks.
+- No v16.1 Market Intelligence UI/hierarchy work is included in this patch.

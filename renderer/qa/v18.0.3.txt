@@ -1,0 +1,5 @@
+DE.PULSE v18.0.3 TEST — Native Cross-Platform Runtime Portability Hardening
+Build: v18.0.3-test-native-cross-platform-runtime-portability-hardening-20260813
+Stable baseline: v17.5.1
+
+Native G14 on v18.0.2 exposed Windows embedded-resource path semantics, OS-specific test config isolation assumptions, non-portable file-mode assertions and a PowerShell sentinel binding issue. v18.0.3 corrects those release blockers without changing Smart Router v2, Rapid Move, provider behavior, protected Day/Swing/Long formulas or the No Execution Boundary.

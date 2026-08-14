@@ -1,0 +1,34 @@
+{
+  "schema": "DE.PULSE-V18.0.6-G0-G3-1",
+  "version": "18.0.6",
+  "channel": "TEST",
+  "baseline": {
+    "tag": "v18.0.5-stable",
+    "commit": "d4431b2cb6a12d6c55fc0c23e93d27b21406465b",
+    "sourceSha256": "a31cc78184bd1b8b1f75a7ac5d3c8f2a1e8623a049bfd328226235f36c511ebd",
+    "sourceFingerprint": "6328baedc2358acb8280a1da4243f2ad02fe0694d3504a3a80c276e139eb268e"
+  },
+  "g1_scope": "v18_0_6_scope.json",
+  "g2_owners": {
+    "routing": "ProviderRouterSnapshot + SmartProviderRouterPolicy in existing provider_router.go/smart_router_v2.go",
+    "capability_entitlement": "existing provider capability state/circuit registry",
+    "source_agreement": "buildProviderReconciliation remains canonical conflict owner",
+    "rapid_move": "Engine.rapidMoveEvents + rapid_move_intelligence.go remains single state owner",
+    "market_shock": "derived classification on canonical RapidMoveEvent; no parallel detector",
+    "outcome_learning": "existing Rapid Move durable outcome path; original provider event anchor is immutable across dedupe",
+    "adaptive_governance": "detection production; learning SHADOW; manual validated/approved promotion only"
+  },
+  "g3_dependencies": {
+    "new_provider_dependencies": false,
+    "new_external_services": false,
+    "new_database": false,
+    "new_ui_surface": false,
+    "tests": [
+      "TestV1806ProviderRouterScorecardSurfacesCanonicalSourceDisagreement",
+      "TestV1806RapidMoveClassifiesMarketWideEventAsMarketShock",
+      "TestV1806RapidMoveHysteresisPreventsAlertStateThrash",
+      "TestV1806RapidMoveDedupPreservesOriginalProviderOutcomeAnchor",
+      "TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote"
+    ]
+  }
+}

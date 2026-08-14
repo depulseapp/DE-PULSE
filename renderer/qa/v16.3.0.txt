@@ -1,0 +1,12 @@
+DE.PULSE v16.3.0 STABLE
+Build: v16.3.0-stable-professional-validation-learning-20260812
+Date: 2026-08-11
+Status: PRE-RC PROFESSIONAL VALIDATION & LEARNING
+
+Scope: #8 Seasonality · #18 Signal Outcome Measurement · #19 Calibration / Professional Validation · #20 Historical Replay / Scenario Validation · #26 Correlation / Concentration Awareness.
+
+Architecture: reuses canonical Engine.bars, SignalValidationState, Evidence Snapshot IDs, corporate-action truth and the same deterministic Day/Swing/Long scoring primitive. No second scoring engine, history store, corporate-action path or Evidence Snapshot model.
+
+Truth rules: no lookahead; target-before-entry never counts; coarse same-bar ordering becomes AMBIGUOUS; small samples degrade; Setup Score is not win probability; correlation is attention context only; replay never mutates current production state.
+
+Release state: STABLE · explicitly promoted by user acceptance. Previous Stable v15.1.2 remains preserved as rollback. Canonical runtime/config returns to PersonalMarketTerminal so compatible prior Stable settings and API keys are retained. Approved release-toolchain, govulncheck and physical native Mac/Windows acceptance remain documented release-assurance residuals.

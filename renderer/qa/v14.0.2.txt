@@ -1,0 +1,46 @@
+DE.PULSE v14.0.2 STABLE — QA REPORT
+Build: v14.0.2-handoff-compliance-20260809
+Baseline: DE.PULSE v14.0.1 UI hotfix / exact v13.3.0 deterministic trading baseline
+
+SCOPE
+Handoff-compliance + cross-module integration release. All audited v14 handoff gaps and user-reported UI defects are included. Deterministic Day/Swing/Long Score/Action formulas remain unchanged.
+
+PRE-PACKAGE VALIDATION
+PASS — 118 Go tests/subtests.
+PASS — go test -race ./...
+PASS — go vet ./...
+PASS — Go statement coverage 44.6%.
+PASS — renderer JavaScript syntax/static/logic regression.
+PASS — 2,403 / 2,403 deterministic trading equivalence checks.
+PASS — professional Day/Swing/Long trader acceptance scenarios.
+PASS — 69 / 69 local HTTP workflow assertions.
+PASS — 284 / 284 responsive/UI checks (15 viewports × 18 surfaces + 14 focused cross-device/v14.0.2 checks).
+PASS — 60-moving-symbol race/stress scenario; canonical state preserved.
+
+FOCUSED FIXES / COMPLIANCE
+PASS — Maintenance Build Information uses 14.0.2 + v14.0.2-handoff-compliance-20260809 and has a renderer/backend identity guard.
+PASS — expanders preserve open state across runtime rerenders.
+PASS — sidebar compact Data Engine/footer is anchored outside the scrollable nav; full diagnostics live in Maintenance.
+PASS — Options Intelligence uses compact DE.PULSE styling and horizon-specific interpretation.
+PASS — Global/Macro context correlates with Market Regime, desks, Queue, Research, AI, Readiness and Validation without changing deterministic desk math.
+PASS — Dashboard order/Horizon Lens/Decision Queue/Catalyst freshness/More Market Context are reconciled with the handoff.
+PASS — direct-global/direct-futures provider contracts, free/official sources, truthful proxy fallback and provenance are represented in canonical context.
+PASS — Macro Event lifecycle and T−15/reaction framework are cross-module; Day surfaces immediate reaction context.
+PASS — Trade Readiness and Signal Validation carry horizon-specific Global/Macro/Options/Research/Queue context.
+PASS — Functionality Inventory and requirement-level traceability matrix are packaged.
+PASS — Gate 11 Cross-Module Integration & Correlation is blocking.
+
+PRODUCTION INVARIANTS
+PASS — outside Demo Mode, real/delayed/cached/proxy/unavailable only; no fabricated provider fallback.
+PASS — Finnhub primary / Alpaca controlled fallback / Alpaca overnight / dedicated VIX semantics preserved.
+PASS — canonical Master Symbol Store and immediate history hydration preserved.
+PASS — no Portfolio, Journal, Alerts, execution/order entry, positions/P&L or autonomous trading controls introduced.
+
+PACKAGE GATE
+PASS — exact final Source ZIP is re-extracted and retested before release.
+PASS — macOS ARM64 + Intel and Windows x64 package architectures/version metadata are verified.
+PASS — approved icon assets are preserved byte-for-byte.
+PASS — final package SHA256 values are published in the external checksum file.
+
+RELEASE GATES
+PASS — all 11 blocking gates, including Performance and Cross-Module Integration & Correlation, pass in the available build/QA environment. Target-OS shell presentation and private authenticated provider entitlements remain explicit external acceptance limitations, not fabricated local passes.

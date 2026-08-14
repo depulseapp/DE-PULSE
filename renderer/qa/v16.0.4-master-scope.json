@@ -1,0 +1,27 @@
+{
+  "version": "16.0.4 WORKING CANDIDATE",
+  "build": "v16.0.4-working-candidate-professional-truth-closure-20260811",
+  "protectedStable": "15.1.2",
+  "sourceLine": "16.0.3 TEST",
+  "count": 11,
+  "requirements": [
+    {"id":"V16.0.4-17-01","title":"Canonical Symbol Lifecycle State","risk":"P1"},
+    {"id":"V16.0.4-17-02","title":"Lifecycle provenance and timing","risk":"P1"},
+    {"id":"V16.0.4-17-03","title":"Lifecycle/history integrity","risk":"P0/P1"},
+    {"id":"V16.0.4-25-01","title":"Catalyst & Material Event Context component","risk":"P1"},
+    {"id":"V16.0.4-25-02","title":"Required Market Context component","risk":"P1"},
+    {"id":"V16.0.4-25-03","title":"Worst-required-dependency package truth","risk":"P0/P1"},
+    {"id":"V16.0.4-ES-01","title":"Evidence Snapshot coverage","risk":"P1"},
+    {"id":"V16.0.4-30-01","title":"Original-scope traceability","risk":"P0 process"},
+    {"id":"V16.0.4-30-02","title":"Final package hash truth","risk":"P0 process"},
+    {"id":"V16.0.4-30-03","title":"Supply-chain evidence","risk":"P1 process"},
+    {"id":"V16.0.4-UX-01","title":"Content, terminology, casing and visual fit","risk":"P1/P2"}
+  ],
+  "nonScope": [
+    "Market Intelligence side-panel tab",
+    "v16.1 Tradeability engine",
+    "Breadth/Internals, Relative Strength, Sector/Industry Regime, Market Structure, Liquidity/Slippage",
+    "Deterministic Day/Swing/Long Score/Action formula changes",
+    "Visual redesign"
+  ]
+}

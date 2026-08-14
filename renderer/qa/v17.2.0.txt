@@ -1,0 +1,17 @@
+DE.PULSE v17.2.0 TEST — Canonical Intelligence + Data Efficiency
+Build ID: v17.2.0-canonical-intelligence-data-efficiency-test-20260812
+Stable baseline: v16.11.0 (immutable)
+
+Implemented:
+- Canonical material-change propagation owner for heavy quote downstream work.
+- Lightweight UI quote updates remain independent of heavy persistence/intelligence propagation.
+- Material persistence uses the existing shared quote materiality policy.
+- Active catalyst quote reactions are symbol-scoped instead of global-per-tick.
+- Finnhub/Alpaca snapshots and history-derived session closes use canonical downstream propagation.
+- Frozen decision lineage payload excludes later mutable outcome fields.
+- Evidence/decision rows are immutable by ID; outcomes remain separate.
+- Derived features update only when their source hash changes.
+- OPEN-003 root cause fixed: Alpaca IEX stream no longer holds Engine.mu while calling multiFeedAllocation(), preventing RWMutex self-deadlock.
+- Unused runtime compatibility helpers removed during G2 source cleanup.
+
+Status: TEST source qualification in progress. No Stable promotion in this slice.

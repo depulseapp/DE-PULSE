@@ -1,0 +1,44 @@
+{
+  "version": "16.0.3 TEST",
+  "build": "v16.0.3-test-professional-authorization-hardening-20260811",
+  "count": 4,
+  "items": [
+    {
+      "id": 16,
+      "title": "Shared Quote Timestamp / Provider Reconciliation Truth",
+      "evidence": [
+        {"file":"v16.go","contains":"quoteEvidenceAges"},
+        {"file":"v16_0_3_professional_test.go","contains":"TestV1603ProfessionalFutureQuoteUsesCanonicalSkewPolicy"},
+        {"file":"v16_0_3_independent_authorization_test.go","contains":"TestV1603AuthorizationFreshReceiptCannotRescueOldProviderQuote"}
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Retryable Corporate-Action Historical Backfill",
+      "evidence": [
+        {"file":"v14_3_0.go","contains":"batchComplete"},
+        {"file":"v16_0_3_professional_test.go","contains":"TestV1603ProfessionalRepeatedCorporateTokenNeverStampsBackfillComplete"},
+        {"file":"v16_0_3_professional_test.go","contains":"TestV1603EdgePartialCorporateBackfillRemainsRetryableAndRecovers"}
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Selected-Ticker Fundamentals Check-Age vs Data-Age Truth",
+      "evidence": [
+        {"file":"v16.go","contains":"fundamental snapshot is too old"},
+        {"file":"v16_0_3_professional_test.go","contains":"TestV1603ProfessionalRecentCheckCannotFreshenOldFundamentals"},
+        {"file":"v16_0_3_independent_authorization_test.go","contains":"TestV1603AuthorizationFreshFundamentalsWithStaleCheckIsPartialNotStaleData"}
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Improved Working-Candidate / Professional Build Authorization Process",
+      "evidence": [
+        {"file":"professional_build_authorization_gate.py","contains":"Professional Build Authorization Gate"},
+        {"file":"fault_injection_gate.py","contains":"Professional Truth Fault-Injection Gate"},
+        {"file":"randomized_order_gate.py","contains":"seed="},
+        {"file":"v16_0_3_independent_authorization_test.go","contains":"TestV1603Authorization"}
+      ]
+    }
+  ]
+}

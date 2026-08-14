@@ -1,0 +1,32 @@
+DE.PULSE v14.3.7 — STABLE RELEASE QA
+Build: v14.3.7-font-fit-audit-20260810
+Date: 2026-08-10
+
+Scope
+- Exact v14.3.6 Stable baseline.
+- Full rendered font-fit audit across every application tab/surface and the supported viewport matrix.
+- No content, placement, ordering, workflow, provider, scoring, or trading-engine changes.
+
+Font-fit corrections
+- Dashboard Decision Queue: compact SCORE / PRIORITY / READINESS / RESEARCH labels and values fit without value clipping/ellipsis.
+- Day/Swing: Event & Data Context heading reduced only enough to fit its compact card at affected widths.
+- Discovery: signed numeric percentage cells reduced only enough to avoid clipping.
+- Narrow Day/Swing/Long watchlist daily-change percentages reduced only at tablet width so they do not crowd desk-membership pills.
+
+Audit disposition
+- Dashboard: PASS after compact Decision Queue correction.
+- Day Trade Desk: PASS after Event & Data Context correction.
+- Swing Desk: PASS after Event & Data Context correction.
+- Long-Term Desk: PASS.
+- Discovery Day/Swing/Long: PASS after numeric-cell correction; intentional secondary-text ellipsis preserved.
+- Research Overview/Fundamentals/Catalysts/Filings: PASS.
+- AI Copilot: PASS.
+- News: PASS.
+- Earnings: PASS.
+- SEC Filings: PASS.
+- Maintenance: PASS.
+- Documentation: PASS.
+- Settings: PASS.
+
+Release invariant
+A font-fit correction must not remove information or silently alter deterministic trading logic.

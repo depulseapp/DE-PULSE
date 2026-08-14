@@ -1,0 +1,157 @@
+{
+  "schema": "DE.PULSE-ORIGINAL-ROADMAP-STATUS-1",
+  "version": "16.8.0",
+  "summary": "27 FULL / 3 PARTIAL / 0 MISSING",
+  "items": [
+    {
+      "id": 1,
+      "name": "Live News Intelligence upgrade",
+      "status": "FULL"
+    },
+    {
+      "id": 2,
+      "name": "Macro Intelligence v2",
+      "status": "FULL"
+    },
+    {
+      "id": 3,
+      "name": "Economic Calendar",
+      "status": "FULL"
+    },
+    {
+      "id": 4,
+      "name": "FOMC / Fed Event Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 5,
+      "name": "Market Sentiment Composite",
+      "status": "FULL"
+    },
+    {
+      "id": 6,
+      "name": "Market / Sector Heat Map",
+      "status": "FULL"
+    },
+    {
+      "id": 7,
+      "name": "Deterministic Market-Structure State",
+      "status": "FULL"
+    },
+    {
+      "id": 8,
+      "name": "SPY / QQQ Seasonality Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 9,
+      "name": "Gamma Exposure / GEX Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 10,
+      "name": "Social & Community Intelligence pipeline",
+      "status": "PARTIAL"
+    },
+    {
+      "id": 11,
+      "name": "Oil / Energy Context",
+      "status": "PARTIAL"
+    },
+    {
+      "id": 12,
+      "name": "Market Tradeability / Sit on Hands",
+      "status": "FULL"
+    },
+    {
+      "id": 13,
+      "name": "Market Breadth & Internals",
+      "status": "FULL"
+    },
+    {
+      "id": 14,
+      "name": "Relative Strength / Weakness Engine",
+      "status": "FULL"
+    },
+    {
+      "id": 15,
+      "name": "Sector & Industry Regime Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 16,
+      "name": "Data Conflict / Provenance Reconciliation",
+      "status": "FULL"
+    },
+    {
+      "id": 17,
+      "name": "Corporate Actions & Symbol Lifecycle hardening",
+      "status": "FULL"
+    },
+    {
+      "id": 18,
+      "name": "Signal Outcome Measurement",
+      "status": "FULL"
+    },
+    {
+      "id": 19,
+      "name": "Signal Calibration & Professional Validation",
+      "status": "FULL"
+    },
+    {
+      "id": 20,
+      "name": "Market Replay / Historical Scenario Validation",
+      "status": "PARTIAL"
+    },
+    {
+      "id": 21,
+      "name": "Smart Notifications",
+      "status": "FULL"
+    },
+    {
+      "id": 22,
+      "name": "AI Evidence Architecture v2",
+      "status": "FULL"
+    },
+    {
+      "id": 23,
+      "name": "AI safety against bad external content",
+      "status": "FULL"
+    },
+    {
+      "id": 24,
+      "name": "AI model routing / cost control",
+      "status": "FULL"
+    },
+    {
+      "id": 25,
+      "name": "Research Package Freshness correction",
+      "status": "FULL"
+    },
+    {
+      "id": 26,
+      "name": "Correlation / Concentration Awareness",
+      "status": "FULL"
+    },
+    {
+      "id": 27,
+      "name": "Liquidity & Slippage Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 28,
+      "name": "Reaction Intelligence",
+      "status": "FULL"
+    },
+    {
+      "id": 29,
+      "name": "Event-to-Decision Correlation",
+      "status": "FULL"
+    },
+    {
+      "id": 30,
+      "name": "Extreme Production validation",
+      "status": "FULL"
+    }
+  ]
+}

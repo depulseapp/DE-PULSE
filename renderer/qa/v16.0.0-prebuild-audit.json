@@ -1,0 +1,11 @@
+{
+  "target": "16.0.0 TEST",
+  "previous_build": "15.1.2 STABLE",
+  "previous_build_id": "v15.1.2-extreme-production-hardening-20260810",
+  "status": "PASS",
+  "stable_source_sha256": "e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c",
+  "approved_scope": "48/48 PASS",
+  "extreme_matrix": "30/30 PASS",
+  "deterministic_equivalence": "2403/2403 PASS",
+  "decision": "v15.1.2 remains frozen/protected. v16.0.0 TEST may start only in an independent worktree/runtime identity."
+}

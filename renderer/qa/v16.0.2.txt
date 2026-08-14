@@ -1,0 +1,49 @@
+DE.PULSE v16.0.2 TEST — PROFESSIONAL TRUTH HARDENING
+Build: v16.0.2-test-professional-truth-hardening-20260811
+Status: TEST · NOT STABLE
+Protected baseline: DE.PULSE v15.1.2 STABLE untouched
+
+COMMITTED PATCH SCOPE
+- #16 Provider Reconciliation professional truth hardening.
+- #17 Corporate Actions / raw-history completeness provenance.
+- #25 Selected-ticker Research Package + Evidence Snapshot truth propagation.
+- #30 Permanent Professional Expert Trader/Investor and Extensive Edge-Case blocking gates.
+
+KEY FIXES
+- Market/data timestamp age and app receipt age are evaluated separately.
+- No provider comparison evidence can never produce FRESH/AGREED.
+- SINGLE SOURCE is truthful partial evidence, not cross-provider agreement.
+- Closed/weekend sessions use session-aware age rules so valid recent closes are not falsely stale.
+- Future clock skew, stale provider timestamps, and stale receipt timestamps are excluded from current reconciliation.
+- Raw corporate history follows pagination, preserves partial results as PARTIAL, and recovers to COMPLETE only after full pagination succeeds.
+- Raw-history coverage persists across restart and exposes requested range, first/last bar, bar count, page count, pagination completeness and state.
+- Corporate-action API page failure/entitlement failure can no longer be overwritten as healthy.
+- Final active Maintenance renderer contains Provider Reconciliation, Corporate Actions/Symbol Lifecycle and Evidence Snapshot truth panels.
+- Final active AI context includes Research Package, Evidence Snapshot, Provider Reconciliation and Corporate Action truth.
+- Evidence Snapshot fingerprints selected-ticker corporate raw-history coverage state.
+
+PERMANENT NEW BLOCKING GATES
+- Professional Expert Trader / Investor Acceptance Gate.
+- Extensive Edge-Case / Failure-Mode Gate.
+
+The final validation results are recorded in the packaged handoff and closure record.
+
+FINAL HOST-VERIFIABLE VALIDATION
+- v16.0.2 scope: 4/4 CLOSED · PASS
+- Professional Expert Trader / Investor Acceptance Gate: PASS
+- Extensive Edge-Case / Failure-Mode Gate: PASS
+- Go full suite: PASS
+- Race detector: PASS
+- go vet: PASS
+- randomized order x10: PASS
+- statement coverage: 52.6%
+- inherited Approved Scope: 48/48 PASS
+- Extreme Production: 30/30 PASS
+- deterministic equivalence: 2403/2403 PASS
+- Professional Trader Acceptance: PASS
+- HTTP/cross-module: 127/127 PASS
+- responsive/layout: 376/376 PASS across 15 viewports / 20 surfaces
+- renderer/content/version gates: PASS
+
+NEXT MINOR BUILD RULE
+v16.1.0 TEST may begin only after the final clean-extracted v16.0.2 Source ZIP passes next_build_audit_gate.py. No report or marker alone authorizes progression.

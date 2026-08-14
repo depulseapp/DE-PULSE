@@ -1,0 +1,4 @@
+'use strict';
+const form=document.getElementById('login-form'),button=document.getElementById('login-button'),message=document.getElementById('auth-message');
+(async()=>{try{const s=await fetch('/api/auth/status',{cache:'no-store'}).then(r=>r.json());if(s.bootstrapRequired){location.replace('/');return}if(s.authenticated){location.replace('/');return}}catch(_){}})();
+form.addEventListener('submit',async e=>{e.preventDefault();message.textContent='';button.disabled=true;try{const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:document.getElementById('username').value,password:document.getElementById('password').value})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Sign in failed.');location.replace('/')}catch(err){message.textContent=err.message;button.disabled=false}});

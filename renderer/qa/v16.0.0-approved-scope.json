@@ -1,0 +1,83 @@
+{
+  "version": "16.0.0 TEST",
+  "build": "v16.0.0-test-professional-truth-foundation-20260811",
+  "count": 4,
+  "items": [
+    {
+      "id": 16,
+      "title": "Professional Provider Conflict / Provenance Reconciliation",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "func buildProviderReconciliation"
+        },
+        {
+          "file": "v16_0_0_test.go",
+          "contains": "TestV1600ProviderReconciliationUsesRouterWinnerNotPriceOrder"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Provider Reconciliation \u00b7 v16"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Corporate Actions / Symbol Lifecycle & Bar Adjustment Provenance",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "refreshAlpacaRawHistoryForCorporateActions"
+        },
+        {
+          "file": "v16_0_0_test.go",
+          "contains": "TestV1600CorporateActionParserCapturesSplitAndSymbolLineage"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Corporate Actions & Symbol Lifecycle \u00b7 v16"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Selected-Ticker Research Package Freshness & Evidence Snapshot",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "func buildResearchPackageTruth"
+        },
+        {
+          "file": "v16_0_0_test.go",
+          "contains": "TestV1600ResearchPackageIsSelectedTickerSpecific"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "v16 Evidence Truth"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Previous-Build / Professional Behavioral Release Gate",
+      "evidence": [
+        {
+          "file": "previous_build_audit_gate.py",
+          "contains": "Previous-Build Implementation Audit Gate"
+        },
+        {
+          "file": "v16_0_scope_gate.py",
+          "contains": "behavioral proof"
+        },
+        {
+          "file": "v16_0_0_test.go",
+          "contains": "TestV1600EvidenceSnapshotStableAcrossClockAging"
+        },
+        {
+          "file": "next_build_audit_gate.py",
+          "contains": "Next-Build Implementation Audit Gate"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "DE.PULSE-V18-MAJOR-SCOPE-1",
+  "major": "v18",
+  "mission": "Secure Multi-User Platform + Smart Provider Intelligence",
+  "scope_frozen": false,
+  "adaptive_placement": true,
+  "stable_baseline": "v17.5.1",
+  "workstreams": [
+    "v18.0 Identity & Secure Sessions",
+    "Smart Intelligent Provider Router v2",
+    "v18.1 Multi-User / My Market Symbols",
+    "TradeInsight SHADOW Intelligence",
+    "v18.2 Admin / Presence / Session Operations",
+    "v18.3 PostgreSQL / Hosted Shared State",
+    "v18.4 Security + Commercial/Data-Rights Hardening",
+    "v18.5 Major Closure & Release Assurance"
+  ],
+  "permanent_boundaries": [
+    "No Execution Boundary",
+    "one canonical Provider Router",
+    "U.S.-listed actionable securities",
+    "SHADOW -> VALIDATED -> APPROVED -> PRODUCTION",
+    "no silent self-modifying production decision logic",
+    "Data Utility & Evidence Value Contract",
+    "Adaptive Performance, Testing & Intelligence Contract"
+  ]
+}

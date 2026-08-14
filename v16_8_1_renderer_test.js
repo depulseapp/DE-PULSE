@@ -1,0 +1,10 @@
+const fs=require('fs');
+const src=fs.readFileSync('renderer/renderer.js','utf8');
+const need=(c,m)=>{if(!c){console.error('v16.8.1 renderer acceptance: FAIL · '+m);process.exit(1)}};
+need(src.includes("marketCalendarFilters={impact:'ALL',scope:'US'"),'Economic Calendar must default to US scope');
+need(src.includes('<label>Scope</label>'),'calendar Scope control missing');
+need(src.includes('Global Context'),'Global Context calendar semantics missing');
+need(src.includes('US primary · selective Global Context only'),'calendar utility/truth copy missing');
+need(src.includes('EXPECTED_RELEASE_VERSION='),'canonical release identity hook missing');
+need(src.includes('EXPECTED_BUILD_ID='),'canonical build identity hook missing');
+console.log('v16.8.1 renderer acceptance: PASS · enduring US-primary calendar + Global Context semantics preserved');

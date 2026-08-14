@@ -1,0 +1,6 @@
+DE.PULSE v16.8.0 STABLE
+Build: v16.8.0-stable-professional-context-readiness-closure-20260812
+Professional Context & Readiness Closure
+#6 Heat Map FULL · #8 Seasonality FULL · #9 GEX FULL · #21 Smart Notifications FULL · #27 Liquidity/Slippage FULL
+Original roadmap: 27 FULL / 3 PARTIAL / 0 MISSING
+Deterministic Day/Swing/Long formulas unchanged. No execution capability.

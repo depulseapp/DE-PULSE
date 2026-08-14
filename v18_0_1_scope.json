@@ -1,0 +1,20 @@
+{
+  "schema": "DE.PULSE-V18.0.1-SCOPE-1",
+  "version": "18.0.1",
+  "build_id": "v18.0.1-test-smart-router-v2-rapid-move-foundation-20260813",
+  "channel": "TEST",
+  "stable_baseline": "v17.5.1",
+  "patch_predecessor": "v18.0.0",
+  "scope_lock": [
+    "single canonical Provider Router enriched, never duplicated",
+    "capability/entitlement registry with bounded revalidation and NOT_ENTITLED suppression",
+    "dynamic deterministic Preferred vs Serving scoring and per-capability circuits",
+    "provider latency/calls-avoided/usefulness-ready scorecard evidence",
+    "Rapid Move short-window event detection integrated with canonical quote pipeline",
+    "source/liquidity/mechanical/catalyst/market correlation before material alerting",
+    "immediate banner plus Opportunity Radar/live-priority promotion",
+    "point-in-time trace/outcome persistence and SHADOW-first adaptive foundation",
+    "truthful TIERED_PARTIAL coverage; no false full-market surveillance claim",
+    "deterministic Day/Swing/Long formulas and No Execution Boundary unchanged"
+  ]
+}

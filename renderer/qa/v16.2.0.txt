@@ -1,0 +1,5 @@
+DE.PULSE v16.2.0 TEST
+Build: v16.2.0-professional-event-intelligence-20260811
+Scope: Professional Event Intelligence (#1/#2/#3/#4/#21/#28/#29).
+Protected Stable: v15.1.2 untouched.
+Deterministic Day/Swing/Long Score/Action: unchanged.

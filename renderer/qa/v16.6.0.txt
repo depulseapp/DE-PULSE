@@ -1,0 +1,8 @@
+DE.PULSE v16.6.0 Stable — Full Professional Integration & Acceptance
+
+- Reconciles all 30 professional requirements end to end.
+- Fixes Master Symbol Store final-item/remove-all persistence: explicit empty user state survives normalization/save/reload.
+- Adds a clear Remove All action for DAY/SWING/LONG user-managed symbols.
+- Separates User Master Symbol Store from protected System Market Context in Maintenance truth.
+- Preserves deterministic Day/Swing/Long formulas, Provider Router, De-Pulse.app and PersonalMarketTerminal credential continuity.
+- No v16.7 feature scope is introduced.

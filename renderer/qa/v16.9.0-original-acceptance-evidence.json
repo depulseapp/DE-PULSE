@@ -1,0 +1,255 @@
+{
+  "schema": "DE.PULSE-v16.9.0-ORIGINAL-ACCEPTANCE-EVIDENCE-1",
+  "contract": "original-professional-roadmap-acceptance.json",
+  "scope": [
+    {
+      "id": 10,
+      "name": "Social & Community Intelligence pipeline",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Normalize permitted/user-authorized X, Reddit, Telegram, Discord and WhatsApp inputs where supported",
+          "status": "PASS",
+          "evidence": [
+            "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+            "community_evidence_fusion.go:communitySourcePolicy",
+            "community_intelligence_api.go:handleCommunityEvidence",
+            "ai_research_v2.go:source-policy AI gate",
+            "renderer/renderer.js:Global Community Evidence Fusion",
+            "community_source_policy.json",
+            "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+            "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+            "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+            "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Official APIs/bots/connectors only; no scraping/bypass",
+          "status": "PASS",
+          "evidence": [
+            "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+            "community_evidence_fusion.go:communitySourcePolicy",
+            "community_intelligence_api.go:handleCommunityEvidence",
+            "ai_research_v2.go:source-policy AI gate",
+            "renderer/renderer.js:Global Community Evidence Fusion",
+            "community_source_policy.json",
+            "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+            "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+            "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+            "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Separate from verified news",
+          "status": "PASS",
+          "evidence": [
+            "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+            "community_evidence_fusion.go:communitySourcePolicy",
+            "community_intelligence_api.go:handleCommunityEvidence",
+            "ai_research_v2.go:source-policy AI gate",
+            "renderer/renderer.js:Global Community Evidence Fusion",
+            "community_source_policy.json",
+            "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+            "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+            "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+            "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Dedupe/ticker-map/credibility-source label",
+          "status": "PASS",
+          "evidence": [
+            "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+            "community_evidence_fusion.go:communitySourcePolicy",
+            "community_intelligence_api.go:handleCommunityEvidence",
+            "ai_research_v2.go:source-policy AI gate",
+            "renderer/renderer.js:Global Community Evidence Fusion",
+            "community_source_policy.json",
+            "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+            "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+            "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+            "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 5,
+          "acceptance": "Always untrusted; prompt-injection defense",
+          "status": "PASS",
+          "evidence": [
+            "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+            "community_evidence_fusion.go:communitySourcePolicy",
+            "community_intelligence_api.go:handleCommunityEvidence",
+            "ai_research_v2.go:source-policy AI gate",
+            "renderer/renderer.js:Global Community Evidence Fusion",
+            "community_source_policy.json",
+            "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+            "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+            "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+            "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+            "v16_9_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "community_evidence_fusion.go:buildCommunityEvidenceFusion",
+        "community_evidence_fusion.go:communitySourcePolicy",
+        "community_intelligence_api.go:handleCommunityEvidence",
+        "ai_research_v2.go:source-policy AI gate",
+        "renderer/renderer.js:Global Community Evidence Fusion",
+        "community_source_policy.json",
+        "TestV169CommunityFusionDedupesAcrossSourcesAndMeasuresDiversity",
+        "TestV169CommunitySourceRightsGateBlocksTelegramAIByDefault",
+        "TestV169CommunityHandlerRejectsScrapingAndForeignTicker",
+        "TestV169CommunityAIUsesOnlyPolicyEligibleItems",
+        "v16_9_renderer_test.js"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Oil / Energy Context",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "WTI/CL and Brent/BZ contextual feeds",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165OilEnergy",
+            "context_alternative_intelligence.go:v169EnergyInstrument",
+            "context_alternative_intelligence.go:v169EnergyTrend",
+            "v14_0_3.go:refreshEIAActuals canonical EIA owner",
+            "renderer/renderer.js:Oil / Energy v16.9",
+            "TestV169OilEnergyWTIBrentTrendSpreadAndUSMarketContext",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Trend/change/spread context",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165OilEnergy",
+            "context_alternative_intelligence.go:v169EnergyInstrument",
+            "context_alternative_intelligence.go:v169EnergyTrend",
+            "v14_0_3.go:refreshEIAActuals canonical EIA owner",
+            "renderer/renderer.js:Oil / Energy v16.9",
+            "TestV169OilEnergyWTIBrentTrendSpreadAndUSMarketContext",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Truthful continuous-contract/roll/delay semantics",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165OilEnergy",
+            "context_alternative_intelligence.go:v169EnergyInstrument",
+            "context_alternative_intelligence.go:v169EnergyTrend",
+            "v14_0_3.go:refreshEIAActuals canonical EIA owner",
+            "renderer/renderer.js:Oil / Energy v16.9",
+            "TestV169OilEnergyWTIBrentTrendSpreadAndUSMarketContext",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Context only; no futures execution",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165OilEnergy",
+            "context_alternative_intelligence.go:v169EnergyInstrument",
+            "context_alternative_intelligence.go:v169EnergyTrend",
+            "v14_0_3.go:refreshEIAActuals canonical EIA owner",
+            "renderer/renderer.js:Oil / Energy v16.9",
+            "TestV169OilEnergyWTIBrentTrendSpreadAndUSMarketContext",
+            "v16_9_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "context_alternative_intelligence.go:v165OilEnergy",
+        "context_alternative_intelligence.go:v169EnergyInstrument",
+        "context_alternative_intelligence.go:v169EnergyTrend",
+        "v14_0_3.go:refreshEIAActuals canonical EIA owner",
+        "renderer/renderer.js:Oil / Energy v16.9",
+        "TestV169OilEnergyWTIBrentTrendSpreadAndUSMarketContext",
+        "v16_9_renderer_test.js"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Market Replay / Historical Scenario Validation",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Replay historical evidence through deterministic engines",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:replayScenarioCatalog",
+            "renderer/renderer.js:replayRuntimeAt",
+            "renderer/renderer.js:computePlanAt",
+            "renderer/renderer.js:replaySignalSnapshot",
+            "renderer/renderer.js:replayScenarioResult",
+            "v16_3_renderer_test.js no-lookahead/live-state isolation",
+            "TestV169ReplayCatalogBuildsRequiredScenarioClassesFromCanonicalEvidence",
+            "TestV169ReplayCatalogNeverFabricatesMissingScenarioEvidence",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Reusable known scenarios including CPI/FOMC shocks, earnings gaps, high-VIX sessions and other known sessions",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:replayScenarioCatalog",
+            "renderer/renderer.js:replayRuntimeAt",
+            "renderer/renderer.js:computePlanAt",
+            "renderer/renderer.js:replaySignalSnapshot",
+            "renderer/renderer.js:replayScenarioResult",
+            "v16_3_renderer_test.js no-lookahead/live-state isolation",
+            "TestV169ReplayCatalogBuildsRequiredScenarioClassesFromCanonicalEvidence",
+            "TestV169ReplayCatalogNeverFabricatesMissingScenarioEvidence",
+            "v16_9_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "No lookahead; validation tool not mock-live mode",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:replayScenarioCatalog",
+            "renderer/renderer.js:replayRuntimeAt",
+            "renderer/renderer.js:computePlanAt",
+            "renderer/renderer.js:replaySignalSnapshot",
+            "renderer/renderer.js:replayScenarioResult",
+            "v16_3_renderer_test.js no-lookahead/live-state isolation",
+            "TestV169ReplayCatalogBuildsRequiredScenarioClassesFromCanonicalEvidence",
+            "TestV169ReplayCatalogNeverFabricatesMissingScenarioEvidence",
+            "v16_9_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "validation_learning.go:replayScenarioCatalog",
+        "renderer/renderer.js:replayRuntimeAt",
+        "renderer/renderer.js:computePlanAt",
+        "renderer/renderer.js:replaySignalSnapshot",
+        "renderer/renderer.js:replayScenarioResult",
+        "v16_3_renderer_test.js no-lookahead/live-state isolation",
+        "TestV169ReplayCatalogBuildsRequiredScenarioClassesFromCanonicalEvidence",
+        "TestV169ReplayCatalogNeverFabricatesMissingScenarioEvidence",
+        "v16_9_renderer_test.js"
+      ]
+    }
+  ],
+  "result": "3/3 FULL at immutable clause depth; original professional roadmap 30 FULL / 0 PARTIAL / 0 MISSING; deterministic formulas unchanged"
+}

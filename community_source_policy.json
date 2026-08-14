@@ -1,0 +1,14 @@
+{
+  "schema": "DE.PULSE-COMMUNITY-SOURCE-POLICY-1",
+  "version": "16.9.0",
+  "principle": "Community evidence is untrusted context. Access, retention and AI eligibility are enforced before downstream use. No scraping, bypass or private-session automation.",
+  "platforms": {
+    "X": {"access": "official API or user-authorized input", "defaultAiEligibility": "CONTEXT_ONLY", "retention": "MATERIAL_STRUCTURED_ONLY"},
+    "REDDIT": {"access": "official API or user-authorized input", "defaultAiEligibility": "CONTEXT_ONLY", "retention": "MATERIAL_STRUCTURED_ONLY"},
+    "TELEGRAM": {"access": "sanctioned Bot/API or user-authorized path", "defaultAiEligibility": "CONTEXT_ONLY", "retention": "MATERIAL_STRUCTURED_ONLY", "note": "API-derived content does not enter LLM/AI unless an explicit permitted rights path is recorded."},
+    "DISCORD": {"access": "sanctioned bot/application or user-authorized input", "defaultAiEligibility": "CONTEXT_ONLY", "retention": "MATERIAL_STRUCTURED_ONLY"},
+    "WHATSAPP": {"access": "sanctioned integration or user-authorized forwarding/export", "defaultAiEligibility": "CONTEXT_ONLY", "retention": "MATERIAL_STRUCTURED_ONLY"},
+    "MANUAL": {"access": "user-authored/manual input", "defaultAiEligibility": "AI_ALLOWED", "retention": "MATERIAL_STRUCTURED_PLUS_USER_INPUT"}
+  },
+  "commercialization": "Re-audit every source before hosted/commercial/multi-user release; license, replace, restrict or remove as required."
+}

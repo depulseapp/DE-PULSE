@@ -1,0 +1,18 @@
+DE.PULSE v14.2.2 STABLE — OPERATIONAL / UI CORRECTION PATCH
+Build: v14.2.2-operational-ui-vix-20260809
+Baseline: v14.2.1 Stable
+
+Scope:
+- VIX Maintenance diagnostics and real-data-only fallback chain.
+- Viewport-level save/status notifications visible at any scroll position.
+- Settings Save-bar safe scroll space.
+- Duplicate Data Freshness heading removed.
+- Discovery Rank typography alignment.
+- Freshness & Cache Policy typography normalization.
+- Data Capabilities typography/wrapping and labeled capability count.
+- Long-Term SEC Intelligence wrapping/width polish.
+
+Protected behavior:
+- Day/Swing/Long deterministic Action/Setup Score formulas unchanged.
+- Provider architecture/freshness semantics unchanged except the additive VIX fallback path.
+- No VIX ETF/futures proxy can be presented as VIX.

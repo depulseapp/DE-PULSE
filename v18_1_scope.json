@@ -1,0 +1,67 @@
+{
+  "schema": "DE.PULSE-V18.1.0-IMMUTABLE-SCOPE-1",
+  "release": "v18.1.0 TEST",
+  "status": "FROZEN",
+  "clauses": [
+    {
+      "id": "MU-01",
+      "requirement": "Personal market state has one durable UserWorkspace owner keyed by immutable authenticated UserID."
+    },
+    {
+      "id": "MU-02",
+      "requirement": "The pre-v18.1 single-user Stable market state migrates exactly once into bootstrap OWNER workspace without data loss."
+    },
+    {
+      "id": "MU-03",
+      "requirement": "A newly authenticated user starts with an empty personal tracked/watchlist state and cannot inherit another user workspace."
+    },
+    {
+      "id": "MU-04",
+      "requirement": "Tracked Symbols, desk membership, watchlists, scope and selected ticker mutations affect only the requesting user workspace."
+    },
+    {
+      "id": "MU-05",
+      "requirement": "Profile export/import and AI default context use only the requesting user workspace; secrets remain excluded from export."
+    },
+    {
+      "id": "MU-06",
+      "requirement": "Bootstrap/state/runtime/quote/news/earnings/filing delivery is workspace-filtered so personal symbol ownership is not leaked across sessions."
+    },
+    {
+      "id": "MU-07",
+      "requirement": "Provider credentials, provider policy, global runtime settings and deterministic scoring configuration remain shared ADMIN-owned operational state."
+    },
+    {
+      "id": "MU-08",
+      "requirement": "Provider fetching, canonical evidence, Router v2, Rapid Move, Radar and deterministic scoring remain one shared canonical backend core."
+    },
+    {
+      "id": "MU-09",
+      "requirement": "The engine processing universe is the deduplicated union of user-required symbols; duplicate user interest never creates duplicate provider/scoring pipelines."
+    },
+    {
+      "id": "MU-10",
+      "requirement": "Removing a symbol from one workspace cannot remove it from the canonical processing universe while another workspace still requires it."
+    },
+    {
+      "id": "MU-11",
+      "requirement": "Broad-market Opportunity Radar and Rapid Move / Market Shock remain shared intelligence surfaces; personal watchlist isolation does not hide market-wide intelligence."
+    },
+    {
+      "id": "MU-12",
+      "requirement": "Persistence support covers SQLite and fallback backends and survives restart/reload with user ownership intact."
+    },
+    {
+      "id": "MU-13",
+      "requirement": "v18.1 TEST uses an isolated runtime profile cloned from v18.0.6 Stable on first run without writing into Stable."
+    },
+    {
+      "id": "MU-14",
+      "requirement": "v18.2 user administration, presence and session lifecycle UI/API is explicitly excluded from v18.1."
+    },
+    {
+      "id": "MU-15",
+      "requirement": "Protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary remain unchanged."
+    }
+  ]
+}

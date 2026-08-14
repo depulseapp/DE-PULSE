@@ -1,0 +1,38 @@
+{
+  "schema": "DE.PULSE-V17-MAJOR-SCOPE-1",
+  "major": "v17",
+  "mission": "Persistent Intelligence Foundation + Runtime Efficiency / Load Resilience",
+  "stable_baseline": "v16.11.0",
+  "scope_frozen": true,
+  "items": [
+    "repository abstraction",
+    "SQLite desktop persistence",
+    "PostgreSQL-ready repository contracts",
+    "Global Symbol Registry",
+    "Persistent Canonical State / Warm Start",
+    "structured evidence/history",
+    "Decision Lineage/Reproducibility",
+    "outcome/history foundation",
+    "derived feature store/incremental sync",
+    "async/material-change persistence",
+    "one canonical symbol pipeline",
+    "observability",
+    "runtime overload/root-cause profiling",
+    "workload prioritization/backpressure",
+    "bounded concurrency/queueing",
+    "provider request/subscription budgeting",
+    "load shedding/background isolation",
+    "adaptive degradation reason codes",
+    "performance/capacity/storage SLO acceptance",
+    "migration/settings/watchlist/API-key continuity"
+  ],
+  "non_goals": [
+    "hosted architecture",
+    "PostgreSQL production hosting",
+    "multi-user authentication",
+    "login/session management",
+    "user quotas/payments",
+    "paper trading or execution",
+    "broker routing"
+  ]
+}

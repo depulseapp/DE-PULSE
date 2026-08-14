@@ -1,0 +1,46 @@
+{
+  "schema": "DE.PULSE-v16.7.0-MASTER-SCOPE-1",
+  "version": "16.7.0",
+  "release": "Core Market Decision Intelligence Closure",
+  "baseline": {
+    "version": "16.6.0",
+    "sourceFingerprint": "6a6a7722aee5e849a538fe28c9e5884bccaf8df3f2e2b8beaecee5a74b851ba5",
+    "sourceZipSha256": "0ca318411ce841593c3289770064ca8be0415b06e3b9107ea5042b18555bbd6d"
+  },
+  "immutableAcceptanceContract": "original-professional-roadmap-acceptance.json",
+  "scope_lock": [
+    {
+      "id": 3,
+      "name": "Economic Calendar",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 12,
+      "name": "Market Tradeability / Sit on Hands",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 13,
+      "name": "Market Breadth & Internals",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 14,
+      "name": "Relative Strength / Weakness Engine",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 15,
+      "name": "Sector & Industry Regime Intelligence",
+      "target": "PARTIAL -> FULL"
+    }
+  ],
+  "non_goals": [
+    "No v16.8 scope",
+    "No new general market-data provider",
+    "No deterministic Day/Swing/Long formula changes",
+    "No database/hosted/multi-user implementation in this closure build",
+    "No visual redesign"
+  ],
+  "release_gate": "All five scope items must satisfy every original_acceptance clause applicable to current data availability; inherited roadmap items remain protected."
+}

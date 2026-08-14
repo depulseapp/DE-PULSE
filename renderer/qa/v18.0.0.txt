@@ -1,0 +1,18 @@
+DE.PULSE v18.0.0 TEST — Identity & Secure Session Foundation
+Build: v18.0.0-test-identity-session-foundation-20260813
+Stable baseline: v17.5.1 Stable
+Status: TEST / qualification in progress
+
+Scope:
+- canonical roles + Principal
+- persistent local users and opaque server-side sessions
+- Argon2id credentials
+- login / logout / password bootstrap
+- session rotation, revocation, idle and absolute expiry
+- centralized auth + role enforcement foundation
+- CSRF-protected authenticated mutations
+- isolated PersonalMarketTerminal-v18-TEST migration from v17.5.1 Stable
+- deterministic Day/Swing/Long formulas unchanged
+- no execution capability
+
+Stable promotion is NOT implied by this TEST checkpoint.

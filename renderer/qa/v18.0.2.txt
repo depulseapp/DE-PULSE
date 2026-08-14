@@ -1,0 +1,4 @@
+DE.PULSE v18.0.2 TEST — Cross-Platform Fingerprint & Native Delivery Hardening
+Build: v18.0.2-test-cross-platform-fingerprint-native-delivery-hardening-20260813
+Stable baseline: v17.5.1
+Scope: canonical cross-platform source fingerprint + native G14/G15 delivery correction; v18.0.1 intelligence behavior unchanged.

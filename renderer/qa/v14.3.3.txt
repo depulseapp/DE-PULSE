@@ -1,0 +1,16 @@
+DE.PULSE v14.3.3 STABLE — LIVE DATA & OPERATIONAL UX IMPROVEMENT
+Build: v14.3.3-live-data-operational-ux-20260809
+Baseline: v14.3.2 Stable
+
+Scope:
+- Dynamic Finnhub → Alpaca IEX → Snapshot live allocation with reserved capacity.
+- GLD / SLV / USO pinned as tradable live symbols.
+- Canonical Live Coverage State.
+- Persistent manual action lifecycle and completion feedback.
+- Side Data Engine readiness-only manual controls.
+- Maintenance Data Engine Detail contextual operations.
+- Header notification dynamic fitting.
+- Adaptive Data Engine geometry/status typography with no clipped or ellipsized status values.
+- Content/copy and build-identity blocking release checks.
+
+Final gate evidence is recorded in the external v14.3.3 QA report generated from exact frozen source.

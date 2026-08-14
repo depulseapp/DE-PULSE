@@ -1,0 +1,62 @@
+{
+  "build": "DE.PULSE v16.0.1 TEST",
+  "build_id": "v16.0.1-test-truth-foundation-correction-20260811",
+  "status": "TEST \u00b7 NOT STABLE",
+  "protected_baseline": "DE.PULSE v15.1.2 STABLE",
+  "stable_source_sha256": "e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c",
+  "stable_untouched": true,
+  "committed_scope": [
+    {
+      "audit_item": 16,
+      "name": "Provider Conflict / Provenance Reconciliation",
+      "status": "CLOSED",
+      "proof": "Canonical winner finalized before reason; adversarial canonical-fallback contradiction test PASS."
+    },
+    {
+      "audit_item": 17,
+      "name": "Corporate Actions / Symbol Lifecycle truth foundation",
+      "status": "CLOSED",
+      "proof": "Persistent cache ledger + per-symbol 15-year initial backfill stamp + pagination/merge + ID/process-date provenance + raw/adjusted history separation tests PASS."
+    },
+    {
+      "audit_item": 25,
+      "name": "Selected-Ticker Research Package Freshness",
+      "status": "CLOSED",
+      "proof": "Daily History now requires research-history:<symbol>; global history clocks cannot satisfy selected ticker. Adversarial false-Fresh test PASS."
+    },
+    {
+      "audit_item": 30,
+      "name": "Previous-Build / Professional Adversarial Release Gate",
+      "status": "CLOSED",
+      "proof": "Gate requires base v16.0 behavioral suite + v16.0.1 adversarial suite + full Go suite; next-build gate reruns adversarial proof."
+    }
+  ],
+  "gates": {
+    "v16_scope": "4/4 CLOSED \u00b7 adversarial behavioral proof PASS",
+    "go_full": "PASS",
+    "go_race": "PASS",
+    "go_vet": "PASS",
+    "randomized_order": "PASS \u00d710",
+    "statement_coverage": "51.9%",
+    "http_cross_module": "127/127 PASS",
+    "deterministic_equivalence": "2403/2403 PASS",
+    "professional_trader_acceptance": "PASS",
+    "responsive_layout": "376/376 PASS \u00b7 15 viewports / 20 surfaces",
+    "renderer_logic": "PASS",
+    "content_copy": "PASS",
+    "edge_case_hardening": "PASS",
+    "inherited_scope": "48/48 PASS",
+    "extreme_production": "30/30 PASS",
+    "version_consistency": "PASS",
+    "clean_source_reextract": "105/105 exact SHA-256 file match \u00b7 PASS",
+    "next_build_audit": "PASS \u00b7 final clean extracted source",
+    "native_package_structure": "macOS arm64 + x86_64 Mach-O; Windows x64 PE32+ GUI \u00b7 PASS"
+  },
+  "conditional_acceptance": [
+    "Authenticated multi-provider disagreement with user credentials",
+    "Alpaca corporate-action/raw-history entitlement",
+    "Physical macOS/Windows launch, sleep/wake and side-by-side lifecycle"
+  ],
+  "next_build_rule": "v16.1.0 TEST may begin only after this v16.0.1 closure passes next_build_audit_gate.py from the final packaged source. No automated report alone authorizes progression.",
+  "next_build_authorization": "AUTHORIZED: v16.1.0 TEST may begin, subject to continuing Stable isolation and the approved v16.1 specification."
+}

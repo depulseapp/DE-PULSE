@@ -1,0 +1,354 @@
+{
+  "schema": "DE.PULSE-v16.8.0-ORIGINAL-ACCEPTANCE-EVIDENCE-1",
+  "contract": "original-professional-roadmap-acceptance.json",
+  "scope": [
+    {
+      "id": 6,
+      "name": "Market / Sector Heat Map",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Heat map for S&P 500, sectors and watchlist where feasible",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165HeatMapForState",
+            "context_alternative_intelligence.go:v168BuildHeatMode",
+            "renderer/renderer.js:v168HeatModes",
+            "canonical Engine quote snapshot reused; no heat-map fetcher",
+            "TestV168HeatMapOriginalAcceptanceModesReuseCanonicalQuotes",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Reuse existing quote universe",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165HeatMapForState",
+            "context_alternative_intelligence.go:v168BuildHeatMode",
+            "renderer/renderer.js:v168HeatModes",
+            "canonical Engine quote snapshot reused; no heat-map fetcher",
+            "TestV168HeatMapOriginalAcceptanceModesReuseCanonicalQuotes",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Complement Market Regime and sector intelligence; no competing signal",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165HeatMapForState",
+            "context_alternative_intelligence.go:v168BuildHeatMode",
+            "renderer/renderer.js:v168HeatModes",
+            "canonical Engine quote snapshot reused; no heat-map fetcher",
+            "TestV168HeatMapOriginalAcceptanceModesReuseCanonicalQuotes",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Explicit freshness/coverage/missing truth",
+          "status": "PASS",
+          "evidence": [
+            "context_alternative_intelligence.go:v165HeatMapForState",
+            "context_alternative_intelligence.go:v168BuildHeatMode",
+            "renderer/renderer.js:v168HeatModes",
+            "canonical Engine quote snapshot reused; no heat-map fetcher",
+            "TestV168HeatMapOriginalAcceptanceModesReuseCanonicalQuotes",
+            "v16_8_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "context_alternative_intelligence.go:v165HeatMapForState",
+        "context_alternative_intelligence.go:v168BuildHeatMode",
+        "renderer/renderer.js:v168HeatModes",
+        "canonical Engine quote snapshot reused; no heat-map fetcher",
+        "TestV168HeatMapOriginalAcceptanceModesReuseCanonicalQuotes",
+        "v16_8_renderer_test.js"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "SPY / QQQ Seasonality Intelligence",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "10-year monthly/seasonal context",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:buildSeasonalitySnapshot",
+            "history_providers.go:SPY/QQQ 10-year daily history path",
+            "renderer/renderer.js:v168SeasonalityRows",
+            "descriptive Validation/Learning owner; no second historical engine",
+            "TestV168SeasonalityTenYearStatisticsAndCurrentYearComparison",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Average, median, positive-period win rate, best/worst, sample size and current-year comparison",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:buildSeasonalitySnapshot",
+            "history_providers.go:SPY/QQQ 10-year daily history path",
+            "renderer/renderer.js:v168SeasonalityRows",
+            "descriptive Validation/Learning owner; no second historical engine",
+            "TestV168SeasonalityTenYearStatisticsAndCurrentYearComparison",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Context only; small samples not predictive",
+          "status": "PASS",
+          "evidence": [
+            "validation_learning.go:buildSeasonalitySnapshot",
+            "history_providers.go:SPY/QQQ 10-year daily history path",
+            "renderer/renderer.js:v168SeasonalityRows",
+            "descriptive Validation/Learning owner; no second historical engine",
+            "TestV168SeasonalityTenYearStatisticsAndCurrentYearComparison",
+            "v16_8_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "validation_learning.go:buildSeasonalitySnapshot",
+        "history_providers.go:SPY/QQQ 10-year daily history path",
+        "renderer/renderer.js:v168SeasonalityRows",
+        "descriptive Validation/Learning owner; no second historical engine",
+        "TestV168SeasonalityTenYearStatisticsAndCurrentYearComparison",
+        "v16_8_renderer_test.js"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Gamma Exposure / GEX Intelligence",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Options Intelligence only when chain/OI quality sufficient",
+          "status": "PASS",
+          "evidence": [
+            "options_intelligence.go:finalizeGEXStructure",
+            "options_intelligence.go:aggregateOptions quality gates",
+            "context_alternative_intelligence.go:GEXContextState",
+            "renderer/renderer.js:v165GEXCards",
+            "Alpaca options chain/OI/Greek canonical owner; context only",
+            "TestV168GEXMajorStrikesZonesExpirationAndFlipTruth",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Gamma flip, zones and major strikes with clear methodology",
+          "status": "PASS",
+          "evidence": [
+            "options_intelligence.go:finalizeGEXStructure",
+            "options_intelligence.go:aggregateOptions quality gates",
+            "context_alternative_intelligence.go:GEXContextState",
+            "renderer/renderer.js:v165GEXCards",
+            "Alpaca options chain/OI/Greek canonical owner; context only",
+            "TestV168GEXMajorStrikesZonesExpirationAndFlipTruth",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "No false precision or dealer-positioning claim",
+          "status": "PASS",
+          "evidence": [
+            "options_intelligence.go:finalizeGEXStructure",
+            "options_intelligence.go:aggregateOptions quality gates",
+            "context_alternative_intelligence.go:GEXContextState",
+            "renderer/renderer.js:v165GEXCards",
+            "Alpaca options chain/OI/Greek canonical owner; context only",
+            "TestV168GEXMajorStrikesZonesExpirationAndFlipTruth",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Context only; no options desk/execution",
+          "status": "PASS",
+          "evidence": [
+            "options_intelligence.go:finalizeGEXStructure",
+            "options_intelligence.go:aggregateOptions quality gates",
+            "context_alternative_intelligence.go:GEXContextState",
+            "renderer/renderer.js:v165GEXCards",
+            "Alpaca options chain/OI/Greek canonical owner; context only",
+            "TestV168GEXMajorStrikesZonesExpirationAndFlipTruth",
+            "v16_8_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "options_intelligence.go:finalizeGEXStructure",
+        "options_intelligence.go:aggregateOptions quality gates",
+        "context_alternative_intelligence.go:GEXContextState",
+        "renderer/renderer.js:v165GEXCards",
+        "Alpaca options chain/OI/Greek canonical owner; context only",
+        "TestV168GEXMajorStrikesZonesExpirationAndFlipTruth",
+        "v16_8_renderer_test.js"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Smart Notifications",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Meaningful state changes only",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:buildSmartNotifications",
+            "event_intelligence.go:signalStateChangeNotifications",
+            "event_intelligence.go:insiderPurchaseNotifications",
+            "event_intelligence.go:dataHealthNotifications",
+            "renderer/renderer.js existing Smart Notifications consumption point",
+            "canonical Validation/SEC/Freshness/Provider state transitions; no duplicate polling",
+            "TestV168SmartNotificationsMaterialStateChangesOnly",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Material news, insider purchase, readiness change, Entry Zone reached/lost, catalyst trigger, Tradeability deterioration and data degradation",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:buildSmartNotifications",
+            "event_intelligence.go:signalStateChangeNotifications",
+            "event_intelligence.go:insiderPurchaseNotifications",
+            "event_intelligence.go:dataHealthNotifications",
+            "renderer/renderer.js existing Smart Notifications consumption point",
+            "canonical Validation/SEC/Freshness/Provider state transitions; no duplicate polling",
+            "TestV168SmartNotificationsMaterialStateChangesOnly",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "No noisy standalone Alerts workspace by default",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:buildSmartNotifications",
+            "event_intelligence.go:signalStateChangeNotifications",
+            "event_intelligence.go:insiderPurchaseNotifications",
+            "event_intelligence.go:dataHealthNotifications",
+            "renderer/renderer.js existing Smart Notifications consumption point",
+            "canonical Validation/SEC/Freshness/Provider state transitions; no duplicate polling",
+            "TestV168SmartNotificationsMaterialStateChangesOnly",
+            "v16_8_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "event_intelligence.go:buildSmartNotifications",
+        "event_intelligence.go:signalStateChangeNotifications",
+        "event_intelligence.go:insiderPurchaseNotifications",
+        "event_intelligence.go:dataHealthNotifications",
+        "renderer/renderer.js existing Smart Notifications consumption point",
+        "canonical Validation/SEC/Freshness/Provider state transitions; no duplicate polling",
+        "TestV168SmartNotificationsMaterialStateChangesOnly",
+        "v16_8_renderer_test.js"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Liquidity & Slippage Intelligence",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Spread percent and relative-to-normal spread",
+          "status": "PASS",
+          "evidence": [
+            "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+            "preparation_types_liquidity.go:liquidityHistoryMetrics",
+            "runtime_live_loop.go:updateQuote learned spread baseline",
+            "engine_core.go:canonical liquidity snapshot integration",
+            "renderer/renderer.js liquidity presentation",
+            "canonical quote/bar evidence; feeds existing Day readiness",
+            "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Dollar volume",
+          "status": "PASS",
+          "evidence": [
+            "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+            "preparation_types_liquidity.go:liquidityHistoryMetrics",
+            "runtime_live_loop.go:updateQuote learned spread baseline",
+            "engine_core.go:canonical liquidity snapshot integration",
+            "renderer/renderer.js liquidity presentation",
+            "canonical quote/bar evidence; feeds existing Day readiness",
+            "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Opening liquidity",
+          "status": "PASS",
+          "evidence": [
+            "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+            "preparation_types_liquidity.go:liquidityHistoryMetrics",
+            "runtime_live_loop.go:updateQuote learned spread baseline",
+            "engine_core.go:canonical liquidity snapshot integration",
+            "renderer/renderer.js liquidity presentation",
+            "canonical quote/bar evidence; feeds existing Day readiness",
+            "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Volatility-adjusted slippage risk",
+          "status": "PASS",
+          "evidence": [
+            "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+            "preparation_types_liquidity.go:liquidityHistoryMetrics",
+            "runtime_live_loop.go:updateQuote learned spread baseline",
+            "engine_core.go:canonical liquidity snapshot integration",
+            "renderer/renderer.js liquidity presentation",
+            "canonical quote/bar evidence; feeds existing Day readiness",
+            "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+            "v16_8_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 5,
+          "acceptance": "Especially feeds Day Trade readiness",
+          "status": "PASS",
+          "evidence": [
+            "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+            "preparation_types_liquidity.go:liquidityHistoryMetrics",
+            "runtime_live_loop.go:updateQuote learned spread baseline",
+            "engine_core.go:canonical liquidity snapshot integration",
+            "renderer/renderer.js liquidity presentation",
+            "canonical quote/bar evidence; feeds existing Day readiness",
+            "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+            "v16_8_renderer_test.js"
+          ]
+        }
+      ],
+      "evidence": [
+        "preparation_types_liquidity.go:deriveLiquidityStatesWithContext",
+        "preparation_types_liquidity.go:liquidityHistoryMetrics",
+        "runtime_live_loop.go:updateQuote learned spread baseline",
+        "engine_core.go:canonical liquidity snapshot integration",
+        "renderer/renderer.js liquidity presentation",
+        "canonical quote/bar evidence; feeds existing Day readiness",
+        "TestV168LiquidityRelativeSpreadDollarVolumeOpeningAndVolatilityAdjustedRisk",
+        "v16_8_renderer_test.js"
+      ]
+    }
+  ],
+  "result": "5/5 FULL at immutable clause depth; deterministic formulas unchanged"
+}

@@ -1,0 +1,28 @@
+DE.PULSE v16.0.4 WORKING CANDIDATE — EMBEDDED QA SUMMARY
+Date: 2026-08-11
+Build ID: v16.0.4-working-candidate-professional-truth-closure-20260811
+Status: WORKING CANDIDATE · NOT TEST · NOT STABLE
+
+IMPLEMENTATION / TEST EVIDENCE
+- Immutable Master Scope: 11/11 PASS / implemented at Working Candidate depth.
+- Full Go suite: PASS.
+- go vet: PASS.
+- Coverage: 53.9% statements.
+- Race detector: PASS across 303 discovered Go tests in 10 bounded shards.
+- Randomized full-suite order: PASS x10; seeds 1600401-1600410.
+- Responsive UI: 376/376 PASS across 15 viewports / 20 surfaces.
+- Extreme Production / Professional Trader: 30/30 PASS.
+- Deterministic Day/Swing/Long equivalence: 2403/2403 PASS.
+- HTTP/cross-module workflow: 127/127 PASS.
+- Approved Scope Traceability: 48/48 PASS.
+- Professional Build Authorization, edge/adversarial/fault-injection, renderer, content/copy and version gates: PASS.
+- Catalyst Watch quote-level reaction tracking is event-driven: dormant without an active confirmed catalyst; deterministic regression PASS.
+
+RELEASE BLOCKERS
+- Supported Go release toolchain required for final G6/G10; host is Go 1.23.2 and runner network policy prevents installing verified current Go 1.26.5.
+- govulncheck unavailable; release vulnerability certification incomplete.
+- Native macOS/Windows G12 RC acceptance cannot be performed on this Linux host.
+
+FINAL DECISION
+v16.0.4 NOT CLOSED — continue the same WORKING CANDIDATE / RC.
+v16.1.0 remains PLAN ONLY / NOT AUTHORIZED.

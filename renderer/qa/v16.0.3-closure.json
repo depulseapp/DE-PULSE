@@ -1,0 +1,53 @@
+{
+  "build": "DE.PULSE v16.0.3 TEST",
+  "build_id": "v16.0.3-test-professional-authorization-hardening-20260811",
+  "status": "TEST · NOT STABLE",
+  "protected_baseline": "DE.PULSE v15.1.2 STABLE",
+  "stable_untouched": true,
+  "stable_source_sha256": "e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c",
+  "committed_scope": [
+    {"audit_item":16,"name":"Shared quote timestamp / Provider Reconciliation truth","status":"CLOSED","proof":"Provider/data age and receipt age are independent; future skew is invalid; stale provider data cannot be rescued by recent receipt; Research applies its own cadence only after canonical timestamp validation."},
+    {"audit_item":17,"name":"Corporate-action historical backfill completion/retry","status":"CLOSED","proof":"Backfill stamps require natural pagination completion; repeated-token/safety-stop/HTTP partial states remain retryable; recovery is tested."},
+    {"audit_item":25,"name":"Selected-ticker Fundamentals Check Age vs Data Age truth","status":"CLOSED","proof":"Recent checks cannot freshen stale underlying fundamentals; future timestamps are invalid and no longer displayed as age zero."},
+    {"audit_item":30,"name":"Professional Working-Candidate / Build Authorization governance","status":"CLOSED","proof":"Professional expert, extensive edge, independent authorization, fault injection, reproducible randomized runs and clean-source transition audit are mandatory."}
+  ],
+  "gates": {
+    "v16_scope": "4/4 CLOSED · PASS",
+    "professional_build_authorization": "PASS",
+    "professional_expert_trader_investor": "PASS",
+    "extensive_edge_case_failure_mode": "PASS",
+    "fault_injection": "PASS",
+    "independent_pre_freeze_adversarial": "PASS",
+    "go_full_suite": "PASS",
+    "race_detector": "PASS · 284/284 Go tests in bounded -race shards",
+    "go_vet": "PASS",
+    "randomized_order_x10": "PASS · seeds 1600301..1600310",
+    "statement_coverage": "52.9%",
+    "inherited_approved_scope": "48/48 PASS",
+    "extreme_production_matrix": "30/30 PASS",
+    "deterministic_equivalence": "2403/2403 PASS",
+    "professional_trader_acceptance": "PASS",
+    "http_cross_module": "127/127 PASS",
+    "responsive_layout": "376/376 PASS · 15 viewports / 20 surfaces",
+    "renderer_logic": "PASS",
+    "content_copy": "PASS",
+    "version_consistency": "PASS"
+  },
+  "professional_truth_rules": [
+    "No false Fresh",
+    "Recent check does not override stale underlying data",
+    "Future timestamps do not become age-zero Fresh evidence",
+    "Fresh receipt does not rescue stale provider market data",
+    "No partial historical backfill marked Complete",
+    "No false provider agreement",
+    "No false Ready",
+    "No deterministic Score/Action regression",
+    "No Stable modification"
+  ],
+  "environment_limited": [
+    "Authenticated live-provider acceptance requires user credentials/entitlements.",
+    "Physical macOS/Windows lifecycle, sleep/wake and side-by-side native acceptance remain target-host checks."
+  ],
+  "next_build_rule": "v16.1.0 WORKING CANDIDATE may begin only when the final clean-extracted v16.0.3 source passes next_build_audit_gate.py.",
+  "next_minor_target": "v16.1.0 WORKING CANDIDATE · Market Intelligence + Professional Market Decision Engine"
+}

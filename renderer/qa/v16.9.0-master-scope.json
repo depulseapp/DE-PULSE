@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-v16.9.0-MASTER-SCOPE-1",
+  "version": "16.9.0",
+  "mission": "Final Original Professional Roadmap Closure",
+  "immutableAcceptanceContract": "original-professional-roadmap-acceptance.json",
+  "scope_lock": [
+    {
+      "id": 10,
+      "name": "Social & Community Intelligence pipeline",
+      "statusTarget": "FULL",
+      "acceptance": [
+        "Normalize permitted/user-authorized X, Reddit, Telegram, Discord and WhatsApp inputs where supported",
+        "Official APIs/bots/connectors only; no scraping/bypass",
+        "Separate from verified news",
+        "Dedupe/ticker-map/credibility-source label",
+        "Always untrusted; prompt-injection defense"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Oil / Energy Context",
+      "statusTarget": "FULL",
+      "acceptance": [
+        "WTI/CL and Brent/BZ contextual feeds",
+        "Trend/change/spread context",
+        "Truthful continuous-contract/roll/delay semantics",
+        "Context only; no futures execution"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Market Replay / Historical Scenario Validation",
+      "statusTarget": "FULL",
+      "acceptance": [
+        "Replay historical evidence through deterministic engines",
+        "Reusable known scenarios including CPI/FOMC shocks, earnings gaps, high-VIX sessions and other known sessions",
+        "No lookahead; validation tool not mock-live mode"
+      ]
+    }
+  ],
+  "non_scope": [
+    "No v17 database/repository implementation",
+    "No v18 hosted/auth/multi-user implementation",
+    "No v16.10 Opportunity Radar/unusual-volume implementation",
+    "No Portfolio/Journal/paper trading/order execution",
+    "No deterministic Day/Swing/Long formula change"
+  ],
+  "target": "30 FULL / 0 PARTIAL / 0 MISSING"
+}

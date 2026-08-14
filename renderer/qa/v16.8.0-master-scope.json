@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-v16.8.0-MASTER-SCOPE-1",
+  "version": "16.8.0",
+  "release": "Professional Context & Readiness Closure",
+  "baseline": {
+    "version": "16.7.0",
+    "sourceFingerprint": "ac66396e4fb27eaf83ff2760892c1ef03be6e3549e721b90ac96d79b26cce5ee",
+    "sourceZipSha256": "3f83050fbb8e7b5c74e39ff8e3f36d4305ad5b3101d1dde53909e0ddbc4df5e0"
+  },
+  "continuitySupplement": "DE-PULSE-Adaptive-Roadmap-Continuity-Handoff-2026-08-12.md",
+  "immutableAcceptanceContract": "original-professional-roadmap-acceptance.json",
+  "scope_lock": [
+    {
+      "id": 6,
+      "name": "Market / Sector Heat Map",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 8,
+      "name": "SPY / QQQ Seasonality Intelligence",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 9,
+      "name": "Gamma Exposure / GEX Intelligence",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 21,
+      "name": "Smart Notifications",
+      "target": "PARTIAL -> FULL"
+    },
+    {
+      "id": 27,
+      "name": "Liquidity & Slippage Intelligence",
+      "target": "PARTIAL -> FULL"
+    }
+  ],
+  "non_goals": [
+    "No v16.9 Community Intelligence/Oil-Energy/Historical Replay closure",
+    "No database/hosted/auth/payment/multi-user implementation",
+    "No new general market-data provider",
+    "No deterministic Day/Swing/Long formula changes",
+    "No paper trading/live execution/Portfolio/Journal",
+    "No visual redesign or standalone Alerts workspace"
+  ],
+  "architecture_order": "REUSE -> CONSOLIDATE -> REFACTOR -> DELETE/REPLACE -> ADD",
+  "release_gate": "All five immutable original-roadmap items FULL; final roadmap 27 FULL / 3 PARTIAL / 0 MISSING; G0-G16 green subject only to truthful host residuals."
+}

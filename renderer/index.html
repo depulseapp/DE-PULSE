@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://finnhub.io https://openrouter.ai https://api.groq.com https://generativelanguage.googleapis.com https://www.sec.gov https://data.sec.gov https://data.alpaca.markets https://api.stlouisfed.org https://api.bls.gov https://api.eia.gov https://api.twelvedata.com https://api.marketaux.com https://query1.finance.yahoo.com https://www.cboe.com https://home.treasury.gov https://www.bea.gov wss://ws.finnhub.io;" />
+  <title>DE.PULSE v18.1.0</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="styles.css?v=16.8.0" />
+</head>
+<body>
+<div id="app-shell">
+  <header class="topbar">
+    <div class="brand"><img src="icon.png" alt="DE.PULSE"><div class="brand-copy"><strong class="brand-name" aria-label="DE dot PULSE"><span>DE</span><i class="brand-dot" aria-hidden="true"></i><span>PULSE</span><svg class="brand-pulse" viewBox="0 0 28 16" aria-hidden="true"><path class="brand-pulse-wave" d="M1 8h5l2.2-5.5 3.2 11 3.3-8.2 2.7 5.2 2-2.5H27"/><circle class="brand-pulse-runner" r="1.7" cx="0" cy="0"><animateMotion dur="2.8s" repeatCount="indefinite" path="M1 8h5l2.2-5.5 3.2 11 3.3-8.2 2.7 5.2 2-2.5H27"/></circle></svg></strong><small>Personal Market Intelligence</small></div></div>
+    <div id="header-notification" class="header-notification" role="status" aria-live="polite" aria-hidden="true" title=""></div>
+    <div class="runtime">
+      <div id="market-session-context" class="market-session-context closed" aria-label="US market session">
+        <b id="market-session-label">MARKET CLOSED</b>
+        <small id="market-session-detail">Checking session…</small>
+      </div>
+      <div class="market-clocks" aria-label="Eastern and Pacific market times">
+        <span class="market-clock" title="US Eastern Time"><b id="zone-et">ET</b><span class="market-clock-value"><small id="date-et">---</small><time id="clock-et">--:--</time></span></span>
+        <span class="market-clock" title="US Pacific Time"><b id="zone-pt">PT</b><span class="market-clock-value"><small id="date-pt">---</small><time id="clock-pt">--:--</time></span></span>
+      </div>
+      <span id="runtime-status" class="runtime-pill stopped" aria-label="Market data status">DATA OFFLINE</span>
+      <button id="runtime-toggle" class="btn primary">START DATA</button>
+      <span id="identity-principal" class="identity-principal" title="Authenticated user"></span>
+      <button id="identity-signout" class="btn ghost identity-signout" hidden>SIGN OUT</button>
+    </div>
+  </header>
+  <div id="macro-event-banner" class="macro-event-banner" role="status" aria-live="polite" aria-hidden="true"></div>
+  <div id="ticker-tape" class="ticker-tape" aria-label="Market Instruments"></div>
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="sidebar-scroll" id="sidebar-scroll" tabindex="0" aria-label="Primary navigation">
+        <nav id="nav" aria-label="Primary navigation">
+          <div class="nav-group" data-nav-group="overview"><div class="nav-group-label">Overview</div>
+            <button class="nav active" data-page="dashboard"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9H5z"/><path d="M9 20v-6h6v6"/></svg><b>Dashboard</b></button>
+            <button class="nav" data-page="market-intelligence"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V9M10 18V5M16 18v-7M3 18h18"/><path d="M4 8l6-4 6 6 4-3"/></svg><b>Market Intelligence</b></button>
+          </div>
+          <div class="nav-group" data-nav-group="trading"><div class="nav-group-label">Trading</div>
+            <button class="nav" data-page="day"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L5 14h7l-1 8 8-13h-7z"/></svg><b>Day Trade Desk</b></button>
+            <button class="nav" data-page="swing"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17L17 5M10 5h7v7"/></svg><b>Swing Desk</b></button>
+            <button class="nav" data-page="long"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8c-4 0-4 8 0 8 4 0 4-8 8-8 4 0 4 8 0 8-4 0-4-8-8-8z"/></svg><b>Long-Term Desk</b></button>
+          </div>
+          <div class="nav-group" data-nav-group="research"><div class="nav-group-label">Research</div>
+            <button class="nav" data-page="discovery"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4M11 7v8M7 11h8"/></svg><b>Discovery</b></button>
+            <button class="nav" data-page="research"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><b>Research</b></button>
+            <button class="nav" data-page="ai"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg><b>AI Copilot</b></button>
+          </div>
+          <div class="nav-group" data-nav-group="system"><div class="nav-group-label">System</div>
+            <button class="nav" data-page="maintenance"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6M16 14v6"/><circle cx="8" cy="7" r="2"/><circle cx="16" cy="17" r="2"/></svg><b>Maintenance</b></button>
+            <button class="nav" data-page="settings"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg><b>Settings</b></button>
+            <button class="nav" data-page="documentation"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4M9 11h6M9 15h6"/></svg><b>Documentation</b></button>
+          </div>
+        </nav>
+        <div class="sidebar-divider sidebar-engine-divider" aria-hidden="true"></div>
+        <section class="sidebar-data-engine" aria-labelledby="sidebar-data-engine-title">
+          <div class="sidebar-engine-head"><div id="sidebar-data-engine-title" class="sidebar-section-title">Data Engine</div><span id="engine-health-chip" class="engine-health-chip stopped"><i id="engine-health-dot" aria-hidden="true"></i><b id="engine-health-label">OFFLINE</b></span></div>
+          <div id="engine-health-detail" class="sidebar-engine-summary-detail">Market data runtime is stopped</div>
+          <div class="data-engine-mode-row"><b>Mode</b><span id="engine-mode">Demo Mode</span></div>
+          <div id="health-list" aria-label="Market data provider health"></div>
+          <div id="prep-status-list" class="sidebar-prep-status" aria-label="Preparation and catalyst job status"></div>
+        </section>
+      </div>
+      <footer class="creator-signature" title="Created by Deivaram Venkatachalapathy"><span class="creator-initials" aria-hidden="true">DV</span><span class="creator-copy"><small>Created by</small><b>Deivaram Venkatachalapathy</b></span></footer>
+    </aside>
+    <main id="main" class="main"></main>
+  </div>
+</div>
+<script src="renderer.js?v=18.1.0"></script>
+</body>
+</html>

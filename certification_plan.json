@@ -1,0 +1,776 @@
+{
+  "schema": "DE.PULSE-CERTIFICATION-PLAN-1",
+  "version": "18.1.0",
+  "checks": [
+    {
+      "id": "g0_release_environment",
+      "gate": "G0",
+      "label": "Release/development environment readiness",
+      "command": [
+        "{python}",
+        "release_environment_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": false
+    },
+    {
+      "id": "g0_v18_baseline",
+      "gate": "G0",
+      "label": "Certified v17.5.1 Stable provenance + v18 GO anchor",
+      "command": [
+        "{python}",
+        "v18_baseline_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g0_release_identity",
+      "gate": "G0",
+      "label": "Canonical v18.0.6 TEST release identity",
+      "command": [
+        "{python}",
+        "release_identity.py",
+        "--verify"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g1_v1806_scope",
+      "gate": "G1",
+      "label": "v18.0.6 Router / Rapid Move / Market Shock immutable scope",
+      "command": [
+        "{python}",
+        "v18_0_6_scope_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g2_source_health",
+      "gate": "G2",
+      "label": "Source health + architecture reuse",
+      "command": [
+        "{python}",
+        "source_health_architecture_gate.py"
+      ],
+      "timeout_seconds": 90,
+      "blocking": true
+    },
+    {
+      "id": "g2_data_utility",
+      "gate": "G2",
+      "label": "Data Utility / Evidence Value registry",
+      "command": [
+        "{python}",
+        "data_utility_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g7_fingerprint_portability",
+      "gate": "G7",
+      "label": "Cross-platform canonical source fingerprint portability",
+      "command": [
+        "{python}",
+        "source_fingerprint_portability_test.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g7_data_health",
+      "gate": "G7",
+      "label": "Freshness/cache/data-health contract",
+      "command": [
+        "{python}",
+        "data_health_policy_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g7_v1801_unit",
+      "gate": "G7",
+      "label": "v18.0.1 Smart Router / Rapid Move focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV1801",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v1805_unit",
+      "gate": "G7",
+      "label": "v18.0.5 canonical tracked-symbol focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV1805",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v1806_unit",
+      "gate": "G7",
+      "label": "v18.0.6 Router / Market Shock focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV1806",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v170_unit",
+      "gate": "G7",
+      "label": "v17.0 persistence/load/degradation focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV170",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v171_unit",
+      "gate": "G7",
+      "label": "v17.1 priority/backpressure/provider-budget focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV171",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v172_unit",
+      "gate": "G7",
+      "label": "v17.2 canonical propagation/lineage tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV172",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v172_race",
+      "gate": "G7",
+      "label": "v17.2 canonical critical-path race tests",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-run",
+        "^TestV172",
+        "./..."
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g7_v171_race",
+      "gate": "G7",
+      "label": "v17.1 focused race detector",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-run",
+        "^TestV171",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v17_cross_platform_sqlite",
+      "gate": "G7",
+      "label": "v17 cross-platform SQLite source/Windows compile contract",
+      "command": [
+        "{python}",
+        "v17_0_cross_platform_persistence_gate.py"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v174_unit",
+      "gate": "G7",
+      "label": "v17.4 readiness truth / operational hardening tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV174",
+        "./..."
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v174_renderer",
+      "gate": "G7",
+      "label": "v17.4 grouped readiness + Master Symbols renderer acceptance",
+      "command": [
+        "node",
+        "v17_4_renderer_test.js"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g7_v170_fallback",
+      "gate": "G7",
+      "label": "CGO-disabled persistence fallback regression",
+      "command": [
+        "bash",
+        "-lc",
+        "CGO_ENABLED=0 go test -count=1 -json -timeout=120s ./..."
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g7_static",
+      "gate": "G7",
+      "label": "Formatting/static/resource hygiene",
+      "command": [
+        "{python}",
+        "code_quality_performance_gate.py",
+        "--static-only"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g7_v1611_perf",
+      "gate": "G7",
+      "label": "Inherited v16.11 performance/stability regression",
+      "command": [
+        "{python}",
+        "v16_11_performance_stability_gate.py"
+      ],
+      "timeout_seconds": 240,
+      "blocking": true
+    },
+    {
+      "id": "g7_v1610_radar_perf",
+      "gate": "G7",
+      "label": "Inherited Opportunity Radar performance regression",
+      "command": [
+        "{python}",
+        "v16_10_performance_gate.py"
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g7_v180_security",
+      "gate": "G7",
+      "label": "v18.0 identity/session/security focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV180",
+        "./..."
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g7_v180_windows_compile",
+      "gate": "G7",
+      "label": "v18.0 Windows x64 compile / identity-persistence contract",
+      "command": [
+        "bash",
+        "-lc",
+        "tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go test -c -o \"$tmp/depulse-v18.test.exe\" . && test -s \"$tmp/depulse-v18.test.exe\""
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g9_v1805_ui",
+      "gate": "G9",
+      "label": "v18.0.5 touched-surface UI/UX + role-visibility acceptance",
+      "command": [
+        "node",
+        "v18_0_5_renderer_test.js"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g10_v1806_principal_engineer",
+      "gate": "G10",
+      "label": "v18.0.6 Principal Engineer Router/Rapid Move hardening review",
+      "command": [
+        "{python}",
+        "v18_0_6_principal_engineer_gate.py"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g10_trader",
+      "gate": "G10",
+      "label": "Professional trader acceptance regression",
+      "command": [
+        "node",
+        "trader_acceptance_test.js"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_v180_adversarial_auth",
+      "gate": "G11",
+      "label": "Independent adversarial authorization regression",
+      "command": [
+        "{python}",
+        "independent_adversarial_authorization_gate.py"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_http",
+      "gate": "G11",
+      "label": "HTTP/cross-module workflow regression",
+      "command": [
+        "{python}",
+        "http_workflow_test.py"
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g11_deterministic",
+      "gate": "G11",
+      "label": "Day/Swing/Long deterministic equivalence",
+      "command": [
+        "node",
+        "deterministic_equivalence_test.js"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_renderer",
+      "gate": "G11",
+      "label": "Renderer logic regression",
+      "command": [
+        "node",
+        "renderer_logic_test.js"
+      ],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_v180_content",
+      "gate": "G11",
+      "label": "Current UI/content terminology and release-copy audit",
+      "command": [
+        "{python}",
+        "content_copy_audit_test.py"
+      ],
+      "timeout_seconds": 90,
+      "blocking": true
+    },
+    {
+      "id": "g11_v180_typography",
+      "gate": "G11",
+      "label": "Documentation typography hierarchy",
+      "command": [
+        "{python}",
+        "v18_documentation_typography_gate.py"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g11_responsive",
+      "gate": "G11",
+      "label": "Responsive/layout integrity \u00b7 bounded 15-viewport shards",
+      "command": [
+        "{python}",
+        "responsive_ui_sharded_gate.py"
+      ],
+      "timeout_seconds": 300,
+      "blocking": true
+    },
+    {
+      "id": "g12_go_full",
+      "gate": "G12",
+      "label": "Full Go suite",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-json",
+        "-timeout=120s",
+        "./..."
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_01",
+      "gate": "G12",
+      "label": "Race detector bounded shard 1/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "1",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_02",
+      "gate": "G12",
+      "label": "Race detector bounded shard 2/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "2",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_03",
+      "gate": "G12",
+      "label": "Race detector bounded shard 3/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "3",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_04",
+      "gate": "G12",
+      "label": "Race detector bounded shard 4/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "4",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_05",
+      "gate": "G12",
+      "label": "Race detector bounded shard 5/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "5",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_06",
+      "gate": "G12",
+      "label": "Race detector bounded shard 6/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "6",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_07",
+      "gate": "G12",
+      "label": "Race detector bounded shard 7/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "7",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_08",
+      "gate": "G12",
+      "label": "Race detector bounded shard 8/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "8",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_09",
+      "gate": "G12",
+      "label": "Race detector bounded shard 9/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "9",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_race_10",
+      "gate": "G12",
+      "label": "Race detector bounded shard 10/10",
+      "command": [
+        "{python}",
+        "bounded_race_gate.py",
+        "--shard",
+        "10",
+        "--shards",
+        "10"
+      ],
+      "timeout_seconds": 150,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_01",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 1/10 (1670701)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670701"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_02",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 2/10 (1670702)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670702"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_03",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 3/10 (1670703)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670703"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_04",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 4/10 (1670704)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670704"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_05",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 5/10 (1670705)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670705"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_06",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 6/10 (1670706)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670706"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_07",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 7/10 (1670707)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670707"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_08",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 8/10 (1670708)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670708"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_09",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 9/10 (1670709)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670709"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_randomized_10",
+      "gate": "G12",
+      "label": "Randomized test-order regression seed 10/10 (1670710)",
+      "command": [
+        "{python}",
+        "randomized_order_gate.py",
+        "--seed",
+        "1670710"
+      ],
+      "timeout_seconds": 100,
+      "blocking": true
+    },
+    {
+      "id": "g12_extreme",
+      "gate": "G12",
+      "label": "Extreme Production 30-category regression",
+      "command": [
+        "{python}",
+        "extreme_30_gate.py"
+      ],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g12_govulncheck",
+      "gate": "G12",
+      "label": "Go vulnerability scan",
+      "command": [
+        "govulncheck",
+        "./..."
+      ],
+      "timeout_seconds": 180,
+      "blocking": false
+    },
+    {
+      "id": "g16_documentation",
+      "gate": "G16",
+      "label": "Documentation/release-governance consistency",
+      "command": [
+        "{python}",
+        "documentation_governance_gate.py"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g16_version_consistency",
+      "gate": "G16",
+      "label": "Canonical version/build/docs/CI consistency",
+      "command": [
+        "{python}",
+        "version_consistency_test.py"
+      ],
+      "timeout_seconds": 60,
+      "blocking": true
+    }
+  ]
+}

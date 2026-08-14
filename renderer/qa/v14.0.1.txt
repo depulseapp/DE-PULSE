@@ -1,0 +1,18 @@
+DE.PULSE v14.0.1 — EMBEDDED STABLE HOTFIX QA SUMMARY
+Build: v14.0.1-stable-header-gap-hotfix-20260809
+Baseline: DE.PULSE v14.0.0 Stable
+
+HOTFIX SCOPE
+- Fixed an empty/invisible row between the primary header and Market Instruments strip.
+- Root cause: the below-header notification host remained display:flex with a minimum height while aria-hidden=true, so it reserved layout space despite being visually transparent.
+- Hidden notifications now collapse to zero layout height, zero padding, zero margin and zero border.
+- Visible notifications still render below the primary header with deliberate spacing.
+- Added explicit header/scroll regression checks verifying zero hidden-notification height and zero gap between the sticky topbar and Market Instruments strip before and after scroll.
+
+INVARIANTS
+- No deterministic Day/Swing/Long Action/Score formulas changed.
+- No provider, Global/Macro, Options, Trade Readiness, Signal Validation, AI, Settings, Maintenance, documentation, watchlist or persistence behavior changed.
+- Production real-data-only rules remain unchanged.
+
+RELEASE GATES
+- This patch must pass the existing 11 blocking v14 release gates, with focused UI/scroll validation added to Gate 7 and regression coverage under Gate 3 / Gate 11.

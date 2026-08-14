@@ -1,1 +1,0 @@
-PASS: DE.PULSE v18.0.5 STABLE native release assurance. STABLE_CERTIFIED.

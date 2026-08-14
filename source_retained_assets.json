@@ -1,0 +1,10 @@
+{
+  "schema": "DE.PULSE-SOURCE-RETAINED-ASSETS-1",
+  "assets": [
+    {
+      "path": "De-Pulse-approved-v13.2.7-master.png",
+      "purpose": "Approved branding source asset; renderer/package icon regressions verify continuity.",
+      "consumers": ["renderer_logic_test.js", "platform icon packaging"]
+    }
+  ]
+}

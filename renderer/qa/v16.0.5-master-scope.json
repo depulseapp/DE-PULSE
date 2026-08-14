@@ -1,0 +1,36 @@
+{
+  "version": "16.0.5",
+  "build": "v16.0.5-v160-closure-20260811",
+  "protectedStable": "15.1.2",
+  "sourceLine": "16.0.4 final RC",
+  "count": 4,
+  "requirements": [
+    {
+      "id": "V16.0.5-01",
+      "title": "Provider Reconciliation requires cross-provider contemporaneity in addition to session freshness",
+      "risk": "P0/P1"
+    },
+    {
+      "id": "V16.0.5-02",
+      "title": "Primary header matches Stable branding; release status lives outside brand header",
+      "risk": "P1 UX"
+    },
+    {
+      "id": "V16.0.5-03",
+      "title": "G0-G16 final closure certification uses supported Go, govulncheck, exact-source/native evidence and final hash truth",
+      "risk": "P0 process"
+    },
+    {
+      "id": "V16.0.5-04",
+      "title": "Inherited v16.0 professional truth scope remains closed; no v16.1 feature leakage or deterministic formula change",
+      "risk": "P0/P1"
+    }
+  ],
+  "nonScope": [
+    "Market Intelligence side-panel tab",
+    "v16.1 Tradeability engine",
+    "Breadth/Internals, Relative Strength, Sector/Industry Regime, Market Structure, Liquidity/Slippage",
+    "Deterministic Day/Swing/Long Score/Action formula changes",
+    "Visual redesign"
+  ]
+}

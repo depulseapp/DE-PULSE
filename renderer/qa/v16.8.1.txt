@@ -1,0 +1,14 @@
+DE.PULSE v16.8.1 STABLE — US MARKET SCOPE & DATA UTILITY HARDENING
+Build: v16.8.1-stable-us-market-data-utility-hardening-20260812
+Roadmap: 27 FULL / 3 PARTIAL / 0 MISSING (unchanged)
+
+Scope:
+- U.S.-listed actionable ticker boundary
+- US-primary Economic Calendar + selective Global Context
+- SPY/QQQ + selected ticker Tier-0 live priority
+- Data Utility & Evidence Value registry/gate
+- Adaptive Data Health / Freshness / Cache policy gate
+- Adaptive Build Process v2 canonical identity + pre-freeze qualification
+
+Deterministic Day/Swing/Long formulas: UNCHANGED
+No Execution Boundary: PRESERVED

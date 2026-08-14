@@ -1,0 +1,5 @@
+DE.PULSE v17.1.0 TEST — Runtime Load + Backpressure
+Build: v17.1.0-runtime-load-backpressure-test-20260812
+Stable baseline: v16.11.0
+
+Tier 0-4 priority/backpressure, hard-bounded provider queues, protected Tier 0/1 reserve, load shedding, background isolation, tier-aware provider work and Alpaca/Finnhub live subscription capacity telemetry. Deterministic Day/Swing/Long formulas and the No Execution Boundary are unchanged. The v17.0 Windows JSON-fallback blocker is resolved in this source with a Windows system-SQLite backend; final native macOS package validation remains required before Stable.

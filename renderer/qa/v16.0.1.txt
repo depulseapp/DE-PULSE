@@ -1,0 +1,68 @@
+DE.PULSE v16.0.1 TEST — PROFESSIONAL TRUTH FOUNDATION CORRECTION
+Build: v16.0.1-test-truth-foundation-correction-20260811
+Status: TEST · NOT STABLE
+Protected baseline: v15.1.2 STABLE
+Protected Stable Source SHA-256: e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c
+
+WHY THIS PATCH EXISTS
+The mandatory source-level re-audit of v16.0.0 found two real defects and one gate weakness despite green automated tests: (1) Provider Reconciliation could show a canonical provider that contradicted its reason, (2) selected-ticker Daily History freshness could inherit a global history clock, and (3) the release gate did not include those adversarial cases. Corporate-action lifecycle persistence also needed hardening before closure.
+
+CORRECTIONS
+#16 Provider Reconciliation — CLOSED
+- Canonical winner is finalized before Reason generation.
+- Runtime canonical source, Router active provider, priority/freshness context are represented truthfully.
+- No silent price averaging.
+- New adversarial fallback test proves CanonicalProvider and Reason cannot contradict.
+
+#17 Corporate Actions / Symbol Lifecycle — CLOSED
+- Corporate actions are persisted in MarketCache instead of disappearing after restart/rolling refresh.
+- Ledger merge uses provider action ID when available and a deterministic fallback key otherwise.
+- Provider process date and first-seen provenance are retained.
+- New tracked symbols receive a per-symbol historical initial backfill; later refreshes use a rolling window and merge rather than replace.
+- Pagination is followed with loop/repeat-token safety and a truthful partial state if a safety stop is reached.
+- Adjusted bars remain canonical; raw comparison history stays separate as daily-raw.
+- Name-change lineage remains explicit without falsely treating every merger/spin-off as a simple ticker rename.
+- Parser/ledger tests cover split/dividend/merger/spin-off/name-change/redemption/rights/worthless-removal/reorganization/partial-call families used by the adapter.
+
+#25 Selected-Ticker Research Freshness — CLOSED
+- Daily History now uses research-history:<SYMBOL>.
+- The stamp is set only after the selected ticker's daily history route successfully reconciles.
+- Global history/history-daily timestamps cannot make another ticker Fresh.
+- Intraday history cannot satisfy the critical Daily History component.
+
+#30 Professional Release Gate — CLOSED
+- v16_0_scope_gate.py requires the inherited v16.0 behavioral proofs AND the v16.0.1 adversarial proofs.
+- next_build_audit_gate.py reruns the adversarial v16.0.1 suite and full Go suite from source.
+- Marker/string presence alone remains insufficient.
+
+VALIDATION
+v16.0.1 truth-foundation scope: 4/4 CLOSED · adversarial proof PASS
+Go full suite: PASS
+Go race detector: PASS
+go vet: PASS
+Randomized Go order ×10: PASS
+Statement coverage: 51.9%
+HTTP/cross-module: 127/127 PASS
+Deterministic Day/Swing/Long equivalence: 2403/2403 PASS
+Professional Trader Acceptance: PASS
+Responsive/Layout: 376/376 PASS across 15 viewports / 20 surfaces
+Renderer logic: PASS
+Content/copy: PASS
+Edge-case hardening: PASS
+Inherited approved scope: 48/48 PASS
+Extreme Production matrix: 30/30 PASS
+Version consistency: PASS
+
+TRUTHFUL CONDITIONAL ACCEPTANCE
+- Real multi-provider disagreement still requires the user's configured live credentials.
+- Corporate-action/raw-history operation depends on Alpaca provider entitlement/availability.
+- Physical native macOS/Windows launch, sleep/wake and simultaneous Stable+TEST lifecycle are user-host acceptance items.
+
+FINAL SOURCE / PACKAGE PROOF
+Clean Source ZIP re-extraction: 105/105 files exact SHA-256 match · PASS
+Next-Build Implementation Audit Gate from clean extracted source: PASS
+Native package structure: macOS arm64 Mach-O + macOS x86_64 Mach-O + Windows PE32+ x64 GUI · PASS
+ZIP integrity: Source/macOS/Windows · PASS
+
+NEXT BUILD
+v16.1.0 TEST is AUTHORIZED by the final clean-source Previous-Build Implementation Audit Gate. It remains TEST-only and must follow the approved Market Intelligence + Professional Market Decision Engine scope.

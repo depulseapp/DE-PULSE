@@ -1,0 +1,50 @@
+DE.PULSE v14.0.0 — EMBEDDED STABLE QA SUMMARY
+Build: v14.0.0-stable-global-options-integration-20260809
+Baseline: exact DE.PULSE v13.3.0 Stable source
+
+IMPLEMENTED SCOPE
+- Central Global Market Driver Engine with truthful direct/official/proxy/cache provenance and session-aware interpretation.
+- Global Macro Event Engine and High-Impact Event Mode with T-15 prewarm and de-duplicated work.
+- Horizon-specific Options Intelligence using real Alpaca option snapshots when available; OPRA entitlement path with real indicative fallback in AUTO; no fabricated production values and no Options Trading Desk.
+- Options P/C volume, IV, consecutive-real-snapshot Delta IV, nearest-expiry near-the-money expected move, horizon interpretation and explicit source limitations.
+- Trade Readiness contextual layer without deterministic Action/Score changes.
+- Signal Validation with real later-bar outcomes only; no automatic formula reweighting.
+- AI compact evidence/retry/cache fix for Research Confirmation, Risk Review, Catalyst Review and custom questions.
+- Dashboard hierarchy, Decision Queue emphasis, horizon overview, Catalyst Pulse and progressive Global/Options context.
+- Settings standardized provider configuration; Maintenance Data Capabilities; three documentation tabs.
+- Shell/sidebar refinement and cross-module context preservation.
+- Gate 11 Cross-Module Integration & Correlation added as blocking acceptance gate.
+
+PRE-PACKAGE AUTOMATED RESULTS
+- Go tests/subtests: 109 discovered, 0 failed.
+- go test -race ./...: PASS.
+- go vet ./...: PASS.
+- Go statement coverage: 42.4% in the pre-package run.
+- renderer JavaScript syntax: PASS.
+- renderer logic/regression: PASS.
+- deterministic Day/Swing/Long equivalence against v13.3.0: 2,403/2,403 PASS.
+- professional trader scenarios: PASS.
+- local-app HTTP workflow assertions: 66/66 PASS.
+- Chromium responsive matrix: 270/270 PASS (15 viewports x 18 surfaces).
+- 60+ concurrently moving symbols stress/race coverage: PASS.
+
+ISSUES FOUND AND FIXED DURING V14
+1. Date-only official macro events could be interpreted as midnight events. Fixed: unknown times remain date-only and cannot falsely trigger Event Mode.
+2. Options expected move initially used an overly broad chain IV average. Fixed: nearest-expiry, near-the-money IV is used; otherwise expected move is unavailable.
+3. High-Impact Event Mode prewarm could repeat every five seconds during T-15. Fixed: prewarm work is de-duplicated per event.
+4. Trade Readiness severity could allow a lower-priority conflict to downgrade CAUTION. Fixed with monotonic severity ranking.
+5. FRED observation value was mapped with the wrong JSON tag. Fixed and covered by deterministic HTTP-provider test.
+6. Options scope could over-poll chains. Fixed: refresh is constrained to the selected ticker plus a bounded set of relevant desk symbols.
+7. Options IV-change context was missing from the approved scope. Added Delta IV from consecutive real snapshots only; no prior value is fabricated.
+
+PRODUCTION DATA-INTEGRITY RULE
+Outside Demo Mode only real sourced data is allowed. Live, official/current, delayed, real proxy, real cache and UNAVAILABLE are valid. Synthetic/mock values are restricted to Demo Mode and test fixtures.
+
+KNOWN ENVIRONMENT / DATA LIMITATIONS
+- Native macOS WKWebView/Gatekeeper/Finder and native Windows shell/Explorer behavior require target-OS acceptance; this Linux QA environment can cross-build and inspect binaries/packages but cannot execute those native shells.
+- Private authenticated provider/entitlement behavior (including OPRA entitlement) cannot be fully validated without the user's private credentials and market-data entitlements.
+- Current Alpaca option snapshot source does not expose open interest in this implementation; OI/unusual-flow classification is not fabricated.
+- Fast institutional seconds-level macro consensus/actual, licensed ES/NQ/RTY and licensed streaming international indices remain premium upgrade paths; free/official/proxy operation is implemented now.
+
+FINAL PACKAGE INTEGRITY
+The external final QA report records the exact Source ZIP re-extraction/retest, cross-platform binary architecture inspection, hashes, and all 11 blocking gate results after final packaging.

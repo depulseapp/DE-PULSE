@@ -1,0 +1,4 @@
+DE.PULSE v17.5.1 STABLE — Release Identity & Documentation Hardening
+Build ID: v17.5.1-stable-release-identity-documentation-hardening-20260813
+Scope: release identity/documentation only; no trading/data logic change.
+Fixes: Stable channel/build identity, complete v17.0-v17.5 history in app docs, current Stable limitations truth, and current-version mismatch copy.

@@ -1,0 +1,11 @@
+DE.PULSE v18.1.0
+Build: v18.1.0-stable-multi-user-my-market-symbols-20260814
+Channel: STABLE
+Stable baseline: v17.5.1
+Previous Stable: v18.0.6
+Scope: Multi-User / My Market Symbols: durable per-user workspaces keyed by immutable authenticated UserID, one-time legacy owner migration, empty new-user state, user-scoped symbols/watchlists/UI/export/AI defaults, targeted state/runtime/symbol-event isolation, and one deduplicated shared provider/evidence processing universe; global provider/settings policy remains ADMIN-owned; no v18.2 admin/presence/session-management UI, no deterministic Day/Swing/Long formula changes and no execution scope
+Application bundle: De-Pulse.app
+Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
+Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)
+Release learning: adaptive G0-G16 Release Learning Registry active · Build Process v2 pre-freeze qualification + canonical identity enabled
+Adaptive contracts: US Equities Processing Boundary · Data Utility/Evidence Value · Performance/Scalability · Data Health/Freshness/Cache · Testing · Intelligence/Learning preserved

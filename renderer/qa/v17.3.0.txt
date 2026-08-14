@@ -1,0 +1,17 @@
+DE.PULSE v17.3.0 TEST — Performance + Reliability Hardening
+Build ID: v17.3.0-performance-reliability-hardening-test-20260812
+Stable baseline: v16.11.0 (immutable)
+
+Implemented:
+- Explicit selected-symbol and actionable-watchlist regular-session freshness SLOs.
+- Stateful stale→current and degradation-recovery measurement.
+- Interactive API p95, bounded queue depth/age and provider-budget acceptance.
+- Go runtime CPU, memory, goroutine and GC diagnostics.
+- Live subscription utilization and protected critical capacity visibility.
+- Startup/warm-start duration and quote coverage.
+- Canonical provider-call reuse/avoidance rate.
+- Rolling one-minute SQLite write batches/rows and storage-growth evidence.
+- Maintenance/Data Engine exposes the canonical runtime measurements.
+- Active-pressure acceptance preserves Tier 0/1 before background work.
+
+Status: SOURCE TEST CHECKPOINT. No Stable promotion in this slice.

@@ -1,0 +1,16 @@
+DE.PULSE v14.3.0 — IMPROVEMENT BUILD
+Build: v14.3.0-improvement-20260809
+Baseline: exact v14.2.2 Stable source
+
+Scope:
+- True app-shell toast and Save scroll/focus preservation.
+- Market Open Preparation and structured preparation telemetry.
+- P1/P2 Finnhub, Alpaca, FRED, BLS, EIA and Twelve Data intelligence expansion.
+- Provider Capability Registry and cadence-aware refresh.
+- Event-driven Earnings & Material Catalyst Reaction Watch.
+- Dashboard More Market Context placement/spacing rework without compacting the app.
+- Cross-Module Integration, Correlation & Reuse gate.
+- Tab-by-Tab UI Placement & Information Hierarchy gate.
+- Deterministic Day/Swing/Long Setup Score formulas unchanged.
+
+Final gate results are recorded in the external v14.3.0 QA report generated at release freeze.

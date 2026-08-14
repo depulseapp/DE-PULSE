@@ -1,0 +1,23 @@
+{
+  "schema": "DE.PULSE-V18.0.6-SCOPE-1",
+  "version": "18.0.6",
+  "channel": "TEST",
+  "stable_baseline": "v18.0.5",
+  "build_id": "v18.0.6-test-smart-provider-router-rapid-move-market-shock-hardening-20260814",
+  "runtime_config": "PersonalMarketTerminal-v18.0.6-TEST",
+  "application_bundle": "De-Pulse-v18.0.6-TEST.app",
+  "clauses": [
+    "Reuse the existing Smart Provider Router v2 and canonical provider reconciliation; no second routing or reconciliation owner.",
+    "Capability/entitlement states, per-capability circuits/cooldowns, latency and calls-avoided telemetry remain owned by the existing Router v2 foundation.",
+    "Provider Router SourceDisagreements must reflect canonical contemporaneous reconciliation CONFLICT truth without extra provider calls or duplicate storage.",
+    "Rapid Move remains the single event detector and gains explicit RAPID_MOVE versus MARKET_SHOCK classification from existing correlated market context.",
+    "Already-alerted Rapid Move states use bounded hysteresis so small retracements cannot thrash CONFIRMED/EXTENDED events back to EARLY/VALIDATING.",
+    "Deduped observations preserve the original provider event and window anchors so 1m/5m/20m outcomes remain point-in-time truthful under busy live updates.",
+    "Rapid Move adaptive learning is explicitly SHADOW with SHADOW \u2192 VALIDATED \u2192 APPROVED \u2192 PRODUCTION governance and no automatic policy promotion.",
+    "Outcome scorecards distinguish continued, reversed and faded/mixed outcomes and count market-shock alerts/hysteresis retention for Adaptive Intelligence evaluation.",
+    "Opportunity Radar and Smart Notifications reuse the existing canonical promotion path with MARKET SHOCK semantics when applicable; protected scoring formulas are not changed.",
+    "Coverage remains truthful TIERED_PARTIAL and no full-market surveillance claim is introduced.",
+    "Performance remains event-first and fetch-once/reuse; the hardening adds no broad polling, provider fan-out or raw tick warehousing.",
+    "No Execution Boundary and protected deterministic Day/Swing/Long formulas remain unchanged; v18.1 multi-user architecture is out of scope."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "DE.PULSE-V17.1.0-TEST-ACCEPTANCE-1",
+  "version": "17.1.0",
+  "build_id": "v17.1.0-runtime-load-backpressure-test-20260812",
+  "stable_baseline": "v16.11.0",
+  "status": "SOURCE TEST CHECKPOINT",
+  "checks": {
+    "v17_baseline": "PASS",
+    "v17_0_foundation_scope": "PASS",
+    "v17_1_scope": "PASS",
+    "cross_platform_sqlite_source_windows_compile": "PASS",
+    "data_utility": "PASS \u00b7 22 datasets",
+    "go_vet": "PASS",
+    "go_full": "PASS",
+    "v17_1_race": "PASS",
+    "code_quality_performance": "PASS",
+    "v16_10_performance": "PASS",
+    "v16_11_performance_stability": "PASS",
+    "deterministic_equivalence": "2403/2403 PASS",
+    "http_cross_module": "163/163 PASS",
+    "renderer_logic": "PASS",
+    "responsive_layout": "391/391 PASS \u00b7 15 viewports / 21 surfaces",
+    "professional_trader_acceptance": "PASS",
+    "extreme_production": "30/30 PASS"
+  },
+  "residuals": [
+    "Full legacy race suite remains subject to inherited host/wrapper timeout classification; v17.1 focused race is PASS.",
+    "Native macOS packaged SQLite runtime must still be verified during final desktop packaging/Stable promotion.",
+    "Provider-plan-specific RPM/credit entitlements are not guessed; unknown limits remain entitlement-dependent and are handled by observed 429 cooldown/fallback."
+  ]
+}

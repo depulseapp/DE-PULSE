@@ -1,0 +1,47 @@
+{
+  "schema": "DE.PULSE-WC-CLOSURE-1",
+  "version": "16.0.4 WORKING CANDIDATE",
+  "buildId": "v16.0.4-working-candidate-professional-truth-closure-20260811",
+  "date": "2026-08-11",
+  "status": "NOT CLOSED / NOT TEST",
+  "protectedStable": {
+    "version": "15.1.2",
+    "sourceSha256": "e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c",
+    "untouched": true
+  },
+  "sourceLine": "16.0.3 TEST",
+  "masterScope": {
+    "count": 11,
+    "implementedAtWorkingCandidateDepth": 11,
+    "knownP0P1FeatureTruthDefects": 0
+  },
+  "verifiedEvidence": {
+    "goTest": "PASS",
+    "goVet": "PASS",
+    "coverage": "53.9% statements",
+    "race": "PASS / 303 discovered Go tests / 10 bounded shards",
+    "randomized": "PASS x10 / seeds 1600401-1600410",
+    "responsive": "PASS 376/376 / 15 viewports / 20 surfaces",
+    "extreme30": "PASS 30/30",
+    "deterministic": "PASS 2403/2403",
+    "http": "PASS 127/127",
+    "approvedScope": "PASS 48/48",
+    "professionalAuthorization": "PASS",
+    "scopeGate": "PASS 11/11",
+    "contentCopy": "PASS",
+    "rendererLogic": "PASS",
+    "versionConsistency": "PASS"
+  },
+  "releaseBlockers": [
+    "G6/G10 supported Go toolchain: host is Go 1.23.2; current release certification requires a supported Go line. Network policy prevented installing the verified current Go 1.26.5 toolchain.",
+    "G6 vulnerability scan: govulncheck is unavailable on this host and cannot be fetched because outbound network access is unavailable.",
+    "G12 native RC acceptance: native macOS and Windows acceptance with real credentials/entitlements cannot be performed on this Linux build host."
+  ],
+  "downstreamState": {
+    "G11": "Official TEST artifact gate not reached; WC continuation artifacts only",
+    "G13": "NOT AUTHORIZED",
+    "G14": "Handoff only; no TEST stamp"
+  },
+  "authorization": "v16.1.0 NOT AUTHORIZED",
+  "decision": "v16.0.4 NOT CLOSED \u2014 continue the same WORKING CANDIDATE / RC; no patch churn."
+}

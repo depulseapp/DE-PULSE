@@ -1,0 +1,72 @@
+{
+  "schema": "DE.PULSE-V16.11-MAJOR-CLOSURE-SCOPE-1",
+  "version": "16.11.0",
+  "title": "v16 Major Closure & Release Assurance",
+  "baseline": {
+    "version": "16.10.0",
+    "source_fingerprint": "68c28932a98236ec8f0572dea76ea3affff04b315d4f03475528e7e2e9b0eaa5",
+    "source_zip_sha256": "00d6ea4d8b5f8f5d5f37d6dc0ac7ef72b2d48586653bece089e835fbd5bea733"
+  },
+  "non_scope": [
+    "new product features",
+    "v17 database/repository",
+    "v18 authentication/multi-user",
+    "payment",
+    "portfolio",
+    "journal",
+    "paper trading",
+    "order execution"
+  ],
+  "scope_lock": [
+    {
+      "id": 1,
+      "capability": "Major Scope Reconstruction & Code Truth",
+      "acceptance": "Reconstruct the full approved v16 family from immutable contracts and current source; every capability maps to current code owner, fresh executable evidence, surfaces/docs and final FULL/PARTIAL/MISSING status."
+    },
+    {
+      "id": 2,
+      "capability": "Comprehensive Fresh Test Campaign",
+      "acceptance": "Fresh unit, functional, end-to-end, cross-module, regression, edge/adversarial/fault, randomized, race/concurrency, deterministic, replay/no-lookahead, security and UI/responsive evidence all pass on the closure fingerprint."
+    },
+    {
+      "id": 3,
+      "capability": "Performance / Capacity / Long-Run Stability",
+      "acceptance": "Representative 100/500-symbol workloads, Radar, cache/concurrency, goroutine/resource growth and repeated-runtime stress remain within bounded release ceilings with no material regression."
+    },
+    {
+      "id": 4,
+      "capability": "Senior Developer / Principal Engineer Review",
+      "acceptance": "A source-level 15+ year engineering review verifies architecture ownership, maintainability, coupling, complexity, concurrency, failure handling, security, provider efficiency, observability, upgrade safety and developer-proof clarity."
+    },
+    {
+      "id": 5,
+      "capability": "Professional Trader / Investor Real-Money Acceptance",
+      "acceptance": "Fresh real-money decision-support scenarios verify freshness/degradation truth, event/catalyst/liquidity risk, contradictions, Radar quality, community/news separation, no false confidence and no execution boundary drift."
+    },
+    {
+      "id": 6,
+      "capability": "Data Utility / Source Hygiene Closure",
+      "acceptance": "Every retained dataset has a valid owner/consumer/retention reason; orphan/duplicate/dead source and unjustified release debris are removed or explicitly retained; cleanup is behavior-preserving."
+    },
+    {
+      "id": 7,
+      "capability": "Adaptive Process Retrospective & Cleanup",
+      "acceptance": "Review v16 challenges/root causes/fixes/effectiveness and update Roadmap, Build Plan, Build Process, Delivery Process and Release Learning so recurring friction is generalized rather than repeated."
+    },
+    {
+      "id": 8,
+      "capability": "Major Documentation / Traceability Reconciliation",
+      "acceptance": "User, Developer, Limitations, README, architecture, release learning, scope matrix and traceability agree with the actual final v16 product and contain no stale current-state semantics."
+    },
+    {
+      "id": 9,
+      "capability": "Upgrade / Packaging / Continuity Assurance",
+      "acceptance": "Canonical De-Pulse.app identity, settings/watchlists/API credentials continuity, native package truth, exact-source clean extraction, provenance and SHA-manifest-last rules remain proven."
+    },
+    {
+      "id": 10,
+      "capability": "v16 -> v17 Go / No-Go Decision",
+      "acceptance": "v17 is authorized only when all blocking closure evidence is green, no unresolved materially misleading real-money defect remains, performance/source health are acceptable and all PARTIAL/MISSING scope is fixed or explicitly dispositioned by owner approval."
+    }
+  ]
+}

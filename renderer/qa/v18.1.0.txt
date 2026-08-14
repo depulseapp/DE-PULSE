@@ -1,0 +1,16 @@
+DE.PULSE v18.1.0 STABLE
+Build ID: v18.1.0-stable-multi-user-my-market-symbols-20260814
+Status: STABLE · G0–G15 certified
+
+Scope:
+- durable per-user UserWorkspace keyed by immutable authenticated UserID
+- one-time v18.0.6 Stable owner-state migration into bootstrap OWNER workspace
+- new users start with empty personal market symbols/watchlists
+- Tracked Symbols / desk membership / watchlists / scope / selected ticker are user-scoped
+- profile export/import and AI default context use requesting user's workspace
+- state/runtime/quote/news/earnings/filing streaming is workspace-filtered
+- provider settings, secrets and runtime policy remain global ADMIN-owned
+- one deduplicated shared processing universe; no per-user provider/scoring engines
+- broad-market Radar and Rapid Move remain shared intelligence surfaces
+- v18.2 Admin / Presence / Sessions excluded
+- protected Day/Swing/Long formulas and No Execution Boundary unchanged

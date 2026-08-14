@@ -1,0 +1,352 @@
+{
+  "schema": "DE.PULSE-V17.5-MAJOR-CLOSURE-SCOPE-MATRIX-1",
+  "version": "17.5.0",
+  "major": "v17",
+  "stable_baseline": "v16.11.0",
+  "mission": "Persistent Intelligence Foundation + Runtime Efficiency / Load Resilience",
+  "scope_count": 20,
+  "items": [
+    {
+      "id": 1,
+      "item": "repository abstraction",
+      "canonical_owner": "PersistenceBackend / PersistenceManager",
+      "code_owners": [
+        "persistence_repository.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_scope_gate.py",
+        "v17_0_persistence_test.go"
+      ]
+    },
+    {
+      "id": 2,
+      "item": "SQLite desktop persistence",
+      "canonical_owner": "native + Windows SQLite backends",
+      "code_owners": [
+        "persistence_backend_sqlite.go",
+        "persistence_backend_windows.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_cross_platform_persistence_gate.py",
+        "v17_0_sqlite_backend_test.go"
+      ]
+    },
+    {
+      "id": 3,
+      "item": "PostgreSQL-ready repository contracts",
+      "canonical_owner": "storage-agnostic PersistenceBackend contract",
+      "code_owners": [
+        "persistence_repository.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_scope_gate.py"
+      ]
+    },
+    {
+      "id": 4,
+      "item": "Global Symbol Registry",
+      "canonical_owner": "canonical symbol registry persistence",
+      "code_owners": [
+        "persistence_repository.go",
+        "persistence_backend_sqlite.go",
+        "persistence_backend_windows.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_persistence_test.go"
+      ]
+    },
+    {
+      "id": 5,
+      "item": "Persistent Canonical State / Warm Start",
+      "canonical_owner": "truth-safe warm-start owner",
+      "code_owners": [
+        "engine_core.go",
+        "persistence_repository.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_persistence_test.go",
+        "v17_3_performance_test.go"
+      ]
+    },
+    {
+      "id": 6,
+      "item": "structured evidence/history",
+      "canonical_owner": "persistent evidence and quote-history stores",
+      "code_owners": [
+        "persistence_repository.go",
+        "persistence_intelligence.go",
+        "persistence_backend_sqlite.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 7,
+      "item": "Decision Lineage/Reproducibility",
+      "canonical_owner": "immutable decision-lineage owner",
+      "code_owners": [
+        "persistence_intelligence.go",
+        "persistence_backend_sqlite.go",
+        "persistence_backend_windows.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_2_scope_gate.py",
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 8,
+      "item": "outcome/history foundation",
+      "canonical_owner": "separate later-outcome owner",
+      "code_owners": [
+        "persistence_intelligence.go",
+        "persistence_backend_sqlite.go",
+        "persistence_backend_windows.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 9,
+      "item": "derived feature store/incremental sync",
+      "canonical_owner": "source-hash incremental feature owner",
+      "code_owners": [
+        "persistence_intelligence.go",
+        "persistence_backend_sqlite.go",
+        "persistence_backend_windows.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_2_scope_gate.py",
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 10,
+      "item": "async/material-change persistence",
+      "canonical_owner": "coalesced persistence worker",
+      "code_owners": [
+        "persistence_repository.go",
+        "canonical_pipeline.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_persistence_test.go",
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 11,
+      "item": "one canonical symbol pipeline",
+      "canonical_owner": "canonical quote propagation owner",
+      "code_owners": [
+        "canonical_pipeline.go",
+        "runtime_live_loop.go",
+        "quote_providers.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_2_scope_gate.py",
+        "v17_2_canonical_pipeline_test.go"
+      ]
+    },
+    {
+      "id": 12,
+      "item": "observability",
+      "canonical_owner": "runtime/provider/persistence diagnostics",
+      "code_owners": [
+        "runtime_load_profile.go",
+        "runtime_observability.go",
+        "runtime_slo.go",
+        "renderer/renderer.js"
+      ],
+      "fresh_executable_evidence": [
+        "v17_3_scope_gate.py",
+        "v17_3_performance_test.go"
+      ]
+    },
+    {
+      "id": 13,
+      "item": "runtime overload/root-cause profiling",
+      "canonical_owner": "runtime load profile owner",
+      "code_owners": [
+        "runtime_load_profile.go",
+        "runtime_observability.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_1_backpressure_test.go",
+        "v17_3_performance_test.go"
+      ]
+    },
+    {
+      "id": 14,
+      "item": "workload prioritization/backpressure",
+      "canonical_owner": "Tier 0-4 workload policy",
+      "code_owners": [
+        "workload_controller.go",
+        "runtime_priority.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_1_scope_gate.py",
+        "v17_1_backpressure_test.go"
+      ]
+    },
+    {
+      "id": 15,
+      "item": "bounded concurrency/queueing",
+      "canonical_owner": "bounded work-class queue owner",
+      "code_owners": [
+        "workload_controller.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_1_backpressure_test.go"
+      ]
+    },
+    {
+      "id": 16,
+      "item": "provider request/subscription budgeting",
+      "canonical_owner": "shared provider budget + live allocation",
+      "code_owners": [
+        "runtime_observability.go",
+        "runtime_priority.go",
+        "runtime_live_loop.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_1_scope_gate.py",
+        "v17_1_backpressure_test.go"
+      ]
+    },
+    {
+      "id": 17,
+      "item": "load shedding/background isolation",
+      "canonical_owner": "tier-aware shedding/background isolation",
+      "code_owners": [
+        "workload_controller.go",
+        "runtime_jobs.go",
+        "opportunity_radar.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_1_backpressure_test.go"
+      ]
+    },
+    {
+      "id": 18,
+      "item": "adaptive degradation reason codes",
+      "canonical_owner": "reasoned degradation owner",
+      "code_owners": [
+        "runtime_degradation.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_0_degradation_test.go",
+        "v17_1_backpressure_test.go"
+      ]
+    },
+    {
+      "id": 19,
+      "item": "performance/capacity/storage SLO acceptance",
+      "canonical_owner": "measurable runtime SLO owner",
+      "code_owners": [
+        "runtime_slo.go",
+        "runtime_load_profile.go",
+        "persistence_repository.go"
+      ],
+      "fresh_executable_evidence": [
+        "v17_3_scope_gate.py",
+        "v17_3_performance_test.go"
+      ]
+    },
+    {
+      "id": 20,
+      "item": "migration/settings/watchlist/API-key continuity",
+      "canonical_owner": "existing application state/config continuity",
+      "code_owners": [
+        "app_state.go",
+        "app_bootstrap.go",
+        "persistence_repository.go"
+      ],
+      "fresh_executable_evidence": [
+        "main_test.go",
+        "v17_0_persistence_test.go"
+      ]
+    }
+  ],
+  "slice_milestones": [
+    {
+      "id": "v17.0",
+      "scope_gate": "v17_0_scope_gate.py",
+      "focused_test": "^TestV170"
+    },
+    {
+      "id": "v17.1",
+      "scope_gate": "v17_1_scope_gate.py",
+      "focused_test": "^TestV171"
+    },
+    {
+      "id": "v17.2",
+      "scope_gate": "v17_2_scope_gate.py",
+      "focused_test": "^TestV172"
+    },
+    {
+      "id": "v17.3",
+      "scope_gate": "v17_3_scope_gate.py",
+      "focused_test": "^TestV173"
+    },
+    {
+      "id": "v17.4",
+      "scope_gate": "v17_4_scope_gate.py",
+      "focused_test": "^TestV174"
+    }
+  ],
+  "permanent_contracts": [
+    {
+      "name": "No Execution Boundary",
+      "evidence": [
+        "renderer/docs/developer.md",
+        "renderer/docs/limitations.md"
+      ]
+    },
+    {
+      "name": "U.S. Equities Processing Boundary",
+      "evidence": [
+        "data_utility_registry.json",
+        "renderer/docs/developer.md"
+      ]
+    },
+    {
+      "name": "Provider Router Authority",
+      "evidence": [
+        "provider_router.go",
+        "v16_11_major_closure_test.go"
+      ]
+    },
+    {
+      "name": "Data Utility / No Orphan Data",
+      "evidence": [
+        "data_utility_registry.json",
+        "data_utility_gate.py"
+      ]
+    },
+    {
+      "name": "Adaptive model governance",
+      "evidence": [
+        "renderer/docs/developer.md",
+        "adaptive_data_policy.go"
+      ]
+    },
+    {
+      "name": "Major Closure & Release Assurance",
+      "evidence": [
+        "v17_delivery_slices.json",
+        "ci_pipeline_plan.json"
+      ]
+    }
+  ],
+  "non_goals": [
+    "hosted architecture",
+    "PostgreSQL production hosting",
+    "multi-user authentication",
+    "login/session management",
+    "user quotas/payments",
+    "paper trading or execution",
+    "broker routing"
+  ]
+}

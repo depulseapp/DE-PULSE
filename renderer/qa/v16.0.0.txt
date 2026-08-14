@@ -1,0 +1,69 @@
+DE.PULSE v16.0.0 TEST — PROFESSIONAL TRUTH FOUNDATION
+Build: v16.0.0-test-professional-truth-foundation-20260811
+Date: 2026-08-11
+Status: TEST · NOT STABLE
+Protected baseline: DE.PULSE v15.1.2 STABLE · frozen/untouched
+Protected source SHA-256: e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c
+
+COMMITTED SCOPE — CLOSED 4/4
+#16 Provider Conflict / Provenance Reconciliation — CLOSED
+#17 Corporate Actions / Symbol Lifecycle & adjustment provenance — CLOSED
+#25 Selected-Ticker Research Package Freshness — CLOSED
+#30 Previous-Build / Professional Behavioral Release Gate — CLOSED
+Shared foundation: material Evidence Snapshot ID + independent v16 TEST runtime/app identity — CLOSED
+
+FINAL BUILD-HOST VALIDATION
+Previous-Build Implementation Audit Gate: PASS
+Next-Build Implementation Audit Gate (fresh re-audit of closure): PASS
+Inherited Approved Scope: 48/48 PASS
+v16.0.0 committed scope: 4/4 CLOSED · behavioral proof PASS
+Extreme Production / Professional Trader matrix: 30/30 PASS
+Go full suite: PASS
+Go race detector: PASS
+Go vet: PASS
+Randomized Go order: PASS x10
+Go statement coverage: 51.7%
+HTTP/cross-module workflow: 127/127 PASS
+Deterministic Day/Swing/Long equivalence: 2403/2403 PASS
+Professional Trader Acceptance: PASS
+Renderer logic/stability: PASS
+Responsive/Layout Integrity: 376/376 PASS across 15 viewports / 20 surfaces
+Content/copy consistency: PASS
+Version/build consistency: PASS
+Edge-case hardening: PASS
+
+PROFESSIONAL TRUTH RULES ESTABLISHED
+- Provider disagreement is explicit; values are never silently averaged.
+- Canonical provider winner follows Router priority/active route and timestamp/health semantics, not price ordering.
+- Research freshness is selected-ticker-specific and the worst critical dependency controls package state.
+- Material provider conflicts can block/degrade the selected ticker research package.
+- Corporate-action-aware canonical history stays adjusted while raw comparison bars are retained separately when provider entitlement permits.
+- Symbol lineage is represented explicitly for ticker changes.
+- Evidence Snapshot ID changes on material evidence changes, not mere clock aging.
+- v16 TEST state/config/instance lock is isolated from v15.1.2 Stable.
+- A future minor TEST build may not begin until the previous committed scope is freshly re-audited CLOSED or explicitly approved DEFERRED.
+
+CONDITIONAL / ENVIRONMENT-LIMITED ACCEPTANCE
+- Real cross-provider conflict acceptance requires two or more contemporaneous configured live providers.
+- Raw Alpaca corporate-action comparison history requires the user's provider entitlement.
+- Physical macOS/Windows native launch/quit/sleep-wake requires target hardware.
+- Authenticated live-provider acceptance requires the user's configured credentials/entitlements.
+These conditions are not reported as Fully Operational without installed-environment evidence.
+
+SCOPE DISCIPLINE
+v16.0.0 TEST intentionally does NOT claim the full 30-item v16 professional roadmap. Only #16, #17, #25 and #30 plus shared truth/isolation infrastructure were committed to this build. The next planned minor line is v16.1.0 TEST (Market Decision Engine), but it may start only after the mandatory fresh v16.0.x Previous-Build Implementation Audit Gate.
+
+RELEASE DECISION
+DE.PULSE v16.0.0 TEST · COMMITTED SCOPE CLOSED · NOT STABLE
+Automated PASS cannot promote this build. Manual installed-environment comparison with v15.1.2 Stable remains part of TEST acceptance.
+
+PACKAGE / SOURCE INTEGRITY
+Exact v16.0.0 TEST Source ZIP re-extraction: 99/99 files SHA-256 matched · PASS
+Critical Go/v16 scope/version tests rerun from clean Source ZIP extraction: PASS
+macOS Apple Silicon binary: VERIFIED Mach-O arm64
+macOS Intel binary: VERIFIED Mach-O x86_64
+Windows x64 GUI binary: VERIFIED PE32+
+macOS TEST bundle ID: com.deivaram.depulse.v16test
+macOS TEST app name: De-Pulse-v16-TEST.app
+TEST runtime/config: PersonalMarketTerminal-v16-TEST
+Protected v15.1.2 source SHA-256 reverified unchanged: e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c

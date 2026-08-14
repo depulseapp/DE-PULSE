@@ -1,0 +1,36 @@
+{
+  "schema": "DE.PULSE-V17.0.0-TEST-ACCEPTANCE-1",
+  "version": "17.0.0",
+  "build_id": "v17.0.0-persistent-intelligence-runtime-foundation-test-20260812",
+  "channel": "TEST",
+  "stable_baseline": "v16.11.0",
+  "source_host_status": "PASS",
+  "desktop_packaging_status": "BLOCKED",
+  "checks": [
+    {"name":"G0 exact v16.11 baseline","status":"PASS","evidence":"Source ZIP SHA d7da932d...476f7, 384 entries, clean fingerprint f4f7fc93...98275"},
+    {"name":"v17 baseline gate","status":"PASS"},
+    {"name":"v17 scope gate","status":"PASS"},
+    {"name":"release identity","status":"PASS"},
+    {"name":"version consistency","status":"PASS"},
+    {"name":"Go full suite","status":"PASS","evidence":"ok depulse"},
+    {"name":"go vet","status":"PASS"},
+    {"name":"v17 targeted race + inherited concurrency stress","status":"PASS"},
+    {"name":"full race sweep","status":"INFRA TIMEOUT","blocking":false,"evidence":"host wrapper exceeded 180s; targeted changed-path/concurrency race suite passes"},
+    {"name":"renderer logic","status":"PASS"},
+    {"name":"v16.3-v16.10 renderer inheritance","status":"PASS"},
+    {"name":"professional expert runtime","status":"PASS"},
+    {"name":"professional trader acceptance","status":"PASS"},
+    {"name":"v16.11 real-money acceptance","status":"PASS"},
+    {"name":"deterministic equivalence","status":"PASS","evidence":"2403/2403"},
+    {"name":"v16.11 performance/stability inheritance","status":"PASS"},
+    {"name":"G7 code quality/performance","status":"PASS"},
+    {"name":"native host SQLite file-format test","status":"PASS"},
+    {"name":"cross-platform persistence packaging gate","status":"BLOCK","blocking":true,"evidence":"!cgo/Windows path still uses JSON fallback; no complete desktop v17 package may be emitted"}
+  ],
+  "safety": {
+    "deterministic_day_swing_long_formulas_changed": false,
+    "execution_scope_added": false,
+    "v18_auth_multi_user_scope_added": false,
+    "v16_11_stable_modified": false
+  }
+}

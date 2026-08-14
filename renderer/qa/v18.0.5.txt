@@ -1,0 +1,14 @@
+DE.PULSE v18.0.5 STABLE — UI/UX + Symbol Management Hardening
+Date: 2026-08-14
+Build: v18.0.5-stable-ui-ux-symbol-management-hardening-20260814
+Status: STABLE · G0–G15 certified
+
+Scope:
+- Tracked Symbols user-facing redesign with canonical cross-desk add/remove/remove-all mutation helpers.
+- Remove All preserves explicit-empty persistence truth, includes disabled desks, leaves Discovery staging untouched, and prevents default-symbol rehydration.
+- Opportunity Radar hierarchy, numeric alignment, status/action consistency and responsive reflow.
+- Compact Research Target only; existing Technical Context and research evidence views preserved.
+- USER/DEMO suppress implementation machinery; OWNER/ADMIN/SUPER_OWNER retain deep diagnostics.
+- v18.0.4 Stable remains immutable; v18.0.5 STABLE uses the canonical PersonalMarketTerminal runtime profile.
+
+Protected boundaries: deterministic Day/Swing/Long formulas unchanged; No Execution Boundary unchanged; no v18.1 multi-user scope.

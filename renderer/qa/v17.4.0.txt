@@ -1,0 +1,8 @@
+DE.PULSE v17.4.0 TEST — UX + Operational Hardening
+Build ID: v17.4.0-ux-operational-hardening-test-20260812
+Stable baseline: v16.11.0
+
+OPEN-001: one canonical Master Market Symbols renderer, compact wide-layout control hierarchy, responsive narrow-layout controls; Add to All Desks / Remove All / chips / Undo behavior preserved.
+OPEN-002: stale/missing quote evidence remains a freshness problem rather than repeated LIQUIDITY RISK; genuine liquidity/event/extended exceptions remain visible and are grouped by cause with counts, bounded default display, View all and per-symbol Review.
+Runtime/Data Engine diagnostics from v17.3 remain preserved.
+No execution. Deterministic Day/Swing/Long Score/Action formulas unchanged.

@@ -1,0 +1,17 @@
+const fs=require('fs'),vm=require('vm');
+let failures=[]; const check=(cond,msg)=>{if(!cond)failures.push(msg)};
+const c={console,globalThis:{__DEPULSE_TEST__:true},document:{querySelector(){return null},querySelectorAll(){return []}},window:{addEventListener(){}},fetch:async()=>({ok:false,status:404,text:async()=>'',json:async()=>({})}),EventSource:function(){},ResizeObserver:function(){this.observe=()=>{}},setInterval(){},setTimeout,clearTimeout,requestAnimationFrame:f=>f(),localStorage:{getItem(){return null},setItem(){},removeItem(){}}};c.globalThis=c;c.__DEPULSE_TEST__=true;vm.createContext(c);vm.runInContext(fs.readFileSync('renderer/renderer.js','utf8'),c);const L=c.DePulseLogic,now=Date.now();
+const state={version:'16.4.0',settings:{},watchlists:[{id:'day',symbols:['AAPL']},{id:'swing',symbols:['AAPL']},{id:'long',symbols:['AAPL']},{id:'discovery',symbols:[]}],ui:{selectedTicker:'AAPL'},cacheInfo:{}};
+const runtime={status:'running',quotes:{AAPL:{symbol:'AAPL',price:200,previousClose:199,updatedAt:now,providerTimestamp:now,source:'alpaca'}},bars:{AAPL:{daily:[{o:199,h:201,l:198,c:200,v:1000}],intraday:[],weekly:[]}},fundamentals:{AAPL:{marketCap:1}},news:[],earnings:[],filings:[],health:{},lastUpdated:{'research-ready:AAPL':now},freshness:[],providerRouter:{routes:[]},providerReconciliation:[{symbol:'AAPL',dataset:'US Live Equities',state:'AGREED',canonicalProvider:'Alpaca',canonicalValue:200,observations:[],reason:'test'}],corporateActionTruth:{actions:[],symbolLineage:{},affectedSymbols:[],rawHistoryAvailable:{AAPL:true},rawHistoryCoverage:{AAPL:{symbol:'AAPL',state:'COMPLETE',barCount:100,pageCount:2,paginationComplete:true,firstBarAt:1,lastBarAt:2}},canonicalHistory:'Adjusted'},researchPackage:{symbol:'AAPL',state:'FRESH',evidenceSnapshotId:'abc',components:[]},evidenceSnapshot:{id:'abc',symbol:'AAPL',researchState:'FRESH'},global:{},intelligence:{},eventMode:{},options:{},liquidity:{},marketOpenFlags:{},catalystReactions:{},symbolIntelligence:{},liveCoverage:{},dataCapabilities:[],signalValidation:{snapshots:[]}};
+L.setState(state,runtime);
+const maint=L.renderMaintenance();
+check(maint.includes('Provider Reconciliation · v16'),'active Maintenance renderer omits Provider Reconciliation');
+check(maint.includes('Corporate Actions & Symbol Lifecycle · v16'),'active Maintenance renderer omits Corporate Actions truth');
+check(maint.includes('Evidence Snapshot · v16'),'active Maintenance renderer omits Evidence Snapshot');
+check(maint.includes('AAPL raw-history coverage')&&maint.includes('pagination complete'),'active Maintenance renderer omits raw-history completeness provenance');
+const ai=L.buildAIClientContext('AAPL','none');
+check(ai.researchPackage,'active AI context drops Research Package truth');
+check(ai.evidenceSnapshot,'active AI context drops Evidence Snapshot');
+check(ai.providerReconciliation,'active AI context drops Provider Reconciliation');
+check(ai.corporateActionTruth,'active AI context drops Corporate Action truth');
+if(failures.length){console.error('Professional Expert Trader/Investor Runtime Gate: FAIL'); failures.forEach(x=>console.error('- '+x)); process.exit(1)} else console.log('Professional Expert Trader/Investor Runtime Gate: PASS');

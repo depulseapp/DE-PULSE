@@ -1,0 +1,32 @@
+DE.PULSE v15.0.0 — STABLE · PASS
+Build: v15.0.0-provider-router-freshness-crossdesk-sec-20260810
+Baseline: exact frozen DE.PULSE v14.3.7 Stable source
+Date: Aug 10, 2026
+
+SCOPE
+- 43/43 approved v15 requirements implemented and explicitly validated.
+- Provider Router + Feed Capability Registry with Alpaca-primary live equities, Finnhub secondary/failover, Twelve tertiary recovery.
+- VIX route/freshness corrected with Twelve Data → yfinance-compatible recovery → CBOE delayed validation/fallback.
+- Maintenance Data Freshness rebuilt with per-dataset diagnostics, truthful delayed/stale states and targeted retries.
+- Cross-desk DAY/SWING/LONG membership, Master Market Symbols, global remove/Undo and scroll-preserving synchronization.
+- SEC Intelligence regression restored/validated, including Form 4 BUY / SELL / OTHER semantics and rich transaction detail.
+- Full UI alignment, row-hover stability, responsive containment and layout-integrity work.
+
+VALIDATION
+- Go tests: 151 PASS; go test -race PASS; go vet PASS; statement coverage 48.5%.
+- Deterministic trading equivalence: 2403/2403 PASS against v14.3.7 renderer baseline.
+- Professional Trader Acceptance: PASS.
+- HTTP/cross-module workflow assertions: 109/109 PASS.
+- Renderer logic/stability: PASS.
+- Content/copy and version consistency: PASS.
+- Responsive/UI matrix: 343/343 PASS across 15 logical viewports / 18 application surfaces, including Windows 125/150% scaling and Mac Retina DPR checks.
+- 43-item traceability: PASS.
+- Exact-source freeze/re-extract/retest and platform-package integrity: PASS.
+
+RELEASE DECISION
+STABLE · PASS. Blocking release defects: 0.
+
+LIMITATIONS
+- Native macOS/Windows launch cannot be physically exercised from the Linux build host.
+- Authenticated/private provider entitlement acceptance requires the user's installed environment and credentials.
+- Packages are unsigned/not notarized.

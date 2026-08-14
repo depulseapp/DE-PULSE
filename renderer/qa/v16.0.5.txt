@@ -1,0 +1,13 @@
+DE.PULSE v16.0.5 — FINAL v16.0 CLOSURE PATCH
+
+Build: v16.0.5-v160-closure-20260811
+Protected Stable: v15.1.2 — untouched
+
+CLOSURE SCOPE
+- Provider Reconciliation requires session-valid AND cross-provider contemporaneous observations before AGREED/CONFLICT.
+- Stable primary brand header restored permanently; release channel/status is not a brand-header element.
+- G0-G16 source-health, checkpointed certification, supported-Go, vulnerability, artifact/provenance and native acceptance process is binding.
+- All v16.0 Professional Truth Foundation scope remains inherited; no v16.1 Market Intelligence/Tradeability feature is included.
+
+PROMOTION RULE
+The exact source does not change when its external release artifact is authorized. Runtime identity is semantic version + build ID; WC/TEST/Stable is release-artifact metadata. This prevents cosmetic promotion changes from invalidating exact-source certification.

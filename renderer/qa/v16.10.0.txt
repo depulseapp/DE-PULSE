@@ -1,0 +1,8 @@
+DE.PULSE v16.10.0 STABLE — Opportunity & Decision Intelligence
+Build: v16.10.0-stable-opportunity-decision-intelligence-20260812
+Scope: Opportunity Radar; unusual volume/volatility; bounded promotion/demotion; adaptive freshness/cache; Shadow foundation; IA/Data Efficiency pass
+Original roadmap: 30 FULL / 0 PARTIAL / 0 MISSING preserved
+No Execution Boundary: preserved
+Deterministic Day/Swing/Long formulas: unchanged
+Scanner owner: Discovery/Scanner only; no second provider/stream engine
+Shadow: read-only until VALIDATED/APPROVED; cannot mutate production

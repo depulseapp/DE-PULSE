@@ -1,0 +1,54 @@
+{
+  "version": "16.2.0",
+  "buildId": "v16.2.0-professional-event-intelligence-20260811",
+  "scope": [
+    {
+      "id": "V16.2-01",
+      "auditItem": 1,
+      "name": "News Intelligence",
+      "owner": "event_intelligence.go"
+    },
+    {
+      "id": "V16.2-02",
+      "auditItem": 2,
+      "name": "Macro Intelligence v2",
+      "owner": "event_intelligence.go + macro_events.go"
+    },
+    {
+      "id": "V16.2-03",
+      "auditItem": 3,
+      "name": "Economic Calendar",
+      "owner": "event_intelligence.go + macro_events.go"
+    },
+    {
+      "id": "V16.2-04",
+      "auditItem": 4,
+      "name": "FOMC / Fed Intelligence",
+      "owner": "event_intelligence.go"
+    },
+    {
+      "id": "V16.2-21",
+      "auditItem": 21,
+      "name": "Smart Notifications",
+      "owner": "event_intelligence.go + renderer"
+    },
+    {
+      "id": "V16.2-28",
+      "auditItem": 28,
+      "name": "Reaction Intelligence",
+      "owner": "event_intelligence.go + existing Catalyst/Event Mode"
+    },
+    {
+      "id": "V16.2-29",
+      "auditItem": 29,
+      "name": "Event to Decision Correlation",
+      "owner": "event_intelligence.go + renderer readiness/queue"
+    }
+  ],
+  "nonScope": [
+    "No v16.3 seasonality/outcomes/calibration/replay/concentration",
+    "No deterministic Score/Action changes",
+    "No new provider fetch engine",
+    "No generic standalone Alerts tab"
+  ]
+}

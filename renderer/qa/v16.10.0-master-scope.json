@@ -1,0 +1,18 @@
+{
+  "schema": "DE.PULSE-V16.10-MASTER-SCOPE-1",
+  "version": "16.10.0",
+  "title": "Professional Decision Quality & Workflow Hardening",
+  "non_scope": ["v17 database/repository", "v18 authentication/multi-user", "payment", "portfolio", "journal", "paper trading", "order execution"],
+  "scope_lock": [
+    {"id": 1, "capability": "Information Architecture & Data Efficiency Pass", "acceptance": "Every canonical surface and major data path is classified before feature placement; no duplicate owner is introduced."},
+    {"id": 2, "capability": "Always-On Opportunity Radar", "acceptance": "Discovery owns a market-session-aware broad low-cost scan that rotates a bounded U.S. universe and does not permanently stream the full market."},
+    {"id": 3, "capability": "Unusual Volume & Volatility Intelligence", "acceptance": "Radar uses session-normalized volume, dollar-volume/liquidity gates, range/volatility expansion, persistence, price confirmation and material catalyst context without becoming a profit promise or protected desk score."},
+    {"id": 4, "capability": "Adaptive Promotion / Demotion", "acceptance": "Qualified candidates reuse existing livePriorityHints/reserve slots, cap promotions, preserve active-user symbols, use hysteresis and expire when not reconfirmed."},
+    {"id": 5, "capability": "Evidence Reuse", "acceptance": "Existing market-activity, news/catalyst and permitted fused community evidence are reused as contextual Radar inputs instead of creating orphan fetches or parallel evidence stores."},
+    {"id": 6, "capability": "Adaptive Data Health / Freshness / Cache", "acceptance": "Session, hot-symbol state and provider health adapt Radar/history/cache cadence within bounded observable policies; new promotions get targeted history hydration."},
+    {"id": 7, "capability": "Smart Opportunity Notifications", "acceptance": "A new material Radar promotion can create one stable Smart Notification; recomputation does not manufacture repeated alerts."},
+    {"id": 8, "capability": "Shadow / Experimental Foundation", "acceptance": "Shadow alternatives are observable but cannot mutate production until SHADOW -> VALIDATED -> APPROVED -> PRODUCTION."},
+    {"id": 9, "capability": "Regression / Product Boundaries", "acceptance": "v16.9 30/30 closure, US Equities boundary, Provider Router authority, deterministic equivalence and No Execution Boundary remain intact."},
+    {"id": 10, "capability": "Decision-Quality Placement Review", "acceptance": "Rapid dislocation merges into Radar; other proposed capabilities are placed/deferred explicitly without creating duplicate tabs or silently expanding scope."}
+  ]
+}

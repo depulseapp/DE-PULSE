@@ -1,0 +1,19 @@
+{
+  "schema": "DE.PULSE-V18.0.4-SCOPE-1",
+  "version": "18.0.4",
+  "channel": "STABLE",
+  "stable_baseline": "v17.5.1",
+  "build_id": "v18.0.4-stable-native-cross-platform-closure-20260813",
+  "runtime_config": "PersonalMarketTerminal",
+  "application_bundle": "De-Pulse.app",
+  "clauses": [
+    "Real-Application tests close the persistence backend before temporary profile cleanup on every OS.",
+    "Windows native tests must not fail because an open SQLite handle survives until t.TempDir cleanup.",
+    "Native G14 release identity verifies the canonical api/health buildId field rather than a nonexistent build field.",
+    "Native G14 continues to require exact source ZIP SHA-256 and canonical source fingerprint on macOS and Windows.",
+    "Smart Router v2 and Rapid Move production behavior are inherited unchanged.",
+    "Protected deterministic Day/Swing/Long formulas and the No Execution Boundary remain unchanged.",
+    "v17.5.1 Stable remains isolated and untouched.",
+    "v18.0.3 remains an immutable failed native candidate and is never silently rewritten."
+  ]
+}

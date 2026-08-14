@@ -1,0 +1,9 @@
+DE.PULSE v14.3.5 STABLE — UI REFINEMENT & PREMIUM OPERATIONAL CONTROLS
+Build: v14.3.5-ui-refinement-20260810
+Baseline: exact v14.3.4 Stable source
+
+Scope
+- Maintenance Data Engine action controls use an integrated mini-panel visual treatment.
+- Side-panel readiness dots are reduced and aligned inline with title text.
+- Auto-Start remains to the right of Settings but uses a premium status capsule positioned closer to the heading/content composition.
+- No deterministic trading-score, data-provider, market-readiness, or canonical-state logic changes.

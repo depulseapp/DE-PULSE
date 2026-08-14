@@ -1,0 +1,11 @@
+DE.PULSE v15.1.0 — FINAL STABLE QA
+Build: v15.1.0-research-v2-readiness-sec-20260810
+Approved scope: 48/48 PASS
+Go unit/race/vet: PASS
+Go statement coverage: 47.1%
+Deterministic Day/Swing/Long equivalence: 2403/2403 PASS
+Professional Trader Acceptance: PASS
+HTTP/cross-module workflows: 123/123 PASS
+Responsive/Layout Integrity: 373/373 PASS across 15 viewports / 20 surfaces
+Approved Scope Traceability & Implementation Completeness: 48/48 PASS
+Blocking defects at source-freeze decision: 0

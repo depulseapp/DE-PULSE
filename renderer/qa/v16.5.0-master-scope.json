@@ -1,0 +1,29 @@
+{
+  "schema": "DE.PULSE-V16.5-MASTER-SCOPE-1",
+  "version": "16.5.0",
+  "channel": "STABLE",
+  "baseline": {
+    "version": "16.4.0 Stable",
+    "source_fingerprint": "d579b9ce5defec59ab4935c5b58dbaafb5cfe7fde7c4b9573cc2f2a2088f5a5a"
+  },
+  "scope_lock": [
+    {"id": 5, "name": "Sentiment Composite", "impact": "transparent context composite; missing inputs degrade confidence; deterministic impact NONE"},
+    {"id": 6, "name": "Market / Sector Heat Map", "impact": "explicit universe/coverage/freshness over canonical quote and classification owners"},
+    {"id": 9, "name": "GEX", "impact": "options context only; publish only with defensible gamma + open-interest completeness"},
+    {"id": 10, "name": "Community Intelligence", "impact": "user-authorized manual evidence; explicitly untrusted; deterministic impact NONE"},
+    {"id": 11, "name": "Oil / Energy Context", "impact": "official EIA + canonical USO/XLE market context with source/delay/roll truth"}
+  ],
+  "exclusions": [
+    "deterministic score/action changes",
+    "Trade Readiness ownership",
+    "Market Tradeability ownership",
+    "brokerage/execution",
+    "Portfolio/Journal",
+    "options execution",
+    "unsourced community scraping",
+    "v16.6 scope"
+  ],
+  "app_identity": "De-Pulse.app",
+  "runtime": "PersonalMarketTerminal",
+  "documentation_mode": "FULL MINOR REFRESH"
+}

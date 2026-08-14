@@ -1,0 +1,499 @@
+{
+  "schema": "DE.PULSE-v16.7.0-ORIGINAL-ACCEPTANCE-EVIDENCE-1",
+  "contract": "original-professional-roadmap-acceptance.json",
+  "scope": [
+    {
+      "id": 3,
+      "name": "Economic Calendar",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Canonical economic-event calendar",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Sortable/filterable by High/Medium/Low impact",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Filter by date",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Filter by country/region",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 5,
+          "acceptance": "Filter by category",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 6,
+          "acceptance": "Preserve actual/forecast/previous/surprise/source truth",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 7,
+          "acceptance": "High-impact events feed Market/Desk Readiness and preparation jobs",
+          "status": "PASS",
+          "evidence": [
+            "event_intelligence.go:economicEventCategory",
+            "event_intelligence.go:buildEconomicCalendar",
+            "renderer/renderer.js:marketEventIntelligenceMarkup",
+            "renderer/renderer.js:filteredEconomicCalendar",
+            "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep",
+            "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+            "v16_7_renderer_test.js"
+          ]
+        }
+      ],
+      "code": [
+        "event_intelligence.go:economicEventCategory",
+        "event_intelligence.go:buildEconomicCalendar"
+      ],
+      "ui": [
+        "renderer/renderer.js:marketEventIntelligenceMarkup",
+        "renderer/renderer.js:filteredEconomicCalendar"
+      ],
+      "workflow": [
+        "canonical MacroEvent -> EconomicCalendarEntry -> Event Intelligence -> EventMode/Readiness/Prep"
+      ],
+      "tests": [
+        "TestV167EconomicCalendarOriginalAcceptanceCategoryAndImpactTruth",
+        "v16_7_renderer_test.js"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Market Tradeability / Sit on Hands",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Deterministic market-level state",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketTradeabilityWithContext",
+            "engine_core.go:buildMarketIntelligenceSnapshotWithContext",
+            "renderer/renderer.js:miTradeabilityComponentsMarkup",
+            "renderer/renderer.js:renderMarketIntelligence",
+            "canonical VIX/breadth/event/liquidity/freshness/scanner/structure/options/global -> Tradeability -> Dashboard + Prep summaries/exceptions + desk Trade Readiness -> Decision Queue priority",
+            "TestV167TradeabilityConsumesOriginalContextWithoutChangingDeskFormula",
+            "deterministic_equivalence_test.js",
+            "v16_7_renderer_test.js",
+            "engine_core.go:preparationsWithMarketTradeability",
+            "renderer/renderer.js:tradeReadiness",
+            "TestV167TradeabilityFeedsPreparationSurfacesWithoutPersistingDerivedState"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Combine Regime, VIX, breadth, macro/event risk, liquidity/spreads, freshness, setup availability, extension and valid options context",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketTradeabilityWithContext",
+            "engine_core.go:buildMarketIntelligenceSnapshotWithContext",
+            "renderer/renderer.js:miTradeabilityComponentsMarkup",
+            "renderer/renderer.js:renderMarketIntelligence",
+            "canonical VIX/breadth/event/liquidity/freshness/scanner/structure/options/global -> Tradeability -> Dashboard + Prep summaries/exceptions + desk Trade Readiness -> Decision Queue priority",
+            "TestV167TradeabilityConsumesOriginalContextWithoutChangingDeskFormula",
+            "deterministic_equivalence_test.js",
+            "v16_7_renderer_test.js",
+            "engine_core.go:preparationsWithMarketTradeability",
+            "renderer/renderer.js:tradeReadiness",
+            "TestV167TradeabilityFeedsPreparationSurfacesWithoutPersistingDerivedState"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Feed Dashboard, Prep, Decision Queue and desks",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketTradeabilityWithContext",
+            "engine_core.go:buildMarketIntelligenceSnapshotWithContext",
+            "renderer/renderer.js:miTradeabilityComponentsMarkup",
+            "renderer/renderer.js:renderMarketIntelligence",
+            "canonical VIX/breadth/event/liquidity/freshness/scanner/structure/options/global -> Tradeability -> Dashboard + Prep summaries/exceptions + desk Trade Readiness -> Decision Queue priority",
+            "TestV167TradeabilityConsumesOriginalContextWithoutChangingDeskFormula",
+            "deterministic_equivalence_test.js",
+            "v16_7_renderer_test.js",
+            "engine_core.go:preparationsWithMarketTradeability",
+            "renderer/renderer.js:tradeReadiness",
+            "TestV167TradeabilityFeedsPreparationSurfacesWithoutPersistingDerivedState"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Not AI-generated and does not mutate deterministic desk scores",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketTradeabilityWithContext",
+            "engine_core.go:buildMarketIntelligenceSnapshotWithContext",
+            "renderer/renderer.js:miTradeabilityComponentsMarkup",
+            "renderer/renderer.js:renderMarketIntelligence",
+            "canonical VIX/breadth/event/liquidity/freshness/scanner/structure/options/global -> Tradeability -> Dashboard + Prep summaries/exceptions + desk Trade Readiness -> Decision Queue priority",
+            "TestV167TradeabilityConsumesOriginalContextWithoutChangingDeskFormula",
+            "deterministic_equivalence_test.js",
+            "v16_7_renderer_test.js",
+            "engine_core.go:preparationsWithMarketTradeability",
+            "renderer/renderer.js:tradeReadiness",
+            "TestV167TradeabilityFeedsPreparationSurfacesWithoutPersistingDerivedState"
+          ]
+        }
+      ],
+      "code": [
+        "market_intelligence.go:marketTradeabilityWithContext",
+        "engine_core.go:buildMarketIntelligenceSnapshotWithContext",
+        "engine_core.go:preparationsWithMarketTradeability"
+      ],
+      "ui": [
+        "renderer/renderer.js:miTradeabilityComponentsMarkup",
+        "renderer/renderer.js:renderMarketIntelligence",
+        "renderer/renderer.js:tradeReadiness"
+      ],
+      "workflow": [
+        "canonical VIX/breadth/event/liquidity/freshness/scanner/structure/options/global -> Tradeability -> Dashboard + Prep summaries/exceptions + desk Trade Readiness -> Decision Queue priority"
+      ],
+      "tests": [
+        "TestV167TradeabilityConsumesOriginalContextWithoutChangingDeskFormula",
+        "TestV167TradeabilityFeedsPreparationSurfacesWithoutPersistingDerivedState",
+        "deterministic_equivalence_test.js",
+        "v16_7_renderer_test.js"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Market Breadth & Internals",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Advancers/decliners and participation",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Percent above key moving averages",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "New highs/lows",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Sector participation where reliable",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 5,
+          "acceptance": "Material input to Market Regime and Tradeability",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 6,
+          "acceptance": "Coverage/freshness/source limitations explicit",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:marketBreadthInternals",
+            "market_intelligence.go:marketBreadthStateWithBars",
+            "renderer/renderer.js:miBreadthInternalsMarkup",
+            "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence",
+            "TestV167BreadthInternalsOriginalAcceptance",
+            "v16_7_renderer_test.js"
+          ]
+        }
+      ],
+      "code": [
+        "market_intelligence.go:marketBreadthInternals",
+        "market_intelligence.go:marketBreadthStateWithBars"
+      ],
+      "ui": [
+        "renderer/renderer.js:miBreadthInternalsMarkup"
+      ],
+      "workflow": [
+        "canonical quotes + completed daily bars -> tracked-universe MA/high-low/sector internals -> Tradeability/Market Intelligence"
+      ],
+      "tests": [
+        "TestV167BreadthInternalsOriginalAcceptance",
+        "v16_7_renderer_test.js"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Relative Strength / Weakness Engine",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Ticker performance versus SPY, QQQ, sector and where feasible industry",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:relativeStrengthFor",
+            "market_intelligence.go:appendRelativeStrengthRows",
+            "scanner.go:applyScannerSessionRelativeStrength",
+            "scanner.go:enrichScannerHistory",
+            "renderer/renderer.js:miRelativeRows",
+            "renderer/renderer.js:tradeReadiness",
+            "existing Research Relative Strength evidence",
+            "canonical bars/snapshots -> Day+Swing RS vs SPY/QQQ/sector/industry -> Discovery ranking + Research + Trade Readiness",
+            "TestV167RelativeStrengthIncludesDayAndSwingAgainstCanonicalBenchmarks",
+            "TestV167DayDiscoveryRankingUsesSharedSessionRelativeStrength",
+            "v16_7_renderer_test.js",
+            "deterministic_equivalence_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Day and Swing horizons",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:relativeStrengthFor",
+            "market_intelligence.go:appendRelativeStrengthRows",
+            "scanner.go:applyScannerSessionRelativeStrength",
+            "scanner.go:enrichScannerHistory",
+            "renderer/renderer.js:miRelativeRows",
+            "renderer/renderer.js:tradeReadiness",
+            "existing Research Relative Strength evidence",
+            "canonical bars/snapshots -> Day+Swing RS vs SPY/QQQ/sector/industry -> Discovery ranking + Research + Trade Readiness",
+            "TestV167RelativeStrengthIncludesDayAndSwingAgainstCanonicalBenchmarks",
+            "TestV167DayDiscoveryRankingUsesSharedSessionRelativeStrength",
+            "v16_7_renderer_test.js",
+            "deterministic_equivalence_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Feed ranking, Research and Trade Readiness",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:relativeStrengthFor",
+            "market_intelligence.go:appendRelativeStrengthRows",
+            "scanner.go:applyScannerSessionRelativeStrength",
+            "scanner.go:enrichScannerHistory",
+            "renderer/renderer.js:miRelativeRows",
+            "renderer/renderer.js:tradeReadiness",
+            "existing Research Relative Strength evidence",
+            "canonical bars/snapshots -> Day+Swing RS vs SPY/QQQ/sector/industry -> Discovery ranking + Research + Trade Readiness",
+            "TestV167RelativeStrengthIncludesDayAndSwingAgainstCanonicalBenchmarks",
+            "TestV167DayDiscoveryRankingUsesSharedSessionRelativeStrength",
+            "v16_7_renderer_test.js",
+            "deterministic_equivalence_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Canonical owner; no deterministic score mutation",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:relativeStrengthFor",
+            "market_intelligence.go:appendRelativeStrengthRows",
+            "scanner.go:applyScannerSessionRelativeStrength",
+            "scanner.go:enrichScannerHistory",
+            "renderer/renderer.js:miRelativeRows",
+            "renderer/renderer.js:tradeReadiness",
+            "existing Research Relative Strength evidence",
+            "canonical bars/snapshots -> Day+Swing RS vs SPY/QQQ/sector/industry -> Discovery ranking + Research + Trade Readiness",
+            "TestV167RelativeStrengthIncludesDayAndSwingAgainstCanonicalBenchmarks",
+            "TestV167DayDiscoveryRankingUsesSharedSessionRelativeStrength",
+            "v16_7_renderer_test.js",
+            "deterministic_equivalence_test.js"
+          ]
+        }
+      ],
+      "code": [
+        "market_intelligence.go:relativeStrengthFor",
+        "market_intelligence.go:appendRelativeStrengthRows",
+        "scanner.go:applyScannerSessionRelativeStrength",
+        "scanner.go:enrichScannerHistory"
+      ],
+      "ui": [
+        "renderer/renderer.js:miRelativeRows",
+        "renderer/renderer.js:tradeReadiness",
+        "existing Research Relative Strength evidence"
+      ],
+      "workflow": [
+        "canonical bars/snapshots -> Day+Swing RS vs SPY/QQQ/sector/industry -> Discovery ranking + Research + Trade Readiness"
+      ],
+      "tests": [
+        "TestV167RelativeStrengthIncludesDayAndSwingAgainstCanonicalBenchmarks",
+        "TestV167DayDiscoveryRankingUsesSharedSessionRelativeStrength",
+        "v16_7_renderer_test.js",
+        "deterministic_equivalence_test.js"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Sector & Industry Regime Intelligence",
+      "status": "FULL",
+      "clauses": [
+        {
+          "clause": 1,
+          "acceptance": "Sector trend and breadth",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:benchmarkRegime",
+            "market_intelligence.go:regimeMembers",
+            "renderer/renderer.js:renderMarketIntelligence Sector/Industry Regime cards",
+            "canonical benchmark momentum + benchmark-vs-SPY RS + mapped-member MA participation -> Sector/Industry Regime -> ticker context",
+            "TestV167SectorIndustryRegimeCombinesMomentumRelativeStrengthAndMemberBreadth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 2,
+          "acceptance": "Leadership/lagging and relative strength",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:benchmarkRegime",
+            "market_intelligence.go:regimeMembers",
+            "renderer/renderer.js:renderMarketIntelligence Sector/Industry Regime cards",
+            "canonical benchmark momentum + benchmark-vs-SPY RS + mapped-member MA participation -> Sector/Industry Regime -> ticker context",
+            "TestV167SectorIndustryRegimeCombinesMomentumRelativeStrengthAndMemberBreadth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 3,
+          "acceptance": "Correlate each ticker with sector/industry context",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:benchmarkRegime",
+            "market_intelligence.go:regimeMembers",
+            "renderer/renderer.js:renderMarketIntelligence Sector/Industry Regime cards",
+            "canonical benchmark momentum + benchmark-vs-SPY RS + mapped-member MA participation -> Sector/Industry Regime -> ticker context",
+            "TestV167SectorIndustryRegimeCombinesMomentumRelativeStrengthAndMemberBreadth",
+            "v16_7_renderer_test.js"
+          ]
+        },
+        {
+          "clause": 4,
+          "acceptance": "Canonical owner; explicit evidence coverage",
+          "status": "PASS",
+          "evidence": [
+            "market_intelligence.go:benchmarkRegime",
+            "market_intelligence.go:regimeMembers",
+            "renderer/renderer.js:renderMarketIntelligence Sector/Industry Regime cards",
+            "canonical benchmark momentum + benchmark-vs-SPY RS + mapped-member MA participation -> Sector/Industry Regime -> ticker context",
+            "TestV167SectorIndustryRegimeCombinesMomentumRelativeStrengthAndMemberBreadth",
+            "v16_7_renderer_test.js"
+          ]
+        }
+      ],
+      "code": [
+        "market_intelligence.go:benchmarkRegime",
+        "market_intelligence.go:regimeMembers"
+      ],
+      "ui": [
+        "renderer/renderer.js:renderMarketIntelligence Sector/Industry Regime cards"
+      ],
+      "workflow": [
+        "canonical benchmark momentum + benchmark-vs-SPY RS + mapped-member MA participation -> Sector/Industry Regime -> ticker context"
+      ],
+      "tests": [
+        "TestV167SectorIndustryRegimeCombinesMomentumRelativeStrengthAndMemberBreadth",
+        "v16_7_renderer_test.js"
+      ]
+    }
+  ]
+}

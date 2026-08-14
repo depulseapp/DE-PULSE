@@ -1,0 +1,6 @@
+DE.PULSE v15.1.1 — EXTENSIVE EDGE-CASE HARDENING
+Build: v15.1.1-extensive-edge-hardening-20260810
+Date: 2026-08-10
+Baseline: v15.1.0 Stable
+
+Final gate results are recorded in the packaged QA report after clean-source retest.

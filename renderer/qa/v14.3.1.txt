@@ -1,0 +1,17 @@
+DE.PULSE v14.3.1 — COMPLETION PATCH
+Build: v14.3.1-completion-20260809
+Baseline: released v14.3.0 Improvement Build, itself derived from exact v14.2.2 Stable source
+
+Completion scope:
+- Remove fixed sidebar scroll-fade overlay that could render as a black horizontal band and jitter on Settings Save/rerender.
+- Complete Twelve Data entitlement-aware fundamentals/earnings/institutional fallback-validation without overwriting primary canonical values.
+- Complete Market Open Prep reconciliation: VIX, global/macro state, premarket gap/range/volume, options context, Day refresh context and meaningful Swing/Long changes.
+- Evaluate OUTSIDE ENTRY ZONE against the real deterministic Day plan entry range after a valid Market Open checkpoint.
+- Earnings & Material Catalyst Watch phases: ARMED -> TRIGGERED -> REACTION.
+- Provider Capability Registry requires verified positive provider health before AVAILABLE.
+- Add provider-adapter fixture/entitlement tests.
+- Re-verify provider adapters against current official provider documentation: use Alpaca Market Data GET /v1/corporate-actions (deprecated announcements route removed) and Finnhub /stock/fund-ownership for institutional/fund ownership context.
+- Slow FRED/BLS/EIA official-data cadence to startup/prep/event-triggered refresh with conservative fallback intervals.
+- Preserve all v14.3.0 UI hierarchy/spacing improvements and frozen Day/Swing/Long deterministic Setup Score formulas.
+
+Final gate results are recorded in the external v14.3.1 QA report generated from the exact frozen source.

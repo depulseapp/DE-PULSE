@@ -1,0 +1,14 @@
+DE.PULSE v18.0.6 STABLE
+Build ID: v18.0.6-stable-smart-provider-router-rapid-move-market-shock-hardening-20260814
+Status: STABLE · G0–G15 certified
+
+Scope:
+- reuse Smart Provider Router v2 and canonical provider reconciliation; no second router
+- surface canonical provider source-disagreement count in Router scorecard
+- explicit RAPID_MOVE vs MARKET_SHOCK event classification
+- alert-state hysteresis to prevent noisy state thrash
+- preserve original provider event anchor across deduped observations for truthful 1m/5m/20m outcomes
+- outcome quality scorecards and explicit SHADOW learning governance
+- TIERED_PARTIAL coverage truth preserved
+- protected Day/Swing/Long formulas and No Execution Boundary unchanged
+- v18.1 multi-user scope excluded

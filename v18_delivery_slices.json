@@ -1,0 +1,14 @@
+{
+  "schema": "DE.PULSE-V18-DELIVERY-SLICES-1",
+  "stable_baseline": "v17.5.1",
+  "slices": [
+    {"id":"v18.0","status":"IN DEVELOPMENT","scope":"Identity & Secure Session Foundation"},
+    {"id":"smart-router-v2","status":"COMMITTED","scope":"Smart Intelligent Provider Router v2"},
+    {"id":"v18.1","status":"COMMITTED","scope":"Multi-User / My Market Symbols"},
+    {"id":"tradeinsight-shadow","status":"COMMITTED","scope":"TradeInsight Intelligence via Smart Router"},
+    {"id":"v18.2","status":"COMMITTED","scope":"Admin / Presence / Session Operations"},
+    {"id":"v18.3","status":"COMMITTED","scope":"PostgreSQL / Hosted Shared State"},
+    {"id":"v18.4","status":"COMMITTED","scope":"Security + Commercial/Data-Rights Hardening"},
+    {"id":"v18.5","status":"MANDATORY","scope":"Major Closure & Release Assurance"}
+  ]
+}

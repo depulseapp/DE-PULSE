@@ -1,0 +1,56 @@
+DE.PULSE v15.0.1 — FINAL STABLE QA REPORT
+Build: v15.0.1-completeness-router-desk-hardening-20260810
+Date: 2026-08-10
+Protected baseline: DE.PULSE v14.3.7 Stable; v15.0.1 patches the v15 reference source derived from that baseline.
+
+APPROVED SCOPE
+- Approved Scope Traceability & Implementation Completeness: 53/53 PASS.
+- All inherited v15 requirements plus strict-audit follow-ups, provider visibility, desk reliability hardening, and Gate 13 are explicitly traced to implementation/test evidence.
+- Active Fundamentals routing is Finnhub -> SEC -> yfinance. Legacy Twelve Data fundamentals are not scheduled or exposed as an active capability.
+
+CORE VALIDATION
+- Go unit tests: PASS.
+- go test -race: PASS.
+- go vet: PASS.
+- Go statement coverage: 48.3%.
+- Renderer logic / stability regression: PASS.
+- Deterministic Day/Swing/Long equivalence vs bundled frozen v14.3.7 renderer: 2403/2403 PASS.
+- Professional Trader Acceptance: PASS.
+- Content/copy consistency: PASS.
+- Canonical version/build consistency: PASS.
+- HTTP / cross-module workflow assertions: 113/113 PASS.
+- Responsive / Layout Integrity matrix: 343/343 PASS across 15 viewports / 18 surfaces.
+
+TARGETED V15.0.1 VALIDATION
+- Independent provider / DE.PULSE received / cache freshness clocks: PASS.
+- Provider Router order, successful-hop termination, 429 suppression, circuit recovery, latency/attempt metadata: PASS.
+- Feed Capability Registry and Data Engine provider diagnostics: PASS.
+- Twelve Data / yfinance / CBOE provider Settings visibility and truthful roles: PASS.
+- Fundamentals Finnhub -> SEC -> yfinance executable route and no active legacy Twelve fundamentals: PASS.
+- Desk membership seven-state transition matrix, idempotency, last-desk protection, concurrency, persistence and legacy-endpoint canonicalization: PASS.
+- Cross-tab membership / Master Market Symbols / global remove + Undo / scroll preservation: PASS.
+- Day/Swing/Long/Discovery row-hover geometry stability: PASS.
+- SEC Form 4 BUY / SELL / OTHER semantics and transaction-detail visibility: PASS.
+
+13 BLOCKING RELEASE GATES
+1. Unit Validation — PASS
+2. Functional & Workflow Validation — PASS
+3. Cross-Module Integration, Correlation & Reuse — PASS
+4. Tab-by-Tab UI Placement & Information Hierarchy Audit — PASS
+5. UI/UX, Responsive & Content/Copy Consistency Validation — PASS
+6. Performance & Data-Efficiency Validation — PASS
+7. Source Cleanup & Engineering Quality — PASS
+8. Engineer Acceptance Test — PASS
+9. Professional Trader Acceptance Test — PASS
+10. Documentation & Operational Readiness / Build Identity — PASS
+11. Platform & Package Validation / Build Identity — PASS on build-host-verifiable scope
+12. Exact-Source Freeze & Final Retest — PASS for delivered source/package contents
+13. Approved Scope Traceability & Implementation Completeness — 53/53 PASS
+
+LIMITATIONS / FINAL DEVICE ACCEPTANCE
+- Native macOS/Windows launch cannot be physically exercised from this Linux build environment.
+- Authenticated private-provider credentials/entitlements require the user's installed environment.
+- Packages are unsigned/not notarized.
+
+RELEASE DECISION
+STABLE · PASS. No blocking defects remain in build-host-verifiable scope.

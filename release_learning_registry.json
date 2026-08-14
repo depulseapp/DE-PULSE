@@ -1,0 +1,630 @@
+{
+  "schema": "DE.PULSE-RELEASE-LEARNING-1",
+  "policy": "Observe challenge -> root cause -> generalize -> adapt the owning G0-G16 gate -> add durable regression -> consolidate obsolete checks; never append a new gate merely to remember a lesson.",
+  "entries": [
+    {
+      "id": "RL-001",
+      "lesson": "Stale certification descendants can continue after a wrapper timeout and contaminate later evidence.",
+      "rootCause": "Process ownership stopped at the wrapper instead of its descendants.",
+      "generalizedRule": "Certification timeouts must terminate descendant work and a new fingerprint must start with no stale jobs.",
+      "owningGates": [
+        "G0",
+        "G12"
+      ],
+      "permanentProtection": [
+        "fingerprint-keyed evidence",
+        "bounded heavy concurrency",
+        "stale-job preflight"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-019",
+      "lesson": "A gate should not re-execute expensive coverage that is already authoritatively owned by another gate in the same immutable certification.",
+      "rootCause": "G0 replayed all inherited scope scripts even though G11 separately reruns those exact executable regressions, duplicating work and making baseline verification unnecessarily slow.",
+      "generalizedRule": "G0 verifies immutable predecessor identity/closure artifacts and learning ownership; G11 is the single executable owner of inherited behavioral revalidation. Coverage is preserved while duplicate heavy execution is consolidated.",
+      "owningGates": [
+        "G0",
+        "G11"
+      ],
+      "permanentProtection": [
+        "G0 predecessor hash/closure-artifact verification",
+        "G0 verifies inherited G11 gate presence without executing it",
+        "G11 executes every inherited scope gate exactly once per final fingerprint"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-002",
+      "lesson": "Tests must not mutate frozen source or documentation.",
+      "rootCause": "A regression test wrote README content during randomized execution.",
+      "generalizedRule": "Certification reads immutable source; test outputs live outside the source tree.",
+      "owningGates": [
+        "G2",
+        "G12"
+      ],
+      "permanentProtection": [
+        "source-health audit",
+        "fingerprint drift check",
+        "randomized order"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-003",
+      "lesson": "Exact prose sentinels create false failures when semantics remain correct.",
+      "rootCause": "Tests coupled safety contracts to one README sentence.",
+      "generalizedRule": "Assert behavioral/architectural semantics rather than incidental prose except where copy itself is the contract.",
+      "owningGates": [
+        "G4",
+        "G10"
+      ],
+      "permanentProtection": [
+        "semantic source checks",
+        "professional regressions"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-004",
+      "lesson": "Refactors can leave orphan helpers and duplicate ownership.",
+      "rootCause": "Temporary helpers survived after consolidation.",
+      "generalizedRule": "Every build preserves one canonical implementation per responsibility and zero orphan production helpers.",
+      "owningGates": [
+        "G2"
+      ],
+      "permanentProtection": [
+        "source_health_architecture_gate.py"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-005",
+      "lesson": "Release manifests and file-count metadata must reflect frozen artifacts, not stale summaries.",
+      "rootCause": "A prior delivery lost the standalone manifest and carried a stale ZIP file count.",
+      "generalizedRule": "Count the actual final ZIP, generate SHA manifest LAST, then verify every entry.",
+      "owningGates": [
+        "G15",
+        "G16"
+      ],
+      "permanentProtection": [
+        "clean extraction",
+        "manifest-last verification"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-006",
+      "lesson": "Stable promotion must preserve compatible credentials/settings.",
+      "rootCause": "TEST runtime isolation used a different Application Support directory.",
+      "generalizedRule": "Stable releases use PersonalMarketTerminal and verify prior Stable secrets continuity before authorization.",
+      "owningGates": [
+        "G0",
+        "G1"
+      ],
+      "permanentProtection": [
+        "stable_promotion_gate.py",
+        "credential continuity regression"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-007",
+      "lesson": "Historical replay must not leak current state and outcome ordering must respect entry before target.",
+      "rootCause": "Present caches and coarse historical ordering can contaminate retrospective validation.",
+      "generalizedRule": "Replay is cutoff-isolated; what was known then is frozen before outcomes are measured.",
+      "owningGates": [
+        "G10"
+      ],
+      "permanentProtection": [
+        "v16_3_professional_test.go",
+        "v16_3_renderer_test.js"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-008",
+      "lesson": "Daily completed-bar truth cannot use the next observed bar timestamp across weekends/holidays.",
+      "rootCause": "Gap duration was mistaken for bar duration.",
+      "generalizedRule": "Completed evidence uses canonical timeframe duration and session truth.",
+      "owningGates": [
+        "G6",
+        "G10"
+      ],
+      "permanentProtection": [
+        "weekend-gap professional regression"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-009",
+      "lesson": "Heavy race/randomized/responsive work can create false failures under host contention.",
+      "rootCause": "Unbounded parallel heavy jobs competed for CPU/browser resources.",
+      "generalizedRule": "LIGHT <=4, MEDIUM <=2, HEAVY normally 1 with explicit bounded sharding.",
+      "owningGates": [
+        "G12"
+      ],
+      "permanentProtection": [
+        "ci_pipeline_plan.json concurrency policy",
+        "bounded shards"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-010",
+      "lesson": "Product readiness and build-host capability are separate truths.",
+      "rootCause": "Unavailable host-native/security tooling was conflated with product defects.",
+      "generalizedRule": "Report host/native residuals explicitly without hiding them in app startup or mislabeling product failures.",
+      "owningGates": [
+        "G0",
+        "G16"
+      ],
+      "permanentProtection": [
+        "release_environment_gate.py",
+        "closure decision"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-011",
+      "lesson": "Active documentation terminology must follow the current release model.",
+      "rootCause": "Old TEST wording survived a Stable policy change.",
+      "generalizedRule": "G16 validates active WC/RC/Stable terminology while preserving historical release records as history.",
+      "owningGates": [
+        "G16"
+      ],
+      "permanentProtection": [
+        "documentation_governance_gate.py"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-012",
+      "lesson": "Application bundle naming is a user-facing release contract.",
+      "rootCause": "A temporary De-Pulse-stable.app name was treated as if it were standard.",
+      "generalizedRule": "macOS Stable bundle is /Applications/De-Pulse.app; release labels belong in version/build metadata, not the app name.",
+      "owningGates": [
+        "G1",
+        "G15",
+        "G16"
+      ],
+      "permanentProtection": [
+        "package-content audit",
+        "install command audit",
+        "documentation naming check"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-013",
+      "lesson": "Randomized certification runners must not hard-code a previous release seed whitelist.",
+      "rootCause": "The G12 runner embedded v16.3-only argparse choices, so valid v16.4 plan seeds were rejected before tests executed.",
+      "generalizedRule": "The certification plan owns reproducible release seeds; the generic G12 runner validates only safe positive seed shape and remains version-agnostic.",
+      "owningGates": [
+        "G12"
+      ],
+      "permanentProtection": [
+        "plan-supplied reproducible seeds",
+        "version-agnostic randomized_order_gate.py seed validation"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-014",
+      "lesson": "Full-minor documentation governance must include the repository top-level README current-release identity, not only in-app Documentation tabs.",
+      "rootCause": "v16.4 canonical User/Developer/Limitations docs were current while README still called v16.3 the current Stable baseline.",
+      "generalizedRule": "G16 validates README version/build/scope/app-identity/learning truth alongside in-app canonical docs before RC authorization.",
+      "owningGates": [
+        "G16"
+      ],
+      "permanentProtection": [
+        "documentation_governance_gate.py README current-release assertions",
+        "version/build/scope terminology audit"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-015",
+      "lesson": "Stored QA/release history must not fail simply because valid release history grows beyond an old fixed test count.",
+      "rootCause": "renderer_logic_test.js imposed an obsolete <=10 cap on an append-only manifest even though the UI intentionally renders only the latest five entries.",
+      "generalizedRule": "Release history is monotonic and append-only; tests validate current-first metadata and independently validate bounded recent-history presentation instead of capping stored history.",
+      "owningGates": [
+        "G4",
+        "G16"
+      ],
+      "permanentProtection": [
+        "renderer logic asserts append-only manifest without a maximum-count sentinel",
+        "qaHistoryMarkup independently limits visible history with slice(0,5)",
+        "G16 validates current release first in manifest"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-016",
+      "lesson": "Responsive tests for continuously animated UI must track element identity instead of assuming the element remains under a fixed screen coordinate.",
+      "rootCause": "The ticker hover regression required animation to remain running, then used elementFromPoint at the pre-animation coordinate; at one viewport the correctly moving item left that coordinate and produced a false null failure.",
+      "generalizedRule": "Animated-component geometry tests bind to the original DOM element/index and independently assert animation state; fixed-coordinate hit-testing is not used to identify a moving target after time advances.",
+      "owningGates": [
+        "G12"
+      ],
+      "permanentProtection": [
+        "responsive_ui_test.py tracks ticker item index across animation",
+        "hover geometry and animation-play-state remain separate assertions"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-017",
+      "lesson": "Persisted collection state must distinguish an intentionally empty list from a missing/legacy list.",
+      "rootCause": "Master Symbol last-item removal serialized/normalized an empty desk slice as nil; legacy normalization interpreted nil as a missing watchlist and restored defaults.",
+      "generalizedRule": "For persisted user-owned collections, nil may represent legacy/missing state only; explicit empty state must remain non-nil through mutation, normalization, save, reload and public rendering.",
+      "owningGates": [
+        "G2",
+        "G11"
+      ],
+      "permanentProtection": [
+        "uniqueSymbols/userTradingSymbols preserve non-nil empties",
+        "v16_6_integration_test.go last-item/remove-all reload regression",
+        "Master Symbol Store UI separates user-managed symbols from protected market context"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-018",
+      "lesson": "Current-release UI/test fixtures must not hard-code a previous release version/build literal.",
+      "rootCause": "Current-release renderer logic and responsive fixtures had duplicated release literals; renderer logic was generalized first, but responsive_ui_test.py still injected the previous v16.5 build-name suffix and falsely reported a v16.6 build-identity mismatch.",
+      "generalizedRule": "Every current-release UI/test fixture derives version/build from the canonical packaged renderer identity owner and then asserts all surfaces agree; historical release literals remain explicit only when history itself is under test.",
+      "owningGates": [
+        "G4",
+        "G12"
+      ],
+      "permanentProtection": [
+        "renderer_logic_test.js derives EXPECTED_RELEASE_VERSION/EXPECTED_BUILD_ID",
+        "responsive_ui_test.py derives canonical renderer identity for primary and scaling fixtures",
+        "version_consistency_test.py remains the canonical cross-surface identity gate"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-020",
+      "lesson": "Roadmap item IDs/names alone do not preserve the original approved acceptance depth.",
+      "rootCause": "A later implementation can narrow a capability while retaining the same roadmap ID/name, allowing evolved traceability to report 30/30 even when original sub-requirements are partial.",
+      "generalizedRule": "Every roadmap item carries immutable original_acceptance clauses. G1 freezes them, G11 executes behavioral proof against them, and G16 reports FULL/PARTIAL/MISSING/DEFERRED/EXPLICITLY_AMENDED. Scope reductions require explicit user approval.",
+      "owningGates": [
+        "G1",
+        "G11",
+        "G16"
+      ],
+      "permanentProtection": [
+        "renderer/qa/original-professional-roadmap-acceptance.json",
+        "current-release scope gate validates original acceptance clauses",
+        "final roadmap audit reports clause-level status"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-021",
+      "lesson": "A timeout during Go test enumeration is infrastructure evidence, not automatically a product race failure.",
+      "rootCause": "An independent v16.6 audit saw go test -list exceed a 45-second wrapper limit before any race test ran; immediate isolated reruns and the complete second certification passed.",
+      "generalizedRule": "G12 distinguishes enumeration/setup timeout from a race/test failure, preserves the first incident, retries enumeration once after stale-job checks, and only classifies a reproducible race/test failure as PRODUCT FAIL.",
+      "owningGates": [
+        "G12"
+      ],
+      "permanentProtection": [
+        "bounded_race_gate.py isolated enumeration retry",
+        "explicit INFRASTRUCTURE FAIL classification after repeated enumeration timeout",
+        "race shard PASS requires actual -race execution"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-022",
+      "lesson": "Canonical in-app documentation titles must remain the first Markdown heading even when a release-specific update is added.",
+      "rootCause": "The v16.8 documentation update prepended release-note headings above the canonical User/Developer documentation titles. G12 renderer logic correctly rejected the changed first-line contract.",
+      "generalizedRule": "Release-specific documentation updates are inserted below the canonical document title; canonical role/audience headings remain first-line identity and are protected by renderer/documentation gates.",
+      "owningGates": [
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "renderer_logic_test.js asserts canonical User/Developer documentation first-line titles",
+        "documentation_governance_gate.py validates role-aware documentation governance",
+        "release updates are nested below canonical document identity rather than replacing it"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-023",
+      "lesson": "Current-release end-to-end HTTP workflow assertions must derive release identity from the canonical version owner rather than retaining the predecessor Stable literal.",
+      "rootCause": "The v16.8 product correctly reported version/build 16.8.0, but http_workflow_test.py still asserted v16.7.0 and therefore produced a blocking false failure after source freeze.",
+      "generalizedRule": "Any current-release HTTP/integration fixture derives expected version and build identity from VERSION.txt (or the canonical packaged identity owner). Historical release assertions remain explicit only when historical compatibility itself is under test.",
+      "owningGates": [
+        "G11",
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "http_workflow_test.py derives EXPECTED_VERSION and EXPECTED_BUILD_ID from VERSION.txt",
+        "HTTP workflow verifies current health/bootstrap/maintenance/renderer identity against the canonical release owner",
+        "current release traceability is explicitly exercised while prior traceability remains historical compatibility evidence"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-024",
+      "lesson": "Machine-readable release metadata can drift even when runtime/version tests pass.",
+      "rootCause": "ci_pipeline_plan.json retained an older version/baseline because release identity was duplicated across independent files.",
+      "generalizedRule": "One canonical release identity owns current version/build/baseline/channel; all release-owned metadata is generated or semantically verified against it before freeze.",
+      "owningGates": [
+        "G0",
+        "G9",
+        "G16"
+      ],
+      "permanentProtection": [
+        "release_identity.json",
+        "release_identity.py --verify",
+        "pre-freeze metadata-drift qualification",
+        "current-state professional/test fixtures derive canonical release identity"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-025",
+      "lesson": "Cheap release-truth failures discovered after RC freeze create avoidable full-certification restart cost.",
+      "rootCause": "Documentation identity and HTTP current-release identity were validated too late in v16.8 heavy certification.",
+      "generalizedRule": "A candidate must pass pre-freeze qualification for identity/docs/renderer/HTTP smoke/source health/scope/data utility before immutable G12 heavy certification.",
+      "owningGates": [
+        "G9",
+        "G11",
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "prefreeze_qualification.py",
+        "canonical release identity",
+        "fingerprint-scoped qualification evidence"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-026",
+      "lesson": "Inherited renderer acceptance must protect enduring capability semantics without pinning superseded UI filters or current-release identity literals.",
+      "rootCause": "The first v16.8.1 frozen RC passed current renderer qualification but historical v16.7/v16.8 renderer scripts still asserted the old Region calendar control and exact v16.8.0 current-release identity, creating blocking false regressions after freeze.",
+      "generalizedRule": "Historical renderer gates assert enduring capability/invariant semantics and are included in pre-freeze qualification. Current-release identity is owned only by the canonical identity/version gates; historical UI literals may remain only when that exact historical compatibility contract is intentionally under test.",
+      "owningGates": [
+        "G9",
+        "G10",
+        "G11",
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "prefreeze inherited renderer sweep",
+        "v16_7_renderer_test.js follows evolved US/Global Context calendar semantics",
+        "v16_8_renderer_test.js checks canonical identity hook rather than a superseded current-release value"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-027",
+      "lesson": "A release scope gate must not recursively own expensive inherited certification that already has an independent evidence owner.",
+      "rootCause": "The first v16.10 scope-gate composition invoked the complete v16.9 30/30 audit as a child process. Under captured orchestration this coupled unrelated checkpoints and exceeded wrapper limits even though the inherited audit passed standalone.",
+      "generalizedRule": "Execute each unique evidence-producing regression once per fingerprint as an independent checkpointed job. Scope gates consume/reference that evidence and run only release-specific acceptance plus bounded invariants; do not recursively nest another heavy certification/audit suite.",
+      "owningGates": [
+        "G3",
+        "G11",
+        "G12"
+      ],
+      "permanentProtection": [
+        "v16_10_scope_gate.py keeps inherited 30/30 audit separate",
+        "prefreeze_qualification.py owns v16.9 original roadmap audit as an independent job",
+        "certification_plan.json gives inherited roadmap audit its own checkpoint"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-028",
+      "lesson": "Parallel CI/CD scheduling must account for shared toolchain/build-cache resource classes, not only logical dependency independence.",
+      "rootCause": "v16.10 pre-freeze initially ran Go vet/full-Go and other Go-heavy evidence in the same parallel medium wave. Although logically independent, they contend for Go build/cache/CPU resources and made wrapper completion less reliable.",
+      "generalizedRule": "Executable DAG jobs declare resource class. Go/build-cache-heavy certification jobs run in a controlled lane unless capacity evidence proves safe concurrency; independent I/O/HTTP/professional checks may use bounded parallelism.",
+      "owningGates": [
+        "G3",
+        "G7",
+        "G12"
+      ],
+      "permanentProtection": [
+        "prefreeze_qualification.py MEDIUM-GO resource lane",
+        "bounded MEDIUM-OTHER parallel lane",
+        "certification process metrics track wall time and wrapper interruptions"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-029",
+      "lesson": "A major-family transition cannot be authorized from accumulated release reports alone.",
+      "rootCause": "Incremental builds can each pass their local scope while cross-release drift, stale assumptions or weak inherited evidence remain hidden unless the final current source is freshly inspected and exercised as one system.",
+      "generalizedRule": "Before every major-version jump, run a mandatory Major Closure & Release Assurance build that reconstructs the outgoing family scope from immutable contracts, maps it to current code owners, executes fresh behavioral evidence, performs expert engineering and real-money acceptance, and issues an explicit GO/NO-GO.",
+      "owningGates": [
+        "G0",
+        "G1",
+        "G2",
+        "G10",
+        "G11",
+        "G16"
+      ],
+      "permanentProtection": [
+        "major-family closure scope matrix",
+        "fresh historical scope execution",
+        "Senior Developer / Principal Engineer review",
+        "Professional Trader / Investor real-money review",
+        "major transition GO/NO-GO"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-030",
+      "lesson": "Correctly labeling market data as STALE is insufficient if downstream decision-readiness can still remain READY.",
+      "rootCause": "Quote freshness truth and Trade Readiness severity were evaluated in separate paths; stale current-price evidence did not automatically raise readiness severity when broader Market Tradeability was normal.",
+      "generalizedRule": "Real-money acceptance must cross-check data-state truth against every decision surface. STALE/CACHED/HISTORY-ONLY current-price evidence cannot present a clean Day entry readiness state; safety overlays may lower readiness but never mutate protected deterministic score formulas.",
+      "owningGates": [
+        "G6",
+        "G10",
+        "G11",
+        "G12"
+      ],
+      "permanentProtection": [
+        "v16_11_real_money_acceptance_test.js",
+        "professional trader/investor gate",
+        "freshness/readiness cross-surface closure scenarios"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-031",
+      "lesson": "Historical release documents and build debris do not belong in the runtime source package merely because they were once useful during development.",
+      "rootCause": "An obsolete v16.1 TEST handoff DOCX remained at source root even though no production/test/package consumer referenced it.",
+      "generalizedRule": "Major closure audits source-package hygiene. Non-source artifacts require an explicit retained-asset purpose/consumer; superseded release documents stay in authoritative release/library history instead of current runtime source.",
+      "owningGates": [
+        "G2",
+        "G15",
+        "G16"
+      ],
+      "permanentProtection": [
+        "source_retained_assets.json",
+        "v16_11_source_hygiene_gate.py",
+        "source clean-extraction review"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-032",
+      "lesson": "A desktop persistence foundation is not complete until every supported packaged OS uses the promised canonical storage technology rather than a silent compatibility fallback.",
+      "rootCause": "The first v17.0 SQLite implementation used native SQLite on macOS/Linux but could fall back to JSON on Windows/CGO-disabled builds, violating the frozen cross-platform persistence contract even though primary-host tests were green.",
+      "generalizedRule": "Platform parity is an architectural acceptance property. Cross-compile/backend-selection gates must prove the same persistence truth model on every supported desktop target before a persistence slice can qualify.",
+      "owningGates": [
+        "G1",
+        "G2",
+        "G9",
+        "G12"
+      ],
+      "permanentProtection": [
+        "v17_0_cross_platform_persistence_gate.py",
+        "Windows winsqlite3 backend selection",
+        "CGO-disabled full regression",
+        "SQLite backend contract tests"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-033",
+      "lesson": "A conservative upstream data-quality state must not be multiplied downstream into many apparently independent market-risk exceptions.",
+      "rootCause": "Market Open Prep converted stale/missing quote-derived conservative liquidity states into per-symbol LIQUIDITY RISK cards even though Quotes freshness already owned the shared stale root cause.",
+      "generalizedRule": "Preserve root-cause semantics across transformations: stale/incomplete evidence stays a freshness/data-quality problem unless current market evidence independently proves the derived market risk. Group repeated genuine causes without hiding per-symbol drill-down.",
+      "owningGates": [
+        "G2",
+        "G6",
+        "G10",
+        "G12"
+      ],
+      "permanentProtection": [
+        "currentLiquidityMarketRisk current-evidence filter",
+        "v17_4_operational_hardening_test.go",
+        "v17_4_renderer_test.js",
+        "v17_5_real_money_acceptance_test.js"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-034",
+      "lesson": "Release governance must distinguish the current TEST/RC identity from the latest authoritative Stable baseline during a major-family build.",
+      "rootCause": "Inherited documentation/version gates assumed the current manifest entry itself must remain v16.11 Stable, creating false failures once legitimate v17 TEST checkpoints became current.",
+      "generalizedRule": "Canonical current identity may advance through TEST/RC while a separate Stable-baseline invariant protects the last certified Stable until promotion. Historical gates verify preserved behavior rather than pinning predecessor current-version literals.",
+      "owningGates": [
+        "G0",
+        "G9",
+        "G16"
+      ],
+      "permanentProtection": [
+        "release_identity.json current vs stable_baseline fields",
+        "documentation_governance_gate.py latest-Stable check",
+        "version_consistency_test.py",
+        "historical v17 slice gates accept later v17.x TEST identity"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-035",
+      "lesson": "Consolidation is incomplete if superseded production owners/helpers are left behind merely because tests still reference them.",
+      "rootCause": "v17.4 initially left a duplicate Master Market Symbols renderer and then exposed an obsolete liquidity wrapper as test-only orphan code after callers moved to the canonical context-aware owner.",
+      "generalizedRule": "REUSE/CONSOLIDATE/REFACTOR/DELETE before ADD includes deleting superseded production owners and updating tests to the canonical owner. Do not whitelist dead helpers to satisfy source-health gates.",
+      "owningGates": [
+        "G2",
+        "G7",
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "source_health_architecture_gate.py orphan/duplicate detection",
+        "single Master Market Symbols renderer assertion",
+        "canonical context-aware liquidity owner tests",
+        "Senior Engineer closure review"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-036",
+      "lesson": "Pre-freeze qualification must not serialize historical scope gates that recursively rerun regression families already owned by current fingerprint-scoped jobs.",
+      "rootCause": "The v17 Major Closure pre-freeze MEDIUM-GO lane still invoked v16.1-v16.10 scope gates whose implementations reran overlapping Go, renderer and deterministic evidence. Coverage was preserved but orchestration wall time and wrapper exposure grew dramatically.",
+      "generalizedRule": "At major closure, static/current scope matrices prove historical scope mapping while each unique behavioral family executes once through its authoritative current-source owner. Historical recursive gates remain available for diagnosis but are not stacked into the normal pre-freeze DAG.",
+      "owningGates": [
+        "G9",
+        "G11",
+        "G12",
+        "G16"
+      ],
+      "permanentProtection": [
+        "prefreeze_qualification.py consolidated MEDIUM-GO lane",
+        "v16_11_major_scope_matrix_gate.py static historical mapping",
+        "v16_9_original_roadmap_audit.py unique original-roadmap behavioral evidence",
+        "full Go + inherited renderer + professional jobs remain independently blocking"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-037",
+      "lesson": "Baseline provenance gates must validate the predecessor Stable anchor independently from the current candidate channel.",
+      "rootCause": "The v17 baseline gate correctly protected v16.11 provenance but also hard-coded channel TEST, so the legitimate v17.5 RC closure candidate failed G0 even though its predecessor Stable, SHA, clean fingerprint and v16\u2192v17 GO anchors were unchanged.",
+      "generalizedRule": "A major-family baseline gate verifies immutable predecessor provenance and permits the current family through its approved candidate lifecycle (TEST \u2192 RC). Stable promotion remains a separate release-authorization step; do not conflate candidate channel with predecessor authority.",
+      "owningGates": [
+        "G0",
+        "G9",
+        "G16"
+      ],
+      "permanentProtection": [
+        "v17_baseline_gate.py TEST/RC lifecycle assertion",
+        "release_identity.json stable_baseline/previous_stable anchors",
+        "pre-freeze identity verification",
+        "Major Closure certification runner G0 baseline check"
+      ],
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RL-038",
+      "lesson": "Stable promotion is incomplete if runtime identity or current in-app documentation still describes the promoted build as RC/TEST or omits completed delivery slices.",
+      "rootCause": "v17.5 promoted exact certified RC bits after native acceptance, but G16 did not require post-promotion reconciliation of runtime channel/build copy or complete v17.0-v17.5 user-facing history.",
+      "generalizedRule": "A Stable promotion must reconcile canonical runtime/renderer identity and current user-facing documentation to Stable truth while preserving historical checkpoint evidence separately. Major-slice history completeness is a release-governance acceptance property.",
+      "owningGates": [
+        "G0",
+        "G9",
+        "G16"
+      ],
+      "permanentProtection": [
+        "v17_5_1_release_hardening_gate.py",
+        "version_consistency_test.py",
+        "documentation_governance_gate.py current Stable truth/history checks",
+        "renderer build-identity mismatch copy check"
+      ],
+      "status": "ACTIVE"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+DE.PULSE v15.1.2 — EXTREME PRODUCTION HARDENING
+Build: v15.1.2-extreme-production-hardening-20260810
+Date: 2026-08-10
+Baseline: v15.1.1 Stable
+
+All 48 approved v15.1 scope items are retained. The permanent Extreme Production / Professional Trader gate adds 30 explicit functional, boundary, chaos, persistence, security, performance, cross-platform-source, and failure-recovery categories. Native target-OS GUI launch and authenticated live-provider entitlement acceptance remain environment-dependent.

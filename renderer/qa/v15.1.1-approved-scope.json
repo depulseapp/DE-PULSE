@@ -1,0 +1,487 @@
+{
+  "version": "15.1.1",
+  "build": "v15.1.1-extensive-edge-hardening-20260810",
+  "count": 48,
+  "items": [
+    {
+      "id": 1,
+      "title": "Settings Quit action",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "func (a *Application) handleQuit"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Data Freshness targeted Refresh/Age reliability and stable refreshing layout",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "func (a *Application) handleTargetedRefresh"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "More Context permanently expanded",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "context-more-always"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Research Decision Brief",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Research Decision Brief"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "What Changed Since Last Review",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "What Changed Since Last Review"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Research Earnings deep dive",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Earnings Deep Dive"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Fundamentals interpretation",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Fundamentals Interpretation"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Research SEC & Ownership workspace",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "SEC & Ownership"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "SEC layout/overflow containment",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".sec-transaction-table-wrap"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Unified Catalyst Timeline",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Catalyst Timeline"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Research Technical Context tab",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Technical Context"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Research Risk Register",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Risk Register"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Research canonical desk membership controls",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "deskMembershipStrip(sym)"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Research AI sourced-first workflow",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "AI Second Opinion Ready"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Expanded AI research evidence context",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "function v151ResearchAIContext"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Research navigation redesign",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "['sec','SEC & Ownership']"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Research ticker input consistency",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".ticker-control,.ticker-input"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Research freshness badge placement",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".research-target-status"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Research top-area responsive placement audit",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "research v2 placement hierarchy regression"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "title": "DESKS column re-audit Day/Swing/Long",
+      "evidence": [
+        {
+          "file": "responsive_ui_test.py",
+          "contains": "canonical desk-membership regression"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "title": "Desk transition reliability matrix",
+      "evidence": [
+        {
+          "file": "http_workflow_test.py",
+          "contains": "last desk protected"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "title": "Desk state resilience/idempotency",
+      "evidence": [
+        {
+          "file": "http_workflow_test.py",
+          "contains": "repeated add is idempotent"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "title": "Master Market Symbols add control",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Add to All Desks"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "Master add means DAY + SWING + LONG with idempotency",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "Added to Day, Swing and Long."
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Persist preparation/catalyst job state",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "Preparations         map[string]PreparationJobStatus"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "Missed-window preparation catch-up",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "missed-window catch-up"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "title": "Professional Pre-Market Prep summary",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "critical datasets usable"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "title": "What Changed Since Last Checkpoint",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "What Changed Since Last Checkpoint"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "title": "Checkpoint severity/attention states",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "func checkpointAttention"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Candidate-level checkpoint exception list",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Requires Review"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Material SEC event-risk classification",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "materialSECFilingForTradingRisk"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "title": "Smarter EXTENDED detection",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "extendedAtMarketOpen"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "Full Catalyst Watch reaction lifecycle",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "PREMARKET REACTION"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Professional catalyst reaction measurements",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "ReactionPercent"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Critical freshness gate before Ready/Complete",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "readinessFreshnessGate(freshSnap.Freshness, []string{\"Quotes\", \"VIX\", \"Intraday Bars\", \"News\", \"Earnings\", \"SEC Filings\"}, now)"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "Readiness source/evidence traceability",
+      "evidence": [
+        {
+          "file": "v14_3_0.go",
+          "contains": "Source    string `json:\"source,omitempty\"`"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "title": "One-click readiness drill-through",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "data-readiness-drill"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "title": "Preparation jobs avoid redundant broad refetches",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "func (e *Engine) runLowPriorityRefresh"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "title": "Trading Readiness Checkpoint Reliability gate/tests",
+      "evidence": [
+        {
+          "file": "v14_3_1_test.go",
+          "contains": "TestV1431PremarketSnapshotAndMarketOpenCheckpoint"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "title": "Catalyst Watch lifecycle tests",
+      "evidence": [
+        {
+          "file": "v14_3_1_test.go",
+          "contains": "TestV1431CatalystArmedThenTriggered"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "title": "Research v2 Professional Trader Acceptance",
+      "evidence": [
+        {
+          "file": "trader_acceptance_test.js",
+          "contains": "professional trader acceptance scenarios: PASS"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "Approved Scope Traceability & Implementation Completeness gate",
+      "evidence": [
+        {
+          "file": "approved_scope_gate.py",
+          "contains": "Approved Scope Traceability & Implementation Completeness"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "Detailed SEC Insider Transaction Intelligence",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "RecentInsiderTransactions"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "title": "Side panel cleanup + Maintenance readiness hierarchy",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Trading Readiness & Catalyst Jobs"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "title": "Adaptive live Data Freshness Age",
+      "evidence": [
+        {
+          "file": "renderer/renderer.js",
+          "contains": "function updateLiveFreshnessAges"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "title": "Automatic stale-data recovery + priority refresh",
+      "evidence": [
+        {
+          "file": "main.go",
+          "contains": "func (e *Engine) autoFreshnessRecoveryLoop"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "title": "Data Freshness v2 dataset-specific age semantics and cadence",
+      "evidence": [
+        {
+          "file": "v15.go",
+          "contains": "CheckAgeMs"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "title": "Reason/Fallback column containment",
+      "evidence": [
+        {
+          "file": "renderer/styles.css",
+          "contains": ".v151-freshness-row>.freshness-reason"
+        }
+      ]
+    }
+  ]
+}

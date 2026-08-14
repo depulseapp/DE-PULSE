@@ -1,0 +1,30 @@
+DE.PULSE v14.3.6 — STABLE RELEASE QA
+Build: v14.3.6-sec-discovery-regime-20260810
+Baseline: exact v14.3.5 Stable Source ZIP
+
+Approved scope:
+- SEC Form 4 BUY / SELL / OTHER classification and richer transaction detail.
+- Side Data Engine readiness dot relocated after Run Now / Evaluate.
+- Options Intelligence settings panel content-driven layout cleanup.
+- Canonical DAY / SWING / LONG membership indicators in desk watchlists and Discovery.
+- SPY / QQQ compact quote pills on the Market Regime state row beside a state-only directional pill and Data Confidence.
+- Global Market Drivers aggregate state word + status light derived from the existing combined driver-family state.
+- Full Discovery candidate-table collision / overflow audit.
+- Macro Rates false-DEGRADED correction: official Treasury core rates + optional FRED enrichment, with separate FRED provider health.
+- Earnings & Material Catalyst Watch persistent-RUNNING correction: READY / ARMED / TRIGGERED / REACTION between manual evaluations.
+- Smaller value typography for Score / Priority / Readiness / Research Decision Queue tiles.
+- Settings Auto-Start balanced right-of-title placement refinement.
+- Overall Gate 4/5 fit/placement enforcement for changed surfaces.
+
+Pre-freeze release stack:
+- Go tests/subtests: 143/143 PASS.
+- Race / vet: PASS.
+- Coverage: 49.0% statements.
+- Renderer logic: PASS.
+- Deterministic equivalence: 2403/2403 PASS.
+- Professional Trader Acceptance: PASS.
+- HTTP workflows: 92/92 PASS.
+- Responsive/UI matrix: 327/327 PASS across 15 viewports / 18 surfaces plus focused v14.3.6 regressions.
+- Version and content/copy audits: PASS.
+
+Final exact-source freeze/retest and platform package verification are recorded in the external v14.3.6 QA artifact shipped beside the source/package downloads.

@@ -1,0 +1,19 @@
+{
+  "schema": "DE.PULSE-V18.0.2-SCOPE-1",
+  "version": "18.0.2",
+  "channel": "TEST",
+  "stable_baseline": "v17.5.1",
+  "build_id": "v18.0.2-test-cross-platform-fingerprint-native-delivery-hardening-20260813",
+  "runtime_config": "PersonalMarketTerminal-v18.0.2-TEST",
+  "application_bundle": "De-Pulse-v18.0.2-TEST.app",
+  "clauses": [
+    "Canonical source fingerprints normalize relative paths to POSIX separators.",
+    "Canonical source fingerprint file ordering is platform-independent.",
+    "CI, pre-freeze qualification and full certification share the canonical fingerprint utility.",
+    "Windows and macOS G14 must verify one exact source fingerprint from one exact source ZIP.",
+    "macOS native audit invocation must not depend on upload-preserved executable metadata.",
+    "Smart Router v2 and Rapid Move runtime behavior are inherited unchanged.",
+    "Protected deterministic Day/Swing/Long formulas remain unchanged.",
+    "v17.5.1 Stable remains isolated and untouched."
+  ]
+}

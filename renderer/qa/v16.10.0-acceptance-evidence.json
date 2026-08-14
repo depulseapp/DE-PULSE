@@ -1,0 +1,117 @@
+{
+  "schema": "DE.PULSE-v16.10.0-ACCEPTANCE-EVIDENCE-1",
+  "status": "10/10 PASS",
+  "inherited_original_roadmap": "30 FULL / 0 PARTIAL / 0 MISSING",
+  "clauses": [
+    {
+      "id": 1,
+      "name": "Information Architecture & Data Efficiency Pass",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Always-On Opportunity Radar",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Unusual Volume & Volatility Intelligence",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Adaptive Promotion / Demotion",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Evidence Reuse",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Adaptive Data Health / Freshness / Cache",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Smart Opportunity Notifications",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Shadow / Experimental Foundation",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Regression / Product Boundaries",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Decision-Quality Placement Review",
+      "status": "PASS",
+      "evidence": [
+        "v16_10_scope_gate.py",
+        "v16_10_test.go",
+        "v16_10_professional_test.go",
+        "v16_10_renderer_test.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "DE.PULSE-RELEASE-IDENTITY-1",
+  "version": "18.1.0",
+  "display_version": "DE.PULSE v18.1.0",
+  "build_id": "v18.1.0-stable-multi-user-my-market-symbols-20260814",
+  "channel": "STABLE",
+  "stable_baseline": "v17.5.1",
+  "previous_stable": "v18.0.6",
+  "scope": "Multi-User / My Market Symbols: durable per-user workspaces keyed by immutable authenticated UserID, one-time legacy owner migration, empty new-user state, user-scoped symbols/watchlists/UI/export/AI defaults, targeted state/runtime/symbol-event isolation, and one deduplicated shared provider/evidence processing universe; global provider/settings policy remains ADMIN-owned; no v18.2 admin/presence/session-management UI, no deterministic Day/Swing/Long formula changes and no execution scope",
+  "bundle_version": "18100",
+  "runtime_config": "PersonalMarketTerminal",
+  "patch_predecessor": "v18.0.6",
+  "application_bundle": "De-Pulse.app"
+}

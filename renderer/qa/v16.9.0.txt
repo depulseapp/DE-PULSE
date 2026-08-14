@@ -1,0 +1,9 @@
+DE.PULSE v16.9.0 STABLE — Final Original Professional Roadmap Closure
+Build: v16.9.0-stable-final-original-roadmap-closure-20260812
+Scope: #10 Community Intelligence; #11 Oil/Energy; #20 Historical Replay/Scenarios
+Original roadmap: 30 FULL / 0 PARTIAL / 0 MISSING
+No Execution Boundary: preserved
+Deterministic Day/Swing/Long formulas: unchanged
+Community: untrusted evidence fusion with source policy, dedupe, U.S.-ticker mapping, corroboration and AI eligibility
+Oil/Energy: truthful WTI/Brent trend/change/spread and U.S.-market relevance; unsupported CL/BZ continuous/roll semantics not fabricated
+Replay: reusable real-evidence CPI/FOMC/earnings/high-VIX/dislocation scenarios through cutoff-safe production deterministic engines; no lookahead, no paper trading

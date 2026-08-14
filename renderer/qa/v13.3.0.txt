@@ -1,0 +1,157 @@
+DE.PULSE v13.3.0 STABLE — QA REPORT
+
+Release status
+STABLE CANDIDATE PASSED ALL AVAILABLE AUTOMATED / LOCAL FUNCTIONAL GATES.
+Previous Stable baseline for deterministic trading equivalence: v13.2.7.
+Development source promoted into this release: v13.2.9 Test.
+
+Release intent
+v13.3.0 consolidates the approved #1–#32 scope into a stable, horizon-specific market-intelligence workflow. It keeps Dashboard/Decision Queue concise, keeps Discovery as candidate generation, keeps Day/Swing/Long as specialist decision desks, keeps Research optional and evidence-oriented, and keeps AI advisory. Data freshness/cache operations are made safer and more visible without changing live quote freshness or the validated deterministic trading model.
+
+APPROVED SCOPE #1–#32 — IMPLEMENTATION STATUS
+PASS  #1 Replace the old 2–3 AM ET quiet-refresh assumption with targeted Pre-Market Preparation during 3:15–3:50 AM ET.
+PASS  #2 Pre-Market Preparation refreshes only stale/missing history/research prerequisites and does not stop overnight quote streams.
+PASS  #3 No destructive nightly cache rewrite; good cached data is retained until a validated replacement is ready.
+PASS  #4 Stale-while-revalidate / last-known-good behavior retained for slow datasets.
+PASS  #5 Live quotes remain event-driven; no artificial quote-frequency reduction.
+PASS  #6 Historical bars retain immediate hydration plus the existing periodic refresh path.
+PASS  #7 News policy is session-aware: approximately 10 minutes active, 30 minutes overnight/closed.
+PASS  #8 SEC refresh remains approximately 30 minutes and can invalidate affected research/fundamental context.
+PASS  #9 Earnings refresh remains approximately 2 hours with recently reported expectations/actuals retained in the fetch window.
+PASS  #10 Fundamentals use a 24-hour TTL plus material earnings/financial-filing invalidation.
+PASS  #11 Discovery consumes shared state/caches rather than owning duplicate live subscriptions.
+PASS  #12 Day/Swing/Long derived caches remain separate and invalidate from relevant shared evidence.
+PASS  #13 Research consumes shared cached state and invalidates affected sections rather than owning a second market-data stack.
+PASS  #14 AI research results are cacheable by ticker/horizon/evidence fingerprint and are advisory only.
+PASS  #15 AI cannot place trades, change deterministic Action/Score, or silently change watchlists.
+PASS  #16 Disk cache persistence is dirty/fingerprint-aware; unchanged payloads do not cause repeated physical rewrites.
+PASS  #17 Weekly deeper integrity maintenance runs non-destructively on Saturday.
+PASS  #18 Maintenance Data Freshness summary is present.
+PASS  #19 Maintenance Pre-Market Preparation status is present.
+PASS  #20 Maintenance Weekly Integrity status is present.
+PASS  #21 Manual Refresh Stale Data, Run Pre-Market Prep, Run Integrity Check, and separate Clear Market Cache actions are available.
+PASS  #22 LIVE/CURRENT/CACHED/STALE/DEGRADED/INDICATIVE provenance semantics are preserved.
+PASS  #23 Provider/API-load protection uses centralized/deduplicated state and skips current datasets in low-priority refreshes.
+PASS  #24 Master Symbol Store, special VIX path, Finnhub primary / controlled Alpaca fallback, and overnight semantics are preserved.
+PASS  #25 Existing removed Alerts/Portfolio/Journal and execution/positions functionality remain absent.
+PASS  #26 AI/Research symbol targeting is no longer hardcoded to NVDA; selected/explicit arbitrary ticker can hydrate without permanent watchlist membership.
+PASS  #27 SEC filing friendly names are restored globally with raw form codes secondary (for example Quarterly Report · 10-Q).
+PASS  #28 SEC Intelligence is horizon-specific: Day only fresh/material catalysts, Swing compact filing/catalyst risk, Long full SEC Intelligence, Research full filing deep dive.
+PASS  #29 Earnings Intelligence supports expectations, expected-vs-actual, surprise, evidence-gated guidance state, historical/recent trend, and post-earnings reaction where data supports it.
+PASS  #30 Decision Queue integrates horizon-aware Earnings/SEC/Research/risk context while keeping deterministic desk Score separate and evidence expandable under Why?.
+PASS  #31 Global dropdown/control fit, chevron integration, compact ticker selectors, spacing, and responsive layout were re-audited.
+PASS  #32 Ask AI receives the selected ticker, origin/horizon, deterministic setup and relevant evidence after an explicit user action; optional free-form question is not required.
+
+HORIZON-SPECIFIC INFORMATION DESIGN
+DAY — primary context
+PASS  Current session state and overnight/pre-market/open-gap context.
+PASS  VWAP relationship, RVOL, spread/liquidity, dollar volume, ATR %, and immediate catalyst/event context.
+PASS  Secondary RSI/EMA/support-resistance remains progressive disclosure rather than primary clutter.
+PASS  Earnings/SEC appear as current-session catalysts only when material.
+
+SWING — primary context
+PASS  20/50/200 trend structure, Relative Strength vs SPY, ATR %, RVOL/volume confirmation, Support/Resistance, and earnings/event proximity.
+PASS  Post-earnings reaction/gap-hold context is available when applicable.
+PASS  SEC is condensed to material filing/catalyst risk rather than a full Long-Term intelligence panel.
+
+LONG-TERM — primary context
+PASS  Revenue/EPS growth, operating margin, free cash flow, leverage/debt, P/E/Forward P/E, SMA 50/200, and Relative Strength vs SPY.
+PASS  ROE, 52-week position, Current Ratio, Dividend Yield remain secondary/progressive context.
+PASS  Full SEC Intelligence and multi-quarter earnings/guidance evidence are available without promoting intraday noise.
+
+DASHBOARD / DISCOVERY / RESEARCH / AI
+PASS  Dashboard remains an executive market-intelligence surface: market state, Decision Queue, and compact catalyst context; no Portfolio/P&L semantics.
+PASS  Decision Queue remains compact, horizon-aware, deduplicated by ticker, and separates Queue Priority from deterministic trading Score.
+PASS  Discovery remains candidate generation/qualification with Scanned → Ranked → Qualified → Staged and separate Discovery Rank terminology.
+PASS  Research remains optional and uses Overview / Fundamentals / Catalysts / Filings; technical setup decisions stay in the appropriate desk.
+PASS  Research/AI selected-symbol handoff supports arbitrary valid symbols without requiring permanent watchlist membership.
+PASS  Ask AI context is horizon-aware and pre-fed from Dashboard/Discovery/Desk/Research after explicit user action.
+PASS  AI output is structured/compact: verdict, confidence, bounded reasons/risks, catalyst, best-fit horizon, next action, summary/details.
+PASS  AI next actions require explicit user clicks; AI never autonomously trades or changes the deterministic model.
+
+SEC / EARNINGS INTELLIGENCE
+PASS  Friendly filing labels include Quarterly Report (10-Q), Annual Report (10-K), Material Company Update (8-K), Insider Transaction (Form 4), Institutional Holdings Report (13F), Major Shareholder Disclosure (13D/G), Registration / Share Offering (S-1), Shelf Registration / Offering (S-3), Offering Terms (424B), and Proxy Statement (DEF 14A).
+PASS  Day SEC view suppresses old/non-material filing noise.
+PASS  Swing SEC view summarizes material filing/event risk.
+PASS  Long SEC view provides full signal-oriented intelligence and links deeper evidence to Research.
+PASS  Earnings fetch window includes recent reports as well as upcoming events so expected-vs-actual can remain visible after release.
+PASS  Guidance classification is evidence-gated; if no explicit evidence is present the UI reports NOT PROVIDED rather than inventing guidance.
+PASS  Earnings/SEC intelligence does not alter the deterministic Action/Score formula in this release.
+
+CACHE / FRESHNESS / MAINTENANCE
+PASS  Pre-Market Preparation eligibility: US trading weekdays, 3:15–3:50 AM ET, once per market day.
+PASS  Weekly Integrity eligibility: Saturday after 10:00 AM ET, once per ISO week unless run manually.
+PASS  Low-priority refresh uses dataset freshness checks instead of refetching every dataset every time.
+PASS  Fundamentals can be marked stale by materially changed reported earnings or financial filings.
+PASS  Cache writes remain atomic and now skip unchanged cache payloads using a content fingerprint that excludes the cache-write timestamp itself.
+PASS  Manual integrity is non-destructive and preserves watchlists/settings.
+PASS  Manual Pre-Market Prep in Demo records status without requiring provider calls.
+PASS  Clear Market Cache remains explicitly destructive only to market/research cache data, preserves the profile, persists Last Cache Cleared, and immediately rehydrates required history while runtime is active.
+
+EXTENSIVE ACTUAL HTTP FUNCTIONALITY PASS
+PASS  42 / 42 end-to-end local-app HTTP workflow assertions.
+      Covered renderer root/session cookie; bootstrap version/build; runtime start; demo quote/history/news/earnings/filings/fundamentals hydration;
+      arbitrary ORCL Research target and immediate quote/history hydration; Day watchlist add/dedup/remove; Day engine OFF → ON with watchlist preservation;
+      Discovery Day/Swing/Long scans; Refresh Stale Data; manual Pre-Market Prep; manual Integrity; Pre-Market status persistence;
+      full Maintenance report with zero failures; Settings round-trip; AI-provider selection and explicit no-key failure/no silent fallback;
+      profile export/import; cache clear/profile preservation/immediate history rehydration/Last Cache Cleared; runtime stop/restart and persisted settings.
+
+FUNCTIONAL TESTING FOUND AND FIXED BEFORE RELEASE
+FIXED  Demo cache clear originally did not re-seed historical bars through the real HTTP route because history hydration was live-only. v13.3.0 now rehydrates required Demo desk/focus bars synchronously and has a permanent regression test.
+FIXED  Profile Export originally emitted only a partial Settings object, so an export/import round-trip could lose non-secret engine/signal/overnight preferences. v13.3.0 now exports all non-secret Settings while forcing only destination-safe DataMode=demo and AutoStart=false. A permanent regression test verifies engine states, signal settings, overnight mode, context/penalties and AI provider are preserved.
+
+AUTOMATED SOURCE GATES
+PASS  go test ./...
+      94 passing Go tests/subtests in the final source run.
+PASS  go test -race ./...
+PASS  go vet ./...
+PASS  statement coverage: 39.3%
+PASS  node --check renderer/renderer.js
+PASS  renderer logic + v13.3.0 Stable regression suite.
+
+TRADING-RESULT EQUIVALENCE
+PASS  2,403 / 2,403 deterministic comparisons against v13.2.7 Stable.
+      801 synthetic input conditions × Day/Swing/Long.
+      Compared Score, Direction, Tone, factor families, Entry, Target, Invalidation, R multiple,
+      ATR, RSI, RVOL, Relative Strength, SMA 20/50/200, VWAP, Support/Resistance, Event Risk and Quality.
+      Result: v13.3.0 does not intentionally change the validated deterministic trading outputs.
+
+PERFORMANCE SANITY CHECK
+PASS  Synthetic repeated derived-analysis workload did not regress in the final comparison.
+      v13.2.9: 3093.7 ms
+      v13.3.0: 2954.5 ms
+      delta: -4.50% in this synthetic VM run.
+      Day/Swing/Long warm-cache hit rates rounded to 100% in both builds; miss counts remained 2 per horizon.
+      This is a comparative synthetic CPU/cache benchmark, not a provider/network latency benchmark.
+
+RESPONSIVE / VISUAL MATRIX
+PASS  270 / 270 Chromium production-renderer/CSS checks.
+      15 viewport sizes × 18 surfaces.
+      Surfaces: Dashboard, Day, Swing, Long, Discovery Day/Swing/Long, Research Overview/Fundamentals/Catalysts/Filings,
+      AI, secondary News/Earnings/SEC, Maintenance, Documentation and Settings.
+PASS  0 renderer-error surfaces.
+PASS  0 document/body page-level horizontal overflow failures.
+PASS  Global v13.3.0 dropdown/control rules and compact Research/AI ticker selectors are included in the exact production CSS used by the matrix.
+
+QA HISTORY
+PASS  Package policy is latest five full QA reports only:
+      v13.3.0, v13.2.9-test, v13.2.8-test, v13.2.7, v13.2.6.
+      v13.2.5 full report is removed from the package.
+
+ARCHITECTURE / SAFETY INVARIANTS
+PASS  Master Symbol Store remains the canonical shared equity/ETF/market-instrument state source.
+PASS  VIX remains on the separate special-index path.
+PASS  Finnhub primary / controlled Alpaca fallback and overnight provider semantics remain unchanged by this release scope.
+PASS  Research, Decision Queue and AI consume canonical state and do not own duplicate quote subscriptions.
+PASS  Removed Alerts, Portfolio and Journal remain absent.
+PASS  No order entry, brokerage execution, positions/P&L, or autonomous trading control is introduced.
+
+TARGET-OS / AUTHENTICATED-PROVIDER LIMITATIONS
+- Native macOS WKWebView/Gatekeeper/Finder icon behavior must still be accepted on macOS hardware.
+- Native Windows shell/Explorer presentation must still be accepted on Windows.
+- Authenticated Finnhub/Alpaca/SEC/AI-provider behavior using the user's private credentials cannot be fully exercised in this Linux build environment.
+- Overnight/pre-market/regular/after-hours behavior should still be observed during real sessions with the configured live providers.
+- Automated AI tests validate request context, structure, caching/guardrails and error behavior; they cannot validate subjective investment correctness of provider-generated analysis.
+
+FINAL RELEASE STATUS
+PASSED AVAILABLE STABLE RELEASE GATES. Cross-platform package architecture/hash verification and exact Source-ZIP re-extraction/retest are recorded in the externally packaged v13.3.0 QA report after final packaging.

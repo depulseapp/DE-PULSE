@@ -1,0 +1,11 @@
+DE.PULSE v16.0.6 — FINAL v16.0 CONSOLIDATION & DELIVERY CLOSURE
+
+Build: v16.0.6-v160-final-delivery-20260811
+Protected Stable: v15.1.2 — untouched
+
+Scope:
+- carry all v16.0 Professional Truth Foundation fixes and Provider Reconciliation contemporaneity protection;
+- retain Stable-style header with no release-status brand pill;
+- restore normal native launch with actual binaries prepackaged;
+- make the complete self-contained release/handoff delivery set permanent;
+- no v16.1 features and no deterministic formula changes.

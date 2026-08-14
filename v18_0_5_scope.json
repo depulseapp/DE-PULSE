@@ -1,0 +1,23 @@
+{
+  "schema": "DE.PULSE-V18.0.5-SCOPE-1",
+  "version": "18.0.5",
+  "channel": "TEST",
+  "stable_baseline": "v18.0.4",
+  "build_id": "v18.0.5-test-ui-ux-symbol-management-hardening-20260814",
+  "runtime_config": "PersonalMarketTerminal-v18.0.5-TEST",
+  "application_bundle": "De-Pulse.app",
+  "clauses": [
+    "Tracked Symbols is the user-facing cross-desk symbol surface; implementation-facing Master Symbol Store wording is removed from the active user panel.",
+    "Cross-desk add/remove/remove-all mutations have one canonical helper path and preserve explicit-empty state across reload/restart.",
+    "Remove All includes symbols in disabled desks, clears Day/Swing/Long immediately, leaves Discovery staging untouched, and cannot silently rehydrate defaults.",
+    "Opportunity Radar keeps existing intelligence semantics while improving column hierarchy, numeric alignment, status pills, actions and narrow-width reflow.",
+    "Research Target alone is compacted; Technical Context and all existing Research evidence views remain intact.",
+    "USER and DEMO surfaces hide Data Engine/provider/subscription/capacity/queue/cache/scheduler/database/circuit/policy machinery and receive user-meaningful Data Status instead.",
+    "OWNER, SUPER_OWNER and ADMIN retain deep diagnostics in Maintenance and configuration surfaces.",
+    "MacBook, Windows desktop, large-screen and narrow/iPad layouts must not clip or overlap touched controls.",
+    "Protected deterministic Day/Swing/Long formulas remain unchanged.",
+    "No Execution Boundary remains unchanged.",
+    "v18.1 multi-user/My Market Symbols architecture is explicitly out of scope.",
+    "v18.0.4 Stable remains immutable; TEST uses an isolated v18.0.5 runtime profile."
+  ]
+}

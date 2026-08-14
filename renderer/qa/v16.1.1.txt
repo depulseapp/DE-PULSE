@@ -1,0 +1,4 @@
+DE.PULSE v16.1.1 TEST PATCH
+Build: v16.1.1-market-intelligence-truth-hardening-20260811
+Scope: MI-HORIZON-01 / MI-FRESH-01 / MI-LIQ-01
+Status: WORKING CANDIDATE until exact-RC certification and final delivery authorization.

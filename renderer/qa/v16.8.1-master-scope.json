@@ -1,0 +1,13 @@
+{
+  "schema": "DE.PULSE-MASTER-SCOPE-1",
+  "version": "16.8.1",
+  "scope_lock": [
+    {"id":"US-01","name":"US Equities Processing Boundary","acceptance":["User actionable ticker input rejects foreign exchange listings","Live-mode validation requires U.S. equity/ETF exchange metadata","Scanner remains U.S. equity universe","Global context does not become foreign actionable ticker scope"]},
+    {"id":"CAL-01","name":"US-Primary Economic Calendar","acceptance":["Calendar defaults to US","Selective material foreign events are Global Context","Foreign Global Context does not automatically activate full U.S. market-critical Event Mode","Routine low-utility foreign calendar fetches are removed/deprioritized"]},
+    {"id":"LIVE-01","name":"Market-Critical Live Priority","acceptance":["SPY and QQQ are Tier 0","Selected actionable U.S. ticker is Tier 0","GLD/SLV/USO retain explicit tradable priority","Provider reserve/failover behavior remains bounded"]},
+    {"id":"DATA-01","name":"Data Utility & Evidence Value","acceptance":["Every registered dataset has canonical owner/purpose/consumer or strategic retention reason","No orphan data is accepted by release gate","Global/macro data states its U.S.-market decision-context consumer"]},
+    {"id":"HEALTH-01","name":"Adaptive Data Health / Freshness / Cache","acceptance":["Session-aware freshness remains intact","Provider/cache/check/data timestamps remain observable","Fallback/stale reason/recovery remain visible","Adaptive policy changes remain Shadow/validation governed"]},
+    {"id":"BUILD-01","name":"Adaptive Build Process v2","acceptance":["Canonical release identity prevents metadata drift","Pre-freeze qualification runs before heavy RC certification","Single-owner runner lock remains enforced","CI plan is executable/bounded-parallel and evidence is fingerprint-scoped"]}
+  ],
+  "non_scope": ["v16.9 Community/Oil/Replay closure","v17 database/repository implementation","v18 login/multi-user/RBAC","new paid provider","deterministic Day/Swing/Long formula changes","execution/paper trading/portfolio/journal"]
+}

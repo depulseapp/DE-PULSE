@@ -1,0 +1,20 @@
+{
+  "schema": "DE.PULSE-V18.0.3-SCOPE-1",
+  "version": "18.0.3",
+  "channel": "TEST",
+  "stable_baseline": "v17.5.1",
+  "build_id": "v18.0.3-test-native-cross-platform-runtime-portability-hardening-20260813",
+  "runtime_config": "PersonalMarketTerminal-v18.0.3-TEST",
+  "application_bundle": "De-Pulse-v18.0.3-TEST.app",
+  "clauses": [
+    "Embedded renderer/auth resource paths use platform-neutral embedded-FS path semantics on every OS.",
+    "Real-Application tests isolate the effective os.UserConfigDir location on Linux, macOS and Windows.",
+    "Stable-to-TEST profile migration tests derive the same OS-specific config base used by production.",
+    "Windows file-permission tests do not misinterpret os.FileMode as Windows ACL evidence.",
+    "Windows G14 uses explicit PowerShell path/value binding for the Stable sentinel.",
+    "Canonical source fingerprint remains platform-independent and unchanged in ownership.",
+    "Smart Router v2 and Rapid Move runtime behavior are inherited unchanged.",
+    "Protected deterministic Day/Swing/Long formulas and the No Execution Boundary remain unchanged.",
+    "v17.5.1 Stable remains isolated and untouched."
+  ]
+}

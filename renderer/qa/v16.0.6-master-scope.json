@@ -1,0 +1,41 @@
+{
+  "version": "16.0.6",
+  "build": "v16.0.6-v160-final-delivery-20260811",
+  "protectedStable": "15.1.2",
+  "sourceLine": "16.0.5 final closure RC",
+  "count": 5,
+  "requirements": [
+    {
+      "id": "V16.0.6-01",
+      "title": "Carry forward Provider Reconciliation cross-provider contemporaneity and all v16.0 Professional Truth Foundation fixes",
+      "risk": "P0/P1"
+    },
+    {
+      "id": "V16.0.6-02",
+      "title": "Primary header remains identical in treatment to Stable; release channel/status stays outside primary branding",
+      "risk": "P1 UX"
+    },
+    {
+      "id": "V16.0.6-03",
+      "title": "Normal native app launch is restored: actual macOS binaries are prepackaged and certification never blocks app startup",
+      "risk": "P0 delivery"
+    },
+    {
+      "id": "V16.0.6-04",
+      "title": "Permanent full delivery standard includes app/source/QA/traceability/source-health/provenance/SBOM/SHA/closure plus self-contained handoff with v16.x roadmap",
+      "risk": "P0 process"
+    },
+    {
+      "id": "V16.0.6-05",
+      "title": "Inherited v16.0 truth remains closed; no v16.1 feature leakage and no deterministic formula change",
+      "risk": "P0/P1"
+    }
+  ],
+  "nonScope": [
+    "Market Intelligence side-panel tab",
+    "v16.1 Tradeability engine",
+    "Breadth/Internals, Relative Strength, Sector/Industry Regime, Market Structure, Liquidity/Slippage",
+    "Deterministic Day/Swing/Long Score/Action formula changes",
+    "Visual redesign"
+  ]
+}

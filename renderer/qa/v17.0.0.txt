@@ -1,0 +1,27 @@
+DE.PULSE v17.0.0 TEST — Runtime Foundation + Persistence Core
+Build: v17.0.0-persistent-intelligence-runtime-foundation-test-20260812
+Stable baseline: v16.11.0
+
+Foundation scope:
+- repository abstraction + SQLite desktop persistence with schema migrations
+- retained Global Symbol Registry with inactive-history preservation
+- canonical quote warm start; persisted state never treated as timeless LIVE/CURRENT
+- material-change/coalesced asynchronous persistence
+- runtime memory/goroutine, persistence and provider request diagnostics
+- shared bounded workload controls and initial background/Radar load shedding
+- reasoned degradation states including LOCAL LOAD, RATE LIMITED, PROVIDER DEGRADED, NETWORK and PARTIAL COVERAGE
+
+This is a TEST build, not a Stable promotion. v16.11.0 remains the authoritative Stable baseline. Deterministic Day/Swing/Long formulas and the No Execution Boundary are unchanged.
+
+
+Checkpoint evidence:
+- Go full suite PASS; v17 targeted race PASS; go vet PASS
+- deterministic equivalence 2403/2403 PASS
+- HTTP/cross-module 163/163 PASS
+- responsive 391/391 across 15 viewports / 21 surfaces PASS
+- Data Utility 22/22 governed datasets PASS
+- pre-report implementation fingerprint d7543784b6d6c1b4cdb6ae78d853d3acfd949b8fd04170570989d45764b85b9a
+
+Release-engineering status:
+- cross-platform SQLite packaging BLOCKED while Windows/CGO-disabled persistence is the JSON compatibility fallback
+- do not promote/package as complete desktop v17 until the SQLite packaging gate passes

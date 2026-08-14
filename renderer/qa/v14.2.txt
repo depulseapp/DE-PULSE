@@ -1,0 +1,23 @@
+DE.PULSE v14.2 STABLE — CONSERVATIVE UI HOTFIX
+Build: v14.2-conservative-ui-hotfix-20260809
+Baseline: exact DE.PULSE v14.0.3 Stable source
+
+SCOPE
+- Fix transient below-header notification centering.
+- Preserve the below-header notification class through show/hide cycles.
+- Hidden/dismissed notification consumes zero layout height, padding, margin and border.
+- Market Instruments returns directly beneath the primary header after dismissal.
+- Repeated Save Settings notification cycles do not accumulate a blank spacer.
+- Remove the sidebar Data Engine Details row; essential health/runtime remains visible and deeper diagnostics stay in Maintenance.
+- Reduce forced empty space in summary/candidate/feed/event/empty-state panels without changing the v14.0.3 page hierarchy.
+- Version/build identity updated to v14.2.
+
+EXPLICITLY NOT INCLUDED
+- No v14.1 UI architecture/content redesign code.
+- No trading formula changes.
+- No provider-routing changes.
+- No data-freshness/cadence changes.
+- No v14.1 Dashboard/desk/Research/AI/Settings/Maintenance reorganization; only the conservative spacing/Data Engine changes listed above.
+
+BASELINE INVARIANTS
+The complete v14.0.3 Stable trading/data/product baseline is preserved.

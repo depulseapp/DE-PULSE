@@ -1,0 +1,215 @@
+{
+  "schema": "DE.PULSE-V16.6-MASTER-SCOPE-1",
+  "version": "16.6.0",
+  "channel": "STABLE",
+  "baseline": {
+    "version": "16.5.0 Stable",
+    "source_fingerprint": "d6a9500aec14ccc75693e67dd272e961ecc33539cc899e3a52dc1b11e26bbbe3",
+    "source_zip_sha256": "3b26ed678c3d527d52ce663755a4bf212c1c0fa351a1c851acf9980a44019b00"
+  },
+  "scope_lock": [
+    {
+      "id": 1,
+      "name": "Live News Intelligence upgrade",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 2,
+      "name": "Macro Intelligence v2",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 3,
+      "name": "Economic Calendar",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 4,
+      "name": "FOMC / Fed Event Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 5,
+      "name": "Market Sentiment Composite",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.5 Context & Alternative Intelligence"
+    },
+    {
+      "id": 6,
+      "name": "Market / Sector Heat Map",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.5 Context & Alternative Intelligence"
+    },
+    {
+      "id": 7,
+      "name": "Deterministic Market-Structure State",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    },
+    {
+      "id": 8,
+      "name": "SPY / QQQ Seasonality Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.3 Professional Validation & Learning"
+    },
+    {
+      "id": 9,
+      "name": "Gamma Exposure / GEX Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.5 Context & Alternative Intelligence"
+    },
+    {
+      "id": 10,
+      "name": "Social & Community Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.5 Context & Alternative Intelligence"
+    },
+    {
+      "id": 11,
+      "name": "Oil / Energy Context",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.5 Context & Alternative Intelligence"
+    },
+    {
+      "id": 12,
+      "name": "Market Tradeability / Sit-on-Hands",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability"
+    },
+    {
+      "id": 13,
+      "name": "Market Breadth & Internals",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability"
+    },
+    {
+      "id": 14,
+      "name": "Relative Strength / Weakness Engine",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability"
+    },
+    {
+      "id": 15,
+      "name": "Sector & Industry Regime Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.1 Market Intelligence / Tradeability"
+    },
+    {
+      "id": 16,
+      "name": "Data Conflict / Provenance Reconciliation",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    },
+    {
+      "id": 17,
+      "name": "Corporate Actions & Symbol Lifecycle",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    },
+    {
+      "id": 18,
+      "name": "Signal Outcome Measurement",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.3 Professional Validation & Learning"
+    },
+    {
+      "id": 19,
+      "name": "Signal Calibration & Professional Validation",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.3 Professional Validation & Learning"
+    },
+    {
+      "id": 20,
+      "name": "Market Replay / Historical Scenario Validation",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.3 Professional Validation & Learning"
+    },
+    {
+      "id": 21,
+      "name": "Smart Notifications",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 22,
+      "name": "AI Evidence Architecture v2",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.4 Professional Research AI"
+    },
+    {
+      "id": 23,
+      "name": "AI external-content safety",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.4 Professional Research AI"
+    },
+    {
+      "id": 24,
+      "name": "AI model routing / cost control",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.4 Professional Research AI"
+    },
+    {
+      "id": 25,
+      "name": "Research Package Freshness",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    },
+    {
+      "id": 26,
+      "name": "Correlation / Concentration Awareness",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.3 Professional Validation & Learning"
+    },
+    {
+      "id": 27,
+      "name": "Liquidity & Slippage Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    },
+    {
+      "id": 28,
+      "name": "Reaction Intelligence",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 29,
+      "name": "Event-to-Decision Correlation",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.2 Professional Event Intelligence"
+    },
+    {
+      "id": 30,
+      "name": "Extreme Production validation",
+      "mission": "end-to-end professional reconciliation and acceptance",
+      "canonical_owner": "v16.0 Professional Truth Foundation / inherited professional gates"
+    }
+  ],
+  "defect_fixes": [
+    {
+      "id": "V16.6-MS-01",
+      "name": "Master Symbol Store explicit-empty/remove-all persistence",
+      "acceptance": [
+        "last user symbol can be removed",
+        "Remove All clears DAY/SWING/LONG user-managed symbols",
+        "empty state survives normalization/save/reload",
+        "system market context remains protected and is not misrepresented as user-managed",
+        "UI/public state agree immediately"
+      ]
+    }
+  ],
+  "exclusions": [
+    "new v16.7 feature scope",
+    "deterministic score/action changes",
+    "brokerage/autonomous execution",
+    "Portfolio/Journal",
+    "options execution"
+  ],
+  "app_identity": "De-Pulse.app",
+  "runtime": "PersonalMarketTerminal",
+  "documentation_mode": "FULL MINOR REFRESH"
+}

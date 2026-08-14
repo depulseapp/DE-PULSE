@@ -1,0 +1,37 @@
+{
+  "schema": "DE.PULSE-V16.4-MASTER-SCOPE-1",
+  "version": "16.4.0",
+  "channel": "STABLE",
+  "baseline": {
+    "version": "16.3.0 Stable",
+    "source_fingerprint": "a945bd245d4aa187cecb7c2a36f5775db057cf977925ae599f1fa81bf9417c8c"
+  },
+  "scope_lock": [
+    {
+      "id": 22,
+      "name": "AI Evidence Architecture v2",
+      "impact": "structured grounded second opinion; deterministic impact NONE"
+    },
+    {
+      "id": 23,
+      "name": "External-content safety",
+      "impact": "external/provider/news/SEC text untrusted; instruction isolation"
+    },
+    {
+      "id": 24,
+      "name": "AI routing / cost control",
+      "impact": "explicit routing policy, material-evidence cache, bounded tokens"
+    }
+  ],
+  "exclusions": [
+    "deterministic score/action changes",
+    "Trade Readiness ownership",
+    "Market Tradeability ownership",
+    "brokerage/execution",
+    "Portfolio/Journal",
+    "v16.5/v16.6 scope"
+  ],
+  "app_identity": "De-Pulse.app",
+  "runtime": "PersonalMarketTerminal",
+  "documentation_mode": "FULL MINOR REFRESH"
+}

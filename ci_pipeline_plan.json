@@ -1,0 +1,109 @@
+{
+  "schema": "DE.PULSE-CICD-PLAN-2",
+  "version": "18.1.0",
+  "policy": {
+    "light_max_concurrency": 4,
+    "medium_max_concurrency": 2,
+    "heavy_max_concurrency": 1,
+    "evidence_outside_source": true,
+    "fingerprint_keyed": true,
+    "immutable_rc_for_heavy": true,
+    "release_channel": "STABLE",
+    "baseline": "v18.0.6 Stable",
+    "adaptive_release_learning": true,
+    "learning_registry": "release_learning_registry.json",
+    "learning_rule": "Adapt owning G0-G16 gate; do not append a new gate for lessons.",
+    "roadmap_acceptance_contract": "renderer/qa/original-professional-roadmap-acceptance.json",
+    "adaptive_delivery": "one authoritative Markdown handoff + roadmap + next build plan after Stable completion",
+    "canonical_release_identity": "release_identity.json",
+    "pre_freeze_qualification": true,
+    "unique_test_evidence": true,
+    "executable_orchestrators": [
+      "prefreeze_qualification.py",
+      "certification_runner.py"
+    ],
+    "single_owner_rc": true,
+    "artifact_authority": "authoritative_release_index.json + final SHA manifest",
+    "major_closure_required_before_major_transition": true,
+    "major_closure_profile": "v18.5 Major Closure",
+    "major_closure_next_major": "v19",
+    "major_transition_requires_explicit_go_no_go": true,
+    "major_closure_historical_reports_are_corroboration_only": true,
+    "major_closure_requires_senior_engineer_review": true,
+    "major_closure_requires_professional_trader_investor_review": true,
+    "resource_class_go_heavy_lane": 1,
+    "resource_class_medium_other_max_parallel": 2,
+    "current_major": "v18",
+    "current_slice": "v18.0.6-smart-provider-router-rapid-move-market-shock-hardening",
+    "major_scope": "v18_major_scope.json",
+    "delivery_slices": "v18_delivery_slices.json"
+  },
+  "stages": [
+    {
+      "id": "g0_g2",
+      "execution": "sequential",
+      "resource": "LIGHT",
+      "orchestrator": "manual/G0-G2",
+      "depends_on": []
+    },
+    {
+      "id": "development",
+      "execution": "parallel-bounded",
+      "resource": "MIXED",
+      "depends_on": [
+        "g0_g2"
+      ],
+      "rule": "independent workstreams + FAST tests"
+    },
+    {
+      "id": "prefreeze",
+      "execution": "parallel-bounded",
+      "resource": "LIGHT_MEDIUM",
+      "depends_on": [
+        "development"
+      ],
+      "orchestrator": "python3 prefreeze_qualification.py",
+      "max_concurrency": {
+        "LIGHT": 4,
+        "MEDIUM": 2
+      }
+    },
+    {
+      "id": "rc_freeze",
+      "execution": "sequential",
+      "resource": "LIGHT",
+      "depends_on": [
+        "prefreeze"
+      ],
+      "rule": "fingerprint immutable candidate"
+    },
+    {
+      "id": "g12_heavy",
+      "execution": "checkpointed-bounded",
+      "resource": "HEAVY",
+      "depends_on": [
+        "rc_freeze"
+      ],
+      "orchestrator": "python3 certification_runner.py --all",
+      "rule": "full Stable matrix; non-blocking BLOCKED residuals record and continue; safe shards may be parallelized only when resource-bounded"
+    },
+    {
+      "id": "packaging",
+      "execution": "parallelizable-from-immutable-rc",
+      "resource": "MEDIUM",
+      "depends_on": [
+        "g12_heavy"
+      ],
+      "rule": "package outside frozen source"
+    },
+    {
+      "id": "authorization",
+      "execution": "sequential",
+      "resource": "LIGHT",
+      "depends_on": [
+        "packaging"
+      ],
+      "rule": "clean extraction -> handoff/evidence -> final independent hashes -> SHA manifest LAST"
+    }
+  ]
+}

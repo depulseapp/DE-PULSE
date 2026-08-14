@@ -1,0 +1,20 @@
+DE.PULSE v18.0.1 TEST — Smart Router v2 + Rapid Move Intelligence Foundation
+Build: v18.0.1-test-smart-router-v2-rapid-move-foundation-20260813
+Stable baseline: v17.5.1
+Patch predecessor: v18.0.0 TEST
+
+Implemented:
+- Smart Intelligent Provider Router v2 inside the existing canonical router
+- provider capability/entitlement state and NOT_ENTITLED suppression
+- per-capability circuits, deterministic scoring and Preferred vs Serving truth
+- p50/p95 provider latency and calls-avoided scorecard evidence
+- Rapid Move 15s/30s/60s/2m/5m context-aware detection
+- immediate banner/Smart Notification + Opportunity Radar/live-priority promotion
+- catalyst/source/liquidity/corporate-action/market-context correlation
+- point-in-time trace/policy/outcome learning evidence with tiered partial Coverage Truth
+
+Protected:
+- v17.5.1 Stable untouched
+- frozen v18.0 TEST source/profile untouched
+- deterministic Day/Swing/Long formulas unchanged
+- No Execution Boundary unchanged

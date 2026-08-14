@@ -1,0 +1,24 @@
+DE.PULSE v14.2.1 STABLE — PLACEMENT / HIERARCHY PATCH
+Build: v14.2.1-placement-hierarchy-20260809
+Baseline: v14.2 Stable
+
+APPROVED SCOPE
+- Placement/hierarchy changes across Dashboard, Day, Swing, Long-Term, Discovery, Research, AI Copilot, Maintenance and Settings.
+- No global compacting of cards, tables or charts; full-page spacing is preserved.
+- Dashboard More Market Context is always visible with no expand/collapse control.
+- Detailed side-panel Data Engine is restored with direct provider/runtime/data-health rows and status dots.
+- Settings replaces only the redundant page-level MARKET OPEN card with Configuration Summary; the global app session status remains unchanged.
+- Deterministic Day/Swing/Long Action/Setup Score formulas, provider architecture, refresh semantics and real-data-only policy are unchanged.
+
+SOURCE VALIDATION BEFORE FREEZE
+- Go tests/subtests: 118/118 PASS
+- go test -race ./...: PASS
+- go vet ./...: PASS
+- Go coverage: 44.6%
+- Renderer logic / placement regression: PASS
+- Deterministic equivalence: 2403/2403 PASS
+- Professional trader acceptance: PASS
+- HTTP workflows: 69/69 PASS
+- Responsive/UI matrix: 299/299 PASS across 15 viewports and 18 surfaces
+
+Exact packaged-source extraction/retest and platform-binary verification are recorded in the external v14.2.1 QA report shipped with the release artifacts.

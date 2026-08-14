@@ -1,0 +1,18 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const renderer=fs.readFileSync('renderer/renderer.js','utf8'),css=fs.readFileSync('renderer/styles.css','utf8'),html=fs.readFileSync('renderer/index.html','utf8');
+const context={console,globalThis:{__DEPULSE_TEST__:true},document:{querySelector(){return null},querySelectorAll(){return []}},window:{addEventListener(){}},fetch:async()=>({ok:false,status:404,text:async()=>'',json:async()=>({})}),EventSource:function(){},ResizeObserver:function(){this.observe=()=>{}},setInterval(){},setTimeout,clearTimeout,requestAnimationFrame:f=>f()};
+context.globalThis=context;context.__DEPULSE_TEST__=true;vm.createContext(context);vm.runInContext(renderer,context);const L=context.DePulseLogic;
+const tracked=L.masterMarketSymbolsPanel();
+assert(tracked.includes('Tracked Symbols')&&tracked.includes('Add Symbol')&&tracked.includes('tracked'));
+assert(!tracked.includes('Master Symbol Store')&&!tracked.includes('Add to All Desks'));
+assert(renderer.includes('Remove from Tracked Symbols'));
+assert.strictEqual(L.diagnosticVisibilityForRole('USER'),false);assert.strictEqual(L.diagnosticVisibilityForRole('DEMO'),false);assert.strictEqual(L.diagnosticVisibilityForRole('ADMIN'),true);assert.strictEqual(L.diagnosticVisibilityForRole('OWNER'),true);assert.strictEqual(L.diagnosticVisibilityForRole('SUPER_OWNER'),true);
+assert(renderer.includes("applyRoleSurfaceVisibility();const ident=$('#identity-principal')"));
+assert(html.includes('sidebar-data-engine')&&html.includes('sidebar-engine-divider'));
+assert(renderer.includes('user-data-status')&&renderer.includes('without provider, queue, cache or scheduler internals'));
+assert(renderer.includes('opportunity-radar-head')&&renderer.includes('radar-status-pill')&&renderer.includes("isStaged?'Staged':'Stage'"));
+assert(css.includes('.opportunity-radar-head,.opportunity-radar-row')&&css.includes('@media(max-width:900px)')&&css.includes('.opportunity-radar-row{grid-template-columns:repeat(2,minmax(0,1fr))'));
+assert(renderer.includes('Research Target')&&renderer.includes("freshLabel=v151ResearchHydrating?'REFRESHING'")&&renderer.includes('Technical Context')&&renderer.includes('return context preserved'));
+assert(css.includes('.research-command-v2 .ticker-control')&&css.includes('height:36px')&&css.includes('.research-origin-context'));
+assert(!/\.ticker-control,\.ticker-input\{[^}]*height:36px/.test(css),'global controls must not be compacted');
+console.log('v18.0.5 renderer / role visibility / responsive touched-surface acceptance: PASS');

@@ -1,0 +1,42 @@
+DE.PULSE v14.0.3 STABLE — QA REPORT
+Build: v14.0.3-ui-consistency-20260809
+Baseline: v14.0.2 Stable handoff-compliance release
+
+PATCH SCOPE
+PASS — Global / Macro Driver cards no longer overlap at wide/medium/narrow responsive widths.
+PASS — Market Instruments hover/focus preserves identical geometry and continuous ticker motion; no hover pause/jiggle.
+PASS — Event & Data Context uses stable header actions and responsive key/value layout.
+PASS — Very old (>30 min) cached desk context is visually warned rather than appearing current.
+PASS — SEC Intelligence Summary key/value typography is rebalanced; values do not overpower labels.
+PASS — Changes are renderer/presentation scoped except release identity; deterministic trading formulas and provider routing are unchanged.
+
+ENGINEERING / REGRESSION
+PASS — 118 / 118 Go tests/subtests.
+PASS — go test -race ./...
+PASS — go vet ./...
+PASS — 44.6% Go statement coverage.
+PASS — node --check renderer/renderer.js.
+PASS — renderer logic + v14.0.3 regression suite.
+PASS — 2,403 / 2,403 deterministic trading-equivalence checks against v13.3.0.
+PASS — professional Day/Swing/Long trader acceptance scenarios.
+PASS — 69 / 69 local-app HTTP workflow assertions.
+PASS — 288 / 288 responsive/UI checks, including focused collision/hover/context/SEC typography checks and Windows scaling/Retina cases.
+PASS — 60-symbol concurrent moving-market stress test.
+
+RELEASE GATES
+PASS — Gate 1 Scope & Traceability.
+PASS — Gate 2 Engineering Quality.
+PASS — Gate 3 Complete Functionality.
+PASS — Gate 4 Data Integrity, Providers & Resilience.
+PASS — Gate 5 Horizon & Professional Trader Acceptance.
+PASS — Gate 6 Performance, Efficiency & Code/App Health.
+PASS — Gate 7 UI/UX & Cross-Device.
+PASS — Gate 8 Migration & Backward Compatibility.
+PASS — Gate 9 Documentation.
+PASS — Gate 10 Final Build & Package Integrity (verified against final external package).
+PASS — Gate 11 Cross-Module Integration & Correlation.
+
+TARGET-ENVIRONMENT LIMITATIONS
+- Native macOS WKWebView/Gatekeeper/Finder presentation requires acceptance on macOS hardware.
+- Native Windows shell/Explorer presentation requires acceptance on Windows.
+- Authenticated private-provider entitlements require the user's real credentials and cannot be manufactured in the Linux QA environment.

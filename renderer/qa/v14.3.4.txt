@@ -1,0 +1,14 @@
+DE.PULSE v14.3.4 STABLE — UI STABILITY & OPERATIONAL POLISH
+Build: v14.3.4-ui-stability-20260809
+Baseline: exact v14.3.3 Stable source
+
+Scope
+- Readiness-state typography normalized so state does not overpower job title.
+- Maintenance Data Engine action/status/timestamp cluster aligned cleanly.
+- QA & Release History is programmatically limited to latest five with complete metadata.
+- Decision Queue Why? evidence opens by default.
+- Freshness & Cache Policy cards use content-driven height.
+- Header notification long-message fitting preserves the beginning and uses end ellipsis only as final fallback.
+- Auto-Start Runtime moved to a compact Settings-header ON/OFF control.
+- VIX manual Refresh/Retry is always available in Maintenance and reuses the canonical VIX pipeline.
+- No deterministic trading-score changes.

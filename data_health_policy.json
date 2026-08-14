@@ -1,0 +1,42 @@
+{
+  "schema": "DE.PULSE-ADAPTIVE-DATA-HEALTH-1",
+  "version": "16.10.0",
+  "policy": {
+    "session_aware": true,
+    "provider_vs_cache_timestamps": true,
+    "stale_while_revalidate": true,
+    "fallback_recovery": true,
+    "material_change_priority": true,
+    "selected_symbol_priority": true,
+    "market_critical_priority": [
+      "SPY",
+      "QQQ"
+    ],
+    "adaptive_policy_changes_require_shadow_validation": true,
+    "opportunity_radar_session_aware": true,
+    "hot_symbol_targeted_history_hydration": true,
+    "adaptive_cache_persistence": true,
+    "provider_degradation_slows_radar": true,
+    "shadow_policy_can_mutate_production": false
+  },
+  "observability": [
+    "provider_latency",
+    "provider_error",
+    "websocket_health",
+    "freshness",
+    "provider_timestamp",
+    "cache_timestamp",
+    "cache_age",
+    "fallback",
+    "stale_reason",
+    "recovery",
+    "request_count",
+    "duplicate_fetch",
+    "storage_growth",
+    "radar_cadence",
+    "radar_promotions",
+    "hot_symbol_history_hydration",
+    "adaptive_cache_cadence",
+    "shadow_observation"
+  ]
+}

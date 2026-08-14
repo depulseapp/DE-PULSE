@@ -1,0 +1,83 @@
+{
+  "version": "16.0.1 TEST",
+  "build": "v16.0.1-test-truth-foundation-correction-20260811",
+  "count": 4,
+  "items": [
+    {
+      "id": 16,
+      "title": "Professional Provider Conflict / Provenance Reconciliation",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "Finalize that winner BEFORE generating the explanatory reason"
+        },
+        {
+          "file": "v16_0_1_test.go",
+          "contains": "TestV1601ProviderReasonMatchesCanonicalOverride"
+        },
+        {
+          "file": "renderer/renderer.js",
+          "contains": "Provider Reconciliation \u00b7 v16"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Persistent Corporate Actions / Symbol Lifecycle & Bar Adjustment Provenance",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "func mergeCorporateActionLedger"
+        },
+        {
+          "file": "main.go",
+          "contains": "CorporateActions     []CorporateAction"
+        },
+        {
+          "file": "v16_0_1_test.go",
+          "contains": "TestV1601CorporateLedgerPersistsInCache"
+        },
+        {
+          "file": "v16_0_1_test.go",
+          "contains": "TestV1601CorporateParserCoversCurrentActionFamilies"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Selected-Ticker Research Package Freshness & Evidence Snapshot",
+      "evidence": [
+        {
+          "file": "v16.go",
+          "contains": "researchTargetStamp(last, \"history\", symbol)"
+        },
+        {
+          "file": "v16.go",
+          "contains": "func (e *Engine) refreshResearchHistory"
+        },
+        {
+          "file": "v16_0_1_test.go",
+          "contains": "TestV1601GlobalHistoryTimestampCannotSatisfySelectedTicker"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "title": "Previous-Build / Professional Adversarial Release Gate",
+      "evidence": [
+        {
+          "file": "v16_0_scope_gate.py",
+          "contains": "TestV1601ProviderReasonMatchesCanonicalOverride"
+        },
+        {
+          "file": "v16_0_scope_gate.py",
+          "contains": "TestV1601GlobalHistoryTimestampCannotSatisfySelectedTicker"
+        },
+        {
+          "file": "next_build_audit_gate.py",
+          "contains": "Next-Build Implementation Audit Gate"
+        }
+      ]
+    }
+  ]
+}

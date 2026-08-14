@@ -1,0 +1,274 @@
+{
+  "releases": [
+    {
+      "version": "18.1.0",
+      "date": "2026-08-14",
+      "summary": "STABLE Multi-User / My Market Symbols: durable per-user workspace ownership/isolation over one deduplicated shared provider/evidence core; global operational policy remains ADMIN-owned; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v18.1.0.txt",
+      "buildId": "v18.1.0-stable-multi-user-my-market-symbols-20260814",
+      "checkpoint": "v18.1.0-g0-g3-multi-user-workspace.md"
+    },
+    {
+      "version": "18.0.6",
+      "date": "2026-08-14",
+      "summary": "STABLE Smart Provider Router v2 + Rapid Move / Market Shock hardening: canonical source-disagreement telemetry, explicit market-shock classification, alert-state hysteresis, provider-time outcome-anchor preservation and SHADOW learning governance/outcome quality; deterministic intelligence formulas unchanged.",
+      "status": "STABLE",
+      "file": "v18.0.6.txt",
+      "buildId": "v18.0.6-stable-smart-provider-router-rapid-move-market-shock-hardening-20260814",
+      "checkpoint": "v18.0.6-g0-g3-router-shock-hardening.md"
+    },
+    {
+      "version": "18.0.5",
+      "date": "2026-08-14",
+      "summary": "STABLE UI/UX + Symbol Management Hardening: Tracked Symbols canonical cross-desk operations and Remove All persistence fix, Opportunity Radar responsive hierarchy, compact Research Target, and USER/DEMO implementation-detail suppression; deterministic intelligence formulas unchanged.",
+      "status": "STABLE",
+      "file": "v18.0.5.txt",
+      "buildId": "v18.0.5-stable-ui-ux-symbol-management-hardening-20260814",
+      "checkpoint": "v18.0.5-g2-g3-architecture-ui-hardening.md"
+    },
+    {
+      "version": "18.0.4",
+      "date": "2026-08-13",
+      "summary": "STABLE native cross-platform closure: Windows SQLite lifecycle + G14 restart/identity hardening certified on macOS Apple Silicon and Windows x64; market-intelligence behavior unchanged.",
+      "status": "STABLE",
+      "file": "v18.0.4.txt",
+      "buildId": "v18.0.4-stable-native-cross-platform-closure-20260813",
+      "checkpoint": "v18.0.4-stable-promotion.md"
+    },
+    {
+      "version": "18.0.3",
+      "date": "2026-08-13",
+      "summary": "TEST native cross-platform runtime portability hardening after G14: Windows embedded-resource path fix, OS-correct test config isolation, Windows permission-test semantics and delivery-harness correction; intelligence behavior unchanged.",
+      "status": "TEST",
+      "file": "v18.0.3.txt",
+      "buildId": "v18.0.3-test-native-cross-platform-runtime-portability-hardening-20260813",
+      "checkpoint": "v18.0.3-native-runtime-portability.md"
+    },
+    {
+      "version": "18.0.2",
+      "date": "2026-08-13",
+      "summary": "TEST native delivery hardening: canonical cross-platform source fingerprint ownership after G14 exposed Windows/POSIX path-semantic drift; v18.0.1 Smart Router v2 and Rapid Move behavior unchanged.",
+      "status": "TEST",
+      "file": "v18.0.2.txt",
+      "buildId": "v18.0.2-test-cross-platform-fingerprint-native-delivery-hardening-20260813",
+      "checkpoint": "v18.0.2-native-delivery-hardening.md"
+    },
+    {
+      "version": "18.0.1",
+      "date": "2026-08-13",
+      "summary": "TEST Smart Router v2 + Rapid Move foundation: capability/entitlement-aware routing, per-capability circuits, Preferred vs Serving truth, calls-avoided telemetry, context-aware short-window shock detection, immediate banner/Radar promotion and outcome learning with truthful tiered coverage.",
+      "status": "TEST",
+      "file": "v18.0.1.txt",
+      "buildId": "v18.0.1-test-smart-router-v2-rapid-move-foundation-20260813",
+      "checkpoint": "v18.0.1-smart-router-rapid-move.md"
+    },
+    {
+      "version": "18.0.0",
+      "date": "2026-08-13",
+      "summary": "TEST Identity & Secure Session Foundation: persistent OWNER identity/session state, Argon2id login, logout/revocation, RBAC foundation, CSRF, bootstrap migration and isolated v18 TEST profile; deterministic market logic unchanged.",
+      "status": "TEST",
+      "file": "v18.0.0.txt",
+      "buildId": "v18.0.0-test-identity-session-foundation-20260813",
+      "checkpoint": "v18.0.0-identity-session-foundation.md"
+    },
+    {
+      "version": "17.5.1",
+      "date": "2026-08-13",
+      "summary": "STABLE release-identity/documentation hardening: current runtime/renderer identity is STABLE, obsolete RC/TEST promotion wording removed, v17.0-v17.2 restored to in-app history, stale v16.8.1 mismatch copy corrected; no trading/data logic change.",
+      "status": "STABLE",
+      "file": "v17.5.1.txt",
+      "buildId": "v17.5.1-stable-release-identity-documentation-hardening-20260813",
+      "checkpoint": "v17.5.1-release-identity-documentation-hardening.md"
+    },
+    {
+      "version": "17.5.0",
+      "date": "2026-08-12",
+      "summary": "RC v17 Major Closure & Release Assurance: no new feature scope; frozen v17 20/20 reconstruction, Principal Engineer and Professional Trader/Investor reviews, performance/data-hygiene closure, RL-036 retrospective and fresh full certification before v18 GO/NO-GO.",
+      "status": "RC",
+      "file": "v17.5.0.txt",
+      "buildId": "v17.5.0-rc-v17-major-closure-release-assurance-20260812",
+      "checkpoint": "v17.5.0-major-closure.md"
+    },
+    {
+      "version": "17.4.0",
+      "date": "2026-08-12",
+      "summary": "TEST UX/operational hardening: balanced Master Market Symbols controls; stale quote evidence no longer multiplied into false per-symbol liquidity risks; genuine readiness exceptions grouped, counted, bounded and expandable with per-symbol Review; v17.3 runtime diagnostics preserved.",
+      "status": "TEST",
+      "file": "v17.4.0.txt",
+      "buildId": "v17.4.0-ux-operational-hardening-test-20260812",
+      "checkpoint": "v17.4.0-ux-operational-hardening.md"
+    },
+    {
+      "version": "17.3.0",
+      "date": "2026-08-12",
+      "summary": "TEST performance/reliability slice: measurable freshness/recovery/API/queue/CPU/provider/warm-start/persistence/storage SLOs with Maintenance diagnostics; v16.11 Stable remains protected.",
+      "status": "TEST",
+      "file": "v17.3.0.txt",
+      "buildId": "v17.3.0-performance-reliability-hardening-test-20260812",
+      "checkpoint": "v17.3.0-performance-reliability-hardening.md"
+    },
+    {
+      "version": "17.2.0",
+      "date": "2026-08-12",
+      "summary": "TEST canonical-intelligence/data-efficiency slice: centralized material-change propagation, immutable decision lineage, source-hash incremental derived features, and Alpaca IEX self-deadlock correction. v16.11 Stable remains protected.",
+      "status": "TEST",
+      "file": "v17.2.0.txt",
+      "buildId": "v17.2.0-canonical-intelligence-data-efficiency-test-20260812",
+      "checkpoint": "v17.2.0-canonical-intelligence-data-efficiency.md"
+    },
+    {
+      "version": "17.1.0",
+      "date": "2026-08-12",
+      "summary": "TEST runtime-load/backpressure slice: Tier 0-4 workload priority, bounded provider queues, protected critical reserve, low-priority shedding, tier-aware provider routing, and live subscription capacity diagnostics. v16.11 Stable remains protected.",
+      "status": "TEST",
+      "file": "v17.1.0.txt",
+      "buildId": "v17.1.0-runtime-load-backpressure-test-20260812",
+      "checkpoint": "v17.1.0-runtime-load-backpressure.md"
+    },
+    {
+      "version": "17.0.0",
+      "date": "2026-08-12",
+      "summary": "TEST source checkpoint: SQLite persistence foundation, retained Global Symbol Registry, truth-safe warm start, retry-safe material persistence, structured lineage, runtime/provider observability and 22-dataset Data Utility governance. Cross-platform SQLite packaging remains blocked; v16.11 Stable remains protected.",
+      "status": "TEST",
+      "file": "v17.0.0.txt",
+      "buildId": "v17.0.0-persistent-intelligence-runtime-foundation-test-20260812",
+      "checkpoint": "v17.0.0-foundation-checkpoint.md"
+    },
+    {
+      "version": "16.11.0",
+      "date": "2026-08-12",
+      "summary": "v16 Major Closure & Release Assurance: fresh v16.1-v16.10 code/executable closure, comprehensive testing, senior-engineer and professional trader/investor reviews, performance/long-run validation, data/source cleanup, adaptive retrospective and v16\u2192v17 Go/No-Go.",
+      "status": "STABLE",
+      "file": "v16.11.0.txt",
+      "buildId": "v16.11.0-stable-v16-major-closure-release-assurance-20260812"
+    },
+    {
+      "version": "16.10.0",
+      "date": "2026-08-12",
+      "summary": "Opportunity & Decision Intelligence: mandatory IA/Data Efficiency pass, Always-On Opportunity Radar, unusual volume/volatility, bounded live promotion/demotion, adaptive freshness/cache and read-only Shadow foundation; original roadmap 30/30 preserved.",
+      "status": "STABLE",
+      "file": "v16.10.0.txt",
+      "buildId": "v16.10.0-stable-opportunity-decision-intelligence-20260812"
+    },
+    {
+      "version": "16.9.0",
+      "date": "2026-08-12",
+      "summary": "Final Original Professional Roadmap Closure: Community Evidence Fusion, WTI/Brent Oil-Energy context, reusable cutoff-safe Historical Replay/Scenarios; original roadmap 30 FULL / 0 PARTIAL / 0 MISSING; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.9.0.txt",
+      "buildId": "v16.9.0-stable-final-original-roadmap-closure-20260812"
+    },
+    {
+      "version": "16.8.1",
+      "date": "2026-08-12",
+      "summary": "US Market Scope & Data Utility Hardening: U.S.-listed actionable ticker boundary, US-primary Economic Calendar with selective Global Context, SPY/QQQ market-critical live priority, Data Utility/Data Health contracts, and Adaptive Build Process v2; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.8.1.txt",
+      "buildId": "v16.8.1-stable-us-market-data-utility-hardening-20260812"
+    },
+    {
+      "version": "16.8.0",
+      "date": "2026-08-12",
+      "summary": "Professional Context & Readiness Closure: #6/#8/#9/#21/#27 moved PARTIAL -> FULL; roadmap 27 FULL / 3 PARTIAL / 0 MISSING; adaptive performance/testing/intelligence contracts preserved; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.8.0.txt",
+      "buildId": "v16.8.0-stable-professional-context-readiness-closure-20260812"
+    },
+    {
+      "version": "16.7.0",
+      "date": "2026-08-12",
+      "summary": "Core Market Decision Intelligence Closure: original roadmap #3/#12/#13/#14/#15 moved PARTIAL -> FULL; immutable original-acceptance contract and adaptive G12 infrastructure-timeout classification added; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.7.0.txt",
+      "buildId": "v16.7.0-stable-core-market-decision-closure-20260812"
+    },
+    {
+      "version": "16.6.0",
+      "date": "2026-08-12",
+      "summary": "Full Professional Integration & Acceptance: 30/30 reconciliation plus Master Symbol Store explicit-empty/remove-all persistence closure; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.6.0.txt",
+      "buildId": "v16.6.0-stable-full-professional-integration-20260812"
+    },
+    {
+      "version": "16.5.0",
+      "date": "2026-08-12",
+      "summary": "Context & Alternative Intelligence (#5/#6/#9/#10/#11): transparent sentiment, explicit sector heat-map coverage, defensible GEX context, manual UNTRUSTED COMMUNITY INTELLIGENCE, official EIA + USO/XLE oil/energy truth; deterministic formulas unchanged.",
+      "status": "STABLE",
+      "file": "v16.5.0.txt",
+      "buildId": "v16.5.0-stable-context-alternative-intelligence-20260812"
+    },
+    {
+      "version": "16.4.0",
+      "date": "2026-08-12",
+      "summary": "Professional Research AI (#22/#23/#24): evidence-grounded Bull/Base/Bear second opinion, external-content safety, explicit routing/cost policy, material-evidence cache; standard De-Pulse.app identity; adaptive G0-G16 Release Learning Loop.",
+      "status": "STABLE",
+      "file": "v16.4.0.txt",
+      "buildId": "v16.4.0-stable-professional-research-ai-20260812"
+    },
+    {
+      "version": "16.3.0",
+      "file": "v16.3.0.txt",
+      "status": "STABLE \u00b7 PROFESSIONAL VALIDATION & LEARNING",
+      "date": "2026-08-12",
+      "summary": "Frozen signal outcomes, no-lookahead historical replay, descriptive calibration/seasonality and candidate correlation/concentration awareness; deterministic Score/Action unchanged. Promoted to Stable with canonical prior-Stable settings/API-key continuity."
+    },
+    {
+      "version": "16.2.0",
+      "file": "v16.2.0.txt",
+      "status": "TEST \u00b7 PROFESSIONAL EVENT INTELLIGENCE",
+      "date": "2026-08-11",
+      "summary": "Canonical derived News/Macro/Economic Calendar/FOMC/Smart Notification/Reaction/Event\u2192Decision intelligence; no duplicate provider engine or deterministic score mutation."
+    },
+    {
+      "version": "16.1.1",
+      "file": "v16.1.1.txt",
+      "status": "TEST PATCH \u00b7 MARKET INTELLIGENCE TRUTH HARDENING",
+      "date": "2026-08-11",
+      "summary": "Fixes exact Long weekly horizon, historical Structure/RS freshness and evidence timestamps, and UNKNOWN liquidity without valid bid/ask; no v16.2 scope or deterministic formula change."
+    },
+    {
+      "version": "16.0.6",
+      "file": "v16.0.6.txt",
+      "status": "V16.0 FINAL CONSOLIDATION \u00b7 RELEASE-CANDIDATE",
+      "date": "2026-08-11",
+      "summary": "Final v16.0 consolidation: all Professional Truth Foundation fixes, Stable-style header, normal prepackaged native launch, permanent complete delivery/handoff standard, and no v16.1 feature leakage."
+    },
+    {
+      "version": "16.0.5",
+      "file": "v16.0.5.txt",
+      "status": "RC \u00b7 FINAL-CLOSURE PREDECESSOR",
+      "date": "2026-08-11",
+      "summary": "Predecessor closure RC: Provider Reconciliation contemporaneity and Stable-style header. Superseded by v16.0.6 delivery/launch consolidation."
+    },
+    {
+      "version": "16.0.3 TEST",
+      "file": "v16.0.3.txt",
+      "status": "TEST \u00b7 PROFESSIONAL AUTHORIZATION HARDENING",
+      "date": "2026-08-11",
+      "summary": "Working-candidate process hardening: Fundamentals Check Age vs Data Age, shared quote clock-skew truth, retryable corporate-action historical backfill, reproducible randomized gates, independent professional authorization and fault-injection proof. v15.1.2 Stable remains frozen."
+    },
+    {
+      "version": "16.0.2 TEST",
+      "file": "v16.0.2.txt",
+      "status": "TEST \u00b7 PROFESSIONAL TRUTH HARDENING",
+      "date": "2026-08-11",
+      "summary": "Professional expert/edge-case correction: market-time vs receipt-time reconciliation, no-evidence/single-source truth, complete raw-history pagination/coverage provenance, final Maintenance/AI truth integration, and permanent expert + failure-mode gates. v15.1.2 Stable remains frozen."
+    },
+    {
+      "version": "16.0.1 TEST",
+      "file": "v16.0.1.txt",
+      "status": "TEST \u00b7 TRUTH FOUNDATION CORRECTION",
+      "date": "2026-08-11",
+      "summary": "Mandatory re-audit correction: provider canonical winner/reason consistency, selected-ticker Daily History reconciliation clocks, persistent/backfilled corporate-action ledger, and adversarial next-build gate strengthening. v15.1.2 Stable remains frozen."
+    },
+    {
+      "version": "16.0.0 TEST",
+      "file": "v16.0.0.txt",
+      "status": "TEST \u00b7 PROFESSIONAL FOUNDATION",
+      "date": "2026-08-11",
+      "summary": "v16 professional truth foundation: Provider Reconciliation, Corporate Actions/Symbol Lifecycle adjustment provenance, selected-ticker Research freshness/Evidence Snapshot, and mandatory Previous-Build audit gate. v15.1.2 Stable remains frozen."
+    }
+  ]
+}

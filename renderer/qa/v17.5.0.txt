@@ -1,0 +1,6 @@
+DE.PULSE v17.5.0 RC — v17 Major Closure & Release Assurance
+Build ID: v17.5.0-rc-v17-major-closure-release-assurance-20260812
+Stable baseline: v16.11.0
+
+No new feature scope. Reconstruct frozen v17 scope 20/20 and completed v17.0-v17.4 slices from current code; run fresh Principal Engineer, Professional Trader/Investor, performance/capacity, data/source-hygiene, race/randomized/full-suite and cross-module certification; complete adaptive retrospective and issue v17→v18 GO/NO-GO only after immutable RC/Stable evidence.
+No execution. No v18 auth/multi-user/session/quota pull-forward. Deterministic Day/Swing/Long Score/Action formulas remain protected.

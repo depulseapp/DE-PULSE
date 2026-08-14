@@ -1,0 +1,40 @@
+{
+  "schema": "DE.PULSE-V18.0-SCOPE-1",
+  "version": "18.0.0",
+  "build_id": "v18.0.0-test-identity-session-foundation-20260813",
+  "channel": "TEST",
+  "stable_baseline": "v17.5.1",
+  "mission": "Identity & Secure Session Foundation",
+  "protected_contracts": [
+    "No Execution Boundary",
+    "deterministic Day/Swing/Long Score/Action formulas unchanged",
+    "v17 settings/watchlists/API-key/persistent-intelligence continuity",
+    "v17.5.1 Stable package remains immutable"
+  ],
+  "items": [
+    {"id":"V180-01","name":"Canonical roles and Principal","status":"IMPLEMENTED"},
+    {"id":"V180-02","name":"Persistent user identity repository","status":"IMPLEMENTED"},
+    {"id":"V180-03","name":"Persistent server-side session repository","status":"IMPLEMENTED"},
+    {"id":"V180-04","name":"Argon2id local credentials","status":"IMPLEMENTED"},
+    {"id":"V180-05","name":"Login UI and API","status":"IMPLEMENTED"},
+    {"id":"V180-06","name":"Logout and server-side revocation","status":"IMPLEMENTED"},
+    {"id":"V180-07","name":"Central authorization policy","status":"IMPLEMENTED"},
+    {"id":"V180-08","name":"Role enforcement","status":"IMPLEMENTED"},
+    {"id":"V180-09","name":"Bootstrap OWNER migration","status":"IMPLEMENTED"},
+    {"id":"V180-10","name":"Rotation, revocation, idle and absolute expiry","status":"IMPLEMENTED"},
+    {"id":"V180-11","name":"Secure cookie and CSRF shaping","status":"IMPLEMENTED"},
+    {"id":"V180-12","name":"Migration continuity and isolated v18 TEST profile","status":"IMPLEMENTED"},
+    {"id":"V180-13","name":"User-isolation principal foundation","status":"IMPLEMENTED"},
+    {"id":"V180-14","name":"No deterministic market-logic change","status":"QUALIFICATION_REQUIRED"},
+    {"id":"V180-15","name":"Canonical TEST release identity","status":"IMPLEMENTED"},
+    {"id":"V180-16","name":"Separate side-by-side TEST packaging","status":"PACKAGING_REQUIRED"}
+  ],
+  "deferred": [
+    "v18.1 per-user market symbols/watchlists",
+    "Smart Intelligent Provider Router v2",
+    "TradeInsight SHADOW intelligence",
+    "v18.2 admin/presence/session operations",
+    "v18.3 PostgreSQL hosted shared state",
+    "v18.4 full security/commercial hardening"
+  ]
+}

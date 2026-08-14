@@ -1,0 +1,30 @@
+{
+  "version": "17.2.0",
+  "channel": "TEST",
+  "buildId": "v17.2.0-canonical-intelligence-data-efficiency-test-20260812",
+  "stableBaseline": "v16.11.0",
+  "scope": "Canonical Intelligence + Data Efficiency",
+  "evidence": {
+    "v172FocusedUnit": "PASS",
+    "v172FocusedRace": "PASS",
+    "v172ScopeGate": "PASS",
+    "g2SourceHealth": "PASS",
+    "deterministicEquivalence": "2403/2403 PASS",
+    "httpCrossModule": "163/163 PASS",
+    "fullGoSuite": "PASS",
+    "v16_10Performance": "PASS",
+    "v16_11PerformanceStability": "PASS",
+    "rendererLogic": "PASS",
+    "responsiveUI": "391/391 PASS \u00b7 15 viewports / 21 surfaces",
+    "professionalTraderInvestor": "PASS",
+    "extremeProduction": "30/30 PASS",
+    "crossPlatformSQLite": "PASS",
+    "dataUtility": "22 datasets PASS",
+    "goVet": "PASS"
+  },
+  "open003": {
+    "finding": "Alpaca IEX stream held Engine write mutex while calling multiFeedAllocation, causing potential RWMutex self-deadlock",
+    "status": "FIXED + REGRESSION TESTED"
+  },
+  "stablePromotion": false
+}

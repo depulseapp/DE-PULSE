@@ -1,0 +1,95 @@
+{
+  "build": "v16.3.0-stable-professional-validation-learning-20260812",
+  "channel": "STABLE",
+  "baseline": {
+    "build_id": "v16.2.0-professional-event-intelligence-20260811",
+    "source_zip_sha256": "21a93f0ce35539191dce9c8dbd0b6d7c6e7d5622a78ca3e315ac96a9f7af8a6a",
+    "source_fingerprint": "da718a33cab7fd177644cb0a84a427d84856a373fe956816b0c945f3cb103b00",
+    "source_files": 216,
+    "protected_stable_source_sha256": "e8a1d08c0990dec39704f94e61c0c547436ab839a336b30cc8085f2fae7a7e9c",
+    "previous_stable": "v15.1.2"
+  },
+  "scope_lock": [
+    {
+      "id": 8,
+      "name": "Seasonality",
+      "deterministic_formula_impact": "NONE",
+      "canonical_owner": "validation/learning analytics over canonical Engine.bars",
+      "surfaces": [
+        "Market Intelligence",
+        "Research",
+        "Maintenance",
+        "Documentation"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Signal Outcome Measurement",
+      "deterministic_formula_impact": "NONE",
+      "canonical_owner": "existing SignalValidationState / signal_validation.go refactored in place",
+      "surfaces": [
+        "Research",
+        "Maintenance",
+        "Decision Queue when material"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Calibration / Professional Validation",
+      "deterministic_formula_impact": "NONE",
+      "canonical_owner": "derived validation analytics over completed canonical outcomes",
+      "surfaces": [
+        "Research",
+        "Maintenance",
+        "Documentation"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Historical Replay / Scenario Validation",
+      "deterministic_formula_impact": "NONE",
+      "canonical_owner": "isolated replay orchestration calling the same production deterministic core",
+      "surfaces": [
+        "Research",
+        "Maintenance",
+        "Documentation"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Correlation / Concentration Awareness",
+      "deterministic_formula_impact": "NONE",
+      "canonical_owner": "aligned-return analytics over canonical Engine.bars plus candidate/watchlist/Decision Queue context",
+      "surfaces": [
+        "Market Intelligence",
+        "Research",
+        "Decision Queue",
+        "Maintenance"
+      ]
+    }
+  ],
+  "explicit_exclusions": [
+    "#22/#23/#24 AI v2",
+    "#5/#6/#9/#10/#11 alternative/context intelligence",
+    "v16.6 integration work",
+    "Portfolio",
+    "Journal",
+    "positions/P&L",
+    "brokerage execution",
+    "autonomous trading",
+    "standalone Alerts page",
+    "automatic deterministic formula changes"
+  ],
+  "hard_invariants": [
+    "No second deterministic scoring engine",
+    "No replay-only scoring formulas",
+    "No second historical-bar store",
+    "No second corporate-action adjustment path",
+    "No duplicate EvidenceSnapshot model",
+    "No lookahead",
+    "Production state restored exactly after replay",
+    "Setup Score is not win probability",
+    "AI/Event/validation analytics cannot mutate deterministic Score/Action"
+  ],
+  "status": "G0/G1/G2 COMPLETE \u00b7 IMPLEMENTATION 5/5 COMPLETE \u00b7 STABLE PROMOTED"
+}
