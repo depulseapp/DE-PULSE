@@ -1,0 +1,52 @@
+name: DE.PULSE v18.0.5 Source Bootstrap
+
+on:
+  push:
+    branches:
+      - v18.0.5-development
+    paths:
+      - '.github/workflows/v18.0.5-source-bootstrap.yml'
+      - 'release/v18.0.5/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-certified-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout v18.0.5 development branch
+        uses: actions/checkout@v4
+
+      - name: Verify certified Stable source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f De-Pulse-v18.0.4-STABLE-Source.zip
+          actual="$(sha256sum De-Pulse-v18.0.4-STABLE-Source.zip | awk '{print $1}')"
+          expected="a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a"
+          echo "expected=$expected"
+          echo "actual=$actual"
+          test "$actual" = "$expected"
+
+      - name: Expand certified source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _v18_0_5_source
+          mkdir -p _v18_0_5_source
+          unzip -q De-Pulse-v18.0.4-STABLE-Source.zip -d _v18_0_5_source
+          find _v18_0_5_source -type f | sort > release/v18.0.5/G0-source-inventory.txt
+          test -s release/v18.0.5/G0-source-inventory.txt
+          echo "Expanded files: $(wc -l < release/v18.0.5/G0-source-inventory.txt)"
+
+      - name: Upload certified source workspace
+        uses: actions/upload-artifact@v4
+        with:
+          name: De-Pulse-v18.0.5-G0-Certified-Source-Workspace
+          path: |
+            _v18_0_5_source/
+            release/v18.0.5/G0-source-inventory.txt
+          if-no-files-found: error
+          retention-days: 30
