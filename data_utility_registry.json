@@ -1,22 +1,13 @@
 {
   "schema": "DE.PULSE-DATA-UTILITY-1",
-  "version": "18.1.0",
+  "version": "18.2.0",
   "policy": "Every fetched/computed/stored dataset must have an active consumer or explicitly justified strategic retention purpose; correlate/integrate canonical evidence before adding raw data or duplicate surfaces.",
   "datasets": [
     {
       "dataset": "Quotes",
       "owner": "Provider Router / canonical quote store",
       "purpose": "Live price/liquidity evidence for U.S.-listed actionable symbols and protected market context",
-      "consumers": [
-        "Dashboard",
-        "Day",
-        "Swing",
-        "Long",
-        "Research",
-        "Decision Queue",
-        "Opportunity/Discovery",
-        "Opportunity Radar"
-      ],
+      "consumers": ["Dashboard", "Day", "Swing", "Long", "Research", "Decision Queue", "Opportunity/Discovery", "Opportunity Radar"],
       "retention": "bounded live/cache state",
       "utility": "ACTIVE"
     },
@@ -24,12 +15,7 @@
       "dataset": "VIX",
       "owner": "Dedicated VIX path",
       "purpose": "Volatility/regime context",
-      "consumers": [
-        "Market Regime",
-        "Dashboard",
-        "Trade Readiness",
-        "Preparation"
-      ],
+      "consumers": ["Market Regime", "Dashboard", "Trade Readiness", "Preparation"],
       "retention": "last-known-good bounded cache",
       "utility": "ACTIVE"
     },
@@ -37,12 +23,7 @@
       "dataset": "Intraday Bars",
       "owner": "Canonical history owner",
       "purpose": "Day/chart/readiness calculations",
-      "consumers": [
-        "Intraday Charts",
-        "Day",
-        "Trade Readiness",
-        "Opportunity Radar promoted-symbol hydration"
-      ],
+      "consumers": ["Intraday Charts", "Day", "Trade Readiness", "Opportunity Radar promoted-symbol hydration"],
       "retention": "bounded/incremental history",
       "utility": "ACTIVE"
     },
@@ -50,13 +31,7 @@
       "dataset": "Daily / Weekly History",
       "owner": "Canonical history owner",
       "purpose": "Swing/Long/validation/seasonality/replay evidence",
-      "consumers": [
-        "Swing",
-        "Long",
-        "Signal Validation",
-        "Seasonality",
-        "Replay"
-      ],
+      "consumers": ["Swing", "Long", "Signal Validation", "Seasonality", "Replay"],
       "retention": "strategic historical evidence",
       "utility": "ACTIVE"
     },
@@ -64,13 +39,7 @@
       "dataset": "News",
       "owner": "Event Intelligence canonical news store",
       "purpose": "Material catalyst/news context",
-      "consumers": [
-        "Dashboard",
-        "Research",
-        "Catalyst Watch",
-        "Event Intelligence",
-        "Opportunity Radar catalyst context"
-      ],
+      "consumers": ["Dashboard", "Research", "Catalyst Watch", "Event Intelligence", "Opportunity Radar catalyst context"],
       "retention": "material evidence only subject to source rights",
       "utility": "ACTIVE"
     },
@@ -78,12 +47,7 @@
       "dataset": "Earnings",
       "owner": "Event Intelligence / earnings store",
       "purpose": "Scheduled/material company-event context",
-      "consumers": [
-        "Dashboard",
-        "Research",
-        "Readiness",
-        "Catalyst Watch"
-      ],
+      "consumers": ["Dashboard", "Research", "Readiness", "Catalyst Watch"],
       "retention": "event evidence",
       "utility": "ACTIVE"
     },
@@ -91,12 +55,7 @@
       "dataset": "SEC Filings",
       "owner": "SEC Intelligence",
       "purpose": "Authoritative filing/ownership/catalyst evidence",
-      "consumers": [
-        "Research",
-        "Long",
-        "Day/Swing Catalyst Risk",
-        "Smart Notifications"
-      ],
+      "consumers": ["Research", "Long", "Day/Swing Catalyst Risk", "Smart Notifications"],
       "retention": "structured evidence",
       "utility": "ACTIVE"
     },
@@ -104,10 +63,7 @@
       "dataset": "Fundamentals",
       "owner": "Research fundamental owner",
       "purpose": "Long-horizon/research evidence",
-      "consumers": [
-        "Research",
-        "Long"
-      ],
+      "consumers": ["Research", "Long"],
       "retention": "latest + useful historical snapshots",
       "utility": "ACTIVE"
     },
@@ -115,12 +71,7 @@
       "dataset": "Global",
       "owner": "Global Context",
       "purpose": "Selective international/FX/rates/commodity context for U.S. market interpretation",
-      "consumers": [
-        "Dashboard",
-        "Market Regime",
-        "Readiness",
-        "Market Intelligence"
-      ],
+      "consumers": ["Dashboard", "Market Regime", "Readiness", "Market Intelligence"],
       "retention": "bounded context history",
       "utility": "ACTIVE"
     },
@@ -128,12 +79,7 @@
       "dataset": "Macro",
       "owner": "Macro/Event Intelligence",
       "purpose": "U.S.-primary macro and selective material Global Context",
-      "consumers": [
-        "Market Intelligence",
-        "Regime",
-        "Readiness",
-        "Event Intelligence"
-      ],
+      "consumers": ["Market Intelligence", "Regime", "Readiness", "Event Intelligence"],
       "retention": "event/observation evidence",
       "utility": "ACTIVE"
     },
@@ -141,11 +87,7 @@
       "dataset": "Options",
       "owner": "Options/GEX context owner",
       "purpose": "Context-only IV/expected-move/GEX evidence",
-      "consumers": [
-        "Research",
-        "Readiness",
-        "Decision Queue"
-      ],
+      "consumers": ["Research", "Readiness", "Decision Queue"],
       "retention": "bounded evidence where permitted",
       "utility": "ACTIVE"
     },
@@ -153,11 +95,7 @@
       "dataset": "Community",
       "owner": "Context & Alternative Intelligence",
       "purpose": "Unverified community evidence fusion for Market Intelligence/Research and contextual Opportunity Radar corroboration; never protected deterministic truth",
-      "consumers": [
-        "Market Intelligence",
-        "Research",
-        "Opportunity Radar contextual catalyst evidence"
-      ],
+      "consumers": ["Market Intelligence", "Research", "Opportunity Radar contextual catalyst evidence"],
       "retention": "material structured evidence only; source-rights controlled",
       "utility": "ACTIVE"
     },
@@ -165,10 +103,7 @@
       "dataset": "Market Activity",
       "owner": "Alpaca market-activity capability / Scanner consumer",
       "purpose": "Entitled most-active/gainer/loser evidence reused as dynamic low-cost Opportunity Radar seeds",
-      "consumers": [
-        "Discovery",
-        "Opportunity Radar"
-      ],
+      "consumers": ["Discovery", "Opportunity Radar"],
       "retention": "latest bounded observation only",
       "utility": "ACTIVE"
     },
@@ -176,12 +111,7 @@
       "dataset": "Opportunity Radar",
       "owner": "Discovery / Scanner",
       "purpose": "Bounded staged detection of unusual volume, volatility, rapid dislocation and material context across eligible U.S. equities",
-      "consumers": [
-        "Discovery",
-        "Smart Notifications",
-        "Live priority hints",
-        "Research entry flow"
-      ],
+      "consumers": ["Discovery", "Smart Notifications", "Live priority hints", "Research entry flow"],
       "retention": "bounded current candidates/promotions; persistent learning deferred to v17",
       "utility": "ACTIVE"
     },
@@ -189,11 +119,7 @@
       "dataset": "Global Symbol Registry",
       "owner": "PersistenceManager / Global Symbol Registry repository",
       "purpose": "Canonical instrument identity and active/inactive processing membership independent of desk membership",
-      "consumers": [
-        "runtime subscription planning",
-        "processing-tier selection",
-        "future persistent intelligence and v18 ownership model"
-      ],
+      "consumers": ["runtime subscription planning", "processing-tier selection", "future persistent intelligence and v18 ownership model"],
       "retention": "retained inactive identity/history; bounded metadata",
       "utility": "ACTIVE"
     },
@@ -201,11 +127,7 @@
       "dataset": "Persistent Canonical Quotes",
       "owner": "Engine canonical quote state + PersistenceManager",
       "purpose": "Warm-start last-known quote evidence without refetching valid state; freshness is always re-derived on read",
-      "consumers": [
-        "Engine warm start",
-        "Data Freshness",
-        "Research/Readiness canonical quote consumers"
-      ],
+      "consumers": ["Engine warm start", "Data Freshness", "Research/Readiness canonical quote consumers"],
       "retention": "latest per symbol plus bounded quote-history buckets",
       "utility": "ACTIVE"
     },
@@ -213,10 +135,7 @@
       "dataset": "Persistent Quote History",
       "owner": "PersistenceManager quote_history",
       "purpose": "Bounded material-change quote evidence for future replay/learning and storage-efficient historical continuity",
-      "consumers": [
-        "v17 replay/learning foundation",
-        "runtime/storage diagnostics"
-      ],
+      "consumers": ["v17 replay/learning foundation", "runtime/storage diagnostics"],
       "retention": "30-day bounded 5-minute buckets in v17 foundation",
       "utility": "STRATEGIC"
     },
@@ -224,10 +143,7 @@
       "dataset": "Evidence Records",
       "owner": "PersistenceManager structured intelligence repository",
       "purpose": "Provenance-bearing evidence snapshots that support reproducible decisions and later learning",
-      "consumers": [
-        "Decision Lineage",
-        "future v20 validation/adaptive research"
-      ],
+      "consumers": ["Decision Lineage", "future v20 validation/adaptive research"],
       "retention": "learning/audit evidence; bounded retention policy evolves in later v17 slices",
       "utility": "STRATEGIC"
     },
@@ -235,11 +151,7 @@
       "dataset": "Decision Lineage",
       "owner": "Signal Validation canonical snapshot + PersistenceManager",
       "purpose": "Reproduce which evidence and protected formula version produced a recorded decision state",
-      "consumers": [
-        "Signal Validation",
-        "Outcome History",
-        "future calibration/research"
-      ],
+      "consumers": ["Signal Validation", "Outcome History", "future calibration/research"],
       "retention": "audit/history tier; deterministic formulas remain protected",
       "utility": "ACTIVE"
     },
@@ -247,10 +159,7 @@
       "dataset": "Outcome History",
       "owner": "Signal Validation outcome observer + PersistenceManager",
       "purpose": "Attach realized outcome observations to frozen decisions without enabling execution",
-      "consumers": [
-        "Signal Validation",
-        "future calibration/false-positive analysis"
-      ],
+      "consumers": ["Signal Validation", "future calibration/false-positive analysis"],
       "retention": "learning/history tier",
       "utility": "STRATEGIC"
     },
@@ -258,10 +167,7 @@
       "dataset": "Derived Feature Store",
       "owner": "PersistenceManager incremental feature repository",
       "purpose": "Persist versioned derived feature snapshots only when source/version materially changes",
-      "consumers": [
-        "future incremental analytics",
-        "future v20 adaptive research"
-      ],
+      "consumers": ["future incremental analytics", "future v20 adaptive research"],
       "retention": "versioned/bounded learning tier",
       "utility": "STRATEGIC"
     },
@@ -269,25 +175,15 @@
       "dataset": "Runtime Load / Provider Telemetry",
       "owner": "Engine RuntimeLoadDiagnostics / ProviderTelemetry",
       "purpose": "Root-cause local load, provider pressure, queueing and responsiveness for OPEN-003 and SLO acceptance",
-      "consumers": [
-        "Runtime degradation reason codes",
-        "Runtime SLO",
-        "Maintenance/Data Engine diagnostics"
-      ],
+      "consumers": ["Runtime degradation reason codes", "Runtime SLO", "Maintenance/Data Engine diagnostics"],
       "retention": "short-lived in-memory operational telemetry; no unbounded persistent log",
       "utility": "ACTIVE"
     },
     {
       "dataset": "Provider Capability / Entitlement State",
       "owner": "Smart Intelligent Provider Router v2",
-      "purpose": "Remember provider\u00d7dataset\u00d7instrument\u00d7session capability truth so deterministic NOT_ENTITLED/rate-limit/degradation evidence suppresses wasteful calls and improves serving-provider decisions.",
-      "consumers": [
-        "Provider Router preferred/serving selection",
-        "per-capability circuit breakers",
-        "provider calls-avoided scorecard",
-        "Maintenance/provider diagnostics",
-        "adaptive provider-usefulness learning"
-      ],
+      "purpose": "Remember provider×dataset×instrument×session capability truth so deterministic NOT_ENTITLED/rate-limit/degradation evidence suppresses wasteful calls and improves serving-provider decisions.",
+      "consumers": ["Provider Router preferred/serving selection", "per-capability circuit breakers", "provider calls-avoided scorecard", "Maintenance/provider diagnostics", "adaptive provider-usefulness learning"],
       "retention": "bounded operational state with cooldown/revalidation; latest state persisted as versioned derived evidence",
       "utility": "ACTIVE"
     },
@@ -295,13 +191,7 @@
       "dataset": "Rapid Move / Market Shock Intelligence",
       "owner": "Canonical live quote pipeline / Rapid Move intelligence",
       "purpose": "Detect, validate, correlate and explain material short-window price dislocations without waiting for normal scanner cadence.",
-      "consumers": [
-        "Smart Notifications/banner",
-        "Opportunity Radar promotions",
-        "live-priority hints",
-        "Decision-support investigation flow",
-        "adaptive event/outcome learning"
-      ],
+      "consumers": ["Smart Notifications/banner", "Opportunity Radar promotions", "live-priority hints", "Decision-support investigation flow", "adaptive event/outcome learning"],
       "retention": "bounded active/recent runtime state plus material evidence/decision/outcome records only; no raw tick warehouse",
       "utility": "ACTIVE"
     },
@@ -309,12 +199,7 @@
       "dataset": "Rapid Move Outcome / Adaptive Learning Evidence",
       "owner": "Rapid Move intelligence / PersistenceManager structured intelligence repository",
       "purpose": "Preserve point-in-time event features and 1m/5m/20m outcomes so misses, false positives, continuation/fade/reversal patterns and future SHADOW policies can be evaluated without look-ahead bias.",
-      "consumers": [
-        "Rapid Move Intelligence Scorecard",
-        "historical replay/backtest",
-        "SHADOW policy validation",
-        "Adaptive Retrospective"
-      ],
+      "consumers": ["Rapid Move Intelligence Scorecard", "historical replay/backtest", "SHADOW policy validation", "Adaptive Retrospective"],
       "retention": "material event/decision/outcome evidence; bounded by intelligence retention policy and source rights",
       "utility": "STRATEGIC"
     },
@@ -322,18 +207,59 @@
       "dataset": "User Workspaces",
       "owner": "Authenticated UserWorkspace persistence boundary",
       "purpose": "Durable ownership/isolation of personal tracked symbols, watchlists and UI context keyed by immutable authenticated UserID without duplicating market-data pipelines",
-      "consumers": [
-        "Bootstrap/User UI",
-        "Tracked Symbols",
-        "Watchlists",
-        "Research target",
-        "AI default context",
-        "Profile export/import",
-        "Runtime/SSE presentation filter",
-        "Shared processing-union builder"
-      ],
+      "consumers": ["Bootstrap/User UI", "Tracked Symbols", "Watchlists", "Research target", "AI default context", "Profile export/import", "Runtime/SSE presentation filter", "Shared processing-union builder"],
       "retention": "durable per-user state; no raw market-data duplication",
       "utility": "ACTIVE"
+    },
+    {
+      "dataset": "Identity Accounts",
+      "owner": "IdentityService canonical user store",
+      "purpose": "Authenticate users and preserve durable identity, role, status and password-reset state without duplicating market/research data per identity.",
+      "consumers": ["Authentication", "Role/capability authorization", "Administration", "User workspace ownership"],
+      "retention": "durable account record while identity exists; password material retained only as one-way Argon2id hash and never exposed in administrative payloads",
+      "sensitivity": "HIGH",
+      "authorization": "Server-side identity and capability boundary; password hashes/secrets never sent to renderer/AI/logs/profile export",
+      "utility": "ACTIVE"
+    },
+    {
+      "dataset": "Authenticated Sessions",
+      "owner": "IdentityService canonical session store",
+      "purpose": "Maintain persistent authenticated sessions, idle/absolute expiry, revocation and forced-sign-out behavior without creating role-specific runtime pipelines.",
+      "consumers": ["Authentication middleware", "Sign out", "Administration session management", "Presence derivation"],
+      "retention": "bounded by idle/absolute expiry plus short operational history where needed for safe administration; expired/revoked session secrets are not normal user-visible data",
+      "sensitivity": "HIGH",
+      "authorization": "Opaque session tokens remain HttpOnly; administrative views expose safe identifiers/timestamps only according to capability",
+      "utility": "ACTIVE"
+    },
+    {
+      "dataset": "Presence State",
+      "owner": "IdentityService session-derived presence",
+      "purpose": "Provide bounded ACTIVE/IDLE/OFFLINE operational presence derived from authorized session last-seen state for administration and session safety.",
+      "consumers": ["Administration user/session views", "Operational session management"],
+      "retention": "derived current state; last-seen timestamps follow bounded session/account operational retention and are not a behavioral tracking warehouse",
+      "sensitivity": "MODERATE",
+      "authorization": "Visible only to authorized administrative capabilities; not sent to ordinary USER/DEMO surfaces",
+      "utility": "ACTIVE"
+    },
+    {
+      "dataset": "Delegated Administrative Capabilities",
+      "owner": "Identity / authorization policy",
+      "purpose": "Represent explicit administrative authority so ADMIN is capability-based rather than automatically full-power and UI/API composition can share one authorization truth.",
+      "consumers": ["Backend authorization", "Role-aware navigation", "Administration", "Maintenance/Settings capability composition"],
+      "retention": "durable latest authorization state plus auditable change history when capability delegation changes",
+      "sensitivity": "HIGH",
+      "authorization": "Only authorized owners/delegated administrators may read or mutate applicable capability assignments; server-side authorization is authoritative",
+      "utility": "ACTIVE"
+    },
+    {
+      "dataset": "Administrative Audit Evidence",
+      "owner": "Identity / governance audit repository",
+      "purpose": "Preserve security-relevant administrative change evidence such as user creation, role/status/capability changes, password resets and session revocation so governance actions are attributable and reviewable.",
+      "consumers": ["Security/governance review", "Administrative diagnostics", "Release/security assurance"],
+      "retention": "bounded security/audit history according to the hosted/commercial retention policy; no password/token contents",
+      "sensitivity": "HIGH",
+      "authorization": "Owner/security-governance capability only; redact secrets and avoid normal user/AI exposure",
+      "utility": "STRATEGIC"
     }
   ]
 }
