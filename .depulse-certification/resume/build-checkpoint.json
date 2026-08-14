@@ -9,16 +9,16 @@
     "tag": "v18.1.0-stable",
     "commit": "4b48c61ee103897e834f4ff7d24af07d4275a62c"
   },
-  "sourceCommit": "f36bfb2846a358bb6c44ced20aa1fed11a9c9b2c",
+  "sourceCommit": "c7884cb6058dbead3c028c3209ea6e62174554e2",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "codeStatus": "BUILT",
-  "implementationSummary": "Admin user lifecycle, role hierarchy, password reset, session visibility/revocation, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement, privileged Admin UI and responsive handling are implemented. Permanent Build Resume Protocol governance has been added and requires a fresh fingerprint-bound qualification pass.",
+  "implementationSummary": "Admin user lifecycle, role hierarchy, password reset, session visibility/revocation, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement, privileged Admin UI and responsive handling are implemented. Permanent GitHub-backed Build Resume Protocol governance is integrated across the Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process.",
   "lastTrustworthyPass": "G0",
   "gates": {
     "G0": {"status": "PASS", "reusable": true, "note": "Incoming Stable v18.1.0 commit/tag provenance remains unchanged."},
-    "G1": {"status": "REVALIDATE", "reusable": false, "note": "Permanent resume-governance source change occurred after earlier scope evidence."},
-    "G2": {"status": "REVALIDATE", "reusable": false, "note": "Architecture/process governance and generic pre-freeze owner changed."},
+    "G1": {"status": "REVALIDATE", "reusable": false, "note": "Resume-governance source changes require the scope contract to bind to the new fingerprint."},
+    "G2": {"status": "REVALIDATE", "reusable": false, "note": "Architecture/process governance and pre-freeze owner changed."},
     "G3": {"status": "REVALIDATE", "reusable": false, "note": "Dependency/readiness evidence must bind to the new fingerprint."},
     "G4": {"status": "PENDING", "reusable": false},
     "G5": {"status": "PENDING", "reusable": false},
@@ -34,8 +34,11 @@
     "G15": {"status": "PENDING", "reusable": false},
     "G16": {"status": "PENDING", "reusable": false}
   },
-  "blockingIssue": "v18.2 documentation sync generated the current QA manifest/checkpoint in CI but the sync workflow did not commit those QA artifacts; clean G4-G10 still sees v18.1 as the first QA manifest entry. Fix the QA commit set, then requalify the new governance-aware fingerprint.",
-  "nextStep": "Commit the missing v18.2 QA manifest/checkpoint artifacts, validate the permanent resume contract, then rerun G1-G10 on the resulting fingerprint.",
-  "resumeInstructions": "Reconcile this checkpoint with active branch HEAD, release_identity.json, current QA manifest, latest GitHub Actions runs/artifacts and ci_pipeline.py fingerprint. Do not reuse downstream PASS evidence from a different fingerprint.",
-  "updatedAt": "2026-08-14T18:02:00Z"
+  "blockingIssue": null,
+  "resolvedIssues": [
+    "The v18.2 documentation-sync workflow now commits generated QA manifest/current-release/checkpoint artifacts; renderer/qa/manifest.json correctly starts with v18.2.0 TEST."
+  ],
+  "nextStep": "Run governance-aware G1-G10 qualification on source commit c7884cb6058dbead3c028c3209ea6e62174554e2 and freeze its canonical source fingerprint if all checks pass.",
+  "resumeInstructions": "Reconcile this checkpoint with active branch HEAD, release_identity.json, renderer/qa/manifest.json, latest GitHub Actions runs/artifacts and ci_pipeline.py fingerprint. Checkpoint-only metadata commits may advance HEAD without invalidating source evidence; any non-checkpoint source change requires affected gate revalidation.",
+  "updatedAt": "2026-08-14T18:11:00Z"
 }
