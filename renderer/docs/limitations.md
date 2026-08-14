@@ -1,6 +1,8 @@
 # DE.PULSE — Capabilities & Limitations
 
-## v18.2.0 TEST — administration / presence boundaries
+## v18.2.0 STABLE — administration / presence boundaries
+
+The promoted Stable build uses the canonical `PersonalMarketTerminal` profile; the separate v18.2 TEST profile remains historical and is not the Stable runtime target.
 
 v18.2 adds local/shared-process administrative user and session operations but is **not yet the true hosted multi-user deployment**. Presence reflects authenticated session activity as ACTIVE / IDLE / OFFLINE; it is operational presence, not device identity, geolocation or guaranteed human attention. Session history is bounded operational context.
 

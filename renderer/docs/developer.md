@@ -1,6 +1,8 @@
 # DE.PULSE — Developer documentation
 
-## v18.2.0 TEST — Admin / presence / session architecture
+## v18.2.0 STABLE — Admin / presence / session architecture
+
+Stable promotion switches the canonical release identity to `STABLE` and runtime/config to `PersonalMarketTerminal`; the v18.2 TEST profile remains historical isolation logic only.
 
 v18.2 extends the existing `IdentityService`; it does not introduce a second user/session/presence store. `AdminUserView` / `AdminSessionView` expose only operational fields, while password hashes, token hashes and opaque tokens remain server-side. Role hierarchy and active-owner safety are centralized in the identity owner. Role/status/password changes revoke affected sessions.
 

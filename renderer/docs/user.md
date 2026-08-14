@@ -1,6 +1,8 @@
 # DE.PULSE — User documentation
 
-## v18.2.0 TEST — Administration, Presence & Sessions
+## v18.2.0 STABLE — Administration, Presence & Sessions
+
+The Stable channel uses the canonical `PersonalMarketTerminal` runtime/profile and preserves compatible prior Stable state; TEST-profile isolation is not used after promotion.
 
 Privileged OWNER/ADMIN-class users now have a compact Settings administration surface for creating lower-authority accounts, changing permitted roles/status, resetting temporary passwords, viewing ACTIVE / IDLE / OFFLINE presence and revoking eligible sessions. Presence comes from authenticated session truth; there is no separate heartbeat database. Credential hashes and opaque session tokens are never shown.
 

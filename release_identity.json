@@ -2,13 +2,13 @@
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
   "version": "18.2.0",
   "display_version": "DE.PULSE v18.2.0",
-  "build_id": "v18.2.0-test-admin-presence-sessions-20260814",
-  "channel": "TEST",
+  "build_id": "v18.2.0-stable-admin-presence-sessions-20260814",
+  "channel": "STABLE",
   "stable_baseline": "v17.5.1",
   "previous_stable": "v18.1.0",
   "scope": "Admin / Presence / Sessions: extend the canonical IdentityService with role-aware user lifecycle operations, redacted user/session operational views, ACTIVE/IDLE/OFFLINE presence derived from persisted session truth, session revocation and password-reset lifecycle, SSE revocation enforcement, and compact OWNER/ADMIN-class Settings administration UI; preserve v18.1 per-user market-state isolation and one shared provider/evidence core; no hosted PostgreSQL/web architecture, no deterministic Day/Swing/Long formula changes and no execution scope",
   "bundle_version": "18200",
-  "runtime_config": "PersonalMarketTerminal-v18.2.0-TEST",
+  "runtime_config": "PersonalMarketTerminal",
   "patch_predecessor": "v18.1.0",
-  "application_bundle": "De-Pulse-v18.2.0-TEST.app"
+  "application_bundle": "De-Pulse.app"
 }

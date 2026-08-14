@@ -3,10 +3,10 @@
     {
       "version": "18.2.0",
       "date": "2026-08-14",
-      "summary": "TEST Admin / Presence / Sessions: canonical IdentityService lifecycle operations, redacted user/session visibility, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement and privileged Settings administration; v18.1 workspaces/shared intelligence preserved.",
-      "status": "TEST",
+      "summary": "STABLE Admin / Presence / Sessions: canonical IdentityService lifecycle operations, redacted user/session visibility, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement and privileged Settings administration; v18.1 workspaces/shared intelligence preserved.",
+      "status": "STABLE",
       "file": "v18.2.0.txt",
-      "buildId": "v18.2.0-test-admin-presence-sessions-20260814",
+      "buildId": "v18.2.0-stable-admin-presence-sessions-20260814",
       "checkpoint": "v18.2.0-g0-g3-admin-presence-sessions.md"
     },
     {

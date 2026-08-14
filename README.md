@@ -1,12 +1,12 @@
-# DE.PULSE v18.2.0 TEST — Admin / Presence / Sessions
+# DE.PULSE v18.2.0 STABLE — Admin / Presence / Sessions
 
-**Build:** `v18.2.0-test-admin-presence-sessions-20260814`  
-**Channel:** TEST  
+**Build:** `v18.2.0-stable-admin-presence-sessions-20260814`  
+**Channel:** STABLE  
 **Current Stable baseline:** v18.1.0  
 **Major v18 provenance anchor:** v17.5.1  
 **Patch predecessor:** v18.1.0 STABLE  
-**Application bundle:** `De-Pulse-v18.2.0-TEST.app`  
-**Runtime/config:** `PersonalMarketTerminal-v18.2.0-TEST`
+**Application bundle:** `De-Pulse.app`  
+**Runtime/config:** `PersonalMarketTerminal`
 
 v18.2.0 extends the canonical `IdentityService` with role-aware user lifecycle operations, redacted user/session operational views, ACTIVE / IDLE / OFFLINE presence derived from persisted session truth, password-reset and session-revocation lifecycle, SSE revocation enforcement, and a compact privileged Settings administration surface. USER/DEMO do not see administration controls.
 
@@ -21,7 +21,7 @@ v18.1 per-user market-state ownership and the shared fetch-once/calculate-once i
 **Application bundle:** `De-Pulse.app`  
 **Runtime/config:** `PersonalMarketTerminal`
 
-v18.1.0 is the certified incoming Stable baseline for this TEST build. It provides durable per-user market workspaces while preserving one shared canonical market-data and intelligence core.
+v18.1.0 is the certified incoming Stable baseline for this promoted release. It provides durable per-user market workspaces while preserving one shared canonical market-data and intelligence core.
 
 ## Previous Stable — v18.0.6 STABLE — Smart Provider Router + Rapid Move / Market Shock Hardening
 
