@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "protocolVersion": "1.0",
+  "schemaVersion": 2,
+  "protocolVersion": "2.0",
   "release": "v18.2.0",
   "channel": "TEST",
   "branch": "v18.2-development",
@@ -9,17 +9,30 @@
     "tag": "v18.1.0-stable",
     "commit": "4b48c61ee103897e834f4ff7d24af07d4275a62c"
   },
-  "sourceCommit": "c7884cb6058dbead3c028c3209ea6e62174554e2",
+  "candidateSourceCommit": "743ea8602c6453bdc71dbce25cef83c4db277ba0",
+  "observedBranchHeadBeforeCheckpointCommit": "743ea8602c6453bdc71dbce25cef83c4db277ba0",
+  "metadataHeadRule": "Checkpoint/evidence-only commits may advance branch HEAD without changing candidate source identity when those paths are fingerprint-excluded and no evidence contract changes.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "codeStatus": "BUILT",
-  "implementationSummary": "Admin user lifecycle, role hierarchy, password reset, session visibility/revocation, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement, privileged Admin UI and responsive handling are implemented. Permanent GitHub-backed Build Resume Protocol governance is integrated across the Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process.",
+  "codeStatus": "BUILT_NOT_QUALIFIED",
+  "implementationSummary": "v18.2 Admin/Presence/Session implementation exists on the active branch. Canonical governance is synchronized. Process architecture was re-audited and hardened to delta-first AIPLC, exact evidence inheritance, bounded execution, one canonical roadmap authority, one Build Coordinator model, and permanent G0-G16 only. Frozen v18.2 G1 remains unchanged.",
+  "processArchitectureAudit": {
+    "roadmapDirection": "10/10 PASS",
+    "buildPlan": "10/10 PASS",
+    "buildProcess": "10/10 PASS",
+    "deliveryProcess": "10/10 PASS",
+    "governanceContinuity": "10/10 PASS",
+    "checkpointTruthfulness": "10/10 PASS",
+    "evidence": "release/v18.2.0/PROCESS-REAUDIT-10-10.md",
+    "qualificationClaim": "NONE"
+  },
   "lastTrustworthyPass": "G0",
+  "earliestRequiredResumeGate": "G1",
   "gates": {
-    "G0": {"status": "PASS", "reusable": true, "note": "Incoming Stable v18.1.0 commit/tag provenance remains unchanged."},
-    "G1": {"status": "REVALIDATE", "reusable": false, "note": "Resume-governance source changes require the scope contract to bind to the new fingerprint."},
-    "G2": {"status": "REVALIDATE", "reusable": false, "note": "Architecture/process governance and pre-freeze owner changed."},
-    "G3": {"status": "REVALIDATE", "reusable": false, "note": "Dependency/readiness evidence must bind to the new fingerprint."},
+    "G0": {"status": "PASS", "reusable": true, "note": "Incoming Stable v18.1.0 tag/commit provenance remains unchanged."},
+    "G1": {"status": "PENDING", "reusable": false, "note": "Frozen scope text remains unchanged, but current candidate/process evidence must be rebound/reconciled before qualification proceeds."},
+    "G2": {"status": "PENDING", "reusable": false, "note": "Revalidate architecture/data-utility/process ownership on the current candidate using delta-first impact mapping."},
+    "G3": {"status": "PENDING", "reusable": false, "note": "Revalidate dependency/readiness/evidence plan on the current candidate."},
     "G4": {"status": "PENDING", "reusable": false},
     "G5": {"status": "PENDING", "reusable": false},
     "G6": {"status": "PENDING", "reusable": false},
@@ -35,10 +48,19 @@
     "G16": {"status": "PENDING", "reusable": false}
   },
   "blockingIssue": null,
-  "resolvedIssues": [
-    "The v18.2 documentation-sync workflow now commits generated QA manifest/current-release/checkpoint artifacts; renderer/qa/manifest.json correctly starts with v18.2.0 TEST."
+  "knownResiduals": [
+    "Actual current candidate source fingerprint has not yet been recomputed/frozen.",
+    "G1-G10 qualification has not yet been rerun on the reconciled current candidate.",
+    "G11-G16 and native delivery remain pending by design."
   ],
-  "nextStep": "Run governance-aware G1-G10 qualification on source commit c7884cb6058dbead3c028c3209ea6e62174554e2 and freeze its canonical source fingerprint if all checks pass.",
-  "resumeInstructions": "Reconcile this checkpoint with active branch HEAD, release_identity.json, renderer/qa/manifest.json, latest GitHub Actions runs/artifacts and ci_pipeline.py fingerprint. Checkpoint-only metadata commits may advance HEAD without invalidating source evidence; any non-checkpoint source change requires affected gate revalidation.",
-  "updatedAt": "2026-08-14T18:11:00Z"
+  "resolvedIssues": [
+    "Canonical product roadmap authority is now singular: governance/ROADMAP.md.",
+    "All active process contracts now enforce permanent G0-G16 only; prior gate-evolution language was removed.",
+    "Delta-first AIPLC/evidence inheritance is operationalized across Build Plan, Build Process, Delivery and CI.",
+    "Process audit no longer requires brute-force full-product work after every meaningful build.",
+    "The prior stale checkpoint source identity has been reconciled to the current process-hardened candidate."
+  ],
+  "nextStep": "Reconcile actual HEAD after checkpoint metadata commits, recompute the current candidate source fingerprint, then run the smallest required G1-G10 qualification set using delta-first AIPLC and evidence inheritance. Do not expand frozen v18.2 G1.",
+  "resumeInstructions": "Read actual v18.2-development HEAD first. Treat candidateSourceCommit as the last non-checkpoint process-hardened candidate unless later non-metadata source exists. Checkpoint/evidence-only metadata commits do not by themselves invalidate candidate source evidence. Compare any later delta, recompute fingerprint, then resume at the earliest affected gate only.",
+  "updatedAt": "2026-08-14T15:08:00-07:00"
 }
