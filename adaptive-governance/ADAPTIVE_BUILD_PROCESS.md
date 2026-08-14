@@ -41,3 +41,36 @@ Checkpoint/resume and adaptive CI never weaken G0–G16, native runtime requirem
 Canonical protocols:
 - `adaptive-governance/BUILD_RESUME_PROTOCOL.md`
 - `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`
+
+## Permanent Role-Aware Composition Execution
+
+Role/capability composition is executed as part of the normal G0–G16 process; it is not an optional polish pass and does not create a new gate.
+
+Required execution pattern:
+
+- **G1 — Immutable Scope:** freeze which tabs/shell controls change and the role/capability matrix for OWNER, selected/full-capability ADMIN, limited ADMIN, USER and DEMO.
+- **G2 — Architecture / Data Utility:** identify the canonical capability owner, backend authorization boundary, sensitive-data suppression rules and reusable layout/composition primitives. Do not create parallel role-specific business logic or duplicate market pipelines.
+- **G3 — Design / Dependency Readiness:** define page hierarchy, conditional sections, Administration-tab utility when applicable, navigation/direct-route behavior and role × viewport acceptance matrix before coding proceeds.
+- **G4 — Development Exit:** frontend composition and backend authorization must be implemented together. A hidden button with an callable unauthorized API is a defect; an API-denied capability with awkward empty UI geometry is also a defect.
+- **G7 — Data / Security / Adaptive Intelligence:** verify unauthorized roles are not sent secrets, token hashes, provider credentials, owner-only security state, raw implementation machinery or privileged administrative payloads merely to hide them client-side.
+- **G9 — Cross-Module / UI / UX:** audit every tab plus global shell/navigation under each required role/capability profile and supported viewport family.
+- **G10/G12:** role-aware regression evidence is mandatory before freeze/full certification.
+- **G16:** record role/tab audit results, learn from recurring composition/security failures and consolidate them into reusable primitives/regressions.
+
+G9 acceptance includes:
+
+- correct visible and forbidden surfaces for each capability profile;
+- SERVER-side denial/redirect for direct unauthorized route/API access;
+- no implementation machinery for USER/DEMO;
+- capability-scoped ADMIN behavior rather than blanket admin power;
+- no blank grid cells, orphan headings/dividers, placeholder height, awkward whitespace or broken page endings after suppression;
+- natural grid/flex reflow at desktop/tablet/narrow widths;
+- preserved information hierarchy: privileged diagnostics do not automatically rise above primary market intelligence;
+- correct keyboard/focus/tab order after conditional composition;
+- no overlap, clipping, horizontal page scroll or unreadable compression;
+- protected deterministic Day/Swing/Long formulas remain identical across roles;
+- any new Administration or other tab is present only where justified by utility and capability ownership.
+
+Permanent implementation rule: **compose from capabilities and canonical hierarchy; do not render the OWNER layout and subtract pieces afterward.**
+
+Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.

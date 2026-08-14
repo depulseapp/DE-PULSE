@@ -39,3 +39,36 @@ Every release plan must also define:
 
 The detailed reconciliation and invalidation rules are mandatory from `adaptive-governance/BUILD_RESUME_PROTOCOL.md`.
 The CI learning/orchestration/delivery rules are mandatory from `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`.
+
+## Permanent Role-Aware Build Planning Requirements
+
+Every release that adds, removes, moves or materially changes a tab, card, shell control, administrative operation or role-sensitive dataset must define its role/capability composition before implementation exits G3.
+
+The build plan must contain or generate a role/capability matrix covering:
+
+- every current application tab and global shell/navigation surface;
+- SUPER_OWNER/OWNER composition;
+- selected/full-capability ADMIN composition where delegated;
+- limited/delegated ADMIN composition;
+- USER composition;
+- DEMO composition;
+- visible controls and server-authorized actions for each capability;
+- data/payload fields that must be withheld server-side, not merely hidden;
+- intended information hierarchy and placement of each surviving section;
+- responsive reflow behavior when privileged sections are absent;
+- direct-navigation/API denial expectations for unauthorized capabilities;
+- supported desktop/tablet/narrow-browser role × viewport test coverage.
+
+Planning rules:
+
+- ADMIN capability grants are explicit; `ADMIN` alone must not imply full runtime/provider/security/maintenance authority.
+- USER/DEMO plans must exclude implementation machinery rather than merely cosmetically hiding it.
+- removal of privileged content must include a planned recomposition/reflow outcome; inherited OWNER geometry is not accepted.
+- OWNER/admin controls are placed according to utility and hierarchy, not automatically at the top.
+- a proposed new tab must pass a utility/separation test: create it only when it materially improves workflow, security boundary, clarity or maintainability. Do not add tabs for organizational convenience alone.
+- when justified, a capability-scoped Administration tab is preferred to mixing delegated identity/session administration into unrelated Settings or Maintenance surfaces.
+- frontend visibility and backend authorization changes are planned together as one capability boundary.
+
+G9 is the main UI-composition enforcement point, with security/data authorization additionally verified in G7/G12 and final role-audit closure recorded at G16.
+
+Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.

@@ -50,3 +50,28 @@ Normal delivery recovery is automated from GitHub/CI and requires no routine man
 Canonical protocols:
 - `adaptive-governance/BUILD_RESUME_PROTOCOL.md`
 - `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`
+
+## Permanent Role-Aware Delivery Invariant
+
+A release is not delivery-complete merely because the role-sensitive code compiled or because privileged content was visually hidden. Role-aware composition and authorization are release-quality requirements.
+
+Before G15/Stable promotion, delivery evidence must establish that:
+
+- every current/new tab and global shell/navigation surface passed the required role/capability audit;
+- OWNER/SUPER_OWNER receives the intended full authorized composition;
+- selected/full-capability ADMIN receives only the explicitly delegated deep capabilities;
+- limited ADMIN receives only assigned administrative capabilities;
+- USER/DEMO receives no implementation machinery or privileged payloads;
+- frontend visibility and backend authorization agree;
+- unauthorized direct page/API access is denied/redirected;
+- information hierarchy remains intentional for every role rather than being reordered accidentally by hidden content;
+- conditional sections reflow seamlessly without blank cells, dead space, orphan headings, uneven leftovers, clipping or awkward whitespace;
+- justified conditional tabs such as Administration appear only for authorized capability profiles and do not leave navigation gaps when absent;
+- role composition does not alter protected deterministic market logic;
+- role × viewport G9 evidence is bound to the certified source/RC and remains valid for the delivered native packages.
+
+G16 must include role-aware delivery closure in the handoff: role/capability matrix result, any known limitations, regressions added, and new generalized learning. Recurring composition/security defects must be converted into reusable primitives/tests rather than rediscovered manually in later releases.
+
+macOS and Windows deliverables must expose the same certified role/capability behavior. A platform package that diverges materially in authorization, navigation or composition cannot inherit the other platform's PASS.
+
+Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
