@@ -44,7 +44,15 @@ Before expensive qualification, the build coordinator consults the permanent rel
 - hard-coded predecessor/current release literals where canonical release identity should be derived;
 - tests mutating frozen source;
 - stale jobs or stale fingerprint evidence contaminating a newer candidate;
-- package/runtime evidence being reused after source or packaging identity changes.
+- package/runtime evidence being reused after source or packaging identity changes;
+- a new primary navigation surface missing from `functionality_utility_registry.json`;
+- a new/materially changed capability without purpose, canonical owner, active consumer, existing-data reuse analysis, correlation targets and UI-placement disposition;
+- a proposed new tab without explicit workflow/security/clarity separation justification;
+- a new provider acquisition/computation path that duplicates fresh canonical evidence or equivalent in-flight work without an approved bounded exception;
+- new data/persistence classes without Data Utility ownership, consumers, retention and security/sensitivity treatment;
+- obsolete or superseded surfaces/jobs remaining silently after a new canonical owner is introduced.
+
+`functionality_utility_checkpoint_gate.py` is a mandatory pre-freeze preflight from v18.2 onward. It complements, and never replaces, `data_utility_gate.py`, source-health, security, performance, UI and full certification gates.
 
 A new recurring failure pattern must be generalized into the learning registry and, where practical, added to this preventative layer instead of being remembered only as history.
 
@@ -85,6 +93,8 @@ Where practical, path filters, concurrency groups and supersession rules prevent
 
 Exact-source PASS evidence is reused according to the Build Resume Protocol. A failed Windows G14 does not invalidate an unchanged G12 or successful macOS G14. A harness/infra repair reruns only the affected lane plus any validation necessary to prove the repair did not alter the certified candidate.
 
+Functionality-utility evidence is source-bound. If a source change adds/moves a surface, engine, job, dataset, acquisition path, metric or administrative operation, the affected functionality-utility disposition and downstream G9/G10 evidence must be revalidated. Pure implementation changes that do not alter these relationships may reuse earlier scope/architecture reasoning only when the registry and actual candidate still agree.
+
 ## 7. Native user-delivery invariant
 
 A completed Stable release is not reported as fully delivered until all of the following are true:
@@ -118,11 +128,13 @@ G16 must review CI incidents from the release and determine:
 - whether each genuinely new lesson has a root cause and generalized rule;
 - which owning G0–G16 gate or preventative preflight now protects against recurrence;
 - whether duplicate/obsolete workflows or checks can be consolidated or removed;
+- whether the functionality utility registry still matches actual tabs/engines/jobs and whether any implementation introduced avoidable duplicate acquisition, computation, storage or user surfaces;
+- what was reused, correlated, consolidated, retired or moved to drill-down/internal-only during the release;
 - whether branch/workflow hygiene is restored to the preferred minimal state;
 - whether both native assets were surfaced and `userDelivery` was completed.
 
-The goal is fewer repeated failures and less CI churn over time without reducing coverage or release assurance.
+The goal is fewer repeated failures, less duplicated product machinery and less CI churn over time without reducing coverage or release assurance.
 
 ## Permanent rule
 
-**DE.PULSE does not merely recover from CI failures. It classifies them, learns from them, converts useful lessons into preventative controls, and reduces the probability of recurrence while preserving full G0–G16 assurance.**
+**DE.PULSE does not merely recover from CI failures. It classifies them, learns from them, converts useful lessons into preventative controls, and reduces the probability of recurrence while preserving full G0–G16 assurance. Product growth follows the same discipline: reuse and correlate first, consolidate overlap, and create new machinery or tabs only when materially justified.**
