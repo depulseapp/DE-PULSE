@@ -1,0 +1,4 @@
+DE.PULSE v18.2.0 TEST
+Build ID: v18.2.0-test-admin-presence-sessions-20260814
+Scope: Admin / Presence / Sessions over canonical IdentityService.
+Status: G0-G3 frozen; qualification in progress.

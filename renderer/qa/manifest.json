@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "version": "18.2.0",
+      "date": "2026-08-14",
+      "summary": "TEST Admin / Presence / Sessions: canonical IdentityService lifecycle operations, redacted user/session visibility, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement and privileged Settings administration; v18.1 workspaces/shared intelligence preserved.",
+      "status": "TEST",
+      "file": "v18.2.0.txt",
+      "buildId": "v18.2.0-test-admin-presence-sessions-20260814",
+      "checkpoint": "v18.2.0-g0-g3-admin-presence-sessions.md"
+    },
+    {
       "version": "18.1.0",
       "date": "2026-08-14",
       "summary": "STABLE Multi-User / My Market Symbols: durable per-user workspace ownership/isolation over one deduplicated shared provider/evidence core; global operational policy remains ADMIN-owned; deterministic formulas unchanged.",
