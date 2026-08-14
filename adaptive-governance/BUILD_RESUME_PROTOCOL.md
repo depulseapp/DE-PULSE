@@ -112,6 +112,8 @@ Normal recovery must require no routine manual work from the user. Ask only for 
 
 ## Permanent safety rule
 
+The permanent **No Execution Boundary** remains in force during every resume, recovery, qualification, delivery and handoff. Resume/recovery machinery may restore research, intelligence and decision-support state and evidence only; it must never introduce or authorize order execution, paper trading, portfolio/P&L, trading journal, or equivalent execution behavior.
+
 **Resume means continue from the last trustworthy evidence, not from the last optimistic status.** GitHub branch state, immutable source identity and CI/artifact evidence control the decision.
 
 Adaptive CI operating rules: `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`.
