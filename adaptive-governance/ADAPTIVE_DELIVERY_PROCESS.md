@@ -96,3 +96,24 @@ Before G15/Stable promotion, certified evidence must establish that the actual c
 G16 must record the final reuse/consolidation/removal result and any remaining approved exceptions. A recurring duplication pattern must become a preventative regression or governance rule.
 
 Canonical checkpoint rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+
+## Permanent Adaptive Delivery Decomposition
+
+Heavy delivery and certification work must use the same adaptive decomposition model as implementation and CI.
+
+Delivery responsibilities may be split into smaller evidence-bound packages when that materially improves recovery, platform isolation, fault diagnosis, resumability or resource efficiency. Examples include independent macOS/Windows packaging and runtime lanes, sharded UI/runtime audits, provenance checks, release-asset verification and publication checks.
+
+Rules:
+
+- each delivery package has one owner, explicit candidate/artifact inputs, completion criteria and durable evidence;
+- independent packages may run in parallel when they do not mutate the same release object or duplicate expensive work;
+- a failure in one platform/lane does not invalidate unrelated PASS evidence when the immutable source/artifact dependencies are unchanged;
+- G15 consumes the complete dependency graph and cannot infer readiness from a partially complete heavy workflow;
+- G16 records whether the chosen decomposition reduced retries/cycle time and removes delivery lanes/checkpoints that proved redundant;
+- decomposition must not weaken native actual-artifact runtime truth, provenance, security or Stable promotion criteria.
+
+### Delivery gate evolution
+
+The delivery process follows the Gate Utility Test before any new release gate is introduced. Prefer checkpoints, platform lanes and strengthened existing gates first. If a new canonical gate is ultimately justified, delivery evidence, status reporting, ledger schema, automation and handoff requirements must be updated coherently for releases using the new map.
+
+Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
