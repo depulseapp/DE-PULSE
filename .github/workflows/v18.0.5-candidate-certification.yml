@@ -75,7 +75,24 @@ jobs:
           find work/candidate -type d -name __pycache__ -prune -exec rm -rf {} + || true
           actual="$(cd work/candidate && python3 ci_pipeline.py --fingerprint)"
           test "$actual" = "$EXPECTED_FP"
-          (cd work/candidate && zip -q -r "../../$RC_SOURCE" .)
+          python3 - <<'PYZIP'
+          from pathlib import Path
+          import zipfile
+          root=Path('work/candidate')
+          out=Path('De-Pulse-v18.0.5-RC-Source.zip')
+          fixed=(2026,8,14,0,0,0)
+          with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for f in sorted(p for p in root.rglob('*') if p.is_file()):
+                  rel=f.relative_to(root).as_posix()
+                  if '__pycache__' in f.parts or f.suffix=='.pyc':
+                      continue
+                  info=zipfile.ZipInfo(rel, fixed)
+                  info.create_system=3
+                  info.external_attr=(0o100644 << 16)
+                  if f.name.endswith('.sh'):
+                      info.external_attr=(0o100755 << 16)
+                  z.writestr(info,f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+          PYZIP
           sha256sum "$RC_SOURCE" | tee "$RC_SOURCE.sha256"
           printf '%s\n' "$EXPECTED_FP" > source-fingerprint.txt
           cp "work/.depulse-prefreeze-${EXPECTED_FP:0:12}/summary.json" G10-prefreeze-summary.json
@@ -129,13 +146,15 @@ jobs:
           python3 data_utility_gate.py
           python3 data_health_policy_gate.py
           python3 source_health_architecture_gate.py
-      - name: Full Go and race suites
+      - name: Full Go, race, vet, and vulnerability suites
         working-directory: candidate
         shell: bash
         run: |
           go test -count=1 ./...
           go test -race -count=1 ./...
           go vet ./...
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          "$(go env GOPATH)/bin/govulncheck" ./...
       - name: Deterministic / trader / renderer / workflow qualification
         working-directory: candidate
         shell: bash
@@ -158,7 +177,7 @@ jobs:
           print(json.dumps({
             'schemaVersion':1,'gate':'G12','status':'PASS','release':'v18.0.5 TEST',
             'buildId':build,'sourceSha256':sha,'sourceFingerprint':fp,
-            'checks':{'goFull':True,'race':True,'vet':True,'randomized':True,'extreme30':True,
+            'checks':{'goFull':True,'race':True,'vet':True,'govulncheck':True,'randomized':True,'extreme30':True,
                       'renderer':True,'v1805Scope':True,'deterministic':True,'professionalTrader':True,
                       'httpWorkflow':True,'responsive':True,'documentation':True,'dataUtility':True,
                       'dataHealth':True,'sourceHealth':True,'releaseIdentity':True},
