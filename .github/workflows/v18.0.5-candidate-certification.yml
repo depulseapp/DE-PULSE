@@ -47,7 +47,7 @@ jobs:
           echo "$BASE_SHA  $BASE_SOURCE" | sha256sum -c -
           rm -rf work && mkdir -p work/candidate
           unzip -q "$BASE_SOURCE" -d work/candidate
-          cat ${PATCH_PREFIX}* | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
+          cat "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" "${PATCH_PREFIX}04" "${PATCH_PREFIX}05" "${PATCH_PREFIX}06" | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
           (
             cd work/candidate
             git init -q
@@ -56,6 +56,50 @@ jobs:
             echo "candidate fingerprint=$actual"
             test "$actual" = "$EXPECTED_FP"
           )
+      - name: Provision responsive-test browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check playwright
+          python3 -m playwright install --with-deps chromium
+          CHROMIUM_PATH="$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              print(p.chromium.executable_path)
+          PY
+          )"
+          test -x "$CHROMIUM_PATH"
+          sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
+
+      - name: Qualify environment-sensitive gates serially
+        working-directory: work/candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          fp="$(python3 ci_pipeline.py --fingerprint)"
+          test "$fp" = "$EXPECTED_FP"
+          out="../.depulse-prefreeze-${fp:0:12}"
+          mkdir -p "$out"
+          run_and_record() {
+            jid="$1"; shift
+            started="$(python3 -c 'import time; print(time.time())')"
+            "$@" 2>&1 | tee "$out/$jid.log"
+            ended="$(python3 -c 'import time; print(time.time())')"
+            python3 - "$out/$jid.json" "$jid" "$started" "$ended" "$@" <<'PY'
+          import json,sys
+          from pathlib import Path
+          path,jid,started,ended,*cmd=sys.argv[1:]
+          Path(path).write_text(json.dumps({
+              'id':jid,'status':'PASS','returncode':0,
+              'duration_seconds':round(float(ended)-float(started),3),
+              'command':cmd,'log':str(Path(path).with_suffix('.log')),'reused':False
+          },indent=2)+'\n')
+          PY
+          }
+          PYTHON="$(python3 -c 'import sys; print(sys.executable)')"
+          run_and_record http_workflow "$PYTHON" http_workflow_test.py
+          run_and_record responsive "$PYTHON" responsive_ui_sharded_gate.py
+
       - name: G10 replay on exact candidate
         working-directory: work/candidate
         run: python3 prefreeze_qualification.py
