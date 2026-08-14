@@ -224,6 +224,44 @@ The reconciliation itself may be called 10/10 only when all ten continuity quali
 
 ---
 
+## DEC-2026-08-14-008 — Adaptive Intelligence & Product Learning Checkpoint (AIPLC)
+
+**Status:** APPROVED / PERMANENT  
+**Date:** 2026-08-14  
+**Affects:** Adaptive Build Plan, Adaptive Build Process, G0–G16 feedback, all tabs/surfaces, data utility, canonical architecture, UI/UX, providers, performance/reliability, testing, defects, adaptive intelligence and next-build prioritization  
+**Placement:** after every meaningful build/checkpoint; aggregated into every Stable G16 Adaptive Retrospective
+
+### Decision
+Adopt **Adaptive Intelligence & Product Learning Checkpoint (AIPLC)** as a permanent DE.PULSE operating rule inside the existing Adaptive Build Process and G16 feedback loop. It does **not** add G17 or another top-level release gate.
+
+DE.PULSE must learn from each meaningful build rather than waiting only for Stable closure. The permanent cycle is:
+
+**BUILD → TEST → OBSERVE → TAB × FEATURE × DATA INTELLIGENCE AUDIT → CHALLENGE / ROOT-CAUSE REVIEW → LEARN → IMPROVE → PREVENT → MEASURE → FEED NEXT BUILD**
+
+Every affected tab, feature and material datum must be evaluated against the AI/LLM-style North Star using:
+
+**datum → purpose → canonical owner → consumer → freshness/materiality → independence/correlation → interpretation → decision value → explanation → outcome → learning**
+
+The checkpoint must determine whether evidence should be kept/strengthened, synthesized/correlated, consolidated/reused, demoted to drill-down, suppressed/removed, or explicitly treated as UNKNOWN/ABSTAIN. Raw availability never justifies UI prominence or processing by itself.
+
+Every material defect/challenge should produce both:
+1. an immediate fix or truthful disposition;
+2. a reusable prevention/learning improvement that reduces recurrence, including cross-product pattern scanning and stronger architecture/test/process protection where appropriate.
+
+AIPLC uses a ten-dimension evidence-based quality score covering AI/LLM Smartness, Data Utility, Canonical Architecture, Decision Utility/User Value, Reliability/Freshness Truth, Performance/Efficiency, UI/UX Intelligence, Learning/Outcome Measurement, Testing/Prevention, and Adaptive Continuity.
+
+**10/10 is a target and quality threshold, not an automatic label.** If an applicable dimension is below 10, improve it immediately when safely in scope and re-audit. If a current build cannot safely close the gap, record the exact residual, evidence, risk and named disposition. Never inflate a rating merely to call the build 10/10.
+
+AIPLC is allowed to influence the next Adaptive Build Plan using validated evidence: strengthen useful providers/intelligence, demote low-value inputs, consolidate redundant code/data/UI, improve workload priority, keep weak learned logic in SHADOW, strengthen root-cause prevention, and simplify user-facing surfaces. It does not authorize silent self-modifying production logic or bypass frozen G1 scope.
+
+Checkpoint evidence should be concise/durable and include build identity, affected surfaces, findings/root causes, changes/prevention, score/residuals, next-build dispositions, metrics to watch and any promotion blocker.
+
+For the currently active v18.2 line, AIPLC is process hardening only: preserve the frozen v18.2 G1, resume qualification from the synchronized active branch, and run the first applicable AIPLC before the next promotion decision. Future source-changing findings outside frozen scope are carried to the named next build unless they are genuine release blockers requiring governed correction/requalification.
+
+Full wording: `governance/ADAPTIVE-OPERATING-CONTRACT.md` section 15.
+
+---
+
 ## DEC-2026-08-13-001 — Four-Layer Adaptive Operating Model
 
 **Status:** APPROVED / CARRIED FORWARD
