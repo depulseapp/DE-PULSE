@@ -117,3 +117,31 @@ Rules:
 The delivery process follows the Gate Utility Test before any new release gate is introduced. Prefer checkpoints, platform lanes and strengthened existing gates first. If a new canonical gate is ultimately justified, delivery evidence, status reporting, ledger schema, automation and handoff requirements must be updated coherently for releases using the new map.
 
 Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+
+## Permanent Governance-to-Implementation Delivery Closure
+
+A release is not delivery-complete merely because the governing documents describe the desired behavior. The certified source, CI evidence, native packages and user-facing handoff must implement the governance requirements that apply to that release.
+
+Before G15/Stable promotion, delivery assurance must confirm:
+
+- no `CURRENT_RELEASE_BLOCKER` remains documented-only;
+- every `CURRENT_RELEASE_PROCESS_HARDENING` item required for trustworthy release evidence is closed or the affected evidence is treated as invalid/untrusted;
+- capability-based ADMIN authorization is enforced server-side and reflected in the certified UI;
+- the capability-scoped Administration surface/navigation is present only for authorized profiles and is not merely embedded into unrelated Settings;
+- full role × tab × viewport evidence is complete for the certified source/RC;
+- the Build State Ledger is reconciled to actual GitHub HEAD/fingerprint/CI/artifact/native/promotion state and uses canonical status vocabulary;
+- one canonical Build Coordinator/dependency graph owns authoritative release conclusions, with subordinate workflows prevented from creating conflicting release state;
+- active workflow/job/artifact/gate/capability names conform to the canonical naming registry or have an explicit compatibility/deprecation exception;
+- `NEXT_RELEASE_MANDATORY_ENTRY` items are named in the G16 handoff with target release and cannot disappear into generic backlog.
+
+For v18.2, the capability-based ADMIN, Administration composition and complete role-aware audit are promotion blockers. Build State Ledger v2, Build Coordinator consolidation and canonical naming migration are required process-hardening closure before their affected release evidence can be considered trustworthy.
+
+For v18.3, `functionality_utility_remediation.json` is a mandatory entry contract and must be consumed before hosted-web/PostgreSQL work advances beyond the applicable planning gates.
+
+G16 must report implementation-closure status using the lifecycle:
+
+**Governed → Implemented → Enforced → Evidenced → Delivered → Learned.**
+
+A requirement that is only `Governed` is not a completed release requirement.
+
+Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
