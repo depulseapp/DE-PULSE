@@ -21,6 +21,11 @@ Per-user symbols/watchlists/preferences with shared Global Symbol Registry and S
 ### TradeInsight — SHADOW / SECONDARY Intelligence
 Use through the canonical Smart Router only. Approved contextual roles include insider/congressional intelligence, historical OHLCV backfill/reconciliation, corporate actions, symbol metadata enrichment, Opportunity Radar corroboration, and future controlled AI/MCP research where rights permit.
 
+### Institutional Holdings / 13F Evidence Foundation
+Begin/continue canonical point-in-time SEC 13F evidence collection where useful and lawful. Preserve filing/report-period identity, manager/security mappings, amendments/restatements, normalized disclosed holdings, quarter-over-quarter deltas, provenance/freshness, limitations, and subsequent outcomes. Direct SEC EDGAR remains canonical filing truth; provider enrichment must flow through the canonical Provider Router.
+
+Do not treat 13F as live ownership or force mature adaptive manager intelligence into v18.2–v18.5.
+
 ### v18.2 — Admin / Presence / Session Operations
 SUPER OWNER / OWNER / ADMIN operations, user/session visibility and lifecycle, bounded presence, enable/disable and revocation controls, role-aware operations, and approved session-policy controls.
 
@@ -47,9 +52,10 @@ Approved direction:
 - data reconciliation and source disagreement;
 - historical depth/adjustment quality;
 - specialized/paid providers only when measured capability gaps justify them;
-- formal long-term role classification for SHADOW candidate providers such as TradeInsight.
+- formal long-term role classification for SHADOW candidate providers such as TradeInsight;
+- harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance.
 
-v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, and rights for v20 adaptive research, including ASBI.
+v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, and rights for v20 adaptive research, including ASBI and adaptive Institutional Holdings / 13F Intelligence.
 
 **Mandatory v19 Major Closure before v20.**
 
@@ -70,7 +76,8 @@ Approved capabilities include:
 - model/prompt governance;
 - explainable adaptive ranking;
 - controlled Champion/Challenger evaluation;
-- **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**.
+- **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**;
+- **Adaptive Institutional Holdings / 13F Intelligence**.
 
 Production promotion remains:
 
@@ -93,6 +100,7 @@ Collect and preserve, where useful and lawful:
 - provider provenance/freshness;
 - market/sector/regime context;
 - catalyst/news/SEC/earnings context;
+- institutional/13F context where available and point-in-time valid;
 - historical depth/adjustments;
 - decision lineage;
 - data-rights metadata.
@@ -117,6 +125,43 @@ Build/validate:
 - immutable Behavior Intelligence Ledger;
 - calibration/drift/outcome measurement;
 - Champion/Challenger SHADOW evaluation.
+
+---
+
+# Institutional Holdings / 13F Intelligence — Roadmap Placement
+
+13F is a durable Smart-Money / Institutional Intelligence dataset and adaptive context layer, not a live-trading signal.
+
+### v18 / v19 Preparation
+Collect/reconcile applicable public SEC evidence with point-in-time truth:
+- 13F-HR / 13F-HR/A / 13F-NT / 13F-NT/A;
+- manager CIK / Form 13F identity / accession;
+- report period and filing/acceptance timestamp;
+- disclosed holdings and relevant information-table fields;
+- amendments/restatements and later-added holdings;
+- CUSIP/FIGI/security mapping into the Global Symbol Registry;
+- quarter-over-quarter states such as NEW / INCREASED / REDUCED / REPORTED EXIT / UNCHANGED / NOT COMPARABLE;
+- split/corporate-action/reorganization reconciliation;
+- explicit filing-lag, short-position, small-position, confidential-treatment, and incomplete-portfolio limitations;
+- subsequent outcome history from the time information became public.
+
+### v20 Adaptive Institutional Intelligence
+Build/validate:
+- Manager / Institutional Behavioral Fingerprints;
+- persistence and disclosed-concentration behavior;
+- accumulation/reduction breadth;
+- consensus vs crowding;
+- passive/index/common-factor adjustment where feasible;
+- sector/thematic institutional rotation;
+- manager/cohort usefulness by stock type, sector and regime;
+- correlation with insider, congressional, ASBI, Rapid Move, Opportunity Radar, earnings/SEC/news, market/sector regime, price/volume/relative strength and options context where useful;
+- convergence and contradiction reasoning;
+- adaptive stale-data penalties;
+- historical outcome distributions and calibration;
+- Champion/Challenger evaluation for learned institutional models/rankings;
+- ABSTAIN when filing completeness, mapping, history, independence, or relevance is insufficient.
+
+13F-derived production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION** and must never silently alter protected deterministic Day/Swing/Long formulas.
 
 ---
 
