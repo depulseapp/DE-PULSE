@@ -69,11 +69,14 @@ except Exception as exc:
 
 try:
     cp = json.loads(checkpoint_path.read_text())
-    need(cp.get('schemaVersion') == 1, 'build checkpoint schemaVersion must be 1')
+    schema = cp.get('schemaVersion')
+    need(isinstance(schema, int) and schema >= 2, 'build checkpoint schemaVersion must be v2 or later')
     release = str(cp.get('release', '')).lstrip('v')
     need(release == str(ident.get('version', '')).lstrip('v'), 'checkpoint release must match canonical release identity')
     need(cp.get('branch'), 'checkpoint branch missing')
-    need(cp.get('sourceCommit'), 'checkpoint sourceCommit missing')
+    candidate = cp.get('candidateSourceCommit')
+    need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidateSourceCommit must be a Git SHA')
+    need(cp.get('metadataHeadRule'), 'checkpoint metadataHeadRule missing')
     fp = cp.get('sourceFingerprint')
     fp_state = cp.get('sourceFingerprintState')
     need((isinstance(fp, str) and re.fullmatch(r'[0-9a-f]{64}', fp)) or (fp is None and fp_state in {'PENDING_REQUALIFICATION','NOT_FROZEN'}), 'checkpoint source fingerprint must be verified SHA-256 or explicitly pending')
@@ -86,9 +89,11 @@ except Exception as exc:
 
 try:
     ev = json.loads(evidence_path.read_text())
-    need(ev.get('schemaVersion') == 1, 'release evidence checkpoint schemaVersion must be 1')
+    schema = ev.get('schemaVersion')
+    need(isinstance(schema, int) and schema >= 2, 'release evidence checkpoint schemaVersion must be v2 or later')
     need(str(ev.get('release', '')).lstrip('v') == str(ident.get('version', '')).lstrip('v'), 'release evidence checkpoint release mismatch')
     need(isinstance(ev.get('evidence'), dict), 'release evidence checkpoint evidence map missing')
+    need(ev.get('metadataHeadRule'), 'release evidence checkpoint metadataHeadRule missing')
 except Exception as exc:
     errors.append(f'release evidence checkpoint invalid/unreadable: {exc}')
 
@@ -98,4 +103,4 @@ if errors:
         print(' -', e)
     sys.exit(1)
 
-print('Adaptive Build Resume Contract: PASS · roadmap/build-plan/build-process/delivery-process integrated · checkpoint + evidence reconciliation enforced · metadata fingerprint-excluded')
+print('Adaptive Build Resume Contract: PASS · roadmap/build-plan/build-process/delivery-process integrated · checkpoint v2+ evidence reconciliation enforced · metadata fingerprint-excluded')
