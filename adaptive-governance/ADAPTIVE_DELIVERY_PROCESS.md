@@ -1,197 +1,222 @@
 # DE.PULSE — Adaptive Delivery Process
 
-## Permanent Delivery Recovery Contract
+**Status:** ACTIVE / GOVERNED  
+**Authority:** `governance/ADAPTIVE-OPERATING-CONTRACT.md` and the certified immutable RC. This file defines efficient trustworthy delivery inside G13–G16.
 
-Delivery state must be durable, independently verifiable, and resumable from GitHub evidence through G13–G16.
+Delivery principle:
 
-### G13 / G14
+**certified source → independent package lanes → actual artifact audit → assurance → promotion → user delivery → G16 learning.**
 
-Packaging and actual artifact runtime audits are bound to the immutable candidate source/RC and artifact hashes. macOS Apple Silicon and Windows x64 results are tracked separately. If one platform is PASS and the other is interrupted, the PASS platform may be reused only when the exact source and packaging identity remain unchanged.
+G0–G16 remains permanent. No delivery workflow may create G17+.
 
-### G15
+---
 
-Release Assurance consumes immutable source/RC provenance plus required native artifact evidence. An interrupted conversation does not change G15 eligibility; GitHub artifacts/hashes and CI job evidence determine whether G15 may resume or must rerun.
+## 1. Delivery Resume Reconciliation
 
-### Promotion
+When delivery resumes after interruption:
 
-Stable promotion is allowed only from certified evidence. The checkpoint records the intended promotion source, but the actual `main`, Stable tag, permanent release, source/package hashes and release evidence remain authoritative.
+**read immutable RC identity → inspect actual workflow/artifact/release state → verify package hashes/provenance → preserve unchanged PASS evidence → resume only incomplete/affected lanes.**
 
-### G16
+Never assume a failed/stopped conversation or wrapper means nothing was produced. Inspect durable GitHub objects first.
 
-G16 must:
+Never duplicate tags/releases/assets without checking existing state.
 
-- verify `main` / immutable Stable tag / permanent release identity agreement;
-- record final source and native artifact provenance;
-- archive the completed release checkpoint/evidence state;
-- close or clean obsolete development/promotion branches according to repository hygiene;
-- seed the next approved development branch from the exact Stable commit/tag;
-- create the next release's initial build checkpoint;
-- classify release CI incidents and preserve genuinely new generalized lessons;
-- verify both native runnable assets were surfaced to the user for completed native deliveries.
+---
 
-### Recovery after partial promotion
+## 2. Exact-artifact evidence inheritance
 
-If publication is interrupted, inspect each durable GitHub object independently before retrying. Never assume that a failed workflow means nothing was published, and never create a duplicate tag/release without checking existing refs/releases first.
+Delivery evidence is reusable only when its relevant:
+- immutable RC/source identity;
+- package/artifact identity/hash;
+- packaging/toolchain contract;
+- runtime audit definition;
+- platform assumptions
 
-## User Delivery completion invariant
+remain equivalent.
 
-A native Stable release is `READY` when permanent certified Mac/Windows assets exist, but it is `DELIVERED` only after the user-facing handoff surfaces both runnable assets with provenance/hash status.
+If one platform is PASS and the other fails/interruption occurs, preserve the PASS platform when the exact RC/package identity is unchanged.
 
-Required concise release status:
+Metadata/checkpoint/documentation commits that do not alter immutable RC/package/test contract do not justify rebuilding native artifacts or rerunning full G12.
+
+---
+
+## 3. G13 — Native Packaging / Provenance
+
+Build required native artifacts from the certified immutable RC.
+
+Required current platform truth:
+- macOS Apple Silicon — independent package/provenance lane;
+- Windows x64 — independent package/provenance lane.
+
+Share safe immutable setup/evidence, but do not couple platform outcomes unnecessarily.
+
+Each artifact records source/RC identity, package identity/hash and provenance needed by G14/G15.
+
+---
+
+## 4. G14 — Actual Artifact Runtime Audit
+
+Audit the **actual packaged artifact**, not merely source tests.
+
+Verify applicable:
+- launch/run behavior;
+- runtime/release identity;
+- persistence/migration/restart behavior;
+- configuration;
+- critical user flows;
+- role/capability behavior;
+- data/freshness/degradation truth;
+- packaging integrity;
+- platform-specific behavior;
+- no execution capability.
+
+Platform runtime evidence is independent. One platform cannot inherit the other's platform-specific PASS.
+
+---
+
+## 5. G15 — Release Assurance / Promotion
+
+G15 consumes the complete authoritative evidence graph:
+- immutable RC/source provenance;
+- G12 certification;
+- required G13/G14 platform results;
+- security/data-rights/reliability/performance closure where applicable;
+- rollback/reproducibility truth;
+- final release identity.
+
+Promotion is allowed only when required evidence is complete and trustworthy.
+
+Generate final artifact/hash manifest only after final contents are immutable.
+
+---
+
+## 6. User Delivery completion invariant
+
+A Stable native release is `READY` when required permanent certified assets exist, but `DELIVERED` only when the user-facing handoff surfaces the required runnable assets and provenance/hash status.
+
+Concise release status:
 
 **Code | G0–G12 | macOS G13/G14 | Windows G13/G14 | G15 | G16 | User Delivery**
 
-A Stable build must not be presented as fully delivered while `User Delivery` is `NOT_READY` or `READY`.
+Routine recovery/delivery should require no manual user work except approved external blockers.
 
-### User burden
+---
 
-Normal delivery recovery is automated from GitHub/CI and requires no routine manual work from the user. Only the approved external-blocker exceptions may interrupt autonomous delivery.
+## 7. Delivery AIPLC
 
-Canonical protocols:
-- `adaptive-governance/BUILD_RESUME_PROTOCOL.md`
-- `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`
+A meaningful packaging/runtime/delivery event runs a concise Delta AIPLC for the affected delivery responsibility.
 
-## Permanent Role-Aware Delivery Invariant
+Ask:
+- what actually failed or cost unnecessary work?
+- was it product, packaging, runtime, CI harness, infra, publishing, provenance or user-delivery logic?
+- what is the root cause?
+- what can be reused?
+- what prevention makes recurrence less likely?
+- can the fix remain platform/lane-scoped?
 
-A release is not delivery-complete merely because the role-sensitive code compiled or because privileged content was visually hidden. Role-aware composition and authorization are release-quality requirements.
+Every material delivery challenge produces:
+1. immediate fix/truthful disposition;
+2. reusable prevention.
 
-Before G15/Stable promotion, delivery evidence must establish that:
+Do not rerun unrelated platforms/lanes merely to generate another report.
 
-- every current/new tab and global shell/navigation surface passed the required role/capability audit;
-- OWNER/SUPER_OWNER receives the intended full authorized composition;
-- selected/full-capability ADMIN receives only the explicitly delegated deep capabilities;
-- limited ADMIN receives only assigned administrative capabilities;
-- USER/DEMO receives no implementation machinery or privileged payloads;
-- frontend visibility and backend authorization agree;
-- unauthorized direct page/API access is denied/redirected;
-- information hierarchy remains intentional for every role rather than being reordered accidentally by hidden content;
-- conditional sections reflow seamlessly without blank cells, dead space, orphan headings, uneven leftovers, clipping or awkward whitespace;
-- justified conditional tabs such as Administration appear only for authorized capability profiles and do not leave navigation gaps when absent;
-- role composition does not alter protected deterministic market logic;
-- role × viewport G9 evidence is bound to the certified source/RC and remains valid for the delivered native packages.
+---
 
-G16 must include role-aware delivery closure in the handoff: role/capability matrix result, any known limitations, regressions added, and new generalized learning. Recurring composition/security defects must be converted into reusable primitives/tests rather than rediscovered manually in later releases.
+## 8. Role-aware delivery invariant
 
-macOS and Windows deliverables must expose the same certified role/capability behavior. A platform package that diverges materially in authorization, navigation or composition cannot inherit the other platform's PASS.
+Before G15 for affected scope, actual certified packages must prove:
+- authorized OWNER/SUPER_OWNER composition;
+- explicitly delegated ADMIN capability boundaries;
+- limited ADMIN restrictions;
+- USER/DEMO no implementation machinery/privileged payloads;
+- frontend/backend authorization agreement;
+- direct unauthorized route/API denial;
+- natural layout reflow after suppressed content;
+- role-invariant protected market logic.
 
-Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+Use fresh + equivalence-bound inherited coverage from G9/G10/G12. Do not brute-force unchanged role×surface×viewport combinations again without a dependency reason.
 
-## Permanent Functionality Utility Delivery Invariant
+---
 
-A release is not delivery-complete if it introduces working but unnecessary or unintegrated product machinery.
+## 9. Functionality Utility delivery invariant
 
-Before G15/Stable promotion, certified evidence must establish that the actual candidate passed the Functionality Utility, Reuse, Correlation & Surface Checkpoint and that:
+A release is not delivery-complete if it ships working but unnecessary/unintegrated machinery.
 
-- every primary navigation tab is represented in the functionality utility registry;
-- every materially introduced/changed engine, job, watcher, scheduler, dataset-facing workflow and major surface has a canonical owner and active consumer;
-- existing data/computation/acquisition was reused where practical and known duplicate provider work is either consolidated or explicitly justified/bounded;
-- new data is correlated with relevant canonical evidence and has freshness/materiality/retention/governance behavior;
-- repeated deep-evidence presentation is consolidated into a canonical home with concise contextual reuse elsewhere;
-- supporting/operational data is not promoted into normal-user UI without material decision-support value;
-- any new tab has explicit documented separation justification;
-- obsolete or superseded routes/surfaces/jobs identified by the checkpoint are removed, redirected, scheduled for the current release, or explicitly carried as a known closure item rather than silently retained;
-- G9 performed an all-tab/major-function repetition and hierarchy audit, not only a changed-file visual check;
-- the delivered macOS and Windows packages preserve the same certified information hierarchy and utility dispositions.
+Certified evidence must show applicable changed functionality has:
+- purpose/consumer;
+- canonical owner;
+- reused/consolidated acquisition/computation where practical;
+- relevant correlation;
+- appropriate freshness/materiality/retention/governance;
+- one deep-evidence home with concise contextual reuse elsewhere;
+- justified user-facing prominence/tab placement;
+- obsolete/superseded paths retired or explicitly carried forward.
 
-G16 must record the final reuse/consolidation/removal result and any remaining approved exceptions. A recurring duplication pattern must become a preventative regression or governance rule.
+G10 full coverage reconciliation remains the pre-freeze completeness boundary.
 
-Canonical checkpoint rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+---
 
-## Permanent Adaptive Delivery Decomposition
+## 10. Shared Symbol Intelligence delivery invariant
 
-Heavy delivery and certification work must use the same adaptive decomposition model as implementation and CI.
+For releases affecting multi-user symbol demand, provider acquisition, Scanner/Radar, preparation/event processing, canonical state, AI synthesis or hosted scale, delivery evidence must prove:
+- equivalent canonical work is shared across compatible consumers;
+- per-user workspaces do not create duplicate market pipelines;
+- in-flight work coalesces where practical;
+- dynamic attention/backpressure protects high-value work;
+- private/tenant/rights/entitlement partitions remain isolated;
+- overlapping user cost scales primarily with unique canonical demand;
+- no unauthorized cross-user leakage.
 
-Delivery responsibilities may be split into smaller evidence-bound packages when that materially improves recovery, platform isolation, fault diagnosis, resumability or resource efficiency. Examples include independent macOS/Windows packaging and runtime lanes, sharded UI/runtime audits, provenance checks, release-asset verification and publication checks.
+Use the material subset of the shared-efficiency scorecard appropriate to the release. Full realistic overlapping-demand closure is mandatory at v18.5.
 
-Rules:
+---
 
-- each delivery package has one owner, explicit candidate/artifact inputs, completion criteria and durable evidence;
-- independent packages may run in parallel when they do not mutate the same release object or duplicate expensive work;
-- a failure in one platform/lane does not invalidate unrelated PASS evidence when the immutable source/artifact dependencies are unchanged;
-- G15 consumes the complete dependency graph and cannot infer readiness from a partially complete heavy workflow;
-- G16 records whether the chosen decomposition reduced retries/cycle time and removes delivery lanes/checkpoints that proved redundant;
-- decomposition must not weaken native actual-artifact runtime truth, provenance, security or Stable promotion criteria.
+## 11. v18.2 delivery closure
 
-### Delivery gate evolution
+v18.2 cannot promote based on governance documents alone.
 
-The delivery process follows the Gate Utility Test before any new release gate is introduced. Prefer checkpoints, platform lanes and strengthened existing gates first. If a new canonical gate is ultimately justified, delivery evidence, status reporting, ledger schema, automation and handoff requirements must be updated coherently for releases using the new map.
+Before promotion, prove applicable frozen-scope and current process-hardening obligations including:
+- capability-based ADMIN authorization;
+- Administration composition;
+- role/session/presence lifecycle behavior;
+- authoritative current Build State Ledger/checkpoint;
+- trusted Build Coordinator/evidence graph;
+- canonical naming/evidence state;
+- first v18.2 AIPLC and G10 coverage reconciliation.
 
-Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+Do not pull v18.3 PostgreSQL/web or unrelated source-changing consolidation work into frozen v18.2.
 
-## Permanent Governance-to-Implementation Delivery Closure
+---
 
-A release is not delivery-complete merely because the governing documents describe the desired behavior. The certified source, CI evidence, native packages and user-facing handoff must implement the governance requirements that apply to that release.
+## 12. G16 — Deep Adaptive Retrospective / Handoff
 
-Before G15/Stable promotion, delivery assurance must confirm:
+G16 must:
+- verify Stable `main` / tag / release identity agreement;
+- record source/native artifact provenance;
+- archive checkpoints/evidence;
+- clean obsolete release branches/workflows/artifacts when safe;
+- seed the next approved release from exact Stable;
+- aggregate AIPLC findings;
+- record calls/reruns/provider/model work avoided where measurable;
+- record role/functionality/shared-processing closure;
+- convert recurring failures into reusable prevention;
+- remove redundant delivery lanes/checkpoints that added ceremony without assurance;
+- verify required user delivery was surfaced.
 
-- no `CURRENT_RELEASE_BLOCKER` remains documented-only;
-- every `CURRENT_RELEASE_PROCESS_HARDENING` item required for trustworthy release evidence is closed or the affected evidence is treated as invalid/untrusted;
-- capability-based ADMIN authorization is enforced server-side and reflected in the certified UI;
-- the capability-scoped Administration surface/navigation is present only for authorized profiles and is not merely embedded into unrelated Settings;
-- full role × tab × viewport evidence is complete for the certified source/RC;
-- the Build State Ledger is reconciled to actual GitHub HEAD/fingerprint/CI/artifact/native/promotion state and uses canonical status vocabulary;
-- one canonical Build Coordinator/dependency graph owns authoritative release conclusions, with subordinate workflows prevented from creating conflicting release state;
-- active workflow/job/artifact/gate/capability names conform to the canonical naming registry or have an explicit compatibility/deprecation exception;
-- `NEXT_RELEASE_MANDATORY_ENTRY` items are named in the G16 handoff with target release and cannot disappear into generic backlog.
+No issue silently disappears.
 
-For v18.2, the capability-based ADMIN, Administration composition and complete role-aware audit are promotion blockers. Build State Ledger v2, Build Coordinator consolidation and canonical naming migration are required process-hardening closure before their affected release evidence can be considered trustworthy.
+---
 
-For v18.3, `functionality_utility_remediation.json` is a mandatory entry contract and must be consumed before hosted-web/PostgreSQL work advances beyond the applicable planning gates.
+## 13. 10/10 Delivery acceptance
 
-G16 must report implementation-closure status using the lifecycle:
-
-**Governed → Implemented → Enforced → Evidenced → Delivered → Learned.**
-
-A requirement that is only `Governed` is not a completed release requirement.
-
-Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
-
-## Permanent Shared Symbol Intelligence Delivery Invariant
-
-A release that materially affects symbol demand, multi-user processing, provider acquisition, Scanner/Radar, preparation/event processing, canonical state, AI/adaptive synthesis or hosted scale is not delivery-complete merely because each user can see correct screens. The certified implementation must also prove that equivalent market intelligence is shared efficiently and safely.
-
-Before G15/Stable promotion for affected scope, delivery evidence must establish that:
-
-- the Global Symbol Registry/shared demand union is the canonical processing membership owner;
-- user workspaces contribute demand and personal workflow state without creating duplicate provider/market/intelligence engines;
-- equivalent canonical symbol/dataset processing is shared across compatible consumers;
-- simultaneous equivalent acquisition/calculation requests are coalesced where practical;
-- material-change propagation avoids unnecessary blanket recomputation;
-- intentional independent-provider reconciliation is documented separately from wasteful duplicate work;
-- dynamic attention, provider budgets, bounded concurrency, backpressure and fairness prevent one user or low-value workload from starving material shared work;
-- shared caches and AI/evidence synthesis are partitioned by provider entitlement, data-rights, tenant/security domain, private user context and relevant model/policy identity;
-- no private prompt/context or restricted output leaks through cross-user cache or fan-out;
-- overlapping user demand scales primarily with unique canonical processing demand rather than `users × symbols`;
-- macOS, Windows and hosted/shared-server targets preserve equivalent canonical ownership and security behavior where applicable.
-
-### Required delivery scorecard
-
-Where applicable, G8/G12/G15 evidence must report the material subset of:
-
-- unique active symbols/canonical processing keys;
-- total consumer demand and overlap ratio;
-- provider calls/subscriptions per unique key;
-- duplicate acquisition and duplicate calculation rate;
-- cache/single-flight reuse;
-- reusable evidence/AI synthesis reuse;
-- fan-out ratio;
-- marginal cost of adding an overlapping user/symbol consumer;
-- CPU/memory/storage per active key;
-- provider/rate-limit/backpressure pressure;
-- acquisition-to-canonical and material-change-to-consumer latency;
-- stale/degraded fan-out incidents;
-- fairness/starvation incidents;
-- authorization/data-rights leakage incidents.
-
-For equivalent overlapping demand, duplicate acquisition/calculation should be **zero by design** except for explicit independent validation/reconciliation or documented unavoidable cases. Any justified duplicate work must have a named owner, reason and bound.
-
-### Release progression in delivery
-
-- **v18.2:** delivery must prove the new multi-user workspace/admin architecture did not introduce per-user market-data/provider/intelligence pipelines.
-- **v18.3:** delivery must prove the first shared-execution consolidation: Scanner/Radar acquisition reuse, Session Intelligence Coordinator, Event Intelligence ownership and hosted shared demand-union behavior.
-- **v18.4:** delivery must close entitlement/data-rights/security partitioning for shared state/caches/synthesis.
-- **v18.5:** major closure requires realistic overlapping-demand certification demonstrating the 10/10 scaling model. Material duplicate processing, uncontrolled provider fan-out, starvation, stale propagation or rights leakage remains a blocker/closure item and cannot be hidden by acceptable average UI response time.
-
-G16 records calls avoided, reuse/fan-out efficiency, remaining justified duplication, learned bottlenecks and any preventative regression added.
-
-Canonical shared-processing rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.
+Delivery Process is 10/10 only when:
+1. exact immutable source/artifact identity controls evidence;
+2. independent platform PASS is preserved safely;
+3. failures rerun the smallest affected lane;
+4. metadata changes do not trigger unnecessary native/full certification;
+5. actual packaged runtime is audited;
+6. role/security/data truth survives packaging;
+7. user delivery is explicit;
+8. AIPLC produces prevention, not just retries;
+9. G16 leaves reproducible provenance and a clean next-release seed;
+10. no promotion status is inferred or inflated without durable evidence.
