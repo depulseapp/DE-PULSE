@@ -1,0 +1,22 @@
+diff --git a/renderer/styles.css b/renderer/styles.css
+index 94ea2b4..d997256 100644
+--- a/renderer/styles.css
++++ b/renderer/styles.css
+@@ -2430,3 +2430,17 @@ button.desk-membership-pill:focus-visible{outline:2px solid rgba(33,200,243,.45)
+ .opportunity-radar-table{overflow:hidden}.opportunity-radar-head,.opportunity-radar-row{display:grid;grid-template-columns:minmax(130px,1.2fr) 84px 96px 78px 104px 110px minmax(150px,1fr);gap:10px;align-items:center}.opportunity-radar-head{padding:8px 12px;background:rgba(123,145,169,.055);border-bottom:1px solid var(--line);color:var(--faint);font-size:9px;font-weight:800;letter-spacing:.055em;text-transform:uppercase}.opportunity-radar-head>span:not(:first-child):not(:last-child),.radar-number{text-align:right}.opportunity-radar-row{padding:10px 12px;min-width:0}.opportunity-symbol{display:grid;grid-template-columns:auto 1fr;gap:5px 8px;align-items:center}.opportunity-symbol b{grid-row:1/-1}.radar-status-pill{justify-self:start;border:1px solid var(--line);border-radius:999px;padding:3px 6px;font-size:7px;font-weight:850;letter-spacing:.05em}.radar-status-pill.priority{border-color:rgba(47,224,168,.32);color:var(--positive);background:rgba(47,224,168,.06)}.radar-status-pill.watch{color:var(--muted)}.radar-actions{justify-content:flex-end}.opportunity-radar-summary.user{grid-template-columns:repeat(4,minmax(100px,1fr))}
+ @media(max-width:900px){.opportunity-radar-summary,.opportunity-radar-summary.user{grid-template-columns:repeat(2,minmax(100px,1fr))}.opportunity-radar-table{overflow:visible;border:0;display:grid;gap:8px}.opportunity-radar-head{display:none}.opportunity-radar-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;border:1px solid var(--line);border-radius:10px;padding:10px}.opportunity-radar-row:first-of-type{border-top:1px solid var(--line)}.opportunity-symbol,.radar-actions{grid-column:1/-1}.radar-number{text-align:left}.radar-actions{justify-content:flex-start}.research-command-v2{grid-template-columns:1fr}.research-target-grid{grid-template-columns:1fr 1.2fr 1fr}.research-command-v2 .research-command-actions{padding-top:0;justify-content:flex-start}}
+ @media(max-width:620px){.opportunity-radar-summary,.opportunity-radar-summary.user{grid-template-columns:1fr}.opportunity-radar-row{grid-template-columns:1fr}.opportunity-symbol,.radar-actions{grid-column:auto}.research-target-grid{grid-template-columns:1fr}.research-command-v2 .research-command-actions{display:grid;grid-template-columns:1fr;width:100%}.research-command-v2 .research-command-actions>*{width:100%;max-width:100%;box-sizing:border-box;white-space:normal}.master-add-row{grid-template-columns:1fr}.master-add-row .ticker-input{grid-column:auto}}
++
++/* v18.0.5 responsive closure — preserve v14.3.7 font-fit guarantees on current Chromium.
++   Presentation-only: reclaim usable width; do not shrink text below certified floors. */
++@media(min-width:1121px) and (max-width:1320px){
++  .event-data-context-head{gap:8px!important}
++  .event-context-actions{gap:6px!important}
++  .event-context-actions .btn{min-width:62px!important;padding-left:8px!important;padding-right:8px!important}
++}
++.discovery-page .scanner-number-cell{padding-left:9px!important;padding-right:9px!important}
++@media(max-width:900px){
++  .compact-list-view .watchlist-row-change{grid-column:2!important}
++  .compact-list-view .watchlist-row-membership{grid-column:3!important;padding-top:0!important;border-top:0!important}
++  .compact-list-view .watchlist-row-setup{grid-column:2/4!important}
++}
