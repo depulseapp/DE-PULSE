@@ -1,0 +1,97 @@
+name: DE.PULSE v18.0.4 G14/G15 Native Delivery
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - v18.0.4-native-certification
+    paths:
+      - 'De-Pulse-v18.0.4-TEST-Source.zip'
+      - 'scripts/**'
+      - '.github/workflows/native-build.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-v1804-native-delivery-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GO_VERSION: '1.26.6'
+  SOURCE_ZIP: 'De-Pulse-v18.0.4-TEST-Source.zip'
+
+jobs:
+  macos-apple-silicon:
+    name: G14 macOS Apple Silicon
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - name: Stage certified source
+        shell: bash
+        run: |
+          mkdir -p input
+          cp "$SOURCE_ZIP" input/De-Pulse-v18.0.4-TEST-Source.zip
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Run G14 native audit
+        shell: bash
+        run: bash ./scripts/build-macos-arm64.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.4-G14-macOS-Apple-Silicon
+          path: out/macos-arm64/**
+          if-no-files-found: error
+          retention-days: 30
+
+  windows-x64:
+    name: G14 Windows x64
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - name: Stage certified source
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path input | Out-Null
+          Copy-Item -LiteralPath $env:SOURCE_ZIP -Destination 'input/De-Pulse-v18.0.4-TEST-Source.zip' -Force
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Run G14 native audit
+        shell: pwsh
+        run: pwsh -NoProfile -File ./scripts/build-windows-x64.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.4-G14-Windows-x64
+          path: out/windows-x64/**
+          if-no-files-found: error
+          retention-days: 30
+
+  release-assurance:
+    name: G15 Native Release Assurance
+    needs: [macos-apple-silicon, windows-x64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.4-G14-macOS-Apple-Silicon
+          path: collected/macos
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v18.0.4-G14-Windows-x64
+          path: collected/windows
+      - name: Verify G15 release assurance
+        run: python3 scripts/verify-g14-g15.py --mac collected/macos --windows collected/windows --out assurance
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.0.4-G15-Release-Assurance
+          path: assurance/**
+          if-no-files-found: error
+          retention-days: 90
