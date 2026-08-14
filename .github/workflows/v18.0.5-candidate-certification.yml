@@ -6,11 +6,6 @@ on:
     paths:
       - 'release/v18.0.5/**'
       - '.github/workflows/v18.0.5-candidate-certification.yml'
-  push:
-    branches: [v18.0.5-development]
-    paths:
-      - 'release/v18.0.5/**'
-      - '.github/workflows/v18.0.5-candidate-certification.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +13,7 @@ permissions:
 
 concurrency:
   group: depulse-v1805-candidate-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   GO_VERSION: '1.26.6'
