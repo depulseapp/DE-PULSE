@@ -1,0 +1,34 @@
+name: DE.PULSE v18.2 Development Qualification
+
+on:
+  push:
+    branches: [v18.2-development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v18.2-development-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.6'
+          cache: false
+      - name: Format check
+        run: |
+          gofmt -w identity_admin.go http_admin_identity.go v18_2_test.go
+          git diff --exit-code -- identity_admin.go http_admin_identity.go v18_2_test.go
+      - name: v18.2 focused tests
+        run: go test -count=1 -run '^TestV182' ./...
+      - name: Full Go suite
+        run: go test -count=1 ./...
+      - name: Vet
+        run: go vet ./...
