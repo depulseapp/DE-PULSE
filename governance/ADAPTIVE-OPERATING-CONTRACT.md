@@ -288,17 +288,158 @@ Confirm release assurance, rollback, reproducibility, authoritative provenance, 
 Generate final artifact hashes/SHA manifest **last**, after final contents are immutable.
 
 ### G16
-Perform adaptive retrospective, cleanup, learning, and next-version handoff. Preserve anything required for reproduction, rollback, audit, provenance, or historical certification.
+Perform the full Stable-level Adaptive Retrospective, cleanup, learning, and next-version handoff. Aggregate the per-build AIPLC evidence defined below and preserve anything required for reproduction, rollback, audit, provenance, or historical certification.
 
 ---
 
-## 15. G16 Feedback Loop
+## 15. Adaptive Intelligence & Product Learning Checkpoints
 
-After every Stable build, feed:
+DE.PULSE must learn from **every meaningful build**, not only after a Stable release. The permanent checkpoint is **Adaptive Intelligence & Product Learning Checkpoint (AIPLC)**.
+
+AIPLC is part of the existing Adaptive Build Process and G16 feedback loop. It does **not** create a new G17+ gate.
+
+Permanent cycle:
+
+**BUILD → TEST → OBSERVE → TAB × FEATURE × DATA INTELLIGENCE AUDIT → CHALLENGE / ROOT-CAUSE REVIEW → LEARN → IMPROVE → PREVENT → MEASURE → FEED NEXT BUILD**
+
+### 15.1 When AIPLC runs
+
+Run a concise AIPLC after every **meaningful build/checkpoint** that changes or materially exercises one or more of:
+- user-visible behavior or information hierarchy;
+- data acquisition, normalization, persistence, freshness or provenance;
+- intelligence, ranking, recommendation, signal or explanation behavior;
+- provider routing/fallback/cost/capacity;
+- architecture/canonical ownership;
+- performance/reliability/concurrency/background work;
+- security/RBAC/session behavior;
+- testing/certification/build/release machinery;
+- a defect class whose root cause can teach a reusable lesson.
+
+A mechanically identical rerun with no new evidence may reuse the latest applicable AIPLC with an explicit **NO NEW LEARNING / EVIDENCE EQUIVALENT** disposition; do not manufacture redundant reports.
+
+### 15.2 Tab × Feature × Datum Intelligence Audit
+
+For every affected tab/surface and every material feature/data element, ask whether DE.PULSE is behaving like a smart AI/LLM-style research system or merely displaying available information.
+
+Use the chain:
+
+**datum → purpose → canonical owner → consumer → freshness/materiality → independence/correlation → interpretation → decision value → explanation → outcome → learning**
+
+Audit applicable surfaces including Dashboard, Day, Swing, Long, Discovery / Opportunity Radar, Research, Decision Queue, Market Intelligence, Administration, Settings, Maintenance and future surfaces.
+
+For each affected element determine whether to:
+- **KEEP / STRENGTHEN** — clear material decision value;
+- **SYNTHESIZE / CORRELATE** — raw evidence should become higher-level intelligence;
+- **CONSOLIDATE / REUSE** — duplicate data/calculation/UI ownership exists;
+- **DEMOTE / DRILL-DOWN** — useful support but too prominent;
+- **SUPPRESS / REMOVE** — low-value, stale, redundant or confusing;
+- **ABSTAIN / UNKNOWN** — evidence is insufficient for a reliable conclusion.
+
+Raw availability is never sufficient justification for collection, computation, persistence or UI prominence.
+
+### 15.3 Challenge → Root Cause → Prevention
+
+Every material defect/challenge should produce **two outputs**:
+
+1. the immediate fix or truthful disposition;
+2. the reusable learning/prevention that makes the same class of failure less likely.
+
+Required reasoning:
+
+**observed symptom → root cause → affected canonical owner → immediate fix → recurrence prevention → cross-product pattern scan → test/gate/contract hardening → measurable follow-up**
+
+Do not stop at symptom repair when the same root cause can exist elsewhere.
+
+Examples of reusable learning include:
+- duplicate calculations → consolidate the canonical calculation owner and scan equivalent paths;
+- runtime overload → improve workload priority/backpressure/provider budgeting and protect critical evidence;
+- repeated UI clutter → improve materiality/information hierarchy rules across related surfaces;
+- provider failures → improve capability routing/fallback/reason semantics rather than patching one consumer;
+- recurring test escape → strengthen the architecture invariant or reusable test oracle, not only one regression case.
+
+### 15.4 Ten-Dimension AIPLC Quality Score
+
+Score applicable dimensions with evidence; **10/10 is a target and quality threshold, never an automatic label**:
+
+1. **AI/LLM Smartness** — synthesis, reasoning, prioritization and useful explanation vs raw display;
+2. **Data Utility** — every material datum has justified purpose/consumer/value;
+3. **Canonical Architecture** — reuse, ownership clarity, no duplicate engines/calculations;
+4. **Decision Utility / User Value** — materially improves research/decision support;
+5. **Reliability / Freshness Truth** — graceful scoped degradation, no false confidence;
+6. **Performance / Efficiency** — bounded cost, calls avoided, no unnecessary processing;
+7. **UI/UX Intelligence** — complex inside, simple outside, correct hierarchy;
+8. **Learning / Outcome Measurement** — useful outcomes, misses, false positives, drift and provider value are measurable where applicable;
+9. **Testing / Prevention** — root-cause regression protection and cross-module coverage;
+10. **Adaptive Continuity** — finding is fixed, explicitly carried forward, or rejected with evidence; nothing silently disappears.
+
+If any applicable dimension is below 10:
+- improve it immediately when safe, dependency-compatible and within frozen scope;
+- rerun the affected checks and rescore;
+- if it cannot safely reach 10 in the current release, record the exact gap, evidence, risk and named disposition (`NEXT BUILD`, `NEXT COMPATIBLE BUILD`, `ROADMAP`, or `REJECT / NO CHANGE WITH EVIDENCE`);
+- never inflate the score merely to call the build 10/10.
+
+A build may still proceed when a below-10 finding is legitimately deferred and non-blocking, but the checkpoint itself must remain truthful about the residual.
+
+### 15.5 AIPLC Can Change the Next Build
+
+AIPLC is not ceremonial. Its validated learning must be allowed to alter the next Adaptive Build Plan.
+
+Examples:
+- reduce/demote a provider or dataset that produces little unique value;
+- strengthen a provider/capability that measurably improves usefulness/reliability;
+- remove or consolidate redundant data/UI/code;
+- change workload priority based on measured pressure;
+- keep weak intelligence in SHADOW or demote it;
+- strengthen intelligence only after outcome/calibration evidence;
+- promote a repeated defect pattern into architecture/test/process prevention;
+- prioritize a user-facing simplification when internal complexity leaks outward.
+
+Production adaptive intelligence still follows **SHADOW → VALIDATED → APPROVED → PRODUCTION**. AIPLC does not authorize silent self-modifying production logic or unapproved product scope.
+
+### 15.6 Scope / Freeze Safety
+
+AIPLC may identify work at any time, but it does not bypass G1.
+
+- safe fixes/hardening already inside frozen scope may close in the current build;
+- genuine escaped defects that materially threaten correctness, security, reliability or release truth may block promotion and require governed correction/requalification;
+- source-changing new scope discovered after G1 normally becomes a named next-build/next-compatible-build entry;
+- future strategic intelligence remains roadmap work until dependency-ready and approved where required.
+
+### 15.7 Checkpoint Evidence
+
+Keep AIPLC evidence concise and durable. Prefer a machine-readable/structured checkpoint plus a short human summary rather than a large repetitive report.
+
+Minimum evidence:
+- build/source identity;
+- affected surfaces/capabilities;
+- challenges/findings;
+- root causes;
+- changes made;
+- reusable prevention added;
+- 10-dimension scores and residuals;
+- next-build dispositions;
+- metrics/outcomes to watch;
+- explicit statement of whether any current promotion blocker remains.
+
+The next build should consume unresolved AIPLC items during G0/G1/G2 rather than rediscovering them from memory.
+
+### 15.8 Stable G16 Deep Retrospective
+
+After every Stable build, G16 aggregates all per-build AIPLC checkpoints plus:
 
 `runtime evidence + user screenshots + defects + performance telemetry + provider effectiveness + calls avoided + intelligence/signal outcomes + UI/UX observations + data usefulness + release-process failures`
 
-into the Adaptive Retrospective.
+and performs the deeper Adaptive Retrospective.
+
+G16 must ask:
+- which per-build learnings actually prevented recurrence;
+- which fixes only treated symptoms;
+- which intelligence/data/providers were useful or low-value;
+- which UI simplifications improved decision utility;
+- which performance/reliability assumptions failed under real use;
+- what should become a permanent architecture/test/process standard;
+- what should be consolidated, demoted, retired, strengthened or kept SHADOW;
+- what the next build should do differently because of measured evidence.
 
 Classify findings as:
 1. FIX NOW / NEXT-BUILD BLOCKER
@@ -307,7 +448,7 @@ Classify findings as:
 4. ROADMAP / LATER HARDENING
 5. REJECT / NO CHANGE WITH EVIDENCE
 
-No reported issue should silently disappear.
+No reported issue, below-10 dimension, failed assumption or useful learning should silently disappear.
 
 ---
 
