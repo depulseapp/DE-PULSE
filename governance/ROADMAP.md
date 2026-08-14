@@ -31,17 +31,40 @@ Preserve and improve the point-in-time evidence/outcome lineage required for fut
 
 Do **not** force the mature adaptive Two-Sided Directional Thesis engine into v18.2–v18.5 as scope creep. v18 should ensure current architecture and evidence are not designed in a way that blocks truthful two-sided learning later.
 
+### Adaptive Data Reliability & Graceful Degradation — v18 Foundation
+Implement the dependency-compatible foundation of the approved 10/10 ADR-GDI contract rather than waiting for v20 or assuming PostgreSQL alone will solve degradation.
+
+v18 priorities include:
+- capability-level health rather than one broad provider/app flag;
+- canonical degradation reason codes;
+- consumer/dependency-aware blast radius;
+- dataset/horizon/session freshness SLOs;
+- provider circuit/retry discipline;
+- duplicate-work elimination, single-flight/coalescing and calls avoided;
+- workload priority, bounded queues/backpressure and graceful load shedding;
+- warm canonical persistence/restart recovery;
+- truthful `UNKNOWN`, degraded and ABSTAIN semantics;
+- concise impact-aware user messaging plus deeper Maintenance diagnostics.
+
+The core target is to eliminate **self-inflicted, overly broad or unexplained** `DATA DEGRADED` states while preserving truthful warnings when required evidence is genuinely unavailable/stale/unreliable.
+
 ### v18.2 — Admin / Presence / Session Operations
 SUPER OWNER / OWNER / ADMIN operations, user/session visibility and lifecycle, bounded presence, enable/disable and revocation controls, role-aware operations, and approved session-policy controls.
 
 ### v18.3 — PostgreSQL / Hosted Shared State
 PostgreSQL repository parity, migrations, transactions/concurrency, shared canonical runtime state, browser/hosted architecture, pooling, backup/restore, migration/export, load/contention testing, and hosted health/readiness.
 
+v18.3 must also use the persistence transition to harden ADR-GDI foundations where dependency-compatible: indexed warm canonical state, restart recovery, shared-symbol reuse, DB/query/pool observability, capability-health persistence where appropriate, bounded persistence pressure, and protection against PostgreSQL becoming a new bottleneck.
+
 ### v18.4 — Security + Commercial / Data-Rights Hardening
 Secrets/security hardening, auth/session/CSRF/cookie review, adversarial authorization testing, provider entitlement/data-rights metadata, hosted/commercial-use readiness, quota/abuse safeguards, observability, and licensing/redistribution/AI-use suitability.
 
 ### v18.5 — Major Closure & Release Assurance
 **MANDATORY before v19.** Reconstruct full v18 scope and run fresh architecture, source quality, performance/capacity, security, data-utility, UI/UX, adaptive-intelligence, native/runtime, Principal Engineer, Professional Trader/Investor, and release-assurance closure.
+
+ADR-GDI is a mandatory v18.5 closure dimension. Prove under realistic supported load that local/runtime architecture does not materially cause broad `DATA DEGRADED`; test provider failures/rate limits, stale data, source disagreement, DB pressure/unavailability, queue saturation, restart/warm-start, multi-user/symbol fan-out, background-job pressure, load shedding, recovery hysteresis, blast-radius correctness and actual packaged-runtime degradation UX.
+
+If self-inflicted overload can delay or misstate decision-critical live/current evidence, it is a release blocker until fixed or explicitly constrained with truthful operating limits.
 
 ---
 
@@ -59,9 +82,10 @@ Approved direction:
 - specialized/paid providers only when measured capability gaps justify them;
 - formal long-term role classification for SHADOW candidate providers such as TradeInsight;
 - harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance;
-- harden two-sided thesis evidence infrastructure: point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE, behavior/regime/catalyst lineage, short-interest/crowding/shortability/borrow/SSR data only where trustworthy and lawful, and explicit UNKNOWN semantics when unavailable.
+- harden two-sided thesis evidence infrastructure: point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE, behavior/regime/catalyst lineage, short-interest/crowding/shortability/borrow/SSR data only where trustworthy and lawful, and explicit UNKNOWN semantics when unavailable;
+- harden ADR-GDI with measured capability SLOs, degradation history, fallback quality, provider/DB/runtime reliability scorecards, query/index tuning, capacity limits, restart behavior, load-shedding effectiveness and commercial/hosted operating limits.
 
-v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, and rights for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, and 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence.
+v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, rights and reliability lineage for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence, and adaptive reliability optimization.
 
 **Mandatory v19 Major Closure before v20.**
 
@@ -84,7 +108,8 @@ Approved capabilities include:
 - controlled Champion/Challenger evaluation;
 - **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**;
 - **Adaptive Institutional Holdings / 13F Intelligence**;
-- **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI) — 10/10 Contract**.
+- **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI) — 10/10 Contract**;
+- **Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) — governed adaptive optimization using reliability history accumulated earlier**.
 
 Production promotion remains:
 
@@ -213,6 +238,50 @@ Build/validate:
 TDTI must reuse ASBI, Day/Swing/Long, Opportunity Radar, Decision Queue, Research, Historical Validation and canonical evidence ownership. It is **not** a new duplicate intelligence silo.
 
 Production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent formula/model self-modification and no execution capability.
+
+---
+
+# Adaptive Data Reliability & Graceful Degradation Intelligence — Roadmap Placement
+
+ADR-GDI is a cross-cutting reliability architecture and adaptive operating contract. Basic reliability is not deferred to v20.
+
+### v18.3 Foundation
+Implement/harden:
+- capability-level health;
+- consumer/dependency blast radius;
+- dataset/horizon/session freshness SLOs;
+- reason taxonomy and recovery state;
+- warm SQLite/PostgreSQL canonical persistence;
+- shared-symbol reuse and request coalescing;
+- workload priorities, bounded queues/backpressure and load shedding;
+- Provider Router circuits/cooldowns/fallback discipline;
+- DB/query/pool/runtime observability;
+- graceful degraded/UNKNOWN/ABSTAIN semantics;
+- impact-aware UI plus Maintenance diagnostics.
+
+Dependency-compatible fixes for retry storms, duplicate work, broad false degradation or local overload should be implemented earlier rather than waiting for v18.3 if they are safe and clearly evidenced.
+
+### v18.5 Mandatory Reliability Closure
+Prove:
+- supported-load SLO attainment for decision-critical capabilities;
+- self-inflicted degradation is eliminated or bounded by explicit truthful operating limits;
+- optional failures do not contaminate unrelated consumers;
+- required failures produce scoped degradation/ABSTAIN;
+- provider/DB/runtime pressure does not create retry/fetch storms;
+- restart/warm-start avoids unnecessary full rebuilds;
+- load shedding protects high-value live work;
+- recovery uses hysteresis and does not flap;
+- packaged runtime can explain reason, impact, fallback and recovery.
+
+### v19 Professional Reliability Hardening
+Measure and optimize provider/DB/runtime reliability, SLOs, fallback quality, degradation history, query/index/capacity behavior, commercial operating limits and cost/value efficiency.
+
+### v20 Adaptive Reliability Optimization
+Use accumulated reliability history to improve provider recovery prediction, cooldown/backoff selection, workload prioritization, fallback usefulness and capacity policy through governed SHADOW/Champion-Challenger evaluation.
+
+No adaptive reliability policy may silently self-promote to production.
+
+Full permanent contract: `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`.
 
 ---
 

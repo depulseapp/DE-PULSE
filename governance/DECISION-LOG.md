@@ -5,6 +5,7 @@
 Current canonical wording lives in:
 - `governance/APPROVED-SCOPE.md`
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`
+- `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`
 - `governance/ROADMAP.md`
 
 Do not delete old decisions when direction changes. Mark them **SUPERSEDED** and reference the replacing decision.
@@ -81,7 +82,7 @@ Full scope: `governance/APPROVED-SCOPE.md` INT-006 through INT-016 and `governan
 
 **Status:** APPROVED  
 **Date:** 2026-08-14  
-**Affects:** Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Day/Swing/Long, ASBI, Research, Opportunity Radar, Decision Queue, Historical Validation
+**Affects:** Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Day/Swing/Long, ASBI, Research, Opportunity Radar, Decision Queue, Historical Validation  
 **Placement:** v18/v19 evidence/data foundation; v20 major adaptive implementation/validation
 
 ### Decision
@@ -102,6 +103,43 @@ Production adaptive influence remains:
 **SHADOW → VALIDATED → APPROVED → PRODUCTION**
 
 Full scope: `governance/APPROVED-SCOPE.md` TDTI-001 through TDTI-023, `governance/ROADMAP.md` Two-Sided Directional Thesis & Trade Plan Intelligence placement, and `governance/ADAPTIVE-OPERATING-CONTRACT.md` section 20.
+
+---
+
+## DEC-2026-08-14-005 — 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence
+
+**Status:** APPROVED  
+**Date:** 2026-08-14  
+**Affects:** Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Provider Router, Shared Symbol Intelligence, SQLite/PostgreSQL, Day/Swing/Long, ASBI, TDTI, Research, Opportunity Radar, Decision Queue, Maintenance/Data Engine  
+**Placement:** dependency-compatible v18 reliability work; v18.3 persistent/shared-state foundation; mandatory v18.5 reliability closure; v19 professional hardening; v20 governed adaptive optimization
+
+### Decision
+Adopt **Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI)** as a permanent 10/10 reliability architecture and operating contract.
+
+The system must stop treating `DATA DEGRADED` as a broad generic state. Reliability is capability-specific, freshness-aware, consumer/dependency-aware and impact-aware. Optional/stale context must not contaminate unrelated decision surfaces; missing/unreliable required evidence must cause scoped degradation or ABSTAIN / NO RELIABLE EDGE rather than false confidence.
+
+ADR-GDI includes:
+- capability-level health;
+- dataset/horizon/session freshness SLOs;
+- canonical degradation reason codes;
+- consumer dependency graphs and blast-radius intelligence;
+- `NORMAL → PRESSURE → PROTECTED → DEGRADED → RECOVERING → HEALTHY` runtime state;
+- workload prioritization/backpressure/load shedding;
+- persistent warm canonical SQLite/PostgreSQL state;
+- fetch-once/calculate-once, single-flight/coalescing and material-change propagation;
+- Provider Router circuit/cooldown/fallback discipline and calls avoided;
+- DB/query/pool/runtime observability so PostgreSQL does not become the new bottleneck;
+- graceful confidence reduction/UNKNOWN/ABSTAIN semantics;
+- degradation/recovery event ledger;
+- adaptive provider/recovery/workload learning under SHADOW → VALIDATED → APPROVED → PRODUCTION governance;
+- concise impact-aware USER messaging with deeper Maintenance/Data Engine diagnostics;
+- G0–G16 failure-injection, load, restart, DB, queue, fallback, recovery and actual packaged-runtime acceptance.
+
+The success criterion is **not zero truthful degradation events**. It is that DE.PULSE rarely degrades because of its own architecture, isolates unavoidable failures to the smallest truthful blast radius, protects high-value decision-critical evidence, explains impact clearly, recovers safely with hysteresis, and learns from real reliability outcomes without silent production self-modification.
+
+PostgreSQL is one component of the solution, not the solution by itself.
+
+Full contract: `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md` and roadmap placement in `governance/ROADMAP.md`.
 
 ---
 
