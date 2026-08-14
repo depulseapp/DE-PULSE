@@ -37,6 +37,7 @@ jobs:
           python3 v18_2_principal_engineer_gate.py
           python3 source_health_architecture_gate.py
           python3 data_utility_gate.py
+          python3 functionality_utility_checkpoint_gate.py
           python3 data_health_policy_gate.py
           python3 documentation_governance_gate.py
           test "$(git merge-base HEAD 4b48c61ee103897e834f4ff7d24af07d4275a62c)" = "4b48c61ee103897e834f4ff7d24af07d4275a62c"
@@ -88,7 +89,7 @@ jobs:
           printf '%s\n' "$FP" | tee v18.2-G10-source-fingerprint.txt
           python3 - "$FP" > v18.2-G10-PASS.json <<'PY'
           import json,sys,datetime
-          print(json.dumps({'schemaVersion':1,'gateRange':'G4-G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','resumeProtocol':'adaptive-governance/BUILD_RESUME_PROTOCOL.md','checks':{'resumeContract':True,'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
+          print(json.dumps({'schemaVersion':1,'gateRange':'G4-G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','resumeProtocol':'adaptive-governance/BUILD_RESUME_PROTOCOL.md','checks':{'resumeContract':True,'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'functionalityUtilityIntegration':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
           PY
       - uses: actions/upload-artifact@v7
         with:
