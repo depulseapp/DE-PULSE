@@ -99,3 +99,34 @@ Planning default: **reuse and correlate before adding; consolidate before creati
 The release must maintain `functionality_utility_registry.json` and keep it aligned with current primary navigation and material background/intelligence capabilities. The plan must include `functionality_utility_checkpoint_gate.py` in pre-freeze qualification.
 
 Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+
+## Permanent Adaptive Work Decomposition Planning
+
+Every release plan must evaluate heavy work before execution and choose the smallest useful evidence boundaries rather than defaulting to monolithic tasks.
+
+For each heavy implementation/qualification/delivery responsibility, the plan should decide:
+
+- keep as one unit, or split into work packages/checkpoints/sub-stages/shards;
+- dependency order and which packages may run safely in parallel;
+- canonical owner for each package;
+- exact inputs/fingerprint/artifact identity;
+- PASS/FAIL/BLOCKED or completion criteria and evidence location;
+- downstream consumers and invalidation rules;
+- shared setup/data/artifacts that prevent duplicated work;
+- bounded concurrency based on runner, browser, provider/API, DB, CPU and memory capacity;
+- resume behavior after a partial failure or interruption;
+- whether intermediate evidence can safely prevent rerunning unrelated work.
+
+Planning follows the adaptive loop:
+
+**Understand → decompose → map dependencies → reuse → execute → checkpoint → evaluate evidence → adapt next work → integrate → certify → learn.**
+
+The planner may adapt sequencing after checkpoints when actual evidence shows a better next action, provided immutable scope, release contracts and required assurance are preserved.
+
+### Gate-model planning
+
+The current G0–G16 map is the default. If a recurring/material responsibility appears to require a new release gate, planning must first attempt checkpointing, sharding/parallel lanes, or strengthening/reassigning an existing gate.
+
+A new gate may be proposed only after the Gate Utility Test proves distinct risk/responsibility, independent evidence, non-duplication, material value, canonical ownership, process-wide updates, migration clarity and planned G16 review. No release plan may introduce an isolated ad-hoc G-gate.
+
+Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
