@@ -1,0 +1,66 @@
+{
+  "schema": "DE.PULSE-CANONICAL-NAMING-1",
+  "version": "18.2.0",
+  "product": {
+    "displayName": "DE.PULSE"
+  },
+  "channels": ["TEST", "RC", "STABLE"],
+  "gateMap": [
+    {"id":"G0","name":"Exact Baseline"},
+    {"id":"G1","name":"Immutable Scope"},
+    {"id":"G2","name":"Architecture & Data Utility"},
+    {"id":"G3","name":"Design & Dependency Readiness"},
+    {"id":"G4","name":"Development Exit"},
+    {"id":"G5","name":"FAST Qualification"},
+    {"id":"G6","name":"Integration & MEDIUM Qualification"},
+    {"id":"G7","name":"Data, Security & Adaptive Intelligence"},
+    {"id":"G8","name":"Performance, Capacity & Stability"},
+    {"id":"G9","name":"Cross-Module UI/UX"},
+    {"id":"G10","name":"Pre-Freeze Qualification"},
+    {"id":"G11","name":"Immutable Release Candidate"},
+    {"id":"G12","name":"Full Certification"},
+    {"id":"G13","name":"Native Packaging & Provenance"},
+    {"id":"G14","name":"Actual Artifact Runtime Audit"},
+    {"id":"G15","name":"Release Assurance & Promotion"},
+    {"id":"G16","name":"Adaptive Retrospective & Handoff"}
+  ],
+  "roles": ["SUPER_OWNER", "OWNER", "ADMIN", "USER", "DEMO"],
+  "evidenceStates": ["PASS", "FAIL", "PENDING", "BLOCKED", "INVALIDATED", "SUPERSEDED"],
+  "failureClasses": ["PRODUCT_FAIL", "GATE_TEST_FAIL", "CI_HARNESS_FAIL", "INFRA_FAIL", "EXPECTED_NOOP", "SUPERSEDED"],
+  "userDeliveryStates": ["NOT_READY", "READY", "DELIVERED"],
+  "surfaces": [
+    {"name":"Dashboard","id":"dashboard"},
+    {"name":"Market Intelligence","id":"market-intelligence"},
+    {"name":"Day Trade Desk","id":"day"},
+    {"name":"Swing Desk","id":"swing"},
+    {"name":"Long-Term Desk","id":"long"},
+    {"name":"Discovery","id":"discovery"},
+    {"name":"Research","id":"research"},
+    {"name":"AI Copilot","id":"ai"},
+    {"name":"Administration","id":"administration","conditional":true},
+    {"name":"Maintenance","id":"maintenance"},
+    {"name":"Settings","id":"settings"},
+    {"name":"Documentation","id":"documentation"}
+  ],
+  "intelligenceNames": [
+    "Discovery Scanner",
+    "Opportunity Radar",
+    "Rapid Move / Market Shock Detector",
+    "Session Intelligence Coordinator",
+    "Pre-Market Checkpoint",
+    "Market Open Checkpoint",
+    "Earnings & Material Catalyst Reaction Watch",
+    "Event Intelligence",
+    "Smart Provider Router"
+  ],
+  "patterns": {
+    "stableTag": "v<major>.<minor>.<patch>-stable",
+    "developmentBranch": "v<major>.<minor>-development",
+    "buildId": "v<version>-<channel-lower>-<short-release-purpose>-<YYYYMMDD>",
+    "macAsset": "De-Pulse-v<version>-<CHANNEL>-macOS-Apple-Silicon.zip",
+    "windowsAsset": "De-Pulse-v<version>-<CHANNEL>-Windows-x64.zip",
+    "checkpointId": "CP-<GATE>-<AREA>-<PURPOSE>",
+    "workPackageId": "WP-<VERSION>-<AREA>-<NN>",
+    "capabilityId": "<domain>.<resource>.<action>"
+  }
+}
