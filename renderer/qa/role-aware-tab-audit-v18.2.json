@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "release": "v18.2.0",
   "contract": "adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md",
   "personas": ["OWNER", "ADMIN", "USER", "DEMO"],
@@ -24,21 +24,22 @@
   },
   "globalShell": {
     "dataStatus": {"OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW"},
-    "runtimeStartStop": {"OWNER":"SHOW","ADMIN":"SHOW_DELEGATED","USER":"HIDE","DEMO":"HIDE"},
-    "dataEngineSidebar": {"OWNER":"SHOW","ADMIN":"SHOW_DELEGATED","USER":"HIDE","DEMO":"HIDE"}
+    "runtimeStartStop": {"OWNER":"SHOW","ADMIN":"HIDE_UNLESS_DELEGATED","USER":"HIDE","DEMO":"HIDE"},
+    "dataEngineSidebar": {"OWNER":"SHOW","ADMIN":"HIDE_UNLESS_DELEGATED","USER":"HIDE","DEMO":"HIDE"}
   },
   "tabs": [
-    {"id":"dashboard","label":"Dashboard","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISIONS_AND_MARKET_CONTEXT_FIRST"},
-    {"id":"market-intelligence","label":"Market Intelligence","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"SYNTHESIZED_MARKET_INTELLIGENCE_FIRST"},
-    {"id":"day","label":"Day Trade Desk","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
-    {"id":"swing","label":"Swing Desk","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
-    {"id":"long","label":"Long-Term Desk","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
-    {"id":"discovery","label":"Discovery","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"CANDIDATE_QUALIFICATION_FIRST"},
-    {"id":"research","label":"Research","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISION_BRIEF_AND_EVIDENCE_FIRST"},
-    {"id":"ai","label":"AI Copilot","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISION_SUPPORT_FIRST_PROVIDER_CONFIG_ELSEWHERE"},
-    {"id":"maintenance","label":"Maintenance","OWNER":"SHOW_FULL","ADMIN":"SHOW_DELEGATED","USER":"HIDE_AND_REJECT","DEMO":"HIDE_AND_REJECT","priorityInvariant":"OPERATIONAL_HEALTH_FIRST_DIAGNOSTICS_AFTER"},
-    {"id":"settings","label":"Settings","OWNER":"COMPOSE_OWNER","ADMIN":"COMPOSE_DELEGATED_ADMIN","USER":"COMPOSE_PERSONAL","DEMO":"COMPOSE_PERSONAL_DEMO","priorityInvariant":"PERSONAL_GENERAL_BEFORE_ROLE_SPECIFIC_ADMIN_WHERE_APPLICABLE"},
-    {"id":"documentation","label":"Documentation","OWNER":"SHOW_USER_DEVELOPER_LIMITATIONS","ADMIN":"SHOW_USER_LIMITATIONS_AND_DELEGATED_OPS","USER":"SHOW_USER_LIMITATIONS","DEMO":"SHOW_USER_LIMITATIONS","priorityInvariant":"AUDIENCE_APPROPRIATE_DOCUMENTATION_ONLY"}
+    {"id":"dashboard","label":"Dashboard","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISIONS_AND_MARKET_CONTEXT_FIRST"},
+    {"id":"market-intelligence","label":"Market Intelligence","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"SYNTHESIZED_MARKET_INTELLIGENCE_FIRST"},
+    {"id":"day","label":"Day Trade Desk","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
+    {"id":"swing","label":"Swing Desk","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
+    {"id":"long","label":"Long-Term Desk","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"PROTECTED_DESK_DECISION_FLOW_FIRST"},
+    {"id":"discovery","label":"Discovery","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"CANDIDATE_QUALIFICATION_FIRST"},
+    {"id":"research","label":"Research","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISION_BRIEF_AND_EVIDENCE_FIRST"},
+    {"id":"ai","label":"AI Copilot","kind":"canonical","OWNER":"SHOW","ADMIN":"SHOW","USER":"SHOW","DEMO":"SHOW","priorityInvariant":"DECISION_SUPPORT_FIRST_PROVIDER_CONFIG_ELSEWHERE"},
+    {"id":"administration","label":"Administration","kind":"conditional-privileged","OWNER":"SHOW_FULL","ADMIN":"SHOW_DELEGATED","USER":"HIDE_AND_REJECT","DEMO":"HIDE_AND_REJECT","priorityInvariant":"USERS_PRESENCE_SESSIONS_ONLY_NO_GLOBAL_PROVIDER_OR_RUNTIME_CONFIG"},
+    {"id":"maintenance","label":"Maintenance","kind":"canonical","OWNER":"SHOW_FULL","ADMIN":"HIDE_UNLESS_DELEGATED","USER":"HIDE_AND_REJECT","DEMO":"HIDE_AND_REJECT","priorityInvariant":"OPERATIONAL_HEALTH_FIRST_DIAGNOSTICS_AFTER"},
+    {"id":"settings","label":"Settings","kind":"canonical","OWNER":"COMPOSE_OWNER","ADMIN":"COMPOSE_PERSONAL_AND_EXPLICIT_DELEGATIONS","USER":"COMPOSE_PERSONAL","DEMO":"COMPOSE_PERSONAL_DEMO","priorityInvariant":"PERSONAL_GENERAL_BEFORE_ROLE_SPECIFIC_CONTROLS"},
+    {"id":"documentation","label":"Documentation","kind":"canonical","OWNER":"SHOW_USER_DEVELOPER_LIMITATIONS","ADMIN":"SHOW_USER_LIMITATIONS_AND_DELEGATED_OPS","USER":"SHOW_USER_LIMITATIONS","DEMO":"SHOW_USER_LIMITATIONS","priorityInvariant":"AUDIENCE_APPROPRIATE_DOCUMENTATION_ONLY"}
   ],
   "g9": {
     "required": true,
