@@ -1,204 +1,293 @@
 # DE.PULSE — Adaptive Build Plan
 
-## Permanent Checkpoint & Resume Requirements
+**Status:** ACTIVE / GOVERNED  
+**Authority:** product sequencing comes from `governance/ROADMAP.md`; permanent operating rules come from `governance/ADAPTIVE-OPERATING-CONTRACT.md`. This file defines how an active release is planned efficiently inside those contracts.
 
-Every release build plan must define its durable recovery state before implementation proceeds beyond G3.
+## 1. Planning North Star
 
-Required plan items:
+Every release plan follows:
 
-- exact incoming Stable tag/commit/release;
+**approved scope → impact map → reuse → smallest safe work packages → bounded execution → evidence → AIPLC learning → next action.**
+
+The plan must maximize assurance **without** maximizing workload.
+
+Permanent engineering order:
+
+**REUSE → CONSOLIDATE → REFACTOR → DELETE/REPLACE → ADD**
+
+Permanent gate model: **G0–G16 only.** No release plan may introduce G17+.
+
+---
+
+## 2. Durable resume state before G3 exit
+
+Every release must define:
+- exact incoming Stable tag/commit;
 - one active development/release branch;
-- canonical release identity and expected runtime profile;
+- canonical release identity/runtime profile;
 - build checkpoint and release-evidence checkpoint locations;
-- fingerprint-keyed qualification strategy;
-- checkpoint updates after meaningful code commits and at G3/G4/G10/G11/G12/G14/G15/G16;
-- next-step/blocker recording whenever a gate stops;
-- G16 archive/cleanup and next-release checkpoint seed.
+- candidate/source fingerprint strategy;
+- authoritative next step/blocker;
+- G16 archive/cleanup and next-release seed.
 
-The build plan must distinguish **implementation complete** from **evidence reusable**. A feature may be built while a later source change requires requalification; the checkpoint must preserve that truth rather than labeling later gates PASS.
+Meaningful implementation work must be committed before it is considered resumable.
 
-Expensive tests and native audits may resume from exact-source evidence when source/RC/artifact identity is unchanged. Any affected evidence must be invalidated after source or packaging changes.
+A checkpoint label never outranks actual GitHub branch HEAD, source fingerprint, workflow/artifact evidence or immutable RC/package identity.
 
-No meaningful local-only work is accepted as a durable build-plan milestone. It must be committed to the active GitHub branch before it can be treated as resumable.
+---
 
-## Permanent Adaptive CI planning requirements
+## 3. Impact-First Planning
 
-Every release plan must also define:
+Before any expensive implementation/qualification, create an impact map:
 
-- one logical Build Coordinator and the G0–G16 dependency graph;
-- which qualification lanes may safely run in parallel;
-- one canonical owner for each expensive test/gate responsibility;
-- preventative-learning preflight before expensive qualification;
-- mandatory CI failure classification;
-- Build State Ledger / Checkpoint v2 reconciliation against actual GitHub evidence;
-- metadata-only path isolation so checkpoint commits do not cause unnecessary recertification;
-- idempotent mutation behavior so no-change operations cannot create false red builds;
-- separate macOS Apple Silicon and Windows x64 native evidence;
-- explicit `User Delivery` completion for native TEST/RC/Stable deliveries as prescribed;
-- G16 CI-learning review and workflow/check consolidation.
+**Git diff / requested change → canonical owner → dependency blast radius → affected tabs/features/data/roles/providers/runtime paths → reusable evidence → smallest required work/test set.**
 
-The detailed reconciliation and invalidation rules are mandatory from `adaptive-governance/BUILD_RESUME_PROTOCOL.md`.
-The CI learning/orchestration/delivery rules are mandatory from `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`.
+Classify each responsibility as:
+- **FRESH_REQUIRED** — affected and must be rerun/reviewed;
+- **INHERITABLE** — unchanged and equivalent evidence may be reused;
+- **SENTINEL_REQUIRED** — unchanged area needs a small dependency/non-regression probe;
+- **NOT_APPLICABLE** — outside release impact.
 
-## Permanent Role-Aware Build Planning Requirements
+Evidence inheritance is allowed only when relevant:
+- source/artifact fingerprint is equivalent;
+- canonical owner/dependency contract is unchanged;
+- test definition/input semantics remain applicable;
+- role/security/data-rights assumptions remain equivalent.
 
-Every release that adds, removes, moves or materially changes a tab, card, shell control, administrative operation or role-sensitive dataset must define its role/capability composition before implementation exits G3.
+This classification must be durable enough for G10 coverage reconciliation.
 
-The build plan must contain or generate a role/capability matrix covering:
+---
 
-- every current application tab and global shell/navigation surface;
-- SUPER_OWNER/OWNER composition;
-- selected/full-capability ADMIN composition where delegated;
-- limited/delegated ADMIN composition;
-- USER composition;
-- DEMO composition;
-- visible controls and server-authorized actions for each capability;
-- data/payload fields that must be withheld server-side, not merely hidden;
-- intended information hierarchy and placement of each surviving section;
-- responsive reflow behavior when privileged sections are absent;
-- direct-navigation/API denial expectations for unauthorized capabilities;
-- supported desktop/tablet/narrow-browser role × viewport test coverage.
+## 4. Three-Depth AIPLC Plan
 
-Planning rules:
+### Level 1 — every meaningful build/checkpoint
+Run **Delta AIPLC** only for changed/affected areas plus dependency sentinels.
 
-- ADMIN capability grants are explicit; `ADMIN` alone must not imply full runtime/provider/security/maintenance authority.
-- USER/DEMO plans must exclude implementation machinery rather than merely cosmetically hiding it.
-- removal of privileged content must include a planned recomposition/reflow outcome; inherited OWNER geometry is not accepted.
-- OWNER/admin controls are placed according to utility and hierarchy, not automatically at the top.
-- a proposed new tab must pass a utility/separation test: create it only when it materially improves workflow, security boundary, clarity or maintainability. Do not add tabs for organizational convenience alone.
-- when justified, a capability-scoped Administration tab is preferred to mixing delegated identity/session administration into unrelated Settings or Maintenance surfaces.
-- frontend visibility and backend authorization changes are planned together as one capability boundary.
+For each affected tab/feature/datum use:
 
-G9 is the main UI-composition enforcement point, with security/data authorization additionally verified in G7/G12 and final role-audit closure recorded at G16.
+**datum → purpose → canonical owner → consumer → freshness/materiality → independence/correlation → interpretation → decision value → explanation → outcome → learning.**
 
-Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+Every material challenge produces:
+1. immediate fix/truthful disposition;
+2. reusable prevention/cross-product pattern scan.
 
-## Permanent Functionality Utility & Integration Planning Requirements
+### Level 2 — G10
+Run **Full Coverage Reconciliation**. Every required product/process responsibility must be either freshly evidenced or explicitly inherited from equivalent trustworthy evidence.
 
-Every release build plan must include a **Functionality Utility, Reuse, Correlation & Surface Checkpoint** before implementation exits G3.
+### Level 3 — G16 / Major Closure
+Run the deep all-system Adaptive Retrospective, including architecture, source quality, data utility, UI/UX, reliability, performance, provider usefulness, adaptive intelligence, process failures and recurring defects.
 
-The plan must inventory every new or materially changed functionality, including tabs/sub-tabs/cards, engines, scanners, detectors, preparation jobs, watchers, schedulers, APIs/provider calls, datasets, derived metrics/models, alerts, persistence fields and administrative operations.
+Mechanically identical reruns with no new evidence may record `NO NEW LEARNING / EVIDENCE EQUIVALENT` instead of creating another heavy report.
 
-For each item, planning must record:
+---
 
-- purpose and active consumer/workflow;
+## 5. Build Coordinator & bounded CI plan
+
+Every release has one logical Build Coordinator and one authoritative G0–G16 dependency graph.
+
+Plan independent lanes only where safe. Bounded parallelism must account for:
+- runner/CPU/memory;
+- browser instances;
+- provider/API limits;
+- database/storage contention;
+- AI/LLM calls;
+- artifact/publishing mutations.
+
+One canonical owner exists for each expensive test/gate responsibility.
+
+CI failures are classified before candidate health changes:
+`PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP`, `SUPERSEDED`.
+
+Metadata/checkpoint-only paths must be isolated so they do not trigger unnecessary certification/native work.
+
+Mutating workflows must be idempotent; a legitimate no-change operation is not a product failure.
+
+---
+
+## 6. Test/load efficiency plan
+
+Plan the cheapest trustworthy evidence first:
+- **G5:** changed-area FAST tests;
+- **G6:** affected integration/MEDIUM tests;
+- **G7/G8/G9:** bounded independent affected lanes;
+- **G10:** complete coverage reconciliation;
+- **G12:** one full certification on the immutable RC.
+
+Provider/data testing:
+- prefer deterministic fixtures, historical replay and canonical cached evidence when live behavior is not the subject under test;
+- use bounded live-provider smoke only where actual live routing/fallback/freshness must be proven;
+- share equivalent acquired evidence across test lanes rather than refetching it.
+
+AI/LLM testing:
+- prefer canonical evidence packages/fingerprints for grounding/regression;
+- use small bounded true-model samples when actual model-runtime behavior must be certified;
+- do not rerun materially identical synthesis per user/symbol/test when reusable evidence is equivalent.
+
+Native:
+- macOS Apple Silicon and Windows x64 evidence are independent lanes;
+- preserve an unchanged platform PASS when exact RC/package identity remains unchanged.
+
+---
+
+## 7. Role-Aware Planning
+
+Any release that changes tabs, cards, shell controls, administrative operations or role-sensitive data must define the role/capability composition before G3 exit.
+
+Cover:
+- SUPER_OWNER / OWNER;
+- full-capability ADMIN where explicitly delegated;
+- limited/delegated ADMIN;
+- USER;
+- DEMO;
+- visible controls and backend-authorized actions;
+- fields withheld server-side;
+- information hierarchy/reflow;
+- direct route/API denial;
+- required desktop/tablet/narrow-browser coverage.
+
+ADMIN authority is capability-based; USER/DEMO receive no implementation machinery.
+
+Frontend visibility and backend authorization are one capability boundary.
+
+Canonical details: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md` and `ROLE_AWARE_SESSION_SECURITY_CONTRACT.md`.
+
+---
+
+## 8. Functionality Utility / Minimal-Surface Planning
+
+For every new/materially changed tab, card, engine, scanner, detector, job, watcher, scheduler, provider path, dataset, derived metric/model, alert, persistence field or administrative operation, record:
+- purpose/consumer;
 - canonical owner;
-- existing implementation/data that will be reused;
-- whether provider acquisition, computation, cache, persistence or in-flight work can be shared/coalesced;
-- functional overlap with existing engines/jobs/surfaces and the chosen consolidation/retirement decision;
-- required correlations with existing canonical evidence and outcome/learning state;
-- freshness/materiality, retention, rights/sensitivity and degraded behavior;
-- provider/runtime/storage/UI performance impact;
-- intended UI disposition: existing surface, compact contextual reuse, drill-down/internal-only, justified new surface, remove/retire, or defer;
-- explicit new-tab justification whenever a new primary/conditional tab is proposed;
-- role/capability visibility and backend authorization requirements;
-- obsolete implementation/surface/job that can be removed as part of the change.
+- reused implementation/data;
+- shared/coalesced acquisition/computation/persistence opportunities;
+- overlap/consolidation decision;
+- required correlations;
+- freshness/materiality/retention/rights/degraded behavior;
+- performance cost;
+- UI disposition;
+- role/backend authorization;
+- obsolete implementation/surface/job to retire where safe.
 
-Planning default: **reuse and correlate before adding; consolidate before creating another owner; create no extra tab unless separation materially improves the product.**
+Default:
 
-The release must maintain `functionality_utility_registry.json` and keep it aligned with current primary navigation and material background/intelligence capabilities. The plan must include `functionality_utility_checkpoint_gate.py` in pre-freeze qualification.
+**one canonical intelligence owner → one deep-evidence home → concise contextual reuse elsewhere.**
 
-Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+Maintain `functionality_utility_registry.json`; use `functionality_utility_checkpoint_gate.py` before G10.
 
-## Permanent Adaptive Work Decomposition Planning
+---
 
-Every release plan must evaluate heavy work before execution and choose the smallest useful evidence boundaries rather than defaulting to monolithic tasks.
+## 9. Governance-to-Implementation Closure Planning
 
-For each heavy implementation/qualification/delivery responsibility, the plan should decide:
-
-- keep as one unit, or split into work packages/checkpoints/sub-stages/shards;
-- dependency order and which packages may run safely in parallel;
-- canonical owner for each package;
-- exact inputs/fingerprint/artifact identity;
-- PASS/FAIL/BLOCKED or completion criteria and evidence location;
-- downstream consumers and invalidation rules;
-- shared setup/data/artifacts that prevent duplicated work;
-- bounded concurrency based on runner, browser, provider/API, DB, CPU and memory capacity;
-- resume behavior after a partial failure or interruption;
-- whether intermediate evidence can safely prevent rerunning unrelated work.
-
-Planning follows the adaptive loop:
-
-**Understand → decompose → map dependencies → reuse → execute → checkpoint → evaluate evidence → adapt next work → integrate → certify → learn.**
-
-The planner may adapt sequencing after checkpoints when actual evidence shows a better next action, provided immutable scope, release contracts and required assurance are preserved.
-
-### Gate-model planning
-
-The current G0–G16 map is the default. If a recurring/material responsibility appears to require a new release gate, planning must first attempt checkpointing, sharding/parallel lanes, or strengthening/reassigning an existing gate.
-
-A new gate may be proposed only after the Gate Utility Test proves distinct risk/responsibility, independent evidence, non-duplication, material value, canonical ownership, process-wide updates, migration clarity and planned G16 review. No release plan may introduce an isolated ad-hoc G-gate.
-
-Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
-
-## Permanent Governance-to-Implementation Closure Planning
-
-Every build plan must distinguish **governance adoption** from **implementation closure**. Each new permanent rule receives an explicit implementation disposition before G3 exit:
-
+Every applicable permanent requirement receives one disposition:
 - `CURRENT_RELEASE_BLOCKER`;
 - `CURRENT_RELEASE_PROCESS_HARDENING`;
 - `NEXT_RELEASE_MANDATORY_ENTRY`;
 - `FUTURE_STRATEGIC`.
 
-For every applicable item, the plan records implementation owner, source/workflow targets, dependencies, evidence gate/checkpoint, naming, regression coverage, delivery impact, and exact completion criteria. A documented rule with no implementation/evidence plan is a planning defect.
+A documented rule with no owner/evidence/completion plan is a planning defect.
 
-### v18.2 required plan closure
+For each applicable item record:
+- implementation owner/target;
+- dependencies;
+- evidence gate/checkpoint;
+- regression coverage;
+- delivery impact;
+- exact completion criteria.
 
-The v18.2 build plan must explicitly schedule and evidence:
+Canonical details: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
 
-- capability-based ADMIN authorization shared by UI and backend;
-- dedicated capability-scoped Administration navigation/composition;
-- all-tab/global-shell role × viewport audit for SUPER_OWNER/OWNER, full-capability ADMIN, limited ADMIN, USER and DEMO;
-- deterministic Build State Ledger v2 reconciliation from actual GitHub HEAD/fingerprint/CI/artifact truth using canonical evidence-state names;
-- consolidation/subordination of overlapping release workflows under one actual Build Coordinator;
-- canonical naming migration/cleanup for active workflows, jobs, artifacts, checkpoints and gate labels.
+---
 
-These are not satisfied by documentation alone. Product/security items block the applicable product gates; process-hardening items block trust in the affected release evidence until closed.
+## 10. Shared Symbol Intelligence Planning
 
-### v18.3 mandatory entry
-
-All source-changing utility/consolidation items in `functionality_utility_remediation.json` are mandatory G1–G3 inputs for v18.3. They may be replaced only by a stronger audited disposition, never silently dropped.
-
-Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
-
-## Permanent Shared Symbol Intelligence Planning Requirements
-
-Every release that adds or materially changes symbol demand, provider acquisition, subscriptions, scanner/radar behavior, research, preparation/event processing, user workspaces, AI/adaptive synthesis, persistence or hosted multi-user behavior must include a **Shared Symbol Intelligence Processing Plan** before G3 exit.
-
-The plan must define:
-
-- Global Symbol Registry ownership and all demand contributors;
-- the shared demand union and rules for entering/leaving it;
-- canonical processing keys, including symbol/instrument, dataset/capability, session/time window, freshness/materiality requirement, provider/entitlement/data-rights domain and model/policy version where relevant;
-- one canonical owner for acquisition, normalization, validation, canonical state, deterministic calculations, correlation, reusable intelligence and fan-out;
-- which consumers reuse each canonical result;
-- cache/freshness strategy and in-flight coalescing/single-flight ownership;
-- material-change invalidation/propagation dependencies rather than blanket recomputation;
-- dynamic attention/priority rules and provider/runtime budgets;
-- fairness/backpressure so one user or large watchlist cannot starve higher-value shared work;
-- memory-first live state and bounded durable persistence/warm-start behavior;
-- AI/evidence fingerprinting and reusable synthesis boundaries;
-- explicit non-shareable boundaries for private prompts/context, tenant/security isolation, provider entitlements and data rights;
-- multi-user load scenarios with overlapping and non-overlapping symbol demand;
-- efficiency scorecard baselines and release acceptance thresholds.
-
-Planning default:
+Any release affecting symbol demand, provider acquisition, Scanner/Radar, preparation/event work, research, user workspaces, adaptive synthesis, persistence or hosted scale must prove:
 
 **shared canonical processing → material-change reuse → authorized personal composition.**
 
-A proposal that introduces a per-user provider engine, duplicate symbol pipeline, separate equivalent scanner/prep acquisition path or repeated identical AI synthesis must justify why canonical sharing is impossible or unsafe. Otherwise it is rejected or consolidated.
+Plan:
+- shared demand union;
+- canonical processing keys;
+- one owner for acquisition/normalization/state/calculation/reusable intelligence;
+- cache/freshness/single-flight ownership;
+- material-change invalidation graph;
+- dynamic attention/provider budgets/backpressure/fairness;
+- private-context/rights/entitlement partitions;
+- multi-user overlapping/non-overlapping load scenarios;
+- efficiency metrics.
 
-### Required efficiency planning metrics
+Equivalent overlapping demand should scale primarily with **unique canonical demand**, not `users × symbols`.
 
-Where applicable, the release plan must capture unique active symbols/processing keys, total consumer demand, provider calls/subscriptions per unique key, duplicate acquisition/calculation rate, in-flight coalescing, cache reuse, shared-synthesis reuse, fan-out ratio, marginal cost of an overlapping user, CPU/memory/storage per active key, provider pressure, freshness/material-change latency, stale/degraded fan-out, fairness/starvation and authorization/data-rights leakage.
+Canonical details: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.
 
-For equivalent overlapping demand, the target architecture is that cost scales primarily with **unique canonical demand**, not `users × symbols`.
+---
 
-### Release-specific planning
+## 11. v18.2 required closure
 
-- **v18.2:** prove multi-user `UserWorkspace`/role work does not introduce per-user market/provider/intelligence ownership.
-- **v18.3:** mandatory implementation plan for shared Scanner/Radar acquisition, Session Intelligence Coordinator, Event Intelligence lifecycle ownership, hosted demand union and shared canonical persistence/recovery behavior.
-- **v18.4:** explicit rights/security/cache/synthesis partitioning plan.
-- **v18.5:** realistic overlapping-user performance/capacity/security certification plan using the full 10/10 efficiency scorecard.
+Frozen v18.2 G1 remains authoritative and must not be expanded.
 
-Canonical shared-processing rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.
+Before v18.2 promotion, the plan must close/evidence applicable current-release obligations including:
+- capability-based ADMIN authorization shared by UI/backend;
+- justified capability-scoped Administration composition;
+- complete role × tab × viewport coverage using fresh evidence plus valid inheritance;
+- authoritative Build State Ledger/checkpoint reconciliation from actual GitHub truth;
+- one Build Coordinator with overlapping release workflows consolidated/subordinated;
+- canonical active naming for gates/workflows/jobs/artifacts/checkpoints/capabilities;
+- first v18.2 AIPLC before the next promotion decision.
+
+AIPLC source-changing findings outside frozen v18.2 scope normally become named next-release entries unless they expose a genuine correctness/security/reliability release blocker.
+
+---
+
+## 12. v18.3 mandatory entry
+
+All v18.2 audit source-changing utility/consolidation work remains mandatory input to v18.3 G1–G3, including the authoritative items in `functionality_utility_remediation.json`.
+
+Key direction:
+- shared/coalesced Scanner/Radar acquisition;
+- Session Intelligence Coordinator for Pre-Market/Market Open Prep;
+- Event Intelligence lifecycle ownership;
+- deep-evidence/UI consolidation;
+- shared hosted demand/canonical persistence/recovery;
+- PostgreSQL must not create duplicate per-user market-wide computation.
+
+These items cannot silently disappear.
+
+---
+
+## 13. G0–G16 planning map
+
+- **G0:** exact baseline/checkpoint/open defects.
+- **G1:** frozen release scope + applicable inherited governance.
+- **G2:** architecture/data utility/canonical ownership/impact map.
+- **G3:** dependency/readiness/test/decomposition plan.
+- **G4:** development exit.
+- **G5:** FAST affected-area qualification.
+- **G6:** affected integration/MEDIUM qualification.
+- **G7:** data/security/adaptive intelligence.
+- **G8:** performance/capacity/stability.
+- **G9:** cross-module/UI/UX.
+- **G10:** full coverage reconciliation/pre-freeze.
+- **G11:** immutable RC.
+- **G12:** full RC certification.
+- **G13:** native packaging/provenance.
+- **G14:** actual artifact runtime audit.
+- **G15:** release assurance/promotion.
+- **G16:** deep adaptive retrospective/handoff.
+
+No G17+.
+
+---
+
+## 14. Build Plan success criteria
+
+The plan is 10/10 only when it can answer, with durable evidence:
+1. What changed?
+2. What depends on it?
+3. What can be reused?
+4. What must rerun?
+5. Who owns each responsibility?
+6. What is the smallest safe workload?
+7. What learned/prevention action came from the build?
+8. What remains and where is it explicitly placed?
+9. Is G1 protected?
+10. Can another conversation/runner resume from GitHub without guessing?
