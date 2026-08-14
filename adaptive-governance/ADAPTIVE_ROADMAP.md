@@ -54,3 +54,27 @@ Permanent roadmap direction:
 This roadmap contract is enforced inside existing G0–G16, especially G1/G2/G3/G9/G10/G12/G16. It creates no new gate.
 
 Canonical role-aware rules: `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`.
+
+## Permanent Functionality Utility, Reuse, Correlation & Minimal-Surface Direction
+
+From v18.2 onward every roadmap release also inherits the **Functionality Utility, Reuse, Correlation & Surface Checkpoint**.
+
+DE.PULSE must not grow by appending independent features, tabs, cards, background jobs, datasets, metrics or provider paths when existing canonical owners/evidence can be reused, extended or consolidated.
+
+Permanent roadmap direction:
+
+- every proposed functionality must have a clear purpose and active consumer/workflow;
+- existing canonical data, computations, caches, subscriptions, evidence and persistence must be reused before new acquisition/storage is approved;
+- overlapping engines/jobs are consolidated or assigned explicit non-overlapping responsibilities;
+- new data must correlate with relevant existing evidence rather than remain an isolated display value;
+- provider requests and expensive computations are fetch-once/calculate-once/reuse where practical, including in-flight coalescing for simultaneous demand;
+- background preparation/watch/integrity work is modeled as temporal checkpoints, event evaluations or maintenance tasks over canonical state unless a genuinely separate engine is required;
+- deep evidence has one canonical home; other surfaces reuse concise conclusions, material risks, freshness and navigation rather than duplicating full evidence packages;
+- supporting/operational data remains internal or drill-down when it does not justify normal-user prominence;
+- a new tab is the exception, not the default, and requires documented workflow/security/clarity separation value;
+- every G9 audit reviews **all tabs and major functionality**, not just the features changed by the release, for accumulated repetition, hierarchy drift and obsolete surfaces/jobs;
+- G16 records reuse, consolidation, removals and newly discovered duplication so the product becomes simpler as intelligence capability grows.
+
+This direction is enforced within G1/G2/G3/G7/G8/G9/G10/G16 and does not create a new G-gate.
+
+Canonical rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
