@@ -13,11 +13,12 @@ Use the following hierarchy whenever DE.PULSE scope or a prior decision is quest
 1. **Actual source / packaged release evidence** — truth about what is actually implemented and delivered.
 2. **`governance/APPROVED-SCOPE.md`** — canonical truth about what has been approved as product/roadmap scope.
 3. **`governance/ADAPTIVE-OPERATING-CONTRACT.md`** — canonical permanent engineering/build/release/delivery contract.
-4. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
-5. **`governance/DECISION-LOG.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
-6. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
-7. **G16 handoff / release evidence** — what actually happened in that release and what carries forward.
-8. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
+4. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
+5. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
+6. **`governance/DECISION-LOG.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
+7. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
+8. **G16 handoff / release evidence** — what actually happened in that release and what carries forward.
+9. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
 
 A governance document never proves a feature exists in code. A release/code artifact never silently changes approved product intent.
 
@@ -33,6 +34,7 @@ Before treating a proposed DE.PULSE idea as new, use:
 Read/search at minimum:
 - `governance/APPROVED-SCOPE.md`
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`
+- `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md` when reliability, data freshness, provider/runtime/database pressure, degraded-state semantics, backpressure or recovery is relevant;
 - `governance/ROADMAP.md`
 - `governance/DECISION-LOG.md`
 
