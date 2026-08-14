@@ -134,3 +134,35 @@ No workflow may invent an isolated `G17`, `G18`, etc. without revising the canon
 **reuse existing evidence → checkpoints → sharded/parallel lanes → strengthen/reassign an existing gate → add a new canonical gate only when materially justified.**
 
 Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+
+## Permanent Governance-to-Implementation Closure Execution
+
+Governance adoption and implementation closure are separate states. The build process uses:
+
+**Governed → Implemented → Enforced → Evidenced → Delivered → Learned.**
+
+At G1 every applicable governance requirement is classified as `CURRENT_RELEASE_BLOCKER`, `CURRENT_RELEASE_PROCESS_HARDENING`, `NEXT_RELEASE_MANDATORY_ENTRY`, or `FUTURE_STRATEGIC`. No item may remain merely “documented.”
+
+### Current-release enforcement
+
+- **G2/G3:** bind every current blocker/process-hardening item to one canonical implementation owner, dependency graph, naming identity and evidence plan.
+- **G4:** current product/security blockers must exist in actual source. For v18.2 this includes capability-based ADMIN authorization and the dedicated capability-scoped Administration composition.
+- **G7:** backend authorization, capability delegation, payload redaction, identity/session/presence/admin audit data and direct API denial must prove the same capability truth.
+- **G9:** execute the complete role × tab × viewport audit across every tab and global shell/navigation, not only changed surfaces.
+- **G10:** refuse freeze if governance claims and implementation/evidence disagree. A stale Build State Ledger, overlapping authoritative workflows, noncanonical active names, blanket ADMIN power, or missing role-composition evidence blocks the affected qualification.
+- **G11/G12:** consume only an authoritative reconciled Build State Ledger and one canonical orchestration graph for the immutable RC.
+- **G16:** close completed items, explicitly carry `NEXT_RELEASE_MANDATORY_ENTRY` items into the named next release, remove obsolete workflow/naming machinery and add preventative regression for recurring governance-to-implementation gaps.
+
+### Build State Ledger enforcement
+
+The ledger must be derived/reconciled from GitHub branch HEAD, release identity, source fingerprint, CI/job evidence, artifacts, RC/native/package state and promotion/delivery state. Noncanonical status labels or stale source commits are corrected before the ledger is used for resume or certification.
+
+### Build Coordinator enforcement
+
+“One logical Build Coordinator” must be visible in actual workflow ownership. Separate workflows may exist as reusable/subordinate lanes, but they must not independently own overlapping release state mutations or authoritative gate conclusions. Path/event filters, concurrency/supersession and idempotent mutation behavior are mandatory where needed to prevent workflow storms.
+
+### Naming enforcement
+
+Canonical naming applies to active workflows/jobs/artifacts/checkpoints/gates/capabilities as well as docs. Obsolete temporary/numbered/ambiguous release machinery is renamed, consolidated, deprecated or removed before release closure where compatibility does not require it.
+
+Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
