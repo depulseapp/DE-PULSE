@@ -3,7 +3,7 @@
   "release": "v18.0.5 TEST",
   "gate": "G10",
   "status": "PASS",
-  "sourceFingerprint": "dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0",
+  "sourceFingerprint": "90b9172e28e0f82ea99f62914f37eddff778c0e7c27ea025b2b86a9317c99b2c",
   "incomingStable": {
     "version": "18.0.4",
     "commit": "9b725526d2749e14ec3fcd41fd64ca75eed0770d",
@@ -36,5 +36,5 @@
     "responsive": "PASS"
   },
   "decision": "READY_FOR_G11_FREEZE",
-  "note": "This summary records the completed pre-freeze qualification for the exact fingerprint above. GitHub candidate certification independently reconstructs and revalidates the source before native qualification."
+  "note": "Exact fingerprint requalified after clean-runner responsive issues were corrected. Full G5-G10 pre-freeze was rerun for this fingerprint with no cross-fingerprint evidence reuse."
 }
