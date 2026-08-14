@@ -1,0 +1,1 @@
+{"schemaVersion":1,"release":"v18.2.0 TEST","gates":{"G0":"EXACT_BASELINE","G1":"IMMUTABLE_SCOPE","G2":"ARCHITECTURE_DATA_UTILITY","G3":"DESIGN_DEPENDENCY_READINESS"},"incomingStable":{"version":"v18.1.0","commit":"4b48c61ee103897e834f4ff7d24af07d4275a62c","sourceSha256":"84a8f2ce4ca7a174b1b3a18cf17904bbbbb4528139c14644b9e07a287e2f0419"},"hostedArchitectureDeferredTo":"v18.3"}

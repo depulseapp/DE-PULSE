@@ -17,6 +17,6 @@ var finnhubAPIBaseURL = "https://finnhub.io/api/v1"
 var finnhubMinRequestInterval = 1100 * time.Millisecond
 
 const appName = "DE.PULSE"
-const appVersion = "18.1.0"
-const releaseChannel = "STABLE"
-const buildID = "v18.1.0-stable-multi-user-my-market-symbols-20260814"
+const appVersion = "18.2.0"
+const releaseChannel = "TEST"
+const buildID = "v18.2.0-test-admin-presence-sessions-20260814"

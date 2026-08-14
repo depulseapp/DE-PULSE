@@ -7,7 +7,7 @@ const html=fs.readFileSync('renderer/index.html','utf8');
 
 need(html.includes('admin-v18.2.css?v=18.2.0'),'v18.2 admin CSS is not loaded');
 need(html.includes('admin-v18.2.js?v=18.2.0'),'v18.2 admin JS is not loaded');
-need(html.includes('<title>DE.PULSE v18.2.0 TEST</title>'),'v18.2 TEST renderer identity missing');
+need(html.includes('<title>DE.PULSE v18.2.0</title>'),'v18.2 TEST renderer identity missing');
 need(js.includes("['SUPER_OWNER','OWNER','ADMIN']"),'admin UI role allowlist drift');
 need(js.includes("return '';")&&js.includes('if(!v182CanAdmin())'),'normal-user admin suppression missing');
 need(js.includes("'X-DE-PULSE-CSRF':v182Cookie('depulse_csrf')"),'admin mutation CSRF protection missing');

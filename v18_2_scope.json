@@ -1,0 +1,3 @@
+{
+  "version":"18.2.0","channel":"TEST","incomingStable":"v18.1.0","incomingStableCommit":"4b48c61ee103897e834f4ff7d24af07d4275a62c","incomingStableSourceSha256":"84a8f2ce4ca7a174b1b3a18cf17904bbbbb4528139c14644b9e07a287e2f0419","clauses":["canonical_identity_owner","role_hierarchy","user_lifecycle","password_reset_revokes_sessions","redacted_admin_views","session_truth_presence","sse_revocation","admin_settings_ui","normal_user_hidden","v181_workspace_preserved","no_v183_hosted_scope","no_execution_no_formula_change"]
+}
