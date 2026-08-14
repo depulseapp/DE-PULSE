@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 
 p=Path('README.md'); s=p.read_text()
 marker='## Previous Stable — v18.0.6 STABLE — Smart Provider Router + Rapid Move / Market Shock Hardening'
@@ -62,4 +63,17 @@ for name,section in sections.items():
     if '## v18.2.0 TEST' not in s:
         s=s[:first+2]+section+s[first+2:]
     p.write_text(s)
+
+mp=Path('renderer/qa/manifest.json'); m=json.loads(mp.read_text())
+entry={
+    'version':'18.2.0','date':'2026-08-14',
+    'summary':'TEST Admin / Presence / Sessions: canonical IdentityService lifecycle operations, redacted user/session visibility, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement and privileged Settings administration; v18.1 workspaces/shared intelligence preserved.',
+    'status':'TEST','file':'v18.2.0.txt','buildId':'v18.2.0-test-admin-presence-sessions-20260814','checkpoint':'v18.2.0-g0-g3-admin-presence-sessions.md'
+}
+releases=m.get('releases',[])
+if not releases or releases[0].get('version')!='18.2.0': releases.insert(0,entry)
+else: releases[0].update(entry)
+m['releases']=releases; mp.write_text(json.dumps(m,indent=2)+'\n')
+Path('renderer/qa/v18.2.0.txt').write_text('DE.PULSE v18.2.0 TEST\nBuild ID: v18.2.0-test-admin-presence-sessions-20260814\nScope: Admin / Presence / Sessions over canonical IdentityService.\nStatus: G0-G3 frozen; qualification in progress.\n')
+Path('renderer/qa/v18.2.0-g0-g3-admin-presence-sessions.md').write_text('# v18.2.0 G0-G3 — Admin / Presence / Sessions\n\nIncoming Stable: v18.1.0. Canonical identity/session ownership is preserved; presence derives from persisted session truth; hosted PostgreSQL remains v18.3.\n')
 print('v18.2 documentation sync: PASS')
