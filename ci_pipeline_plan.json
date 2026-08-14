@@ -34,9 +34,26 @@
     "resource_class_go_heavy_lane": 1,
     "resource_class_medium_other_max_parallel": 2,
     "current_major": "v18",
-    "current_slice": "v18.0.6-smart-provider-router-rapid-move-market-shock-hardening",
+    "current_slice": "v18.2-admin-presence-sessions",
     "major_scope": "v18_major_scope.json",
-    "delivery_slices": "v18_delivery_slices.json"
+    "delivery_slices": "v18_delivery_slices.json",
+    "build_resume_protocol": "adaptive-governance/BUILD_RESUME_PROTOCOL.md",
+    "resume_checkpoint": ".depulse-certification/resume/build-checkpoint.json",
+    "release_evidence_checkpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "resume_reconciliation_required": true,
+    "checkpoint_metadata_excluded_from_product_fingerprint": true,
+    "resume_evidence_rule": "Reuse PASS only when branch/release identity and relevant source fingerprint or immutable RC/artifact identity agree; otherwise resume from the earliest affected G0-G16 gate.",
+    "checkpoint_cadence": [
+      "G3",
+      "G4",
+      "G10",
+      "G11",
+      "G12",
+      "G14-macos",
+      "G14-windows",
+      "G15",
+      "G16"
+    ]
   },
   "stages": [
     {
@@ -44,7 +61,8 @@
       "execution": "sequential",
       "resource": "LIGHT",
       "orchestrator": "manual/G0-G2",
-      "depends_on": []
+      "depends_on": [],
+      "resume_rule": "Reconcile active branch, checkpoint, release identity and existing CI evidence before executing new work."
     },
     {
       "id": "development",
@@ -53,7 +71,8 @@
       "depends_on": [
         "g0_g2"
       ],
-      "rule": "independent workstreams + FAST tests"
+      "rule": "independent workstreams + FAST tests",
+      "resume_rule": "Meaningful implementation work is durable only after commit to the active development branch."
     },
     {
       "id": "prefreeze",
@@ -66,7 +85,8 @@
       "max_concurrency": {
         "LIGHT": 4,
         "MEDIUM": 2
-      }
+      },
+      "resume_rule": "Evidence is fingerprint-keyed; reuse exact-fingerprint PASS jobs and rerun invalidated/incomplete jobs only."
     },
     {
       "id": "rc_freeze",
@@ -75,7 +95,8 @@
       "depends_on": [
         "prefreeze"
       ],
-      "rule": "fingerprint immutable candidate"
+      "rule": "fingerprint immutable candidate",
+      "resume_rule": "G11 identity is authoritative for downstream certification; never substitute a mutable development workspace."
     },
     {
       "id": "g12_heavy",
@@ -85,7 +106,8 @@
         "rc_freeze"
       ],
       "orchestrator": "python3 certification_runner.py --all",
-      "rule": "full Stable matrix; non-blocking BLOCKED residuals record and continue; safe shards may be parallelized only when resource-bounded"
+      "rule": "full Stable matrix; non-blocking BLOCKED residuals record and continue; safe shards may be parallelized only when resource-bounded",
+      "resume_rule": "Resume exact-RC completed evidence; source/RC drift invalidates affected downstream evidence."
     },
     {
       "id": "packaging",
@@ -94,7 +116,8 @@
       "depends_on": [
         "g12_heavy"
       ],
-      "rule": "package outside frozen source"
+      "rule": "package outside frozen source",
+      "resume_rule": "Track macOS Apple Silicon and Windows x64 package/runtime evidence independently and reuse only exact-source/artifact PASS evidence."
     },
     {
       "id": "authorization",
@@ -103,7 +126,8 @@
       "depends_on": [
         "packaging"
       ],
-      "rule": "clean extraction -> handoff/evidence -> final independent hashes -> SHA manifest LAST"
+      "rule": "clean extraction -> handoff/evidence -> final independent hashes -> SHA manifest LAST",
+      "resume_rule": "Before retrying partial publication, inspect main/tag/release objects independently to prevent duplicate or partial promotion."
     }
   ]
 }
