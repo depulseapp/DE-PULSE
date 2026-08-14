@@ -18,6 +18,20 @@ Capability/entitlement-aware provider routing, Preferred vs Serving semantics, d
 ### v18.1 — Multi-User / My Market Symbols
 Per-user symbols/watchlists/preferences with shared Global Symbol Registry and Shared Symbol Intelligence. Avoid duplicate canonical provider/calculation work for the same symbol.
 
+### Adaptive Opportunity Discovery & Recommendations Foundation
+Begin dependency-compatible productization of the market intelligence DE.PULSE already computes so users can see **My Market Opportunities** and **Global Opportunities** without creating another scanner or recommendation data silo.
+
+v18/v19 foundation should reuse Global Symbol Registry, Reliable Actionable Universe, Shared Symbol Intelligence and Opportunity Radar to support:
+- user-specific My Market vs outside-My-Market bucketing;
+- shared canonical opportunity inputs rather than duplicate fetch/calculation work;
+- bounded candidate ranking and NOW/WATCH/PASS/ABSTAIN semantics;
+- Long/Short/horizon-aware opportunity context where current canonical TDTI/ASBI evidence supports it;
+- point-in-time recommendation/ranking lineage and outcome collection;
+- simple user-facing `why now / what confirms / what changes the view` synthesis grounded in canonical evidence;
+- ADR-GDI-aware suppression/demotion when required evidence is degraded.
+
+Do not disrupt the frozen v18.2 Admin / Presence / Session Operations scope to force mature AODR intelligence into that release. Implement foundational pieces only when dependency-compatible with the active build plan.
+
 ### TradeInsight — SHADOW / SECONDARY Intelligence
 Use through the canonical Smart Router only. Approved contextual roles include insider/congressional intelligence, historical OHLCV backfill/reconciliation, corporate actions, symbol metadata enrichment, Opportunity Radar corroboration, and future controlled AI/MCP research where rights permit.
 
@@ -56,6 +70,8 @@ PostgreSQL repository parity, migrations, transactions/concurrency, shared canon
 
 v18.3 must also use the persistence transition to harden ADR-GDI foundations where dependency-compatible: indexed warm canonical state, restart recovery, shared-symbol reuse, DB/query/pool observability, capability-health persistence where appropriate, bounded persistence pressure, and protection against PostgreSQL becoming a new bottleneck.
 
+AODR shared ranking/recommendation state should reuse the same canonical shared-symbol and per-user isolation architecture where dependency-compatible; PostgreSQL must not cause each user to trigger duplicate market-wide recommendation computation.
+
 ### v18.4 — Security + Commercial / Data-Rights Hardening
 Secrets/security hardening, auth/session/CSRF/cookie review, adversarial authorization testing, provider entitlement/data-rights metadata, hosted/commercial-use readiness, quota/abuse safeguards, observability, and licensing/redistribution/AI-use suitability.
 
@@ -63,6 +79,8 @@ Secrets/security hardening, auth/session/CSRF/cookie review, adversarial authori
 **MANDATORY before v19.** Reconstruct full v18 scope and run fresh architecture, source quality, performance/capacity, security, data-utility, UI/UX, adaptive-intelligence, native/runtime, Principal Engineer, Professional Trader/Investor, and release-assurance closure.
 
 ADR-GDI is a mandatory v18.5 closure dimension. Prove under realistic supported load that local/runtime architecture does not materially cause broad `DATA DEGRADED`; test provider failures/rate limits, stale data, source disagreement, DB pressure/unavailability, queue saturation, restart/warm-start, multi-user/symbol fan-out, background-job pressure, load shedding, recovery hysteresis, blast-radius correctness and actual packaged-runtime degradation UX.
+
+If dependency-compatible AODR foundation is present by v18.5, closure must verify it reuses canonical symbol intelligence, preserves My Market vs Global separation, does not manufacture recommendations under weak/degraded evidence, and does not create unbounded full-universe/provider load.
 
 If self-inflicted overload can delay or misstate decision-critical live/current evidence, it is a release blocker until fixed or explicitly constrained with truthful operating limits.
 
@@ -83,9 +101,10 @@ Approved direction:
 - formal long-term role classification for SHADOW candidate providers such as TradeInsight;
 - harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance;
 - harden two-sided thesis evidence infrastructure: point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE, behavior/regime/catalyst lineage, short-interest/crowding/shortability/borrow/SSR data only where trustworthy and lawful, and explicit UNKNOWN semantics when unavailable;
+- harden AODR opportunity infrastructure: point-in-time ranking/recommendation lineage, My Market vs Global bucket truth, user-preference isolation, shared-ranking efficiency, diversity/correlation metadata, NOW/WATCH/PASS/ABSTAIN transitions, recommendation usefulness outcomes, missed-opportunity analysis, staleness/degradation effects and explainable ranking provenance;
 - harden ADR-GDI with measured capability SLOs, degradation history, fallback quality, provider/DB/runtime reliability scorecards, query/index tuning, capacity limits, restart behavior, load-shedding effectiveness and commercial/hosted operating limits.
 
-v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, rights and reliability lineage for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence, and adaptive reliability optimization.
+v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, rights and reliability lineage for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence, Adaptive Opportunity Discovery & Recommendations, and adaptive reliability optimization.
 
 **Mandatory v19 Major Closure before v20.**
 
@@ -109,6 +128,7 @@ Approved capabilities include:
 - **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**;
 - **Adaptive Institutional Holdings / 13F Intelligence**;
 - **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI) — 10/10 Contract**;
+- **Adaptive Opportunity Discovery & Recommendations (AODR) — 10/10 Contract**;
 - **Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) — governed adaptive optimization using reliability history accumulated earlier**.
 
 Production promotion remains:
@@ -238,6 +258,45 @@ Build/validate:
 TDTI must reuse ASBI, Day/Swing/Long, Opportunity Radar, Decision Queue, Research, Historical Validation and canonical evidence ownership. It is **not** a new duplicate intelligence silo.
 
 Production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent formula/model self-modification and no execution capability.
+
+---
+
+# Adaptive Opportunity Discovery & Recommendations — Roadmap Placement
+
+AODR turns existing global/shared market intelligence into useful user-facing prioritization. It is not a replacement for Opportunity Radar, the Global Symbol Registry, ASBI or TDTI.
+
+### v18 / v19 Preparation
+Build/harden dependency-compatible foundations:
+- My Market Opportunities vs Global Opportunities bucketing with no per-user duplicates;
+- Global Symbol Registry / Reliable Actionable Universe eligibility truth;
+- Shared Symbol Intelligence reuse so ranking does not trigger duplicate provider/calculation work;
+- Opportunity Radar broad-observe → PROMOTE → deeper shared analysis → DEMOTE lifecycle;
+- bounded canonical ranking inputs and material-change propagation;
+- Long/Short/horizon labels using current canonical TDTI/ASBI truth where available;
+- NOW / WATCH / PASS / ABSTAIN states;
+- point-in-time candidate/rank/reason/bucket lineage before outcomes are known;
+- recommendation usefulness, miss, redundancy, extension/chase, staleness and degradation outcomes;
+- correlation/sector/theme/common-catalyst metadata for diversity-aware surfacing;
+- user preference/relevance state isolated from shared canonical market truth;
+- grounded concise why-now / confirms / invalidates / what-to-watch-next presentation;
+- ADR-GDI dependency and freshness integration.
+
+Do not force mature adaptive ranking/personalization into frozen v18.2 scope.
+
+### v20 Major Adaptive Opportunity Intelligence
+Build/validate:
+- adaptive cross-candidate ranking using TDTI Opportunity Quality/Readiness and ASBI state/path/probability momentum;
+- expected-magnitude/time-to-resolution and opportunity-cost-aware prioritization;
+- strong penalties for extension/chase, poor R:R, degraded required evidence, stale data, contradictions and low independence;
+- diversity/correlation-aware recommendation sets rather than many copies of the same factor/catalyst;
+- personalized relevance layered **after** shared market truth;
+- historical candidate-vs-surfaced-vs-missed comparison;
+- adaptive recommendation utility/calibration and false-positive/miss analysis;
+- Champion/Challenger ranking/personalization evaluation;
+- concise AI/LLM-style synthesis grounded in canonical evidence;
+- ABSTAIN / no strong opportunities as a valid high-quality outcome.
+
+Production ranking/personalization influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent self-modification and no execution capability.
 
 ---
 
