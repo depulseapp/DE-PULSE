@@ -46,7 +46,7 @@ jobs:
           (
             cd work/candidate
             git init -q
-            git apply --whitespace=nowarn ../v18.0.5.patch
+            git apply --whitespace=nowarn --exclude='__pycache__/*' --exclude='*/__pycache__/*' ../v18.0.5.patch
             actual="$(python3 ci_pipeline.py --fingerprint)"
             echo "candidate fingerprint=$actual"
             test "$actual" = "$EXPECTED_FP"
