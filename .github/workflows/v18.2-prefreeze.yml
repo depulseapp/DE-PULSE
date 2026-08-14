@@ -1,4 +1,4 @@
-# qualification trigger: documentation-aligned v18.2 candidate
+# qualification trigger: governance-aware v18.2 candidate
 name: DE.PULSE v18.2 G4-G10 Pre-Freeze
 
 on:
@@ -25,11 +25,12 @@ jobs:
         with:
           go-version: '1.26.6'
           cache: false
-      - name: G0-G4 identity scope architecture
+      - name: G0-G4 identity scope architecture and resume contract
         run: |
           set -euo pipefail
           python3 release_identity.py --verify
           python3 version_consistency_test.py
+          python3 adaptive_resume_gate.py
           python3 v18_2_scope_gate.py
           python3 v18_2_principal_engineer_gate.py
           python3 source_health_architecture_gate.py
@@ -86,7 +87,7 @@ jobs:
           printf '%s\n' "$FP" | tee v18.2-G10-source-fingerprint.txt
           python3 - "$FP" > v18.2-G10-PASS.json <<'PY'
           import json,sys,datetime
-          print(json.dumps({'schemaVersion':1,'gateRange':'G4-G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','checks':{'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
+          print(json.dumps({'schemaVersion':1,'gateRange':'G4-G10','status':'PASS','release':'v18.2.0 TEST','sourceFingerprint':sys.argv[1],'incomingStable':'v18.1.0','resumeProtocol':'adaptive-governance/BUILD_RESUME_PROTOCOL.md','checks':{'resumeContract':True,'scope':True,'architecture':True,'sourceHealth':True,'dataUtility':True,'dataHealth':True,'focusedV182':True,'v181Regression':True,'routerRapidMoveRegression':True,'fullGo':True,'vet':True,'cgoFallback':True,'windowsCompile':True,'renderer':True,'deterministic':True,'trader':True,'http':True,'responsive':True,'randomized':True,'extreme30':True},'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()},indent=2))
           PY
       - uses: actions/upload-artifact@v7
         with:
