@@ -26,6 +26,11 @@ Begin/continue canonical point-in-time SEC 13F evidence collection where useful 
 
 Do not treat 13F as live ownership or force mature adaptive manager intelligence into v18.2–v18.5.
 
+### Two-Sided Thesis Evidence Foundation
+Preserve and improve the point-in-time evidence/outcome lineage required for future Long-vs-Short thesis validation, including existing Entry/Target/Invalidation plan truth, previously approved short-entry context where supportable, first-event ordering, MFE/MAE, ASBI-relevant behavior evidence, catalyst/regime/liquidity context, and reliable short-specific data provenance when available.
+
+Do **not** force the mature adaptive Two-Sided Directional Thesis engine into v18.2–v18.5 as scope creep. v18 should ensure current architecture and evidence are not designed in a way that blocks truthful two-sided learning later.
+
 ### v18.2 — Admin / Presence / Session Operations
 SUPER OWNER / OWNER / ADMIN operations, user/session visibility and lifecycle, bounded presence, enable/disable and revocation controls, role-aware operations, and approved session-policy controls.
 
@@ -53,9 +58,10 @@ Approved direction:
 - historical depth/adjustment quality;
 - specialized/paid providers only when measured capability gaps justify them;
 - formal long-term role classification for SHADOW candidate providers such as TradeInsight;
-- harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance.
+- harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance;
+- harden two-sided thesis evidence infrastructure: point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE, behavior/regime/catalyst lineage, short-interest/crowding/shortability/borrow/SSR data only where trustworthy and lawful, and explicit UNKNOWN semantics when unavailable.
 
-v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, and rights for v20 adaptive research, including ASBI and adaptive Institutional Holdings / 13F Intelligence.
+v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, and rights for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, and 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence.
 
 **Mandatory v19 Major Closure before v20.**
 
@@ -77,7 +83,8 @@ Approved capabilities include:
 - explainable adaptive ranking;
 - controlled Champion/Challenger evaluation;
 - **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**;
-- **Adaptive Institutional Holdings / 13F Intelligence**.
+- **Adaptive Institutional Holdings / 13F Intelligence**;
+- **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI) — 10/10 Contract**.
 
 Production promotion remains:
 
@@ -162,6 +169,50 @@ Build/validate:
 - ABSTAIN when filing completeness, mapping, history, independence, or relevance is insufficient.
 
 13F-derived production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION** and must never silently alter protected deterministic Day/Swing/Long formulas.
+
+---
+
+# Two-Sided Directional Thesis & Trade Plan Intelligence — Roadmap Placement
+
+The earlier product direction already allowed `entry / short-entry zone context when supportable`. The 10/10 TDTI contract turns that into a complete AI/LLM-style competing-thesis system without creating a separate short-trading product or execution engine.
+
+### v18 / v19 Preparation
+Preserve/build the evidence and validation substrate needed to compare Long and Short fairly:
+- one canonical ticker/horizon evidence snapshot;
+- existing Entry/Target/Invalidation truth and short-entry context where supportable;
+- structural trigger/confirmation/invalidation evidence;
+- side-aware outcome ordering;
+- actual eligible-entry anchoring for MFE/MAE where measurable;
+- ASBI state/path context;
+- market/sector regime, catalyst, liquidity and relative-strength lineage;
+- institutional/insider/congressional context with freshness/independence;
+- options context where useful;
+- short-interest/crowding and borrow/shortability/SSR context only when reliable, lawful and clearly sourced;
+- explicit UNKNOWN/ABSTAIN when short-specific evidence is unavailable.
+
+### v20 Major Two-Sided Intelligence
+Build/validate:
+- competing Long / Short / No Reliable Edge thesis reasoning from the same evidence snapshot;
+- separate Direction Probability, Thesis Strength, Confidence, Opportunity Quality and Readiness;
+- Long Entry / Trim-Target / Invalidation / R:R;
+- Short Entry / Cover-Trim / Downside Targets / Short Invalidation / R:R;
+- structural rather than naïvely mirrored invalidation;
+- per-side readiness lifecycle and probability momentum;
+- ASBI-conditioned short-chase, squeeze, rebound, bull-trap and continuation reasoning;
+- multiple expected paths, outcome distributions and time-to-resolution;
+- long-specific and short-specific risk intelligence;
+- cross-horizon contradiction/reconciliation;
+- evidence independence and cause-aware reasoning;
+- AI/LLM-style concise `WHY / CONFIRMS / INVALIDATES / WHAT CHANGES THE VIEW / WHAT TO WATCH NEXT` synthesis;
+- immutable two-sided thesis/trade-plan ledger;
+- side-aware historical calibration, MFE/MAE, false positives/misses and Decision Utility;
+- Champion/Challenger evaluation;
+- Professional Trader/Investor acceptance;
+- ABSTAIN / NO RELIABLE EDGE as a first-class valid outcome.
+
+TDTI must reuse ASBI, Day/Swing/Long, Opportunity Radar, Decision Queue, Research, Historical Validation and canonical evidence ownership. It is **not** a new duplicate intelligence silo.
+
+Production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent formula/model self-modification and no execution capability.
 
 ---
 
