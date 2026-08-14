@@ -88,15 +88,17 @@ for item in items:
             errors.append(f"duplicate surfaceId {sid}: {surfaces[sid]} and {name}")
         surfaces[sid] = name
 
-# Every primary navigation tab must automatically enter the audit registry.
+# Every statically declared primary navigation tab must automatically enter the
+# audit registry. Conditional/dynamic surfaces are additionally required below.
 html = INDEX.read_text()
 nav_surfaces = set(re.findall(r'data-page="([^"]+)"', html))
 for sid in sorted(nav_surfaces):
     if sid not in surfaces:
         errors.append(f"primary navigation surface not audited: {sid}")
 
-# Explicitly require the current canonical high-value engines/checkpoints so
-# they cannot silently disappear from the overlap/reuse review.
+# Explicitly require canonical high-value engines/checkpoints and the v18.2
+# conditional Administration surface so they cannot silently disappear from
+# overlap/reuse/placement review merely because they are dynamically rendered.
 required_items = {
     "Discovery Scanner",
     "Opportunity Radar",
@@ -106,6 +108,7 @@ required_items = {
     "Earnings & Material Catalyst Reaction Watch",
     "Research",
     "Market Intelligence",
+    "Administration",
     "Maintenance",
     "Settings",
 }
@@ -113,11 +116,35 @@ for required in sorted(required_items):
     if required not in names:
         errors.append(f"required audited capability missing: {required}")
 
-# Data-utility remains a companion blocking contract. Functionality may not
-# invent a dataset without the data registry carrying purpose/consumer truth.
+# Data Utility is a companion blocking contract. Current-release identity,
+# session, presence and delegated-capability data must be explicitly owned and
+# governed; administrative audit evidence is strategic until its durable audit
+# repository is activated.
 data_registry = json.loads(DATA_REGISTRY.read_text())
-if not data_registry.get("datasets"):
+datasets = data_registry.get("datasets", [])
+if not datasets:
     errors.append("data utility registry has no datasets")
+if str(data_registry.get("version", "")) != "18.2.0":
+    errors.append("data utility registry must be reconciled to v18.2.0")
+
+data_by_name = {str(d.get("dataset", "")).strip(): d for d in datasets}
+required_data = {
+    "Identity Accounts",
+    "Authenticated Sessions",
+    "Presence State",
+    "Delegated Administrative Capabilities",
+    "Administrative Audit Evidence",
+}
+for dataset in sorted(required_data):
+    item = data_by_name.get(dataset)
+    if not item:
+        errors.append(f"required v18.2 data-utility entry missing: {dataset}")
+        continue
+    for field in ("owner", "purpose", "retention", "utility", "sensitivity", "authorization"):
+        if not str(item.get(field, "")).strip():
+            errors.append(f"{dataset}: {field} missing")
+    if not item.get("consumers"):
+        errors.append(f"{dataset}: consumers missing")
 
 contract_text = CONTRACT.read_text()
 for phrase in (
@@ -137,5 +164,6 @@ if errors:
 
 print(
     "Functionality Utility & Integration Checkpoint: PASS · "
-    f"{len(items)} audited items · {len(nav_surfaces)} primary navigation surfaces covered"
+    f"{len(items)} audited items · {len(nav_surfaces)} static primary navigation surfaces covered · "
+    f"{len(required_data)} v18.2 identity/admin data classes governed"
 )
