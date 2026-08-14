@@ -145,3 +145,53 @@ G16 must report implementation-closure status using the lifecycle:
 A requirement that is only `Governed` is not a completed release requirement.
 
 Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
+
+## Permanent Shared Symbol Intelligence Delivery Invariant
+
+A release that materially affects symbol demand, multi-user processing, provider acquisition, Scanner/Radar, preparation/event processing, canonical state, AI/adaptive synthesis or hosted scale is not delivery-complete merely because each user can see correct screens. The certified implementation must also prove that equivalent market intelligence is shared efficiently and safely.
+
+Before G15/Stable promotion for affected scope, delivery evidence must establish that:
+
+- the Global Symbol Registry/shared demand union is the canonical processing membership owner;
+- user workspaces contribute demand and personal workflow state without creating duplicate provider/market/intelligence engines;
+- equivalent canonical symbol/dataset processing is shared across compatible consumers;
+- simultaneous equivalent acquisition/calculation requests are coalesced where practical;
+- material-change propagation avoids unnecessary blanket recomputation;
+- intentional independent-provider reconciliation is documented separately from wasteful duplicate work;
+- dynamic attention, provider budgets, bounded concurrency, backpressure and fairness prevent one user or low-value workload from starving material shared work;
+- shared caches and AI/evidence synthesis are partitioned by provider entitlement, data-rights, tenant/security domain, private user context and relevant model/policy identity;
+- no private prompt/context or restricted output leaks through cross-user cache or fan-out;
+- overlapping user demand scales primarily with unique canonical processing demand rather than `users × symbols`;
+- macOS, Windows and hosted/shared-server targets preserve equivalent canonical ownership and security behavior where applicable.
+
+### Required delivery scorecard
+
+Where applicable, G8/G12/G15 evidence must report the material subset of:
+
+- unique active symbols/canonical processing keys;
+- total consumer demand and overlap ratio;
+- provider calls/subscriptions per unique key;
+- duplicate acquisition and duplicate calculation rate;
+- cache/single-flight reuse;
+- reusable evidence/AI synthesis reuse;
+- fan-out ratio;
+- marginal cost of adding an overlapping user/symbol consumer;
+- CPU/memory/storage per active key;
+- provider/rate-limit/backpressure pressure;
+- acquisition-to-canonical and material-change-to-consumer latency;
+- stale/degraded fan-out incidents;
+- fairness/starvation incidents;
+- authorization/data-rights leakage incidents.
+
+For equivalent overlapping demand, duplicate acquisition/calculation should be **zero by design** except for explicit independent validation/reconciliation or documented unavoidable cases. Any justified duplicate work must have a named owner, reason and bound.
+
+### Release progression in delivery
+
+- **v18.2:** delivery must prove the new multi-user workspace/admin architecture did not introduce per-user market-data/provider/intelligence pipelines.
+- **v18.3:** delivery must prove the first shared-execution consolidation: Scanner/Radar acquisition reuse, Session Intelligence Coordinator, Event Intelligence ownership and hosted shared demand-union behavior.
+- **v18.4:** delivery must close entitlement/data-rights/security partitioning for shared state/caches/synthesis.
+- **v18.5:** major closure requires realistic overlapping-demand certification demonstrating the 10/10 scaling model. Material duplicate processing, uncontrolled provider fan-out, starvation, stale propagation or rights leakage remains a blocker/closure item and cannot be hidden by acceptable average UI response time.
+
+G16 records calls avoided, reuse/fan-out efficiency, remaining justified duplication, learned bottlenecks and any preventative regression added.
+
+Canonical shared-processing rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.

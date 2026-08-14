@@ -160,3 +160,45 @@ These are not satisfied by documentation alone. Product/security items block the
 All source-changing utility/consolidation items in `functionality_utility_remediation.json` are mandatory G1–G3 inputs for v18.3. They may be replaced only by a stronger audited disposition, never silently dropped.
 
 Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
+
+## Permanent Shared Symbol Intelligence Planning Requirements
+
+Every release that adds or materially changes symbol demand, provider acquisition, subscriptions, scanner/radar behavior, research, preparation/event processing, user workspaces, AI/adaptive synthesis, persistence or hosted multi-user behavior must include a **Shared Symbol Intelligence Processing Plan** before G3 exit.
+
+The plan must define:
+
+- Global Symbol Registry ownership and all demand contributors;
+- the shared demand union and rules for entering/leaving it;
+- canonical processing keys, including symbol/instrument, dataset/capability, session/time window, freshness/materiality requirement, provider/entitlement/data-rights domain and model/policy version where relevant;
+- one canonical owner for acquisition, normalization, validation, canonical state, deterministic calculations, correlation, reusable intelligence and fan-out;
+- which consumers reuse each canonical result;
+- cache/freshness strategy and in-flight coalescing/single-flight ownership;
+- material-change invalidation/propagation dependencies rather than blanket recomputation;
+- dynamic attention/priority rules and provider/runtime budgets;
+- fairness/backpressure so one user or large watchlist cannot starve higher-value shared work;
+- memory-first live state and bounded durable persistence/warm-start behavior;
+- AI/evidence fingerprinting and reusable synthesis boundaries;
+- explicit non-shareable boundaries for private prompts/context, tenant/security isolation, provider entitlements and data rights;
+- multi-user load scenarios with overlapping and non-overlapping symbol demand;
+- efficiency scorecard baselines and release acceptance thresholds.
+
+Planning default:
+
+**shared canonical processing → material-change reuse → authorized personal composition.**
+
+A proposal that introduces a per-user provider engine, duplicate symbol pipeline, separate equivalent scanner/prep acquisition path or repeated identical AI synthesis must justify why canonical sharing is impossible or unsafe. Otherwise it is rejected or consolidated.
+
+### Required efficiency planning metrics
+
+Where applicable, the release plan must capture unique active symbols/processing keys, total consumer demand, provider calls/subscriptions per unique key, duplicate acquisition/calculation rate, in-flight coalescing, cache reuse, shared-synthesis reuse, fan-out ratio, marginal cost of an overlapping user, CPU/memory/storage per active key, provider pressure, freshness/material-change latency, stale/degraded fan-out, fairness/starvation and authorization/data-rights leakage.
+
+For equivalent overlapping demand, the target architecture is that cost scales primarily with **unique canonical demand**, not `users × symbols`.
+
+### Release-specific planning
+
+- **v18.2:** prove multi-user `UserWorkspace`/role work does not introduce per-user market/provider/intelligence ownership.
+- **v18.3:** mandatory implementation plan for shared Scanner/Radar acquisition, Session Intelligence Coordinator, Event Intelligence lifecycle ownership, hosted demand union and shared canonical persistence/recovery behavior.
+- **v18.4:** explicit rights/security/cache/synthesis partitioning plan.
+- **v18.5:** realistic overlapping-user performance/capacity/security certification plan using the full 10/10 efficiency scorecard.
+
+Canonical shared-processing rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.

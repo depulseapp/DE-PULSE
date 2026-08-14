@@ -166,3 +166,51 @@ The ledger must be derived/reconciled from GitHub branch HEAD, release identity,
 Canonical naming applies to active workflows/jobs/artifacts/checkpoints/gates/capabilities as well as docs. Obsolete temporary/numbered/ambiguous release machinery is renamed, consolidated, deprecated or removed before release closure where compatibility does not require it.
 
 Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
+
+## Permanent Shared Symbol Intelligence Processing Execution
+
+Shared symbol intelligence is enforced as a blocking architecture/performance checkpoint inside the existing gate model. It is not a cosmetic optimization and does not create a new gate by itself.
+
+Required execution pattern:
+
+- **G1 — Immutable Scope:** inventory every source of symbol demand and every affected consumer, including user tracking, selected symbols, Scanner/Radar, desks, Decision Queue, Rapid Move/Market Shock, preparation checkpoints, catalysts, Research and system context.
+- **G2 — Architecture & Data Utility:** bind each dataset/capability to one canonical shared owner and define the processing identity used for safe reuse. Prove that user workspaces contribute demand/context rather than owning duplicate market pipelines.
+- **G3 — Design & Dependency Readiness:** map the shared demand union, producer/consumer graph, freshness rules, in-flight ownership, material-change invalidation graph, rights/entitlement partitions, dynamic priority/backpressure and efficiency scorecard.
+- **G4 — Development Exit:** reject unintended per-user or per-feature duplicate acquisition, subscriptions, calculations, canonical state or reusable synthesis. Shared provider/router/cache/state owners must exist in actual source where affected.
+- **G6 — Integration & MEDIUM Qualification:** exercise overlapping consumers/users for the same symbol and prove one canonical result can safely serve multiple consumers; adding/removing one consumer must not corrupt the others.
+- **G7 — Data, Security & Adaptive Intelligence:** verify provenance/point-in-time truth, independent-provider reconciliation, AI evidence-fingerprint reuse, private-context separation, entitlement/data-rights isolation and zero unauthorized cross-user leakage.
+- **G8 — Performance, Capacity & Stability:** measure unique-demand scaling, provider calls/subscriptions, duplicate acquisition/calculation, cache/coalescing, reusable synthesis, fan-out, marginal overlapping-user cost, CPU/memory/storage, material-change latency, rate-limit pressure, fairness and long-running stability.
+- **G9 — Cross-Module UI/UX:** ensure shared intelligence is composed into the right user surfaces without reproducing the same deep evidence or exposing implementation machinery.
+- **G10 — Pre-Freeze Qualification:** unresolved unjustified duplicate processing or an architecture that materially scales as `users × symbols` blocks freeze for affected scope.
+- **G12 — Full Certification:** replay applicable shared-processing/security/performance evidence on the immutable RC.
+- **G16 — Adaptive Retrospective & Handoff:** record calls avoided, reuse/fan-out ratios, justified duplication, bottlenecks, regressions and new preventative controls.
+
+### Shared execution invariants
+
+1. The Global Symbol Registry is the canonical instrument/shared-processing membership owner.
+2. Equivalent demand is represented once in the shared demand union.
+3. A fresh equivalent acquisition/calculation/synthesis is reused across compatible consumers.
+4. Simultaneous equivalent misses collapse to one in-flight owner where practical.
+5. Material changes invalidate only affected downstream state rather than triggering blanket recomputation.
+6. Dynamic attention is assigned by materiality/freshness/decision relevance/session/event risk/capacity.
+7. Shared work is partitioned when rights, entitlement, tenant/security domain, private prompts/context or model/policy identity differ.
+8. One user's burst or oversized symbol set cannot starve higher-priority shared work or other authorized users.
+9. Adding an overlapping user/symbol consumer should primarily add authorization/composition/fan-out cost, not another market pipeline.
+10. Intentional independent-provider reconciliation is allowed and recorded as validation, not mistaken for wasteful duplication.
+
+### AI/LLM execution
+
+Prefer:
+
+**canonical evidence package → evidence fingerprint → correlation/synthesis → reusable intelligence → user-specific composition/question.**
+
+Do not rerun materially identical AI synthesis solely because another user opens the same symbol. User-specific reasoning is reserved for private context, explicit questions, approved personalization, authorization/entitlement differences or workflow state that materially changes the answer. Cross-user caches must never contain private prompts/context or restricted outputs.
+
+### v18.2–v18.5 progression
+
+- **v18.2:** protect the no-per-user-market-pipeline invariant while closing multi-user identity/workspace scope.
+- **v18.3:** implement shared Scanner/Radar acquisition, Session Intelligence Coordinator, Event Intelligence ownership and hosted shared demand union/canonical state.
+- **v18.4:** close shared-cache/synthesis entitlement, security and data-rights isolation.
+- **v18.5:** execute the full 10/10 overlapping-demand scorecard and treat material scaling/duplication/security shortfalls as closure blockers.
+
+Canonical rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.

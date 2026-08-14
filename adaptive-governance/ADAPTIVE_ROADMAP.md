@@ -154,3 +154,35 @@ These items cannot be treated as optional backlog merely because their governing
 The v18.3 functionality-consolidation workstream above remains mandatory `NEXT_RELEASE_MANDATORY_ENTRY`, preserving v18.2 immutable product scope while preventing the audit findings from being lost.
 
 Canonical closure rules: `adaptive-governance/GOVERNANCE_IMPLEMENTATION_CLOSURE_CONTRACT.md`.
+
+## Permanent Shared Symbol Intelligence Processing Direction
+
+From v18.2 onward DE.PULSE also adopts the **Shared Symbol Intelligence Processing Contract**. The architectural North Star is:
+
+**Global/shared market intelligence first; authorized personal composition second.**
+
+The Global Symbol Registry owns instrument identity/shared processing membership. User workspaces contribute demand, membership, preferences and workflow context but must not create independent provider, quote, history, event, indicator or reusable intelligence pipelines for symbols that are already active in the shared processing union.
+
+Permanent roadmap direction:
+
+- build one shared demand union across legitimate user/system consumers;
+- process each equivalent canonical symbol/dataset key once where lawful and technically equivalent;
+- use shared provider subscriptions/acquisition, canonical state, deterministic calculations, correlation, evidence packages and reusable AI/adaptive synthesis;
+- collapse simultaneous equivalent work with freshness-aware cache and in-flight coalescing;
+- propagate material changes to affected downstream consumers instead of blindly recomputing all state;
+- dynamically allocate attention by materiality, session, event risk, decision relevance and capacity rather than treating all symbols equally;
+- personalize authorization, ranking, notifications and UI composition at the consumer layer without multiplying the market-data pipeline;
+- partition sharing whenever provider entitlement, data-rights, tenant/security domain or private user/LLM context differs;
+- measure duplicate acquisition/calculation, cache/coalescing reuse, fan-out, marginal overlapping-user cost, latency, CPU/memory/storage, provider pressure, fairness and leakage incidents;
+- treat uncontrolled per-user duplicate market pipelines or repeated identical AI synthesis as architecture/performance defects.
+
+### Release progression
+
+- **v18.2:** governance/invariant protection — multi-user identity/workspace work must not introduce per-user market/provider/intelligence engines.
+- **v18.3:** mandatory shared-execution implementation — shared Scanner/Radar acquisition, Session Intelligence Coordinator, Event Intelligence ownership, hosted shared demand union and canonical shared state compatible with persistence/recovery.
+- **v18.4:** security/data-rights isolation closure for shared caches, synthesis, provider entitlements and private context.
+- **v18.5:** full 10/10 multi-user efficiency/capacity/security closure under realistic overlapping-demand load; processing cost must scale primarily with unique canonical demand rather than `users × symbols`.
+
+This direction is enforced through existing G1/G2/G3/G4/G6/G7/G8/G9/G10/G12/G16 and does not create a new gate by itself.
+
+Canonical rules: `adaptive-governance/SHARED_SYMBOL_INTELLIGENCE_PROCESSING_CONTRACT.md`.
