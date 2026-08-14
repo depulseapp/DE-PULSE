@@ -24,39 +24,44 @@ env:
   GO_VERSION: '1.26.6'
   BASE_SOURCE: 'De-Pulse-v18.0.4-STABLE-Source.zip'
   BASE_SHA: 'a7fc226577a23ce89ad214183dfad73f11cde1e43b59eba08eedb200ddc0da2a'
-  EXPECTED_FP: 'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0'
+  EXPECTED_FP: '1eac7ec4557c69ff072f703fe36718f91e6810abc7818f9432fee7989fb2d20f'
   BUILD_ID: 'v18.0.5-test-ui-ux-symbol-management-hardening-20260814'
   PATCH_PREFIX: 'release/v18.0.5/v18.0.5-final-source.patch.gz.b64.part'
+  RC2_OVERLAY: 'release/v18.0.5/v18.0.5-rc2-responsive.patch'
   RC_SOURCE: 'De-Pulse-v18.0.5-RC-Source.zip'
 
 jobs:
   g11-freeze:
     name: G11 Immutable RC Freeze
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: false
-      - name: Reconstruct exact v18.0.5 candidate
+      - name: Reconstruct exact v18.0.5 RC2 candidate
         shell: bash
         run: |
           set -euo pipefail
           echo "$BASE_SHA  $BASE_SOURCE" | sha256sum -c -
           rm -rf work && mkdir -p work/candidate
           unzip -q "$BASE_SOURCE" -d work/candidate
-          cat "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" "${PATCH_PREFIX}04" "${PATCH_PREFIX}05a" "${PATCH_PREFIX}05b" "${PATCH_PREFIX}06" | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5.patch
+          cat "${PATCH_PREFIX}01" "${PATCH_PREFIX}02" "${PATCH_PREFIX}03" "${PATCH_PREFIX}04" "${PATCH_PREFIX}05" "${PATCH_PREFIX}06" | tr -d '\r\n' | base64 -d | gunzip > work/v18.0.5-rc1.patch
           (
             cd work/candidate
             git init -q
-            git apply --whitespace=nowarn ../v18.0.5.patch
+            git apply --whitespace=nowarn ../v18.0.5-rc1.patch
+            rc1="$(python3 ci_pipeline.py --fingerprint)"
+            echo "RC1 fingerprint=$rc1"
+            test "$rc1" = 'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0'
+            git apply --whitespace=nowarn "../../$RC2_OVERLAY"
             actual="$(python3 ci_pipeline.py --fingerprint)"
-            echo "candidate fingerprint=$actual"
+            echo "RC2 fingerprint=$actual"
             test "$actual" = "$EXPECTED_FP"
           )
-      - name: Provision responsive-test browser
+      - name: Provision Chromium for rendered gates
         shell: bash
         run: |
           set -euo pipefail
@@ -70,7 +75,6 @@ jobs:
           )"
           test -x "$CHROMIUM_PATH"
           sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
-
       - name: Qualify environment-sensitive gates serially
         working-directory: work/candidate
         shell: bash
@@ -99,24 +103,25 @@ jobs:
           PYTHON="$(python3 -c 'import sys; print(sys.executable)')"
           run_and_record http_workflow "$PYTHON" http_workflow_test.py
           run_and_record responsive "$PYTHON" responsive_ui_sharded_gate.py
-
-      - name: G10 replay on exact candidate
+      - name: Replay G10 on exact RC2
         working-directory: work/candidate
         run: python3 prefreeze_qualification.py
-      - name: Principal engineer / scope freeze checks
+      - name: Principal engineer and scope freeze checks
         working-directory: work/candidate
         shell: bash
         run: |
+          set -euo pipefail
           python3 v18_0_5_scope_gate.py
           python3 v18_0_5_principal_engineer_gate.py
           python3 release_identity.py --verify
           python3 version_consistency_test.py
-      - name: Freeze immutable RC source
+      - name: Freeze deterministic immutable RC source
         shell: bash
         run: |
           set -euo pipefail
           rm -rf work/candidate/.git work/candidate/__pycache__
           find work/candidate -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          find work/candidate -type f -name '*.pyc' -delete
           actual="$(cd work/candidate && python3 ci_pipeline.py --fingerprint)"
           test "$actual" = "$EXPECTED_FP"
           python3 - <<'PYZIP'
@@ -127,14 +132,12 @@ jobs:
           fixed=(2026,8,14,0,0,0)
           with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
               for f in sorted(p for p in root.rglob('*') if p.is_file()):
-                  rel=f.relative_to(root).as_posix()
                   if '__pycache__' in f.parts or f.suffix=='.pyc':
                       continue
-                  info=zipfile.ZipInfo(rel, fixed)
+                  rel=f.relative_to(root).as_posix()
+                  info=zipfile.ZipInfo(rel,fixed)
                   info.create_system=3
-                  info.external_attr=(0o100644 << 16)
-                  if f.name.endswith('.sh'):
-                      info.external_attr=(0o100755 << 16)
+                  info.external_attr=((0o100755 if f.suffix=='.sh' else 0o100644) << 16)
                   z.writestr(info,f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
           PYZIP
           sha256sum "$RC_SOURCE" | tee "$RC_SOURCE.sha256"
@@ -149,6 +152,7 @@ jobs:
             source-fingerprint.txt
             G10-prefreeze-summary.json
             release/v18.0.5/G1-IMMUTABLE-SCOPE.md
+            release/v18.0.5/v18.0.5-rc2-responsive.patch
           if-no-files-found: error
           retention-days: 90
 
@@ -156,7 +160,7 @@ jobs:
     name: G12 Full Certification
     needs: [g11-freeze]
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 55
     steps:
       - uses: actions/download-artifact@v8
         with:
@@ -170,17 +174,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cd rc
-          sha256sum -c "$RC_SOURCE.sha256"
-          cd ..
+          (cd rc && sha256sum -c "$RC_SOURCE.sha256")
           mkdir -p candidate
           unzip -q "rc/$RC_SOURCE" -d candidate
           actual="$(cd candidate && python3 ci_pipeline.py --fingerprint)"
           test "$actual" = "$EXPECTED_FP"
-      - name: Governance / architecture / data gates
+      - name: Governance architecture and data gates
         working-directory: candidate
         shell: bash
         run: |
+          set -euo pipefail
           python3 v18_baseline_gate.py
           python3 v18_0_5_scope_gate.py
           python3 v18_0_5_principal_engineer_gate.py
@@ -190,16 +193,17 @@ jobs:
           python3 data_utility_gate.py
           python3 data_health_policy_gate.py
           python3 source_health_architecture_gate.py
-      - name: Full Go, race, vet, and vulnerability suites
+      - name: Full Go race vet and vulnerability suites
         working-directory: candidate
         shell: bash
         run: |
+          set -euo pipefail
           go test -count=1 ./...
           go test -race -count=1 ./...
           go vet ./...
           go install golang.org/x/vuln/cmd/govulncheck@latest
           "$(go env GOPATH)/bin/govulncheck" ./...
-      - name: Provision responsive-test browser
+      - name: Provision Chromium for rendered certification
         shell: bash
         run: |
           set -euo pipefail
@@ -213,11 +217,11 @@ jobs:
           )"
           test -x "$CHROMIUM_PATH"
           sudo ln -sf "$CHROMIUM_PATH" /usr/bin/chromium
-
-      - name: Deterministic / trader / renderer / workflow qualification
+      - name: Deterministic trader renderer workflow and responsive qualification
         working-directory: candidate
         shell: bash
         run: |
+          set -euo pipefail
           python3 randomized_order_gate.py
           python3 extreme_30_gate.py
           node renderer_logic_test.js
@@ -254,7 +258,7 @@ jobs:
     name: G14 macOS Apple Silicon
     needs: [g12-certification]
     runs-on: macos-15
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -272,16 +276,16 @@ jobs:
           mkdir -p input
           cp "rc/$RC_SOURCE" "input/$RC_SOURCE"
           SRC_SHA="$(awk '{print $1}' "rc/$RC_SOURCE.sha256")"
-          python3 - "$SRC_SHA" <<'PY'
+          python3 - "$SRC_SHA" "$EXPECTED_FP" "$BUILD_ID" <<'PY'
           from pathlib import Path
           import sys
-          sha=sys.argv[1]
+          sha,fp,build=sys.argv[1:]
           p=Path('scripts/build-macos-arm64.sh').read_text()
           repl={
             'De-Pulse-v18.0.4-TEST-Source.zip':'De-Pulse-v18.0.5-RC-Source.zip',
             '69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f':sha,
-            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0',
-            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':'v18.0.5-test-ui-ux-symbol-management-hardening-20260814',
+            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':fp,
+            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':build,
             'v1804test':'v1805test','18004':'18005','18.0.4':'18.0.5'
           }
           for a,b in repl.items(): p=p.replace(a,b)
@@ -299,7 +303,7 @@ jobs:
     name: G14 Windows x64
     needs: [g12-certification]
     runs-on: windows-2025
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -335,7 +339,7 @@ jobs:
     name: G15 Candidate Release Assurance
     needs: [g12-certification, macos-apple-silicon, windows-x64]
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
@@ -350,22 +354,22 @@ jobs:
         with:
           name: De-Pulse-v18.0.5-G14-Windows-x64
           path: collected/windows
-      - name: Verify native evidence / source provenance
+      - name: Verify native evidence and source provenance
         shell: bash
         run: |
           set -euo pipefail
           SRC_SHA="$(awk '{print $1}' "rc/$RC_SOURCE.sha256")"
           cp scripts/verify-g14-g15.py scripts/verify-v18.0.5-g14-g15.py
-          python3 - "$SRC_SHA" <<'PY'
+          python3 - "$SRC_SHA" "$EXPECTED_FP" "$BUILD_ID" <<'PY'
           from pathlib import Path
           import sys
-          sha=sys.argv[1]
+          sha,fp,build=sys.argv[1:]
           f=Path('scripts/verify-v18.0.5-g14-g15.py')
           p=f.read_text()
           repl={
             '69f87c3fd2f94e9adc8fe5e3fb273843bd5b07cc019f62eeaf1e4ad688adb66f':sha,
-            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':'dc5d3e52fad483edd42b2dcb2e7076a2d6ad9f58fe518d5da22f8ffff1079eb0',
-            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':'v18.0.5-test-ui-ux-symbol-management-hardening-20260814',
+            'a1ff742baf04176d6122da338fc2360c0d21c7220977c6901299b755ce2cfc5b':fp,
+            'v18.0.4-test-native-windows-lifecycle-g14-harness-hardening-20260813':build,
             'v18.0.4 TEST':'v18.0.5 TEST','v18.0.4':'v18.0.5'
           }
           for a,b in repl.items(): p=p.replace(a,b)
