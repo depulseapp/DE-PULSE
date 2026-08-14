@@ -8,7 +8,7 @@ Effective: **v18.2 and all later releases**
 
 DE.PULSE CI/CD must behave as an adaptive engineering system: **observe → classify → diagnose → generalize → prevent → execute → measure → learn**. Learning is not complete when a failure is merely fixed; the generalized lesson must prevent the same failure class from recurring where practical.
 
-This contract operates entirely inside canonical G0–G16. It creates no additional release gate and never weakens an existing gate.
+This contract operates under the current canonical G0–G16 map. That map remains the default but may evolve only through the Gate Utility Test defined in `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`; ad-hoc workflow-local gates are forbidden.
 
 ## 1. Single logical Build Coordinator
 
@@ -135,6 +135,57 @@ G16 must review CI incidents from the release and determine:
 
 The goal is fewer repeated failures, less duplicated product machinery and less CI churn over time without reducing coverage or release assurance.
 
+## 10. Adaptive decomposition and parallel execution
+
+Heavy CI responsibilities should be split into smaller independently verifiable work packages, checkpoints, shards or parallel lanes when doing so materially improves fault isolation, resumability, evidence reuse, speed or resource efficiency.
+
+Every decomposed lane must define:
+
+- canonical responsibility owner;
+- dependencies and source/fingerprint/artifact inputs;
+- PASS/FAIL/BLOCKED criteria;
+- evidence output;
+- downstream consumers;
+- invalidation/reuse rules.
+
+Independent lanes may run in parallel. Dependent work remains ordered. Shared setup, caches, artifacts, data acquisition and test fixtures should be reused so sharding does not multiply work unnecessarily.
+
+Concurrency is bounded by real capacity. More jobs are not automatically better; total runner minutes, CPU, memory, browser load, artifact volume, provider/API calls and database pressure must be considered.
+
+After a lane fails, classify the failure and rerun the smallest affected/dependent set whose evidence is invalid. Do not restart an entire heavy phase when unchanged-source evidence remains trustworthy.
+
+Examples of appropriate decomposition include:
+
+- role × viewport × surface-family G9 UI shards;
+- independent performance/load scenarios with one aggregated G8 conclusion;
+- separate macOS and Windows G13/G14 evidence;
+- fast/medium/full qualification layers that reuse earlier evidence where valid;
+- platform/toolchain-specific compile/runtime lanes;
+- independent source/data/security checks that share one candidate fingerprint.
+
+## 11. Gate Utility Test and canonical gate evolution
+
+The current G0–G16 map is the default. A new canonical G-gate may be added only when a recurring/material release risk cannot be owned cleanly by an existing gate and cannot be handled more simply through checkpointing, sharding/parallel lanes or strengthening/reassigning an existing gate.
+
+Before any gate addition, prove:
+
+- distinct risk/responsibility;
+- independent durable evidence and clear PASS/FAIL criteria;
+- non-duplication with existing gates/checkpoints;
+- material assurance value;
+- exactly one canonical owner after consolidation;
+- coordinated updates to Roadmap, Build Plan, Build Process, Delivery Process, CI, ledger/checkpoint schema and automation;
+- migration clarity for in-flight/future releases while historical Stable evidence remains immutable;
+- required G16 review after the new gate is used.
+
+No workflow-local `G17`/`G18` is valid by itself.
+
+Preferred process evolution order:
+
+**reuse existing evidence → checkpoints → sharded/parallel lanes → strengthen/reassign an existing gate → add a new canonical gate only when materially justified.**
+
+Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
+
 ## Permanent rule
 
-**DE.PULSE does not merely recover from CI failures. It classifies them, learns from them, converts useful lessons into preventative controls, and reduces the probability of recurrence while preserving full G0–G16 assurance. Product growth follows the same discipline: reuse and correlate first, consolidate overlap, and create new machinery or tabs only when materially justified.**
+**DE.PULSE does not merely recover from CI failures. It classifies them, learns from them, converts useful lessons into preventative controls, and reduces the probability of recurrence while preserving full release assurance. Product growth and engineering execution follow the same discipline: understand, decompose, reuse, correlate, execute, checkpoint, evaluate, adapt, integrate and learn; add new machinery or gates only when their utility is proven.**
