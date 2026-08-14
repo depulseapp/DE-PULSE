@@ -99,3 +99,38 @@ Background work follows the same rule. A temporal preparation job, event watcher
 Every release maintains `functionality_utility_registry.json`; `functionality_utility_checkpoint_gate.py` verifies primary navigation coverage and required ownership/reuse/correlation/UI dispositions before G10.
 
 Canonical checkpoint rules: `adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md`.
+
+## Permanent Adaptive Work Decomposition & Gate Evolution
+
+Large implementation, qualification, audit and delivery responsibilities must be decomposed when smaller independently verifiable work packages materially improve fault isolation, resumability, safe parallelism, evidence reuse, resource efficiency or learning.
+
+Execution pattern:
+
+**Understand → decompose → map dependencies → reuse → execute → checkpoint → evaluate evidence → adapt next work → integrate → certify → learn.**
+
+The Build Coordinator owns the dependency graph. Each decomposed package has one canonical owner, explicit inputs/dependencies, completion criteria, evidence, downstream consumers and invalidation rules. Independent packages may run in parallel; dependent work remains ordered. Parallelism must be bounded so splitting work does not multiply runner load, provider/API calls, database work, browser load or duplicate expensive qualification.
+
+Use meaningful intermediate checkpoints so a late failure does not force unrelated qualified work to rerun. Preserve unchanged-source PASS evidence and rerun the smallest affected/dependent set after failure or interruption.
+
+Under the current gate map:
+
+- G1/G2/G3 define decomposition, dependencies and evidence before heavy work;
+- G4 may use independently testable implementation packages;
+- G5/G6 provide early fast/medium checkpoints;
+- G7/G8/G9 may shard independent data/security/adaptive, performance/capacity and role × viewport × surface work before producing one gate conclusion;
+- G10 verifies all required sub-checkpoints/lanes are complete;
+- G12 may internally decompose full certification but produces one authoritative RC-bound conclusion;
+- G13/G14 keep macOS and Windows packaging/runtime evidence independent;
+- G16 measures whether decomposition reduced cycle time/failure repetition and removes redundant packages/checks.
+
+### Gate evolution
+
+G0–G16 remains the canonical gate map by default, but it is no longer treated as structurally untouchable. If accumulated evidence shows a materially distinct assurance boundary cannot be represented cleanly as a checkpoint, sub-stage, parallel lane or strengthened existing gate, the gate model may evolve.
+
+Before adding a new G-gate, pass the Gate Utility Test: distinct risk/responsibility, independent evidence, non-duplication, material value, canonical ownership, process-wide documentation/automation update, migration clarity for in-flight/future releases, and G16 post-use review.
+
+No workflow may invent an isolated `G17`, `G18`, etc. without revising the canonical process. Prefer in order:
+
+**reuse existing evidence → checkpoints → sharded/parallel lanes → strengthen/reassign an existing gate → add a new canonical gate only when materially justified.**
+
+Canonical rules: `adaptive-governance/ADAPTIVE_WORK_DECOMPOSITION_CONTRACT.md`.
