@@ -1,5 +1,11 @@
 # DE.PULSE — Developer documentation
 
+## v18.2.0 TEST — Admin / presence / session architecture
+
+v18.2 extends the existing `IdentityService`; it does not introduce a second user/session/presence store. `AdminUserView` / `AdminSessionView` expose only operational fields, while password hashes, token hashes and opaque tokens remain server-side. Role hierarchy and active-owner safety are centralized in the identity owner. Role/status/password changes revoke affected sessions.
+
+Presence is derived from persisted `SessionRecord.LastSeenAt`, idle/absolute expiry and revocation. SSE keepalive revalidates the same canonical session and touches `LastSeenAt`; revoked or expired streams terminate. The modular Settings admin UI is role-gated to SUPER_OWNER / OWNER / ADMIN and uses existing CSRF protection for mutations. v18.1 `UserWorkspace` remains the personal-market-state owner, and shared provider/evidence/Router/Rapid Move/deterministic scoring pipelines remain unchanged. PostgreSQL/hosted web stays v18.3.
+
 ## v18.1.0 STABLE — Multi-user ownership architecture
 
 `UserWorkspace` is the single durable owner for personal watchlists and UI state. It is persisted by the existing `PersistenceBackend` abstraction and keyed by immutable authenticated `UserID`; the pre-v18.1 owner state migrates once, then shared `state.json` retains operational settings rather than a private copy of the owner's symbols. Auth materializes an empty workspace for a new account before normal request handling.

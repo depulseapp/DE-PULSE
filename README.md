@@ -1,16 +1,27 @@
-# DE.PULSE v18.1.0 STABLE — Multi-User / My Market Symbols
+# DE.PULSE v18.2.0 TEST — Admin / Presence / Sessions
+
+**Build:** `v18.2.0-test-admin-presence-sessions-20260814`  
+**Channel:** TEST  
+**Current Stable baseline:** v18.1.0  
+**Major v18 provenance anchor:** v17.5.1  
+**Patch predecessor:** v18.1.0 STABLE  
+**Application bundle:** `De-Pulse-v18.2.0-TEST.app`  
+**Runtime/config:** `PersonalMarketTerminal-v18.2.0-TEST`
+
+v18.2.0 extends the canonical `IdentityService` with role-aware user lifecycle operations, redacted user/session operational views, ACTIVE / IDLE / OFFLINE presence derived from persisted session truth, password-reset and session-revocation lifecycle, SSE revocation enforcement, and a compact privileged Settings administration surface. USER/DEMO do not see administration controls.
+
+v18.1 per-user market-state ownership and the shared fetch-once/calculate-once intelligence core remain unchanged. Provider configuration, canonical market evidence, Router/Rapid Move, Opportunity Radar and deterministic scoring remain shared operational intelligence. True hosted PostgreSQL/browser architecture remains v18.3. Protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged.
+
+## Immediate Stable predecessor — v18.1.0 STABLE — Multi-User / My Market Symbols
 
 **Build:** `v18.1.0-stable-multi-user-my-market-symbols-20260814`  
 **Channel:** STABLE  
-**Current Stable baseline:** v18.0.6  
+**Current Stable baseline:** v18.1.0  
 **Major v18 provenance anchor:** v17.5.1  
-**Patch predecessor:** v18.0.6 STABLE  
 **Application bundle:** `De-Pulse.app`  
 **Runtime/config:** `PersonalMarketTerminal`
 
-v18.1.0 adds durable **My Market Symbols** ownership on top of the certified v18.0.6 Stable core. Personal Tracked Symbols, watchlists, scope/selected ticker, profile export/import and AI default context are keyed by the authenticated immutable `UserID`; a new user starts empty and cannot inherit another user's personal market state. The pre-v18.1 Stable user's personal state migrates once into the bootstrap OWNER workspace.
-
-The market-data and intelligence core remains shared: provider configuration, canonical evidence, quotes, Router v2, Rapid Move / Market Shock, Radar and deterministic scoring are not duplicated per user. The engine processes one deduplicated union of workspace symbols, and presentation/SSE payloads are filtered to each authenticated workspace. Global provider/settings/runtime policy remains ADMIN-owned. v18.2 Admin / Presence / Sessions is explicitly out of scope. Protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged.
+v18.1.0 is the certified incoming Stable baseline for this TEST build. It provides durable per-user market workspaces while preserving one shared canonical market-data and intelligence core.
 
 ## Previous Stable — v18.0.6 STABLE — Smart Provider Router + Rapid Move / Market Shock Hardening
 

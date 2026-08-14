@@ -1,5 +1,11 @@
 # DE.PULSE — User documentation
 
+## v18.2.0 TEST — Administration, Presence & Sessions
+
+Privileged OWNER/ADMIN-class users now have a compact Settings administration surface for creating lower-authority accounts, changing permitted roles/status, resetting temporary passwords, viewing ACTIVE / IDLE / OFFLINE presence and revoking eligible sessions. Presence comes from authenticated session truth; there is no separate heartbeat database. Credential hashes and opaque session tokens are never shown.
+
+Role and lifecycle changes revoke affected sessions, and a revoked/expired long-lived SSE connection closes on its next keepalive. USER/DEMO do not see administration controls. v18.1 personal market workspaces remain isolated, while provider/evidence/scoring intelligence remains shared and efficient. Hosted PostgreSQL/browser deployment remains v18.3. The **No Execution** boundary is unchanged.
+
 ## v18.1.0 STABLE — My Market Symbols / personal workspace
 
 Each authenticated user now has a durable personal market workspace keyed by the account's immutable `UserID`. Tracked Symbols, Day/Swing/Long memberships, personal watchlists, scope and selected ticker no longer share one global list. New users start with an empty personal symbol set; the existing Stable user's state is migrated once into the OWNER workspace.

@@ -1,5 +1,11 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.2.0 TEST — administration / presence boundaries
+
+v18.2 adds local/shared-process administrative user and session operations but is **not yet the true hosted multi-user deployment**. Presence reflects authenticated session activity as ACTIVE / IDLE / OFFLINE; it is operational presence, not device identity, geolocation or guaranteed human attention. Session history is bounded operational context.
+
+Administrators can manage only roles below their authority; own-account destructive changes and elimination of the final active OWNER/SUPER_OWNER are blocked. Temporary-password creation/reset requires the user to replace the password on sign-in and revokes prior sessions. Hosted PostgreSQL, browser-scale concurrency, backup/restore and shared-server recovery remain v18.3. Broader commercial/data-rights/security hardening remains v18.4. The **No Execution** boundary is unchanged.
+
 ## v18.1.0 STABLE — multi-user boundaries
 
 v18.1 isolates personal market state, but it is not yet the full hosted multi-user product. User-administration, presence/session operations and lifecycle controls remain v18.2; true shared hosted PostgreSQL/browser deployment remains v18.3. Provider entitlements, canonical market evidence and global operational policy are intentionally shared rather than duplicated per account. Broad-market Opportunity Radar and Rapid Move / Market Shock intelligence may therefore be visible to multiple users even when it was not triggered by their personal watchlist.
