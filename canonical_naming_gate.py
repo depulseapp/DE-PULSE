@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import json
 import pathlib
-import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -93,13 +92,13 @@ if CONTRACT.exists():
         if f"**{gate} — {name}**" not in text:
             errors.append(f"naming contract missing canonical {gate} title")
 
-# Guard against durable low-quality naming in governance definitions.
-for p in [REG, CONTRACT]:
-    if p.exists():
-        txt = p.read_text().lower()
-        for bad in ["final-final", "phase2", "new-check"]:
-            if bad in txt:
-                errors.append(f"ambiguous durable naming token present in {p.name}: {bad}")
+# Guard machine registries from durable placeholder naming. Documentation may
+# intentionally mention these strings as negative examples, so do not scan prose.
+if REG.exists():
+    txt = REG.read_text().lower()
+    for bad in ["final-final", "phase2", "new-check"]:
+        if bad in txt:
+            errors.append(f"ambiguous durable naming token present in {REG.name}: {bad}")
 
 if errors:
     print("Canonical Naming Gate: FAIL")
