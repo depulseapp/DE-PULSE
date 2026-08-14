@@ -363,3 +363,92 @@ Stop only for genuinely unavoidable:
 This contract may be changed only by an explicitly approved material decision recorded in `governance/DECISION-LOG.md`.
 
 Release handoffs may summarize this contract but cannot silently supersede it.
+
+---
+
+## 20. 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence — Four-Layer Contract
+
+The approved TDTI scope in `governance/APPROVED-SCOPE.md` is governed across all four adaptive layers. It does **not** create a fifth operating layer or a new G17+ gate.
+
+### 20.1 Adaptive Roadmap
+Roadmap placement must preserve the distinction between:
+- **v18/v19 evidence/data foundation** — point-in-time Long/Short plan lineage, side-aware outcomes, ASBI/regime/catalyst/liquidity context, reliable short-specific data provenance and historical depth;
+- **v20 major adaptive implementation** — competing Long/Short/No Reliable Edge reasoning, probability/quality/readiness, adaptive path modeling, AI/LLM-style synthesis, side-aware calibration and Champion/Challenger validation.
+
+Do not force mature v20 TDTI into v18.2–v18.5 merely because the scope is approved.
+
+### 20.2 Adaptive Build Plan
+When TDTI work becomes dependency-compatible, prioritize slices using:
+
+**user value + evidence readiness + canonical ownership + data rights + historical depth + performance cost + validation maturity + defect risk + cross-module benefit**
+
+Preferred dependency order:
+1. reuse/audit existing Day/Swing/Long Entry/Target/Invalidation and evidence-snapshot owners;
+2. freeze a canonical two-sided thesis/trade-plan schema and semantics;
+3. harden side-aware outcome measurement and no-lookahead history;
+4. add short-specific contextual datasets only where useful/reliable/lawful;
+5. integrate ASBI state/path and cross-horizon reasoning;
+6. introduce learned probability/quality/readiness in SHADOW;
+7. add AI/LLM-style structured synthesis and contradiction reasoning;
+8. validate Champion/Challenger before production influence;
+9. expose concise contextual UI only after truth/performance is proven.
+
+Do not create a separate Short Desk, second market-data pipeline, second historical store, or duplicate deterministic horizon engine merely to implement the short side.
+
+### 20.3 Adaptive Build Process — G0–G16 Responsibilities
+TDTI uses the existing gate model:
+
+- **G0 Exact Baseline:** identify current Long-plan formulas, prior short-entry direction, validation/outcome owners, open defects, and exact source fingerprint.
+- **G1 Immutable Scope:** freeze which TDTI slice is in the release and what remains roadmap-only.
+- **G2 Architecture / Data Utility:** prove one canonical evidence/thesis owner; classify every proposed component REUSE / CONSOLIDATE / REFACTOR / DELETE-REPLACE / ADD; justify short-interest/borrow/SSR or other data by consumer/value/rights.
+- **G3 Design / Dependency Readiness:** freeze Long/Short semantics, structural trigger/invalidation rules, UNKNOWN/ABSTAIN behavior, data/provider/rights dependencies, and test oracle before implementation.
+- **G4 Development Exit:** unit/static/schema tests must prove directional arithmetic/sign semantics, structural levels, no unsupported LLM level invention, and backward compatibility for protected outputs where no approved change applies.
+- **G5 FAST Qualification:** smoke/regression on Long, Short and NO RELIABLE EDGE states, including missing/stale/degraded evidence.
+- **G6 Integration / MEDIUM Qualification:** verify ASBI, Day/Swing/Long, Research, Opportunity Radar, Decision Queue, Event/Market Intelligence, Historical Validation and Smart-Money integration without duplicate computation.
+- **G7 Data / Security / Adaptive Intelligence:** enforce point-in-time truth, no lookahead, evidence independence, provenance/freshness, ABSTAIN, LLM grounding, side-aware immutable ledger, SHADOW/Champion-Challenger governance and no silent self-modification.
+- **G8 Performance / Capacity / Stability:** measure incremental CPU/memory/provider/storage/latency cost, duplicate calculations, material-change propagation, bounded background learning and long-running stability. Shared Long/Short reasoning should reuse the same canonical evidence rather than double workload naïvely.
+- **G9 Cross-Module / UI / UX:** prove clear Long-vs-Short labels, no mirrored/ambiguous terminology, responsive trade-plan geometry, concise strongest-thesis + competing-thesis presentation, accessible uncertainty/UNKNOWN and no execution-looking controls.
+- **G10 Pre-Freeze Qualification:** require side-aware deterministic/invariant tests, no-lookahead replay, outcome-ordering tests, calibration evidence where claimed, contradiction/ABSTAIN tests and Professional Trader/Investor review before RC freeze.
+- **G11 Immutable RC:** freeze the exact thesis/model/prompt/rule version and evidence contract.
+- **G12 Full Certification:** run full regression plus walk-forward/point-in-time evaluation, Long vs Short calibration, false positives/misses, target/invalidation ordering, MFE/MAE, Decision Utility, regime robustness, squeeze/bounce/bull-trap failure cases, cross-horizon cases, AI grounding and ABSTAIN quality as applicable.
+- **G13 Native Packaging / Provenance:** package the exact certified model/rule/prompt/schema identities and required provenance.
+- **G14 Actual Artifact Runtime Audit:** launch the packaged app and verify real rendered Long/Short plans, state transitions, UNKNOWN/degraded behavior, restart persistence and no execution capability.
+- **G15 Release Assurance / Promotion:** prove rollback/reproducibility, production-vs-SHADOW truth and that no Challenger or LLM logic was silently promoted.
+- **G16 Adaptive Retrospective / Handoff:** feed side-specific outcomes, false positives/misses, MFE/MAE, thesis flips, ABSTAIN quality, alert usefulness, short-specific data usefulness, provider cost and UI findings into the next Adaptive Build Plan.
+
+### 20.4 Adaptive Delivery Process
+A delivered TDTI-capable artifact is trustworthy only when the **actual package**, not just source tests, proves applicable:
+- Long and Short are derived from the same point-in-time canonical evidence contract;
+- Entry/Short Entry, Trim/Target/Cover and Invalidation semantics are directionally correct and structurally explainable;
+- unsupported/missing shortability, borrow, short-interest or similar evidence is UNKNOWN rather than guessed;
+- target/cover-before-entry cannot count as success in validation;
+- historical replay does not leak future news, filings, earnings, fundamentals, market state or provider corrections;
+- AI/LLM synthesis is grounded in available evidence, preserves contradictions/uncertainty, and cannot silently overwrite canonical truth;
+- NO RELIABLE EDGE / ABSTAIN works in normal and degraded states;
+- Champion/Challenger and SHADOW/production identities are visible in provenance/diagnostics where applicable;
+- packaged runtime preserves restart/persistence truth and does not expose order-entry, borrow, portfolio, P&L or execution controls;
+- UI remains **complex inside → intelligent synthesis → simple outside**.
+
+### 20.5 TDTI Adaptive Scorecard
+Measure applicable:
+- Long vs Short calibration separately;
+- thesis-strength usefulness;
+- Opportunity Quality / Decision Utility;
+- readiness precision and lead time;
+- target/cover/invalidation first-event truth;
+- MFE/MAE and time-to-resolution;
+- false-positive and missed-material-move cost by side;
+- squeeze/rebound/bull-trap/failed-breakdown failure modes;
+- cross-horizon contradiction quality;
+- ASBI state-transition usefulness;
+- evidence independence/contradiction handling;
+- LLM grounding / unsupported-claim rate;
+- ABSTAIN quality;
+- alert burden/usefulness;
+- provider/data usefulness and calls avoided;
+- latency/resource overhead;
+- regime robustness/drift;
+- Champion/Challenger evidence;
+- Professional Trader/Investor acceptance.
+
+Headline directional accuracy alone is insufficient for promotion.
