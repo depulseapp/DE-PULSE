@@ -143,6 +143,46 @@ Full contract: `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md` and roadmap pl
 
 ---
 
+## DEC-2026-08-14-006 — 10/10 Adaptive Opportunity Discovery & Recommendations
+
+**Status:** APPROVED  
+**Date:** 2026-08-14  
+**Affects:** Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process, Adaptive Delivery Process, Global Symbol Registry, Reliable Actionable Universe, Shared Symbol Intelligence, Opportunity Radar, My Market, ASBI, TDTI, ADR-GDI, Dashboard, Decision Queue, Research, Historical Validation  
+**Placement:** dependency-compatible v18/v19 productization and evidence foundation; v19 hardening; v20 mature adaptive ranking/personalization
+
+### Decision
+Adopt **Adaptive Opportunity Discovery & Recommendations (AODR)** as a permanent 10/10 AI/LLM-style opportunity-prioritization capability.
+
+AODR converts market intelligence DE.PULSE already understands into two user-facing opportunity groups:
+- **My Market Opportunities** — strongest material opportunities among symbols already in that user's watchlists/My Market;
+- **Global Opportunities** — strongest material opportunities from the eligible broader market universe that are not already in that user's My Market.
+
+AODR does not create another scanner, symbol registry, market-data pipeline, chart engine, ASBI/TDTI clone, or independent recommendation-truth silo. It reuses Global Symbol Registry eligibility, Reliable Actionable Universe quality, Shared Symbol Intelligence, Opportunity Radar broad observation/PROMOTE/DEMOTE, ASBI behavior intelligence, TDTI Long/Short opportunity quality/readiness, and ADR-GDI reliability truth.
+
+Underlying market evidence remains canonical and shared where semantically valid. User preferences may affect relevance/ranking/presentation, but must not fabricate different market truth for different users. The permanent model is:
+
+**shared canonical market truth → user-specific relevance/ranking/presentation**
+
+Ranking is not a highest-score leaderboard. It must consider applicable Opportunity Quality, Readiness, ASBI state/path/probability momentum, TDTI Long/Short thesis, expected magnitude/time-to-resolution, regime, relative strength, liquidity, catalysts, evidence independence/contradiction, freshness/data sufficiency, extension/chase and squeeze risk, historical usefulness, materiality and opportunity cost.
+
+Candidate lifecycle supports **NOW / WATCH / PASS / ABSTAIN / NO RELIABLE EDGE**. AODR must be allowed to show no strong opportunities rather than manufacture recommendations. Strong direction with poor entry location, poor R:R, excessive extension or degraded required evidence must be demoted even when the underlying thesis remains strong.
+
+AODR preserves staged scalable processing:
+
+**broad low-cost observation → PROMOTE → deeper shared analysis → rank/surface → DEMOTE**
+
+It must not run expensive deep analysis across the entire Global Symbol Registry continuously. Correlation/diversity logic should avoid presenting many copies of the same sector/theme/catalyst as independent opportunities while remaining a recommendation-quality feature, not portfolio construction.
+
+Normal UX should be concise and AI/LLM-style: why now, Long/Short/horizon, readiness/quality, confirms, invalidates, key contradiction/risk, extension/chase state and what to watch next. LLM output must remain grounded in canonical structured evidence and must not invent prices, levels, catalysts, probabilities or recommendations.
+
+Material surfaced recommendations must be recorded point-in-time before outcomes are known so DE.PULSE can measure recommendation usefulness, misses, redundancy, staleness, extension/chase errors, diversity value, degradation effects and decision utility. Learned ranking/personalization follows **SHADOW → VALIDATED → APPROVED → PRODUCTION** with Champion/Challenger evaluation and no silent production self-modification.
+
+AODR does not change the permanent No Execution Boundary. Recommendations are research/decision-support prioritization only.
+
+Full scope: `governance/APPROVED-SCOPE.md` AODR-001 through AODR-018 and `governance/ROADMAP.md` Adaptive Opportunity Discovery & Recommendations placement.
+
+---
+
 ## DEC-2026-08-13-001 — Four-Layer Adaptive Operating Model
 
 **Status:** APPROVED / CARRIED FORWARD
