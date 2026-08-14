@@ -28,6 +28,12 @@ func (a *Application) routes() http.Handler {
 	mux.HandleFunc("/api/auth/rotate", a.auth(postOnly(a.handleRotateSession)))
 	mux.HandleFunc("/api/bootstrap", a.auth(a.handleBootstrap))
 	mux.HandleFunc("/api/events", a.auth(a.handleEvents))
+	mux.HandleFunc("/api/admin/identity", a.requireRole(RoleAdmin, a.handleAdminIdentity))
+	mux.HandleFunc("/api/admin/users/create", a.requireRole(RoleAdmin, postOnly(a.handleAdminUserCreate)))
+	mux.HandleFunc("/api/admin/users/role", a.requireRole(RoleAdmin, postOnly(a.handleAdminUserRole)))
+	mux.HandleFunc("/api/admin/users/status", a.requireRole(RoleAdmin, postOnly(a.handleAdminUserStatus)))
+	mux.HandleFunc("/api/admin/users/reset-password", a.requireRole(RoleAdmin, postOnly(a.handleAdminPasswordReset)))
+	mux.HandleFunc("/api/admin/sessions/revoke", a.requireRole(RoleAdmin, postOnly(a.handleAdminSessionRevoke)))
 	mux.HandleFunc("/api/settings/save", a.requireRole(RoleAdmin, postOnly(a.handleSettingsSave)))
 	mux.HandleFunc("/api/settings/ai-provider", a.requireRole(RoleAdmin, postOnly(a.handleAIProviderSelect)))
 	mux.HandleFunc("/api/settings/clear-secret", a.requireRole(RoleAdmin, postOnly(a.handleClearSecret)))
@@ -172,6 +178,12 @@ func (a *Application) handleEvents(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "data: %s\n\n", data)
 			flusher.Flush()
 		case <-ticker.C:
+			if a.identity != nil {
+				if !a.identity.sessionIDActive(p.SessionID) {
+					return
+				}
+				a.identity.touchSessionID(p.SessionID)
+			}
 			fmt.Fprint(w, ": keepalive\n\n")
 			flusher.Flush()
 		}
