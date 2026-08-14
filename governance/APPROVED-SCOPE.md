@@ -96,10 +96,98 @@ Approved uses include:
 - optional future controlled AI/MCP research when measured value and rights permit.
 
 ## INT-004 — Smart-Money / Multi-Source Convergence
-Contextual intelligence may combine insider/congressional activity, unusual market activity, catalysts/news, technical evidence, market regime, and options context where useful. Correlated observations must not be counted as independent confirmations.
+Contextual intelligence may combine insider/congressional activity, institutional/13F positioning, unusual market activity, catalysts/news, technical evidence, market regime, and options context where useful. Correlated observations must not be counted as independent confirmations.
 
 ## INT-005 — Options Context Only
 User trades stocks. Options data may be used where useful as contextual intelligence (e.g. unusual activity, put/call, IV, expected move) but must not silently change protected deterministic Day/Swing/Long formulas or create an options execution product.
+
+## INT-006 — Institutional Holdings / 13F Intelligence
+Track Form 13F as **lag-aware institutional-positioning intelligence** inside the existing Smart-Money / Institutional Intelligence architecture. It is not a standalone scanner and must not be treated as live ownership truth or as `institution bought = bullish`.
+
+Use 13F evidence to understand disclosed institutional positioning, persistence, concentration, consensus/crowding, manager behavior, sector/thematic rotation, and historical outcome usefulness.
+
+## INT-007 — Canonical 13F Source / Provenance
+**Direct SEC EDGAR is canonical filing truth** for 13F. Other providers may normalize, enrich, map, backfill, or corroborate only through the canonical Provider Router and must preserve source/provenance.
+
+Support applicable public filing types and amendments, including 13F-HR, 13F-HR/A, 13F-NT, and 13F-NT/A, with manager identity, CIK/13F file identity where available, accession, report period, filing/acceptance timestamp, amendment/restatement semantics, and provenance.
+
+## INT-008 — Point-in-Time / Filing-Lag Truthfulness
+13F reports are quarterly disclosures of report-period holdings, not current positions. Public filings can arrive up to the applicable filing deadline after quarter end; DE.PULSE must preserve both **report-period time** and **public filing/acceptance time** and never leak a filing into historical analysis before it became public.
+
+The UI/intelligence layer must visibly distinguish:
+- `POSITION AS OF <quarter end>`;
+- `FILED / PUBLIC <timestamp>`;
+- current age/staleness.
+
+Never infer an exact purchase/sale date from quarter-over-quarter changes.
+
+## INT-009 — Coverage / Disclosure Limitations
+13F intelligence must explicitly account for known disclosure limits. Among them:
+- only Section 13(f) securities are reportable;
+- short positions are not reported and must not be inferred as absent exposure;
+- certain small positions may be omitted under Form 13F instructions;
+- confidential treatment can delay public visibility of qualifying holdings;
+- a public filing is a disclosed snapshot, not the manager's complete real-time portfolio.
+
+Therefore `REPORTED EXIT` means absent from the applicable public disclosed holdings after reconciliation—not proof of a contemporaneous full economic exit.
+
+## INT-010 — Canonical 13F Holdings Record / Reconciliation
+Normalize applicable fields such as manager identity, filing/accession, report period, issuer, security class, CUSIP, FIGI where present, reported value, shares/principal amount, share/principal type, put/call designation where applicable, investment discretion, other manager, voting authority, amendment/restatement state, and source timestamps.
+
+Reconcile amendments, restatements, additions of omitted/confidential holdings when later public, security-identifier changes, splits/corporate actions, mergers/spinoffs, duplicate manager reporting, combination/notice reports, and mapping into the Global Symbol Registry before deriving position changes.
+
+## INT-011 — Position Change / Institutional Conviction
+Derive truthful quarter-over-quarter states such as:
+
+**NEW / INCREASED / REDUCED / REPORTED EXIT / UNCHANGED / NOT COMPARABLE / INCOMPLETE**
+
+Institutional Conviction may consider applicable evidence such as disclosed position size, change magnitude, disclosed-13F concentration, persistence across quarters, new-position significance, manager/cohort behavior, breadth of independent accumulation/reduction, and security liquidity/market context.
+
+Do not imply that disclosed-13F concentration equals the manager's complete portfolio weight when non-13F assets are unknown.
+
+## INT-012 — Manager Behavioral Fingerprints
+Where sufficient history exists, learn a **Manager / Institutional Behavioral Fingerprint** such as:
+- typical holding horizon/persistence;
+- tendency to initiate vs scale positions;
+- concentration behavior;
+- momentum vs mean-reversion tendencies;
+- sector/thematic specialization;
+- tendency to add into weakness or trim into strength;
+- post-earnings/catalyst positioning patterns;
+- historical outcome usefulness after public disclosure;
+- reliability by security type, sector, regime, and market-cap/liquidity cohort.
+
+Cold-start managers/cohorts must use broader evidence transparently and may ABSTAIN when history is insufficient.
+
+## INT-013 — Consensus, Crowding & Independence
+Measure institutional breadth and change without naïvely counting every filer as independent conviction.
+
+Where possible distinguish active discretionary conviction from passive/index/benchmark effects, related managers/sub-advisers, duplicate reporting relationships, mechanically similar strategies, and common-factor exposure.
+
+Potential outputs include accumulation/reduction breadth, consensus persistence, crowding/concentration risk, divergence between manager cohorts, and sector/thematic rotation.
+
+## INT-014 — Adaptive Correlation / Integration
+13F is contextual evidence that must correlate with existing canonical intelligence rather than live in isolation. Applicable integrations include:
+
+`13F institutional positioning + insider activity + congressional activity + ASBI + Rapid Move + Opportunity Radar + earnings/guidance + SEC/news catalysts + market/sector regime + price/volume/relative strength + options context where useful`
+
+The system must surface both convergence and contradiction. Old 13F accumulation must not override newer contradictory evidence merely because the manager is prominent.
+
+Validated 13F features may influence adaptive ranking/context only through normal governance; protected deterministic Day/Swing/Long formulas remain unchanged unless separately approved.
+
+## INT-015 — Adaptive Outcome Learning / Accountability
+Preserve point-in-time institutional evidence and measure what happened after the information was actually public. Learn which managers, cohorts, position-change patterns, consensus states, sectors, regimes, catalysts, and 13F-derived features add useful decision value.
+
+Evaluation should include applicable calibration, false-positive/miss cost, lead/lag, return/outcome distributions, MFE/MAE where meaningful, regime robustness, crowding risk, evidence independence, manager/cohort usefulness, stale-data penalties, amendment/reconciliation accuracy, and drift.
+
+Adaptive influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION** with Champion/Challenger evaluation where models/rankings are learned.
+
+## INT-016 — 13F UX / Performance / Delivery
+13F is naturally quarterly/event-driven. Prefer SEC filing detection, incremental filing/reconciliation work, background historical computation, bounded concurrency, cached normalized holdings/deltas, and material-change propagation rather than frequent wasteful polling or full-history recomputation.
+
+Normal UI should show concise institutional intelligence with report period, filed/public date, freshness/lag warning, change/conviction/consensus, key managers or cohorts where material, contradiction, and concise why. Raw filing tables belong in drill-down/research views.
+
+v18/v19 should begin/continue collecting trustworthy point-in-time 13F filing/history/outcome evidence; v19 hardens data quality/rights/reconciliation; major adaptive manager/consensus learning belongs in v20 Adaptive Intelligence & Decision Research.
 
 ---
 
@@ -133,7 +221,7 @@ For every eligible/reliable actionable symbol, build a continuously updated beha
 
 ASBI is **not** a duplicate scanner, a candlestick-pattern library, or an `RSI oversold = buy` system.
 
-It composes existing canonical capabilities including Global Symbol Registry, Shared Symbol Intelligence, Provider Router, Rapid Move, Opportunity Radar, Historical Replay/point-in-time evidence, Market Regime/sector context, catalyst/news/SEC/earnings intelligence, options context where useful, and Smart-Money/TradeInsight contextual evidence.
+It composes existing canonical capabilities including Global Symbol Registry, Shared Symbol Intelligence, Provider Router, Rapid Move, Opportunity Radar, Historical Replay/point-in-time evidence, Market Regime/sector context, catalyst/news/SEC/earnings intelligence, Institutional Holdings/13F Intelligence, options context where useful, and Smart-Money/TradeInsight contextual evidence.
 
 ## ASBI-002 — Behavioral State Machine
 Model state transitions and competing next states, not binary UP/DOWN predictions.

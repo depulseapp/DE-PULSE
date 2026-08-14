@@ -54,6 +54,29 @@ Full scope: `governance/APPROVED-SCOPE.md` ASBI-001 through ASBI-022.
 
 ---
 
+## DEC-2026-08-14-003 — Institutional Holdings / 13F Intelligence
+
+**Status:** APPROVED  
+**Date:** 2026-08-14  
+**Placement:** v18/v19 evidence/data foundation; v20 adaptive institutional intelligence
+
+### Decision
+Adopt **Institutional Holdings / 13F Intelligence** as a permanent Smart-Money / Institutional Intelligence capability.
+
+Direct SEC EDGAR is the canonical filing source. DE.PULSE will preserve report-period time separately from public filing/acceptance time and must never treat quarterly 13F disclosures as live ownership or leak filings into historical analysis before they became public.
+
+The capability includes normalized holdings/reconciliation, amendments/restatements, truthful quarter-over-quarter position states, manager/institutional Behavioral Fingerprints, disclosed-position conviction/persistence, consensus/crowding, sector/thematic rotation, outcome learning, and adaptive correlation with insider/congressional activity, ASBI, Rapid Move, Opportunity Radar, earnings/SEC/news catalysts, market/sector regime, price/volume/relative strength, and options context where useful.
+
+13F limitations—including filing lag, absence of short positions, potentially omitted small positions, confidential treatment, and incomplete representation of a manager's total real-time portfolio—must remain explicit in data semantics, UI, backtesting and adaptive learning.
+
+Production influence remains:
+
+**SHADOW → VALIDATED → APPROVED → PRODUCTION**
+
+Full scope: `governance/APPROVED-SCOPE.md` INT-006 through INT-016 and `governance/ROADMAP.md` Institutional Holdings / 13F Intelligence placement.
+
+---
+
 ## DEC-2026-08-13-001 — Four-Layer Adaptive Operating Model
 
 **Status:** APPROVED / CARRIED FORWARD
