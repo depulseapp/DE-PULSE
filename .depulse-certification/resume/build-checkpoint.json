@@ -1,79 +1,57 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.0",
-  "release": "v18.2.0",
-  "channel": "STABLE",
-  "branch": "main",
+  "release": "v18.3.0",
+  "channel": "TEST",
+  "branch": "v18.3-development",
   "incomingStable": {
-    "version": "v18.1.0",
-    "tag": "v18.1.0-stable",
-    "commit": "4b48c61ee103897e834f4ff7d24af07d4275a62c"
-  },
-  "certifiedStable": {
     "version": "v18.2.0",
     "tag": "v18.2.0-stable",
     "commit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
-    "buildId": "v18.2.0-stable-admin-presence-sessions-20260814"
+    "sourceFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed"
   },
-  "candidateSourceCommit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
-  "observedMainHeadBeforeCheckpointCommit": "6c1b76f43529f96dfc766d0096441ea413267161",
-  "metadataHeadRule": "G16 checkpoint/evidence commits under .depulse-certification are fingerprint-excluded and may advance main after the immutable Stable tag without changing certified source identity.",
-  "sourceFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed",
-  "sourceFingerprintState": "FROZEN_STABLE",
-  "codeStatus": "STABLE_CERTIFIED",
-  "implementationSummary": "v18.2 Admin / Presence / Session Operations is complete and promoted Stable. It extends the canonical IdentityService with role-aware lifecycle operations, redacted user/session operational views, bounded ACTIVE/IDLE/OFFLINE presence, enable/disable and revocation controls, password-reset/session lifecycle, SSE revocation enforcement, and privileged administration UI while preserving v18.1 per-user market-state isolation, the shared provider/evidence core, deterministic Day/Swing/Long formulas, and the permanent No Execution Boundary.",
-  "processArchitectureAudit": {
-    "roadmapDirection": "10/10 PASS",
-    "buildPlan": "10/10 PASS",
-    "buildProcess": "10/10 PASS",
-    "deliveryProcess": "10/10 PASS",
-    "governanceContinuity": "10/10 PASS",
-    "checkpointTruthfulness": "10/10 PASS",
-    "evidence": "release/v18.2.0/PROCESS-REAUDIT-10-10.md",
-    "releaseQualification": "G0-G16 PASS"
-  },
-  "lastTrustworthyPass": "G16",
-  "earliestRequiredResumeGate": "v18.3 G0",
+  "candidateSourceCommit": "9fe2e6f5002f498f77ace41eb223e03132f7391e",
+  "metadataHeadRule": "Checkpoint/evidence-only commits under .depulse-certification are fingerprint-excluded and may advance v18.3-development without changing the product candidate described by candidateSourceCommit.",
+  "sourceFingerprint": null,
+  "sourceFingerprintState": "PENDING_REQUALIFICATION",
+  "codeStatus": "BUILT_QUALIFYING",
+  "implementationSummary": "v18.3 PostgreSQL / Hosted Shared State is implemented as an explicit fail-closed hosted backend beneath the canonical PersistenceBackend while desktop remains SQLite/local by default. The current candidate adds repository/migration parity, dedicated-session migration locking, bounded pooling and DB diagnostics, hosted liveness/readiness, full persistence archive with SHA-256/private-file protection, SQLite-to-PostgreSQL migration continuity, bounded outage retry/recovery hysteresis, and bounded intelligence queue behavior while preserving one shared market-processing union, per-user workspace isolation, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary.",
+  "lastTrustworthyPass": "G8",
+  "earliestRequiredResumeGate": "G9",
   "gates": {
-    "G0": {"status": "PASS", "reusable": true, "note": "Exact v18.1 incoming Stable provenance bound."},
-    "G1": {"status": "PASS", "reusable": true, "note": "v18.2 Admin / Presence / Session scope remained frozen."},
-    "G2": {"status": "PASS", "reusable": true, "note": "Canonical IdentityService ownership, source health and data utility verified."},
-    "G3": {"status": "PASS", "reusable": true, "note": "Design/dependency/readiness and evidence plan verified."},
-    "G4": {"status": "PASS", "reusable": true},
-    "G5": {"status": "PASS", "reusable": true},
-    "G6": {"status": "PASS", "reusable": true},
-    "G7": {"status": "PASS", "reusable": true},
-    "G8": {"status": "PASS", "reusable": true},
-    "G9": {"status": "PASS", "reusable": true, "note": "Renderer, HTTP 167/167 and responsive 393/393 acceptance passed."},
-    "G10": {"status": "PASS", "reusable": true, "note": "Randomized x10 and Extreme 30/30 passed; TEST fingerprint frozen."},
-    "G11": {"status": "PASS", "reusable": true, "note": "Exact Stable source artifact frozen at commit 78c42d739bff64b0e4c8676cb341fee65c4a3e67."},
-    "G12": {"status": "PASS", "reusable": true, "note": "Full authoritative Stable certification passed including race/vet/CGO fallback and actual runtime UI acceptance."},
-    "G13": {"status": "PASS", "reusable": true, "note": "Required native packages produced from exact Stable source."},
-    "G14": {"status": "PASS", "reusable": true, "note": "macOS Apple Silicon and Windows x64 packaged-runtime audits passed after harness-only correction; source unchanged."},
-    "G15": {"status": "PASS", "reusable": true, "note": "Run 31850702062 decision STABLE_CERTIFIED."},
-    "G16": {"status": "PASS", "reusable": true, "note": "Stable tag/promote, release evidence archive, AIPLC and v18.3 handoff completed."}
+    "G0": {"status": "PASS", "reusable": true, "note": "Exact v18.2.0 Stable tag/commit/fingerprint bound."},
+    "G1": {"status": "PASS", "reusable": true, "note": "Frozen v18.3 PostgreSQL / Hosted Shared State scope 16/16."},
+    "G2": {"status": "PASS", "reusable": true, "note": "Canonical PersistenceBackend ownership, shared-symbol reuse and data utility verified."},
+    "G3": {"status": "PASS", "reusable": true, "note": "PostgreSQL dependency, migration-lock, archive/recovery and evidence design verified."},
+    "G4": {"status": "PASS", "reusable": true, "note": "Development exit passed on same product candidate."},
+    "G5": {"status": "PASS", "reusable": true, "note": "Focused/full/vet plus Windows archive compilation passed."},
+    "G6": {"status": "PASS", "reusable": true, "note": "Actual PostgreSQL 17 repository/migration/archive parity passed in run 31857979914."},
+    "G7": {"status": "PASS", "reusable": true, "note": "Identity/workspace/lineage continuity, fail-closed hosted persistence and readiness semantics passed."},
+    "G8": {"status": "PASS", "reusable": true, "note": "Bounded pool contention, outage recovery, queue pressure and hosted runtime readiness passed in run 31857979914."},
+    "G9": {"status": "PENDING", "reusable": false},
+    "G10": {"status": "PENDING", "reusable": false},
+    "G11": {"status": "PENDING", "reusable": false},
+    "G12": {"status": "PENDING", "reusable": false},
+    "G13": {"status": "PENDING", "reusable": false},
+    "G14": {"status": "PENDING", "reusable": false},
+    "G15": {"status": "PENDING", "reusable": false},
+    "G16": {"status": "PENDING", "reusable": false}
   },
   "blockingIssue": null,
-  "knownResiduals": [],
-  "resolvedIssues": [
-    "Removed permanently failing superseded documentation-sync CI lane.",
-    "Aligned adaptive resume gate with checkpoint schema v2 / candidateSourceCommit and made the permanent No Execution Boundary explicit.",
-    "Made Formalize G0-G3 idempotent with EXPECTED_NOOP when already synchronized.",
-    "Corrected Windows native secret continuity from byte-identical serialization to semantic credential preservation.",
-    "Forced UTF-8/fail-fast behavior for Windows native certification and removed an out-of-scope stopped-runtime Router/Rapid assertion from G14.",
-    "Used delta-first G12 evidence inheritance for harness-only G14 retry instead of wastefully rerunning full certification.",
-    "Promoted main by non-forced fast-forward and created immutable annotated tag v18.2.0-stable pointing to the exact certified Stable source."
+  "knownResiduals": [
+    "G9 cross-module/UI/runtime qualification remains pending.",
+    "G10 pre-freeze randomized/Extreme/fingerprint freeze remains pending.",
+    "G11-G16 release/native promotion evidence remains pending."
   ],
-  "aiplc": {
-    "status": "PASS_WITH_REUSABLE_PROCESS_LEARNING",
-    "nextBuildImplications": [
-      "Treat semantic persistence continuity separately from storage serialization identity.",
-      "Keep certification platform/locale independent, especially UTF-8 handling on Windows.",
-      "Keep native runtime audits responsibility-scoped and inherit authoritative earlier evidence when source is unchanged.",
-      "For v18.3, test PostgreSQL failure/pressure/recovery with scoped ADR-GDI blast radius and no self-inflicted broad DATA DEGRADED state."
-    ]
-  },
-  "nextStep": "Create v18.3-development from completed v18.2 G16 main metadata head. Bind v18.3 G0 to immutable v18.2.0-stable tag/commit, freeze v18.3 PostgreSQL / Hosted Shared State scope, then begin delta-first G1-G4 implementation/qualification.",
-  "resumeInstructions": "For v18.3, use v18.2.0-stable commit 78c42d739bff64b0e4c8676cb341fee65c4a3e67 as immutable product baseline; inherit v18.2 G16 checkpoint metadata from main. Do not alter v18.2 Stable source/tag. Preserve the permanent No Execution Boundary and protected deterministic Day/Swing/Long formulas.",
-  "updatedAt": "2026-08-14T16:37:30-07:00"
+  "resolvedIssues": [
+    "PostgreSQL migration advisory lock now remains on one dedicated SQL session through lock, migration and unlock.",
+    "Runtime readiness now reflects actual database health instead of staying true after PostgreSQL loss.",
+    "Initialized/accepting persistence state is separated from current health so transient outages retain/coalesce bounded work and shutdown remains deterministic.",
+    "Database recovery uses one bounded exponential-backoff probe lane with two-success hysteresis instead of retry storms.",
+    "Persistence archive now preserves full canonical lineage with SHA-256 integrity, 0600 atomic files and safe empty/explicit-replace restore modes.",
+    "SQLite-to-PostgreSQL archive migration, PostgreSQL pool contention and Windows archive compile are covered by qualification."
+  ],
+  "nextStep": "Run current-candidate G9 cross-module/UI/runtime qualification and G10 randomized/Extreme reconciliation, freeze the exact source fingerprint, then advance only after G10 PASS to G11 immutable RC.",
+  "resumeInstructions": "Resume from candidateSourceCommit 9fe2e6f5002f498f77ace41eb223e03132f7391e. Inherit same-candidate G0-G8 evidence from run 31857979914. Checkpoint metadata is fingerprint-excluded. Preserve v18.2.0-stable unchanged, the No Execution Boundary, per-user workspace isolation, shared canonical market computation, and protected deterministic Day/Swing/Long formulas.",
+  "updatedAt": "2026-08-14T19:02:00-07:00"
 }
