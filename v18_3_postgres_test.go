@@ -181,3 +181,110 @@ func TestV183PostgresConcurrentMigrationInitializationIsSerialized(t *testing.T)
 		}
 	}
 }
+
+func TestV183PostgresSQLiteArchiveMigratesWithoutLineageLoss(t *testing.T) {
+	source := newPersistenceManagerWithBackend(newLocalPersistenceBackend(t.TempDir()))
+	defer source.Close()
+	if source.backend.Name() != "sqlite" {
+		t.Skip("SQLite source backend required for SQLite to PostgreSQL migration proof")
+	}
+	seedV183ArchiveBackend(t, source.backend)
+	path := t.TempDir() + "/sqlite-to-postgres.json"
+	archive, err := source.ExportArchiveFile(context.Background(), path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(archive.QuoteHistory) < 2 {
+		t.Fatalf("source archive did not preserve quote history: %+v", archive.QuoteHistory)
+	}
+
+	target := newV183PostgresBackend(t)
+	defer target.Close()
+	if err := target.RestorePersistenceArchive(context.Background(), archive, persistenceRestoreModeEmpty); err != nil {
+		t.Fatalf("SQLite to PostgreSQL restore: %v", err)
+	}
+	restored, err := target.ExportPersistenceArchive(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(restored.Symbols) != len(archive.Symbols) || len(restored.CanonicalQuotes) != len(archive.CanonicalQuotes) || len(restored.QuoteHistory) != len(archive.QuoteHistory) || len(restored.Evidence) != len(archive.Evidence) || len(restored.Decisions) != len(archive.Decisions) || len(restored.Outcomes) != len(archive.Outcomes) || len(restored.Features) != len(archive.Features) || !restored.HasIdentity || len(restored.UserWorkspaces) != len(archive.UserWorkspaces) {
+		t.Fatalf("SQLite to PostgreSQL lineage parity failed: source=%+v target=%+v", archive, restored)
+	}
+	if restored.Identity.Users[0].PasswordHash != archive.Identity.Users[0].PasswordHash || restored.Identity.Sessions[0].TokenHash != archive.Identity.Sessions[0].TokenHash {
+		t.Fatal("identity credential/session hash continuity was not preserved")
+	}
+	quotes, err := target.LoadQuotes(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if q := quotes["NVDA"]; q.Price != 201 || q.DataState != "persisted" || q.FeedType != "persisted" {
+		t.Fatalf("migrated warm-start quote is not truthful persisted state: %+v", q)
+	}
+}
+
+func TestV183PostgresPoolContentionWaitsWithinConfiguredBound(t *testing.T) {
+	url := v183PostgresURL(t)
+	backend := newPostgresPersistenceBackend(postgresPersistenceConfig{DatabaseURL: url, MaxOpenConns: 2, MaxIdleConns: 2, ConnMaxLifetime: 10 * time.Minute, ConnMaxIdleTime: 2 * time.Minute}).(*postgresPersistenceBackend)
+	if err := backend.Init(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	defer backend.Close()
+	resetV183Postgres(t, backend)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	conn1, err := backend.db.Conn(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	conn2, err := backend.db.Conn(ctx)
+	if err != nil {
+		conn1.Close()
+		t.Fatal(err)
+	}
+	defer conn2.Close()
+
+	done := make(chan error, 1)
+	go func() {
+		workspace := defaultUserWorkspace("pool-wait")
+		workspace.UpdatedAt = time.Now().UnixMilli()
+		done <- backend.SaveUserWorkspace(ctx, workspace)
+	}()
+	deadline := time.Now().Add(time.Second)
+	for time.Now().Before(deadline) && backend.PoolDiagnostics().WaitCount == 0 {
+		time.Sleep(5 * time.Millisecond)
+	}
+	pool := backend.PoolDiagnostics()
+	if pool.MaxOpenConnections != 2 || pool.OpenConnections > 2 || pool.WaitCount == 0 {
+		conn1.Close()
+		t.Fatalf("PostgreSQL contention did not stay inside pool bounds: %+v", pool)
+	}
+	if err := conn1.Close(); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatalf("queued database work failed after capacity returned: %v", err)
+		}
+	case <-ctx.Done():
+		t.Fatal("queued database work did not recover after pool capacity returned")
+	}
+	pool = backend.PoolDiagnostics()
+	if pool.OpenConnections > 2 || pool.WaitCount == 0 || pool.WaitDurationMs <= 0 {
+		t.Fatalf("PostgreSQL contention observability missing: %+v", pool)
+	}
+}
+
+func TestV183PostgresHealthCheckReflectsClosedDatabase(t *testing.T) {
+	backend := newV183PostgresBackend(t)
+	if err := backend.HealthCheck(context.Background()); err != nil {
+		t.Fatalf("healthy database probe failed: %v", err)
+	}
+	if err := backend.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := backend.HealthCheck(context.Background()); err == nil {
+		t.Fatal("closed PostgreSQL backend reported healthy")
+	}
+}

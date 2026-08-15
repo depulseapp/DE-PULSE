@@ -929,3 +929,11 @@ The production app package must contain the actual native DE.PULSE binaries befo
 Runtime/UI identity carries only semantic version + build ID. Working Candidate / RC / Stable is release-artifact status, not primary brand-header content. Completed user-facing releases are Stable; Working Candidate/RC labels remain internal certification states. Promotion must never require a cosmetic header source change that invalidates exact-source certification.
 
 > **RL-023 / G11/G12/G16 current-release identity:** HTTP/integration fixtures derive current version/build expectations from `VERSION.txt`; predecessor release literals are used only for historical compatibility assertions.
+
+## v18.3 persistence archive, migration and recovery contract
+
+The persistence archive is a versioned backend-neutral snapshot of the canonical persistence repository: Global Symbol Registry, canonical quotes, quote history, evidence, decision lineage, outcomes, derived features, IdentityPersistentState and per-user UserWorkspace state. Archives are wrapped in a SHA-256 integrity envelope and written atomically with private `0600` permissions because identity password/session hashes are security-sensitive. Provider API secrets remain outside this archive.
+
+Operational export uses `DEPULSE_PERSISTENCE_EXPORT_PATH`. Hosted migration/restore uses `DEPULSE_PERSISTENCE_RESTORE_PATH`; restore defaults to `empty` and rejects a non-empty target. `DEPULSE_PERSISTENCE_RESTORE_MODE=replace` is the explicit destructive restore mode. Restore occurs after repository initialization/migrations but before IdentityService/workspace bootstrap so imported identity/workspace truth remains canonical.
+
+Runtime database readiness is distinct from initialization. `PersistenceManager` retains/coalesces bounded pending work when PostgreSQL becomes unavailable, marks readiness `DEGRADED`, and uses one exponential health-probe retry lane (250 ms to 5 s cap) with two-success recovery hysteresis. `/api/ready` performs a rate-limited persistence health probe and returns 503 while canonical persistence is unavailable; `/api/health` remains process liveness. The intelligence persistence queue deduplicates immutable IDs/feature keys and has a hard 50,000-record ceiling, shedding reproducible derived features first with explicit diagnostics rather than allowing unbounded memory growth.

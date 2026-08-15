@@ -812,3 +812,319 @@ func (b *sqlitePersistenceBackend) Close() error {
 	b.db = nil
 	return nil
 }
+
+func (b *sqlitePersistenceBackend) HealthCheck(ctx context.Context) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	_, err := b.scalarInt64(`SELECT 1`)
+	return err
+}
+
+func (b *sqlitePersistenceBackend) ExportPersistenceArchive(ctx context.Context) (PersistenceArchive, error) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return PersistenceArchive{}, err
+	}
+	archive := PersistenceArchive{}
+	schema, err := b.scalarInt64(`SELECT COALESCE(MAX(version),0) FROM schema_migrations`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	archive.SourceStoreSchema = int(schema)
+	text := func(stmt *C.sqlite3_stmt, col int) string {
+		ptr := C.sqlite3_column_text(stmt, C.int(col))
+		if ptr == nil {
+			return ""
+		}
+		return C.GoString((*C.char)(unsafe.Pointer(ptr)))
+	}
+	blob := func(stmt *C.sqlite3_stmt, col int) []byte {
+		ptr := C.sqlite3_column_blob(stmt, C.int(col))
+		n := C.sqlite3_column_bytes(stmt, C.int(col))
+		if ptr == nil || n <= 0 {
+			return nil
+		}
+		return C.GoBytes(ptr, n)
+	}
+	query := func(sqlText string, consume func(*C.sqlite3_stmt) error) error {
+		stmt, err := prepare(b.db, sqlText)
+		if err != nil {
+			return err
+		}
+		defer C.sqlite3_finalize(stmt)
+		for {
+			if err := ctx.Err(); err != nil {
+				return err
+			}
+			rc := C.sqlite3_step(stmt)
+			if rc == C.SQLITE_DONE {
+				return nil
+			}
+			if rc != C.SQLITE_ROW {
+				return b.sqliteErr()
+			}
+			if err := consume(stmt); err != nil {
+				return err
+			}
+		}
+	}
+	if err := query(`SELECT symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms FROM symbol_registry ORDER BY symbol`, func(stmt *C.sqlite3_stmt) error {
+		archive.Symbols = append(archive.Symbols, SymbolRegistryRecord{Symbol: normalizeSymbol(text(stmt, 0)), FirstSeenAt: int64(C.sqlite3_column_int64(stmt, 1)), LastSeenAt: int64(C.sqlite3_column_int64(stmt, 2)), Active: C.sqlite3_column_int(stmt, 3) != 0, Selected: C.sqlite3_column_int(stmt, 4) != 0, ProcessingTier: int(C.sqlite3_column_int(stmt, 5)), DeskMembership: text(stmt, 6), ProviderEligible: C.sqlite3_column_int(stmt, 7) != 0, LastSubscribedAt: int64(C.sqlite3_column_int64(stmt, 8)), LastProcessedAt: int64(C.sqlite3_column_int64(stmt, 9))})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state FROM canonical_quotes ORDER BY symbol`, func(stmt *C.sqlite3_stmt) error {
+		var q Quote
+		if err := json.Unmarshal(blob(stmt, 1), &q); err != nil {
+			return err
+		}
+		symbol := normalizeSymbol(text(stmt, 0))
+		q.Symbol = symbol
+		archive.CanonicalQuotes = append(archive.CanonicalQuotes, PersistenceCanonicalQuoteRecord{Symbol: symbol, Quote: q, ProviderTimestamp: int64(C.sqlite3_column_int64(stmt, 2)), ReceivedTimestamp: int64(C.sqlite3_column_int64(stmt, 3)), PersistedAt: int64(C.sqlite3_column_int64(stmt, 4)), Source: text(stmt, 5), DataState: text(stmt, 6)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state FROM quote_history ORDER BY symbol,bucket_ms`, func(stmt *C.sqlite3_stmt) error {
+		archive.QuoteHistory = append(archive.QuoteHistory, PersistenceQuoteHistoryRecord{Symbol: normalizeSymbol(text(stmt, 0)), Bucket: int64(C.sqlite3_column_int64(stmt, 1)), ProviderTimestamp: int64(C.sqlite3_column_int64(stmt, 2)), ReceivedTimestamp: int64(C.sqlite3_column_int64(stmt, 3)), Price: float64(C.sqlite3_column_double(stmt, 4)), Bid: float64(C.sqlite3_column_double(stmt, 5)), Ask: float64(C.sqlite3_column_double(stmt, 6)), Volume: float64(C.sqlite3_column_double(stmt, 7)), Source: text(stmt, 8), DataState: text(stmt, 9)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json FROM evidence_records ORDER BY evidence_id`, func(stmt *C.sqlite3_stmt) error {
+		archive.Evidence = append(archive.Evidence, EvidenceRecord{ID: text(stmt, 0), Symbol: normalizeSymbol(text(stmt, 1)), Kind: text(stmt, 2), ObservedAt: int64(C.sqlite3_column_int64(stmt, 3)), Source: text(stmt, 4), Provenance: text(stmt, 5), FreshnessState: text(stmt, 6), Payload: append(json.RawMessage(nil), blob(stmt, 7)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json FROM decision_lineage ORDER BY decision_id`, func(stmt *C.sqlite3_stmt) error {
+		archive.Decisions = append(archive.Decisions, DecisionLineageRecord{ID: text(stmt, 0), Symbol: normalizeSymbol(text(stmt, 1)), Horizon: text(stmt, 2), EvidenceID: text(stmt, 3), DecisionKind: text(stmt, 4), DecisionValue: text(stmt, 5), FormulaVersion: text(stmt, 6), CreatedAt: int64(C.sqlite3_column_int64(stmt, 7)), Payload: append(json.RawMessage(nil), blob(stmt, 8)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json FROM outcome_history ORDER BY outcome_id`, func(stmt *C.sqlite3_stmt) error {
+		archive.Outcomes = append(archive.Outcomes, OutcomeHistoryRecord{ID: text(stmt, 0), DecisionID: text(stmt, 1), Symbol: normalizeSymbol(text(stmt, 2)), Horizon: text(stmt, 3), ObservedAt: int64(C.sqlite3_column_int64(stmt, 4)), OutcomeLabel: text(stmt, 5), Payload: append(json.RawMessage(nil), blob(stmt, 6)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json FROM derived_features ORDER BY symbol,feature_key,feature_version`, func(stmt *C.sqlite3_stmt) error {
+		archive.Features = append(archive.Features, DerivedFeatureRecord{Symbol: normalizeSymbol(text(stmt, 0)), FeatureKey: text(stmt, 1), FeatureVersion: text(stmt, 2), AsOf: int64(C.sqlite3_column_int64(stmt, 3)), SourceHash: text(stmt, 4), Payload: append(json.RawMessage(nil), blob(stmt, 5)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT payload_json FROM identity_state WHERE id=1`, func(stmt *C.sqlite3_stmt) error {
+		if err := json.Unmarshal(blob(stmt, 0), &archive.Identity); err != nil {
+			return err
+		}
+		archive.HasIdentity = true
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT payload_json FROM user_workspaces ORDER BY user_id`, func(stmt *C.sqlite3_stmt) error {
+		var workspace UserWorkspace
+		if err := json.Unmarshal(blob(stmt, 0), &workspace); err != nil {
+			return err
+		}
+		archive.UserWorkspaces = append(archive.UserWorkspaces, workspace)
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	return archive, nil
+}
+
+func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context, archive PersistenceArchive, mode string) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
+		return errors.New("unsupported persistence archive schema")
+	}
+	queries := []string{`SELECT COUNT(*) FROM symbol_registry`, `SELECT COUNT(*) FROM canonical_quotes`, `SELECT COUNT(*) FROM quote_history`, `SELECT COUNT(*) FROM evidence_records`, `SELECT COUNT(*) FROM decision_lineage`, `SELECT COUNT(*) FROM outcome_history`, `SELECT COUNT(*) FROM derived_features`, `SELECT COUNT(*) FROM identity_state`, `SELECT COUNT(*) FROM user_workspaces`}
+	var rows int64
+	for _, q := range queries {
+		n, err := b.scalarInt64(q)
+		if err != nil {
+			return err
+		}
+		rows += n
+	}
+	if mode == persistenceRestoreModeEmpty && rows > 0 {
+		return errors.New("persistence restore target is not empty; use explicit replace mode")
+	}
+	if err := b.exec("BEGIN IMMEDIATE"); err != nil {
+		return err
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			_ = b.exec("ROLLBACK")
+		}
+	}()
+	if mode == persistenceRestoreModeReplace {
+		if err := b.exec(`DELETE FROM user_workspaces; DELETE FROM identity_state; DELETE FROM derived_features; DELETE FROM outcome_history; DELETE FROM decision_lineage; DELETE FROM evidence_records; DELETE FROM quote_history; DELETE FROM canonical_quotes; DELETE FROM symbol_registry;`); err != nil {
+			return err
+		}
+	}
+	execRows := func(sqlText string, rows int, bind func(*C.sqlite3_stmt, int)) error {
+		stmt, err := prepare(b.db, sqlText)
+		if err != nil {
+			return err
+		}
+		defer C.sqlite3_finalize(stmt)
+		for i := 0; i < rows; i++ {
+			if err := ctx.Err(); err != nil {
+				return err
+			}
+			C.sqlite3_reset(stmt)
+			C.sqlite3_clear_bindings(stmt)
+			bind(stmt, i)
+			if rc := C.sqlite3_step(stmt); rc != C.SQLITE_DONE {
+				return b.sqliteErr()
+			}
+		}
+		return nil
+	}
+	if err := execRows(`INSERT INTO symbol_registry(symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms) VALUES(?,?,?,?,?,?,?,?,?,?)`, len(archive.Symbols), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.Symbols[i]
+		bindText(stmt, 1, normalizeSymbol(r.Symbol))
+		C.sqlite3_bind_int64(stmt, 2, C.sqlite3_int64(r.FirstSeenAt))
+		C.sqlite3_bind_int64(stmt, 3, C.sqlite3_int64(r.LastSeenAt))
+		if r.Active {
+			C.sqlite3_bind_int(stmt, 4, 1)
+		} else {
+			C.sqlite3_bind_int(stmt, 4, 0)
+		}
+		if r.Selected {
+			C.sqlite3_bind_int(stmt, 5, 1)
+		} else {
+			C.sqlite3_bind_int(stmt, 5, 0)
+		}
+		C.sqlite3_bind_int(stmt, 6, C.int(r.ProcessingTier))
+		bindText(stmt, 7, r.DeskMembership)
+		if r.ProviderEligible {
+			C.sqlite3_bind_int(stmt, 8, 1)
+		} else {
+			C.sqlite3_bind_int(stmt, 8, 0)
+		}
+		C.sqlite3_bind_int64(stmt, 9, C.sqlite3_int64(r.LastSubscribedAt))
+		C.sqlite3_bind_int64(stmt, 10, C.sqlite3_int64(r.LastProcessedAt))
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO canonical_quotes(symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state) VALUES(?,?,?,?,?,?,?)`, len(archive.CanonicalQuotes), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.CanonicalQuotes[i]
+		raw, _ := json.Marshal(r.Quote)
+		bindText(stmt, 1, normalizeSymbol(r.Symbol))
+		bindBlob(stmt, 2, raw)
+		C.sqlite3_bind_int64(stmt, 3, C.sqlite3_int64(r.ProviderTimestamp))
+		C.sqlite3_bind_int64(stmt, 4, C.sqlite3_int64(r.ReceivedTimestamp))
+		C.sqlite3_bind_int64(stmt, 5, C.sqlite3_int64(r.PersistedAt))
+		bindText(stmt, 6, r.Source)
+		bindText(stmt, 7, r.DataState)
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO quote_history(symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state) VALUES(?,?,?,?,?,?,?,?,?,?)`, len(archive.QuoteHistory), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.QuoteHistory[i]
+		bindText(stmt, 1, normalizeSymbol(r.Symbol))
+		C.sqlite3_bind_int64(stmt, 2, C.sqlite3_int64(r.Bucket))
+		C.sqlite3_bind_int64(stmt, 3, C.sqlite3_int64(r.ProviderTimestamp))
+		C.sqlite3_bind_int64(stmt, 4, C.sqlite3_int64(r.ReceivedTimestamp))
+		C.sqlite3_bind_double(stmt, 5, C.double(r.Price))
+		C.sqlite3_bind_double(stmt, 6, C.double(r.Bid))
+		C.sqlite3_bind_double(stmt, 7, C.double(r.Ask))
+		C.sqlite3_bind_double(stmt, 8, C.double(r.Volume))
+		bindText(stmt, 9, r.Source)
+		bindText(stmt, 10, r.DataState)
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES(?,?,?,?,?,?,?,?)`, len(archive.Evidence), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.Evidence[i]
+		bindText(stmt, 1, r.ID)
+		bindText(stmt, 2, normalizeSymbol(r.Symbol))
+		bindText(stmt, 3, r.Kind)
+		C.sqlite3_bind_int64(stmt, 4, C.sqlite3_int64(r.ObservedAt))
+		bindText(stmt, 5, r.Source)
+		bindText(stmt, 6, r.Provenance)
+		bindText(stmt, 7, r.FreshnessState)
+		bindBlob(stmt, 8, payloadOrEmpty(r.Payload))
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO decision_lineage(decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json) VALUES(?,?,?,?,?,?,?,?,?)`, len(archive.Decisions), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.Decisions[i]
+		bindText(stmt, 1, r.ID)
+		bindText(stmt, 2, normalizeSymbol(r.Symbol))
+		bindText(stmt, 3, r.Horizon)
+		bindText(stmt, 4, r.EvidenceID)
+		bindText(stmt, 5, r.DecisionKind)
+		bindText(stmt, 6, r.DecisionValue)
+		bindText(stmt, 7, r.FormulaVersion)
+		C.sqlite3_bind_int64(stmt, 8, C.sqlite3_int64(r.CreatedAt))
+		bindBlob(stmt, 9, payloadOrEmpty(r.Payload))
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO outcome_history(outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json) VALUES(?,?,?,?,?,?,?)`, len(archive.Outcomes), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.Outcomes[i]
+		bindText(stmt, 1, r.ID)
+		bindText(stmt, 2, r.DecisionID)
+		bindText(stmt, 3, normalizeSymbol(r.Symbol))
+		bindText(stmt, 4, r.Horizon)
+		C.sqlite3_bind_int64(stmt, 5, C.sqlite3_int64(r.ObservedAt))
+		bindText(stmt, 6, r.OutcomeLabel)
+		bindBlob(stmt, 7, payloadOrEmpty(r.Payload))
+	}); err != nil {
+		return err
+	}
+	if err := execRows(`INSERT INTO derived_features(symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json) VALUES(?,?,?,?,?,?)`, len(archive.Features), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.Features[i]
+		bindText(stmt, 1, normalizeSymbol(r.Symbol))
+		bindText(stmt, 2, r.FeatureKey)
+		bindText(stmt, 3, r.FeatureVersion)
+		C.sqlite3_bind_int64(stmt, 4, C.sqlite3_int64(r.AsOf))
+		bindText(stmt, 5, r.SourceHash)
+		bindBlob(stmt, 6, payloadOrEmpty(r.Payload))
+	}); err != nil {
+		return err
+	}
+	if archive.HasIdentity {
+		raw, err := json.Marshal(archive.Identity)
+		if err != nil {
+			return err
+		}
+		if err := execRows(`INSERT INTO identity_state(id,payload_json,updated_at_ms) VALUES(1,?,?)`, 1, func(stmt *C.sqlite3_stmt, _ int) {
+			bindBlob(stmt, 1, raw)
+			C.sqlite3_bind_int64(stmt, 2, C.sqlite3_int64(archive.Identity.UpdatedAt))
+		}); err != nil {
+			return err
+		}
+	}
+	if err := execRows(`INSERT INTO user_workspaces(user_id,payload_json,updated_at_ms) VALUES(?,?,?)`, len(archive.UserWorkspaces), func(stmt *C.sqlite3_stmt, i int) {
+		r := archive.UserWorkspaces[i]
+		raw, _ := json.Marshal(r)
+		bindText(stmt, 1, r.UserID)
+		bindBlob(stmt, 2, raw)
+		C.sqlite3_bind_int64(stmt, 3, C.sqlite3_int64(r.UpdatedAt))
+	}); err != nil {
+		return err
+	}
+	if err := b.exec("COMMIT"); err != nil {
+		return err
+	}
+	committed = true
+	return nil
+}

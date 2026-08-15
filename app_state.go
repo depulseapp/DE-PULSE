@@ -184,6 +184,10 @@ func NewApplication() (*Application, error) {
 	app := &Application{configDir: configDir, hub: NewHub(), aiCache: map[string]aiCacheEntry{}, httpTelemetry: NewRequestTelemetry()}
 	app.load()
 	app.persistence = NewPersistenceManager(configDir)
+	if err := configureStartupPersistenceRestore(app.persistence); err != nil {
+		_ = app.persistence.Close()
+		return nil, fmt.Errorf("persistence restore: %w", err)
+	}
 	identity, err := NewIdentityService(app.persistence)
 	if err != nil {
 		_ = app.persistence.Close()
@@ -195,6 +199,10 @@ func NewApplication() (*Application, error) {
 		return nil, fmt.Errorf("workspace initialization: %w", err)
 	}
 	app.persistence.EnqueueSymbols(symbolRegistryRecords(app.processingStateLocked(), time.Now()))
+	if err := configureStartupPersistenceExport(app.persistence); err != nil {
+		_ = app.persistence.Close()
+		return nil, fmt.Errorf("persistence export: %w", err)
+	}
 	app.engine = NewEngine(app)
 	return app, nil
 }

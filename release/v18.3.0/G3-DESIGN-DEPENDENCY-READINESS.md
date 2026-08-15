@@ -10,3 +10,6 @@
 - Real PostgreSQL tests cover repository parity, warm-start truth, identity/workspace persistence, concurrent workspace writes and serialized migration startup.
 - Before G10, add and prove SQLite→PostgreSQL export/import, backup/restore, realistic contention/load, DB outage/recovery, bounded retry/backpressure, and hosted runtime restart scenarios.
 - Required later release qualification remains G0–G16 only, including fresh G12 full certification and independent G13/G14 macOS Apple Silicon + Windows x64 runtime/package audits.
+
+### Recovery / backup qualification additions
+Before G10, qualification must prove: integrity-checked private archive export; empty-target and explicit replace restore; SQLite→PostgreSQL history/identity/workspace lineage parity; bounded PostgreSQL pool contention; readiness 503 during database loss; bounded exponential health probing; two-success recovery hysteresis; queued-write recovery; Windows x64 archive compilation; and no protected Day/Swing/Long formula-owner changes.

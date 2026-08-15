@@ -251,3 +251,9 @@ A cached quote can remain available as truthful last-known-good evidence when li
 - **Alpha Vantage** is demoted to emergency / low-frequency fallback only and remains a removal candidate after dependency validation. New active routing must not depend on it.
 - **Massive** and **FMP** are intentionally **not added** in this release. DE.PULSE will not add another general-purpose market-data provider unless a verified capability gap remains after the approved Alpaca / Finnhub / Twelve Data / Marketaux / SEC / FRED core plus yfinance/CBOE recovery stack is evaluated.
 - yfinance remains automatic recovery-only; CBOE remains VIX-specific validation/delayed fallback. Neither is presented as a configurable credentialed provider.
+
+## v18.3 TEST — archive and outage limits
+
+Persistence archives contain credential/session hashes and must be stored privately. Restore is empty-target-only by default; replacing existing canonical state requires the explicit `replace` mode. The archive does not carry provider/API secrets from `secrets.json`.
+
+During a prolonged canonical-database outage, DE.PULSE bounds queued persistence memory and may shed reproducible derived-feature records before immutable evidence/decision/outcome lineage. Readiness remains unavailable until recovery hysteresis succeeds. v18.5 still requires realistic supported-load closure for prolonged outage, queue saturation, restart/warm-start and recovery-flap behavior before the v18 major line is considered fully closed.

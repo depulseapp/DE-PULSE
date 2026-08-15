@@ -14,14 +14,17 @@ need(identity.get('application_bundle')=='De-Pulse-v18.3.0-TEST.app','v18.3 TEST
 need(scope.get('incomingStableCommit')=='78c42d739bff64b0e4c8676cb341fee65c4a3e67','G0 Stable commit drift')
 need(scope.get('incomingStableFingerprint')=='d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed','G0 Stable fingerprint drift')
 need(len(scope.get('clauses',[]))==16,'scope clause count drift')
-repo=(R/'persistence_repository.go').read_text(); select=(R/'persistence_backend_select.go').read_text(); pg=(R/'persistence_backend_postgres.go').read_text(); stub=(R/'persistence_backend_postgres_stub.go').read_text(); workspace=(R/'user_workspace.go').read_text(); main=(R/'main.go').read_text(); api=(R/'http_api.go').read_text()
-for token in ['type PersistenceBackend interface','newPersistenceManagerWithBackend','PersistencePoolDiagnostics','PersistenceDatabaseDiagnostics']:
+repo=(R/'persistence_repository.go').read_text(); archive=(R/'persistence_archive.go').read_text(); select=(R/'persistence_backend_select.go').read_text(); pg=(R/'persistence_backend_postgres.go').read_text(); stub=(R/'persistence_backend_postgres_stub.go').read_text(); workspace=(R/'user_workspace.go').read_text(); main=(R/'main.go').read_text(); api=(R/'http_api.go').read_text()
+for token in ['type PersistenceBackend interface','newPersistenceManagerWithBackend','PersistencePoolDiagnostics','PersistenceDatabaseDiagnostics','ProbeReady','HealthState','RetryBackoffMs']:
     need(token in repo, token+' missing from canonical persistence owner')
+need('persistenceArchiveSchemaVersion' in archive and 'ExportArchiveFile' in archive and 'RestoreArchiveFile' in archive,'versioned backup/restore/migration archive missing')
+need('sha256.Sum256' in archive and '0600' in archive,'archive integrity/private-file contract missing')
+need('persistenceRestoreModeEmpty' in archive and 'persistenceRestoreModeReplace' in archive,'safe restore modes missing')
 need('newLocalPersistenceBackend(configDir)' in select,'desktop local backend delegation missing')
 need('case "postgres", "postgresql"' in select and 'newPostgresPersistenceBackend' in select,'explicit PostgreSQL selection missing')
 need('//go:build postgres' in pg and 'github.com/jackc/pgx/v5/stdlib' in pg,'hosted PostgreSQL driver/build boundary missing')
 need('//go:build !postgres' in stub and 'newUnavailablePersistenceBackend' in stub,'fail-closed non-postgres build behavior missing')
-for token in ['pg_advisory_lock','schema_migrations','user_workspaces','identity_state','quote_history','PoolDiagnostics','DatabaseDiagnostics']:
+for token in ['pg_advisory_lock','schema_migrations','user_workspaces','identity_state','quote_history','PoolDiagnostics','DatabaseDiagnostics','ExportPersistenceArchive','RestorePersistenceArchive','HealthCheck']:
     need(token in pg, 'PostgreSQL parity/readiness token missing: '+token)
 need('union, never a per-user provider pipeline' in workspace,'shared market processing contract drift')
 need('isHostedRuntime()' in main and 'hostedListenAddress()' in main,'hosted runtime outer seam missing')

@@ -715,3 +715,9 @@ More Market Context remains always visible. The evidence is grouped into Market 
 - **Catalyst Watch:** RUNNING means the short manual Evaluate action only. Normal event-driven states are READY, ARMED, TRIGGERED and REACTION.
 - **Macro Rates:** core official rates can remain healthy when usable Treasury data exists even if optional FRED enrichment is temporarily unavailable; provider-specific health remains explicit in Maintenance.
 - **Discovery and placement:** candidate rows use explicit columns so liquidity, spread, membership and action controls do not overlap. At narrower supported widths, the candidate table scrolls inside its panel instead of causing page-level overflow.
+
+## v18.3 TEST — hosted backup/recovery behavior
+
+v18.3 TEST adds a private, integrity-checked persistence backup/migration format for hosted-state qualification. It preserves account/session hashes, per-user workspaces and canonical market/intelligence history, so archive files must be protected like other sensitive application data. API/provider secrets are not included in this database archive.
+
+Hosted readiness now reflects the canonical database rather than only process startup. A database interruption can leave `/api/health` live while `/api/ready` reports unavailable; DE.PULSE keeps bounded/coalesced persistence work and recovers only after database health is stable again. This is intentional truthful degradation, not a silent fallback to a different local state store.

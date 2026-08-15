@@ -4,7 +4,7 @@ import sys
 R=Path(__file__).resolve().parent; e=[]
 def need(ok,msg):
     if not ok:e.append(msg)
-repo=(R/'persistence_repository.go').read_text(); select=(R/'persistence_backend_select.go').read_text(); pg=(R/'persistence_backend_postgres.go').read_text(); workspace=(R/'user_workspace.go').read_text(); main=(R/'main.go').read_text(); api=(R/'http_api.go').read_text(); scope=(R/'release/v18.3.0/G1-IMMUTABLE-SCOPE.md').read_text()
+repo=(R/'persistence_repository.go').read_text(); archive=(R/'persistence_archive.go').read_text(); select=(R/'persistence_backend_select.go').read_text(); pg=(R/'persistence_backend_postgres.go').read_text(); workspace=(R/'user_workspace.go').read_text(); main=(R/'main.go').read_text(); api=(R/'http_api.go').read_text(); scope=(R/'release/v18.3.0/G1-IMMUTABLE-SCOPE.md').read_text()
 need(repo.count('type PersistenceBackend interface')==1,'PersistenceBackend ownership duplicated')
 need('newPersistenceManagerWithBackend' in repo,'backend injection/test seam missing')
 need('newLocalPersistenceBackend' in select and 'newPostgresPersistenceBackend' in select,'central backend selection missing')
@@ -13,6 +13,9 @@ need('db.SetMaxOpenConns' in pg and 'db.SetMaxIdleConns' in pg,'bounded PostgreS
 need('db.Conn(ctx)' in pg and 'pg_advisory_lock' in pg and 'pg_advisory_unlock' in pg,'same-session migration serialization missing')
 need('LevelSerializable' in pg,'transactional migration isolation missing')
 need('DataState = "persisted"' in pg and 'FeedType = "persisted"' in pg,'warm-start truth relabel missing')
+need('ExportArchiveFile' in archive and 'RestoreArchiveFile' in archive and 'sha256.Sum256' in archive,'integrity-checked migration/backup owner missing')
+need('ProbeReady' in repo and 'scheduleRetryLocked' in repo and '5*time.Second' in repo,'bounded health/recovery backoff missing')
+need('maxPendingIntelligenceRecords' in repo and 'compactPersistenceIntelligence' in repo,'bounded persistence pressure missing')
 need('union, never a per-user provider pipeline' in workspace,'shared processing owner drift')
 need('isHostedRuntime()' in main and 'openAppWindow' in main,'desktop/hosted outer runtime seam missing')
 need('"/api/health"' in api and '"/api/ready"' in api,'liveness/readiness separation missing')

@@ -158,3 +158,11 @@ Before every major-family transition (for example v16 → v17, v17 → v18), DE.
 - **v20 — Adaptive Intelligence & Decision Research:** validated historical learning, analogs/calibration, pattern/regime outcomes, source reliability, drift/contradiction analysis and governed model evaluation.
 
 The north star remains: **collect the best lawful evidence → understand it → preserve useful structured evidence → measure outcomes → learn through validated methods → improve U.S.-market decision support without becoming an execution platform.**
+
+### v18.3 TEST persistence backup / migration operations
+
+- `DEPULSE_PERSISTENCE_EXPORT_PATH=/private/path/depulse-backup.json` writes a versioned SHA-256-verified canonical persistence archive during startup after identity/workspace initialization.
+- `DEPULSE_PERSISTENCE_RESTORE_PATH=/private/path/depulse-backup.json` restores an archive after repository migrations and before IdentityService bootstrap.
+- Restore defaults to empty-target-only. `DEPULSE_PERSISTENCE_RESTORE_MODE=replace` explicitly replaces existing persisted canonical state.
+- Archives include identity password/session hashes and must remain private; provider/API secrets are not included.
+- Hosted `/api/health` is process liveness; `/api/ready` is canonical persistence + identity readiness and returns 503 during database degradation/recovery.

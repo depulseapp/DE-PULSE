@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sort"
 	"sync"
 	"time"
 )
@@ -138,6 +139,10 @@ type persistenceDatabaseObserver interface {
 	DatabaseDiagnostics() PersistenceDatabaseDiagnostics
 }
 
+type persistenceHealthBackend interface {
+	HealthCheck(context.Context) error
+}
+
 type PersistenceDiagnostics struct {
 	Backend                  string                         `json:"backend"`
 	Capabilities             []string                       `json:"capabilities,omitempty"`
@@ -159,6 +164,15 @@ type PersistenceDiagnostics struct {
 	Store                    PersistenceStoreStats          `json:"store"`
 	Pool                     PersistencePoolDiagnostics     `json:"pool,omitempty"`
 	Database                 PersistenceDatabaseDiagnostics `json:"database,omitempty"`
+	HealthState              string                         `json:"healthState,omitempty"`
+	ConsecutiveFailures      int                            `json:"consecutiveFailures,omitempty"`
+	ConsecutiveSuccesses     int                            `json:"consecutiveSuccesses,omitempty"`
+	LastHealthCheckAt        int64                          `json:"lastHealthCheckAt,omitempty"`
+	LastHealthyAt            int64                          `json:"lastHealthyAt,omitempty"`
+	RetryScheduled           bool                           `json:"retryScheduled,omitempty"`
+	RetryBackoffMs           int64                          `json:"retryBackoffMs,omitempty"`
+	PendingIntelligence      int                            `json:"pendingIntelligenceRecords,omitempty"`
+	ShedIntelligenceRecords  int64                          `json:"shedIntelligenceRecords,omitempty"`
 }
 
 type persistenceWriteEvent struct {
@@ -181,6 +195,9 @@ type PersistenceManager struct {
 	diag                PersistenceDiagnostics
 	writeEvents         []persistenceWriteEvent
 	closed              bool
+	initialized         bool
+	retryScheduled      bool
+	retryBackoff        time.Duration
 }
 
 func NewPersistenceManager(configDir string) *PersistenceManager {
@@ -200,7 +217,13 @@ func newPersistenceManagerWithBackend(backend PersistenceBackend) *PersistenceMa
 		close(p.done)
 		return p
 	}
+	p.initialized = true
 	p.diag.Ready = true
+	p.diag.HealthState = "HEALTHY"
+	p.diag.ConsecutiveSuccesses = 2
+	p.diag.LastHealthCheckAt = time.Now().UnixMilli()
+	p.diag.LastHealthyAt = p.diag.LastHealthCheckAt
+	p.retryBackoff = 250 * time.Millisecond
 	p.refreshStoreStats()
 	go p.worker()
 	return p
@@ -210,7 +233,11 @@ func (p *PersistenceManager) LoadIdentityState(ctx context.Context) (IdentityPer
 	if p == nil || p.backend == nil {
 		return IdentityPersistentState{}, errors.New("persistence unavailable")
 	}
-	return p.backend.LoadIdentityState(ctx)
+	state, err := p.backend.LoadIdentityState(ctx)
+	if err != nil {
+		p.recordPersistenceFailure(err)
+	}
+	return state, err
 }
 
 func (p *PersistenceManager) SaveIdentityState(ctx context.Context, state IdentityPersistentState) error {
@@ -218,6 +245,7 @@ func (p *PersistenceManager) SaveIdentityState(ctx context.Context, state Identi
 		return errors.New("persistence unavailable")
 	}
 	if err := p.backend.SaveIdentityState(ctx, state); err != nil {
+		p.recordPersistenceFailure(err)
 		return err
 	}
 	p.refreshStoreStats()
@@ -228,7 +256,11 @@ func (p *PersistenceManager) LoadUserWorkspaces(ctx context.Context) ([]UserWork
 	if p == nil || p.backend == nil {
 		return nil, errors.New("persistence unavailable")
 	}
-	return p.backend.LoadUserWorkspaces(ctx)
+	workspaces, err := p.backend.LoadUserWorkspaces(ctx)
+	if err != nil {
+		p.recordPersistenceFailure(err)
+	}
+	return workspaces, err
 }
 
 func (p *PersistenceManager) SaveUserWorkspace(ctx context.Context, workspace UserWorkspace) error {
@@ -236,6 +268,7 @@ func (p *PersistenceManager) SaveUserWorkspace(ctx context.Context, workspace Us
 		return errors.New("persistence unavailable")
 	}
 	if err := p.backend.SaveUserWorkspace(ctx, workspace); err != nil {
+		p.recordPersistenceFailure(err)
 		return err
 	}
 	p.refreshStoreStats()
@@ -243,11 +276,30 @@ func (p *PersistenceManager) SaveUserWorkspace(ctx context.Context, workspace Us
 }
 
 func (p *PersistenceManager) worker() {
+	p.mu.Lock()
+	if !p.initialized && p.diag.Ready {
+		p.initialized = true
+		if p.diag.HealthState == "" {
+			p.diag.HealthState = "HEALTHY"
+			p.diag.ConsecutiveSuccesses = 2
+			p.diag.LastHealthCheckAt = time.Now().UnixMilli()
+			p.diag.LastHealthyAt = p.diag.LastHealthCheckAt
+		}
+		if p.retryBackoff <= 0 {
+			p.retryBackoff = 250 * time.Millisecond
+		}
+	}
+	p.mu.Unlock()
 	defer close(p.done)
 	for {
 		select {
 		case <-p.wake:
-			p.flushPending()
+			p.mu.Lock()
+			ready := p.diag.Ready
+			p.mu.Unlock()
+			if ready {
+				p.flushPending()
+			}
 		case <-p.stop:
 			p.flushPending()
 			return
@@ -299,8 +351,7 @@ func (p *PersistenceManager) flushPending() {
 		p.mu.Lock()
 		closed := p.closed
 		if len(errs) > 0 {
-			p.diag.Errors++
-			p.diag.LastError = errors.Join(errs...).Error()
+			p.markPersistenceFailureLocked(errors.Join(errs...))
 			if closed {
 				// Close is the final bounded flush opportunity. Never spin forever
 				// during shutdown; surface any unrecoverable loss explicitly.
@@ -323,12 +374,15 @@ func (p *PersistenceManager) flushPending() {
 			p.pendingIntelligence.Decisions = append(intel.Decisions, p.pendingIntelligence.Decisions...)
 			p.pendingIntelligence.Outcomes = append(intel.Outcomes, p.pendingIntelligence.Outcomes...)
 			p.pendingIntelligence.Features = append(intel.Features, p.pendingIntelligence.Features...)
+			var shed int
+			p.pendingIntelligence, shed = compactPersistenceIntelligence(p.pendingIntelligence, maxPendingIntelligenceRecords)
+			p.diag.ShedIntelligenceRecords += int64(shed)
 			if p.oldestPending.IsZero() {
 				p.oldestPending = time.Now()
 			}
 			p.diag.RetryBatches++
+			p.scheduleRetryLocked()
 			p.mu.Unlock()
-			time.AfterFunc(250*time.Millisecond, p.signal)
 			return
 		}
 
@@ -338,6 +392,12 @@ func (p *PersistenceManager) flushPending() {
 		p.diag.LastWriteAt = now.UnixMilli()
 		p.writeEvents = append(p.writeEvents, persistenceWriteEvent{at: now, rows: int64(rows)})
 		p.diag.LastError = ""
+		p.diag.HealthState = "HEALTHY"
+		p.diag.Ready = true
+		p.diag.ConsecutiveFailures = 0
+		p.diag.ConsecutiveSuccesses = 2
+		p.diag.LastHealthyAt = now.UnixMilli()
+		p.retryBackoff = 250 * time.Millisecond
 		more := len(p.pendingSymbols) > 0 || len(p.pendingQuotes) > 0 || p.pendingIntelligence.Len() > 0
 		p.mu.Unlock()
 		p.refreshStoreStats()
@@ -363,7 +423,7 @@ func (p *PersistenceManager) EnqueueSymbols(records []SymbolRegistryRecord) {
 	}
 	copyRecords := append([]SymbolRegistryRecord(nil), records...)
 	p.mu.Lock()
-	if !p.diag.Ready || p.closed {
+	if (!p.initialized && !p.diag.Ready) || p.closed {
 		p.mu.Unlock()
 		return
 	}
@@ -441,7 +501,7 @@ func (p *PersistenceManager) EnqueueQuotes(quotes map[string]Quote) {
 		return
 	}
 	p.mu.Lock()
-	if !p.diag.Ready || p.closed {
+	if (!p.initialized && !p.diag.Ready) || p.closed {
 		p.mu.Unlock()
 		return
 	}
@@ -479,7 +539,7 @@ func (p *PersistenceManager) EnqueueIntelligence(batch PersistenceIntelligenceBa
 		return
 	}
 	p.mu.Lock()
-	if !p.diag.Ready || p.closed {
+	if (!p.initialized && !p.diag.Ready) || p.closed {
 		p.mu.Unlock()
 		return
 	}
@@ -490,6 +550,9 @@ func (p *PersistenceManager) EnqueueIntelligence(batch PersistenceIntelligenceBa
 	p.pendingIntelligence.Decisions = append(p.pendingIntelligence.Decisions, batch.Decisions...)
 	p.pendingIntelligence.Outcomes = append(p.pendingIntelligence.Outcomes, batch.Outcomes...)
 	p.pendingIntelligence.Features = append(p.pendingIntelligence.Features, batch.Features...)
+	var shed int
+	p.pendingIntelligence, shed = compactPersistenceIntelligence(p.pendingIntelligence, maxPendingIntelligenceRecords)
+	p.diag.ShedIntelligenceRecords += int64(shed)
 	if p.oldestPending.IsZero() {
 		p.oldestPending = time.Now()
 	}
@@ -513,8 +576,7 @@ func (p *PersistenceManager) LoadQuotes() map[string]Quote {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if err != nil {
-		p.diag.Errors++
-		p.diag.LastError = err.Error()
+		p.markPersistenceFailureLocked(err)
 		return nil
 	}
 	p.diag.WarmStartedQuotes = len(quotes)
@@ -534,8 +596,7 @@ func (p *PersistenceManager) refreshStoreStats() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if err != nil {
-		p.diag.Errors++
-		p.diag.LastError = err.Error()
+		p.markPersistenceFailureLocked(err)
 		return
 	}
 	p.diag.Store = stats
@@ -549,13 +610,47 @@ func (p *PersistenceManager) LoadSymbols() []SymbolRegistryRecord {
 	defer cancel()
 	records, err := p.backend.LoadSymbols(ctx)
 	if err != nil {
-		p.mu.Lock()
-		p.diag.Errors++
-		p.diag.LastError = err.Error()
-		p.mu.Unlock()
+		p.recordPersistenceFailure(err)
 		return nil
 	}
 	return records
+}
+
+func (p *PersistenceManager) ProbeReady(ctx context.Context) bool {
+	if p == nil || p.backend == nil {
+		return false
+	}
+	p.mu.Lock()
+	initialized := p.initialized
+	ready := p.diag.Ready
+	retryScheduled := p.retryScheduled
+	lastCheck := p.diag.LastHealthCheckAt
+	p.mu.Unlock()
+	if !initialized {
+		return false
+	}
+	if !ready && retryScheduled {
+		return false
+	}
+	if ready && lastCheck > 0 && time.Since(time.UnixMilli(lastCheck)) < 2*time.Second {
+		return true
+	}
+	health, ok := p.backend.(persistenceHealthBackend)
+	if !ok {
+		return ready
+	}
+	if err := health.HealthCheck(ctx); err != nil {
+		p.recordPersistenceFailure(err)
+		return false
+	}
+	p.recordPersistenceHealthy()
+	p.mu.Lock()
+	ready = p.diag.Ready
+	if !ready {
+		p.scheduleRetryLocked()
+	}
+	p.mu.Unlock()
+	return ready
 }
 
 func (p *PersistenceManager) Diagnostics() PersistenceDiagnostics {
@@ -587,6 +682,8 @@ func (p *PersistenceManager) Diagnostics() PersistenceDiagnostics {
 	if p.pendingIntelligence.Len() > 0 {
 		d.QueueDepth++
 	}
+	d.PendingIntelligence = p.pendingIntelligence.Len()
+	d.RetryScheduled = p.retryScheduled
 	if !p.oldestPending.IsZero() {
 		d.OldestJobAgeMs = time.Since(p.oldestPending).Milliseconds()
 	}
@@ -599,6 +696,182 @@ func (p *PersistenceManager) Diagnostics() PersistenceDiagnostics {
 	return d
 }
 
+const maxPendingIntelligenceRecords = 50000
+
+func compactPersistenceIntelligence(batch PersistenceIntelligenceBatch, limit int) (PersistenceIntelligenceBatch, int) {
+	if batch.Len() == 0 {
+		return batch, 0
+	}
+	evidence := map[string]EvidenceRecord{}
+	for _, record := range batch.Evidence {
+		if record.ID != "" {
+			evidence[record.ID] = record
+		}
+	}
+	decisions := map[string]DecisionLineageRecord{}
+	for _, record := range batch.Decisions {
+		if record.ID != "" {
+			decisions[record.ID] = record
+		}
+	}
+	outcomes := map[string]OutcomeHistoryRecord{}
+	for _, record := range batch.Outcomes {
+		if record.ID != "" {
+			outcomes[record.ID] = record
+		}
+	}
+	features := map[string]DerivedFeatureRecord{}
+	for _, record := range batch.Features {
+		key := normalizeSymbol(record.Symbol) + "|" + record.FeatureKey + "|" + record.FeatureVersion
+		if key != "||" {
+			features[key] = record
+		}
+	}
+	out := PersistenceIntelligenceBatch{}
+	for _, record := range evidence {
+		out.Evidence = append(out.Evidence, record)
+	}
+	for _, record := range decisions {
+		out.Decisions = append(out.Decisions, record)
+	}
+	for _, record := range outcomes {
+		out.Outcomes = append(out.Outcomes, record)
+	}
+	for _, record := range features {
+		out.Features = append(out.Features, record)
+	}
+	sort.Slice(out.Evidence, func(i, j int) bool { return out.Evidence[i].ID < out.Evidence[j].ID })
+	sort.Slice(out.Decisions, func(i, j int) bool { return out.Decisions[i].ID < out.Decisions[j].ID })
+	sort.Slice(out.Outcomes, func(i, j int) bool { return out.Outcomes[i].ID < out.Outcomes[j].ID })
+	sort.Slice(out.Features, func(i, j int) bool {
+		a := normalizeSymbol(out.Features[i].Symbol) + "|" + out.Features[i].FeatureKey + "|" + out.Features[i].FeatureVersion
+		b := normalizeSymbol(out.Features[j].Symbol) + "|" + out.Features[j].FeatureKey + "|" + out.Features[j].FeatureVersion
+		return a < b
+	})
+	if limit <= 0 || out.Len() <= limit {
+		return out, 0
+	}
+	before := out.Len()
+	// Derived features are reproducible and are shed before immutable evidence/decision/outcome lineage.
+	for out.Len() > limit && len(out.Features) > 0 {
+		out.Features = out.Features[1:]
+	}
+	// A very high hard ceiling still bounds memory during a prolonged outage after shedding reproducible features.
+	for out.Len() > limit && len(out.Evidence) > 0 {
+		out.Evidence = out.Evidence[1:]
+	}
+	for out.Len() > limit && len(out.Decisions) > 0 {
+		out.Decisions = out.Decisions[1:]
+	}
+	for out.Len() > limit && len(out.Outcomes) > 0 {
+		out.Outcomes = out.Outcomes[1:]
+	}
+	return out, before - out.Len()
+}
+
+func (p *PersistenceManager) markPersistenceFailureLocked(err error) {
+	if err == nil {
+		return
+	}
+	p.diag.Errors++
+	p.diag.LastError = err.Error()
+	p.diag.HealthState = "DEGRADED"
+	p.diag.Ready = false
+	p.diag.ConsecutiveFailures++
+	p.diag.ConsecutiveSuccesses = 0
+	p.diag.LastHealthCheckAt = time.Now().UnixMilli()
+	p.scheduleRetryLocked()
+}
+
+func (p *PersistenceManager) recordPersistenceFailure(err error) {
+	if p == nil || err == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.markPersistenceFailureLocked(err)
+}
+
+func (p *PersistenceManager) recordPersistenceHealthy() {
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	now := time.Now().UnixMilli()
+	p.diag.LastHealthCheckAt = now
+	p.diag.LastHealthyAt = now
+	p.diag.ConsecutiveSuccesses++
+	if p.diag.ConsecutiveSuccesses >= 2 {
+		p.diag.Ready = true
+		p.diag.HealthState = "HEALTHY"
+		p.diag.ConsecutiveFailures = 0
+		p.diag.LastError = ""
+		p.retryBackoff = 250 * time.Millisecond
+	}
+}
+
+func (p *PersistenceManager) scheduleRetryLocked() {
+	if p == nil || p.closed || !p.initialized || p.retryScheduled {
+		return
+	}
+	if p.retryBackoff <= 0 {
+		p.retryBackoff = 250 * time.Millisecond
+	}
+	delay := p.retryBackoff
+	if delay > 5*time.Second {
+		delay = 5 * time.Second
+	}
+	p.retryScheduled = true
+	p.diag.RetryScheduled = true
+	p.diag.RetryBackoffMs = delay.Milliseconds()
+	next := delay * 2
+	if next > 5*time.Second {
+		next = 5 * time.Second
+	}
+	p.retryBackoff = next
+	time.AfterFunc(delay, p.retryProbe)
+}
+
+func (p *PersistenceManager) retryProbe() {
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	if p.closed || !p.initialized {
+		p.retryScheduled = false
+		p.mu.Unlock()
+		return
+	}
+	p.retryScheduled = false
+	p.diag.RetryScheduled = false
+	p.mu.Unlock()
+	health, ok := p.backend.(persistenceHealthBackend)
+	if !ok {
+		p.recordPersistenceHealthy()
+		p.recordPersistenceHealthy()
+		p.signal()
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 1500*time.Millisecond)
+	err := health.HealthCheck(ctx)
+	cancel()
+	if err != nil {
+		p.recordPersistenceFailure(err)
+		return
+	}
+	p.recordPersistenceHealthy()
+	p.mu.Lock()
+	ready := p.diag.Ready
+	if !ready {
+		p.scheduleRetryLocked()
+	}
+	p.mu.Unlock()
+	if ready {
+		p.signal()
+	}
+}
+
 func (p *PersistenceManager) Close() error {
 	if p == nil {
 		return nil
@@ -609,9 +882,9 @@ func (p *PersistenceManager) Close() error {
 		return nil
 	}
 	p.closed = true
-	ready := p.diag.Ready
+	started := p.initialized || p.diag.Ready
 	p.mu.Unlock()
-	if ready {
+	if started {
 		close(p.stop)
 		<-p.done
 	}

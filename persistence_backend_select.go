@@ -129,3 +129,5 @@ func (b *unavailablePersistenceBackend) Stats(context.Context) (PersistenceStore
 	return PersistenceStoreStats{}, b.err()
 }
 func (b *unavailablePersistenceBackend) Close() error { return nil }
+
+func (b *unavailablePersistenceBackend) HealthCheck(context.Context) error { return b.err() }

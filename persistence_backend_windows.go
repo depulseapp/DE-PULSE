@@ -729,3 +729,227 @@ func (b *sqlitePersistenceBackend) Close() error {
 	b.db = 0
 	return nil
 }
+
+func (b *sqlitePersistenceBackend) HealthCheck(ctx context.Context) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	_, err := b.scalarInt64(`SELECT 1`)
+	return err
+}
+
+func (b *sqlitePersistenceBackend) ExportPersistenceArchive(ctx context.Context) (PersistenceArchive, error) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return PersistenceArchive{}, err
+	}
+	archive := PersistenceArchive{}
+	schema, err := b.scalarInt64(`SELECT COALESCE(MAX(version),0) FROM schema_migrations`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	archive.SourceStoreSchema = int(schema)
+	query := func(sqlText string, consume func(uintptr) error) error {
+		stmt, err := b.prepare(sqlText)
+		if err != nil {
+			return err
+		}
+		defer finalizeWinSQLite(stmt)
+		for {
+			if err := ctx.Err(); err != nil {
+				return err
+			}
+			switch stepWinSQLite(stmt) {
+			case winSQLiteDone:
+				return nil
+			case winSQLiteRow:
+				if err := consume(stmt); err != nil {
+					return err
+				}
+			default:
+				return b.sqliteErr()
+			}
+		}
+	}
+	if err := query(`SELECT symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms FROM symbol_registry ORDER BY symbol`, func(stmt uintptr) error {
+		archive.Symbols = append(archive.Symbols, SymbolRegistryRecord{Symbol: normalizeSymbol(winSQLiteText(stmt, 0)), FirstSeenAt: winSQLiteInt64(stmt, 1), LastSeenAt: winSQLiteInt64(stmt, 2), Active: winSQLiteInt(stmt, 3) != 0, Selected: winSQLiteInt(stmt, 4) != 0, ProcessingTier: winSQLiteInt(stmt, 5), DeskMembership: winSQLiteText(stmt, 6), ProviderEligible: winSQLiteInt(stmt, 7) != 0, LastSubscribedAt: winSQLiteInt64(stmt, 8), LastProcessedAt: winSQLiteInt64(stmt, 9)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state FROM canonical_quotes ORDER BY symbol`, func(stmt uintptr) error {
+		var q Quote
+		if err := json.Unmarshal(winSQLiteBlob(stmt, 1), &q); err != nil {
+			return err
+		}
+		sym := normalizeSymbol(winSQLiteText(stmt, 0))
+		q.Symbol = sym
+		archive.CanonicalQuotes = append(archive.CanonicalQuotes, PersistenceCanonicalQuoteRecord{Symbol: sym, Quote: q, ProviderTimestamp: winSQLiteInt64(stmt, 2), ReceivedTimestamp: winSQLiteInt64(stmt, 3), PersistedAt: winSQLiteInt64(stmt, 4), Source: winSQLiteText(stmt, 5), DataState: winSQLiteText(stmt, 6)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state FROM quote_history ORDER BY symbol,bucket_ms`, func(stmt uintptr) error {
+		// SQLite's text representation preserves numeric values portably across winsqlite3.dll.
+		parseFloat := func(col int) float64 { v, _ := strconv.ParseFloat(winSQLiteText(stmt, col), 64); return v }
+		archive.QuoteHistory = append(archive.QuoteHistory, PersistenceQuoteHistoryRecord{Symbol: normalizeSymbol(winSQLiteText(stmt, 0)), Bucket: winSQLiteInt64(stmt, 1), ProviderTimestamp: winSQLiteInt64(stmt, 2), ReceivedTimestamp: winSQLiteInt64(stmt, 3), Price: parseFloat(4), Bid: parseFloat(5), Ask: parseFloat(6), Volume: parseFloat(7), Source: winSQLiteText(stmt, 8), DataState: winSQLiteText(stmt, 9)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json FROM evidence_records ORDER BY evidence_id`, func(stmt uintptr) error {
+		archive.Evidence = append(archive.Evidence, EvidenceRecord{ID: winSQLiteText(stmt, 0), Symbol: normalizeSymbol(winSQLiteText(stmt, 1)), Kind: winSQLiteText(stmt, 2), ObservedAt: winSQLiteInt64(stmt, 3), Source: winSQLiteText(stmt, 4), Provenance: winSQLiteText(stmt, 5), FreshnessState: winSQLiteText(stmt, 6), Payload: append(json.RawMessage(nil), winSQLiteBlob(stmt, 7)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json FROM decision_lineage ORDER BY decision_id`, func(stmt uintptr) error {
+		archive.Decisions = append(archive.Decisions, DecisionLineageRecord{ID: winSQLiteText(stmt, 0), Symbol: normalizeSymbol(winSQLiteText(stmt, 1)), Horizon: winSQLiteText(stmt, 2), EvidenceID: winSQLiteText(stmt, 3), DecisionKind: winSQLiteText(stmt, 4), DecisionValue: winSQLiteText(stmt, 5), FormulaVersion: winSQLiteText(stmt, 6), CreatedAt: winSQLiteInt64(stmt, 7), Payload: append(json.RawMessage(nil), winSQLiteBlob(stmt, 8)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json FROM outcome_history ORDER BY outcome_id`, func(stmt uintptr) error {
+		archive.Outcomes = append(archive.Outcomes, OutcomeHistoryRecord{ID: winSQLiteText(stmt, 0), DecisionID: winSQLiteText(stmt, 1), Symbol: normalizeSymbol(winSQLiteText(stmt, 2)), Horizon: winSQLiteText(stmt, 3), ObservedAt: winSQLiteInt64(stmt, 4), OutcomeLabel: winSQLiteText(stmt, 5), Payload: append(json.RawMessage(nil), winSQLiteBlob(stmt, 6)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json FROM derived_features ORDER BY symbol,feature_key,feature_version`, func(stmt uintptr) error {
+		archive.Features = append(archive.Features, DerivedFeatureRecord{Symbol: normalizeSymbol(winSQLiteText(stmt, 0)), FeatureKey: winSQLiteText(stmt, 1), FeatureVersion: winSQLiteText(stmt, 2), AsOf: winSQLiteInt64(stmt, 3), SourceHash: winSQLiteText(stmt, 4), Payload: append(json.RawMessage(nil), winSQLiteBlob(stmt, 5)...)})
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT payload_json FROM identity_state WHERE id=1`, func(stmt uintptr) error {
+		if err := json.Unmarshal(winSQLiteBlob(stmt, 0), &archive.Identity); err != nil {
+			return err
+		}
+		archive.HasIdentity = true
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	if err := query(`SELECT payload_json FROM user_workspaces ORDER BY user_id`, func(stmt uintptr) error {
+		var w UserWorkspace
+		if err := json.Unmarshal(winSQLiteBlob(stmt, 0), &w); err != nil {
+			return err
+		}
+		archive.UserWorkspaces = append(archive.UserWorkspaces, w)
+		return nil
+	}); err != nil {
+		return PersistenceArchive{}, err
+	}
+	return archive, nil
+}
+
+func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context, archive PersistenceArchive, mode string) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
+		return errors.New("unsupported persistence archive schema")
+	}
+	queries := []string{`SELECT COUNT(*) FROM symbol_registry`, `SELECT COUNT(*) FROM canonical_quotes`, `SELECT COUNT(*) FROM quote_history`, `SELECT COUNT(*) FROM evidence_records`, `SELECT COUNT(*) FROM decision_lineage`, `SELECT COUNT(*) FROM outcome_history`, `SELECT COUNT(*) FROM derived_features`, `SELECT COUNT(*) FROM identity_state`, `SELECT COUNT(*) FROM user_workspaces`}
+	var rows int64
+	for _, q := range queries {
+		n, err := b.scalarInt64(q)
+		if err != nil {
+			return err
+		}
+		rows += n
+	}
+	if mode == persistenceRestoreModeEmpty && rows > 0 {
+		return errors.New("persistence restore target is not empty; use explicit replace mode")
+	}
+	if err := b.exec("BEGIN IMMEDIATE"); err != nil {
+		return err
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			_ = b.exec("ROLLBACK")
+		}
+	}()
+	if mode == persistenceRestoreModeReplace {
+		if err := b.exec(`DELETE FROM user_workspaces; DELETE FROM identity_state; DELETE FROM derived_features; DELETE FROM outcome_history; DELETE FROM decision_lineage; DELETE FROM evidence_records; DELETE FROM quote_history; DELETE FROM canonical_quotes; DELETE FROM symbol_registry;`); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Symbols {
+		q := fmt.Sprintf(`INSERT INTO symbol_registry(symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(normalizeSymbol(r.Symbol)), sqlInt64(r.FirstSeenAt), sqlInt64(r.LastSeenAt), sqlBool(r.Active), sqlBool(r.Selected), sqlInt(r.ProcessingTier), sqlText(r.DeskMembership), sqlBool(r.ProviderEligible), sqlInt64(r.LastSubscribedAt), sqlInt64(r.LastProcessedAt))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.CanonicalQuotes {
+		raw, err := json.Marshal(r.Quote)
+		if err != nil {
+			return err
+		}
+		q := fmt.Sprintf(`INSERT INTO canonical_quotes(symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state) VALUES(%s,%s,%s,%s,%s,%s,%s)`, sqlText(normalizeSymbol(r.Symbol)), sqlBlob(raw), sqlInt64(r.ProviderTimestamp), sqlInt64(r.ReceivedTimestamp), sqlInt64(r.PersistedAt), sqlText(r.Source), sqlText(r.DataState))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.QuoteHistory {
+		q := fmt.Sprintf(`INSERT INTO quote_history(symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(normalizeSymbol(r.Symbol)), sqlInt64(r.Bucket), sqlInt64(r.ProviderTimestamp), sqlInt64(r.ReceivedTimestamp), sqlFloat(r.Price), sqlFloat(r.Bid), sqlFloat(r.Ask), sqlFloat(r.Volume), sqlText(r.Source), sqlText(r.DataState))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Evidence {
+		q := fmt.Sprintf(`INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Kind), sqlInt64(r.ObservedAt), sqlText(r.Source), sqlText(r.Provenance), sqlText(r.FreshnessState), sqlBlob(payloadOrEmpty(r.Payload)))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Decisions {
+		q := fmt.Sprintf(`INSERT INTO decision_lineage(decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Horizon), sqlText(r.EvidenceID), sqlText(r.DecisionKind), sqlText(r.DecisionValue), sqlText(r.FormulaVersion), sqlInt64(r.CreatedAt), sqlBlob(payloadOrEmpty(r.Payload)))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Outcomes {
+		q := fmt.Sprintf(`INSERT INTO outcome_history(outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json) VALUES(%s,%s,%s,%s,%s,%s,%s)`, sqlText(r.ID), sqlText(r.DecisionID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Horizon), sqlInt64(r.ObservedAt), sqlText(r.OutcomeLabel), sqlBlob(payloadOrEmpty(r.Payload)))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Features {
+		q := fmt.Sprintf(`INSERT INTO derived_features(symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json) VALUES(%s,%s,%s,%s,%s,%s)`, sqlText(normalizeSymbol(r.Symbol)), sqlText(r.FeatureKey), sqlText(r.FeatureVersion), sqlInt64(r.AsOf), sqlText(r.SourceHash), sqlBlob(payloadOrEmpty(r.Payload)))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	if archive.HasIdentity {
+		raw, err := json.Marshal(archive.Identity)
+		if err != nil {
+			return err
+		}
+		q := fmt.Sprintf(`INSERT INTO identity_state(id,payload_json,updated_at_ms) VALUES(1,%s,%s)`, sqlBlob(raw), sqlInt64(archive.Identity.UpdatedAt))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.UserWorkspaces {
+		raw, err := json.Marshal(r)
+		if err != nil {
+			return err
+		}
+		q := fmt.Sprintf(`INSERT INTO user_workspaces(user_id,payload_json,updated_at_ms) VALUES(%s,%s,%s)`, sqlText(r.UserID), sqlBlob(raw), sqlInt64(r.UpdatedAt))
+		if err := b.exec(q); err != nil {
+			return err
+		}
+	}
+	if err := b.exec("COMMIT"); err != nil {
+		return err
+	}
+	committed = true
+	return nil
+}

@@ -236,3 +236,129 @@ func (b *filePersistenceBackend) Stats(context.Context) (PersistenceStoreStats, 
 }
 
 func (b *filePersistenceBackend) Close() error { return nil }
+
+func (b *filePersistenceBackend) HealthCheck(context.Context) error { return nil }
+
+func (b *filePersistenceBackend) ExportPersistenceArchive(ctx context.Context) (PersistenceArchive, error) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return PersistenceArchive{}, err
+	}
+	archive := PersistenceArchive{SourceStoreSchema: 4}
+	for _, record := range b.data.Symbols {
+		archive.Symbols = append(archive.Symbols, record)
+	}
+	sort.Slice(archive.Symbols, func(i, j int) bool { return archive.Symbols[i].Symbol < archive.Symbols[j].Symbol })
+	for symbol, quote := range b.data.Quotes {
+		symbol = normalizeSymbol(symbol)
+		quote.Symbol = symbol
+		archive.CanonicalQuotes = append(archive.CanonicalQuotes, PersistenceCanonicalQuoteRecord{
+			Symbol: symbol, Quote: quote, ProviderTimestamp: quote.ProviderTimestamp, ReceivedTimestamp: quote.UpdatedAt,
+			PersistedAt: quote.UpdatedAt, Source: quote.Source, DataState: quote.DataState,
+		})
+	}
+	sort.Slice(archive.CanonicalQuotes, func(i, j int) bool { return archive.CanonicalQuotes[i].Symbol < archive.CanonicalQuotes[j].Symbol })
+	for _, record := range b.data.Evidence {
+		archive.Evidence = append(archive.Evidence, record)
+	}
+	sort.Slice(archive.Evidence, func(i, j int) bool { return archive.Evidence[i].ID < archive.Evidence[j].ID })
+	for _, record := range b.data.Decisions {
+		archive.Decisions = append(archive.Decisions, record)
+	}
+	sort.Slice(archive.Decisions, func(i, j int) bool { return archive.Decisions[i].ID < archive.Decisions[j].ID })
+	for _, record := range b.data.Outcomes {
+		archive.Outcomes = append(archive.Outcomes, record)
+	}
+	sort.Slice(archive.Outcomes, func(i, j int) bool { return archive.Outcomes[i].ID < archive.Outcomes[j].ID })
+	for _, record := range b.data.Features {
+		archive.Features = append(archive.Features, record)
+	}
+	sort.Slice(archive.Features, func(i, j int) bool {
+		if archive.Features[i].Symbol != archive.Features[j].Symbol {
+			return archive.Features[i].Symbol < archive.Features[j].Symbol
+		}
+		if archive.Features[i].FeatureKey != archive.Features[j].FeatureKey {
+			return archive.Features[i].FeatureKey < archive.Features[j].FeatureKey
+		}
+		return archive.Features[i].FeatureVersion < archive.Features[j].FeatureVersion
+	})
+	archive.Identity = clone(b.data.Identity)
+	archive.HasIdentity = archive.Identity.Version != 0 || len(archive.Identity.Users) > 0 || len(archive.Identity.Sessions) > 0
+	for _, workspace := range b.data.Workspaces {
+		archive.UserWorkspaces = append(archive.UserWorkspaces, clone(workspace))
+	}
+	sort.Slice(archive.UserWorkspaces, func(i, j int) bool { return archive.UserWorkspaces[i].UserID < archive.UserWorkspaces[j].UserID })
+	return archive, nil
+}
+
+func (b *filePersistenceBackend) RestorePersistenceArchive(ctx context.Context, archive PersistenceArchive, mode string) error {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
+		return errors.New("unsupported persistence archive schema")
+	}
+	nonEmpty := len(b.data.Symbols)+len(b.data.Quotes)+len(b.data.Evidence)+len(b.data.Decisions)+len(b.data.Outcomes)+len(b.data.Features)+len(b.data.Workspaces) > 0 || b.data.Identity.Version != 0 || len(b.data.Identity.Users) > 0 || len(b.data.Identity.Sessions) > 0
+	if mode == persistenceRestoreModeEmpty && nonEmpty {
+		return errors.New("persistence restore target is not empty; use explicit replace mode")
+	}
+	if mode == persistenceRestoreModeReplace {
+		b.data = filePersistenceData{}
+	}
+	b.data.Symbols = map[string]SymbolRegistryRecord{}
+	b.data.Quotes = map[string]Quote{}
+	b.data.Evidence = map[string]EvidenceRecord{}
+	b.data.Decisions = map[string]DecisionLineageRecord{}
+	b.data.Outcomes = map[string]OutcomeHistoryRecord{}
+	b.data.Features = map[string]DerivedFeatureRecord{}
+	b.data.Workspaces = map[string]UserWorkspace{}
+	for _, record := range archive.Symbols {
+		record.Symbol = normalizeSymbol(record.Symbol)
+		if record.Symbol != "" {
+			b.data.Symbols[record.Symbol] = record
+		}
+	}
+	for _, record := range archive.CanonicalQuotes {
+		symbol := normalizeSymbol(record.Symbol)
+		if symbol == "" {
+			continue
+		}
+		quote := record.Quote
+		quote.Symbol = symbol
+		b.data.Quotes[symbol] = quote
+	}
+	for _, record := range archive.Evidence {
+		if record.ID != "" {
+			b.data.Evidence[record.ID] = record
+		}
+	}
+	for _, record := range archive.Decisions {
+		if record.ID != "" {
+			b.data.Decisions[record.ID] = record
+		}
+	}
+	for _, record := range archive.Outcomes {
+		if record.ID != "" {
+			b.data.Outcomes[record.ID] = record
+		}
+	}
+	for _, record := range archive.Features {
+		if normalizeSymbol(record.Symbol) == "" || record.FeatureKey == "" || record.FeatureVersion == "" {
+			continue
+		}
+		key := normalizeSymbol(record.Symbol) + "|" + record.FeatureKey + "|" + record.FeatureVersion
+		b.data.Features[key] = record
+	}
+	if archive.HasIdentity {
+		b.data.Identity = clone(archive.Identity)
+	}
+	for _, workspace := range archive.UserWorkspaces {
+		if workspace.UserID != "" {
+			b.data.Workspaces[workspace.UserID] = clone(workspace)
+		}
+	}
+	return b.persistLocked()
+}

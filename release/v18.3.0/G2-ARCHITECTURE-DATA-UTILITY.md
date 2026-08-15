@@ -12,3 +12,8 @@
 - `/api/health` is process liveness. `/api/ready` is dependency readiness and must reflect canonical persistence plus IdentityService availability.
 - PostgreSQL pool and operation diagnostics are exposed through existing runtime persistence diagnostics; DSNs, credentials, password hashes, token hashes and provider secrets are never emitted.
 - Database work remains bounded and coalesced; provider/data acquisition is not triggered by persistence reads/writes.
+
+### Persistence continuity / migration hardening
+The backend-neutral archive contract preserves canonical symbols, current/history quotes, evidence, decision lineage, outcomes, derived features, IdentityPersistentState and UserWorkspace state without creating a second business-state owner. Provider secrets remain outside persistence archives. SQLite→PostgreSQL migration therefore moves canonical repository truth, not provider/scanner computation.
+
+Runtime persistence health is capability-scoped. Database failure degrades hosted readiness while process liveness remains separate; there is no silent local fallback. Pending writes remain coalesced/bounded and use one backoff/recovery lane instead of per-request retry storms.

@@ -637,3 +637,293 @@ func (b *postgresPersistenceBackend) Close() (err error) {
 	b.db = nil
 	return err
 }
+
+func (b *postgresPersistenceBackend) HealthCheck(ctx context.Context) (err error) {
+	started := time.Now()
+	defer func() { b.observe("health-check", started, err) }()
+	if b == nil || b.db == nil {
+		return errors.New("postgres database is not open")
+	}
+	return b.db.PingContext(ctx)
+}
+
+func (b *postgresPersistenceBackend) ExportPersistenceArchive(ctx context.Context) (archive PersistenceArchive, err error) {
+	started := time.Now()
+	defer func() { b.observe("archive-export", started, err) }()
+	if b == nil || b.db == nil {
+		return PersistenceArchive{}, errors.New("postgres database is not open")
+	}
+	tx, err := b.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead, ReadOnly: true})
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	defer tx.Rollback()
+	if err := tx.QueryRowContext(ctx, `SELECT COALESCE(MAX(version),0) FROM schema_migrations`).Scan(&archive.SourceStoreSchema); err != nil {
+		return PersistenceArchive{}, err
+	}
+	rows, err := tx.QueryContext(ctx, `SELECT symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms FROM symbol_registry ORDER BY symbol`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r SymbolRegistryRecord
+		if err := rows.Scan(&r.Symbol, &r.FirstSeenAt, &r.LastSeenAt, &r.Active, &r.Selected, &r.ProcessingTier, &r.DeskMembership, &r.ProviderEligible, &r.LastSubscribedAt, &r.LastProcessedAt); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		archive.Symbols = append(archive.Symbols, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state FROM canonical_quotes ORDER BY symbol`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r PersistenceCanonicalQuoteRecord
+		var raw []byte
+		if err := rows.Scan(&r.Symbol, &raw, &r.ProviderTimestamp, &r.ReceivedTimestamp, &r.PersistedAt, &r.Source, &r.DataState); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		if err := json.Unmarshal(raw, &r.Quote); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		r.Quote.Symbol = r.Symbol
+		archive.CanonicalQuotes = append(archive.CanonicalQuotes, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state FROM quote_history ORDER BY symbol,bucket_ms`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r PersistenceQuoteHistoryRecord
+		if err := rows.Scan(&r.Symbol, &r.Bucket, &r.ProviderTimestamp, &r.ReceivedTimestamp, &r.Price, &r.Bid, &r.Ask, &r.Volume, &r.Source, &r.DataState); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		archive.QuoteHistory = append(archive.QuoteHistory, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json FROM evidence_records ORDER BY evidence_id`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r EvidenceRecord
+		var raw []byte
+		if err := rows.Scan(&r.ID, &r.Symbol, &r.Kind, &r.ObservedAt, &r.Source, &r.Provenance, &r.FreshnessState, &raw); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		r.Payload = append(json.RawMessage(nil), raw...)
+		archive.Evidence = append(archive.Evidence, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json FROM decision_lineage ORDER BY decision_id`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r DecisionLineageRecord
+		var raw []byte
+		if err := rows.Scan(&r.ID, &r.Symbol, &r.Horizon, &r.EvidenceID, &r.DecisionKind, &r.DecisionValue, &r.FormulaVersion, &r.CreatedAt, &raw); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		r.Payload = append(json.RawMessage(nil), raw...)
+		archive.Decisions = append(archive.Decisions, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json FROM outcome_history ORDER BY outcome_id`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r OutcomeHistoryRecord
+		var raw []byte
+		if err := rows.Scan(&r.ID, &r.DecisionID, &r.Symbol, &r.Horizon, &r.ObservedAt, &r.OutcomeLabel, &raw); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		r.Payload = append(json.RawMessage(nil), raw...)
+		archive.Outcomes = append(archive.Outcomes, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	rows, err = tx.QueryContext(ctx, `SELECT symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json FROM derived_features ORDER BY symbol,feature_key,feature_version`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var r DerivedFeatureRecord
+		var raw []byte
+		if err := rows.Scan(&r.Symbol, &r.FeatureKey, &r.FeatureVersion, &r.AsOf, &r.SourceHash, &raw); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		r.Symbol = normalizeSymbol(r.Symbol)
+		r.Payload = append(json.RawMessage(nil), raw...)
+		archive.Features = append(archive.Features, r)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	var identityRaw []byte
+	err = tx.QueryRowContext(ctx, `SELECT payload_json FROM identity_state WHERE id=1`).Scan(&identityRaw)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		err = nil
+	case err != nil:
+		return PersistenceArchive{}, err
+	default:
+		if err := json.Unmarshal(identityRaw, &archive.Identity); err != nil {
+			return PersistenceArchive{}, err
+		}
+		archive.HasIdentity = true
+	}
+	rows, err = tx.QueryContext(ctx, `SELECT payload_json FROM user_workspaces ORDER BY user_id`)
+	if err != nil {
+		return PersistenceArchive{}, err
+	}
+	for rows.Next() {
+		var raw []byte
+		var w UserWorkspace
+		if err := rows.Scan(&raw); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		if err := json.Unmarshal(raw, &w); err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
+		archive.UserWorkspaces = append(archive.UserWorkspaces, w)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return PersistenceArchive{}, err
+	}
+	rows.Close()
+	if err := tx.Commit(); err != nil {
+		return PersistenceArchive{}, err
+	}
+	return archive, nil
+}
+
+func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Context, archive PersistenceArchive, mode string) (err error) {
+	started := time.Now()
+	defer func() { b.observe("archive-restore", started, err) }()
+	if b == nil || b.db == nil {
+		return errors.New("postgres database is not open")
+	}
+	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
+		return errors.New("unsupported persistence archive schema")
+	}
+	tx, err := b.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var count int64
+	if err := tx.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM symbol_registry)+(SELECT COUNT(*) FROM canonical_quotes)+(SELECT COUNT(*) FROM quote_history)+(SELECT COUNT(*) FROM evidence_records)+(SELECT COUNT(*) FROM decision_lineage)+(SELECT COUNT(*) FROM outcome_history)+(SELECT COUNT(*) FROM derived_features)+(SELECT COUNT(*) FROM identity_state)+(SELECT COUNT(*) FROM user_workspaces)`).Scan(&count); err != nil {
+		return err
+	}
+	if mode == persistenceRestoreModeEmpty && count > 0 {
+		return errors.New("persistence restore target is not empty; use explicit replace mode")
+	}
+	if mode == persistenceRestoreModeReplace {
+		if _, err := tx.ExecContext(ctx, `TRUNCATE TABLE user_workspaces, identity_state, derived_features, outcome_history, decision_lineage, evidence_records, quote_history, canonical_quotes, symbol_registry`); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Symbols {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO symbol_registry(symbol,first_seen_ms,last_seen_ms,active,selected,processing_tier,desk_membership,provider_eligible,last_subscribed_ms,last_processed_ms) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, normalizeSymbol(r.Symbol), r.FirstSeenAt, r.LastSeenAt, r.Active, r.Selected, r.ProcessingTier, r.DeskMembership, r.ProviderEligible, r.LastSubscribedAt, r.LastProcessedAt); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.CanonicalQuotes {
+		raw, e := json.Marshal(r.Quote)
+		if e != nil {
+			return e
+		}
+		if _, err := tx.ExecContext(ctx, `INSERT INTO canonical_quotes(symbol,payload_json,provider_timestamp_ms,received_timestamp_ms,persisted_at_ms,source,data_state) VALUES($1,$2,$3,$4,$5,$6,$7)`, normalizeSymbol(r.Symbol), raw, r.ProviderTimestamp, r.ReceivedTimestamp, r.PersistedAt, r.Source, r.DataState); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.QuoteHistory {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO quote_history(symbol,bucket_ms,provider_timestamp_ms,received_timestamp_ms,price,bid,ask,volume,source,data_state) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, normalizeSymbol(r.Symbol), r.Bucket, r.ProviderTimestamp, r.ReceivedTimestamp, r.Price, r.Bid, r.Ask, r.Volume, r.Source, r.DataState); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Evidence {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES($1,$2,$3,$4,$5,$6,$7,$8)`, r.ID, normalizeSymbol(r.Symbol), r.Kind, r.ObservedAt, r.Source, r.Provenance, r.FreshnessState, payloadOrEmpty(r.Payload)); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Decisions {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO decision_lineage(decision_id,symbol,horizon,evidence_id,decision_kind,decision_value,formula_version,created_at_ms,payload_json) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, r.ID, normalizeSymbol(r.Symbol), r.Horizon, r.EvidenceID, r.DecisionKind, r.DecisionValue, r.FormulaVersion, r.CreatedAt, payloadOrEmpty(r.Payload)); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Outcomes {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO outcome_history(outcome_id,decision_id,symbol,horizon,observed_at_ms,outcome_label,payload_json) VALUES($1,$2,$3,$4,$5,$6,$7)`, r.ID, r.DecisionID, normalizeSymbol(r.Symbol), r.Horizon, r.ObservedAt, r.OutcomeLabel, payloadOrEmpty(r.Payload)); err != nil {
+			return err
+		}
+	}
+	for _, r := range archive.Features {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO derived_features(symbol,feature_key,feature_version,as_of_ms,source_hash,payload_json) VALUES($1,$2,$3,$4,$5,$6)`, normalizeSymbol(r.Symbol), r.FeatureKey, r.FeatureVersion, r.AsOf, r.SourceHash, payloadOrEmpty(r.Payload)); err != nil {
+			return err
+		}
+	}
+	if archive.HasIdentity {
+		raw, e := json.Marshal(archive.Identity)
+		if e != nil {
+			return e
+		}
+		if _, err := tx.ExecContext(ctx, `INSERT INTO identity_state(id,payload_json,updated_at_ms) VALUES(1,$1,$2)`, raw, archive.Identity.UpdatedAt); err != nil {
+			return err
+		}
+	}
+	for _, w := range archive.UserWorkspaces {
+		raw, e := json.Marshal(w)
+		if e != nil {
+			return e
+		}
+		if _, err := tx.ExecContext(ctx, `INSERT INTO user_workspaces(user_id,payload_json,updated_at_ms) VALUES($1,$2,$3)`, w.UserID, raw, w.UpdatedAt); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
+}
