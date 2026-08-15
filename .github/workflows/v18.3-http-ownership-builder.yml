@@ -30,8 +30,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = '1d0445eac1fdc2b95ec9d3aabbef124c6fa24b6d'
-          echo '6f5bce07e18ecf6dbfde649e6630676b9364081a1b551a0cb10ee442bba833e6  .depulse-build/v18.3-http-ownership.patch' | sha256sum -c -
+          test "$(git rev-parse HEAD^)" = '60b4d78a7e8b6f156fe95c7686403336cbf0a227'
+          test "$(git hash-object .depulse-build/v18.3-http-ownership.patch)" = '64cd060740ebac0f005fae21d94acd0d648da525'
           git apply --check .depulse-build/v18.3-http-ownership.patch
           git apply .depulse-build/v18.3-http-ownership.patch
           gofmt -w http_api.go http_health.go
