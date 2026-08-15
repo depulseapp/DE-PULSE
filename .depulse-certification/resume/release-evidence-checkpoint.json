@@ -10,26 +10,13 @@
     "commit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
     "sourceFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed"
   },
-  "candidateSourceCommit": "9fe2e6f5002f498f77ace41eb223e03132f7391e",
-  "metadataHeadRule": "Checkpoint/evidence-only commits under .depulse-certification are fingerprint-excluded and may advance branch HEAD without changing the product candidate source identity.",
+  "candidateSourceCommit": "1ade06a00782f04380302ce7d15905a1f64f4578",
+  "metadataHeadRule": "Checkpoint/evidence-only commits under .depulse-certification are fingerprint-excluded and may advance branch HEAD without changing candidate source identity.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "evidence": {
-    "G0-G3": {
-      "status": "PASS",
-      "candidateSourceCommit": "9fe2e6f5002f498f77ace41eb223e03132f7391e",
-      "scopeClauses": "16/16"
-    },
-    "G4-G5": {
-      "status": "PASS",
-      "runId": 31857979914,
-      "checks": "v18.3 focused + full default Go + vet + Windows x64 archive compile + protected deterministic source unchanged"
-    },
-    "G6-G8": {
-      "status": "PASS",
-      "runId": 31857979914,
-      "checks": "actual PostgreSQL 17 repository/migrations + SQLite-to-PostgreSQL archive migration/lineage continuity + pool contention + postgres vet/build + actual hosted liveness/readiness"
-    },
+    "G0-G3": {"status": "PASS", "candidateSourceCommit": "1ade06a00782f04380302ce7d15905a1f64f4578", "scopeClauses": "16/16"},
+    "G4-G8": {"status": "PENDING", "note": "Same-candidate requalification required after source-health ownership refactor/tooling cleanup."},
     "G9": {"status": "PENDING"},
     "G10": {"status": "PENDING"},
     "G11": {"status": "PENDING"},
@@ -41,14 +28,10 @@
     "UserDelivery": {"status": "NOT_READY"}
   },
   "supersededOrFailedEvidence": [
-    {
-      "runId": 31857979923,
-      "stage": "G9-G10 pre-freeze entry",
-      "status": "FAIL",
-      "classification": "CHECKPOINT_RECONCILIATION_FAIL",
-      "reason": "v18.2 completed-release checkpoints had not yet been advanced to current v18.3 release identity; product source did not fail."
-    }
+    {"runId": 31857979923, "classification": "CHECKPOINT_RECONCILIATION_FAIL", "reason": "v18.2 completed-release checkpoints had not yet advanced to v18.3."},
+    {"runId": 31858106891, "classification": "SOURCE_HEALTH_FAIL", "reason": "http_api.go exceeded 1200-line responsibility budget; fixed by behavior-preserving HTTP health ownership split."},
+    {"runId": 31857979914, "classification": "SUPERSEDED_CANDIDATE_EVIDENCE", "reason": "G0-G8 passed on pre-refactor candidate; useful delta evidence but not final G10 same-candidate evidence."}
   ],
-  "nextRequiredEvidence": "Current-candidate G9/G10 pre-freeze qualification and exact source fingerprint freeze.",
-  "updatedAt": "2026-08-14T19:02:00-07:00"
+  "nextRequiredEvidence": "Same-candidate v18.3 Development Qualification G4-G8 plus G9/G10 Pre-Freeze qualification and exact fingerprint freeze.",
+  "updatedAt": "2026-08-14T19:15:00-07:00"
 }
