@@ -1,6 +1,8 @@
 # DE.PULSE — Developer documentation
 
-## v18.3.0 TEST — PostgreSQL / hosted shared-state architecture
+## v18.3.0 STABLE — PostgreSQL / hosted shared-state architecture
+
+Stable promotion switches the canonical desktop runtime/config to `PersonalMarketTerminal` while hosted mode continues to require explicit PostgreSQL selection. The v18.3 TEST profile remains historical isolation only; no persistence owner, provider pipeline, or deterministic scoring logic changes during promotion.
 
 `PersistenceBackend` remains the single repository contract. Local desktop selection delegates to the existing SQLite/file fallback implementations; an explicit `postgres`/`postgresql` selection binds the hosted target to a PostgreSQL implementation under the `postgres` build tag. Requested PostgreSQL is fail-closed: a missing driver build or DSN produces an unavailable backend rather than local fallback.
 

@@ -1,25 +1,16 @@
-DE.PULSE v18.3.0 TEST — PostgreSQL / Hosted Shared State
-Date: 2026-08-14
-Status: TEST — G0-G3 PASS; G4-G10 same-candidate requalification pending
+DE.PULSE v18.3.0 STABLE — PostgreSQL / Hosted Shared State
+Date: 2026-08-15
+Build ID: v18.3.0-stable-postgresql-hosted-shared-state-20260815
+Status: G0-G15 certified · promoted Stable · G16 handoff follows
 
-Current scope
-- PostgreSQL repository parity beneath the canonical PersistenceBackend.
+Certified scope
+- PostgreSQL 17 repository parity beneath the canonical PersistenceBackend.
 - Desktop macOS/Windows remain SQLite/local by default; hosted PostgreSQL selection is explicit and fail-closed.
-- Dedicated-session migration locking, bounded pooling and DB/query/pool diagnostics.
-- Hosted browser/server runtime with separate liveness and persistence-backed readiness.
-- Integrity-protected private persistence archive, safe backup/restore, and SQLite→PostgreSQL migration continuity.
-- Bounded persistence pressure, outage retry/recovery hysteresis, and truthful degraded readiness.
-- Per-user workspace isolation remains preserved with one shared deduplicated market-processing universe.
-- Protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary remain unchanged.
+- Integrity-protected backup/restore and SQLite→PostgreSQL migration/export continuity.
+- Bounded pooling/contention, outage recovery hysteresis, liveness/readiness, and hosted runtime smoke.
+- Per-user workspace isolation with one shared deduplicated provider/scanner/intelligence pipeline.
+- Protected deterministic Day/Swing/Long formulas remain unchanged.
+- Required macOS Apple Silicon and Windows x64 actual packaged runtime audits passed.
+- Permanent No Execution Boundary preserved.
 
-Evidence to date
-- Frozen G0-G3 scope/architecture contract: PASS (16/16 scope clauses).
-- Earlier PostgreSQL 17 repository/migration/archive/contention and hosted-readiness qualification: PASS as delta evidence; final same-candidate G4-G10 evidence is still required after source-health ownership cleanup.
-- Source-health issue resolved: hosted health/readiness HTTP ownership moved to http_health.go and http_api.go returned under the permanent 1,200-line responsibility ceiling; focused/full/vet qualification passed before publication.
-
-Not yet claimed
-- v18.3 is not Stable.
-- G10 source fingerprint is not yet frozen.
-- G11-G16 release/native promotion evidence remains pending.
-
-No execution capability was added.
+Broader commercial/data-rights/security hardening remains future scope and is not implied by this Stable promotion.

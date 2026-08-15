@@ -1,10 +1,10 @@
 # DE.PULSE — User documentation
 
-## v18.3.0 TEST — PostgreSQL / hosted shared state foundation
+## v18.3.0 STABLE — PostgreSQL / hosted shared state
 
-v18.3 TEST adds the hosted-state foundation without changing normal desktop storage. macOS and Windows desktop builds continue to use the existing local SQLite profile by default. A hosted build explicitly selects PostgreSQL; if that hosted database is unavailable or misconfigured, readiness fails instead of silently using a local substitute.
+v18.3 STABLE adds the certified hosted-state foundation without changing normal desktop storage. macOS and Windows desktop builds continue to use the existing local SQLite profile by default. A hosted build explicitly selects PostgreSQL; if that hosted database is unavailable or misconfigured, readiness fails instead of silently using a local substitute.
 
-Personal watchlists and UI state remain per-user. Market-data/provider/scanner/intelligence work remains one shared canonical pipeline across the deduplicated union of required symbols, so adding users does not create one market engine per account. `/api/health` remains liveness; `/api/ready` reports whether canonical identity and persistence are actually ready. This build is TEST until migration/export, backup/restore, contention/load, hosted runtime, and native release qualification are complete. The **No Execution** boundary is unchanged.
+Personal watchlists and UI state remain per-user. Market-data/provider/scanner/intelligence work remains one shared canonical pipeline across the deduplicated union of required symbols, so adding users does not create one market engine per account. `/api/health` remains liveness; `/api/ready` reports whether canonical identity and persistence are actually ready. Migration/export, backup/restore, contention/recovery, PostgreSQL 17 hosted runtime, and required native release qualification passed G0–G15 before Stable promotion. The **No Execution** boundary is unchanged.
 
 ## v18.2.0 STABLE — Administration, Presence & Sessions
 
@@ -716,8 +716,8 @@ More Market Context remains always visible. The evidence is grouped into Market 
 - **Macro Rates:** core official rates can remain healthy when usable Treasury data exists even if optional FRED enrichment is temporarily unavailable; provider-specific health remains explicit in Maintenance.
 - **Discovery and placement:** candidate rows use explicit columns so liquidity, spread, membership and action controls do not overlap. At narrower supported widths, the candidate table scrolls inside its panel instead of causing page-level overflow.
 
-## v18.3 TEST — hosted backup/recovery behavior
+## v18.3 STABLE — hosted backup/recovery behavior
 
-v18.3 TEST adds a private, integrity-checked persistence backup/migration format for hosted-state qualification. It preserves account/session hashes, per-user workspaces and canonical market/intelligence history, so archive files must be protected like other sensitive application data. API/provider secrets are not included in this database archive.
+v18.3 STABLE includes the certified private, integrity-checked persistence backup/migration format for hosted-state operation. It preserves account/session hashes, per-user workspaces and canonical market/intelligence history, so archive files must be protected like other sensitive application data. API/provider secrets are not included in this database archive.
 
 Hosted readiness now reflects the canonical database rather than only process startup. A database interruption can leave `/api/health` live while `/api/ready` reports unavailable; DE.PULSE keeps bounded/coalesced persistence work and recovers only after database health is stable again. This is intentional truthful degradation, not a silent fallback to a different local state store.

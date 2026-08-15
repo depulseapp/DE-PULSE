@@ -6,11 +6,14 @@ def need(ok,msg):
     if not ok: errors.append(msg)
 identity=json.loads((R/'release_identity.json').read_text())
 scope=json.loads((R/'v18_3_scope.json').read_text())
-need(identity.get('version')=='18.3.0' and identity.get('channel')=='TEST','v18.3 TEST identity missing')
+channel=identity.get('channel'); need(identity.get('version')=='18.3.0' and channel in {'TEST','STABLE'},'v18.3 release identity missing')
 need(identity.get('previous_stable')=='v18.2.0' and identity.get('patch_predecessor')=='v18.2.0','v18.2.0 predecessor drift')
-need(identity.get('build_id')=='v18.3.0-test-postgresql-hosted-shared-state-20260814','v18.3 TEST build identity drift')
-need(identity.get('runtime_config')=='PersonalMarketTerminal-v18.3.0-TEST','isolated v18.3 TEST runtime missing')
-need(identity.get('application_bundle')=='De-Pulse-v18.3.0-TEST.app','v18.3 TEST bundle missing')
+expected_build='v18.3.0-test-postgresql-hosted-shared-state-20260814' if channel=='TEST' else 'v18.3.0-stable-postgresql-hosted-shared-state-20260815'
+expected_runtime='PersonalMarketTerminal-v18.3.0-TEST' if channel=='TEST' else 'PersonalMarketTerminal'
+expected_bundle='De-Pulse-v18.3.0-TEST.app' if channel=='TEST' else 'De-Pulse.app'
+need(identity.get('build_id')==expected_build,'v18.3 build identity drift')
+need(identity.get('runtime_config')==expected_runtime,'v18.3 runtime identity drift')
+need(identity.get('application_bundle')==expected_bundle,'v18.3 application bundle drift')
 need(scope.get('incomingStableCommit')=='78c42d739bff64b0e4c8676cb341fee65c4a3e67','G0 Stable commit drift')
 need(scope.get('incomingStableFingerprint')=='d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed','G0 Stable fingerprint drift')
 need(len(scope.get('clauses',[]))==16,'scope clause count drift')
@@ -43,4 +46,4 @@ if errors:
     print('v18.3 Scope Gate: FAIL')
     for err in errors: print(' -',err)
     sys.exit(2)
-print('v18.3 Scope Gate: PASS · 16/16 clauses · PostgreSQL/hosted shared-state boundaries preserved')
+print(f'v18.3 Scope Gate: PASS · {channel} · 16/16 clauses · PostgreSQL/hosted shared-state boundaries preserved')

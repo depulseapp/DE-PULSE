@@ -18,5 +18,5 @@ var finnhubMinRequestInterval = 1100 * time.Millisecond
 
 const appName = "DE.PULSE"
 const appVersion = "18.3.0"
-const releaseChannel = "TEST"
-const buildID = "v18.3.0-test-postgresql-hosted-shared-state-20260814"
+const releaseChannel = "STABLE"
+const buildID = "v18.3.0-stable-postgresql-hosted-shared-state-20260815"

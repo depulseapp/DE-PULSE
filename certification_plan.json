@@ -27,7 +27,7 @@
     {
       "id": "g0_release_identity",
       "gate": "G0",
-      "label": "Canonical v18.3.0 TEST release identity",
+      "label": "Canonical v18.3.0 STABLE release identity",
       "command": [
         "{python}",
         "release_identity.py",

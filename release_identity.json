@@ -2,13 +2,13 @@
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
   "version": "18.3.0",
   "display_version": "DE.PULSE v18.3.0",
-  "build_id": "v18.3.0-test-postgresql-hosted-shared-state-20260814",
-  "channel": "TEST",
+  "build_id": "v18.3.0-stable-postgresql-hosted-shared-state-20260815",
+  "channel": "STABLE",
   "stable_baseline": "v17.5.1",
   "previous_stable": "v18.2.0",
   "scope": "PostgreSQL / Hosted Shared State: add PostgreSQL repository parity beneath the canonical PersistenceBackend, migrations and bounded transactions/concurrency, one shared canonical market/runtime state with preserved per-user workspace isolation, explicit hosted browser/server runtime with truthful liveness/readiness, DB/query/pool observability, warm-start/restart reliability and bounded persistence pressure; preserve SQLite/local desktop as the default, one shared provider/scanner/intelligence pipeline, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary; no v18.4 commercial/data-rights scope",
   "bundle_version": "18300",
-  "runtime_config": "PersonalMarketTerminal-v18.3.0-TEST",
+  "runtime_config": "PersonalMarketTerminal",
   "patch_predecessor": "v18.2.0",
-  "application_bundle": "De-Pulse-v18.3.0-TEST.app"
+  "application_bundle": "De-Pulse.app"
 }

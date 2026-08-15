@@ -1,16 +1,16 @@
-# DE.PULSE v18.3.0 TEST — PostgreSQL / Hosted Shared State
+# DE.PULSE v18.3.0 STABLE — PostgreSQL / Hosted Shared State
 
-**Build:** `v18.3.0-test-postgresql-hosted-shared-state-20260814`  
-**Channel:** TEST  
+**Build:** `v18.3.0-stable-postgresql-hosted-shared-state-20260815`  
+**Channel:** STABLE  
 **Current Stable baseline:** v18.2.0  
 **Major v18 provenance anchor:** v17.5.1  
 **Patch predecessor:** v18.2.0 STABLE  
-**Application bundle:** `De-Pulse-v18.3.0-TEST.app`  
-**Runtime/config:** `PersonalMarketTerminal-v18.3.0-TEST`
+**Application bundle:** `De-Pulse.app`  
+**Runtime/config:** `PersonalMarketTerminal`
 
 v18.3.0 adds PostgreSQL repository parity beneath the existing storage-agnostic `PersistenceBackend`, bounded hosted DB pooling/transactions, shared-state observability, and an explicit hosted browser/server runtime with separate liveness and persistence-backed readiness. PostgreSQL is an explicit hosted selection and fails closed when unavailable; it never silently falls back to a local store.
 
-Desktop macOS/Windows remain local-first and use the existing SQLite persistence path by default. Per-user watchlists/UI stay isolated while `processingStateLocked()` continues to form one deduplicated shared market-processing universe, so PostgreSQL does not multiply provider, scanner, Router, Rapid Move, Opportunity Radar or deterministic scoring work per user. Protected Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. Backup/restore, SQLite→PostgreSQL migration/export, hosted contention/load proof and final native/runtime certification remain qualification work before v18.3 can become Stable.
+Desktop macOS/Windows remain local-first and use the existing SQLite persistence path by default. Per-user watchlists/UI stay isolated while `processingStateLocked()` continues to form one deduplicated shared market-processing universe, so PostgreSQL does not multiply provider, scanner, Router, Rapid Move, Opportunity Radar or deterministic scoring work per user. Protected Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. Backup/restore, SQLite→PostgreSQL migration/export, hosted contention/recovery, PostgreSQL 17 readiness, and final macOS Apple Silicon / Windows x64 runtime audits passed G0–G15 certification for this Stable promotion.
 
 ## Immediate Stable predecessor — v18.2.0 STABLE — Admin / Presence / Sessions
 
@@ -159,7 +159,7 @@ Before every major-family transition (for example v16 → v17, v17 → v18), DE.
 
 The north star remains: **collect the best lawful evidence → understand it → preserve useful structured evidence → measure outcomes → learn through validated methods → improve U.S.-market decision support without becoming an execution platform.**
 
-### v18.3 TEST persistence backup / migration operations
+### v18.3 STABLE persistence backup / migration operations
 
 - `DEPULSE_PERSISTENCE_EXPORT_PATH=/private/path/depulse-backup.json` writes a versioned SHA-256-verified canonical persistence archive during startup after identity/workspace initialization.
 - `DEPULSE_PERSISTENCE_RESTORE_PATH=/private/path/depulse-backup.json` restores an archive after repository migrations and before IdentityService bootstrap.

@@ -1,8 +1,8 @@
 # DE.PULSE — Capabilities & Limitations
 
-## v18.3.0 TEST — hosted persistence boundaries
+## v18.3.0 STABLE — hosted persistence boundaries
 
-v18.3 is currently a TEST foundation, not yet a Stable hosted service. PostgreSQL repository parity, bounded pooling, hosted listener selection and liveness/readiness are implemented locally, but real PostgreSQL integration, migration/export, backup/restore, supported-load/contention limits, failure/recovery behavior and final macOS/Windows/hosted certification must pass before promotion.
+v18.3 STABLE has passed PostgreSQL 17 repository parity, migration/export, backup/restore, bounded contention/recovery, hosted liveness/readiness, and required macOS Apple Silicon / Windows x64 release certification. This does not by itself represent the broader commercial/data-rights/security hardening reserved for v18.4.
 
 PostgreSQL is not treated as a cure-all for `DATA DEGRADED`: provider pressure, freshness, queues and DB pressure remain separate capability-level concerns. Hosted mode must fail readiness truthfully when its canonical database is unavailable and must not silently fall back to per-machine local state. Personal workspace isolation does not imply separate market engines; canonical market intelligence is intentionally shared and deduplicated. Broader commercial/data-rights/security hardening remains v18.4. The **No Execution** boundary is unchanged.
 
@@ -252,7 +252,7 @@ A cached quote can remain available as truthful last-known-good evidence when li
 - **Massive** and **FMP** are intentionally **not added** in this release. DE.PULSE will not add another general-purpose market-data provider unless a verified capability gap remains after the approved Alpaca / Finnhub / Twelve Data / Marketaux / SEC / FRED core plus yfinance/CBOE recovery stack is evaluated.
 - yfinance remains automatic recovery-only; CBOE remains VIX-specific validation/delayed fallback. Neither is presented as a configurable credentialed provider.
 
-## v18.3 TEST — archive and outage limits
+## v18.3 STABLE — archive and outage limits
 
 Persistence archives contain credential/session hashes and must be stored privately. Restore is empty-target-only by default; replacing existing canonical state requires the explicit `replace` mode. The archive does not carry provider/API secrets from `secrets.json`.
 

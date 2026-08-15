@@ -2,11 +2,11 @@
   "releases": [
     {
       "version": "18.3.0",
-      "date": "2026-08-14",
-      "status": "TEST",
-      "summary": "TEST PostgreSQL / Hosted Shared State: repository/migration parity, integrity-protected persistence archive and SQLite-to-PostgreSQL migration, bounded pooling/contention and outage recovery, hosted liveness/readiness, and source-responsibility hardening; G4-G10 same-candidate requalification remains pending before RC freeze.",
+      "date": "2026-08-15",
+      "status": "STABLE",
+      "summary": "STABLE PostgreSQL / Hosted Shared State: G0\u2013G15 certified PostgreSQL 17 repository/migration/archive/contention and hosted readiness, with required macOS Apple Silicon and Windows x64 actual-artifact runtime audits; desktop remains canonical SQLite/local by default, per-user workspace isolation and one shared market-intelligence core are preserved, and the No Execution Boundary remains unchanged.",
       "file": "v18.3.0.txt",
-      "buildId": "v18.3.0-test-postgresql-hosted-shared-state-20260814",
+      "buildId": "v18.3.0-stable-postgresql-hosted-shared-state-20260815",
       "checkpoint": "v18.3.0-g0-g3-postgresql-hosted-shared-state.md"
     },
     {
