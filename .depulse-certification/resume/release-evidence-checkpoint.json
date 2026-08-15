@@ -2,36 +2,123 @@
   "schemaVersion": 2,
   "protocolVersion": "2.0",
   "release": "v18.3.0",
-  "channel": "TEST",
-  "branch": "v18.3-development",
+  "channel": "STABLE",
+  "branch": "main",
   "incomingStable": {
     "version": "v18.2.0",
     "tag": "v18.2.0-stable",
     "commit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
     "sourceFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed"
   },
-  "candidateSourceCommit": "1ade06a00782f04380302ce7d15905a1f64f4578",
-  "metadataHeadRule": "Checkpoint/evidence-only commits under .depulse-certification are fingerprint-excluded and may advance branch HEAD without changing candidate source identity.",
-  "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_REQUALIFICATION",
+  "certifiedStable": {
+    "version": "v18.3.0",
+    "tag": "v18.3.0-stable",
+    "commit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
+    "buildId": "v18.3.0-stable-postgresql-hosted-shared-state-20260815",
+    "sourceFingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f",
+    "sourceSha256": "c70ffba7eaf97cc33762db4016714497932c7f6802c3776d0d2a92897b4194b1"
+  },
+  "candidateSourceCommit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
+  "observedMainHeadBeforeCheckpointCommit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
+  "metadataHeadRule": "G16 checkpoint/handoff commits under .depulse-certification are fingerprint-excluded and may advance main only after the immutable Stable tag is created; they do not change certified source identity.",
+  "sourceFingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f",
+  "sourceFingerprintState": "FROZEN_STABLE",
   "evidence": {
-    "G0-G3": {"status": "PASS", "candidateSourceCommit": "1ade06a00782f04380302ce7d15905a1f64f4578", "scopeClauses": "16/16"},
-    "G4-G8": {"status": "PENDING", "note": "Same-candidate requalification required after source-health ownership refactor/tooling cleanup."},
-    "G9": {"status": "PENDING"},
-    "G10": {"status": "PENDING"},
-    "G11": {"status": "PENDING"},
-    "G12": {"status": "PENDING"},
-    "G13": {"status": "PENDING"},
-    "G14": {"status": "PENDING"},
-    "G15": {"status": "PENDING"},
-    "G16": {"status": "PENDING"},
-    "UserDelivery": {"status": "NOT_READY"}
+    "G0-G8": {
+      "status": "PASS",
+      "testCandidateCommit": "d057db11354530a5244d92ada40f19754a59a4ab",
+      "runId": 31912832420,
+      "note": "Same-head development qualification passed including Windows x64 compile and real PostgreSQL 17 migration/archive/contention plus hosted readiness."
+    },
+    "G9-G10": {
+      "status": "PASS",
+      "testCandidateCommit": "d057db11354530a5244d92ada40f19754a59a4ab",
+      "testFingerprint": "1b2251231d4d4a140ad034bc022d62c5ffd68f5c1ff0a2b4ed926089bc025de4",
+      "runId": 31912832422,
+      "note": "Renderer/browser/HTTP/responsive, randomized order and Extreme 30 passed before immutable RC freeze."
+    },
+    "G11-G15-TEST": {
+      "status": "PASS",
+      "runId": 31913540543,
+      "decision": "STABLE_PROMOTION_READY",
+      "note": "Immutable TEST RC passed full race/PostgreSQL 17 hosted certification and required macOS Apple Silicon + Windows x64 actual-artifact runtime audits."
+    },
+    "StableIdentityPromotion": {
+      "status": "PASS",
+      "sourceCommit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
+      "parentTestRC": "d057db11354530a5244d92ada40f19754a59a4ab",
+      "changedFiles": 15,
+      "scope": "identity/documentation/gate-only",
+      "fingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f"
+    },
+    "G11-STABLE": {
+      "status": "PASS",
+      "runId": 31914647719,
+      "artifactId": 9254586144,
+      "artifactDigest": "sha256:71a77fd82e6ceeb44d1d23d1e271c199f336079a80331b97df01315dba2bb4fb",
+      "note": "Exact Stable source frozen and fingerprint reproduced."
+    },
+    "G12-STABLE": {
+      "status": "PASS",
+      "runId": 31914647719,
+      "artifactId": 9254667117,
+      "artifactDigest": "sha256:e43038be33196191ab6f58a7712b594b7638e46d0794150bf300e1994bedac30",
+      "note": "Full Stable certification passed: governance, full Go + race + vet + CGO fallback, PostgreSQL 17 parity/migration/archive/contention, hosted Stable readiness, renderer/deterministic/professional acceptance, randomized/Extreme 30, HTTP and responsive runtime."
+    },
+    "G13-G14-STABLE": {
+      "status": "PASS",
+      "runId": 31915196766,
+      "macosArtifactId": 9254722138,
+      "macosWorkflowArtifactDigest": "sha256:7a48b08993b88e2e425ed2d99e584dd02a359fd425ca8a9338271fee7b583a02",
+      "macosPackageSha256": "3c2ff8332e4579a2a8165a188e3e934ec17e48de90b37465c9fbdf2d8e3ff8be",
+      "windowsArtifactId": 9254726071,
+      "windowsWorkflowArtifactDigest": "sha256:977a421d67e09a24ae470896cf22b2f4a0c78d96d03bc45dd876863a78b497dd",
+      "windowsPackageSha256": "7539443a71cb156d8f9a73a40de827d4e4274d59e66d021764f0b9d948963675",
+      "note": "Both actual packaged Stable runtimes passed after harness-only correction; certified source unchanged."
+    },
+    "G15": {
+      "status": "PASS",
+      "runId": 31915196766,
+      "artifactId": 9254728203,
+      "artifactDigest": "sha256:a24d7b3f92a47175a948f483c7e5457f484a6c94f02dcb7b766488baf68e276e",
+      "decision": "STABLE_CERTIFIED"
+    },
+    "StablePromotion": {
+      "status": "PASS",
+      "mainFastForward": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
+      "tag": "v18.3.0-stable",
+      "tagRunId": 31915319399,
+      "tagTargetsCertifiedSource": true
+    },
+    "BranchCleanup": {
+      "status": "PASS",
+      "runId": 31915391884,
+      "temporaryV18_3BranchesRemaining": 0
+    },
+    "G16": {
+      "status": "PASS",
+      "note": "Adaptive retrospective, release truth checkpoint, branch cleanup and v18.4 handoff completed after immutable Stable tag creation."
+    },
+    "UserDelivery": {"status": "READY"}
   },
   "supersededOrFailedEvidence": [
     {"runId": 31857979923, "classification": "CHECKPOINT_RECONCILIATION_FAIL", "reason": "v18.2 completed-release checkpoints had not yet advanced to v18.3."},
-    {"runId": 31858106891, "classification": "SOURCE_HEALTH_FAIL", "reason": "http_api.go exceeded 1200-line responsibility budget; fixed by behavior-preserving HTTP health ownership split."},
-    {"runId": 31857979914, "classification": "SUPERSEDED_CANDIDATE_EVIDENCE", "reason": "G0-G8 passed on pre-refactor candidate; useful delta evidence but not final G10 same-candidate evidence."}
+    {"runId": 31858106891, "classification": "SOURCE_HEALTH_FAIL", "reason": "http_api.go exceeded the permanent 1200-line responsibility budget; corrected by behavior-preserving HTTP health ownership split."},
+    {"classification": "INHERITED_RENDERER_HARNESS_DRIFT", "reason": "v18_2_renderer_test.js incorrectly owned the current release title; replaced with a version-neutral canonical DE.PULSE title sanity check."},
+    {"classification": "STABLE_G12_LAUNCH_TOOLING", "reason": "Hosted runtime environment variables were initially scoped too broadly; corrected to apply only to the launched hosted server. Immutable source unchanged."},
+    {"runId": 31914647719, "classification": "NATIVE_G14_HARNESS_ONLY", "reason": "Initial Stable native jobs duplicated G12 Smart Router/Rapid Move active-state assertions; Windows also exposed UTF-8 and POSIX permission-mode harness assumptions. Corrected G14-only retry passed on unchanged Stable source."}
   ],
-  "nextRequiredEvidence": "Same-candidate v18.3 Development Qualification G4-G8 plus G9/G10 Pre-Freeze qualification and exact fingerprint freeze.",
-  "updatedAt": "2026-08-14T19:15:00-07:00"
+  "aiplcLessons": [
+    "Inherited release-specific regression harnesses must not own current release identity; canonical identity/version gates own it.",
+    "Hosted runtime environment variables must be scoped to hosted launch and must not contaminate neutral PostgreSQL test/build steps.",
+    "Canonical source fingerprints must be taken from the actual Git transformation/source bytes, not an independently reconstructed equivalent.",
+    "Markdown-aware formatting policy is required; generic whitespace checks must not reject intentional Markdown hard breaks.",
+    "Native G14 validates actual packaged-runtime responsibilities and must not duplicate Smart Router/Rapid Move active-state behavior already certified by G12.",
+    "Windows native audits must force UTF-8 for UTF-8 repository documents and must not treat POSIX permission bits as the Windows security contract.",
+    "Tooling-only release branches/scripts must never mutate immutable RC/Stable source identity.",
+    "One-shot patch/build staging must represent new files correctly and bind integrity to repository Git blob/source identity.",
+    "Checkpoint/evidence-only commits remain fingerprint-excluded and occur after immutable Stable source/tag freeze."
+  ],
+  "nextRequiredEvidence": "v18.4 G0 exact-baseline reconciliation from v18.3.0 Stable; recover and freeze v18.4 scope before implementation.",
+  "updatedAt": "2026-08-15T23:42:00Z"
 }
