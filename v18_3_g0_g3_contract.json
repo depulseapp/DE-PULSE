@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.3.0 TEST",
+  "gates": {
+    "G0": "EXACT_BASELINE",
+    "G1": "IMMUTABLE_SCOPE",
+    "G2": "ARCHITECTURE_DATA_UTILITY",
+    "G3": "DESIGN_DEPENDENCY_READINESS"
+  },
+  "incomingStable": {
+    "version": "v18.2.0",
+    "tag": "v18.2.0-stable",
+    "commit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
+    "sourceFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed"
+  },
+  "architecture": {
+    "persistenceOwner": "PersistenceBackend + PersistenceManager",
+    "desktopBackend": "SQLite/local",
+    "hostedBackend": "PostgreSQL via postgres build tag",
+    "personalStateOwner": "UserWorkspace",
+    "sharedProcessingOwner": "processingStateLocked() union",
+    "identityOwner": "IdentityService",
+    "hostedReadiness": "/api/ready"
+  }
+}

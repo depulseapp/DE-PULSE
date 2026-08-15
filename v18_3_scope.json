@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "version": "18.3.0",
+  "channel": "TEST",
+  "incomingStable": "v18.2.0",
+  "incomingStableCommit": "78c42d739bff64b0e4c8676cb341fee65c4a3e67",
+  "incomingStableFingerprint": "d867dc2b7c58be879d1fa15a3e27a7f67dbf03509d52f7925963c1c74758c7ed",
+  "clauses": [
+    "canonical_persistence_backend",
+    "desktop_sqlite_default",
+    "postgres_fail_closed",
+    "repository_schema_parity",
+    "bounded_transactions_pool",
+    "shared_market_processing",
+    "per_user_workspace_identity_isolation",
+    "warm_start_truth",
+    "hosted_runtime_health_readiness",
+    "db_pool_query_observability",
+    "backup_restore_migration_export",
+    "postgres_load_contention_recovery",
+    "adr_gdi_persistence_hardening",
+    "no_execution_no_formula_change",
+    "no_v184_scope_creep",
+    "mac_windows_native_targets_preserved"
+  ]
+}

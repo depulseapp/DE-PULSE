@@ -1,18 +1,30 @@
-# DE.PULSE v18.2.0 STABLE — Admin / Presence / Sessions
+# DE.PULSE v18.3.0 TEST — PostgreSQL / Hosted Shared State
+
+**Build:** `v18.3.0-test-postgresql-hosted-shared-state-20260814`  
+**Channel:** TEST  
+**Current Stable baseline:** v18.2.0  
+**Major v18 provenance anchor:** v17.5.1  
+**Patch predecessor:** v18.2.0 STABLE  
+**Application bundle:** `De-Pulse-v18.3.0-TEST.app`  
+**Runtime/config:** `PersonalMarketTerminal-v18.3.0-TEST`
+
+v18.3.0 adds PostgreSQL repository parity beneath the existing storage-agnostic `PersistenceBackend`, bounded hosted DB pooling/transactions, shared-state observability, and an explicit hosted browser/server runtime with separate liveness and persistence-backed readiness. PostgreSQL is an explicit hosted selection and fails closed when unavailable; it never silently falls back to a local store.
+
+Desktop macOS/Windows remain local-first and use the existing SQLite persistence path by default. Per-user watchlists/UI stay isolated while `processingStateLocked()` continues to form one deduplicated shared market-processing universe, so PostgreSQL does not multiply provider, scanner, Router, Rapid Move, Opportunity Radar or deterministic scoring work per user. Protected Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. Backup/restore, SQLite→PostgreSQL migration/export, hosted contention/load proof and final native/runtime certification remain qualification work before v18.3 can become Stable.
+
+## Immediate Stable predecessor — v18.2.0 STABLE — Admin / Presence / Sessions
 
 **Build:** `v18.2.0-stable-admin-presence-sessions-20260814`  
 **Channel:** STABLE  
-**Current Stable baseline:** v18.1.0  
+**Current Stable baseline:** v18.2.0  
 **Major v18 provenance anchor:** v17.5.1  
 **Patch predecessor:** v18.1.0 STABLE  
 **Application bundle:** `De-Pulse.app`  
 **Runtime/config:** `PersonalMarketTerminal`
 
-v18.2.0 extends the canonical `IdentityService` with role-aware user lifecycle operations, redacted user/session operational views, ACTIVE / IDLE / OFFLINE presence derived from persisted session truth, password-reset and session-revocation lifecycle, SSE revocation enforcement, and a compact privileged Settings administration surface. USER/DEMO do not see administration controls.
+v18.2.0 is the certified incoming Stable baseline. It extends the canonical `IdentityService` with role-aware user lifecycle operations, redacted user/session views, persisted-session presence truth, password reset/revocation lifecycle, SSE revocation enforcement, and privileged Settings administration while preserving v18.1 per-user isolation and shared intelligence.
 
-v18.1 per-user market-state ownership and the shared fetch-once/calculate-once intelligence core remain unchanged. Provider configuration, canonical market evidence, Router/Rapid Move, Opportunity Radar and deterministic scoring remain shared operational intelligence. True hosted PostgreSQL/browser architecture remains v18.3. Protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged.
-
-## Immediate Stable predecessor — v18.1.0 STABLE — Multi-User / My Market Symbols
+## Previous Stable — v18.1.0 STABLE — Multi-User / My Market Symbols
 
 **Build:** `v18.1.0-stable-multi-user-my-market-symbols-20260814`  
 **Channel:** STABLE  

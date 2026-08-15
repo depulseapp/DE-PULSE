@@ -22,18 +22,25 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logPath := filepath.Join(app.configDir, "De-Pulse.log")
-	if logFile, logErr := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600); logErr == nil {
-		defer logFile.Close()
-		log.SetOutput(io.MultiWriter(os.Stderr, logFile))
-		log.Printf("starting %s %s on %s/%s", appName, appVersion, runtime.GOOS, runtime.GOARCH)
-	} else {
-		log.Printf("unable to open application log %s: %v", logPath, logErr)
+	hosted := isHostedRuntime()
+	if !hosted {
+		logPath := filepath.Join(app.configDir, "De-Pulse.log")
+		if logFile, logErr := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600); logErr == nil {
+			defer logFile.Close()
+			log.SetOutput(io.MultiWriter(os.Stderr, logFile))
+		} else {
+			log.Printf("unable to open application log %s: %v", logPath, logErr)
+		}
 	}
-	if focusExisting(app.configDir) {
+	log.Printf("starting %s %s on %s/%s (%s)", appName, appVersion, runtime.GOOS, runtime.GOARCH, runtimeMode())
+	if !hosted && focusExisting(app.configDir) {
 		return
 	}
-	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	listenAddr := "127.0.0.1:0"
+	if hosted {
+		listenAddr = hostedListenAddress()
+	}
+	listener, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,17 +48,23 @@ func main() {
 	server := &http.Server{Handler: app.routes(), ReadHeaderTimeout: 10 * time.Second}
 	app.server = server
 	rawURL := fmt.Sprintf("http://127.0.0.1:%d/", port)
-	log.Printf("Local terminal: %s", rawURL)
+	if hosted {
+		log.Printf("Hosted HTTP listener: %s", listener.Addr().String())
+	} else {
+		log.Printf("Local terminal: %s", rawURL)
+	}
 	go func() {
 		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Printf("server error: %v", err)
 		}
 	}()
-	time.Sleep(120 * time.Millisecond)
-	exe, _ := os.Executable()
-	iconPath := filepath.Join(filepath.Dir(filepath.Dir(exe)), "Resources", "DePulse.icns")
-	windowPID := openAppWindow(rawURL, iconPath, app.configDir)
-	writeInstance(app.configDir, rawURL, windowPID)
+	if !hosted {
+		time.Sleep(120 * time.Millisecond)
+		exe, _ := os.Executable()
+		iconPath := filepath.Join(filepath.Dir(filepath.Dir(exe)), "Resources", "DePulse.icns")
+		windowPID := openAppWindow(rawURL, iconPath, app.configDir)
+		writeInstance(app.configDir, rawURL, windowPID)
+	}
 	if app.state.Settings.AutoStart {
 		go func() { time.Sleep(time.Second); _ = app.engine.Start() }()
 	}
@@ -62,7 +75,9 @@ func main() {
 	if app.persistence != nil {
 		_ = app.persistence.Close()
 	}
-	_ = os.Remove(instancePath(app.configDir))
+	if !hosted {
+		_ = os.Remove(instancePath(app.configDir))
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_ = server.Shutdown(ctx)

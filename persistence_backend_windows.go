@@ -54,7 +54,7 @@ type sqlitePersistenceBackend struct {
 	db   uintptr
 }
 
-func newPersistenceBackend(configDir string) PersistenceBackend {
+func newLocalPersistenceBackend(configDir string) PersistenceBackend {
 	return &sqlitePersistenceBackend{path: filepath.Join(configDir, "depulse-v17.db")}
 }
 

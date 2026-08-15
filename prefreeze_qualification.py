@@ -145,10 +145,10 @@ def main():
         ('v18_baseline', [py, 'v18_baseline_gate.py'], 30),
         ('release_identity', [py, 'release_identity.py', '--verify'], 30),
         ('adaptive_resume', [py, 'adaptive_resume_gate.py'], 30),
-        ('v182_scope', [py, 'v18_2_scope_gate.py'], 30),
-        ('v182_principal', [py, 'v18_2_principal_engineer_gate.py'], 30),
-        ('v181_scope', [py, 'v18_1_scope_gate.py'], 30),
-        ('v181_principal', [py, 'v18_1_principal_engineer_gate.py'], 30),
+        ('v183_scope', [py, 'v18_3_scope_gate.py'], 30),
+        ('v183_principal', [py, 'v18_3_principal_engineer_gate.py'], 30),
+        ('v182_principal_inherited', [py, 'v18_2_principal_engineer_gate.py'], 30),
+        ('v181_principal_inherited', [py, 'v18_1_principal_engineer_gate.py'], 30),
         ('v1805_ui', ['node', 'v18_0_5_renderer_test.js'], 60),
         ('fingerprint_portability', [py, 'source_fingerprint_portability_test.py'], 30),
         ('v18_typography', [py, 'v18_documentation_typography_gate.py'], 30),
@@ -164,6 +164,7 @@ def main():
     # Go/build-cache-heavy evidence stays in one controlled resource lane.
     medium_go = [
         ('go_vet', ['go', 'vet', './...'], 150),
+        ('v183_postgres_hosted_foundation', ['go', 'test', '-count=1', '-run', '^TestV183', './...'], 180),
         ('v182_admin_presence_sessions', ['go', 'test', '-count=1', '-run', '^TestV182', './...'], 180),
         ('v181_multi_user', ['go', 'test', '-count=1', '-run', '^TestV181', './...'], 180),
         ('v1806_router_shock', ['go', 'test', '-count=1', '-run', '^TestV1806', './...'], 120),

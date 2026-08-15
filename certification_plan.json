@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CERTIFICATION-PLAN-1",
-  "version": "18.2.0",
+  "version": "18.3.0",
   "checks": [
     {
       "id": "g0_release_environment",
@@ -27,7 +27,7 @@
     {
       "id": "g0_release_identity",
       "gate": "G0",
-      "label": "Canonical v18.0.6 TEST release identity",
+      "label": "Canonical v18.3.0 TEST release identity",
       "command": [
         "{python}",
         "release_identity.py",
@@ -37,12 +37,12 @@
       "blocking": true
     },
     {
-      "id": "g1_v1806_scope",
+      "id": "g1_v183_scope",
       "gate": "G1",
-      "label": "v18.0.6 Router / Rapid Move / Market Shock immutable scope",
+      "label": "v18.3 PostgreSQL / Hosted Shared State immutable scope",
       "command": [
         "{python}",
-        "v18_0_6_scope_gate.py"
+        "v18_3_scope_gate.py"
       ],
       "timeout_seconds": 30,
       "blocking": true
@@ -89,6 +89,21 @@
         "data_health_policy_gate.py"
       ],
       "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g7_v183_unit",
+      "gate": "G7",
+      "label": "v18.3 PostgreSQL/hosted default-build focused tests",
+      "command": [
+        "go",
+        "test",
+        "-count=1",
+        "-run",
+        "^TestV183",
+        "./..."
+      ],
+      "timeout_seconds": 180,
       "blocking": true
     },
     {
@@ -335,12 +350,12 @@
       "blocking": true
     },
     {
-      "id": "g10_v1806_principal_engineer",
+      "id": "g10_v183_principal_engineer",
       "gate": "G10",
-      "label": "v18.0.6 Principal Engineer Router/Rapid Move hardening review",
+      "label": "v18.3 Principal Engineer persistence/hosted architecture review",
       "command": [
         "{python}",
-        "v18_0_6_principal_engineer_gate.py"
+        "v18_3_principal_engineer_gate.py"
       ],
       "timeout_seconds": 60,
       "blocking": true

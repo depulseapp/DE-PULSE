@@ -1,5 +1,11 @@
 # DE.PULSE — User documentation
 
+## v18.3.0 TEST — PostgreSQL / hosted shared state foundation
+
+v18.3 TEST adds the hosted-state foundation without changing normal desktop storage. macOS and Windows desktop builds continue to use the existing local SQLite profile by default. A hosted build explicitly selects PostgreSQL; if that hosted database is unavailable or misconfigured, readiness fails instead of silently using a local substitute.
+
+Personal watchlists and UI state remain per-user. Market-data/provider/scanner/intelligence work remains one shared canonical pipeline across the deduplicated union of required symbols, so adding users does not create one market engine per account. `/api/health` remains liveness; `/api/ready` reports whether canonical identity and persistence are actually ready. This build is TEST until migration/export, backup/restore, contention/load, hosted runtime, and native release qualification are complete. The **No Execution** boundary is unchanged.
+
 ## v18.2.0 STABLE — Administration, Presence & Sessions
 
 The Stable channel uses the canonical `PersonalMarketTerminal` runtime/profile and preserves compatible prior Stable state; TEST-profile isolation is not used after promotion.

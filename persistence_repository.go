@@ -109,25 +109,56 @@ type PersistenceStoreStats struct {
 	StorageBytes      int64 `json:"storageBytes"`
 }
 
+type PersistencePoolDiagnostics struct {
+	MaxOpenConnections int   `json:"maxOpenConnections,omitempty"`
+	OpenConnections    int   `json:"openConnections,omitempty"`
+	InUse              int   `json:"inUse,omitempty"`
+	Idle               int   `json:"idle,omitempty"`
+	WaitCount          int64 `json:"waitCount,omitempty"`
+	WaitDurationMs     int64 `json:"waitDurationMs,omitempty"`
+	MaxIdleClosed      int64 `json:"maxIdleClosed,omitempty"`
+	MaxIdleTimeClosed  int64 `json:"maxIdleTimeClosed,omitempty"`
+	MaxLifetimeClosed  int64 `json:"maxLifetimeClosed,omitempty"`
+}
+
+type PersistenceDatabaseDiagnostics struct {
+	Operations              int64  `json:"operations,omitempty"`
+	Errors                  int64  `json:"errors,omitempty"`
+	SlowOperations          int64  `json:"slowOperations,omitempty"`
+	LastOperation           string `json:"lastOperation,omitempty"`
+	LastOperationDurationMs int64  `json:"lastOperationDurationMs,omitempty"`
+	MaxOperationDurationMs  int64  `json:"maxOperationDurationMs,omitempty"`
+}
+
+type persistencePoolObserver interface {
+	PoolDiagnostics() PersistencePoolDiagnostics
+}
+
+type persistenceDatabaseObserver interface {
+	DatabaseDiagnostics() PersistenceDatabaseDiagnostics
+}
+
 type PersistenceDiagnostics struct {
-	Backend                  string                `json:"backend"`
-	Capabilities             []string              `json:"capabilities,omitempty"`
-	Ready                    bool                  `json:"ready"`
-	QueueDepth               int                   `json:"queueDepth"`
-	OldestJobAgeMs           int64                 `json:"oldestJobAgeMs,omitempty"`
-	WriteBatches             int64                 `json:"writeBatches"`
-	RowsWritten              int64                 `json:"rowsWritten"`
-	WriteBatchesLastMin      int                   `json:"writeBatchesLastMinute"`
-	RowsWrittenLastMin       int64                 `json:"rowsWrittenLastMinute"`
-	CoalescedRequests        int64                 `json:"coalescedRequests"`
-	MaterialWritesSuppressed int64                 `json:"materialWritesSuppressed"`
-	RetryBatches             int64                 `json:"retryBatches"`
-	DroppedBatches           int64                 `json:"droppedBatches"`
-	Errors                   int64                 `json:"errors"`
-	LastError                string                `json:"lastError,omitempty"`
-	LastWriteAt              int64                 `json:"lastWriteAt,omitempty"`
-	WarmStartedQuotes        int                   `json:"warmStartedQuotes"`
-	Store                    PersistenceStoreStats `json:"store"`
+	Backend                  string                         `json:"backend"`
+	Capabilities             []string                       `json:"capabilities,omitempty"`
+	Ready                    bool                           `json:"ready"`
+	QueueDepth               int                            `json:"queueDepth"`
+	OldestJobAgeMs           int64                          `json:"oldestJobAgeMs,omitempty"`
+	WriteBatches             int64                          `json:"writeBatches"`
+	RowsWritten              int64                          `json:"rowsWritten"`
+	WriteBatchesLastMin      int                            `json:"writeBatchesLastMinute"`
+	RowsWrittenLastMin       int64                          `json:"rowsWrittenLastMinute"`
+	CoalescedRequests        int64                          `json:"coalescedRequests"`
+	MaterialWritesSuppressed int64                          `json:"materialWritesSuppressed"`
+	RetryBatches             int64                          `json:"retryBatches"`
+	DroppedBatches           int64                          `json:"droppedBatches"`
+	Errors                   int64                          `json:"errors"`
+	LastError                string                         `json:"lastError,omitempty"`
+	LastWriteAt              int64                          `json:"lastWriteAt,omitempty"`
+	WarmStartedQuotes        int                            `json:"warmStartedQuotes"`
+	Store                    PersistenceStoreStats          `json:"store"`
+	Pool                     PersistencePoolDiagnostics     `json:"pool,omitempty"`
+	Database                 PersistenceDatabaseDiagnostics `json:"database,omitempty"`
 }
 
 type persistenceWriteEvent struct {
@@ -153,7 +184,13 @@ type PersistenceManager struct {
 }
 
 func NewPersistenceManager(configDir string) *PersistenceManager {
-	backend := newPersistenceBackend(configDir)
+	return newPersistenceManagerWithBackend(newPersistenceBackend(configDir))
+}
+
+func newPersistenceManagerWithBackend(backend PersistenceBackend) *PersistenceManager {
+	if backend == nil {
+		backend = newUnavailablePersistenceBackend("persistence backend is nil")
+	}
 	p := &PersistenceManager{backend: backend, wake: make(chan struct{}, 1), stop: make(chan struct{}), done: make(chan struct{}), pendingQuotes: map[string]Quote{}, lastAcceptedQuotes: map[string]Quote{}}
 	p.diag.Backend = backend.Name()
 	p.diag.Capabilities = append([]string(nil), backend.Capabilities()...)
@@ -552,6 +589,12 @@ func (p *PersistenceManager) Diagnostics() PersistenceDiagnostics {
 	}
 	if !p.oldestPending.IsZero() {
 		d.OldestJobAgeMs = time.Since(p.oldestPending).Milliseconds()
+	}
+	if observer, ok := p.backend.(persistencePoolObserver); ok {
+		d.Pool = observer.PoolDiagnostics()
+	}
+	if observer, ok := p.backend.(persistenceDatabaseObserver); ok {
+		d.Database = observer.DatabaseDiagnostics()
 	}
 	return d
 }

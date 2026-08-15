@@ -1,5 +1,11 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.3.0 TEST — hosted persistence boundaries
+
+v18.3 is currently a TEST foundation, not yet a Stable hosted service. PostgreSQL repository parity, bounded pooling, hosted listener selection and liveness/readiness are implemented locally, but real PostgreSQL integration, migration/export, backup/restore, supported-load/contention limits, failure/recovery behavior and final macOS/Windows/hosted certification must pass before promotion.
+
+PostgreSQL is not treated as a cure-all for `DATA DEGRADED`: provider pressure, freshness, queues and DB pressure remain separate capability-level concerns. Hosted mode must fail readiness truthfully when its canonical database is unavailable and must not silently fall back to per-machine local state. Personal workspace isolation does not imply separate market engines; canonical market intelligence is intentionally shared and deduplicated. Broader commercial/data-rights/security hardening remains v18.4. The **No Execution** boundary is unchanged.
+
 ## v18.2.0 STABLE — administration / presence boundaries
 
 The promoted Stable build uses the canonical `PersonalMarketTerminal` profile; the separate v18.2 TEST profile remains historical and is not the Stable runtime target.

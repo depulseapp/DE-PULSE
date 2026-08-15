@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CICD-PLAN-2",
-  "version": "18.2.0",
+  "version": "18.3.0",
   "policy": {
     "light_max_concurrency": 4,
     "medium_max_concurrency": 2,
@@ -8,8 +8,8 @@
     "evidence_outside_source": true,
     "fingerprint_keyed": true,
     "immutable_rc_for_heavy": true,
-    "release_channel": "STABLE",
-    "baseline": "v18.1.0 Stable",
+    "release_channel": "TEST",
+    "baseline": "v18.2.0 Stable",
     "adaptive_release_learning": true,
     "learning_registry": "release_learning_registry.json",
     "learning_rule": "Adapt owning G0-G16 gate; do not append a new gate for lessons.",
@@ -34,7 +34,7 @@
     "resource_class_go_heavy_lane": 1,
     "resource_class_medium_other_max_parallel": 2,
     "current_major": "v18",
-    "current_slice": "v18.2-admin-presence-sessions",
+    "current_slice": "v18.3-postgresql-hosted-shared-state",
     "major_scope": "v18_major_scope.json",
     "delivery_slices": "v18_delivery_slices.json",
     "build_resume_protocol": "adaptive-governance/BUILD_RESUME_PROTOCOL.md",

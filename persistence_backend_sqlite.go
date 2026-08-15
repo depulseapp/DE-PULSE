@@ -28,7 +28,7 @@ type sqlitePersistenceBackend struct {
 	db   *C.sqlite3
 }
 
-func newPersistenceBackend(configDir string) PersistenceBackend {
+func newLocalPersistenceBackend(configDir string) PersistenceBackend {
 	return &sqlitePersistenceBackend{path: filepath.Join(configDir, "depulse-v17.db")}
 }
 func (b *sqlitePersistenceBackend) Name() string { return "sqlite" }

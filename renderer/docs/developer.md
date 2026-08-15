@@ -1,5 +1,13 @@
 # DE.PULSE — Developer documentation
 
+## v18.3.0 TEST — PostgreSQL / hosted shared-state architecture
+
+`PersistenceBackend` remains the single repository contract. Local desktop selection delegates to the existing SQLite/file fallback implementations; an explicit `postgres`/`postgresql` selection binds the hosted target to a PostgreSQL implementation under the `postgres` build tag. Requested PostgreSQL is fail-closed: a missing driver build or DSN produces an unavailable backend rather than local fallback.
+
+PostgreSQL mirrors SQLite migrations 1–4 for Global Symbol Registry, canonical quotes/history, evidence, decision lineage, outcomes, derived features, `IdentityPersistentState`, and `UserWorkspace`. It uses bounded `database/sql` pooling, transactional upserts, a migration advisory lock, query/pool diagnostics, 5-minute quote-history buckets and the existing 30-day history retention. Warm-start quotes are always relabelled `persisted`, never timeless LIVE truth.
+
+Hosted runtime selection is explicit and bypasses desktop instance-focus/native-window behavior while preserving the existing desktop path by default. `/api/health` is liveness; `/api/ready` requires canonical persistence plus IdentityService readiness. `processingStateLocked()` remains the one shared union owner, so hosted persistence cannot create per-user provider/scanner/scoring pipelines.
+
 ## v18.2.0 STABLE — Admin / presence / session architecture
 
 Stable promotion switches the canonical release identity to `STABLE` and runtime/config to `PersonalMarketTerminal`; the v18.2 TEST profile remains historical isolation logic only.

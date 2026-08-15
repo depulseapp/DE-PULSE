@@ -29,7 +29,7 @@ type filePersistenceData struct {
 	Workspaces map[string]UserWorkspace         `json:"workspaces,omitempty"`
 }
 
-func newPersistenceBackend(configDir string) PersistenceBackend {
+func newLocalPersistenceBackend(configDir string) PersistenceBackend {
 	return &filePersistenceBackend{path: filepath.Join(configDir, "persistent-intelligence-fallback.json")}
 }
 func (b *filePersistenceBackend) Name() string { return "file-fallback" }
