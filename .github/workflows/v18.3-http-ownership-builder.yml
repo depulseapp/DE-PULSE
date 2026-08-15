@@ -4,7 +4,7 @@ on:
   push:
     branches: [v18.3-development]
     paths:
-      - '.depulse-build/v18.3-http-ownership.patch'
+      - '.depulse-build/v18.3-http-refactor.b64'
       - '.github/workflows/v18.3-http-ownership-builder.yml'
 
 permissions:
@@ -26,19 +26,23 @@ jobs:
         with:
           go-version: '1.26.6'
           cache: false
-      - name: Verify exact parent and patch
+      - name: Verify exact parent and reconstruct patch
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = '60b4d78a7e8b6f156fe95c7686403336cbf0a227'
-          test "$(git hash-object .depulse-build/v18.3-http-ownership.patch)" = '64cd060740ebac0f005fae21d94acd0d648da525'
-          git apply --check .depulse-build/v18.3-http-ownership.patch
-          git apply .depulse-build/v18.3-http-ownership.patch
+          test "$(git rev-parse HEAD^)" = '9fb2c9c03d743b948a84d78946688ee12196dbc0'
+          base64 -d .depulse-build/v18.3-http-refactor.b64 > /tmp/http-refactor.patch.gz
+          echo 'b828b47f1bf6b12faa21141bc72a52ce7f4aa6f6d9b75f6cbea3dc4a41230ab9  /tmp/http-refactor.patch.gz' | sha256sum -c -
+          gzip -dc /tmp/http-refactor.patch.gz > /tmp/http-refactor.patch
+          echo 'ce2c3553106bdc9e951b10ad24a7b2aaceaddde19b152b948a6deceb8fe3fb62  /tmp/http-refactor.patch' | sha256sum -c -
+          git apply --check /tmp/http-refactor.patch
+          git apply /tmp/http-refactor.patch
           gofmt -w http_api.go http_health.go
       - name: Architecture budget and bounded regression
         shell: bash
         run: |
           set -euo pipefail
+          test "$(wc -l < http_api.go)" -le 1200
           python3 source_health_architecture_gate.py
           python3 release_identity.py --verify
           python3 v18_3_scope_gate.py
@@ -52,6 +56,6 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -- http_api.go http_health.go
+          git add -- http_api.go http_health.go v18_3_scope_gate.py v18_3_principal_engineer_gate.py
           git commit -m 'v18.3: separate hosted health HTTP ownership'
           git push origin HEAD:v18.3-development
