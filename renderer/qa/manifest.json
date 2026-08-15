@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "version": "18.3.0",
+      "date": "2026-08-14",
+      "status": "TEST",
+      "summary": "TEST PostgreSQL / Hosted Shared State: repository/migration parity, integrity-protected persistence archive and SQLite-to-PostgreSQL migration, bounded pooling/contention and outage recovery, hosted liveness/readiness, and source-responsibility hardening; G4-G10 same-candidate requalification remains pending before RC freeze.",
+      "file": "v18.3.0.txt",
+      "buildId": "v18.3.0-test-postgresql-hosted-shared-state-20260814",
+      "checkpoint": "v18.3.0-g0-g3-postgresql-hosted-shared-state.md"
+    },
+    {
       "version": "18.2.0",
       "date": "2026-08-14",
       "summary": "STABLE Admin / Presence / Sessions: canonical IdentityService lifecycle operations, redacted user/session visibility, session-derived ACTIVE/IDLE/OFFLINE presence, SSE revocation enforcement and privileged Settings administration; v18.1 workspaces/shared intelligence preserved.",
