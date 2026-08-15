@@ -18,27 +18,7 @@ import (
 
 func (a *Application) routes() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
-		writeJSON(w, 200, map[string]any{"ok": true, "version": appVersion, "buildId": buildID, "runtimeMode": runtimeMode()})
-	})
-	mux.HandleFunc("/api/ready", func(w http.ResponseWriter, r *http.Request) {
-		diagnostics := PersistenceDiagnostics{Backend: "disabled"}
-		if a.persistence != nil {
-			probeCtx, cancel := context.WithTimeout(r.Context(), 750*time.Millisecond)
-			a.persistence.ProbeReady(probeCtx)
-			cancel()
-			diagnostics = a.persistence.Diagnostics()
-		}
-		ready := a.identity != nil && diagnostics.Ready
-		status := http.StatusOK
-		if !ready {
-			status = http.StatusServiceUnavailable
-		}
-		writeJSON(w, status, map[string]any{
-			"ok": ready, "version": appVersion, "buildId": buildID, "runtimeMode": runtimeMode(),
-			"persistence": map[string]any{"backend": diagnostics.Backend, "ready": diagnostics.Ready, "healthState": diagnostics.HealthState, "lastHealthyAt": diagnostics.LastHealthyAt, "retryScheduled": diagnostics.RetryScheduled, "retryBackoffMs": diagnostics.RetryBackoffMs, "pool": diagnostics.Pool, "database": diagnostics.Database},
-		})
-	})
+	a.registerHealthRoutes(mux)
 	mux.HandleFunc("/api/auth/status", a.handleAuthStatus)
 	mux.HandleFunc("/api/auth/login", a.handleLogin)
 	mux.HandleFunc("/api/auth/logout", a.authAllowPasswordSetup(a.handleLogout))
