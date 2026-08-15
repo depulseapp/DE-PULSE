@@ -1,0 +1,96 @@
+name: DE.PULSE v18.3 One-Shot Candidate Builder
+
+on:
+  push:
+    branches: [v18.3-development]
+    paths:
+      - '.depulse-build/v18.3/**'
+      - '.github/workflows/v18.3-candidate-builder.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v18.3-candidate-builder
+  cancel-in-progress: false
+
+jobs:
+  build-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.6'
+          cache: false
+      - name: Verify exact staging base and patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_BASE='cbbdf2bdc1619146ee0a52c99a9d0e43cdbd1fcc'
+          EXPECTED_PATCH='d1f06140fd62c4bd367386b65c20fea466f612024b8cb04bb79f85026e64e9f2'
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_BASE"
+          mapfile -t staged < <(git diff --name-only "$EXPECTED_BASE" HEAD | sort)
+          printf '%s\n' "${staged[@]}"
+          test "${#staged[@]}" -eq 9
+          for f in "${staged[@]}"; do
+            case "$f" in
+              .depulse-build/v18.3/chunk0?.b64|.github/workflows/v18.3-candidate-builder.yml) ;;
+              *) echo "unexpected staging path: $f" >&2; exit 1 ;;
+            esac
+          done
+          cat .depulse-build/v18.3/chunk0?.b64 | base64 -d > /tmp/v18.3-candidate.patch
+          echo "$EXPECTED_PATCH  /tmp/v18.3-candidate.patch" | sha256sum -c -
+          git reset --hard "$EXPECTED_BASE"
+          git apply --check /tmp/v18.3-candidate.patch
+          git apply /tmp/v18.3-candidate.patch
+      - name: Canonicalize dependency and Go source
+        shell: bash
+        run: |
+          set -euo pipefail
+          go mod tidy
+          gofmt -w app_bootstrap.go http_api.go main.go persistence_backend_fallback.go persistence_backend_postgres.go persistence_backend_postgres_stub.go persistence_backend_select.go persistence_backend_sqlite.go persistence_backend_windows.go persistence_repository.go runtime_environment.go v18_3_foundation_test.go v18_3_postgres_test.go v18_test_profile.go
+      - name: Bound candidate delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import subprocess
+          expected = {
+            '.github/workflows/v18.3-dev-ci.yml','README.md','VERSION.txt','app_bootstrap.go','certification_plan.json','ci_pipeline_plan.json','go.mod','go.sum','http_api.go','main.go','persistence_backend_fallback.go','persistence_backend_postgres.go','persistence_backend_postgres_stub.go','persistence_backend_select.go','persistence_backend_sqlite.go','persistence_backend_windows.go','persistence_repository.go','prefreeze_qualification.py','release/v18.3.0/G0-EXACT-BASELINE.md','release/v18.3.0/G1-IMMUTABLE-SCOPE.md','release/v18.3.0/G2-ARCHITECTURE-DATA-UTILITY.md','release/v18.3.0/G3-DESIGN-DEPENDENCY-READINESS.md','release_identity.json','renderer/docs/developer.md','renderer/docs/limitations.md','renderer/docs/user.md','renderer/index.html','renderer/renderer.js','runtime_environment.go','v18_3_foundation_test.go','v18_3_g0_g3_contract.json','v18_3_postgres_test.go','v18_3_principal_engineer_gate.py','v18_3_scope.json','v18_3_scope_gate.py','v18_test_profile.go'
+          }
+          got = set(subprocess.check_output(['git','status','--porcelain=v1'], text=True).splitlines())
+          paths = {line[3:] for line in got}
+          if paths != expected:
+              print('missing', sorted(expected-paths))
+              print('extra', sorted(paths-expected))
+              raise SystemExit(1)
+          print(f'bounded candidate paths: {len(paths)}')
+          PY
+      - name: G0-G3 and focused qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python release_identity.py --verify
+          python v18_3_scope_gate.py
+          python v18_3_principal_engineer_gate.py
+          go test -count=1 -run '^TestV183' ./...
+          go test -count=1 ./...
+          go vet ./...
+          go test -tags postgres -run '^$' ./...
+          go vet -tags postgres ./...
+      - name: Freeze source identity and publish candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python source_fingerprint.py > /tmp/fingerprint.txt
+          cat /tmp/fingerprint.txt
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- .github/workflows/v18.3-dev-ci.yml README.md VERSION.txt app_bootstrap.go certification_plan.json ci_pipeline_plan.json go.mod go.sum http_api.go main.go persistence_backend_fallback.go persistence_backend_postgres.go persistence_backend_postgres_stub.go persistence_backend_select.go persistence_backend_sqlite.go persistence_backend_windows.go persistence_repository.go prefreeze_qualification.py release/v18.3.0/G0-EXACT-BASELINE.md release/v18.3.0/G1-IMMUTABLE-SCOPE.md release/v18.3.0/G2-ARCHITECTURE-DATA-UTILITY.md release/v18.3.0/G3-DESIGN-DEPENDENCY-READINESS.md release_identity.json renderer/docs/developer.md renderer/docs/limitations.md renderer/docs/user.md renderer/index.html renderer/renderer.js runtime_environment.go v18_3_foundation_test.go v18_3_g0_g3_contract.json v18_3_postgres_test.go v18_3_principal_engineer_gate.py v18_3_scope.json v18_3_scope_gate.py v18_test_profile.go
+          test -z "$(git status --porcelain --untracked-files=all | grep -v '^M  \|^A  ' || true)"
+          git commit -m 'v18.3: PostgreSQL hosted shared-state foundation'
+          git push origin HEAD:v18.3-development
