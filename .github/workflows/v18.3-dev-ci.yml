@@ -32,7 +32,7 @@ jobs:
           python3 v18_3_scope_gate.py
       - name: Canonical formatting is clean
         run: |
-          files="app_bootstrap.go v18_test_profile.go runtime_environment.go main.go http_api.go persistence_repository.go persistence_backend_select.go persistence_backend_postgres_stub.go persistence_backend_postgres.go persistence_backend_sqlite.go persistence_backend_fallback.go persistence_backend_windows.go v18_3_foundation_test.go v18_3_postgres_test.go"
+          files="app_bootstrap.go v18_test_profile.go runtime_environment.go main.go http_api.go persistence_repository.go persistence_archive.go persistence_backend_select.go persistence_backend_postgres_stub.go persistence_backend_postgres.go persistence_backend_sqlite.go persistence_backend_fallback.go persistence_backend_windows.go v18_3_foundation_test.go v18_3_postgres_test.go"
           gofmt -d $files | tee /tmp/gofmt.diff
           test ! -s /tmp/gofmt.diff
       - name: v18.3 focused default-build tests
@@ -41,6 +41,8 @@ jobs:
         run: go test -count=1 ./...
       - name: Vet default desktop build
         run: go vet ./...
+      - name: Compile Windows x64 persistence/archive path
+        run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go test -c -o /tmp/depulse-v183-windows.test .
       - name: Protected deterministic source unchanged from v18.2 Stable
         run: git diff --exit-code v18.2.0-stable...HEAD -- scanner.go preparation_types_liquidity.go validation_learning.go signal_validation.go
 
@@ -73,7 +75,7 @@ jobs:
           cache: false
       - name: Fetch hosted PostgreSQL dependency
         run: go mod download
-      - name: Real PostgreSQL repository/migration/concurrency tests
+      - name: Real PostgreSQL repository/migration/archive/contention tests
         run: go test -tags postgres -count=1 -run '^TestV183Postgres' ./...
       - name: Vet hosted PostgreSQL build
         run: go vet -tags postgres ./...
