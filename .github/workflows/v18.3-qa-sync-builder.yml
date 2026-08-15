@@ -1,0 +1,51 @@
+name: DE.PULSE v18.3 QA Sync Builder
+
+on:
+  push:
+    branches: [v18.3-development]
+    paths: ['.github/workflows/v18.3-qa-sync-builder.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Preserve manifest schema and add v18.3 QA checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('renderer/qa/manifest.json')
+          obj=json.loads(p.read_text())
+          assert obj.get('schema') == 'DE.PULSE-QA-MANIFEST-1'
+          assert isinstance(obj.get('releases'), list) and obj['releases']
+          entry={
+            'version':'18.3.0','date':'2026-08-14','status':'TEST',
+            'summary':'TEST PostgreSQL / Hosted Shared State: repository/migration parity, integrity-protected persistence archive and SQLite-to-PostgreSQL migration, bounded pooling/contention and outage recovery, hosted liveness/readiness, and source-responsibility hardening; G4-G10 same-candidate requalification remains pending before RC freeze.',
+            'file':'v18.3.0.txt','buildId':'v18.3.0-test-postgresql-hosted-shared-state-20260814',
+            'checkpoint':'v18.3.0-g0-g3-postgresql-hosted-shared-state.md'
+          }
+          obj['releases']=[entry]+[r for r in obj['releases'] if r.get('version')!='18.3.0']
+          p.write_text(json.dumps(obj,indent=2)+'\n')
+          Path('renderer/qa/v18.3.0.txt').write_text('''DE.PULSE v18.3.0 TEST — PostgreSQL / Hosted Shared State\nDate: 2026-08-14\nStatus: TEST — G0-G3 PASS; G4-G10 same-candidate requalification pending\n\nCurrent scope\n- PostgreSQL repository parity beneath the canonical PersistenceBackend.\n- Desktop macOS/Windows remain SQLite/local by default; hosted PostgreSQL selection is explicit and fail-closed.\n- Dedicated-session migration locking, bounded pooling and DB/query/pool diagnostics.\n- Hosted browser/server runtime with separate liveness and persistence-backed readiness.\n- Integrity-protected private persistence archive, safe backup/restore, and SQLite→PostgreSQL migration continuity.\n- Bounded persistence pressure, outage retry/recovery hysteresis, and truthful degraded readiness.\n- Per-user workspace isolation remains preserved with one shared deduplicated market-processing universe.\n- Protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary remain unchanged.\n\nEvidence to date\n- Frozen G0-G3 scope/architecture contract: PASS (16/16 scope clauses).\n- Earlier PostgreSQL 17 repository/migration/archive/contention and hosted-readiness qualification: PASS as delta evidence; final same-candidate G4-G10 evidence is still required after source-health ownership cleanup.\n- Source-health issue resolved: hosted health/readiness HTTP ownership moved to http_health.go and http_api.go returned under the permanent 1,200-line responsibility ceiling; focused/full/vet qualification passed before publication.\n\nNot yet claimed\n- v18.3 is not Stable.\n- G10 source fingerprint is not yet frozen.\n- G11-G16 release/native promotion evidence remains pending.\n\nNo execution capability was added.\n''')
+          Path('renderer/qa/v18.3.0-g0-g3-postgresql-hosted-shared-state.md').write_text('''# v18.3.0 G0-G3 — PostgreSQL / Hosted Shared State\n\nIncoming Stable: v18.2.0 (`v18.2.0-stable` @ `78c42d739bff64b0e4c8676cb341fee65c4a3e67`). The frozen v18.3 scope adds PostgreSQL repository parity and hosted shared state beneath the canonical `PersistenceBackend`, preserves desktop SQLite/local defaults, per-user workspace isolation, one shared canonical market-processing universe, protected deterministic Day/Swing/Long formulas, and the permanent No Execution Boundary. G4-G10 same-candidate requalification remains required before RC freeze.\n''')
+          PY
+          python3 documentation_governance_gate.py
+      - name: Commit QA sync only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- renderer/qa/manifest.json renderer/qa/v18.3.0.txt renderer/qa/v18.3.0-g0-g3-postgresql-hosted-shared-state.md
+          git diff --cached --check
+          git commit -m 'docs: add v18.3 TEST QA checkpoint'
+          git push origin HEAD:v18.3-development
