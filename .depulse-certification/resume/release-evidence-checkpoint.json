@@ -19,8 +19,8 @@
     "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
     "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
-  "candidateSourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
-  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. candidateSourceCommit identifies the v18.5.1 development-complete candidate; later metadata-only checkpoint synchronization does not advance its product fingerprint.",
+  "candidateSourceCommit": "5b74166fbd7d66284becbaa7186d56d87ab1c8fa",
+  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. candidateSourceCommit identifies the latest v18.5.1 product/tooling/documentation candidate; later metadata-only ledger updates do not advance its product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "evidence": {
@@ -32,17 +32,27 @@
     },
     "v18.5.1-Development-Complete": {
       "status": "IMPLEMENTED_AWAITING_REQUALIFICATION",
-      "candidateSourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+      "candidateSourceCommit": "5b74166fbd7d66284becbaa7186d56d87ab1c8fa",
       "developmentEvidence": "release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json",
-      "requiredDecision": "One new exact-SHA G0-G10 checkpoint must pass after resume metadata synchronization; development evidence alone is not certification."
+      "documentationImpact": "release/v18.5.1/DOCUMENTATION-IMPACT.md",
+      "qaManifestDelta": "release/v18.5.1/QA-MANIFEST-DELTA.json",
+      "requiredDecision": "One exact-SHA G0-G10 checkpoint must pass after the completed documentation/provenance batch; development evidence alone is not certification."
     },
     "v18.5.1-Qualification-Run-32081605253": {
       "status": "FAILED_EARLY_CONTROL_PLANE",
       "sourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
       "passed": ["checkpoint-contract", "G0/G1 baseline-identity-frozen-scope", "G1 ten-ID scope", "renderer cheap lane"],
       "failed": "adaptive_resume_gate",
-      "reason": "build-checkpoint.json and release-evidence-checkpoint.json still identified v18.5.0/v18.5-development; downstream Go/browser/G6-G9 were correctly skipped.",
-      "disposition": "Fix both stale control-plane records as one batch, then perform one requalification checkpoint."
+      "reason": "Resume/evidence checkpoints still identified v18.5.0/v18.5-development.",
+      "disposition": "Paired resume metadata synchronized before Checkpoint 02."
+    },
+    "v18.5.1-Qualification-Run-32082204255": {
+      "status": "FAILED_EARLY_DOCUMENTATION_GOVERNANCE",
+      "sourceCommit": "11116626d9f5e49b1ef73054d344dab239041dc7",
+      "passed": ["checkpoint-contract", "G0/G1 baseline-identity-frozen-scope", "G1 ten-ID scope", "release identity", "adaptive resume", "source architecture", "data utility", "renderer cheap lane"],
+      "failed": "documentation_governance_gate",
+      "reason": "Inherited gate expected current TEST candidate to be duplicated into three long-lived manuals/README/QA manifest and exposed incorrect v18 major provenance-anchor semantics.",
+      "disposition": "Restored stable_baseline=v17.5.1 / previous_stable=v18.5.0 and added strict TEST/RC Documentation Impact + QA manifest delta while retaining all historical manual/manifest checks."
     },
     "v18.5.1-G11-G15": {
       "status": "NOT_STARTED_BLOCKED_ON_G10",
@@ -58,16 +68,18 @@
     }
   },
   "supersededOrFailedEvidence": [
-    {"runId":32081605253,"classification":"V18_5_1_CHECKPOINT_IDENTITY_DISCOVERY","reason":"Cheap gate correctly stopped stale v18.5.0 resume metadata before expensive qualification; no product-code failure was observed in that run."}
+    {"runId":32081605253,"classification":"V18_5_1_CHECKPOINT_IDENTITY_DISCOVERY","reason":"Cheap gate stopped stale resume metadata before expensive lanes."},
+    {"runId":32082204255,"classification":"V18_5_1_DOCUMENTATION_SYNC_DISCOVERY","reason":"Cheap gate stopped current-candidate documentation/provenance drift before Go/browser/PostgreSQL/performance/native lanes."}
   ],
   "aiplcLessons": [
-    "Checkpoint-based CI prevented stale governance identity from consuming PostgreSQL/performance/native lanes.",
-    "Development source/tests are accumulated before deliberate qualification; failures are batched before a single requalification.",
-    "Resume and release-evidence metadata must advance with canonical release identity before checkpoint qualification.",
-    "Exact-source/fingerprint binding remains mandatory even when metadata files are excluded from the product fingerprint.",
+    "Checkpoint-based CI prevented two control-plane/documentation issues from consuming expensive deeper lanes.",
+    "Development source/tests are accumulated before deliberate qualification; failures are batched before requalification.",
+    "Resume/release evidence metadata must advance with canonical release identity.",
+    "Major-family provenance anchor and immediate Stable predecessor are distinct identity concepts.",
+    "TEST/RC patch documentation can be represented by a strict delta while promoted/manual history remains blocking and intact.",
     "CI efficiency may remove redundant executions but never PostgreSQL, security, race/randomized, browser, performance or native-runtime evidence.",
     "Stable delivery requires actual macOS arm64 and Windows x64 runnable artifacts and G14/G15 evidence, not a tag or source-only PASS."
   ],
-  "nextRequiredEvidence": "Fresh exact-SHA v18.5.1 G0-G10 after this paired checkpoint synchronization; then immutable G11 RC and full G12-G15 native/release certification.",
-  "updatedAt": "2026-08-17T23:50:00Z"
+  "nextRequiredEvidence": "Fresh exact-SHA v18.5.1 G0-G10 after the completed documentation/provenance batch; then immutable G11 RC and full G12-G15 native/release certification.",
+  "updatedAt": "2026-08-17T23:58:00Z"
 }
