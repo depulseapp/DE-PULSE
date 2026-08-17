@@ -30,8 +30,16 @@ v18.5.1 is no longer accepted as structure-only equivalence work. It must preser
 4. **NAV-18.5.1-001:** live/SSE refresh can unexpectedly jump a user from mid-section to the page top or lose interaction state.
 5. **RESEARCH-v15.1.0-17-19-REOPENED:** approved Research ticker input, freshness placement and responsive top-area requirements require fresh closure, including truthful labels, action semantics, disabled states and evidence recovery.
 6. **IMPL-18-TRADEINSIGHT-001:** the committed TradeInsight SHADOW / SECONDARY workstream is absent from current source and must be implemented through the canonical Smart Router with entitlement, rights, provenance, tests and package proof.
+7. **IMPL-18-UTILITY-001:** Scanner and Opportunity Radar must use one bounded/coalesced snapshot acquisition owner rather than independent equivalent Alpaca fetch paths.
+8. **IMPL-18-UTILITY-002:** Pre-Market and Market Open must be governed by one Session Intelligence Coordinator.
+9. **IMPL-18-UTILITY-003:** Market Activity Seeds must cease to be a prominent normal-user Discovery surface.
+10. **IMPL-18-UTILITY-004:** legacy standalone News/Earnings/Filings routes must retire or safely redirect to canonical evidence homes.
+11. **IMPL-18-DOC-001:** role-aware documentation composition and the Documentation Impact Manifest must be implemented and enforced.
+12. **IMPL-17-DEPS-001:** the External Dependency & Provider Readiness checkpoint and User Action Required register must be implemented over the existing capability/rights foundations.
+13. **VERSION-18.5.1-002:** obsolete active release strings in setup, renderer, runtime and TEST-profile paths must be removed or explicitly classified and tested.
+14. **UTILITY-v18.3-CARRY-FORWARD:** all 13 mandatory `functionality_utility_remediation.json` records must receive current implementation/evidence disposition; none may inherit closure from plan presence.
 
-The release must reconstruct and reconcile all 48 inherited requirements, all 20 frozen v17 items, every v18 major workstream and v18.0–v18.5 release entry, accepted conversational commitments and defects against current source and actual packaged behavior. TradeInsight is confirmed missing and is no longer an undecided verification item.
+The release must reconstruct and reconcile all 48 inherited requirements, all 20 frozen v17 items, every v18 major workstream and v18.0–v18.5 release entry, all 13 orphaned functionality/utility remediations, accepted conversational commitments and defects against current source and actual packaged behavior. TradeInsight plus six additional implementation-gap groups are confirmed missing; six other escaped defect groups are reopened.
 
 These items are **CURRENT_RELEASE_BLOCKER**. A repository move may not hide, defer or claim equivalence for them. Each item requires:
 
@@ -258,7 +266,8 @@ v18.5.1 is complete only when:
 8. no approved product functionality, decision semantics or protected boundary changed;
 9. actual macOS Apple Silicon and Windows x64 artifacts pass runtime/provenance audit and are published in the GitHub Release;
 10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root;
-11. all five escaped-defect groups pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
-12. TradeInsight SHADOW integration passes canonical-router, rights/provenance, bounded fixture/live-smoke and actual-package qualification;
-13. the full inherited + v17 + v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
-14. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
+11. all six escaped-defect groups pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
+12. all seven confirmed implementation-gap groups pass their canonical-owner, security/rights, behavioral, regression and actual-package qualification;
+13. all 13 orphaned functionality/utility remediation records have a fresh evidence-backed final disposition;
+14. the full inherited + v17 + v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
+15. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
