@@ -1,200 +1,237 @@
-# DE.PULSE v18.5.1 — Repository Archetype Refactor Build Plan
+# DE.PULSE v18.5.1 — 10/10 Repository Archetype Closure Build Plan
 
-**Release type:** behavior-preserving patch / developer-proofing  
-**Dependency:** starts only after v18.5.0 Stable promotion  
-**Product scope:** no new user-facing capability; no trading/execution scope; no decision-semantic changes.
+**Release type:** behavior-preserving repository/source-architecture closure patch  
+**Dependency:** starts only after v18.5.0 Stable promotion and native delivery  
+**Qualification standard:** closure-grade G0–G16; not a lightweight cleanup  
+**Product scope:** no new user-facing capability; no execution scope; no decision-semantic changes.
 
 ## Mission
 
-Transform the current flat/mixed repository into a predictable archetype-style structure so a developer can navigate DE.PULSE by ownership rather than by scanning hundreds of root filenames.
+Transform the current flat/mixed repository into a predictable, Maven-archetype-like structure so an engineer can navigate DE.PULSE by responsibility and package ownership rather than by scanning hundreds of root filenames.
 
-This patch implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`.
+This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md` and is accepted only at **10/10**.
 
-## Non-negotiable rule
+## Non-negotiable rules
 
-**Structure changes must not change product behavior.**
+1. **Structure changes must not change product behavior.**
+2. Every moved/deleted file must have an inventoried disposition and dependency/path analysis.
+3. Do not export or duplicate Go symbols merely to make package moves compile.
+4. Preserve canonical shared state, fetch-once/calculate-once, Smart Provider Router v2, bounded work/backpressure, truthful ADR-GDI degradation, user isolation, US Equities Processing and No Execution boundaries.
+5. A structural move that exposes or requires a semantic defect fix is treated as a separate change and requalified from the earliest invalidated gate.
+6. v18.5.1 must complete the canonical G0–G16 process and native runtime delivery despite being a patch version.
 
-If a move exposes a real defect or requires behavior/semantic modification, that change is separated, documented, and requalified from the earliest affected gate.
+## Target archetype
+
+```text
+DE-PULSE/
+├── cmd/
+│   └── depulse/                    # executable composition / entry point
+├── internal/
+│   ├── app/                        # application orchestration/state
+│   ├── domain/                     # domain models/invariants
+│   ├── intelligence/               # research/adaptive/decision support
+│   ├── market/                     # market state/scanners/readiness/catalysts
+│   ├── providers/                  # provider adapters/router/subscriptions
+│   ├── persistence/                # repository/database/PostgreSQL/SQLite
+│   ├── runtime/                    # lifecycle/jobs/load/backpressure
+│   ├── security/                   # identity/auth/RBAC/session/security
+│   └── transport/                  # HTTP/API/DTO boundaries
+├── renderer/                       # desktop/web renderer assets
+├── tests/
+│   ├── integration/
+│   ├── acceptance/
+│   ├── ui/
+│   ├── performance/
+│   ├── degradation/
+│   └── fixtures/
+├── tools/
+│   ├── gates/
+│   ├── ci/
+│   ├── release/
+│   └── dev/
+├── config/
+│   ├── policies/
+│   └── schemas/
+├── docs/
+│   ├── architecture/
+│   ├── governance/
+│   ├── operations/
+│   └── releases/
+├── assets/
+│   └── reference/
+├── release/<version>/
+├── .depulse-certification/
+├── .github/workflows/              # active workflows only
+├── README.md
+├── VERSION.txt
+├── go.mod
+└── go.sum
+```
 
 ## Workstreams
 
-### 1. Inventory + dependency graph
+### 1. Machine-readable inventory + dependency graph
 
-Generate a machine-readable inventory of every tracked file containing:
+Inventory every tracked file with:
 
 - current path;
-- category;
-- owning subsystem;
+- category and owning subsystem;
 - production/test/tool/config/doc/release classification;
-- direct callers/importers/path references where determinable;
-- disposition: KEEP / MOVE / DELETE / REVIEW;
+- callers/importers/path references where determinable;
+- disposition `KEEP / MOVE / DELETE / REVIEW`;
 - target path;
-- risk class.
+- risk class;
+- verification owner.
 
-No file moves until path-dependent callers have been enumerated.
+No broad move group begins until path-dependent callers have been enumerated.
 
-### 2. Remove dead repository clutter
+### 2. Dead/duplicate repository hygiene
 
-Delete from the active branch after evidence/dependency verification:
+After dependency verification, remove from the active branch:
 
 - completed one-shot/discovery workflows;
 - version-specific workflows superseded by current canonical workflows;
-- generated/transient artifacts accidentally committed;
+- generated/transient files accidentally tracked;
 - obsolete duplicate gates/scripts;
 - dead reference outputs no longer used by docs/tests/runtime.
 
-Git history and immutable Stable tags remain the historical recovery mechanism.
+Git history and immutable Stable tags are the historical recovery mechanism. Uncertain items may temporarily enter `archive/to-review/<date>/` with a disposition manifest; this is not a permanent dumping ground.
 
-Uncertain items go temporarily to `archive/to-review/<date>/` with a disposition manifest; the folder is not a permanent dumping ground.
+### 3. Deterministic non-Go relocation first
 
-### 3. Move non-Go artifacts first
+Move lower-risk categories before changing Go package boundaries:
 
-Preferred destinations:
+- qualification gates/helpers → `tools/gates/` or `tools/ci/`;
+- identity/package/provenance helpers → `tools/release/`;
+- acceptance/UI harnesses → `tests/acceptance/` / `tests/ui/`;
+- performance/degradation harnesses → matching `tests/` subtree;
+- policy/registry JSON → `config/policies/`;
+- reference screenshots/media → `assets/reference/`;
+- long-lived documentation/governance → `docs/` hierarchy where compatible.
 
-```text
-tools/gates/
-tools/ci/
-tools/release/
-tools/dev/
-tests/integration/
-tests/acceptance/
-tests/ui/
-tests/performance/
-tests/degradation/
-tests/fixtures/
-config/policies/
-config/schemas/
-docs/architecture/
-docs/governance/
-docs/operations/
-docs/releases/
-assets/reference/
-```
-
-All CI/workflow/script references are changed atomically with each move group.
+Every caller/workflow path change lands atomically with the move that requires it.
 
 ### 4. Go package decomposition
 
-Move away from the broad root `package main` layout toward:
+After non-Go relocation is green, migrate the broad root `package main` ownership into `cmd/depulse` + focused `internal/...` packages.
 
-```text
-cmd/depulse/
-internal/app/
-internal/domain/
-internal/intelligence/
-internal/market/
-internal/providers/
-internal/persistence/
-internal/runtime/
-internal/security/
-internal/transport/
-```
+Rules:
 
-Decomposition rules:
+- boundaries follow ownership and invariants, not arbitrary file counts;
+- dependency direction must be documented and cycle-free;
+- interfaces stay narrow;
+- provider, persistence, intelligence, runtime/backpressure, security and transport ownership remain explicit;
+- UI/transport DTO concerns stay out of core market/intelligence packages where practical;
+- no duplicate canonical state, router, scanner or provider ownership is introduced.
 
-- package boundaries follow ownership/invariants;
-- avoid circular dependencies;
-- keep interfaces narrow;
-- do not export symbols merely to make a move compile when a cleaner ownership boundary is possible;
-- preserve canonical shared state, provider routing, persistence ownership, fetch-once/calculate-once, bounded work/backpressure, and truthful degradation semantics;
-- preserve user isolation and hosted/native parity;
-- keep UI/transport DTO concerns out of core market/intelligence packages where practical.
-
-### 5. Developer experience
+### 5. Developer experience and anti-regression
 
 Add/update:
 
-- concise root `README` developer map;
+- concise root README developer map;
 - architecture/module ownership diagram;
-- build/test commands;
-- package dependency rules;
-- repository structure gate preventing renewed root sprawl;
+- dependency-direction diagram;
+- build/test/certification/package commands;
 - active-workflow manifest;
-- CODEOWNERS or ownership guidance if useful later.
+- repository-structure gate preventing renewed root sprawl;
+- path-reference gate preventing broken script/workflow links;
+- package ownership guidance / CODEOWNERS where useful.
 
-## Test strategy — heavy qualification required
+## 10/10 Repository Archetype acceptance rubric
 
-The refactor must pass all applicable existing qualification plus explicit structural-regression checks.
+**All ten dimensions must independently PASS. There is no averaging. A 9/10 result blocks v18.5.1 Stable.**
 
-### Static / compile
+| # | Dimension | 10/10 requirement |
+|---|---|---|
+| 1 | Root clarity | Root contains only approved entry-point metadata/directories; no test/gate/config/version clutter. |
+| 2 | Production ownership | Runtime code is located by subsystem ownership and a new engineer can identify the owner without filename archaeology. |
+| 3 | Package/dependency direction | `cmd` composition and `internal` dependencies are documented, cycle-free and architecture-gated. |
+| 4 | Test organization | Unit/integration/acceptance/UI/performance/degradation evidence has predictable homes and no broken discovery. |
+| 5 | Tool/CI organization | Gates, CI orchestration, release tooling and dev utilities are separated; active workflows contain no historical accident. |
+| 6 | Config/policy organization | Policies, registries and schemas are centralized, typed/validated where applicable, and not scattered through root. |
+| 7 | Docs/governance navigation | Architecture, operations, governance and release docs have an understandable index and diagrams where useful. |
+| 8 | Workflow hygiene | `.github/workflows` contains only current purposeful workflows; one-shot workflows retire automatically/explicitly after use. |
+| 9 | Dead/duplicate artifact hygiene | No known dead/duplicate file remains without a documented retention reason; REVIEW items are bounded and manifested. |
+| 10 | Build/test/release discoverability | A developer can find how to build, test, certify, package and recover a release within minutes; structure/path gates enforce this continuously. |
 
-- repository structure gate;
-- broken-path/reference scan;
-- `gofmt`;
-- `go vet ./...`;
+Each dimension must have machine-verifiable evidence where technically possible and explicit human-readable evidence otherwise. “Looks cleaner” is not evidence.
+
+## Closure-grade test strategy
+
+v18.5.1 receives the same seriousness as a Major Closure because repository/package movement can silently invalidate build, test, runtime and release assumptions.
+
+### G0–G4 · baseline / architecture / source integrity
+
+- exact immutable v18.5.0 Stable baseline;
+- frozen no-feature structural scope;
+- complete inventory/dependency graph;
+- repository structure + path-reference gates;
+- `gofmt` and `go vet ./...`;
+- source-quality/developer-proofing gates;
+- bounded-diff review proving structural intent.
+
+### G5–G10 · behavioral equivalence / integration / performance / security / UI
+
 - full `go test -count=1 ./...`;
-- CGO-disabled full test;
-- Windows x64 compile;
-- macOS Apple Silicon compile/package.
-
-### Concurrency / performance
-
-- focused and bounded race detector;
-- v16.11+ performance/capacity gates;
-- queue/backpressure/load-shedding suites;
-- duplicate-work/single-flight assertions;
-- multi-user/multi-symbol fanout;
-- background-job pressure;
-- long-running stability where existing harness permits.
-
-### Data / persistence / degradation
-
-- real PostgreSQL integration using ephemeral CI PostgreSQL;
-- restart/warm-start persistence;
-- PostgreSQL pressure/unavailability;
-- provider failure/rate limit/fallback;
-- stale evidence/source disagreement;
-- degradation blast-radius containment;
-- recovery hysteresis;
-- truthful UNKNOWN/ABSTAIN/readiness.
-
-### Product regression
-
+- selector-existence guards before every focused `go test -run`;
+- CGO-disabled fallback;
+- focused and bounded/full race coverage appropriate to package moves;
+- real ephemeral PostgreSQL integration with mandatory tests failing if skipped;
+- SQLite desktop continuity;
+- ADR-GDI provider failure/rate limit/stale evidence/source disagreement/blast radius/backpressure/load shedding/fanout/restart/recovery hysteresis/UNKNOWN-ABSTAIN truth;
+- v16.11+ performance/capacity gates and supported operating envelopes;
 - deterministic equivalence;
-- functional workflow;
-- Professional Trader/Investor acceptance;
-- Extreme-30;
 - randomized test order;
-- browser HTTP/runtime;
-- responsive/UI/renderer/accessibility;
-- approved-scope traceability;
-- security runtime/docs;
-- data utility/architecture/adaptive-governance gates.
+- Extreme-30;
+- functional HTTP workflow;
+- Professional Trader/Investor acceptance;
+- renderer/browser/responsive/accessibility/role visibility regression;
+- security/auth/session/adversarial authorization/provider-rights fail-closed qualification;
+- approved-scope traceability and adaptive-governance gates.
 
-### Native / provenance
+### G11–G15 · immutable RC / full certification / native runtime / release assurance
 
-- macOS Apple Silicon actual package/runtime audit;
-- Windows x64 actual package/runtime audit;
-- source fingerprint and provenance;
-- exact artifact SHA manifest;
-- GitHub Release containing runnable macOS + Windows + source + checksums + certification evidence.
+- immutable exact-source RC and source fingerprint;
+- fresh full certification after freeze;
+- macOS Apple Silicon package build and **actual runtime audit**;
+- Windows x64 package build and **actual runtime audit**;
+- exact source ZIP;
+- per-artifact SHA-256 manifest and provenance;
+- fresh Stable identity-only promotion followed by exact Stable recertification;
+- GitHub Release must visibly contain runnable macOS + Windows ZIPs, source ZIP, checksums and certification evidence before G15 can pass.
 
-## Gate behavior
+### G16 · retrospective / handoff / hygiene
 
-Use the canonical G0–G16 model; no new top-level gate is created.
+- 10/10 rubric all PASS;
+- no temporary branches/workflows left behind;
+- repository map and diagrams match actual paths;
+- final handoff records exact commit/tag/fingerprint/artifact SHAs and GitHub Release location;
+- adaptive retrospective records any structural lesson that should prevent future repo sprawl.
 
-Repository restructuring is evaluated mainly through:
+## Native delivery is mandatory again for v18.5.1
 
-- G0 exact v18.5 Stable baseline;
-- G1 immutable no-feature scope;
-- G2 architecture/package ownership;
-- G3 dependency/path readiness;
-- G4 source-quality/developer-proofing;
-- G5–G10 full regression/medium/performance/security/UI closure;
-- G11 immutable RC;
-- G12 full certification;
-- G13–G15 native/provenance/runtime/promotion;
-- G16 cleanup/retrospective/handoff.
+v18.5.1 does not inherit v18.5 binaries. It must generate and certify its own:
+
+1. macOS Apple Silicon runnable ZIP;
+2. Windows x64 runnable ZIP;
+3. exact source ZIP;
+4. SHA-256 manifest;
+5. provenance/certification evidence;
+6. actual GitHub Release listing those assets.
+
+A tag alone is not sufficient.
 
 ## Definition of done
 
 v18.5.1 is complete only when:
 
-1. repository root contains only intentionally allowed entry-point files/directories;
-2. active workflows are current, minimal and named by purpose rather than historical accident;
-3. tests/tools/config/docs are categorized;
-4. production Go package ownership is understandable from the directory tree;
-5. no dead/duplicate file remains without an explicit reason;
-6. all structural gates and full product/native qualification pass;
-7. no approved user-visible functionality or decision semantics changed;
-8. a developer unfamiliar with the history can locate the major subsystem they need without searching the entire root.
+1. all 10/10 repository-archetype dimensions independently PASS;
+2. root contains only intentionally allowed entry-point files/directories;
+3. active workflows are current, minimal and purpose-named;
+4. tests/tools/config/docs are categorized and discoverable;
+5. production package ownership and dependency direction are clear from the tree and diagrams;
+6. no dead/duplicate file remains without explicit reason;
+7. all canonical G0–G16 applicable gates and closure-grade regression suites pass;
+8. no approved product functionality, decision semantics or protected boundary changed;
+9. actual macOS Apple Silicon and Windows x64 artifacts pass runtime/provenance audit and are published in the GitHub Release;
+10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root.

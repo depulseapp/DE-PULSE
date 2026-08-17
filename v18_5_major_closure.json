@@ -1,0 +1,210 @@
+{
+  "schema": "DE.PULSE-v18.5-MAJOR-CLOSURE-1",
+  "version": "18.5.0",
+  "scopeFile": "v18_5_scope.json",
+  "closureDimensions": [
+    {
+      "id": "full_v18_scope_traceability",
+      "ownerGate": "G10",
+      "evidence": ["v18_5_scope_gate.py", "approved_scope_gate.py", "release/v18.5.0/"]
+    },
+    {
+      "id": "architecture_source_quality_developer_proofing",
+      "ownerGate": "G7",
+      "evidence": ["source_health_architecture_gate.py", "v18_0_1_principal_engineer_gate.py", "v18_3_principal_engineer_gate.py", "go vet ./..."]
+    },
+    {
+      "id": "data_utility_correlation_reuse",
+      "ownerGate": "G7",
+      "evidence": ["data_utility_gate.py", "functionality_utility_checkpoint_gate.py", "v17_2_canonical_pipeline_test.go"]
+    },
+    {
+      "id": "performance_capacity_responsiveness_stability",
+      "ownerGate": "G8",
+      "evidence": ["v16_11_performance_stability_gate.py", "v16_10_performance_gate.py", "v17_1_backpressure_test.go", "v17_3_performance_test.go"]
+    },
+    {
+      "id": "security_auth_session_authorization_abuse",
+      "ownerGate": "G7",
+      "evidence": ["v18_4_security_test.go", "v18_4_session_security_test.go", "v18_4_reauth_test.go", "v18_4_provider_rights_test.go", "v18_4_commercial_readiness_test.go", "independent_adversarial_authorization_gate.py"]
+    },
+    {
+      "id": "ui_ux_content_responsive_accessibility_runtime_truth",
+      "ownerGate": "G9",
+      "evidence": ["renderer_logic_test.js", "v18_0_5_renderer_test.js", "v18_2_renderer_test.js", "http_workflow_test.py", "responsive_ui_sharded_gate.py"]
+    },
+    {
+      "id": "adaptive_intelligence_governance",
+      "ownerGate": "G7",
+      "evidence": ["adaptive_resume_gate.py", "TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote"]
+    },
+    {
+      "id": "principal_engineer_acceptance",
+      "ownerGate": "G7",
+      "evidence": ["v18_0_1_principal_engineer_gate.py", "v18_3_principal_engineer_gate.py", "source_health_architecture_gate.py"]
+    },
+    {
+      "id": "professional_trader_investor_acceptance",
+      "ownerGate": "G9",
+      "evidence": ["professional_expert_gate.py", "v17_5_trader_investor_gate.py", "v17_5_real_money_acceptance_test.js", "deterministic_equivalence_test.js"]
+    },
+    {
+      "id": "native_hosted_packaging_provenance_release_assurance",
+      "ownerGate": "G10",
+      "evidence": ["v17_0_cross_platform_persistence_gate.py", "source_fingerprint.py", "governance/RELEASE_ARTIFACT_ARCHIVE.md", "G13-G15 required after G10"]
+    }
+  ],
+  "adrGdiScenarios": [
+    {
+      "id": "provider_failure_rate_limit_fallback_calls_avoided",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV170ProviderTelemetryAndAdaptiveDegradationReasonCodes|TestV171ProviderRateLimitCooldownShedsLowTierButProtectsActionable|TestV1801SmartRouterAvoidedTelemetrySeparatesReasons)$",
+      "expectedTruth": "Provider failure or rate pressure is classified, bounded and attributable; low-priority work sheds before actionable work and avoided calls remain observable without false healthy state.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "stale_evidence_freshness_slo",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV170CriticalDecisionUsabilityRequiresActualCriticalRows|TestV170RuntimeSLOBlocksCriticalTruthButOnlyWarnsModerateLatency|TestV173SelectedAndActionableFreshnessSLOsAreExplicit)$",
+      "expectedTruth": "Decision-critical stale evidence cannot masquerade as current/usable; dataset and actionable freshness SLOs remain explicit and severity-aware.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "source_disagreement",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV1806ProviderRouterScorecardSurfacesCanonicalSourceDisagreement|TestV1801RapidMoveSuppressesMechanicalAndSourceConflictNoise)$",
+      "expectedTruth": "Material provider disagreement is surfaced as canonical conflict evidence and suppresses unsafe interpretation rather than being silently averaged away.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "consumer_aware_blast_radius",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV1801SmartRouterCapabilityCircuitIsolation|TestV170DegradationDistinguishesRateLimitAndPartialCoverage)$",
+      "expectedTruth": "A narrow provider/capability failure degrades only dependent consumers; unrelated capabilities remain truthful and available.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "postgres_pressure_slow_unavailable",
+      "ownerGate": "G6",
+      "selectorOrGate": "^TestV183Postgres(PoolContentionWaitsWithinConfiguredBound|HealthCheckReflectsClosedDatabase)$",
+      "expectedTruth": "Real PostgreSQL contention remains inside configured pool bounds and database unavailability fails readiness closed; mandatory PostgreSQL tests may not skip.",
+      "requiresRealService": true,
+      "evidencePath": "evidence/G6-postgres.log",
+      "status": "required"
+    },
+    {
+      "id": "sqlite_desktop_continuity",
+      "ownerGate": "G6",
+      "selectorOrGate": "v17_0_cross_platform_persistence_gate.py + TestV183DesktopPersistenceRemainsLocalByDefault",
+      "expectedTruth": "Desktop keeps canonical local persistence on supported native targets, including Windows x64 SQLite; no silent packaged Windows JSON fallback.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G6-integration.log",
+      "status": "required"
+    },
+    {
+      "id": "queue_saturation_bounded_backpressure",
+      "ownerGate": "G8",
+      "selectorOrGate": "^TestV171ProviderQueueIsHardBounded$",
+      "expectedTruth": "Provider work queues remain hard bounded under saturation and expose pressure rather than growing without limit.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "workload_priority_graceful_load_shedding",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV171ReservedCapacityProtectsTierZeroAndOne|TestV171LowPriorityShedsBeforeActionable|TestV173ActiveMarketPressureProtectsCriticalWork)$",
+      "expectedTruth": "Critical/current decision work retains reserved capacity while low-priority work is shed first under measured pressure.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "restart_warm_start_recovery",
+      "ownerGate": "G6",
+      "selectorOrGate": "TestV183PostgresRepositoryParityAndWarmStart + TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth",
+      "expectedTruth": "Warm-start state survives restart with provenance and is explicitly persisted/stale-aware until refreshed; PostgreSQL parity is proven against a real service.",
+      "requiresRealService": true,
+      "evidencePath": "evidence/G6-postgres.log",
+      "status": "required"
+    },
+    {
+      "id": "multi_user_multi_symbol_fanout_shared_reuse",
+      "ownerGate": "G6",
+      "selectorOrGate": "^(TestV181ProcessingUnionDeduplicatesAndRetainsOtherOwner|TestV181SymbolEventFanoutTargetsWorkspaceOwners)$",
+      "expectedTruth": "Multi-user symbol demand reuses one shared canonical processing union while user delivery remains correctly scoped.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G6-integration.log",
+      "status": "required"
+    },
+    {
+      "id": "background_job_pressure_duplicate_work_avoidance",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV172ImmaterialTicksUpdateMemoryButSuppressHeavyDownstream|TestV1801RapidMoveDedupesOneMarketEvent)$",
+      "expectedTruth": "Immaterial updates and duplicate market events do not fan out redundant heavy/background work.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "recovery_hysteresis",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV1806RapidMoveHysteresisPreventsAlertStateThrash|TestV183PersistenceOutageReadinessRecoversWithBoundedHysteresis|TestV173RecoveryTrackerMeasuresStaleAndDegradationRecovery)$",
+      "expectedTruth": "Recovery is measured and bounded; transient fluctuations do not cause readiness/alert thrash or premature healthy claims.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "unknown_degraded_abstain_truth",
+      "ownerGate": "G8",
+      "selectorOrGate": "^(TestV170CriticalDecisionUsabilityRequiresActualCriticalRows|TestV174DerivedStaleLiquidityDoesNotMasqueradeAsMarketRisk|TestV183ReadinessRequiresCanonicalPersistenceAndIdentity)$",
+      "expectedTruth": "Missing/stale required evidence stays non-actionable (UNKNOWN/degraded/ABSTAIN-equivalent) and cannot produce misleading Ready/healthy truth.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-adr-gdi.log",
+      "status": "required"
+    },
+    {
+      "id": "packaged_runtime_degradation_ux_diagnostics",
+      "ownerGate": "G9",
+      "selectorOrGate": "http_workflow_test.py + responsive_ui_sharded_gate.py + professional_expert_gate.py",
+      "expectedTruth": "The actual browser/runtime path presents degradation and readiness truth concisely to users while retaining deeper diagnostics for authorized roles.",
+      "requiresRealService": true,
+      "evidencePath": "evidence/G9-runtime-ui.log",
+      "status": "required"
+    },
+    {
+      "id": "truthful_supported_operating_limits",
+      "ownerGate": "G8",
+      "selectorOrGate": "TestV171LiveSubscriptionBudgetsExposeReservedHeadroom + TestV173SLOBudgetsBlockOnlyMeasuredSeverePressure + v16_11_performance_stability_gate.py",
+      "expectedTruth": "Certification envelopes are explicit and evidence-backed; they are not advertised as unmeasured production capacity.",
+      "requiresRealService": false,
+      "evidencePath": "evidence/G8-operating-limits.json",
+      "status": "required"
+    }
+  ],
+  "certificationOperatingEnvelope": {
+    "meaning": "certification envelope only; not an advertised production capacity guarantee",
+    "radarCandidateBenchmark": 500,
+    "promotionStateStressCycles": 10000,
+    "symbolRotationStressCount": 2000,
+    "postgresConfiguredMaxConnectionsCeiling": 128,
+    "evidence": ["v16_10_performance_gate.py", "v16_11_performance_stability_gate.py", "TestV183PostgresPoolConfigurationIsBounded"]
+  },
+  "nativeDeliveryRequirements": {
+    "macosAppleSiliconRunnableZip": "required",
+    "windowsX64RunnableZip": "required",
+    "exactSourceZip": "required",
+    "sha256Manifest": "required",
+    "certificationEvidence": "required",
+    "githubReleaseListsRunnableAssets": "required"
+  }
+}
