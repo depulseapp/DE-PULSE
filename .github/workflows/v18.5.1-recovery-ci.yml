@@ -60,7 +60,7 @@ jobs:
           PY
 
   g0-inventory:
-    name: G0/G1 · Baseline, identity, conservation and freeze materialization
+    name: G0/G1 · Baseline / identity / frozen scope verification
     needs: [checkpoint-contract]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -78,22 +78,14 @@ jobs:
           git cat-file -e 'v18.5.0-stable^{commit}'
           test "$(git rev-parse 'v18.5.0-stable^{commit}')" = '0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680'
           git merge-base --is-ancestor 'v18.5.0-stable^{commit}' HEAD
-      - name: Verify canonical v18.5.1 TEST identity is already materialized
+      - name: Verify canonical v18.5.1 TEST identity
+        run: python3 release_identity.py --verify
+      - name: Verify immutable G1 scope
+        run: python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
+      - id: freeze
+        name: Bind exact checkpoint source without branch mutation
         shell: bash
-        run: |
-          set -euo pipefail
-          python3 release_identity.py --verify
-      - name: Verify immutable G1 placement and freeze overlay are already materialized
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
-      - name: Bind exact checkpoint source without mutating the branch
-        id: freeze
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        run: echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         with:
           name: De-Pulse-v18.5.1-G0-G1-Freeze
@@ -115,10 +107,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
-      - name: Enforce identity + hash-bound 295-row conservation and frozen ten-ID slice
-        shell: bash
-        run: |
-          set -euo pipefail
+      - run: |
           python3 release_identity.py --verify
           python3 release/v18.5.1/g1_scope_freeze_gate.py
 
@@ -134,19 +123,15 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
       - name: Governance and architecture checks
-        shell: bash
         run: |
-          set -euo pipefail
           python3 release_identity.py --verify
           python3 adaptive_resume_gate.py
           python3 source_health_architecture_gate.py
           python3 data_utility_gate.py
           python3 documentation_governance_gate.py
           python3 functionality_utility_checkpoint_gate.py
-      - name: Go static checks
-        run: go vet ./...
+      - run: go vet ./...
 
   focused-go:
     name: G5 · Focused affected Go tests
@@ -160,12 +145,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
-      - name: Recovery-focused inherited and v18.5.1 families
-        shell: bash
-        run: |
-          set -euo pipefail
-          go test -count=1 -run '^(TestV170|TestV171|TestV172|TestV174|TestV1851)' ./...
+      - run: go test -count=1 -run '^(TestV170|TestV171|TestV172|TestV174|TestV1851)' ./...
 
   full-go:
     name: G5 · Full Go development exit
@@ -179,7 +159,6 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
       - run: go test -count=1 ./...
 
   renderer-fast:
@@ -195,9 +174,7 @@ jobs:
         with:
           node-version: '24'
       - name: Mandatory renderer syntax contracts
-        shell: bash
         run: |
-          set -euo pipefail
           node --check renderer/renderer.js
           node --check renderer/live-dom-reconcile.js
           node --check renderer/watchlist-v18.5.1.js
@@ -208,9 +185,7 @@ jobs:
             release/v18.5.1/browser_auth_copy_test.py \
             release/v18.5.1/browser_ui_hierarchy_test.py
       - name: Verify v18.5.1 behavior layers are loaded by the actual renderer shell
-        shell: bash
         run: |
-          set -euo pipefail
           grep -Fq 'live-dom-reconcile.js?v=18.5.1' renderer/index.html
           grep -Fq 'watchlist-v18.5.1.js?v=18.5.1' renderer/index.html
           grep -Fq 'watchlist-v18.5.1.css?v=18.5.1' renderer/index.html
@@ -232,21 +207,14 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-          cache: pip
       - name: Install lightweight Playwright driver
-        shell: bash
         run: |
-          set -euo pipefail
           command -v google-chrome
           python -m pip install --disable-pip-version-check playwright
-      - name: Behavior-first live renderer regression using hosted Chrome
-        run: python release/v18.5.1/browser_live_render_test.py
-      - name: Behavior-first watchlist removal and desk semantics regression
-        run: python release/v18.5.1/browser_watchlist_membership_test.py
-      - name: Browser/content first-run auth copy regression
-        run: python release/v18.5.1/browser_auth_copy_test.py
-      - name: Browser Research/header responsive hierarchy regression
-        run: python release/v18.5.1/browser_ui_hierarchy_test.py
+      - run: python release/v18.5.1/browser_live_render_test.py
+      - run: python release/v18.5.1/browser_watchlist_membership_test.py
+      - run: python release/v18.5.1/browser_auth_copy_test.py
+      - run: python release/v18.5.1/browser_ui_hierarchy_test.py
 
   qualified-summary:
     name: G5 · Development checkpoint exit
@@ -257,19 +225,17 @@ jobs:
     outputs:
       qualified_source: ${{ needs.g0-inventory.outputs.freeze_commit }}
     steps:
-      - name: Require all cheap/fast prerequisite lanes green
+      - name: Require all FAST prerequisite lanes green
         env:
           CHECKPOINT: ${{ needs.checkpoint-contract.result }}
           G0: ${{ needs.g0-inventory.result }}
           FULL_GO: ${{ needs.full-go.result }}
           BROWSER: ${{ needs.browser-qualified.result }}
         run: |
-          set -euo pipefail
           test "$CHECKPOINT" = success
           test "$G0" = success
           test "$FULL_GO" = success
           test "$BROWSER" = success
-          echo 'v18.5.1 checkpoint FAST qualification is green; G6-G10 may proceed.'
 
   g6-integration-medium:
     name: G6 · Integration & MEDIUM · PostgreSQL / continuity
@@ -283,8 +249,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: depulse_test
-        ports:
-          - 5432:5432
+        ports: ['5432:5432']
         options: >-
           --health-cmd "pg_isready -U postgres -d depulse_test"
           --health-interval 5s
@@ -300,37 +265,21 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
-      - name: Bind release identity and G1 scope
-        run: |
-          set -euo pipefail
+      - run: |
           python3 release_identity.py --verify
           python3 release/v18.5.1/g1_scope_freeze_gate.py
       - name: Real PostgreSQL 17 integration · no skips
-        shell: bash
         run: |
-          set -euo pipefail
           mkdir -p evidence
           listing="$(go test -tags postgres -list '^TestV183Postgres' ./...)"
           printf '%s\n' "$listing" | tee evidence/v18.5.1-G6-postgres-selectors.log
-          for test in \
-            TestV183PostgresRepositoryParityAndWarmStart \
-            TestV183PostgresConcurrentWorkspaceWritesStayBounded \
-            TestV183PostgresConcurrentMigrationInitializationIsSerialized \
-            TestV183PostgresSQLiteArchiveMigratesWithoutLineageLoss \
-            TestV183PostgresPoolContentionWaitsWithinConfiguredBound \
-            TestV183PostgresHealthCheckReflectsClosedDatabase; do
-            printf '%s\n' "$listing" | grep -q "^${test}$" || { echo "::error::Missing PostgreSQL selector ${test}"; exit 1; }
+          for test in TestV183PostgresRepositoryParityAndWarmStart TestV183PostgresConcurrentWorkspaceWritesStayBounded TestV183PostgresConcurrentMigrationInitializationIsSerialized TestV183PostgresSQLiteArchiveMigratesWithoutLineageLoss TestV183PostgresPoolContentionWaitsWithinConfiguredBound TestV183PostgresHealthCheckReflectsClosedDatabase; do
+            printf '%s\n' "$listing" | grep -q "^${test}$" || exit 1
           done
           go test -tags postgres -count=1 -v -run '^TestV183Postgres' ./... 2>&1 | tee evidence/v18.5.1-G6-postgres.log
-          if grep -q -- '--- SKIP: TestV183Postgres' evidence/v18.5.1-G6-postgres.log; then
-            echo '::error::Mandatory PostgreSQL test skipped'
-            exit 1
-          fi
+          ! grep -q -- '--- SKIP: TestV183Postgres' evidence/v18.5.1-G6-postgres.log
       - name: Desktop / readiness / multi-user continuity
-        shell: bash
         run: |
-          set -euo pipefail
           selector='^(TestV183DesktopPersistenceRemainsLocalByDefault|TestV183PostgresSelectionFailsClosedWhenUnavailableOrUnconfigured|TestV183ReadinessRequiresCanonicalPersistenceAndIdentity|TestV183PersistenceOutageReadinessRecoversWithBoundedHysteresis|TestV181ProcessingUnionDeduplicatesAndRetainsOtherOwner|TestV181SymbolEventFanoutTargetsWorkspaceOwners|TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth|TestV1851TestProfileIdentityTruth|TestV1851TestProfileClonesV1850StableWithoutMutatingSource)$'
           go test -count=1 -v -run "$selector" ./... 2>&1 | tee evidence/v18.5.1-G6-continuity.log
           python3 v17_0_cross_platform_persistence_gate.py 2>&1 | tee -a evidence/v18.5.1-G6-continuity.log
@@ -354,11 +303,8 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
       - name: Release / architecture / data governance
-        shell: bash
         run: |
-          set -euo pipefail
           python3 release_identity.py --verify
           python3 release/v18.5.1/g1_scope_freeze_gate.py
           python3 source_health_architecture_gate.py
@@ -368,18 +314,15 @@ jobs:
           python3 adaptive_resume_gate.py
           go vet ./...
       - name: Security, authorization and rights family
-        shell: bash
         run: |
-          set -euo pipefail
           mkdir -p evidence
           listing="$(go test -list '^TestV184' ./...)"
           printf '%s\n' "$listing" | tee evidence/v18.5.1-G7-v184-selectors.log
-          printf '%s\n' "$listing" | grep -q '^TestV184' || { echo '::error::No v18.4 security/commercial family found'; exit 1; }
+          printf '%s\n' "$listing" | grep -q '^TestV184'
           go test -count=1 -v -run '^TestV184' ./... 2>&1 | tee evidence/v18.5.1-G7-security.log
           python3 v18_4_reauth_ui_gate.py 2>&1 | tee -a evidence/v18.5.1-G7-security.log
           python3 independent_adversarial_authorization_gate.py 2>&1 | tee -a evidence/v18.5.1-G7-security.log
-      - name: Adaptive production-governance boundary
-        run: go test -count=1 -v -run '^TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote$' ./...
+      - run: go test -count=1 -v -run '^TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote$' ./...
       - uses: actions/upload-artifact@v7
         with:
           name: De-Pulse-v18.5.1-G7-Data-Security
@@ -399,18 +342,13 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
       - name: Performance/stability gates
-        shell: bash
         run: |
-          set -euo pipefail
           mkdir -p evidence
           python3 v16_11_performance_stability_gate.py 2>&1 | tee evidence/v18.5.1-G8-performance.log
           python3 v16_10_performance_gate.py 2>&1 | tee -a evidence/v18.5.1-G8-performance.log
-      - name: Race detector focused critical families
-        run: go test -race -count=1 -run '^(TestV170|TestV171|TestV172|TestV174|TestV1851)' ./...
-      - name: Randomized test-order resilience
-        run: go test -count=5 -shuffle=on ./...
+      - run: go test -race -count=1 -run '^(TestV170|TestV171|TestV172|TestV174|TestV1851)' ./...
+      - run: go test -count=5 -shuffle=on ./...
       - uses: actions/upload-artifact@v7
         with:
           name: De-Pulse-v18.5.1-G8-Performance
@@ -432,27 +370,19 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: true
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-          cache: pip
       - name: Full HTTP / cross-module functional workflows
-        shell: bash
         run: |
-          set -euo pipefail
           mkdir -p evidence
           python3 full_http_functional_workflow.py 2>&1 | tee evidence/v18.5.1-G9-http.log
       - name: Responsive / renderer / professional-trader acceptance
-        shell: bash
         run: |
-          set -euo pipefail
           python3 responsive_ui_test.py 2>&1 | tee evidence/v18.5.1-G9-responsive.log
           python3 professional_trader_acceptance_gate.py 2>&1 | tee evidence/v18.5.1-G9-trader.log
       - name: Re-run v18.5.1 browser behavior proofs at qualified source
-        shell: bash
         run: |
-          set -euo pipefail
           python -m pip install --disable-pip-version-check playwright
           python release/v18.5.1/browser_live_render_test.py
           python release/v18.5.1/browser_watchlist_membership_test.py
@@ -467,13 +397,7 @@ jobs:
 
   g10-prefreeze:
     name: G10 · Immutable qualification evidence
-    needs:
-      - checkpoint-contract
-      - g0-inventory
-      - g6-integration-medium
-      - g7-data-security-adaptive
-      - g8-performance-stability
-      - g9-cross-module-ui
+    needs: [checkpoint-contract, g0-inventory, g6-integration-medium, g7-data-security-adaptive, g8-performance-stability, g9-cross-module-ui]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -489,9 +413,7 @@ jobs:
           G9: ${{ needs.g9-cross-module-ui.result }}
           CHECKPOINT_ID: ${{ needs.checkpoint-contract.outputs.checkpoint_id }}
           SOURCE_SHA: ${{ needs.g0-inventory.outputs.freeze_commit }}
-        shell: bash
         run: |
-          set -euo pipefail
           test "$G6" = success
           test "$G7" = success
           test "$G8" = success
