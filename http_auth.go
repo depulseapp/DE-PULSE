@@ -196,3 +196,62 @@ func (a *Application) requireRole(required UserRole, next http.HandlerFunc) http
 		next(w, r)
 	})
 }
+
+func (a *Application) handleReauthenticate(w http.ResponseWriter, r *http.Request) {
+	p, ok := principalFromContext(r.Context())
+	if !ok || a.identity == nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required.")
+		return
+	}
+	var req struct {
+		Password string `json:"password"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10)).Decode(&req); err != nil || strings.TrimSpace(req.Password) == "" {
+		writeError(w, http.StatusBadRequest, "Current password is required.")
+		return
+	}
+	abuseKey := "reauth:" + loginAbuseKey(p.Username, r)
+	if allowed, retryAfter := loginLimiter.Allow(abuseKey); !allowed {
+		rejectThrottledLogin(w, retryAfter)
+		return
+	}
+	verified, err := a.identity.reauthenticateSession(p.SessionID, req.Password)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "Password verification unavailable.")
+		return
+	}
+	if !verified {
+		loginLimiter.RecordFailure(abuseKey)
+		time.Sleep(120 * time.Millisecond)
+		writeError(w, http.StatusForbidden, "Password verification failed.")
+		return
+	}
+	loginLimiter.Reset(abuseKey)
+	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "recentAuthentication": true})
+}
+
+func writeReauthRequired(w http.ResponseWriter) {
+	writeJSON(w, http.StatusPreconditionRequired, map[string]any{
+		"error": "Recent password authentication is required for this security-sensitive change.",
+		"code":  "REAUTH_REQUIRED",
+	})
+}
+
+func (a *Application) requireRecentAuthentication(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if a.identity == nil {
+			next(w, r)
+			return
+		}
+		p, ok := principalFromContext(r.Context())
+		if !ok {
+			writeError(w, http.StatusUnauthorized, "Authentication required.")
+			return
+		}
+		if !a.identity.sessionRecentlyAuthenticated(p.SessionID, defaultSensitiveReauthTTL) {
+			writeReauthRequired(w)
+			return
+		}
+		next(w, r)
+	}
+}

@@ -38,7 +38,10 @@ jobs:
           for f in $files; do test ! -f "$f" || existing="$existing $f"; done
           test -z "$existing" || { gofmt -d $existing | tee /tmp/gofmt.diff; test ! -s /tmp/gofmt.diff; }
       - name: v18.4 focused security tests
-        run: go test -count=1 -run '^TestV184' ./...
+        run: |
+          python3 v18_4_reauth_ui_gate.py
+          node --check renderer/renderer.js
+          go test -count=1 -run '^TestV184' ./...
       - name: Full default-build Go suite
         run: go test -count=1 ./...
       - name: Vet default build
