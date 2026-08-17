@@ -196,17 +196,57 @@ jobs:
 
   qualified-summary:
     name: G5-G9 · Recovery qualification summary
-    needs: [full-go, browser-qualified]
+    needs: [g0-inventory, full-go, browser-qualified]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Require all prerequisite lanes green
         env:
+          G0: ${{ needs.g0-inventory.result }}
           FULL_GO: ${{ needs.full-go.result }}
           BROWSER: ${{ needs.browser-qualified.result }}
         run: |
           set -euo pipefail
+          test "$G0" = success
           test "$FULL_GO" = success
           test "$BROWSER" = success
           echo 'v18.5.1 cheap-first qualification and behavior-first browser proof are green.'
+      - name: Checkout branch for durable qualification evidence
+        uses: actions/checkout@v7
+        with:
+          ref: v18.5.1-development
+          fetch-depth: 0
+      - name: Persist machine-readable green evidence
+        env:
+          FREEZE_COMMIT: ${{ needs.g0-inventory.outputs.freeze_commit }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          payload = {
+              'schemaVersion': 1,
+              'release': 'v18.5.1',
+              'workflow': 'v18.5.1-recovery-ci',
+              'result': 'GREEN',
+              'runId': os.environ['RUN_ID'],
+              'runAttempt': os.environ['RUN_ATTEMPT'],
+              'qualifiedSourceCommit': os.environ['FREEZE_COMMIT'],
+              'fullGo': 'success',
+              'browserQualified': 'success',
+              'qualifiedAt': datetime.now(timezone.utc).isoformat(),
+          }
+          with open('evidence/v18.5.1-recovery-qualified.json', 'w', encoding='utf-8') as fh:
+              json.dump(payload, fh, indent=2, sort_keys=True)
+              fh.write('\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evidence/v18.5.1-recovery-qualified.json
+          git commit -m 'ci: record v18.5.1 recovery qualification [skip ci]'
+          git push origin HEAD:v18.5.1-development
