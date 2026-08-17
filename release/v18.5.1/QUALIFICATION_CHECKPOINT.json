@@ -4,7 +4,7 @@
   "status": "QUALIFICATION_REQUESTED",
   "qualificationRequested": true,
   "releaseCertificationRequested": false,
-  "sourceSha": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
-  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-01",
-  "notes": "Single deliberate development-complete checkpoint. Qualify exact source SHA through cheap-first G0-G5, then gated G6-G10. CI efficiency may eliminate redundant execution, never required evidence. G11-G15 release certification remains separate and requires an immutable RC."
+  "sourceSha": "11116626d9f5e49b1ef73054d344dab239041dc7",
+  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-02",
+  "notes": "One batched requalification after the first checkpoint was correctly stopped by stale resume metadata. Qualify exact source SHA through cheap-first G0-G5, then gated G6-G10. No per-fix workflow runs. CI efficiency may eliminate redundant execution, never required evidence. G11-G15 remains blocked until exact G10 PASS and immutable RC."
 }
