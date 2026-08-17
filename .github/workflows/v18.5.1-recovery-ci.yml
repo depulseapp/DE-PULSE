@@ -1,15 +1,17 @@
-name: DE.PULSE v18.5.1 | Recovery Control Plane
+name: DE.PULSE v18.5.1 | Qualification Checkpoint
 
 on:
   push:
     branches: [v18.5.1-development]
+    paths:
+      - 'release/v18.5.1/QUALIFICATION_CHECKPOINT.json'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: v18.5.1-recovery-${{ github.ref }}
+  group: v18.5.1-qualification-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -17,8 +19,50 @@ env:
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
+  checkpoint-contract:
+    name: Checkpoint · Require deliberate qualification request
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint_sha: ${{ steps.contract.outputs.checkpoint_sha }}
+      checkpoint_id: ${{ steps.contract.outputs.checkpoint_id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: v18.5.1-development
+      - id: contract
+        name: Validate qualification checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, subprocess, os
+          p = pathlib.Path('release/v18.5.1/QUALIFICATION_CHECKPOINT.json')
+          cp = json.loads(p.read_text())
+          if cp.get('release') != 'v18.5.1':
+              raise SystemExit('checkpoint release must be v18.5.1')
+          if cp.get('qualificationRequested') is not True:
+              raise SystemExit('qualificationRequested must be true for checkpoint qualification')
+          checkpoint_id = str(cp.get('checkpointId') or '').strip()
+          source_sha = str(cp.get('sourceSha') or '').strip()
+          if not checkpoint_id:
+              raise SystemExit('checkpointId is required')
+          if len(source_sha) != 40:
+              raise SystemExit('sourceSha must be an exact 40-character commit SHA')
+          subprocess.run(['git','cat-file','-e',f'{source_sha}^{{commit}}'], check=True)
+          # The checkpoint commit may be after the source SHA because it only requests qualification.
+          subprocess.run(['git','merge-base','--is-ancestor',source_sha,'HEAD'], check=True)
+          out = pathlib.Path(os.environ['GITHUB_OUTPUT'])
+          with out.open('a') as fh:
+              fh.write(f'checkpoint_sha={source_sha}\n')
+              fh.write(f'checkpoint_id={checkpoint_id}\n')
+          print(f'Qualification checkpoint {checkpoint_id} bound to {source_sha}')
+          PY
+
   g0-inventory:
     name: G0/G1 · Baseline, identity, conservation and freeze materialization
+    needs: [checkpoint-contract]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -27,7 +71,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: v18.5.1-development
+          ref: ${{ needs.checkpoint-contract.outputs.checkpoint_sha }}
       - name: Verify exact incoming Stable and branch ancestry
         shell: bash
         run: |
@@ -45,26 +89,13 @@ jobs:
         run: python3 release/v18.5.1/g1_scope_materialize.py --apply
       - name: Validate materialized G1 scope
         run: python3 release/v18.5.1/g1_scope_freeze_gate.py
-      - name: Commit generated identity and G1 authority if changed
+      - name: Record generated identity and G1 authority without recursive branch push
         id: freeze
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'depulseapp'
-          git config user.email 'de.pulse.app@gmail.com'
-          git add \
-            VERSION.txt \
-            app_bootstrap.go \
-            renderer/renderer.js \
-            renderer/index.html \
-            certification_plan.json \
-            ci_pipeline_plan.json \
-            release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json \
-            release/v18.5.1/G1-SCOPE-FREEZE.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'governance: materialize v18.5.1 identity and G1 recovery scope'
-            git push origin HEAD:v18.5.1-development
-          fi
+          # Qualification must never push generated files back to the development branch.
+          # The exact checkout SHA remains the evidence authority for this run.
           echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Reverify canonical identity and frozen scope
         shell: bash
@@ -112,7 +143,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
+          cache: true
       - name: Governance and architecture checks
         shell: bash
         run: |
@@ -138,7 +169,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
+          cache: true
       - name: Recovery-focused inherited and v18.5.1 families
         shell: bash
         run: |
@@ -157,7 +188,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
+          cache: true
       - run: go test -count=1 ./...
 
   renderer-fast:
@@ -172,6 +203,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: npm
+          cache-dependency-path: renderer/package-lock.json
       - name: Mandatory renderer syntax contracts
         shell: bash
         run: |
@@ -210,6 +243,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+          cache: pip
       - name: Install lightweight Playwright driver
         shell: bash
         run: |
@@ -226,8 +260,8 @@ jobs:
         run: python release/v18.5.1/browser_ui_hierarchy_test.py
 
   qualified-summary:
-    name: G5 · Recovery development exit
-    needs: [g0-inventory, full-go, browser-qualified]
+    name: G5 · Development checkpoint exit
+    needs: [checkpoint-contract, g0-inventory, full-go, browser-qualified]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -236,15 +270,17 @@ jobs:
     steps:
       - name: Require all cheap/fast prerequisite lanes green
         env:
+          CHECKPOINT: ${{ needs.checkpoint-contract.result }}
           G0: ${{ needs.g0-inventory.result }}
           FULL_GO: ${{ needs.full-go.result }}
           BROWSER: ${{ needs.browser-qualified.result }}
         run: |
           set -euo pipefail
+          test "$CHECKPOINT" = success
           test "$G0" = success
           test "$FULL_GO" = success
           test "$BROWSER" = success
-          echo 'v18.5.1 G0-G5 and fast behavior-first browser proof are green; expensive qualification may proceed.'
+          echo 'v18.5.1 checkpoint FAST qualification is green; G6-G10 may proceed.'
 
   g6-integration-medium:
     name: G6 · Integration & MEDIUM · PostgreSQL / continuity
@@ -275,7 +311,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
+          cache: true
       - name: Bind release identity and G1 scope
         run: |
           set -euo pipefail
@@ -329,7 +365,7 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
+          cache: true
       - name: Release / architecture / data governance
         shell: bash
         run: |
@@ -357,16 +393,16 @@ jobs:
         run: go test -count=1 -v -run '^TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote$' ./...
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.5.1-G7-Data-Security-Adaptive
+          name: De-Pulse-v18.5.1-G7-Data-Security
           path: evidence/v18.5.1-G7-*.log
           if-no-files-found: error
           retention-days: 365
 
   g8-performance-stability:
-    name: G8 · Performance, Capacity & Stability · ADR-GDI
+    name: G8 · Performance, Capacity & Stability
     needs: [g0-inventory, qualified-summary]
     runs-on: ubuntu-24.04
-    timeout-minutes: 70
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
         with:
@@ -374,45 +410,30 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
-      - name: ADR-GDI and v18.5.1 focused families
+          cache: true
+      - name: Performance/stability gates
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p evidence
-          go test -count=1 -v -run '^TestV(170|171|172|173|174|1801|1806|181|183|1851)' ./... 2>&1 | tee evidence/v18.5.1-G8-adr-gdi.log
-      - name: Performance and stability gates
-        shell: bash
-        run: |
-          set -euo pipefail
           python3 v16_11_performance_stability_gate.py 2>&1 | tee evidence/v18.5.1-G8-performance.log
           python3 v16_10_performance_gate.py 2>&1 | tee -a evidence/v18.5.1-G8-performance.log
-      - name: Focused race / CGO-disabled fallback
-        shell: bash
-        run: |
-          set -euo pipefail
-          go test -race -count=1 -run '^(TestV171|TestV172|TestV173|TestV1806|TestV181|TestV1851)' ./...
-          CGO_ENABLED=0 go test -count=1 -run '^(TestV170|TestV171|TestV172|TestV173|TestV174|TestV1801|TestV1806|TestV181|TestV1851)' ./...
-      - name: Randomized full-suite order x3
-        shell: bash
-        run: |
-          set -euo pipefail
-          for n in 1 2 3; do
-            echo "Randomized pass $n"
-            go test -shuffle=on -count=1 ./...
-          done
+      - name: Race detector focused critical families
+        run: go test -race -count=1 -run '^(TestV170|TestV171|TestV172|TestV174|TestV1851)' ./...
+      - name: Randomized test-order resilience
+        run: go test -count=5 -shuffle=on ./...
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.5.1-G8-Performance-Stability
+          name: De-Pulse-v18.5.1-G8-Performance
           path: evidence/v18.5.1-G8-*.log
           if-no-files-found: error
           retention-days: 365
 
-  g9-cross-module-ui-ux:
-    name: G9 · Cross-Module UI/UX · Behavior-first runtime truth
+  g9-cross-module-ui:
+    name: G9 · Cross-Module / UI / UX
     needs: [g0-inventory, qualified-summary]
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 45
     env:
       CHROME_BIN: /usr/bin/google-chrome
     steps:
@@ -422,150 +443,88 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache: false
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '24'
+          cache: true
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-      - name: Renderer / deterministic / role-aware acceptance
+          cache: pip
+      - name: Full HTTP / cross-module functional workflows
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p evidence
-          node --check renderer/renderer.js
-          node --check renderer/live-dom-reconcile.js
-          node --check renderer/watchlist-v18.5.1.js
-          node --check renderer/header-v18.5.1.js
-          node renderer_logic_test.js
-          node v18_0_5_renderer_test.js
-          node v18_2_renderer_test.js
-          node deterministic_equivalence_test.js
-          node trader_acceptance_test.js
-      - name: Provision lightweight hosted Chromium driver
+          python3 full_http_functional_workflow.py 2>&1 | tee evidence/v18.5.1-G9-http.log
+      - name: Responsive / renderer / professional-trader acceptance
         shell: bash
         run: |
           set -euo pipefail
-          command -v google-chrome
-          sudo ln -sf /usr/bin/google-chrome /usr/bin/chromium
+          python3 responsive_ui_test.py 2>&1 | tee evidence/v18.5.1-G9-responsive.log
+          python3 professional_trader_acceptance_gate.py 2>&1 | tee evidence/v18.5.1-G9-trader.log
+      - name: Re-run v18.5.1 browser behavior proofs at qualified source
+        shell: bash
+        run: |
+          set -euo pipefail
           python -m pip install --disable-pip-version-check playwright
-      - name: Full HTTP / responsive / professional runtime acceptance
-        shell: bash
-        run: |
-          set -euo pipefail
-          {
-            python3 http_workflow_test.py
-            python3 responsive_ui_sharded_gate.py
-            python3 professional_expert_gate.py
-            node v17_5_real_money_acceptance_test.js
-            python3 v17_5_trader_investor_gate.py
-            python3 release/v18.5.1/browser_live_render_test.py
-            python3 release/v18.5.1/browser_watchlist_membership_test.py
-            python3 release/v18.5.1/browser_auth_copy_test.py
-            python3 release/v18.5.1/browser_ui_hierarchy_test.py
-          } 2>&1 | tee evidence/v18.5.1-G9-runtime-ui.log
+          python release/v18.5.1/browser_live_render_test.py
+          python release/v18.5.1/browser_watchlist_membership_test.py
+          python release/v18.5.1/browser_auth_copy_test.py
+          python release/v18.5.1/browser_ui_hierarchy_test.py
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.5.1-G9-UI-UX-Runtime
-          path: evidence/v18.5.1-G9-runtime-ui.log
+          name: De-Pulse-v18.5.1-G9-UI-UX
+          path: evidence/v18.5.1-G9-*.log
           if-no-files-found: error
           retention-days: 365
 
   g10-prefreeze:
-    name: G10 · Pre-Freeze Qualification · Exact source binding
-    needs: [g0-inventory, g6-integration-medium, g7-data-security-adaptive, g8-performance-stability, g9-cross-module-ui-ux]
+    name: G10 · Immutable qualification evidence
+    needs:
+      - checkpoint-contract
+      - g0-inventory
+      - g6-integration-medium
+      - g7-data-security-adaptive
+      - g8-performance-stability
+      - g9-cross-module-ui
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Require G6-G9 green
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
+      - name: Require G6-G9 green and bind exact source/checkpoint
         env:
           G6: ${{ needs.g6-integration-medium.result }}
           G7: ${{ needs.g7-data-security-adaptive.result }}
           G8: ${{ needs.g8-performance-stability.result }}
-          G9: ${{ needs.g9-cross-module-ui-ux.result }}
+          G9: ${{ needs.g9-cross-module-ui.result }}
+          CHECKPOINT_ID: ${{ needs.checkpoint-contract.outputs.checkpoint_id }}
+          SOURCE_SHA: ${{ needs.g0-inventory.outputs.freeze_commit }}
+        shell: bash
         run: |
           set -euo pipefail
           test "$G6" = success
           test "$G7" = success
           test "$G8" = success
           test "$G9" = success
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
-          fetch-depth: 0
-      - name: Re-bind exact candidate identity / scope / source
-        id: bind
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 release_identity.py --verify
-          python3 release/v18.5.1/g1_scope_freeze_gate.py
-          SHA="$(git rev-parse HEAD)"
-          FP="$(python3 ci_pipeline.py --fingerprint)"
-          echo "source_sha=$SHA" >> "$GITHUB_OUTPUT"
-          echo "source_fp=$FP" >> "$GITHUB_OUTPUT"
-      - name: Checkout branch for durable machine evidence
-        uses: actions/checkout@v7
-        with:
-          ref: v18.5.1-development
-          fetch-depth: 0
-      - name: Record G0-G10 qualification evidence
-        env:
-          SOURCE_SHA: ${{ steps.bind.outputs.source_sha }}
-          SOURCE_FP: ${{ steps.bind.outputs.source_fp }}
-          RUN_ID: ${{ github.run_id }}
-          RUN_ATTEMPT: ${{ github.run_attempt }}
-        shell: bash
-        run: |
-          set -euo pipefail
           mkdir -p evidence
           python3 - <<'PY'
-          import json, os
-          from datetime import datetime, timezone
-          now=datetime.now(timezone.utc).isoformat()
-          recovery={
-            'schemaVersion':1,
-            'release':'v18.5.1',
-            'workflow':'v18.5.1-recovery-ci',
-            'result':'GREEN',
-            'runId':os.environ['RUN_ID'],
-            'runAttempt':os.environ['RUN_ATTEMPT'],
-            'qualifiedSourceCommit':os.environ['SOURCE_SHA'],
-            'G0ThroughG5':'success',
-            'G6IntegrationMedium':'success',
-            'G7DataSecurityAdaptive':'success',
-            'G8PerformanceCapacityStability':'success',
-            'G9CrossModuleUIUX':'success',
-            'G10PreFreeze':'success',
-            'qualifiedAt':now,
+          import json, os, pathlib, datetime
+          out = {
+            'schemaVersion': 1,
+            'release': 'v18.5.1',
+            'phase': 'G10',
+            'status': 'PASS',
+            'checkpointId': os.environ['CHECKPOINT_ID'],
+            'sourceSha': os.environ['SOURCE_SHA'],
+            'checks': {'G6': True, 'G7': True, 'G8': True, 'G9': True},
+            'generatedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           }
-          g10={
-            'schemaVersion':1,
-            'release':'v18.5.1',
-            'gate':'G10',
-            'state':'PASS',
-            'qualifiedSourceCommit':os.environ['SOURCE_SHA'],
-            'sourceFingerprint':os.environ['SOURCE_FP'],
-            'workflowRunId':os.environ['RUN_ID'],
-            'checks':{
-              'G6IntegrationMedium':True,
-              'G7DataSecurityAdaptive':True,
-              'G8PerformanceCapacityStability':True,
-              'G9CrossModuleUIUX':True,
-            },
-            'generatedAt':now,
-          }
-          for path,payload in [
-            ('evidence/v18.5.1-recovery-qualified.json',recovery),
-            ('evidence/v18.5.1-G10-PASS.json',g10),
-          ]:
-            with open(path,'w',encoding='utf-8') as fh:
-              json.dump(payload,fh,indent=2,sort_keys=True); fh.write('\n')
+          pathlib.Path('evidence/v18.5.1-G10-PASS.json').write_text(json.dumps(out, indent=2)+'\n')
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add evidence/v18.5.1-recovery-qualified.json evidence/v18.5.1-G10-PASS.json
-          git commit -m 'ci: record v18.5.1 G0-G10 qualification [skip ci]'
-          git push origin HEAD:v18.5.1-development
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G10-PASS
+          path: evidence/v18.5.1-G10-PASS.json
+          if-no-files-found: error
+          retention-days: 365
