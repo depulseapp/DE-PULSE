@@ -273,9 +273,8 @@ func keepContemporaneousProviderObservations(rows []ProviderQuoteObservation) []
 	return out
 }
 
-// buildProviderReconciliation compares valid contemporaneous provider observations
-// without treating absence of a second source as agreement. Canonical provider choice
-// follows the Provider Router priority so reconciliation cannot create a parallel owner.
+// providerReconciliationConflictCount counts only explicit cross-provider conflicts;
+// SINGLE SOURCE and STALE are intentionally not promoted into disagreement evidence.
 func providerReconciliationConflictCount(rows []ProviderReconciliationDecision) int64 {
 	var count int64
 	for _, row := range rows {
@@ -286,6 +285,9 @@ func providerReconciliationConflictCount(rows []ProviderReconciliationDecision) 
 	return count
 }
 
+// buildProviderReconciliation compares valid contemporaneous provider observations
+// without treating absence of a second source as agreement. Canonical provider choice
+// follows Provider Router priority so reconciliation cannot create a parallel owner.
 func buildProviderReconciliation(router ProviderRouterSnapshot, observations map[string]map[string]Quote, canonical map[string]Quote, now int64) []ProviderReconciliationDecision {
 	set := map[string]bool{}
 	for s := range observations {
