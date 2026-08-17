@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "release": "v18.5.1",
-  "status": "DEVELOPMENT",
-  "qualificationRequested": false,
+  "status": "QUALIFICATION_REQUESTED",
+  "qualificationRequested": true,
   "releaseCertificationRequested": false,
-  "sourceSha": null,
-  "checkpointId": null,
-  "notes": "Normal development commits do not trigger qualification. Set qualificationRequested=true and bind sourceSha/checkpointId only after a coherent development batch is complete. G11-G15 release certification remains separate and requires an immutable RC. CI efficiency may eliminate redundant execution, never required evidence."
+  "sourceSha": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-01",
+  "notes": "Single deliberate development-complete checkpoint. Qualify exact source SHA through cheap-first G0-G5, then gated G6-G10. CI efficiency may eliminate redundant execution, never required evidence. G11-G15 release certification remains separate and requires an immutable RC."
 }
