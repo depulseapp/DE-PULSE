@@ -84,11 +84,11 @@ If dependency-compatible AODR foundation is present by v18.5, closure must verif
 
 If self-inflicted overload can delay or misstate decision-critical live/current evidence, it is a release blocker until fixed or explicitly constrained with truthful operating limits.
 
-#### v18.5.1 — Escaped Defect Recovery & Certification Repair
+#### v18.5.1 — Audit, Containment & Urgent Recovery
 
-**CURRENT_RELEASE_BLOCKER.** v18.5.1 is not complete as a repository-closure patch unless it also closes the v18.5 defects and implementation uncertainty that escaped Major Closure. These are corrective changes to approved behavior, not new product scope.
+**CURRENT RELEASE ENTRY SLICE.** v18.5.1 reconstructs the full v17/v18 ledger, installs anti-slicing enforcement and executes the safest urgent recovery work. It is not automatically the final v18 closure release. Open applicable work must be explicitly assigned to v18.6 or a later evidence-selected v18.x slice; it may not remain unowned or disappear.
 
-Mandatory escaped-defect set:
+Mandatory v18.x recovery-program set:
 
 - **COPY-18.5.1-001 — version/profile preservation truth:** remove stale `v17` preservation copy and derive migration/preservation messaging from the actual source and target release context.
 - **SYMBOL-18.5.1-001 — removal contract:** the visible row remove control must work consistently in Day, Swing and Long, including the final desk membership; counts, selection, persistence and reload behavior must reconcile.
@@ -105,15 +105,17 @@ Mandatory escaped-defect set:
 - **VERSION-18.5.1-002 — active version drift:** remove or explicitly classify/test obsolete v17, v18.0.4 and v18.4.0 identity strings in current user/runtime/TEST-profile paths.
 - **UTILITY-v18.3-CARRY-FORWARD — 13 orphaned remediations:** disposition and close every item in `functionality_utility_remediation.json`; six have confirmed current-source failures and seven require fresh behavioral/design/package proof.
 
-v18.5.1 must also run a **full v17 + v18 approved-implementation reconciliation**. Reconstruct the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, every v18 major workstream, every v18.0–v18.5 release clause, all 13 orphaned functionality/utility remediations, accepted conversational commitment, defect history and issue record. Classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. Nothing is silently assumed complete because an earlier release once recorded PASS.
+v18.5.1 must run a **full v17 + v18 approved-implementation reconciliation**. Reconstruct the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, every v18 major workstream, every v18.0–v18.5 release clause, all 13 orphaned functionality/utility remediations, accepted conversational commitment, defect history and issue record. Classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. Nothing is silently assumed complete because an earlier release once recorded PASS.
 
-**Hardened Final Closure Build:** v18.5.1 now executes one controlled closure sequence: inventory freeze → escaped defects → confirmed implementation misses → all 13 utility remediations → complete v17/v18 evidence reconciliation → cross-cutting hardening → zero-gap G10 → one immutable RC → actual macOS/Windows audit → G16 prevention/handoff.
+**Adaptive v18.x Recovery & Closure Program:** the program executes inventory freeze → urgent defects → confirmed implementation misses → all 13 utility remediations → complete v17/v18 evidence reconciliation → cross-cutting hardening → zero-gap major-closure G10 → one immutable RC → actual macOS/Windows audit → G16 prevention/handoff. These phases may span v18.5.1, v18.6, v18.7 or later coherent v18.x slices.
 
-The reconciliation ledger is the parent authority. Release slices must conserve the same immutable IDs; they cannot independently drop or close work. G1, G3, G10 and G15 block on any ID-count mismatch, missing owner/test/evidence binding, open recurrence, unexplained deferral or stale evidence fingerprint.
+The reconciliation ledger is the parent authority. Release slices must conserve the same immutable IDs; they cannot independently drop or close work. Slice G1/G3/G10/G15 blocks on missing ownership or unexplained placement. The final major-closure G10/G15 additionally blocks on any open/reopened/not-implemented applicable row.
 
-No v19 implementation may share the v18.5.1 source/evidence/release lane until this closure reaches G16. Planning may continue, but it cannot dilute or bypass v18 closure.
+After each slice, use `Observe → Reconcile → Prioritize → Slice → Build → Validate → Measure → Learn → Replan` to select the smallest safe next v18.x scope. Do not predeclare a final version or compress unresolved work to fit one.
 
-Detailed authority: `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+v19 planning may continue, but implementation cannot dilute or share the active v18 source/evidence lane before the evidence-selected v18 closure reaches G16.
+
+Detailed authority: `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
 
 Permanent anti-miss rules:
 
@@ -121,7 +123,22 @@ Permanent anti-miss rules:
 2. Every defect and implementation promise must preserve one durable chain: **origin → current observation → owner → fix/disposition → regression test → actual package proof → closure evidence**.
 3. A source, dependency, renderer or package change invalidates earlier PASS evidence for the affected surface and its dependents.
 4. Closure requires direct browser evidence plus actual macOS Apple Silicon and Windows x64 packaged-runtime evidence for affected user workflows.
-5. v18.5.1 Stable is blocked until the escaped-defect set, confirmed implementation misses and full v17/v18 reconciliation have no unexplained or unplaced gaps. Any intentional deferral requires an explicit approved roadmap placement and truthful user impact.
+5. A v18.x slice is blocked by unresolved items assigned to that slice or any unexplained/unowned remainder. The final v18 closure is blocked until all applicable defects, misses and reconciliation rows have current final evidence.
+
+
+#### v18.6+ — Adaptive Recovery, Implementation & Hardening Capacity
+
+No fixed feature allocation is assumed. At each prior-slice G16 / next-slice G0–G3, choose from the still-open ledger using user impact, recurrence, dependency readiness, rights/security, performance/freshness risk, coupling, evidence invalidation and learning value.
+
+Candidate clusters include:
+
+- user-trust UI/state continuity;
+- provider/utility architecture and TradeInsight;
+- documentation/dependency readiness;
+- intelligence-surface consolidation;
+- full cross-cutting performance/security/native hardening.
+
+The final v18 closure release number is assigned only when the remaining applicable scope is ready for one immutable RC and 2/2 native artifact audit.
 
 ---
 
