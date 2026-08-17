@@ -1,0 +1,263 @@
+/* DE.PULSE v18.5.1 — frozen Research/header hierarchy recovery.
+   Presentation only: no market, provider, scoring, persistence or decision logic. */
+
+:root{
+  --v1851-topbar-h:64px;
+  --v1851-statusbar-h:44px;
+  --v1851-ticker-h:34px;
+  --v1851-chrome-h:142px;
+}
+
+/* Primary header = identity, notification, complete ET/PT clocks and account. */
+.topbar{
+  height:var(--v1851-topbar-h)!important;
+  min-height:var(--v1851-topbar-h)!important;
+  grid-template-columns:minmax(210px,.8fr) minmax(0,1fr) auto!important;
+  gap:12px!important;
+  padding:6px 14px!important;
+  overflow:hidden!important;
+  top:0!important;
+}
+.topbar .runtime{
+  min-width:0!important;
+  overflow:visible!important;
+  gap:7px!important;
+}
+.topbar .market-clocks{
+  display:flex!important;
+  gap:6px!important;
+  min-width:0!important;
+}
+.topbar .market-clock,
+.topbar .market-clock:last-child{
+  display:flex!important;
+  min-width:112px!important;
+  max-width:none!important;
+  padding:5px 7px!important;
+}
+.topbar .market-clock-value small{
+  display:block!important;
+  font-size:5.8px!important;
+  line-height:1!important;
+  letter-spacing:.055em!important;
+}
+.topbar .market-clock-value time{
+  display:block!important;
+  font-size:8.5px!important;
+  line-height:1.15!important;
+}
+
+/* Secondary header = market state, data coverage/detail and data control. */
+.market-status-bar{
+  min-height:var(--v1851-statusbar-h);
+  height:var(--v1851-statusbar-h);
+  position:sticky;
+  top:var(--v1851-topbar-h);
+  z-index:49;
+  display:grid;
+  grid-template-columns:auto minmax(220px,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:4px 14px;
+  border-bottom:1px solid var(--line);
+  background:#08111a;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+}
+.market-status-bar::-webkit-scrollbar{display:none}
+.market-status-bar .market-session-context{
+  position:static!important;
+  min-width:205px!important;
+  max-width:none!important;
+  width:auto!important;
+  height:34px!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  grid-template-rows:1fr!important;
+  align-items:center!important;
+  gap:9px!important;
+  padding:5px 10px!important;
+  overflow:hidden!important;
+}
+.market-status-bar .market-session-context b{
+  font-size:7.5px!important;
+  white-space:nowrap!important;
+}
+.market-status-bar .market-session-context small{
+  display:block!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  font-size:6.5px!important;
+}
+.market-data-summary{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 2px;
+}
+.market-data-summary .runtime-pill{
+  display:inline-flex!important;
+  flex:0 0 auto;
+  min-width:94px!important;
+  max-width:none!important;
+  justify-content:center;
+  padding:5px 8px!important;
+  font-size:7.5px!important;
+}
+.market-data-detail{
+  min-width:0;
+  color:var(--muted);
+  font-size:7.5px;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.market-status-bar .btn{
+  min-width:82px;
+  min-height:32px;
+  white-space:nowrap;
+}
+
+/* Market Instruments remains the tertiary strip. */
+.ticker-tape{
+  min-height:var(--v1851-ticker-h)!important;
+  top:calc(var(--v1851-topbar-h) + var(--v1851-statusbar-h))!important;
+}
+.workspace{min-height:calc(100vh - var(--v1851-chrome-h))!important}
+.sidebar{
+  top:var(--v1851-chrome-h)!important;
+  height:calc(100vh - var(--v1851-chrome-h))!important;
+  max-height:calc(100vh - var(--v1851-chrome-h))!important;
+}
+
+/* Research Target: target identity is primary, symbol ingestion/freshness secondary. */
+.research-command-v2{
+  grid-template-columns:minmax(0,1fr) minmax(210px,.34fr)!important;
+  gap:16px!important;
+  padding:16px 18px!important;
+  border-color:rgba(33,200,243,.22)!important;
+}
+.research-command-v2 .research-command-symbol>.eyebrow{
+  color:var(--cyan)!important;
+  font-size:8.5px!important;
+  letter-spacing:.13em!important;
+}
+.research-target-grid{
+  grid-template-columns:minmax(260px,1.3fr) minmax(220px,.9fr) minmax(165px,.68fr)!important;
+  gap:10px!important;
+  margin-top:8px!important;
+  align-items:end!important;
+}
+.research-target-grid>*{min-width:0!important}
+.research-target-grid>label:first-child{
+  border:1px solid rgba(33,200,243,.28);
+  background:rgba(33,200,243,.035);
+  border-radius:11px;
+  padding:8px;
+}
+.research-target-grid>label:first-child>small{
+  color:#b7deeb!important;
+  font-size:8px!important;
+  font-weight:900!important;
+}
+.research-target-grid>label:first-child .ticker-control{
+  height:44px!important;
+  min-height:44px!important;
+  border-color:rgba(33,200,243,.55)!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.025em!important;
+}
+.research-target-grid>label:nth-child(2),
+.research-target-status{
+  padding:8px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:rgba(6,14,22,.45);
+}
+.research-command-v2 .research-add-symbol .ticker-input,
+.research-command-v2 .research-add-symbol .btn,
+.research-command-v2 .research-target-status .data-badge{
+  height:36px!important;
+  min-height:36px!important;
+}
+.research-command-actions{
+  padding-top:18px!important;
+  align-content:start!important;
+  align-items:stretch!important;
+}
+.research-origin-context{margin-top:8px!important}
+.research-tabs-v2{
+  width:100%!important;
+  max-width:100%!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  overflow:hidden!important;
+}
+.research-tabs-v2 button{
+  min-width:0!important;
+  white-space:normal!important;
+  line-height:1.25!important;
+  overflow-wrap:anywhere!important;
+}
+
+@media(max-width:1180px){
+  .topbar{grid-template-columns:minmax(190px,.75fr) minmax(120px,.65fr) auto!important}
+  .header-notification{max-width:320px!important}
+  .research-command-v2{grid-template-columns:1fr!important}
+  .research-command-actions{padding-top:0!important;display:flex!important;max-width:none!important}
+  .research-target-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important}
+  .research-target-grid>label:first-child{grid-column:1/-1}
+  .research-tabs-v2{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+
+@media(max-width:900px){
+  .topbar{grid-template-columns:minmax(155px,1fr) auto!important}
+  .header-notification{display:none!important}
+  .brand img{width:44px!important;height:44px!important;flex-basis:44px!important}
+  .brand small{display:none!important}
+  .topbar .market-clock,.topbar .market-clock:last-child{min-width:104px!important}
+  .identity-principal{display:none!important}
+  .market-status-bar{grid-template-columns:auto minmax(180px,1fr) auto;gap:8px;padding-inline:10px}
+  .market-status-bar .market-session-context{min-width:190px!important}
+}
+
+@media(max-width:700px){
+  .topbar{padding-inline:9px!important;gap:7px!important}
+  .brand img{width:38px!important;height:38px!important;flex-basis:38px!important}
+  .brand-name{font-size:14px!important}
+  .brand-pulse{display:none!important}
+  .topbar .market-clocks{gap:4px!important}
+  .topbar .market-clock,.topbar .market-clock:last-child{min-width:94px!important;padding-inline:5px!important}
+  .topbar .market-clock b{font-size:6px!important}
+  .topbar .market-clock-value small{font-size:5px!important}
+  .topbar .market-clock-value time{font-size:7.3px!important}
+  .market-status-bar{grid-template-columns:auto minmax(150px,1fr) auto;padding-inline:8px;gap:6px}
+  .market-status-bar .market-session-context{min-width:174px!important}
+  .market-data-detail{font-size:7px}
+  .market-status-bar .btn{min-width:72px;padding-inline:8px}
+  .research-target-grid{grid-template-columns:1fr!important}
+  .research-target-grid>label:first-child{grid-column:auto}
+  .research-command-actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important}
+  .research-command-actions>*{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+  .research-tabs-v2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media(max-width:560px){
+  .topbar{grid-template-columns:minmax(112px,.65fr) auto!important}
+  .brand{gap:6px!important}
+  .brand img{width:34px!important;height:34px!important;flex-basis:34px!important}
+  .brand-name{font-size:13px!important}
+  .brand-version{display:none!important}
+  .topbar .market-clock,.topbar .market-clock:last-child{min-width:84px!important}
+  .market-status-bar{display:flex;align-items:center;overflow-x:auto}
+  .market-status-bar .market-session-context{min-width:165px!important;flex:0 0 165px}
+  .market-data-summary{min-width:190px;flex:1 0 190px}
+  .market-status-bar .btn{flex:0 0 auto}
+  .sidebar{top:var(--v1851-chrome-h)!important}
+}
