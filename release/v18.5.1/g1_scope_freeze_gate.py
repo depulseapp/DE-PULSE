@@ -68,9 +68,6 @@ def has_future_placement(row):
 
 
 def source_owner(row):
-    # G1 requires a current owner. Existing explicit ownership wins. Historical
-    # evidence is diagnostic context only and must not be silently promoted to
-    # current ownership.
     for key in ("owner", "sourceOwner", "codeOwner", "currentSourceOwner"):
         if row.get(key):
             return row.get(key)
@@ -84,7 +81,8 @@ def main():
 
     data = json.loads(LEDGER.read_text())
     baseline = data.get("baseline", {})
-    current = data.get("currentSlice", {})
+    train = data.get("adaptiveReleaseTrain", {})
+    current = train.get("currentSlice", {})
     rows = collect_rows(data)
     row_ids = [row["id"] for _, row in rows]
     counts = Counter(row_ids)
@@ -110,7 +108,7 @@ def main():
         errors.append(f"current-slice IDs missing from ledger: {missing_current}")
     assigned = current.get("assignedIds", [])
     if assigned != EXPECTED_CURRENT_IDS:
-        errors.append("currentSlice.assignedIds differs from the audited ten-ID recovery scope")
+        errors.append("adaptiveReleaseTrain.currentSlice.assignedIds differs from the audited ten-ID recovery scope")
 
     unplaced = []
     missing_owner = []
@@ -142,10 +140,7 @@ def main():
             "review section accounting before freeze"
         )
 
-    frozen = (
-        current.get("planningState") == "G1_SCOPE_FROZEN"
-        and current.get("scopeFreezeState") == "FROZEN"
-    )
+    frozen = current.get("planningState") == "G1_SCOPE_FROZEN" and current.get("scopeFreezeState") == "FROZEN"
     report = {
         "schema": "DE.PULSE-v18.5.1-G1-SCOPE-DIAGNOSTICS-1",
         "release": EXPECTED_RELEASE,
