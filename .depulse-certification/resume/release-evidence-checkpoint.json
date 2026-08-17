@@ -2,76 +2,106 @@
   "schemaVersion": 2,
   "protocolVersion": "2.0",
   "release": "v18.4.0",
-  "channel": "TEST",
-  "branch": "v18.4-development",
+  "channel": "STABLE",
+  "branch": "main",
   "incomingStable": {
     "version": "v18.3.0",
     "tag": "v18.3.0-stable",
     "commit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
     "sourceFingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f"
   },
-  "candidateSourceCommit": "f524d6df1d074e8fff19846cf4dca0ddbbe50e71",
-  "metadataHeadRule": "Resume evidence metadata is fingerprint-excluded. G10 source fingerprint and G11-G15 immutable artifacts become authoritative only after same-head qualification passes.",
-  "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_REQUALIFICATION",
+  "certifiedStable": {
+    "version": "v18.4.0",
+    "tag": "v18.4.0-stable",
+    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+    "buildId": "v18.4.0-stable-security-commercial-readiness-20260816",
+    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
+    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+  },
+  "candidateSourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+  "metadataHeadRule": "G16 resume evidence and handoff metadata are fingerprint-excluded. v18.4 product truth remains the immutable v18.4.0-stable tag at the exact Stable-certified source commit.",
+  "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
+  "sourceFingerprintState": "FROZEN_CERTIFIED",
   "evidence": {
     "Incoming-v18.3-Stable": {
       "status": "PASS",
       "sourceCommit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
       "sourceFingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f",
-      "note": "Certified v18.3 PostgreSQL/hosted shared-state baseline remains immutable."
+      "note": "Certified v18.3 PostgreSQL/hosted shared-state baseline remained immutable throughout v18.4."
     },
-    "v18.4-Reauth": {
+    "v18.4-Implementation": {
       "status": "PASS",
-      "note": "Adversarial fresh re-authentication slice accepted with focused/full regression and no normal market/research gating."
-    },
-    "v18.4-Provider-Rights": {
-      "status": "PASS",
-      "sourceCommit": "844044582a031c7c003834569736828d7f164eff",
-      "note": "Conservative provider rights metadata accepted; routing-separation guards passed."
-    },
-    "v18.4-Hosted-Quota-Observability": {
-      "status": "PASS",
-      "sourceCommit": "5ddc03c01f9b156e6994a15aa5f95b34ba63f92c",
-      "runId": 31993792259,
-      "note": "Focused v18.4, full Go, vet, Windows x64 and protected-owner checks passed."
-    },
-    "v18.4-Commercial-Readiness": {
-      "status": "PASS",
-      "sourceCommit": "e8eb1666a8ac228ef789a4d32ee7d8a5b39a0f7a",
-      "runId": 31994276069,
-      "note": "Fail-closed evidence-bound commercial/redistribution/AI-use readiness and routing-separation regression passed."
-    },
-    "v18.4-TEST-Identity-And-Docs": {
-      "status": "PASS",
-      "note": "Canonical v18.4.0 TEST identity, isolated runtime profile, README/in-app documentation and QA manifest synchronized."
+      "note": "Approved security/commercial-readiness scope completed with re-authentication, adversarial security hardening, bounded hosted quota/observability, provider-rights metadata and fail-closed rights readiness while preserving protected market behavior and No Execution."
     },
     "G4-G10": {
-      "status": "PENDING",
-      "candidateCommit": "f524d6df1d074e8fff19846cf4dca0ddbbe50e71",
-      "note": "Clean same-head pre-freeze requalification required after resume checkpoint synchronization."
+      "status": "PASS",
+      "candidateCommit": "f5edf0dd93c9e0ec13380644b9a946d7c2f6e20b",
+      "sourceFingerprint": "b91680a19754657c5d594e5f1608bf70f04b88f2f6003264265b8f9b30c7b7d9",
+      "note": "Clean same-head pre-freeze qualification passed and exact TEST RC source fingerprint was frozen."
     },
     "G11-G15-TEST": {
-      "status": "PENDING"
+      "status": "PASS",
+      "runId": 31995638726,
+      "sourceCommit": "f5edf0dd93c9e0ec13380644b9a946d7c2f6e20b",
+      "sourceFingerprint": "b91680a19754657c5d594e5f1608bf70f04b88f2f6003264265b8f9b30c7b7d9",
+      "decision": "STABLE_PROMOTION_READY"
+    },
+    "Identity-Only-Stable-Promotion": {
+      "status": "PASS",
+      "runId": 31996721805,
+      "sourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+      "parentCommit": "f5edf0dd93c9e0ec13380644b9a946d7c2f6e20b",
+      "note": "Bounded identity/docs/QA/gate delta only; protected market/router/persistence/formula owners unchanged."
+    },
+    "G11-G15-STABLE": {
+      "status": "PASS",
+      "runId": 31996862006,
+      "decision": "STABLE_CERTIFIED",
+      "sourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+      "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
+      "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4",
+      "artifacts": {
+        "G11": {"id": 9277092943, "digest": "sha256:8d3a3072e1f0d69cc56a2d21f35a279d07bd8b37ef32fced43eb04d4082f25fd"},
+        "G12": {"id": 9277261578, "digest": "sha256:973ab22b4b680f982c6d8e6a809b16078cba2750f3ac3e77ce3f672bd30ceb46"},
+        "G14-macOS-Apple-Silicon": {"id": 9277288755, "digest": "sha256:aebd4b2b5d091226d63cbdd6d2987f4f3e0cefce7e8070286977466fb5997740", "packageSha256": "bed1f76fdefa1e4ec7076e29dc63f93f14bb5fee01d24eef02c64e1c14bed452"},
+        "G14-Windows-x64": {"id": 9277305919, "digest": "sha256:be7220cbc45988c2701d1b5c77d90997b24a87bf51d7404b1f12d5f70e26d5f1", "packageSha256": "66d694c690c65459d273d285b1a0388c81cd4908fd6c110e3f02ec9b66078d25"},
+        "G15": {"id": 9277309842, "digest": "sha256:a3b1f7ebdbbbd9e5ade323ea0c832d23fe05fad3e50d80e3af4fdbf2369ba757"}
+      }
     },
     "Stable-Promotion": {
-      "status": "PENDING"
+      "status": "PASS",
+      "runId": 31997633477,
+      "mainProductSourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+      "stableTag": "v18.4.0-stable",
+      "promotionArtifact": {"id": 9277340694, "digest": "sha256:646cf33112f5eb0de7c6495aeb0f2c6fab80a7554222711d3d6fe9b442ee31f3"},
+      "note": "Final promotion independently re-read Stable G15 and exact source identity before fast-forwarding main and creating the immutable tag."
+    },
+    "Branch-Cleanup": {
+      "status": "PASS",
+      "runId": 31997690856,
+      "note": "All temporary v18.4 development, RC, certification, promotion and cleanup branches deleted after main/tag verification."
     },
     "G16": {
-      "status": "PENDING"
+      "status": "PASS",
+      "handoff": ".depulse-certification/handoff/DE-PULSE-v18.4.0-Stable-to-v18.5-Handoff-2026-08-16.md",
+      "decision": "V18.4_CLOSED_V18.5_READY"
     }
   },
   "supersededOrFailedEvidence": [
-    {"runId":31994636068,"classification":"RELEASE_DOC_IDENTITY_SYNC","reason":"Pre-freeze stopped before product tests because README/docs still represented v18.3 Stable."},
-    {"runId":31994891606,"classification":"QA_MANIFEST_SYNC","reason":"Documentation text passed version consistency; QA manifest current-release row was not yet synchronized."},
-    {"runId":31995020830,"classification":"RESUME_CHECKPOINT_SYNC","reason":"Release/docs/naming passed; fingerprint-excluded resume checkpoints still declared v18.3 and required current-release synchronization."},
-    {"classification":"FORMALIZER_IDEMPOTENCE","reason":"Temporary one-shot formalizer reran and advanced two TEST migration provenance strings; corrected before G10 and formalizer retired."}
+    {"runId": 31994636068, "classification": "RELEASE_DOC_IDENTITY_SYNC", "reason": "Pre-freeze stopped before product tests because README/docs still represented v18.3 Stable."},
+    {"runId": 31994891606, "classification": "QA_MANIFEST_SYNC", "reason": "Documentation text passed version consistency; QA manifest current-release row was not yet synchronized."},
+    {"runId": 31995020830, "classification": "RESUME_CHECKPOINT_SYNC", "reason": "Release/docs/naming passed; fingerprint-excluded resume checkpoints still declared v18.3 and required current-release synchronization."},
+    {"classification": "FORMALIZER_IDEMPOTENCE", "reason": "Temporary one-shot formalizer reran and advanced two TEST migration provenance strings; corrected before G10 and formalizer retired."},
+    {"runId": 31996551381, "classification": "PROMOTION_TOOLING_CACHE_NOISE", "reason": "Stable identity qualification itself passed; bounded diff correctly rejected generated __pycache__/ content before any product-source write. Retry disabled Python bytecode generation and cleaned caches."}
   ],
   "aiplcLessons": [
     "Release formalization tooling must be idempotent and removed before immutable candidate freeze.",
     "Current-release identity synchronization includes runtime metadata, README, in-app docs, QA manifest and fingerprint-excluded resume checkpoints.",
-    "Provider commercial/data-rights readiness must fail closed and remain separate from operational routing entitlement."
+    "Provider commercial/data-rights readiness must fail closed and remain separate from operational routing entitlement.",
+    "Stable identity promotion must be bounded and freshly recertified from exact source through G11-G15 before immutable publication.",
+    "Generated Python cache/bytecode must be disabled or cleaned before source-diff allowlist checks.",
+    "Final Stable promotion must independently verify G15 status, exact source commit, fingerprint and source SHA before moving main/tag."
   ],
-  "nextRequiredEvidence": "Clean same-head v18.4 G4-G10 pre-freeze qualification and source fingerprint freeze.",
-  "updatedAt": "2026-08-17T04:36:00Z"
+  "nextRequiredEvidence": "v18.5 G0 exact-baseline reconstruction plus Major Closure & Release Assurance plan, anchored to immutable v18.4.0-stable.",
+  "updatedAt": "2026-08-17T05:24:00Z"
 }
