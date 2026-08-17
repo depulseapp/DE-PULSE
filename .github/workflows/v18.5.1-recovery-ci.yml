@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: v18.5.1-recovery-${{ github.ref }}
@@ -18,13 +18,16 @@ env:
 
 jobs:
   g0-inventory:
-    name: G0 · Baseline + G1 diagnostics
+    name: G0/G1 · Baseline, conservation and freeze materialization
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 10
+    outputs:
+      freeze_commit: ${{ steps.freeze.outputs.freeze_commit }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: v18.5.1-development
       - name: Verify exact incoming Stable and branch ancestry
         shell: bash
         run: |
@@ -32,36 +35,56 @@ jobs:
           git cat-file -e 'v18.5.0-stable^{commit}'
           test "$(git rev-parse 'v18.5.0-stable^{commit}')" = '0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680'
           git merge-base --is-ancestor 'v18.5.0-stable^{commit}' HEAD
-      - name: Diagnose G1 requirement conservation
+      - name: Materialize complete G1 placement and freeze overlay
+        run: python3 release/v18.5.1/g1_scope_materialize.py --apply
+      - name: Validate materialized G1 scope
+        run: python3 release/v18.5.1/g1_scope_freeze_gate.py
+      - name: Commit generated G1 authority if changed
+        id: freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'depulseapp'
+          git config user.email 'de.pulse.app@gmail.com'
+          git add release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json release/v18.5.1/G1-SCOPE-FREEZE.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'governance: freeze v18.5.1 G1 recovery scope'
+            git push origin HEAD:v18.5.1-development
+          fi
+          echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Refresh G1 diagnostics on frozen source
         run: python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
-      - name: Materialize complete G1 placement draft
-        run: python3 release/v18.5.1/g1_scope_materialize.py
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.5.1-G1-Diagnostics
+          name: De-Pulse-v18.5.1-G1-Freeze
           path: |
             evidence/v18.5.1-G1-scope-diagnostics.json
-            evidence/v18.5.1-G1-placement-draft.json
+            release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json
+            release/v18.5.1/G1-SCOPE-FREEZE.json
           if-no-files-found: error
-          retention-days: 90
+          retention-days: 365
 
   g1-scope-freeze:
-    name: G1 · Immutable recovery scope
+    name: G1 · Immutable ten-ID recovery scope
     needs: [g0-inventory]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
-      - name: Enforce frozen ten-ID recovery slice
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
+      - name: Enforce hash-bound 295-row conservation and frozen ten-ID slice
         run: python3 release/v18.5.1/g1_scope_freeze_gate.py
 
   fast-static:
     name: G2-G5 · Cheap static qualification
-    needs: [g1-scope-freeze]
+    needs: [g0-inventory, g1-scope-freeze]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -80,11 +103,13 @@ jobs:
 
   focused-go:
     name: G5 · Focused affected Go tests
-    needs: [fast-static]
+    needs: [g0-inventory, fast-static]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -97,11 +122,13 @@ jobs:
 
   full-go:
     name: G5 · Full Go development exit
-    needs: [focused-go]
+    needs: [g0-inventory, focused-go]
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -110,11 +137,13 @@ jobs:
 
   renderer-fast:
     name: G5 · Renderer fast lane
-    needs: [g1-scope-freeze]
+    needs: [g0-inventory, g1-scope-freeze]
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
