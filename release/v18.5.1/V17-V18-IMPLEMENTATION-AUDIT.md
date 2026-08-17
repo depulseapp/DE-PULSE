@@ -109,13 +109,14 @@ Allowed current dispositions:
 - `FRESH_PASS`
 - `REOPENED`
 - `NOT_IMPLEMENTED_CONFIRMED`
+- `PLACED_NEXT_V18`
 - `INTENTIONALLY_SUPERSEDED`
 - `NOT_APPLICABLE`
 - `ROADMAP_PLACED_FUTURE`
 - `REVALIDATION_REQUIRED`
 - `REVALIDATION_REQUIRED_HIGH`
 
-v18.5.1 Stable is blocked by every `REOPENED`, `NOT_IMPLEMENTED_CONFIRMED`, `REVALIDATION_REQUIRED` and `REVALIDATION_REQUIRED_HIGH` row.
+A v18.x slice release is blocked by unresolved rows assigned to that slice and by any remainder without complete next-slice placement. The evidence-selected final v18 major closure is blocked by every `PLACED_NEXT_V18`, `REOPENED`, `NOT_IMPLEMENTED_CONFIRMED`, `REVALIDATION_REQUIRED` and `REVALIDATION_REQUIRED_HIGH` row.
 
 ## Required evidence chain
 
@@ -132,9 +133,11 @@ A matching repeat report reopens the original row, increments recurrence and inv
 3. Reconcile all v18 workstreams and 169 release entries; implement TradeInsight through the canonical Smart Router.
 4. Close the 13 orphaned functionality/utility remediation rows with implementation or evidence-backed explicit disposition.
 5. Fix the six escaped defect groups plus the confirmed documentation/dependency gaps and add behavioral regressions.
-6. Run cross-role, cross-desk, cross-viewport, restart/reload, failure/degradation and actual-package matrices.
-7. Freeze an immutable RC only after the ledger has no unexplained or blocking status.
-8. Record at G16 why prior gates missed each escape and which machine control prevents recurrence.
+6. At G0–G3, select the smallest coherent v18.5.1 scope and explicitly place every remainder into the next evidence-selected v18.x lane.
+7. Run the required cross-role, cross-desk, cross-viewport, restart/reload, failure/degradation and actual-package matrices for the frozen slice.
+8. Repeat reconciliation and adaptive reprioritization for v18.6+ until major-closure readiness is zero-gap.
+9. Freeze a major-closure RC only when no next-slice/open applicable row remains.
+10. Record at every G16 why prior gates missed each escape and which machine control prevents recurrence.
 
 ## Non-miss future scope
 
