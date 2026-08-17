@@ -60,15 +60,26 @@ def slug(value: object) -> str:
 def scope_entries(path: str, data: dict) -> list[dict]:
     rows: list[dict] = []
 
+    key_prefix = {
+        "items": "items",
+        "scope_lock": "scope-lock",
+        "clauses": "clauses",
+        "firstSlice": "first-slice",
+        "closureDimensions": "closure",
+        "adrGdiRequiredScenarios": "adr-gdi",
+        "releaseBlockers": "release-blocker",
+        "protectedContracts": "protected",
+    }
+
     def append(section: str, values: object) -> None:
         if not isinstance(values, list):
             return
         for index, item in enumerate(values, 1):
             if isinstance(item, dict):
-                key = item.get("id") or f"{path}#{section.replace('_', '-')}-{index}"
+                key = item.get("id") or f"{path}#{key_prefix[section]}-{index}"
                 title = item.get("name") or item.get("requirement") or str(item)
             else:
-                key = f"{path}#{section.replace('_', '-')}-{index}"
+                key = f"{path}#{key_prefix[section]}-{index}"
                 title = str(item)
             rows.append(
                 {
