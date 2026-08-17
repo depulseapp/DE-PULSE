@@ -304,6 +304,89 @@ Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTE
 
 ---
 
+## 12B. Requirement-Controlled Build Slicing
+
+This section supersedes plan-only slicing. A build slice is executable only when it is derived from the reconciliation ledger and carries its parent requirement IDs.
+
+### Mandatory work-packet schema
+
+Every work packet must declare:
+
+- immutable requirement/defect IDs and exact origins;
+- current user-visible promise;
+- target release/slice and implementation owner;
+- source modules, API/state/persistence/UI/package impacts;
+- dependency and evidence-invalidation graph;
+- security/role/data-rights implications;
+- performance/provider/storage budget;
+- regression test IDs and behavioral scenarios;
+- browser/API/runtime evidence requirements;
+- macOS and Windows package evidence requirements;
+- completion status and unresolved blockers.
+
+A work packet with no parent IDs cannot enter G4. A parent ID with no work packet, approved disposition or explicit evidence-only lane blocks G3.
+
+### Slice-conservation checkpoints
+
+| Gate | Required continuity proof |
+|---|---|
+| G0 | Canonical baseline plus complete ledger count/ID fingerprint. |
+| G1 | Every incoming ID assigned; no silent omission, duplicate ownership or unapproved deferral. |
+| G3 | Every assigned ID has owner, impact map, tests, evidence and dependency readiness. |
+| G4 | Implementation commits map back to IDs; no unrelated hidden semantic work. |
+| G5–G9 | Test and behavior results attach to IDs and invalidate stale predecessor evidence. |
+| G10 | Full ledger reconciliation: zero missing/open/unowned/untested/evidence-stale applicable rows. |
+| G11 | RC freezes exact ledger, source and evidence fingerprints. |
+| G12–G14 | Full certification and both native artifact audits attach to the frozen IDs/source. |
+| G15 | Promotion rechecks ID conservation and exact artifact provenance. |
+| G16 | Recurrences, root causes, prevention and remaining future placements are explicit. |
+
+### Hardened final-closure execution board
+
+| Wave | Primary work | Parallelizable lanes | Exit condition |
+|---|---|---|---|
+| 0 | Freeze 282-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
+| 1 | Escaped user defects | copy/version; symbol semantics; navigation; Research UI | focused tests + direct browser proof |
+| 2 | Confirmed implementation misses | TradeInsight; snapshot broker; session coordinator; routes/surfaces; docs; dependency register | canonical ownership + functional/security/performance proof |
+| 3 | Remaining utility remediations | Dashboard, Market Intelligence, Desks, Catalyst, Maintenance | all 13 remediation rows final |
+| 4 | Complete v17/v18 proof | backend, renderer, persistence, provider, security, docs lanes | every applicable row current and evidenced |
+| 5 | Cross-cutting hardening | roles, desks, viewports, restart, failure, load, data rights | G7–G10 matrices clean |
+| 6 | Immutable release | G12 full suite; macOS and Windows in parallel | exact packages pass G13/G14/G15 |
+| 7 | Retrospective/handoff | documentation, learning, cleanup, provenance | G16 reconstructable handoff |
+
+### Evidence freshness and invalidation
+
+Evidence records must carry source commit and dependency fingerprint. Changes invalidate at least:
+
+- renderer change → affected UI, responsive, keyboard and native workflow evidence;
+- API/state/persistence change → functional, isolation, migration, restart and package evidence;
+- provider/router change → entitlement, rights, fallback, rate-limit, performance and decision-truth evidence;
+- build/package change → G13/G14/G15 artifact evidence;
+- requirement wording or ownership change → G1/G3/G10 traceability evidence;
+- repeated defect → original row, linked regressions and dependent package proof.
+
+Only unaffected evidence with a matching fingerprint may be reused.
+
+### Quantitative final-closure scorecard
+
+All values must be achieved before G11:
+
+- requirement identity conservation: **282/282**;
+- applicable rows with owner: **100%**;
+- applicable rows with regression mapping: **100%**;
+- applicable user workflows with browser evidence: **100%**;
+- applicable rows with current source/evidence fingerprint: **100%**;
+- open/reopened/not-implemented applicable rows: **0**;
+- unexplained deferrals: **0**;
+- repeated defects without root-cause/prevention evidence: **0**;
+- required native platforms passing actual-artifact audit: **2/2**;
+- protected Day/Swing/Long formula drift: **0**;
+- No Execution or U.S. Equities boundary violations: **0**.
+
+The detailed execution authority is `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+
+---
+
 ## 13. G0–G16 planning map
 
 - **G0:** exact baseline/checkpoint/open defects.
@@ -341,3 +424,5 @@ The plan is 10/10 only when it can answer, with durable evidence:
 8. What remains and where is it explicitly placed?
 9. Is G1 protected?
 10. Can another conversation/runner resume from GitHub without guessing?
+11. Are all input requirement IDs conserved through every slice?
+12. Does every PASS have current behavior and exact-package evidence rather than historical/static evidence?
