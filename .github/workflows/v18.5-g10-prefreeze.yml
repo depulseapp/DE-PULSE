@@ -240,7 +240,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: false
       - name: Renderer / deterministic / role-aware acceptance
         shell: bash
         run: |
@@ -306,7 +305,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: false
       - name: Rebind identity / scope / closure contract
         shell: bash
         run: |
