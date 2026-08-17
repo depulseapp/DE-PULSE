@@ -110,6 +110,19 @@ Prioritization considers:
 
 Likely clusters may include user-trust UI/state recovery, provider/utility architecture, TradeInsight, documentation/dependency readiness, consolidation and final hardening. These are planning candidates, not pre-frozen promises. G0–G3 selects the smallest coherent next slice from the open ledger.
 
+### Provisional starting sequence
+
+This is the recommended starting plan, subject to G0–G3 replanning after each slice:
+
+| Candidate | Primary objective | Candidate contents | Why this grouping |
+|---|---|---|---|
+| v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; scroll/focus continuity; Research top-area; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
+| v18.6 | Canonical utility/ownership recovery | shared Scanner/Radar acquisition; Session Intelligence Coordinator; Market Activity demotion; legacy route redirects; role-aware docs/impact manifest; dependency readiness register | These items share architecture, ownership, surface and governance dependencies. |
+| v18.7 | Provider intelligence + remaining consolidation | TradeInsight SHADOW/SECONDARY; remaining Dashboard/Market Intelligence/Desk/Catalyst/Maintenance remediation; provider-rights/readiness validation | External/provider work and larger consolidation need isolated rights, performance and regression qualification. |
+| v18.8+ | Major closure candidate or additional hardening | full 282-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
+
+This table is not immutable scope. Each candidate becomes binding only when its own G1 closes. Findings may pull a dependency-compatible blocker earlier, split an unsafe slice or create another v18.x release.
+
 ### Final v18.x closure release
 
 The final closure version may be v18.6, v18.7, v18.8 or later. It is designated only when:
