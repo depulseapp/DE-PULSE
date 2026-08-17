@@ -124,6 +124,32 @@ This overlay cannot change those placements.
 
 ---
 
+## 6A. v18.5.1 escaped-defect recovery overlay
+
+Classification: **CURRENT_RELEASE_BLOCKER**. v18.5.1 must close the following evidence-backed v18.5 escapes in addition to its repository-archetype work.
+
+| ID | Required recovery | Minimum closure evidence |
+|---|---|---|
+| COPY-18.5.1-001 | Replace stale `v17` profile-preservation copy with truthful source/target-version messaging. | Fresh-install and upgrade-path checks in source, browser and packaged runtime. |
+| SYMBOL-18.5.1-001 | Make row removal reliable across Day/Swing/Long, including final desk membership, with truthful counts and persistence. | All-desk membership matrix, API/state assertions, reload and packaged-runtime retest. |
+| SYMBOL-18.5.1-002 | Visually distinguish the current desk membership from other memberships on every desk. | Day/Swing/Long responsive screenshots plus state/selection assertions. |
+| NAV-18.5.1-001 | Preserve scroll, focus and relevant selection across live/SSE refresh; no unrequested jump to page top. | Mid-section dwell through repeated updates in browser and actual packages. |
+| RESEARCH-v15.1.0-17-19-REOPENED | Reclose approved Research input, freshness-badge and responsive top-area placement; make labels, controls, disabled states and evidence recovery truthful. | Requirement-level UI/state tests at desktop/tablet/narrow widths plus packaged-runtime evidence. |
+
+A full v18 implementation-reconciliation ledger is also mandatory. It must compare approved scope, canonical roadmap, decision records, release evidence, accepted defects/issues, current source and actual packages. Each promise receives exactly one current disposition: `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED` or `NOT_APPLICABLE`. Smart Provider Router / TradeInsight placement is verified here rather than guessed.
+
+Operational recurrence rule:
+
+- search before creating a new item;
+- link duplicate observations to the original origin;
+- if reproducible, reopen it, increment recurrence and invalidate affected closure evidence;
+- the second observed escape is automatically G16 root-cause work and a current-release blocker until prevention evidence exists;
+- do not close from source inspection alone—require **Find → Fix → Regression Test → Retest** on the actual supported surfaces and packages.
+
+This overlay does not create G17+. The work is enforced through G0/G1 traceability, G2/G3 ownership and impact planning, G5/G6 functional qualification, G9 UI/UX, G10 full reconciliation, G14 actual packaged-runtime audit, G15 release assurance and G16 prevention/handoff.
+
+---
+
 ## 7. Governance-to-Implementation lifecycle
 
 Every applicable rule follows:
