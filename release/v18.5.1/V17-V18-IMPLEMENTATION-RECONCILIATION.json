@@ -50,7 +50,7 @@
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
     "reconciliationBranch": "v18.5.1-development",
     "functionalityUtilityRemediations": 13,
-    "totalTrackedRows": 282
+    "totalTrackedRows": 283
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -3014,6 +3014,29 @@
         "current TEST/HOSTED profile contract",
         "source scan blocking obsolete active-version strings",
         "packaged UI/runtime verification"
+      ]
+    },
+    {
+      "id": "HOVER-18.5.1-001",
+      "title": "Ticker hover causes repeated screen/table blinking during live updates",
+      "status": "REOPENED",
+      "origin": [
+        "User report 2026-08-17",
+        "screenshot c961349f-110c-47ad-b45d-f1e48a10ce99.png",
+        "screenshot 59e2d3e6-e138-41bd-b257-b36692527b65.png"
+      ],
+      "findings": [
+        "Hovering a ticker/row causes visible repeated blinking or flicker in the surrounding screen/table.",
+        "The defect is interaction and refresh sensitive and may involve hover styling, live quote/SSE rerender, DOM replacement, layout invalidation or paint churn.",
+        "Scope is not limited to the captured table; all ticker cards, watchlists and Day/Swing/Long table surfaces require verification."
+      ],
+      "requiredClosure": [
+        "identify and remove the root cause rather than masking the hover state",
+        "stable pointer hover during repeated live/SSE quote and readiness updates",
+        "no row/table/screen remount, geometry shift, opacity flash or unintended selection change",
+        "automated hover-plus-refresh regression across all ticker surfaces and Day/Swing/Long",
+        "desktop/tablet/narrow browser proof with reduced-motion and keyboard-focus checks",
+        "macOS Apple Silicon and Windows x64 actual-package dwell/retest evidence"
       ]
     }
   ],
