@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.5.1",
+  "status": "DEVELOPMENT",
+  "qualificationRequested": false,
+  "releaseCertificationRequested": false,
+  "sourceSha": null,
+  "checkpointId": null,
+  "notes": "Normal development commits do not trigger qualification. Set qualificationRequested=true and bind sourceSha/checkpointId only after a coherent development batch is complete. G11-G15 release certification remains separate and requires an immutable RC."
+}
