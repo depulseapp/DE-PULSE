@@ -273,6 +273,7 @@ v18.5.1 establishes the complete reconciliation control plane, prevents further 
 | I — documentation governance | IMPL-18-DOC-001 | Server-authoritative audience policy, role-composed UI/direct paths, Documentation Impact Manifest and cross-role security/package tests. |
 | J — dependency readiness | IMPL-17-DEPS-001 | Canonical dependency/readiness registry, User Action Required records, gate binding and role-safe operational proof. |
 | K — remaining utility carry-forward | Dashboard, Market Intelligence, three Desks, Catalyst Watch and Maintenance records | Fresh design/behavior/performance/package disposition; no registry-only or target-release-only closure. |
+| L — header information hierarchy | HEADER-18.5.1-001 | Preserve the existing ET/PT module unchanged; create a stable session-aware secondary Market Pulse Ribbon for market session, time, coverage and data control; move market instruments tertiary; place Sign Out in the Local Owner menu; prove responsive/accessibility/state truth with no animation-induced flicker or layout shift. |
 
 Each ledger row must contain:
 
@@ -358,7 +359,7 @@ Candidate version numbers such as v18.6 or v18.7 are capacity, not fixed content
 
 | Wave | Primary work | Parallelizable lanes | Exit condition |
 |---|---|---|---|
-| 0 | Freeze 283-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
+| 0 | Freeze 284-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
 | 1 | Escaped user defects | copy/version; symbol semantics; hover/render stability; navigation; Research UI | focused tests + direct browser proof |
 | 2 | Confirmed implementation misses | TradeInsight; snapshot broker; session coordinator; routes/surfaces; docs; dependency register | canonical ownership + functional/security/performance proof |
 | 3 | Remaining utility remediations | Dashboard, Market Intelligence, Desks, Catalyst, Maintenance | all 13 remediation rows final |
@@ -384,7 +385,7 @@ Only unaffected evidence with a matching fingerprint may be reused.
 
 All values must be achieved before G11:
 
-- requirement identity conservation: **283/283**;
+- requirement identity conservation: **284/284**;
 - applicable rows with owner: **100%**;
 - applicable rows with regression mapping: **100%**;
 - applicable user workflows with browser evidence: **100%**;
