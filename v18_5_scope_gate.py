@@ -47,8 +47,15 @@ if (R/'governance/ROADMAP.md').exists():
     need('ADR-GDI is a mandatory v18.5 closure dimension' in road,'roadmap ADR-GDI closure clause missing')
 if (R/'governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md').exists():
     adr=(R/'governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md').read_text()
-    for phrase in ('DATA DEGRADED','bounded queues','ABSTAIN','blast radius'):
-        need(phrase.lower() in adr.lower(),f'ADR-GDI contract missing {phrase}')
+    low=adr.lower()
+    need('data degraded' in low,'ADR-GDI contract missing DATA DEGRADED truth semantics')
+    need('abstain' in low,'ADR-GDI contract missing ABSTAIN semantics')
+    need('blast-radius' in low or 'blast radius' in low,'ADR-GDI contract missing blast-radius semantics')
+    # Validate the governing bounded-work requirement semantically, not by an invented literal phrase.
+    need(('queues, goroutines/workers, subscriptions, db work and background jobs must be bounded' in low)
+         or ('queues' in low and 'must be bounded' in low and 'backpressure' in low),
+         'ADR-GDI contract missing bounded queue/work/backpressure requirement')
+    need('local_overload' in low and 'queue_saturated' in low,'ADR-GDI contract missing local-overload/queue-saturation reason taxonomy')
 if errors:
     print('v18.5 scope gate: FAIL')
     for e in errors: print(' -',e)
