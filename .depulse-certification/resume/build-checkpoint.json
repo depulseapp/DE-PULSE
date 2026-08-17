@@ -19,7 +19,7 @@
     "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
     "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
   },
-  "candidateSourceCommit": "7fcdad3cb4a93ed40c33ceb521b9d92c18742454",
+  "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
   "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling source being requalified; this later metadata-only checkpoint commit does not advance the product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
@@ -57,24 +57,25 @@
     "v18.5 Major Closure matrix binds all 10 closure dimensions and all 15 frozen ADR-GDI scenarios.",
     "Real PostgreSQL 17 integration is mandatory and rejects skipped selectors.",
     "Windows SQLite packaging gate follows current newLocalPersistenceBackend ownership while retaining winsqlite3/API/compile checks.",
-    "Current v18.5 Principal Engineer acceptance replaces obsolete v18.0.1 isolated-profile assumptions.",
+    "Current v18.5 Principal Engineer acceptance replaces obsolete v18.0.1 isolated-profile assumptions and binds permanent boundaries to canonical scope/product-documentation owners.",
     "Repository Structure Contract and closure-grade v18.5.1 10/10 build plan are governed source."
   ],
   "adaptiveProcessLearning": {
     "status": "IN_PROGRESS",
-    "lessonsRecorded": 5,
+    "lessonsRecorded": 6,
     "highestPriorityReusablePrevention": [
       "Release identity synchronization includes fingerprint-excluded resume checkpoints before G7/G10.",
       "Every focused go test selector needs a non-zero existence guard.",
       "Inherited gates test current invariants/ownership rather than obsolete symbol/profile spellings.",
       "Current release Principal Engineer acceptance must not require retired point-release packaging artifacts.",
+      "Permanent product-boundary gates bind canonical machine/document owners instead of demanding duplicated prose everywhere.",
       "A Stable tag alone is insufficient delivery; runnable native assets must be verified on the GitHub Release."
     ]
   },
   "userDelivery": "NOT_READY",
   "handoff": ".depulse-certification/handoff/DE-PULSE-v18.4.0-Stable-to-v18.5-Handoff-2026-08-16.md",
   "nextBranch": "v18.5-development",
-  "nextStep": "Run fresh exact-head G0-G10 after current Principal Engineer correction; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
+  "nextStep": "Run fresh exact-head G0-G10 after canonical-boundary Principal Engineer correction; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
   "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. v18.5 requires fresh closure evidence for all 15 ADR-GDI scenarios and native delivery. Do not force mature ASBI/TDTI/AODR/adaptive-13F engines into v18.5.",
-  "updatedAt": "2026-08-17T07:49:00Z"
+  "updatedAt": "2026-08-17T07:53:00Z"
 }

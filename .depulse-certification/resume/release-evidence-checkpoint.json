@@ -19,8 +19,8 @@
     "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
     "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
   },
-  "candidateSourceCommit": "7fcdad3cb4a93ed40c33ceb521b9d92c18742454",
-  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. The candidate source is the current Principal-Engineer-corrected product/tooling source; this metadata synchronization does not advance that product fingerprint.",
+  "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
+  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. The candidate source is the current canonical-boundary Principal-Engineer-corrected product/tooling source; this metadata synchronization does not advance that product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "evidence": {
@@ -32,7 +32,7 @@
     },
     "v18.5-Current-Candidate": {
       "status": "PENDING_REQUALIFICATION",
-      "candidateSourceCommit": "7fcdad3cb4a93ed40c33ceb521b9d92c18742454",
+      "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
       "requiredDecision": "G0-G10 all PASS on this product fingerprint after checkpoint metadata synchronization before G11 freeze."
     },
     "v18.5-Preliminary-Real-PostgreSQL17": {
@@ -62,16 +62,18 @@
   "supersededOrFailedEvidence": [
     {"runId":32006672450,"classification":"FIRST_G6_G10_TOOLING_DISCOVERY","reason":"Real PostgreSQL and G8 passed; release/tooling defects were fixed rather than waived."},
     {"runId":32006955148,"classification":"RESUME_CHECKPOINT_SYNC","reason":"Adaptive resume correctly blocked stale v18.4 checkpoint identity."},
-    {"runId":32007221723,"classification":"PRINCIPAL_ENGINEER_GATE_VERSIONING","reason":"Current governance/resume passed; historical v18.0.1 Principal Engineer gate incorrectly required a retired v18.0.1 TEST profile. v18.5 now owns a current Principal Engineer closure gate."}
+    {"runId":32007221723,"classification":"PRINCIPAL_ENGINEER_GATE_VERSIONING","reason":"Historical v18.0.1 Principal Engineer gate incorrectly required a retired point-release TEST profile."},
+    {"runId":32007527913,"classification":"PRINCIPAL_ENGINEER_BOUNDARY_BINDING","reason":"Current Principal Engineer gate correctly reached v18.5 logic but initially searched non-canonical prose locations for No Execution/US Equities. It now binds the frozen scope machine contract plus current product documentation."}
   ],
   "aiplcLessons": [
     "Release identity synchronization includes fingerprint-excluded resume checkpoints.",
     "Focused test commands prove selectors exist before execution.",
     "Historical point-release gates must not impose retired packaging profiles on later closure releases.",
+    "Permanent boundary gates bind canonical machine/document owners instead of demanding duplicated wording in unrelated governance files.",
     "Real PostgreSQL tests fail closed if the service is absent or mandatory tests skip.",
     "Stable delivery requires a GitHub Release with native runnable assets; a tag/workflow artifact alone is insufficient.",
     "Deep repository decomposition is closure-grade v18.5.1 work after v18.5 Stable native delivery."
   ],
-  "nextRequiredEvidence": "Fresh exact-head G0-G10 for candidateSourceCommit 7fcdad3cb4a93ed40c33ceb521b9d92c18742454 after this fingerprint-excluded checkpoint synchronization, then immutable G11 RC and full G12-G15 native/release certification.",
-  "updatedAt": "2026-08-17T07:49:00Z"
+  "nextRequiredEvidence": "Fresh exact-head G0-G10 for candidateSourceCommit d18392edeffcd6024c68b550d65792cfe2d03c6e after this fingerprint-excluded checkpoint synchronization, then immutable G11 RC and full G12-G15 native/release certification.",
+  "updatedAt": "2026-08-17T07:53:00Z"
 }
