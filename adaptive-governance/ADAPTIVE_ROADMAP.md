@@ -184,9 +184,11 @@ For every roadmap-to-build, build-to-slice, slice-to-RC and RC-to-Stable transit
 
 The two sides must contain the same immutable IDs. A count or identity mismatch is a blocker, even if every individual slice reports PASS.
 
-### Hardened v18.5.1 Final Closure placement
+### Adaptive v18.x recovery and closure placement
 
-v18.5.1 is the last v18 closure build and executes these ordered waves:
+v18.5.1 is the audit/containment and urgent-recovery entry slice. It is not automatically the final closure release. v18.6, v18.7 and further v18.x slices remain available and are selected using current ledger, dependency, risk, performance and evidence feedback.
+
+The v18.x program executes these ordered waves across as many coherent minor releases as evidence requires:
 
 1. reconstruct/freeze the complete 282-row inventory;
 2. fix escaped user defects;
@@ -198,9 +200,9 @@ v18.5.1 is the last v18 closure build and executes these ordered waves:
 8. freeze one RC and audit actual macOS/Windows packages;
 9. complete G16 prevention and handoff.
 
-No v19 feature work begins until v18.5.1 reaches G16 or is explicitly separated without sharing source, evidence or release identity.
+The final v18 closure version is chosen only when all applicable rows are ready for one immutable RC. If new evidence appears, another v18.x hardening slice is created rather than forcing closure. v19 planning may continue, but it cannot dilute or share the active v18 source/evidence lane before v18 G16.
 
-Canonical execution plan: `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+Canonical execution plan: `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
 
 ---
 
