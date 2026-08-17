@@ -31,6 +31,13 @@ REQUIRED_BLOCKERS = {
     "SYMBOL-18.5.1-002",
     "NAV-18.5.1-001",
     "RESEARCH-v15.1.0-17-19-REOPENED",
+    "VERSION-18.5.1-002",
+    "IMPL-18-UTILITY-001",
+    "IMPL-18-UTILITY-002",
+    "IMPL-18-UTILITY-003",
+    "IMPL-18-UTILITY-004",
+    "IMPL-18-DOC-001",
+    "IMPL-17-DEPS-001",
 }
 RELEASE_SCOPE_FILES = [
     "v18_0_scope.json",
@@ -182,6 +189,33 @@ def main() -> int:
         if recorded != canonical:
             errors.append(f"release-scope entry drift: {path}")
 
+    remediation = load(ROOT / "functionality_utility_remediation.json")
+    carry = ledger.get("functionalityUtilityCarryForward", {})
+    carry_rows = carry.get("items", [])
+    expected_carry = remediation.get("items", [])
+    if remediation.get("targetRelease") != "v18.3.0":
+        errors.append("functionality utility remediation target drift")
+    if len(expected_carry) != 13 or len(carry_rows) != 13:
+        errors.append("functionality utility carry-forward is not 13")
+    expected_disposition = [
+        (row.get("name"), row.get("action"), row.get("priority"))
+        for row in expected_carry
+    ]
+    recorded_disposition = [
+        (row.get("name"), row.get("action"), row.get("priority"))
+        for row in carry_rows
+    ]
+    if recorded_disposition != expected_disposition:
+        errors.append("functionality utility carry-forward differs from canonical remediation")
+    v18_3_scope = load(ROOT / "v18_3_scope.json")
+    v18_3_text = json.dumps(v18_3_scope, sort_keys=True)
+    silently_sliced = [
+        row.get("name") for row in expected_carry
+        if str(row.get("name", "")).lower() in v18_3_text.lower()
+    ]
+    if silently_sliced:
+        errors.append("audit assumption drift: v18.3 scope now contains remediation names; reclassify ledger")
+
     present_blockers = {
         row.get("id") for row in ledger.get("confirmedImplementationMisses", [])
     } | {row.get("id") for row in ledger.get("escapedDefects", [])}
@@ -228,6 +262,7 @@ def main() -> int:
         f" · v17={len(v17_rows)}"
         f" · v18-workstreams={len(workstreams)}"
         f" · v18-release-entries={sum(len(x.get('entries', [])) for x in ledger_scopes.values())}"
+        f" · functionality-remediation={len(carry_rows)}"
         f" · open-blocking/revalidation={len(blockers)}"
     )
     return 0
