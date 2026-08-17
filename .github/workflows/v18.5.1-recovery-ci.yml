@@ -1,0 +1,143 @@
+name: DE.PULSE v18.5.1 | Recovery Control Plane
+
+on:
+  push:
+    branches: [v18.5.1-development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v18.5.1-recovery-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  g0-inventory:
+    name: G0 · Baseline + G1 diagnostics
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Verify exact incoming Stable and branch ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e 'v18.5.0-stable^{commit}'
+          test "$(git rev-parse 'v18.5.0-stable^{commit}')" = '0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680'
+          git merge-base --is-ancestor 'v18.5.0-stable^{commit}' HEAD
+      - name: Diagnose G1 requirement conservation
+        run: python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G1-Diagnostics
+          path: evidence/v18.5.1-G1-scope-diagnostics.json
+          if-no-files-found: error
+          retention-days: 90
+
+  g1-scope-freeze:
+    name: G1 · Immutable recovery scope
+    needs: [g0-inventory]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: Enforce frozen ten-ID recovery slice
+        run: python3 release/v18.5.1/g1_scope_freeze_gate.py
+
+  fast-static:
+    name: G2-G5 · Cheap static qualification
+    needs: [g1-scope-freeze]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Governance and architecture checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 adaptive_resume_gate.py
+          python3 source_health_architecture_gate.py
+          python3 data_utility_gate.py
+          python3 documentation_governance_gate.py
+          python3 functionality_utility_checkpoint_gate.py
+      - name: Go static checks
+        run: go vet ./...
+
+  focused-go:
+    name: G5 · Focused affected Go tests
+    needs: [fast-static]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Recovery-focused inherited families
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=1 -run '^(TestV170|TestV171|TestV172|TestV174)' ./...
+
+  full-go:
+    name: G5 · Full Go development exit
+    needs: [focused-go]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - run: go test -count=1 ./...
+
+  renderer-fast:
+    name: G5 · Renderer fast lane
+    needs: [g1-scope-freeze]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: false
+      - name: JavaScript syntax
+        run: node --check renderer/renderer.js
+      - name: Existing renderer contract gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          for gate in renderer_logic_test.py responsive_ui_test.py; do
+            if [ -f "$gate" ]; then python3 "$gate"; fi
+          done
+
+  qualified-summary:
+    name: G5 · Recovery qualification summary
+    needs: [full-go, renderer-fast]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Require all prerequisite lanes green
+        env:
+          FULL_GO: ${{ needs.full-go.result }}
+          RENDERER: ${{ needs.renderer-fast.result }}
+        run: |
+          set -euo pipefail
+          test "$FULL_GO" = success
+          test "$RENDERER" = success
+          echo 'v18.5.1 cheap-first qualification lanes are green.'
