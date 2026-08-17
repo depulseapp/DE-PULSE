@@ -84,6 +84,28 @@ If dependency-compatible AODR foundation is present by v18.5, closure must verif
 
 If self-inflicted overload can delay or misstate decision-critical live/current evidence, it is a release blocker until fixed or explicitly constrained with truthful operating limits.
 
+#### v18.5.1 — Escaped Defect Recovery & Certification Repair
+
+**CURRENT_RELEASE_BLOCKER.** v18.5.1 is not complete as a repository-closure patch unless it also closes the v18.5 defects and implementation uncertainty that escaped Major Closure. These are corrective changes to approved behavior, not new product scope.
+
+Mandatory escaped-defect set:
+
+- **COPY-18.5.1-001 — version/profile preservation truth:** remove stale `v17` preservation copy and derive migration/preservation messaging from the actual source and target release context.
+- **SYMBOL-18.5.1-001 — removal contract:** the visible row remove control must work consistently in Day, Swing and Long, including the final desk membership; counts, selection, persistence and reload behavior must reconcile.
+- **SYMBOL-18.5.1-002 — active desk state:** a symbol's membership in the current desk must be unmistakably distinguished from its memberships in other desks across Day, Swing and Long.
+- **NAV-18.5.1-001 — interaction continuity:** live/SSE refresh must not unexpectedly move a user from the middle of a section to the top or discard relevant focus/selection state.
+- **RESEARCH-v15.1.0-17-19-REOPENED — Research top area:** reopen the approved Research ticker-input consistency, freshness-badge placement and responsive-placement requirements. Correct layout density/alignment, truthful freshness and action semantics, disabled-state clarity, and evidence-incomplete recovery guidance.
+
+v18.5.1 must also run a **full approved-implementation reconciliation**. Reconstruct every promised v18 implementation from approved scope, this roadmap, decision records, release evidence, accepted defect history and issue tracking—including Smart Provider Router / TradeInsight placement—and classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED` or `NOT_APPLICABLE`. Nothing is silently assumed complete because an earlier release once recorded PASS.
+
+Permanent anti-miss rules:
+
+1. Before adding a report, search and compare it with prior requirements/defects. A reproducible recurrence reopens and escalates the original item; it is not discarded as a duplicate.
+2. Every defect and implementation promise must preserve one durable chain: **origin → current observation → owner → fix/disposition → regression test → actual package proof → closure evidence**.
+3. A source, dependency, renderer or package change invalidates earlier PASS evidence for the affected surface and its dependents.
+4. Closure requires direct browser evidence plus actual macOS Apple Silicon and Windows x64 packaged-runtime evidence for affected user workflows.
+5. v18.5.1 Stable is blocked until the escaped-defect set and implementation reconciliation have no unexplained or unplaced gaps. Any intentional deferral requires an explicit approved roadmap placement and truthful user impact.
+
 ---
 
 ## v19 — Professional Data Infrastructure
