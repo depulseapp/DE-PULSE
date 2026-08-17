@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: v18.5.1-qualification-${{ github.ref }}
@@ -51,7 +51,6 @@ jobs:
           if len(source_sha) != 40:
               raise SystemExit('sourceSha must be an exact 40-character commit SHA')
           subprocess.run(['git','cat-file','-e',f'{source_sha}^{{commit}}'], check=True)
-          # The checkpoint commit may be after the source SHA because it only requests qualification.
           subprocess.run(['git','merge-base','--is-ancestor',source_sha,'HEAD'], check=True)
           out = pathlib.Path(os.environ['GITHUB_OUTPUT'])
           with out.open('a') as fh:
@@ -79,30 +78,22 @@ jobs:
           git cat-file -e 'v18.5.0-stable^{commit}'
           test "$(git rev-parse 'v18.5.0-stable^{commit}')" = '0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680'
           git merge-base --is-ancestor 'v18.5.0-stable^{commit}' HEAD
-      - name: Materialize canonical v18.5.1 TEST identity
+      - name: Verify canonical v18.5.1 TEST identity is already materialized
         shell: bash
         run: |
           set -euo pipefail
-          python3 release_identity.py --sync
           python3 release_identity.py --verify
-      - name: Materialize complete G1 placement and freeze overlay
-        run: python3 release/v18.5.1/g1_scope_materialize.py --apply
-      - name: Validate materialized G1 scope
-        run: python3 release/v18.5.1/g1_scope_freeze_gate.py
-      - name: Record generated identity and G1 authority without recursive branch push
+      - name: Verify immutable G1 placement and freeze overlay are already materialized
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
+      - name: Bind exact checkpoint source without mutating the branch
         id: freeze
         shell: bash
         run: |
           set -euo pipefail
-          # Qualification must never push generated files back to the development branch.
-          # The exact checkout SHA remains the evidence authority for this run.
           echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      - name: Reverify canonical identity and frozen scope
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 release_identity.py --verify
-          python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
       - uses: actions/upload-artifact@v7
         with:
           name: De-Pulse-v18.5.1-G0-G1-Freeze
@@ -203,8 +194,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-          cache: npm
-          cache-dependency-path: renderer/package-lock.json
       - name: Mandatory renderer syntax contracts
         shell: bash
         run: |
