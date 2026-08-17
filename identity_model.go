@@ -47,6 +47,7 @@ type SessionRecord struct {
 	TokenHash         string `json:"tokenHash"`
 	UserID            string `json:"userId"`
 	CreatedAt         int64  `json:"createdAt"`
+	AuthenticatedAt   int64  `json:"authenticatedAt,omitempty"`
 	LastSeenAt        int64  `json:"lastSeenAt"`
 	IdleExpiresAt     int64  `json:"idleExpiresAt"`
 	AbsoluteExpiresAt int64  `json:"absoluteExpiresAt"`
@@ -111,6 +112,7 @@ func roleAtLeast(actual, required UserRole) bool { return roleRank(actual) >= ro
 const (
 	defaultSessionIdleTTL     = 2 * time.Hour
 	defaultSessionAbsoluteTTL = 24 * time.Hour
+	defaultSensitiveReauthTTL = 15 * time.Minute
 	sessionCookieName         = "depulse_session"
 	csrfCookieName            = "depulse_csrf"
 	bootstrapOwnerID          = "bootstrap-owner"
@@ -283,9 +285,28 @@ func sessionTokenHash(token string) string {
 	return base64.RawURLEncoding.EncodeToString(sum[:])
 }
 
+func sessionAuthenticationTime(rec SessionRecord) int64 {
+	if rec.AuthenticatedAt > 0 {
+		return rec.AuthenticatedAt
+	}
+	return rec.CreatedAt
+}
+
 func (s *IdentityService) createSessionLocked(u UserRecord, rotatedFrom string) (string, Principal, error) {
+	now := s.now()
+	return s.createSessionWithSecurityLocked(u, rotatedFrom, now.UnixMilli(), now.Add(s.absoluteTTL).UnixMilli())
+}
+
+func (s *IdentityService) createSessionWithSecurityLocked(u UserRecord, rotatedFrom string, authenticatedAt, absoluteExpiresAt int64) (string, Principal, error) {
 	raw := randomID("ses") + randomID("")
 	now := s.now()
+	nowMillis := now.UnixMilli()
+	if authenticatedAt <= 0 || authenticatedAt > nowMillis {
+		authenticatedAt = nowMillis
+	}
+	if absoluteExpiresAt <= nowMillis {
+		return "", Principal{}, errors.New("session lifetime exhausted")
+	}
 	cutoff := now.Add(-7 * 24 * time.Hour).UnixMilli()
 	kept := s.state.Sessions[:0]
 	for _, existing := range s.state.Sessions {
@@ -298,7 +319,11 @@ func (s *IdentityService) createSessionLocked(u UserRecord, rotatedFrom string) 
 		kept = append(kept, existing)
 	}
 	s.state.Sessions = kept
-	rec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), UserID: u.ID, CreatedAt: now.UnixMilli(), LastSeenAt: now.UnixMilli(), IdleExpiresAt: now.Add(s.idleTTL).UnixMilli(), AbsoluteExpiresAt: now.Add(s.absoluteTTL).UnixMilli(), RotatedFrom: rotatedFrom}
+	idleExpiresAt := now.Add(s.idleTTL).UnixMilli()
+	if idleExpiresAt > absoluteExpiresAt {
+		idleExpiresAt = absoluteExpiresAt
+	}
+	rec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), UserID: u.ID, CreatedAt: nowMillis, AuthenticatedAt: authenticatedAt, LastSeenAt: nowMillis, IdleExpiresAt: idleExpiresAt, AbsoluteExpiresAt: absoluteExpiresAt, RotatedFrom: rotatedFrom}
 	s.state.Sessions = append(s.state.Sessions, rec)
 	if err := s.persistLocked(); err != nil {
 		return "", Principal{}, err
@@ -393,21 +418,51 @@ func (s *IdentityService) rotate(token string) (string, Principal, error) {
 	}
 	oldHash := sessionTokenHash(token)
 	oldID := ""
+	authenticatedAt := int64(0)
+	absoluteExpiresAt := int64(0)
 	for i := range s.state.Sessions {
-		if subtle.ConstantTimeCompare([]byte(s.state.Sessions[i].TokenHash), []byte(oldHash)) == 1 && s.state.Sessions[i].RevokedAt == 0 {
-			s.state.Sessions[i].RevokedAt = now
-			oldID = s.state.Sessions[i].ID
+		rec := &s.state.Sessions[i]
+		if subtle.ConstantTimeCompare([]byte(rec.TokenHash), []byte(oldHash)) == 1 && rec.RevokedAt == 0 {
+			oldID = rec.ID
+			authenticatedAt = sessionAuthenticationTime(*rec)
+			absoluteExpiresAt = rec.AbsoluteExpiresAt
+			if absoluteExpiresAt <= now {
+				return "", Principal{}, errors.New("expired session")
+			}
+			rec.RevokedAt = now
 			break
 		}
 	}
-	return s.createSessionLocked(u, oldID)
+	if oldID == "" {
+		return "", Principal{}, errors.New("invalid session")
+	}
+	return s.createSessionWithSecurityLocked(u, oldID, authenticatedAt, absoluteExpiresAt)
+}
+
+func (s *IdentityService) sessionRecentlyAuthenticated(sessionID string, maxAge time.Duration) bool {
+	if strings.TrimSpace(sessionID) == "" || maxAge <= 0 {
+		return false
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	now := s.now().UnixMilli()
+	for i := range s.state.Sessions {
+		rec := s.state.Sessions[i]
+		if rec.ID != sessionID || rec.RevokedAt != 0 || now >= rec.IdleExpiresAt || now >= rec.AbsoluteExpiresAt {
+			continue
+		}
+		authenticatedAt := sessionAuthenticationTime(rec)
+		return authenticatedAt > 0 && authenticatedAt <= now && now-authenticatedAt <= int64(maxAge/time.Millisecond)
+	}
+	return false
 }
 
 func (s *IdentityService) status(token string) map[string]any {
-	out := map[string]any{"authenticated": false, "bootstrapRequired": s.ownerNeedsPassword()}
+	out := map[string]any{"authenticated": false, "bootstrapRequired": s.ownerNeedsPassword(), "recentAuthentication": false}
 	if p, err := s.resolve(token, false); err == nil {
 		out["authenticated"] = true
 		out["principal"] = p
+		out["recentAuthentication"] = s.sessionRecentlyAuthenticated(p.SessionID, defaultSensitiveReauthTTL)
 	}
 	return out
 }
