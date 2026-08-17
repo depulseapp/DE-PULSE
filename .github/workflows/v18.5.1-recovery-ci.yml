@@ -147,7 +147,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-          cache: false
       - name: JavaScript syntax
         run: node --check renderer/renderer.js
       - name: Existing renderer contract gates
