@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""Behavior-first browser proof for v18.5.1 incremental live rendering.
+
+This is intentionally a real Chromium test. It verifies the user-visible contract
+that quote ticks update data without replacing/reordering the row under active
+interaction, while non-quote structural events retain the full-render path.
+"""
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+
+ROOT = Path(__file__).resolve().parents[2]
+LIVE_RECONCILER = ROOT / "renderer" / "live-dom-reconcile.js"
+
+INITIAL_HTML = """
+<style>
+  #main { height: 160px; overflow: auto; width: 700px; }
+  .spacer { height: 120px; }
+  article { min-height: 70px; border: 1px solid transparent; }
+</style>
+<main id="main">
+  <div class="page">
+    <div class="spacer">top</div>
+    <section data-live-key="quote-list">
+      <article data-live-key="row:AAPL" class="quote neutral">
+        <button data-symbol="AAPL">AAPL</button>
+        <span data-live-key="price:AAPL">$100.00</span>
+        <input id="note" value="keep-me" aria-label="interaction sentinel">
+      </article>
+      <article data-live-key="row:MSFT" class="quote neutral">
+        <button data-symbol="MSFT">MSFT</button>
+        <span data-live-key="price:MSFT">$200.00</span>
+      </article>
+    </section>
+    <div class="spacer">bottom</div>
+  </div>
+</main>
+"""
+
+NEXT_HTML = """
+<div class="page">
+  <div class="spacer">top</div>
+  <section data-live-key="quote-list">
+    <article data-live-key="row:MSFT" class="quote negative">
+      <button data-symbol="MSFT">MSFT</button>
+      <span data-live-key="price:MSFT">$199.50</span>
+    </article>
+    <article data-live-key="row:AAPL" class="quote positive">
+      <button data-symbol="AAPL">AAPL</button>
+      <span data-live-key="price:AAPL">$101.25</span>
+      <input id="note" value="server-value" aria-label="interaction sentinel">
+    </article>
+  </section>
+  <div class="spacer">bottom</div>
+</div>
+"""
+
+HARNESS = r"""
+var state = {settings:{dataMode:'live'}};
+var runtime = {status:'running'};
+var page = 'dashboard';
+var perfMetrics = {renderRequests:0, renderExecuted:0, renderSkipped:0};
+window.__fullRenderCalls = 0;
+window.__fullScheduleCalls = 0;
+window.__chromeUpdates = 0;
+window.__prioritySyncs = 0;
+window.__nextHtml = '';
+function quoteAffectsPage(){ return true; }
+function watchlistEditInProgress(){ return false; }
+function pageRenderer(){ return function(){ return window.__nextHtml; }; }
+function updateChrome(){ window.__chromeUpdates += 1; }
+function syncLivePriorityHints(){ window.__prioritySyncs += 1; }
+function render(){
+  window.__fullRenderCalls += 1;
+  document.getElementById('main').innerHTML = window.__nextHtml;
+}
+function scheduleLiveRender(){
+  window.__fullScheduleCalls += 1;
+  clearTimeout(window.__renderTimer);
+  window.__renderTimer = setTimeout(render, 50);
+}
+"""
+
+
+def main() -> None:
+    assert LIVE_RECONCILER.is_file(), f"missing reconciler: {LIVE_RECONCILER}"
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page_obj = browser.new_page(viewport={"width": 1000, "height": 700})
+        page_obj.set_content(INITIAL_HTML)
+        page_obj.add_script_tag(content=HARNESS)
+        page_obj.add_script_tag(path=str(LIVE_RECONCILER))
+
+        assert page_obj.evaluate("Boolean(window.__DEPULSE_LIVE_DOM__)")
+        assert page_obj.evaluate("window.__DEPULSE_LIVE_DOM__.version") == "18.5.1"
+
+        page_obj.evaluate(
+            """next => {
+              window.__nextHtml = next;
+              window.__aaplNode = document.querySelector('[data-live-key="row:AAPL"]');
+              const main = document.getElementById('main');
+              main.scrollTop = 125;
+              const note = document.getElementById('note');
+              note.focus();
+              note.setSelectionRange(1, 4);
+              window.__scrollBefore = main.scrollTop;
+            }""",
+            NEXT_HTML,
+        )
+        page_obj.hover('[data-live-key="row:AAPL"]')
+        page_obj.evaluate("scheduleLiveRender('AAPL')")
+        page_obj.wait_for_timeout(450)
+
+        result = page_obj.evaluate(
+            """() => {
+              const main = document.getElementById('main');
+              const aapl = document.querySelector('[data-live-key="row:AAPL"]');
+              const rows = [...document.querySelectorAll('article[data-live-key]')].map(x => x.dataset.liveKey);
+              const note = document.getElementById('note');
+              return {
+                sameNode: window.__aaplNode === aapl,
+                price: aapl.querySelector('[data-live-key="price:AAPL"]').textContent,
+                className: aapl.className,
+                rows,
+                fullRenderCalls: window.__fullRenderCalls,
+                fullScheduleCalls: window.__fullScheduleCalls,
+                chromeUpdates: window.__chromeUpdates,
+                prioritySyncs: window.__prioritySyncs,
+                focused: document.activeElement === note,
+                noteValue: note.value,
+                selectionStart: note.selectionStart,
+                selectionEnd: note.selectionEnd,
+                scrollBefore: window.__scrollBefore,
+                scrollAfter: main.scrollTop,
+                renderExecuted: perfMetrics.renderExecuted
+              };
+            }"""
+        )
+
+        assert result["sameNode"], result
+        assert result["price"] == "$101.25", result
+        assert "positive" in result["className"], result
+        assert result["rows"] == ["row:AAPL", "row:MSFT"], result
+        assert result["fullRenderCalls"] == 0, result
+        assert result["fullScheduleCalls"] == 0, result
+        assert result["chromeUpdates"] == 1, result
+        assert result["prioritySyncs"] == 1, result
+        assert result["focused"], result
+        assert result["noteValue"] == "keep-me", result
+        assert (result["selectionStart"], result["selectionEnd"]) == (1, 4), result
+        assert result["scrollAfter"] == result["scrollBefore"], result
+        assert result["renderExecuted"] == 1, result
+
+        # A structural event (empty symbol) must still use renderer.js's original
+        # full-render contract; the incremental layer is quote-selective.
+        page_obj.evaluate("scheduleLiveRender('')")
+        page_obj.wait_for_timeout(150)
+        structural = page_obj.evaluate(
+            "({fullRenderCalls:window.__fullRenderCalls, fullScheduleCalls:window.__fullScheduleCalls})"
+        )
+        assert structural == {"fullRenderCalls": 1, "fullScheduleCalls": 1}, structural
+
+        browser.close()
+
+    print("PASS: v18.5.1 live quote rendering preserves DOM identity, focus, selection and scroll; structural events retain full render.")
+
+
+if __name__ == "__main__":
+    main()
