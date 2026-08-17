@@ -1,0 +1,48 @@
+name: DE.PULSE v18.5 | One-shot Closure Evidence Discovery
+
+on:
+  push:
+    branches: [v18.5-development]
+    paths:
+      - '.github/workflows/v18.5-closure-discovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GO_VERSION: '1.26.6'
+
+jobs:
+  discover:
+    name: Discover ADR-GDI selectors and PostgreSQL contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Enumerate inherited reliability tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== GO TEST LIST ==='
+          go test -list '^TestV(170|171|172|174)' ./...
+          echo '=== SOURCE DECLARATIONS ==='
+          grep -R -n -E '^func TestV(170|171|172|174)' --include='*_test.go' . || true
+      - name: Enumerate PostgreSQL test/runtime contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== POSTGRES TEST FILES / ENV / SKIPS ==='
+          grep -R -n -E 'POSTGRES|Postgres|postgres|DATABASE_URL|t\.Skip|Skipf' --include='*_test.go' . || true
+          echo '=== POSTGRES PRODUCTION CONFIG ==='
+          grep -R -n -E 'POSTGRES|Postgres|postgres|DATABASE_URL' --include='*.go' . | head -n 300 || true
+      - name: Enumerate closure and acceptance gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' '=== RELEVANT GATE FILES ==='
+          find . -maxdepth 2 -type f \( -name '*security*gate*.py' -o -name '*performance*gate*.py' -o -name '*adaptive*gate*.py' -o -name '*professional*' -o -name '*acceptance*' -o -name '*browser*' -o -name '*native*gate*.py' -o -name '*functional*gate*.py' -o -name '*deterministic*gate*.py' -o -name '*scope*gate*.py' \) -print | sort
