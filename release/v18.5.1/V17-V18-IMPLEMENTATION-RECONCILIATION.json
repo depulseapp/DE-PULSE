@@ -2937,5 +2937,43 @@
     "Windows x64 actual package result",
     "approved disposition for any superseded/not-applicable item",
     "G16 root cause and prevention for repeat escapes"
-  ]
+  ],
+  "auditProgress": {
+    "inherited48StaticMarkerAudit": {
+      "result": "PASS_STATIC_ONLY",
+      "checked": 48,
+      "missingMarkers": 0,
+      "method": "Exact historical owner marker or approved current-owner override, with the same production-corpus fallback used by approved_scope_gate.py.",
+      "limitation": "Does not prove current interaction semantics, layout, state truth or packaged behavior. Items 17-21 are reopened by direct user evidence despite marker presence."
+    },
+    "v17StaticGateReconstruction": {
+      "result": "PASS_STATIC_ONLY",
+      "scopes": [
+        "v17.0",
+        "v17.1",
+        "v17.2",
+        "v17.3",
+        "v17.4"
+      ],
+      "missingContracts": 0,
+      "method": "Reproduced current v17 scope-gate file/token/test-presence assertions against main.",
+      "limitation": "Fresh executable, integration, browser and actual-package revalidation remains mandatory."
+    },
+    "v18MajorWorkstreamMapping": {
+      "result": "FAIL_CONFIRMED_ORPHAN",
+      "missingOrOrphaned": [
+        "TradeInsight SHADOW Intelligence"
+      ],
+      "limitation": "Every other v18 workstream still requires fresh current-source/behavior/package reconciliation; historical slice PASS is not inherited."
+    },
+    "freshBehavioralExecution": {
+      "result": "NOT_STARTED"
+    },
+    "currentMacOSPackageAudit": {
+      "result": "NOT_STARTED"
+    },
+    "currentWindowsPackageAudit": {
+      "result": "NOT_STARTED"
+    }
+  }
 }
