@@ -33,11 +33,11 @@ jobs:
         run: python3 source_health_architecture_gate.py
       - name: Canonical formatting is clean
         run: |
-          files="runtime_environment.go http_security.go http_auth.go http_api.go identity_model.go v18_4_security_test.go"
+          files="runtime_environment.go http_security.go http_auth.go http_api.go identity_model.go identity_reauth.go provider_data_rights.go provider_router.go v18_4_security_test.go v18_4_session_security_test.go v18_4_reauth_test.go v18_4_provider_rights_test.go"
           existing=""
           for f in $files; do test ! -f "$f" || existing="$existing $f"; done
           test -z "$existing" || { gofmt -d $existing | tee /tmp/gofmt.diff; test ! -s /tmp/gofmt.diff; }
-      - name: v18.4 focused security tests
+      - name: v18.4 focused security and commercial-readiness tests
         run: |
           python3 v18_4_reauth_ui_gate.py
           node --check renderer/renderer.js
