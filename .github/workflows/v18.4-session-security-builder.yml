@@ -1,0 +1,362 @@
+name: DE.PULSE v18.4 Session Security Builder
+
+on:
+  push:
+    branches: [v18.4-development]
+    paths:
+      - '.github/workflows/v18.4-session-security-builder.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v18.4-session-security-builder
+  cancel-in-progress: false
+
+jobs:
+  session-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.6'
+          cache: false
+      - name: Apply bounded session-security delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '673fcd3b60d06eafb8e91244d0cdbbe88c001c4a'
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('identity_model.go')
+          s=p.read_text()
+          def replace_exact(old,new,label):
+              global s
+              count=s.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one match, got {count}')
+              s=s.replace(old,new,1)
+          replace_exact('''type SessionRecord struct {
+          \tID                string `json:"id"`
+          \tTokenHash         string `json:"tokenHash"`
+          \tUserID            string `json:"userId"`
+          \tCreatedAt         int64  `json:"createdAt"`
+          \tLastSeenAt        int64  `json:"lastSeenAt"`
+          \tIdleExpiresAt     int64  `json:"idleExpiresAt"`
+          \tAbsoluteExpiresAt int64  `json:"absoluteExpiresAt"`
+          \tRevokedAt         int64  `json:"revokedAt,omitempty"`
+          \tRotatedFrom       string `json:"rotatedFrom,omitempty"`
+          }''','''type SessionRecord struct {
+          \tID                string `json:"id"`
+          \tTokenHash         string `json:"tokenHash"`
+          \tUserID            string `json:"userId"`
+          \tCreatedAt         int64  `json:"createdAt"`
+          \tAuthenticatedAt   int64  `json:"authenticatedAt,omitempty"`
+          \tLastSeenAt        int64  `json:"lastSeenAt"`
+          \tIdleExpiresAt     int64  `json:"idleExpiresAt"`
+          \tAbsoluteExpiresAt int64  `json:"absoluteExpiresAt"`
+          \tRevokedAt         int64  `json:"revokedAt,omitempty"`
+          \tRotatedFrom       string `json:"rotatedFrom,omitempty"`
+          }''','session record')
+          replace_exact('''const (
+          \tdefaultSessionIdleTTL     = 2 * time.Hour
+          \tdefaultSessionAbsoluteTTL = 24 * time.Hour
+          \tsessionCookieName         = "depulse_session"
+          \tcsrfCookieName            = "depulse_csrf"
+          \tbootstrapOwnerID          = "bootstrap-owner"
+          )''','''const (
+          \tdefaultSessionIdleTTL       = 2 * time.Hour
+          \tdefaultSessionAbsoluteTTL   = 24 * time.Hour
+          \tdefaultSensitiveReauthTTL   = 15 * time.Minute
+          \tsessionCookieName           = "depulse_session"
+          \tcsrfCookieName              = "depulse_csrf"
+          \tbootstrapOwnerID            = "bootstrap-owner"
+          )''','session constants')
+          replace_exact('''func (s *IdentityService) createSessionLocked(u UserRecord, rotatedFrom string) (string, Principal, error) {
+          \traw := randomID("ses") + randomID("")
+          \tnow := s.now()
+          \tcutoff := now.Add(-7 * 24 * time.Hour).UnixMilli()
+          \tkept := s.state.Sessions[:0]
+          \tfor _, existing := range s.state.Sessions {
+          \t\tif existing.RevokedAt > 0 && existing.RevokedAt < cutoff {
+          \t\t\tcontinue
+          \t\t}
+          \t\tif existing.AbsoluteExpiresAt > 0 && existing.AbsoluteExpiresAt < cutoff {
+          \t\t\tcontinue
+          \t\t}
+          \t\tkept = append(kept, existing)
+          \t}
+          \ts.state.Sessions = kept
+          \trec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), UserID: u.ID, CreatedAt: now.UnixMilli(), LastSeenAt: now.UnixMilli(), IdleExpiresAt: now.Add(s.idleTTL).UnixMilli(), AbsoluteExpiresAt: now.Add(s.absoluteTTL).UnixMilli(), RotatedFrom: rotatedFrom}
+          \ts.state.Sessions = append(s.state.Sessions, rec)
+          \tif err := s.persistLocked(); err != nil {
+          \t\treturn "", Principal{}, err
+          \t}
+          \treturn raw, Principal{UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID}, nil
+          }''','''func sessionAuthenticationTime(rec SessionRecord) int64 {
+          \tif rec.AuthenticatedAt > 0 {
+          \t\treturn rec.AuthenticatedAt
+          \t}
+          \treturn rec.CreatedAt
+          }
+          
+          func (s *IdentityService) createSessionLocked(u UserRecord, rotatedFrom string) (string, Principal, error) {
+          \tnow := s.now()
+          \treturn s.createSessionWithSecurityLocked(u, rotatedFrom, now.UnixMilli(), now.Add(s.absoluteTTL).UnixMilli())
+          }
+          
+          func (s *IdentityService) createSessionWithSecurityLocked(u UserRecord, rotatedFrom string, authenticatedAt, absoluteExpiresAt int64) (string, Principal, error) {
+          \traw := randomID("ses") + randomID("")
+          \tnow := s.now()
+          \tnowMillis := now.UnixMilli()
+          \tif authenticatedAt <= 0 || authenticatedAt > nowMillis {
+          \t\tauthenticatedAt = nowMillis
+          \t}
+          \tif absoluteExpiresAt <= nowMillis {
+          \t\treturn "", Principal{}, errors.New("session lifetime exhausted")
+          \t}
+          \tcutoff := now.Add(-7 * 24 * time.Hour).UnixMilli()
+          \tkept := s.state.Sessions[:0]
+          \tfor _, existing := range s.state.Sessions {
+          \t\tif existing.RevokedAt > 0 && existing.RevokedAt < cutoff {
+          \t\t\tcontinue
+          \t\t}
+          \t\tif existing.AbsoluteExpiresAt > 0 && existing.AbsoluteExpiresAt < cutoff {
+          \t\t\tcontinue
+          \t\t}
+          \t\tkept = append(kept, existing)
+          \t}
+          \ts.state.Sessions = kept
+          \tidleExpiresAt := now.Add(s.idleTTL).UnixMilli()
+          \tif idleExpiresAt > absoluteExpiresAt {
+          \t\tidleExpiresAt = absoluteExpiresAt
+          \t}
+          \trec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), UserID: u.ID, CreatedAt: nowMillis, AuthenticatedAt: authenticatedAt, LastSeenAt: nowMillis, IdleExpiresAt: idleExpiresAt, AbsoluteExpiresAt: absoluteExpiresAt, RotatedFrom: rotatedFrom}
+          \ts.state.Sessions = append(s.state.Sessions, rec)
+          \tif err := s.persistLocked(); err != nil {
+          \t\treturn "", Principal{}, err
+          \t}
+          \treturn raw, Principal{UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID}, nil
+          }''','session creation')
+          replace_exact('''func (s *IdentityService) rotate(token string) (string, Principal, error) {
+          \tp, err := s.resolve(token, false)
+          \tif err != nil {
+          \t\treturn "", Principal{}, err
+          \t}
+          \ts.mu.Lock()
+          \tdefer s.mu.Unlock()
+          \tnow := s.now().UnixMilli()
+          \tvar u UserRecord
+          \tfound := false
+          \tfor i := range s.state.Users {
+          \t\tif s.state.Users[i].ID == p.UserID {
+          \t\t\tu = s.state.Users[i]
+          \t\t\tfound = true
+          \t\t\tbreak
+          \t\t}
+          \t}
+          \tif !found {
+          \t\treturn "", Principal{}, errors.New("principal unavailable")
+          \t}
+          \toldHash := sessionTokenHash(token)
+          \toldID := ""
+          \tfor i := range s.state.Sessions {
+          \t\tif subtle.ConstantTimeCompare([]byte(s.state.Sessions[i].TokenHash), []byte(oldHash)) == 1 && s.state.Sessions[i].RevokedAt == 0 {
+          \t\t\ts.state.Sessions[i].RevokedAt = now
+          \t\t\toldID = s.state.Sessions[i].ID
+          \t\t\tbreak
+          \t\t}
+          \t}
+          \treturn s.createSessionLocked(u, oldID)
+          }''','''func (s *IdentityService) rotate(token string) (string, Principal, error) {
+          \tp, err := s.resolve(token, false)
+          \tif err != nil {
+          \t\treturn "", Principal{}, err
+          \t}
+          \ts.mu.Lock()
+          \tdefer s.mu.Unlock()
+          \tnow := s.now().UnixMilli()
+          \tvar u UserRecord
+          \tfound := false
+          \tfor i := range s.state.Users {
+          \t\tif s.state.Users[i].ID == p.UserID {
+          \t\t\tu = s.state.Users[i]
+          \t\t\tfound = true
+          \t\t\tbreak
+          \t\t}
+          \t}
+          \tif !found {
+          \t\treturn "", Principal{}, errors.New("principal unavailable")
+          \t}
+          \toldHash := sessionTokenHash(token)
+          \toldID := ""
+          \tauthenticatedAt := int64(0)
+          \tabsoluteExpiresAt := int64(0)
+          \tfor i := range s.state.Sessions {
+          \t\trec := &s.state.Sessions[i]
+          \t\tif subtle.ConstantTimeCompare([]byte(rec.TokenHash), []byte(oldHash)) == 1 && rec.RevokedAt == 0 {
+          \t\t\toldID = rec.ID
+          \t\t\tauthenticatedAt = sessionAuthenticationTime(*rec)
+          \t\t\tabsoluteExpiresAt = rec.AbsoluteExpiresAt
+          \t\t\tif absoluteExpiresAt <= now {
+          \t\t\t\treturn "", Principal{}, errors.New("expired session")
+          \t\t\t}
+          \t\t\trec.RevokedAt = now
+          \t\t\tbreak
+          \t\t}
+          \t}
+          \tif oldID == "" {
+          \t\treturn "", Principal{}, errors.New("invalid session")
+          \t}
+          \treturn s.createSessionWithSecurityLocked(u, oldID, authenticatedAt, absoluteExpiresAt)
+          }''','session rotation')
+          replace_exact('''func (s *IdentityService) status(token string) map[string]any {''','''func (s *IdentityService) sessionRecentlyAuthenticated(sessionID string, maxAge time.Duration) bool {
+          \tif strings.TrimSpace(sessionID) == "" || maxAge <= 0 {
+          \t\treturn false
+          \t}
+          \ts.mu.Lock()
+          \tdefer s.mu.Unlock()
+          \tnow := s.now().UnixMilli()
+          \tfor i := range s.state.Sessions {
+          \t\trec := s.state.Sessions[i]
+          \t\tif rec.ID != sessionID || rec.RevokedAt != 0 || now >= rec.IdleExpiresAt || now >= rec.AbsoluteExpiresAt {
+          \t\t\tcontinue
+          \t\t}
+          \t\tauthenticatedAt := sessionAuthenticationTime(rec)
+          \t\treturn authenticatedAt > 0 && authenticatedAt <= now && now-authenticatedAt <= int64(maxAge/time.Millisecond)
+          \t}
+          \treturn false
+          }
+          
+          func (s *IdentityService) status(token string) map[string]any {''','recent auth query')
+          p.write_text(s)
+          Path('v18_4_session_security_test.go').write_text(r'''package main
+
+import (
+	"testing"
+	"time"
+)
+
+func v184SessionByID(t *testing.T, s *IdentityService, sessionID string) SessionRecord {
+	t.Helper()
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, rec := range s.state.Sessions {
+		if rec.ID == sessionID {
+			return rec
+		}
+	}
+	t.Fatalf("session %s not found", sessionID)
+	return SessionRecord{}
+}
+
+func TestV184RotationPreservesAuthenticationAndAbsoluteLifetime(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_100_000_000, 0)
+	s.now = func() time.Time { return base }
+	s.idleTTL = 45 * time.Minute
+	s.absoluteTTL = 2 * time.Hour
+
+	token, principal, err := s.bootstrapOwnerSession()
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := v184SessionByID(t, s, principal.SessionID)
+	if original.AuthenticatedAt != base.UnixMilli() {
+		t.Fatalf("fresh session auth timestamp mismatch: %+v", original)
+	}
+	wantAbsolute := base.Add(2 * time.Hour).UnixMilli()
+	if original.AbsoluteExpiresAt != wantAbsolute {
+		t.Fatalf("fresh absolute expiry mismatch: got %d want %d", original.AbsoluteExpiresAt, wantAbsolute)
+	}
+
+	s.now = func() time.Time { return base.Add(20 * time.Minute) }
+	rotated, rp, err := s.rotate(token)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rotated == token {
+		t.Fatal("rotation reused raw session token")
+	}
+	next := v184SessionByID(t, s, rp.SessionID)
+	if next.CreatedAt != base.Add(20*time.Minute).UnixMilli() {
+		t.Fatalf("rotation creation time mismatch: %+v", next)
+	}
+	if next.AuthenticatedAt != original.AuthenticatedAt {
+		t.Fatalf("rotation incorrectly refreshed authentication: old=%d new=%d", original.AuthenticatedAt, next.AuthenticatedAt)
+	}
+	if next.AbsoluteExpiresAt != original.AbsoluteExpiresAt {
+		t.Fatalf("rotation extended absolute lifetime: old=%d new=%d", original.AbsoluteExpiresAt, next.AbsoluteExpiresAt)
+	}
+	if s.sessionRecentlyAuthenticated(rp.SessionID, defaultSensitiveReauthTTL) {
+		t.Fatal("20-minute-old authentication incorrectly counted as recent")
+	}
+	if !s.sessionRecentlyAuthenticated(rp.SessionID, 30*time.Minute) {
+		t.Fatal("20-minute-old authentication not recognized within wider policy")
+	}
+
+	s.now = func() time.Time { return base.Add(30 * time.Minute) }
+	if _, err := s.resolve(rotated, true); err != nil {
+		t.Fatal(err)
+	}
+	if s.sessionRecentlyAuthenticated(rp.SessionID, defaultSensitiveReauthTTL) {
+		t.Fatal("passive activity refreshed authentication recency")
+	}
+
+	s.now = func() time.Time { return base.Add(121 * time.Minute) }
+	if _, err := s.resolve(rotated, false); err == nil {
+		t.Fatal("rotated token exceeded original absolute lifetime")
+	}
+}
+
+func TestV184LegacySessionAuthenticationFallsBackToCreationTime(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_200_000_000, 0)
+	s.now = func() time.Time { return base }
+	_, p, err := s.bootstrapOwnerSession()
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.mu.Lock()
+	for i := range s.state.Sessions {
+		if s.state.Sessions[i].ID == p.SessionID {
+			s.state.Sessions[i].AuthenticatedAt = 0
+		}
+	}
+	s.mu.Unlock()
+
+	s.now = func() time.Time { return base.Add(4 * time.Minute) }
+	if !s.sessionRecentlyAuthenticated(p.SessionID, 5*time.Minute) {
+		t.Fatal("legacy session did not fall back to createdAt")
+	}
+	s.now = func() time.Time { return base.Add(6 * time.Minute) }
+	if s.sessionRecentlyAuthenticated(p.SessionID, 5*time.Minute) {
+		t.Fatal("legacy createdAt fallback exceeded recent-auth policy")
+	}
+}
+''')
+          PY
+          gofmt -w identity_model.go v18_4_session_security_test.go
+      - name: Qualify session-security delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 source_health_architecture_gate.py
+          python3 v18_4_scope_gate.py
+          go test -count=1 -run '^TestV184' ./...
+          go test -count=1 ./...
+          go vet ./...
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go test -c -o /tmp/depulse-v184-session-windows.test .
+      - name: Publish qualified session-security delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- identity_model.go v18_4_session_security_test.go
+          git commit -m 'v18.4: preserve authentication age and absolute session lifetime'
+          git push origin HEAD:v18.4-development
