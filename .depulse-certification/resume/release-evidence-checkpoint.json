@@ -1,79 +1,73 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.0",
-  "release": "v18.5.0",
+  "release": "v18.5.1",
   "channel": "TEST",
-  "branch": "v18.5-development",
+  "branch": "v18.5.1-development",
   "incomingStable": {
-    "version": "v18.4.0",
-    "tag": "v18.4.0-stable",
-    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+    "version": "v18.5.0",
+    "tag": "v18.5.0-stable",
+    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
   "certifiedStable": {
-    "version": "v18.4.0",
-    "tag": "v18.4.0-stable",
-    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-    "buildId": "v18.4.0-stable-security-commercial-readiness-20260816",
-    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+    "version": "v18.5.0",
+    "tag": "v18.5.0-stable",
+    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "buildId": "v18.5.0-stable-major-closure-release-assurance-20260817",
+    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
-  "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
-  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. The candidate source is the current canonical-boundary Principal-Engineer-corrected product/tooling source; this metadata synchronization does not advance that product fingerprint.",
+  "candidateSourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. candidateSourceCommit identifies the v18.5.1 development-complete candidate; later metadata-only checkpoint synchronization does not advance its product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "evidence": {
-    "Incoming-v18.4-Stable": {
+    "Incoming-v18.5.0-Stable": {
       "status": "PASS",
-      "sourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-      "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-      "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+      "sourceCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+      "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+      "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
     },
-    "v18.5-Current-Candidate": {
-      "status": "PENDING_REQUALIFICATION",
-      "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
-      "requiredDecision": "G0-G10 all PASS on this product fingerprint after checkpoint metadata synchronization before G11 freeze."
+    "v18.5.1-Development-Complete": {
+      "status": "IMPLEMENTED_AWAITING_REQUALIFICATION",
+      "candidateSourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+      "developmentEvidence": "release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json",
+      "requiredDecision": "One new exact-SHA G0-G10 checkpoint must pass after resume metadata synchronization; development evidence alone is not certification."
     },
-    "v18.5-Preliminary-Real-PostgreSQL17": {
-      "status": "SUPERSEDED_PASS_EVIDENCE",
-      "runId": 32006672450,
-      "sourceCommit": "a205661f5aa1b3db1a32f1c96f9f01723d4f8261",
-      "note": "Real PostgreSQL 17 parity/warm-start/concurrency/migration/pool-contention/health tests passed with no mandatory skips; exact current-candidate rerun remains mandatory."
+    "v18.5.1-Qualification-Run-32081605253": {
+      "status": "FAILED_EARLY_CONTROL_PLANE",
+      "sourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+      "passed": ["checkpoint-contract", "G0/G1 baseline-identity-frozen-scope", "G1 ten-ID scope", "renderer cheap lane"],
+      "failed": "adaptive_resume_gate",
+      "reason": "build-checkpoint.json and release-evidence-checkpoint.json still identified v18.5.0/v18.5-development; downstream Go/browser/G6-G9 were correctly skipped.",
+      "disposition": "Fix both stale control-plane records as one batch, then perform one requalification checkpoint."
     },
-    "v18.5-Preliminary-G8-ADR-GDI": {
-      "status": "SUPERSEDED_PASS_EVIDENCE",
-      "runId": 32006672450,
-      "sourceCommit": "a205661f5aa1b3db1a32f1c96f9f01723d4f8261",
-      "note": "15-scenario ADR-GDI family, performance envelopes, focused race and CGO fallback passed; exact current-candidate rerun remains mandatory."
-    },
-    "v18.5-G11-G15": {
-      "status": "NOT_STARTED",
+    "v18.5.1-G11-G15": {
+      "status": "NOT_STARTED_BLOCKED_ON_G10",
       "nativeDeliveryRequired": [
         "macOS Apple Silicon runnable ZIP",
         "Windows x64 runnable ZIP",
         "exact source ZIP",
         "SHA-256 manifest",
-        "certification evidence",
+        "G12/G14/G15 certification evidence",
+        "actual packaged-runtime identity/profile/persistence/interaction proof",
         "GitHub Release visibly listing runnable assets"
       ]
     }
   },
   "supersededOrFailedEvidence": [
-    {"runId":32006672450,"classification":"FIRST_G6_G10_TOOLING_DISCOVERY","reason":"Real PostgreSQL and G8 passed; release/tooling defects were fixed rather than waived."},
-    {"runId":32006955148,"classification":"RESUME_CHECKPOINT_SYNC","reason":"Adaptive resume correctly blocked stale v18.4 checkpoint identity."},
-    {"runId":32007221723,"classification":"PRINCIPAL_ENGINEER_GATE_VERSIONING","reason":"Historical v18.0.1 Principal Engineer gate incorrectly required a retired point-release TEST profile."},
-    {"runId":32007527913,"classification":"PRINCIPAL_ENGINEER_BOUNDARY_BINDING","reason":"Current Principal Engineer gate correctly reached v18.5 logic but initially searched non-canonical prose locations for No Execution/US Equities. It now binds the frozen scope machine contract plus current product documentation."}
+    {"runId":32081605253,"classification":"V18_5_1_CHECKPOINT_IDENTITY_DISCOVERY","reason":"Cheap gate correctly stopped stale v18.5.0 resume metadata before expensive qualification; no product-code failure was observed in that run."}
   ],
   "aiplcLessons": [
-    "Release identity synchronization includes fingerprint-excluded resume checkpoints.",
-    "Focused test commands prove selectors exist before execution.",
-    "Historical point-release gates must not impose retired packaging profiles on later closure releases.",
-    "Permanent boundary gates bind canonical machine/document owners instead of demanding duplicated wording in unrelated governance files.",
-    "Real PostgreSQL tests fail closed if the service is absent or mandatory tests skip.",
-    "Stable delivery requires a GitHub Release with native runnable assets; a tag/workflow artifact alone is insufficient.",
-    "Deep repository decomposition is closure-grade v18.5.1 work after v18.5 Stable native delivery."
+    "Checkpoint-based CI prevented stale governance identity from consuming PostgreSQL/performance/native lanes.",
+    "Development source/tests are accumulated before deliberate qualification; failures are batched before a single requalification.",
+    "Resume and release-evidence metadata must advance with canonical release identity before checkpoint qualification.",
+    "Exact-source/fingerprint binding remains mandatory even when metadata files are excluded from the product fingerprint.",
+    "CI efficiency may remove redundant executions but never PostgreSQL, security, race/randomized, browser, performance or native-runtime evidence.",
+    "Stable delivery requires actual macOS arm64 and Windows x64 runnable artifacts and G14/G15 evidence, not a tag or source-only PASS."
   ],
-  "nextRequiredEvidence": "Fresh exact-head G0-G10 for candidateSourceCommit d18392edeffcd6024c68b550d65792cfe2d03c6e after this fingerprint-excluded checkpoint synchronization, then immutable G11 RC and full G12-G15 native/release certification.",
-  "updatedAt": "2026-08-17T07:53:00Z"
+  "nextRequiredEvidence": "Fresh exact-SHA v18.5.1 G0-G10 after this paired checkpoint synchronization; then immutable G11 RC and full G12-G15 native/release certification.",
+  "updatedAt": "2026-08-17T23:50:00Z"
 }
