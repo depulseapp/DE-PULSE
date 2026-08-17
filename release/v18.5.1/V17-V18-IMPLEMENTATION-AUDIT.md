@@ -35,6 +35,19 @@ The ledger inventories:
 
 The counts are inventory counts, not PASS counts.
 
+## Current audit results
+
+| Audit | Result | Meaning |
+|---|---|---|
+| Inherited 48-item production-source marker reconstruction | 48/48 markers present | Static ownership evidence exists; it does not prove working behavior. Research/desk items remain reopened by direct user evidence. |
+| v17.0–v17.4 static scope-gate reconstruction | 0 missing contracts/files/test names | v17 implementation structure is still present; fresh test execution and package behavior remain required. |
+| v18 major-workstream-to-release mapping | FAIL | TradeInsight was committed and deferred but never reassigned or implemented. |
+| Fresh current behavioral campaign | NOT STARTED | Blocking. |
+| Current macOS Apple Silicon package audit | NOT STARTED | Blocking. |
+| Current Windows x64 package audit | NOT STARTED | Blocking. |
+
+A static marker or test-name check can support traceability but can never close a user workflow. This distinction is now explicit because the earlier gates reported PASS while Research, symbol removal, desk-state styling and scroll continuity were still defective.
+
 ## Current confirmed blockers
 
 1. `IMPL-18-TRADEINSIGHT-001` — TradeInsight SHADOW / SECONDARY integration is not implemented.
