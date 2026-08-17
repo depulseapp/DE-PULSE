@@ -19,19 +19,19 @@
     "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
     "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
   },
-  "candidateSourceCommit": "eebe3f48e686db09c220e97ff682c1a126bb3e28",
-  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling source being requalified; a later metadata-only checkpoint commit does not silently advance the product fingerprint.",
+  "candidateSourceCommit": "7fcdad3cb4a93ed40c33ceb521b9d92c18742454",
+  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling source being requalified; this later metadata-only checkpoint commit does not advance the product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "codeStatus": "V18_5_MAJOR_CLOSURE_IN_PROGRESS",
-  "implementationSummary": "v18.5 Major Closure is in qualification. Frozen scope contains 10 closure dimensions and 15 ADR-GDI scenarios. G6-G10 machinery now requires real PostgreSQL 17/no-skip integration, bounded load/backpressure/recovery evidence, runtime/browser truth, Principal Engineer and Professional Trader/Investor acceptance, and fail-closed native GitHub Release delivery. Repository-archetype cleanup is limited to safe hygiene before v18.5 Stable; deep behavior-preserving decomposition is reserved for closure-grade v18.5.1.",
-  "lastTrustworthyPass": "G3",
+  "implementationSummary": "v18.5 Major Closure is in qualification. Frozen scope contains 10 closure dimensions and 15 ADR-GDI scenarios. G6-G10 requires real PostgreSQL 17/no-skip integration, bounded load/backpressure/recovery evidence, browser/runtime truth, current Principal Engineer and Professional Trader/Investor acceptance, and fail-closed native GitHub Release delivery. Deep repository/package decomposition remains reserved for closure-grade v18.5.1 after v18.5 Stable.",
+  "lastTrustworthyPass": "NONE_ON_CURRENT_PRODUCT_SOURCE",
   "earliestRequiredResumeGate": "G0",
   "gates": {
-    "G0": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
-    "G1": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
-    "G2": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
-    "G3": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
+    "G0": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G1": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G2": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G3": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G4": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G5": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G6": {"status": "PENDING_REQUALIFICATION", "reusable": false},
@@ -52,27 +52,29 @@
     "v18.5 Stable is not deliverable until macOS Apple Silicon and Windows x64 runnable ZIPs, source ZIP, SHA manifest and certification evidence are visibly published on the GitHub Release."
   ],
   "resolvedIssues": [
-    "v18.5 TEST identity, README/docs/QA provenance and v18 family baseline anchor synchronized.",
-    "G4/G5 test-family selectors are existence-guarded so zero-match go test -run cannot create false green evidence.",
+    "v18.5 identity/docs/QA provenance and v18 family baseline anchor synchronized.",
+    "G4/G5 focused selectors are existence-guarded against zero-match false green.",
     "v18.5 Major Closure matrix binds all 10 closure dimensions and all 15 frozen ADR-GDI scenarios.",
-    "Real PostgreSQL 17 integration path is wired with mandatory selector checks and skip rejection.",
-    "Inherited Windows SQLite packaging gate was updated to current newLocalPersistenceBackend ownership without weakening winsqlite3/API/compile checks.",
-    "Repository Structure Contract and closure-grade v18.5.1 Repository Archetype Build Plan are governed source."
+    "Real PostgreSQL 17 integration is mandatory and rejects skipped selectors.",
+    "Windows SQLite packaging gate follows current newLocalPersistenceBackend ownership while retaining winsqlite3/API/compile checks.",
+    "Current v18.5 Principal Engineer acceptance replaces obsolete v18.0.1 isolated-profile assumptions.",
+    "Repository Structure Contract and closure-grade v18.5.1 10/10 build plan are governed source."
   ],
   "adaptiveProcessLearning": {
     "status": "IN_PROGRESS",
-    "lessonsRecorded": 4,
+    "lessonsRecorded": 5,
     "highestPriorityReusablePrevention": [
-      "Release identity synchronization must include fingerprint-excluded resume checkpoints before G7/G10.",
+      "Release identity synchronization includes fingerprint-excluded resume checkpoints before G7/G10.",
       "Every focused go test selector needs a non-zero existence guard.",
-      "Inherited gates must test current invariant/ownership contracts rather than obsolete symbol spellings.",
+      "Inherited gates test current invariants/ownership rather than obsolete symbol/profile spellings.",
+      "Current release Principal Engineer acceptance must not require retired point-release packaging artifacts.",
       "A Stable tag alone is insufficient delivery; runnable native assets must be verified on the GitHub Release."
     ]
   },
   "userDelivery": "NOT_READY",
   "handoff": ".depulse-certification/handoff/DE-PULSE-v18.4.0-Stable-to-v18.5-Handoff-2026-08-16.md",
   "nextBranch": "v18.5-development",
-  "nextStep": "Run fresh exact-head G0-G10 after checkpoint synchronization; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
-  "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. v18.5 must use fresh closure evidence for all 15 ADR-GDI scenarios and native delivery. Do not force mature ASBI/TDTI/AODR/adaptive-13F engines into v18.5.",
-  "updatedAt": "2026-08-17T07:45:00Z"
+  "nextStep": "Run fresh exact-head G0-G10 after current Principal Engineer correction; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
+  "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. v18.5 requires fresh closure evidence for all 15 ADR-GDI scenarios and native delivery. Do not force mature ASBI/TDTI/AODR/adaptive-13F engines into v18.5.",
+  "updatedAt": "2026-08-17T07:49:00Z"
 }
