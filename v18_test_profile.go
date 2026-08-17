@@ -56,7 +56,7 @@ func prepareV18TestConfig(base string) (string, error) {
 	source := filepath.Join(base, stableRuntimeConfigDirName)
 	if st, err := os.Stat(source); err == nil && st.IsDir() {
 		if stableInstanceIsLive(source) {
-			return "", fmt.Errorf("v18.4.0 TEST first-run migration requires DE.PULSE v18.4.0 Stable to be closed once; Stable data was not modified")
+			return "", fmt.Errorf("v18.4.0 TEST first-run migration requires DE.PULSE v18.3.0 Stable to be closed once; Stable data was not modified")
 		}
 		tmp := target + ".migrating"
 		_ = os.RemoveAll(tmp)
@@ -69,7 +69,7 @@ func prepareV18TestConfig(base string) (string, error) {
 		}
 		marker, _ := json.MarshalIndent(map[string]any{
 			"source":        stableRuntimeConfigDirName,
-			"sourceVersion": "v18.4.0",
+			"sourceVersion": "v18.3.0",
 			"target":        v18TestRuntimeConfigDirName,
 			"migratedAt":    time.Now().UTC().Format(time.RFC3339Nano),
 		}, "", "  ")
