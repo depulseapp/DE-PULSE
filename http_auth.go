@@ -18,14 +18,14 @@ func sessionTokenFromRequest(r *http.Request) string {
 }
 
 func setSessionCookie(w http.ResponseWriter, r *http.Request, token string) {
-	secure := r != nil && r.TLS != nil
+	secure := requestIsSecure(r)
 	http.SetCookie(w, &http.Cookie{Name: sessionCookieName, Value: token, Path: "/", HttpOnly: true, SameSite: http.SameSiteStrictMode, Secure: secure, MaxAge: int(defaultSessionAbsoluteTTL / time.Second)})
 	// Double-submit CSRF token: readable by same-origin JS, never accepted from a form body.
 	csrf := randomID("csrf") + randomID("")
 	http.SetCookie(w, &http.Cookie{Name: csrfCookieName, Value: csrf, Path: "/", HttpOnly: false, SameSite: http.SameSiteStrictMode, Secure: secure, MaxAge: int(defaultSessionAbsoluteTTL / time.Second)})
 }
 func clearSessionCookie(w http.ResponseWriter, r *http.Request) {
-	secure := r != nil && r.TLS != nil
+	secure := requestIsSecure(r)
 	http.SetCookie(w, &http.Cookie{Name: sessionCookieName, Value: "", Path: "/", HttpOnly: true, SameSite: http.SameSiteStrictMode, Secure: secure, MaxAge: -1, Expires: time.Unix(1, 0)})
 	http.SetCookie(w, &http.Cookie{Name: csrfCookieName, Value: "", Path: "/", HttpOnly: false, SameSite: http.SameSiteStrictMode, Secure: secure, MaxAge: -1, Expires: time.Unix(1, 0)})
 }
@@ -71,12 +71,19 @@ func (a *Application) handleLogin(w http.ResponseWriter, r *http.Request) {
 		writeError(w, 400, "Invalid login request.")
 		return
 	}
+	abuseKey := loginAbuseKey(req.Username, r)
+	if allowed, retryAfter := loginLimiter.Allow(abuseKey); !allowed {
+		rejectThrottledLogin(w, retryAfter)
+		return
+	}
 	token, p, err := a.identity.authenticate(req.Username, req.Password)
 	if err != nil {
+		loginLimiter.RecordFailure(abuseKey)
 		time.Sleep(120 * time.Millisecond)
 		writeError(w, http.StatusUnauthorized, "Invalid username or password.")
 		return
 	}
+	loginLimiter.Reset(abuseKey)
 	setSessionCookie(w, r, token)
 	writeJSON(w, 200, map[string]any{"ok": true, "principal": p})
 }

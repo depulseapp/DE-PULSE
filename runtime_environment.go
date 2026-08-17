@@ -6,9 +6,11 @@ import (
 )
 
 const (
-	runtimeModeEnv      = "DEPULSE_RUNTIME_MODE"
-	hostedListenAddrEnv = "DEPULSE_LISTEN_ADDR"
-	hostedConfigDirEnv  = "DEPULSE_CONFIG_DIR"
+	runtimeModeEnv              = "DEPULSE_RUNTIME_MODE"
+	hostedListenAddrEnv         = "DEPULSE_LISTEN_ADDR"
+	hostedConfigDirEnv          = "DEPULSE_CONFIG_DIR"
+	hostedTrustProxyHeadersEnv  = "DEPULSE_TRUST_PROXY_HEADERS"
+	hostedPublicOriginEnv       = "DEPULSE_PUBLIC_ORIGIN"
 )
 
 func runtimeMode() string {
@@ -33,4 +35,23 @@ func hostedListenAddress() string {
 		return ":" + port
 	}
 	return ":8080"
+}
+
+func trustHostedProxyHeaders() bool {
+	if !isHostedRuntime() {
+		return false
+	}
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(hostedTrustProxyHeadersEnv))) {
+	case "1", "true", "yes", "on":
+		return true
+	default:
+		return false
+	}
+}
+
+func hostedPublicOrigin() string {
+	if !isHostedRuntime() {
+		return ""
+	}
+	return strings.TrimSpace(os.Getenv(hostedPublicOriginEnv))
 }
