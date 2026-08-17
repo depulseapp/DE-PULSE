@@ -136,10 +136,10 @@ jobs:
       - run: go test -count=1 ./...
 
   renderer-fast:
-    name: G5 · Renderer fast lane
+    name: G5 · Renderer cheap lane
     needs: [g0-inventory, g1-scope-freeze]
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v7
         with:
@@ -147,49 +147,44 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - name: JavaScript syntax
-        run: node --check renderer/renderer.js
-      - name: Optional dependency-free renderer contract
+      - name: Mandatory renderer syntax contracts
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f renderer_logic_test.py ]; then
-            python3 renderer_logic_test.py
-          else
-            echo 'renderer_logic_test.py is not part of this baseline; syntax gate retained.'
-          fi
-      - name: Prepare browser contract dependency
+          node --check renderer/renderer.js
+          node --check renderer/live-dom-reconcile.js
+          python3 -m py_compile release/v18.5.1/browser_live_render_test.py
+      - name: Verify live reconciler is loaded by the actual renderer shell
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m pip install --disable-pip-version-check playwright
-          if command -v chromium >/dev/null 2>&1; then
-            echo "Using hosted Chromium: $(command -v chromium)"
-          elif command -v google-chrome >/dev/null 2>&1; then
-            sudo ln -sf "$(command -v google-chrome)" /usr/bin/chromium
-            echo "Using hosted Google Chrome through /usr/bin/chromium"
-          elif command -v google-chrome-stable >/dev/null 2>&1; then
-            sudo ln -sf "$(command -v google-chrome-stable)" /usr/bin/chromium
-            echo "Using hosted Google Chrome Stable through /usr/bin/chromium"
-          else
-            python3 -m playwright install --with-deps chromium
-            chromium_path="$(python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
-            sudo ln -sf "$chromium_path" /usr/bin/chromium
-            echo "Using Playwright Chromium fallback through /usr/bin/chromium"
-          fi
-      - name: Responsive browser contract
+          grep -Fq 'live-dom-reconcile.js?v=18.5.1' renderer/index.html
+          grep -Fq '<title>DE.PULSE v18.5.1</title>' renderer/index.html
+
+  browser-qualified:
+    name: G6/G9 · Qualified Chromium live interaction proof
+    needs: [g0-inventory, fast-static, renderer-fast]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install qualified browser dependency
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f responsive_ui_test.py ]; then
-            python3 responsive_ui_test.py
-          else
-            echo 'No responsive_ui_test.py present in this baseline.'
-          fi
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install --with-deps chromium
+      - name: Behavior-first live renderer regression
+        run: python release/v18.5.1/browser_live_render_test.py
 
   qualified-summary:
-    name: G5 · Recovery qualification summary
-    needs: [full-go, renderer-fast]
+    name: G5-G9 · Recovery qualification summary
+    needs: [full-go, browser-qualified]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 3
@@ -197,9 +192,9 @@ jobs:
       - name: Require all prerequisite lanes green
         env:
           FULL_GO: ${{ needs.full-go.result }}
-          RENDERER: ${{ needs.renderer-fast.result }}
+          BROWSER: ${{ needs.browser-qualified.result }}
         run: |
           set -euo pipefail
           test "$FULL_GO" = success
-          test "$RENDERER" = success
-          echo 'v18.5.1 cheap-first qualification lanes are green.'
+          test "$BROWSER" = success
+          echo 'v18.5.1 cheap-first qualification and behavior-first browser proof are green.'
