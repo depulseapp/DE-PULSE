@@ -19,6 +19,18 @@ TradeInsight proves the failure mode:
 
 The adaptive method therefore existed as documentation but lacked end-to-end enforcement.
 
+## Root-cause analysis of the slicing failure
+
+1. **No v18 equivalent of the v17 20-item major closure matrix.** v18 had a major workstream list and separate minor scopes, but no enforced one-to-one final disposition for every original workstream.
+2. **Deferred work did not require reassignment.** TradeInsight was marked committed, deferred from v18.0 and then left without a target owner/release.
+3. **Most v18 slice gates are release-identity pinned.** Earlier gates expect their original v18.0.x/v18.1/v18.2/v18.3 identity and cannot be rerun unchanged on v18.5.
+4. **v18.5 checked closure metadata, not every earlier behavioral contract.** Its scope gate validates closure dimensions, scenario names, documents and boundaries; it does not enumerate all original v18 workstreams or directly rerun every earlier user workflow.
+5. **The inherited 48-item gate is marker-oriented.** It confirms source ownership markers, while separate suites were assumed to prove behavior. The failing Research/desk workflows show that this separation did not guarantee requirement-level runtime acceptance.
+6. **Conversation commitments were not all converted into durable requirement IDs.** GitHub currently has only the new v18.5.1 issues, so older reported items could rely on handoffs or conversation memory instead of one authoritative defect ledger.
+7. **A duplicate report had no mandatory reopen rule.** “Already tracked” could suppress recurrence instead of invalidating the prior closure evidence.
+
+The corrective model is version-independent, requirement-level and package-bound. A slice may optimize execution, but it cannot own the only record of whether a major commitment was eventually implemented.
+
 ## Audit universe
 
 The ledger inventories:
