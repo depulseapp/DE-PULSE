@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "version": "18.5.1",
+  "status": "TEST",
+  "date": "2026-08-17",
+  "buildId": "v18.5.1-test-recovery-20260817",
+  "previousStable": "v18.5.0",
+  "majorProvenanceAnchor": "v17.5.1",
+  "scopeFile": "release/v18.5.1/G1-SCOPE-FREEZE.json",
+  "developmentEvidence": "release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json",
+  "documentationImpact": "release/v18.5.1/DOCUMENTATION-IMPACT.md",
+  "qualificationStatus": "PENDING",
+  "releaseCertificationStatus": "BLOCKED_ON_G10",
+  "requiredNativeTargets": ["macos-arm64", "windows-x64"],
+  "note": "Patch-candidate delta only. renderer/qa/manifest.json remains the durable promoted/historical release manifest until v18.5.1 reaches a certified promotion disposition."
+}
