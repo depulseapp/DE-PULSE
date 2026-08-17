@@ -66,7 +66,7 @@ The authoritative ledger currently contains 282 rows:
 - 8 v18 major workstreams;
 - 169 v18.0–v18.5 release entries;
 - 13 orphaned functionality/utility remediations;
-- 7 recovered conversational commitments;
+- 8 recovered conversational commitments;
 - 7 confirmed implementation-miss groups;
 - 7 escaped-defect groups;
 - 4 approved future-only mature workstreams.
@@ -116,10 +116,10 @@ This is the recommended starting plan, subject to G0–G3 replanning after each 
 
 | Candidate | Primary objective | Candidate contents | Why this grouping |
 |---|---|---|---|
-| v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; hover/render stability; scroll/focus continuity; Research top-area; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
+| v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; hover/render stability; scroll/focus continuity; Research top-area; three-tier header/Market Pulse Ribbon; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
 | v18.6 | Canonical utility/ownership recovery | shared Scanner/Radar acquisition; Session Intelligence Coordinator; Market Activity demotion; legacy route redirects; role-aware docs/impact manifest; dependency readiness register | These items share architecture, ownership, surface and governance dependencies. |
 | v18.7 | Provider intelligence + remaining consolidation | TradeInsight SHADOW/SECONDARY; remaining Dashboard/Market Intelligence/Desk/Catalyst/Maintenance remediation; provider-rights/readiness validation | External/provider work and larger consolidation need isolated rights, performance and regression qualification. |
-| v18.8+ | Major closure candidate or additional hardening | full 283-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
+| v18.8+ | Major closure candidate or additional hardening | full 284-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
 
 This table is not immutable scope. Each candidate becomes binding only when its own G1 closes. Findings may pull a dependency-compatible blocker earlier, split an unsafe slice or create another v18.x release.
 
@@ -141,7 +141,7 @@ If new evidence appears, the program creates another v18.x recovery/hardening sl
 ### Wave 0 — Reconstruct and freeze (G0–G3)
 
 - Freeze the exact v18.5.0 Stable source/package baseline and v18.5.1 branch.
-- Validate all 283 IDs, origins and counts.
+- Validate all 284 IDs, origins and counts.
 - Add code owner, build lane, dependency graph, regression ID and evidence matrix for every applicable row.
 - Record source/dependency/UI/state/persistence/security/package blast radius.
 - Reject any slice whose input/output ID count is not conserved.
@@ -157,6 +157,7 @@ Fix and prove:
 - Day/Swing/Long final-membership removal;
 - current-desk membership highlighting;
 - stable ticker/row hover with no table or screen blinking during repeated live/SSE updates;
+- approved three-tier header hierarchy: unchanged ET/PT time module in a stable session-aware secondary Market Pulse Ribbon, market instruments tertiary, account actions simplified;
 - scroll/focus/selection preservation through live/SSE and save/action rerenders;
 - Research target/freshness/action layout and recovery behavior.
 
