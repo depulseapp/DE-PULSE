@@ -1,35 +1,35 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.0",
-  "release": "v18.5.0",
+  "release": "v18.5.1",
   "channel": "TEST",
-  "branch": "v18.5-development",
+  "branch": "v18.5.1-development",
   "incomingStable": {
-    "version": "v18.4.0",
-    "tag": "v18.4.0-stable",
-    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+    "version": "v18.5.0",
+    "tag": "v18.5.0-stable",
+    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
   "certifiedStable": {
-    "version": "v18.4.0",
-    "tag": "v18.4.0-stable",
-    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-    "buildId": "v18.4.0-stable-security-commercial-readiness-20260816",
-    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
+    "version": "v18.5.0",
+    "tag": "v18.5.0-stable",
+    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "buildId": "v18.5.0-stable-major-closure-release-assurance-20260817",
+    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
-  "candidateSourceCommit": "d18392edeffcd6024c68b550d65792cfe2d03c6e",
-  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling source being requalified; this later metadata-only checkpoint commit does not advance the product fingerprint.",
+  "candidateSourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
+  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the v18.5.1 development-complete source being qualified; later metadata-only checkpoint commits do not advance the product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "codeStatus": "V18_5_MAJOR_CLOSURE_IN_PROGRESS",
-  "implementationSummary": "v18.5 Major Closure is in qualification. Frozen scope contains 10 closure dimensions and 15 ADR-GDI scenarios. G6-G10 requires real PostgreSQL 17/no-skip integration, bounded load/backpressure/recovery evidence, browser/runtime truth, current Principal Engineer and Professional Trader/Investor acceptance, and fail-closed native GitHub Release delivery. Deep repository/package decomposition remains reserved for closure-grade v18.5.1 after v18.5 Stable.",
-  "lastTrustworthyPass": "NONE_ON_CURRENT_PRODUCT_SOURCE",
+  "codeStatus": "V18_5_1_RECOVERY_QUALIFICATION",
+  "implementationSummary": "v18.5.1 contains the frozen ten-ID recovery slice: live DOM reconciliation, watchlist/global-remove and current-desk semantics, durable Stable-profile wording, isolated v18.5.1 TEST identity/profile migration, Research/header hierarchy hardening, checkpoint-based CI containment, and behavior-first QA. Development evidence is mapped; certification remains pending fresh exact-source G0-G15 evidence.",
+  "lastTrustworthyPass": "G0_G1_AND_RENDERER_CHEAP_ON_27B7D99;_FULL_QUALIFICATION_NOT_YET_PASS",
   "earliestRequiredResumeGate": "G0",
   "gates": {
-    "G0": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G1": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G0": {"status": "REQUALIFY", "reusable": false},
+    "G1": {"status": "REQUALIFY", "reusable": false},
     "G2": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G3": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G4": {"status": "PENDING_REQUALIFICATION", "reusable": false},
@@ -46,36 +46,38 @@
     "G15": {"status": "NOT_STARTED", "reusable": false},
     "G16": {"status": "NOT_STARTED", "reusable": false}
   },
-  "blockingIssue": null,
+  "blockingIssue": "Latest qualification run 32081605253 stopped at adaptive_resume_gate because these resume records still identified v18.5.0/v18.5-development. Product tests had not failed; stale checkpoint identity is being corrected before one batched requalification.",
   "knownResiduals": [
-    "Provider-specific commercial/redistribution/AI-use rights remain UNREVIEWED/NOT_ASSERTED until evidence is explicitly bound; release logic remains fail closed.",
-    "v18.5 Stable is not deliverable until macOS Apple Silicon and Windows x64 runnable ZIPs, source ZIP, SHA manifest and certification evidence are visibly published on the GitHub Release."
+    "Full v18.5.1 G0-G10 qualification has not yet passed on one exact source SHA.",
+    "G11-G15 immutable RC, full certification, macOS Apple Silicon, Windows x64 actual-artifact runtime audit, provenance and release assurance remain mandatory.",
+    "Provider-specific commercial/redistribution/AI-use rights remain governed by existing fail-closed rights metadata; this recovery patch does not broaden provider rights."
   ],
   "resolvedIssues": [
-    "v18.5 identity/docs/QA provenance and v18 family baseline anchor synchronized.",
-    "G4/G5 focused selectors are existence-guarded against zero-match false green.",
-    "v18.5 Major Closure matrix binds all 10 closure dimensions and all 15 frozen ADR-GDI scenarios.",
-    "Real PostgreSQL 17 integration is mandatory and rejects skipped selectors.",
-    "Windows SQLite packaging gate follows current newLocalPersistenceBackend ownership while retaining winsqlite3/API/compile checks.",
-    "Current v18.5 Principal Engineer acceptance replaces obsolete v18.0.1 isolated-profile assumptions and binds permanent boundaries to canonical scope/product-documentation owners.",
-    "Repository Structure Contract and closure-grade v18.5.1 10/10 build plan are governed source."
+    "v18.5.1 exact release identity and isolated TEST profile are implemented.",
+    "The ten frozen G1 IDs are conserved and mapped to source/tests in release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json.",
+    "Ordinary development commits no longer invoke expensive qualification; deliberate exact-SHA checkpointing is required.",
+    "Live DOM reconciliation prevents destructive same-page live refresh remounts.",
+    "Desk-row global removal and membership-pill final-desk protection have intentionally distinct semantics with Undo coverage.",
+    "Research/header hierarchy and durable auth/profile copy are covered by Chromium behavior tests."
   ],
   "adaptiveProcessLearning": {
-    "status": "IN_PROGRESS",
-    "lessonsRecorded": 6,
+    "status": "ACTIVE",
+    "lessonsRecorded": 8,
     "highestPriorityReusablePrevention": [
-      "Release identity synchronization includes fingerprint-excluded resume checkpoints before G7/G10.",
-      "Every focused go test selector needs a non-zero existence guard.",
-      "Inherited gates test current invariants/ownership rather than obsolete symbol/profile spellings.",
-      "Current release Principal Engineer acceptance must not require retired point-release packaging artifacts.",
-      "Permanent product-boundary gates bind canonical machine/document owners instead of demanding duplicated prose everywhere.",
-      "A Stable tag alone is insufficient delivery; runnable native assets must be verified on the GitHub Release."
+      "Development commits are accumulated into deliberate qualification checkpoints instead of launching full CI per fix.",
+      "Checkpoint evidence is exact-SHA/fingerprint bound and cannot be inherited across source changes.",
+      "Cheap gates stop the graph before expensive PostgreSQL/performance/native lanes when governance identity is stale.",
+      "CI efficiency may eliminate redundant execution, never required evidence.",
+      "CI-generated evidence/control metadata must not recursively trigger qualification.",
+      "Every focused Go selector needs a non-zero existence guard where zero-match could falsely pass.",
+      "Inherited gates test current invariants/ownership rather than obsolete point-release spellings.",
+      "Actual macOS arm64 and Windows x64 packaged-runtime proof remains mandatory before Stable promotion."
     ]
   },
   "userDelivery": "NOT_READY",
-  "handoff": ".depulse-certification/handoff/DE-PULSE-v18.4.0-Stable-to-v18.5-Handoff-2026-08-16.md",
-  "nextBranch": "v18.5-development",
-  "nextStep": "Run fresh exact-head G0-G10 after canonical-boundary Principal Engineer correction; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
-  "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. v18.5 requires fresh closure evidence for all 15 ADR-GDI scenarios and native delivery. Do not force mature ASBI/TDTI/AODR/adaptive-13F engines into v18.5.",
-  "updatedAt": "2026-08-17T07:53:00Z"
+  "handoff": "release/v18.5.1/V18.5.1-ADAPTIVE-RECOVERY-HANDOFF-2026-08-17.md",
+  "nextBranch": "v18.5.1-development",
+  "nextStep": "Batch-fix the stale resume/evidence checkpoint identity, bind one new exact v18.5.1 source SHA in QUALIFICATION_CHECKPOINT.json, rerun G0-G10 once, and proceed to immutable G11-G15 native certification only after exact G10 PASS.",
+  "resumeInstructions": "Treat v18.5.0-stable at 0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680 as immutable incoming Stable. Preserve all ten frozen v18.5.1 IDs and the permanent No Execution boundary. Do not claim qualification, native certification or Stable promotion without fresh exact-source evidence.",
+  "updatedAt": "2026-08-17T23:50:00Z"
 }
