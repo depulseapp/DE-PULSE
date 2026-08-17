@@ -29,8 +29,9 @@ v18.5.1 is no longer accepted as structure-only equivalence work. It must preser
 3. **SYMBOL-18.5.1-002:** current desk membership is not visually distinguished from other memberships.
 4. **NAV-18.5.1-001:** live/SSE refresh can unexpectedly jump a user from mid-section to the page top or lose interaction state.
 5. **RESEARCH-v15.1.0-17-19-REOPENED:** approved Research ticker input, freshness placement and responsive top-area requirements require fresh closure, including truthful labels, action semantics, disabled states and evidence recovery.
+6. **IMPL-18-TRADEINSIGHT-001:** the committed TradeInsight SHADOW / SECONDARY workstream is absent from current source and must be implemented through the canonical Smart Router with entitlement, rights, provenance, tests and package proof.
 
-The release must also reconstruct and reconcile every approved v18 implementation and accepted defect against current source and actual packaged behavior. This includes verification of Smart Provider Router / TradeInsight placement; it is not declared missing or complete without evidence.
+The release must reconstruct and reconcile all 48 inherited requirements, all 20 frozen v17 items, every v18 major workstream and v18.0–v18.5 release entry, accepted conversational commitments and defects against current source and actual packaged behavior. TradeInsight is confirmed missing and is no longer an undecided verification item.
 
 These items are **CURRENT_RELEASE_BLOCKER**. A repository move may not hide, defer or claim equivalence for them. Each item requires:
 
@@ -208,7 +209,8 @@ v18.5.1 receives the same seriousness as a Major Closure because repository/pack
 - security/auth/session/adversarial authorization/provider-rights fail-closed qualification;
 - approved-scope traceability and adaptive-governance gates;
 - requirement-linked regression coverage for COPY-18.5.1-001, SYMBOL-18.5.1-001/002, NAV-18.5.1-001 and RESEARCH-v15.1.0-17-19-REOPENED;
-- full v18 implementation-reconciliation ledger with no unexplained gaps.
+- full inherited + v17 + v18 implementation-reconciliation ledger with no unexplained gaps;
+- inventory gate PASS and release-mode reconciliation gate PASS from `v18_5_1_v17_v18_reconciliation_gate.py`.
 
 ### G11–G15 · immutable RC / full certification / native runtime / release assurance
 
@@ -256,6 +258,7 @@ v18.5.1 is complete only when:
 8. no approved product functionality, decision semantics or protected boundary changed;
 9. actual macOS Apple Silicon and Windows x64 artifacts pass runtime/provenance audit and are published in the GitHub Release;
 10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root;
-11. all five escaped-defect items pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
-12. the full v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
-13. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
+11. all five escaped-defect groups pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
+12. TradeInsight SHADOW integration passes canonical-router, rights/provenance, bounded fixture/live-smoke and actual-package qualification;
+13. the full inherited + v17 + v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
+14. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
