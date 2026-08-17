@@ -97,11 +97,11 @@ func TestV184SecurityPerimeterOriginAndHeaders(t *testing.T) {
 		t.Fatalf("same origin blocked: code=%d called=%d", same.Code, called)
 	}
 	for name := range map[string]bool{
-		"Content-Security-Policy": true,
-		"Permissions-Policy": true,
-		"Cross-Origin-Opener-Policy": true,
+		"Content-Security-Policy":           true,
+		"Permissions-Policy":                true,
+		"Cross-Origin-Opener-Policy":        true,
 		"X-Permitted-Cross-Domain-Policies": true,
-		"Strict-Transport-Security": true,
+		"Strict-Transport-Security":         true,
 	} {
 		if strings.TrimSpace(same.Header().Get(name)) == "" {
 			t.Fatalf("missing security header %s", name)

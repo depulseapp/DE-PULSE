@@ -6,11 +6,11 @@ import (
 )
 
 const (
-	runtimeModeEnv              = "DEPULSE_RUNTIME_MODE"
-	hostedListenAddrEnv         = "DEPULSE_LISTEN_ADDR"
-	hostedConfigDirEnv          = "DEPULSE_CONFIG_DIR"
-	hostedTrustProxyHeadersEnv  = "DEPULSE_TRUST_PROXY_HEADERS"
-	hostedPublicOriginEnv       = "DEPULSE_PUBLIC_ORIGIN"
+	runtimeModeEnv             = "DEPULSE_RUNTIME_MODE"
+	hostedListenAddrEnv        = "DEPULSE_LISTEN_ADDR"
+	hostedConfigDirEnv         = "DEPULSE_CONFIG_DIR"
+	hostedTrustProxyHeadersEnv = "DEPULSE_TRUST_PROXY_HEADERS"
+	hostedPublicOriginEnv      = "DEPULSE_PUBLIC_ORIGIN"
 )
 
 func runtimeMode() string {
