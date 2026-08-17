@@ -168,6 +168,9 @@ func (a *Application) authResolved(allowPasswordSetup bool, next http.HandlerFun
 			writeError(w, http.StatusForbidden, "Security token validation failed.")
 			return
 		}
+		if !a.enforceHostedRequestQuota(w, r, p) {
+			return
+		}
 		if err := a.ensureUserWorkspace(p.UserID); err != nil {
 			writeError(w, http.StatusInternalServerError, "User workspace unavailable.")
 			return

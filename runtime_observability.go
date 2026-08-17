@@ -276,39 +276,51 @@ func (e *Engine) shouldShedBackground() bool {
 }
 
 type HTTPRuntimeDiagnostics struct {
-	Requests         int64  `json:"requests"`
-	InFlight         int    `json:"inFlight"`
-	LastLatencyMs    int64  `json:"lastLatencyMs,omitempty"`
-	AverageLatencyMs int64  `json:"averageLatencyMs,omitempty"`
-	InteractiveP95Ms int64  `json:"interactiveP95Ms,omitempty"`
-	InteractiveMaxMs int64  `json:"interactiveMaxMs,omitempty"`
-	SlowInteractive  int64  `json:"slowInteractive"`
-	LastPath         string `json:"lastPath,omitempty"`
+	Requests                 int64  `json:"requests"`
+	InFlight                 int    `json:"inFlight"`
+	LastLatencyMs            int64  `json:"lastLatencyMs,omitempty"`
+	AverageLatencyMs         int64  `json:"averageLatencyMs,omitempty"`
+	InteractiveP95Ms         int64  `json:"interactiveP95Ms,omitempty"`
+	InteractiveMaxMs         int64  `json:"interactiveMaxMs,omitempty"`
+	SlowInteractive          int64  `json:"slowInteractive"`
+	LastPath                 string `json:"lastPath,omitempty"`
+	HostedMutationAllowed    int64  `json:"hostedMutationAllowed"`
+	HostedMutationThrottled  int64  `json:"hostedMutationThrottled"`
+	HostedExpensiveAllowed   int64  `json:"hostedExpensiveAllowed"`
+	HostedExpensiveThrottled int64  `json:"hostedExpensiveThrottled"`
 }
 
 type RequestTelemetry struct {
-	mu          sync.Mutex
-	requests    int64
-	inFlight    int
-	totalMs     int64
-	lastMs      int64
-	lastPath    string
-	slow        int64
-	interactive []int64
+	mu                       sync.Mutex
+	requests                 int64
+	inFlight                 int
+	totalMs                  int64
+	lastMs                   int64
+	lastPath                 string
+	slow                     int64
+	interactive              []int64
+	hostedMutationAllowed    int64
+	hostedMutationThrottled  int64
+	hostedExpensiveAllowed   int64
+	hostedExpensiveThrottled int64
 }
 
 func NewRequestTelemetry() *RequestTelemetry { return &RequestTelemetry{} }
+
+func isExpensiveAPIPath(path string) bool {
+	for _, heavy := range []string{"refresh", "scan", "generate", "maintenance", "integrity", "provider/test", "pre-market", "market-open", "catalyst", "stream-reconnect"} {
+		if strings.Contains(path, heavy) {
+			return true
+		}
+	}
+	return false
+}
 
 func isInteractiveAPIPath(path string) bool {
 	if !strings.HasPrefix(path, "/api/") || path == "/api/events" {
 		return false
 	}
-	for _, heavy := range []string{"refresh", "scan", "generate", "maintenance", "integrity", "provider/test", "pre-market", "market-open", "catalyst", "stream-reconnect"} {
-		if strings.Contains(path, heavy) {
-			return false
-		}
-	}
-	return true
+	return !isExpensiveAPIPath(path)
 }
 
 func (t *RequestTelemetry) begin(path string) func() {
@@ -343,6 +355,25 @@ func (t *RequestTelemetry) begin(path string) func() {
 	}
 }
 
+func (t *RequestTelemetry) RecordHostedQuota(expensive, allowed bool) {
+	if t == nil {
+		return
+	}
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	if allowed {
+		t.hostedMutationAllowed++
+		if expensive {
+			t.hostedExpensiveAllowed++
+		}
+		return
+	}
+	t.hostedMutationThrottled++
+	if expensive {
+		t.hostedExpensiveThrottled++
+	}
+}
+
 func (t *RequestTelemetry) Diagnostics() HTTPRuntimeDiagnostics {
 	if t == nil {
 		return HTTPRuntimeDiagnostics{}
@@ -367,7 +398,20 @@ func (t *RequestTelemetry) Diagnostics() HTTPRuntimeDiagnostics {
 		p95 = values[idx]
 		max = values[len(values)-1]
 	}
-	return HTTPRuntimeDiagnostics{Requests: t.requests, InFlight: t.inFlight, LastLatencyMs: t.lastMs, AverageLatencyMs: avg, InteractiveP95Ms: p95, InteractiveMaxMs: max, SlowInteractive: t.slow, LastPath: t.lastPath}
+	return HTTPRuntimeDiagnostics{
+		Requests:                 t.requests,
+		InFlight:                 t.inFlight,
+		LastLatencyMs:            t.lastMs,
+		AverageLatencyMs:         avg,
+		InteractiveP95Ms:         p95,
+		InteractiveMaxMs:         max,
+		SlowInteractive:          t.slow,
+		LastPath:                 t.lastPath,
+		HostedMutationAllowed:    t.hostedMutationAllowed,
+		HostedMutationThrottled:  t.hostedMutationThrottled,
+		HostedExpensiveAllowed:   t.hostedExpensiveAllowed,
+		HostedExpensiveThrottled: t.hostedExpensiveThrottled,
+	}
 }
 
 func (a *Application) observeHTTP(next http.Handler) http.Handler {

@@ -49,7 +49,7 @@ func effectiveRequestScheme(r *http.Request) string {
 
 func validForwardedHost(v string) bool {
 	v = strings.TrimSpace(v)
-	return v != "" && !strings.ContainsAny(v, "/\\ 	\r\n")
+	return v != "" && !strings.ContainsAny(v, "/\\ \t\r\n")
 }
 
 func effectiveRequestHost(r *http.Request) string {
@@ -256,4 +256,143 @@ var loginLimiter = newLoginAbuseLimiter(4096, 5, 5*time.Minute, 5*time.Minute)
 func rejectThrottledLogin(w http.ResponseWriter, retryAfter int) {
 	w.Header().Set("Retry-After", strconv.Itoa(retryAfter))
 	writeError(w, http.StatusTooManyRequests, "Too many login attempts. Try again later.")
+}
+
+const (
+	hostedMutationQuotaPerMinute  = 180
+	hostedExpensiveQuotaPerMinute = 20
+)
+
+type hostedQuotaWindow struct {
+	StartedAt time.Time
+	Count     int
+}
+
+type hostedRequestQuotaEntry struct {
+	Mutation  hostedQuotaWindow
+	Expensive hostedQuotaWindow
+	LastSeen  time.Time
+}
+
+type hostedRequestQuotaLimiter struct {
+	mu             sync.Mutex
+	entries        map[string]hostedRequestQuotaEntry
+	maxEntries     int
+	mutationLimit  int
+	expensiveLimit int
+	window         time.Duration
+	now            func() time.Time
+}
+
+func newHostedRequestQuotaLimiter(maxEntries, mutationLimit, expensiveLimit int, window time.Duration) *hostedRequestQuotaLimiter {
+	return &hostedRequestQuotaLimiter{
+		entries:        map[string]hostedRequestQuotaEntry{},
+		maxEntries:     maxEntries,
+		mutationLimit:  mutationLimit,
+		expensiveLimit: expensiveLimit,
+		window:         window,
+		now:            time.Now,
+	}
+}
+
+func hostedRequestQuotaKey(userID string) string {
+	sum := sha256.Sum256([]byte("hosted-quota\x00" + strings.TrimSpace(userID)))
+	return base64.RawURLEncoding.EncodeToString(sum[:])
+}
+
+func resetHostedQuotaWindow(now time.Time, current hostedQuotaWindow, window time.Duration) hostedQuotaWindow {
+	if current.StartedAt.IsZero() || now.Sub(current.StartedAt) >= window {
+		return hostedQuotaWindow{StartedAt: now}
+	}
+	return current
+}
+
+func hostedQuotaRetryAfter(now time.Time, current hostedQuotaWindow, window time.Duration) int {
+	retry := int((current.StartedAt.Add(window).Sub(now) + time.Second - 1) / time.Second)
+	if retry < 1 {
+		return 1
+	}
+	return retry
+}
+
+func (l *hostedRequestQuotaLimiter) cleanupLocked(now time.Time, requestedKey string) {
+	for key, entry := range l.entries {
+		if now.Sub(entry.LastSeen) > 2*l.window {
+			delete(l.entries, key)
+		}
+	}
+	if _, exists := l.entries[requestedKey]; exists {
+		return
+	}
+	for len(l.entries) >= l.maxEntries && len(l.entries) > 0 {
+		oldestKey := ""
+		var oldest time.Time
+		for key, entry := range l.entries {
+			if oldestKey == "" || entry.LastSeen.Before(oldest) {
+				oldestKey, oldest = key, entry.LastSeen
+			}
+		}
+		delete(l.entries, oldestKey)
+	}
+}
+
+// Allow enforces both the broad hosted mutation budget and, for expensive
+// operations, the stricter expensive-work budget in one atomic decision.
+func (l *hostedRequestQuotaLimiter) Allow(key string, expensive bool) (bool, int) {
+	if l == nil || strings.TrimSpace(key) == "" {
+		return false, 1
+	}
+	now := l.now()
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.cleanupLocked(now, key)
+	entry := l.entries[key]
+	entry.Mutation = resetHostedQuotaWindow(now, entry.Mutation, l.window)
+	entry.Expensive = resetHostedQuotaWindow(now, entry.Expensive, l.window)
+	entry.LastSeen = now
+	if l.mutationLimit > 0 && entry.Mutation.Count >= l.mutationLimit {
+		l.entries[key] = entry
+		return false, hostedQuotaRetryAfter(now, entry.Mutation, l.window)
+	}
+	if expensive && l.expensiveLimit > 0 && entry.Expensive.Count >= l.expensiveLimit {
+		l.entries[key] = entry
+		return false, hostedQuotaRetryAfter(now, entry.Expensive, l.window)
+	}
+	entry.Mutation.Count++
+	if expensive {
+		entry.Expensive.Count++
+	}
+	l.entries[key] = entry
+	return true, 0
+}
+
+var hostedQuotaLimiter = newHostedRequestQuotaLimiter(4096, hostedMutationQuotaPerMinute, hostedExpensiveQuotaPerMinute, time.Minute)
+
+func hostedQuotaApplies(r *http.Request) bool {
+	if !isHostedRuntime() || r == nil || r.URL == nil || !strings.HasPrefix(r.URL.Path, "/api/") || strings.HasPrefix(r.URL.Path, "/api/auth/") {
+		return false
+	}
+	switch r.Method {
+	case http.MethodGet, http.MethodHead, http.MethodOptions:
+		return false
+	default:
+		return true
+	}
+}
+
+func (a *Application) enforceHostedRequestQuota(w http.ResponseWriter, r *http.Request, p Principal) bool {
+	if !hostedQuotaApplies(r) {
+		return true
+	}
+	expensive := isExpensiveAPIPath(r.URL.Path)
+	allowed, retryAfter := hostedQuotaLimiter.Allow(hostedRequestQuotaKey(p.UserID), expensive)
+	if a != nil && a.httpTelemetry != nil {
+		a.httpTelemetry.RecordHostedQuota(expensive, allowed)
+	}
+	if allowed {
+		return true
+	}
+	w.Header().Set("Retry-After", strconv.Itoa(retryAfter))
+	writeError(w, http.StatusTooManyRequests, "Hosted request quota exceeded. Try again later.")
+	return false
 }
