@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 2,
+  "gate": "G16",
+  "status": "PASS",
+  "stableTag": "v18.5.0-stable",
+  "stableSourceCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+  "stableSourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+  "stableSourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a",
+  "stableClosureRun": 32049647088,
+  "stableTagImmutable": true,
+  "productSemanticDeltaAfterTag": false,
+  "nextRelease": "v18.5.1",
+  "generatedAt": "2026-08-17T17:30:25.840811+00:00",
+  "timestampSource": "G15 certification evidence"
+}

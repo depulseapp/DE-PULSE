@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "release": "v18.5.0 STABLE",
+  "tag": "v18.5.0-stable",
+  "buildId": "v18.5.0-stable-major-closure-release-assurance-20260817",
+  "stableClosureRun": 32049647088,
+  "sourceCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+  "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
+  "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a",
+  "nativeTargets": [
+    "macos-arm64",
+    "windows-x64"
+  ],
+  "nativePasses": 1,
+  "publicationRebuild": false,
+  "status": "STABLE_CERTIFIED",
+  "generatedAt": "2026-08-17T17:30:25.840811+00:00",
+  "timestampSource": "G15 certification evidence"
+}
