@@ -154,10 +154,12 @@ jobs:
           node --check renderer/renderer.js
           node --check renderer/live-dom-reconcile.js
           node --check renderer/watchlist-v18.5.1.js
+          node --check renderer/header-v18.5.1.js
           python3 -m py_compile \
             release/v18.5.1/browser_live_render_test.py \
             release/v18.5.1/browser_watchlist_membership_test.py \
-            release/v18.5.1/browser_auth_copy_test.py
+            release/v18.5.1/browser_auth_copy_test.py \
+            release/v18.5.1/browser_ui_hierarchy_test.py
       - name: Verify v18.5.1 behavior layers are loaded by the actual renderer shell
         shell: bash
         run: |
@@ -165,6 +167,8 @@ jobs:
           grep -Fq 'live-dom-reconcile.js?v=18.5.1' renderer/index.html
           grep -Fq 'watchlist-v18.5.1.js?v=18.5.1' renderer/index.html
           grep -Fq 'watchlist-v18.5.1.css?v=18.5.1' renderer/index.html
+          grep -Fq 'header-v18.5.1.js?v=18.5.1' renderer/index.html
+          grep -Fq 'ui-v18.5.1.css?v=18.5.1' renderer/index.html
           grep -Fq '<title>DE.PULSE v18.5.1</title>' renderer/index.html
 
   browser-qualified:
@@ -193,6 +197,8 @@ jobs:
         run: python release/v18.5.1/browser_watchlist_membership_test.py
       - name: Browser/content first-run auth copy regression
         run: python release/v18.5.1/browser_auth_copy_test.py
+      - name: Browser Research/header responsive hierarchy regression
+        run: python release/v18.5.1/browser_ui_hierarchy_test.py
 
   qualified-summary:
     name: G5-G9 · Recovery qualification summary
