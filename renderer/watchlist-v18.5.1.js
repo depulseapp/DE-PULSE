@@ -5,7 +5,8 @@
 
   deskMembershipStrip = function deskMembershipStripV1851(sym, currentDesk = '') {
     const target = String(sym || '').toUpperCase();
-    const current = String(currentDesk || '').toLowerCase();
+    const inferredDesk = ['day', 'swing', 'long'].includes(String(page || '').toLowerCase()) ? String(page).toLowerCase() : '';
+    const current = String(currentDesk || inferredDesk).toLowerCase();
     const items = [['day', 'DAY'], ['swing', 'SWING'], ['long', 'LONG']];
     return `<span class="desk-membership-strip" aria-label="Desk membership for ${esc(target)}">${items.map(([kind, label]) => {
       const active = (deskWL(kind).symbols || []).includes(target);
