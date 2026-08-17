@@ -9,26 +9,27 @@ import (
 )
 
 type ProviderRouteHop struct {
-	Provider      string   `json:"provider"`
-	Role          string   `json:"role"`
-	Configured    bool     `json:"configured"`
-	Health        string   `json:"health"`
-	Circuit       string   `json:"circuit"`
-	Priority      int      `json:"priority"`
-	Quota         string   `json:"quota,omitempty"`
-	RateLimit     string   `json:"rateLimit,omitempty"`
-	LatencyMs     int64    `json:"latencyMs,omitempty"`
-	LastSuccess   int64    `json:"lastSuccess,omitempty"`
-	LastFailure   int64    `json:"lastFailure,omitempty"`
-	FailureCount  int      `json:"failureCount,omitempty"`
-	Attempts      int64    `json:"attempts,omitempty"`
-	LastError     string   `json:"lastError,omitempty"`
-	Recovery      string   `json:"recovery,omitempty"`
-	ExpectedDelay string   `json:"expectedDelay,omitempty"`
-	CostClass     string   `json:"costClass,omitempty"`
-	Entitlement   string   `json:"entitlement,omitempty"`
-	Score         float64  `json:"score,omitempty"`
-	ScoreReasons  []string `json:"scoreReasons,omitempty"`
+	Provider      string                     `json:"provider"`
+	Role          string                     `json:"role"`
+	Configured    bool                       `json:"configured"`
+	Health        string                     `json:"health"`
+	Circuit       string                     `json:"circuit"`
+	Priority      int                        `json:"priority"`
+	Quota         string                     `json:"quota,omitempty"`
+	RateLimit     string                     `json:"rateLimit,omitempty"`
+	LatencyMs     int64                      `json:"latencyMs,omitempty"`
+	LastSuccess   int64                      `json:"lastSuccess,omitempty"`
+	LastFailure   int64                      `json:"lastFailure,omitempty"`
+	FailureCount  int                        `json:"failureCount,omitempty"`
+	Attempts      int64                      `json:"attempts,omitempty"`
+	LastError     string                     `json:"lastError,omitempty"`
+	Recovery      string                     `json:"recovery,omitempty"`
+	ExpectedDelay string                     `json:"expectedDelay,omitempty"`
+	CostClass     string                     `json:"costClass,omitempty"`
+	Entitlement   string                     `json:"entitlement,omitempty"`
+	DataRights    ProviderDataRightsMetadata `json:"dataRights"`
+	Score         float64                    `json:"score,omitempty"`
+	ScoreReasons  []string                   `json:"scoreReasons,omitempty"`
 }
 
 type ProviderRouteState struct {
@@ -464,7 +465,7 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 				Quota: providerQuotaLabel(provider), RateLimit: rate, LatencyMs: c.LatencyMs, LastSuccess: c.LastSuccess, LastFailure: c.LastFailure,
 				FailureCount: c.Failures, Attempts: c.Attempts, LastError: defaultString(cap.Reason, c.LastError), Recovery: recovery,
 				ExpectedDelay: expectedProviderDelay(dataset, provider), CostClass: providerCostClass(provider), Entitlement: entitlement,
-				Score: score.Score, ScoreReasons: append([]string(nil), score.Reasons...),
+				DataRights: providerDataRightsMetadata(provider), Score: score.Score, ScoreReasons: append([]string(nil), score.Reasons...),
 			})
 		}
 		if preferred == "" && len(chain) > 0 {
@@ -477,7 +478,6 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 					active = h.Provider
 					break
 				}
-			}
 		}
 
 		state := "READY"
