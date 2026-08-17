@@ -39,7 +39,6 @@ jobs:
           python3 documentation_governance_gate.py
           git cat-file -e 'v18.4.0-stable^{commit}'
           test "$(git rev-parse 'v18.4.0-stable^{commit}')" = '8f3d0db3a7b7300f5954bd34af2541a0e04d6870'
-          FP="$(git archive v18.4.0-stable | tar -x -C /tmp 2>/dev/null || true)"
       - name: Record G0-G3 evidence
         shell: bash
         run: |
