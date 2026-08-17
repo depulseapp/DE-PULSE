@@ -1,15 +1,15 @@
-# DE.PULSE v18.5.1 — 10/10 Repository Archetype Closure Build Plan
+# DE.PULSE v18.5.1 — 10/10 Repository Archetype + Escaped-Defect Closure Build Plan
 
-**Release type:** behavior-preserving repository/source-architecture closure patch  
+**Release type:** repository/source-architecture closure patch plus escaped-defect recovery  
 **Dependency:** starts only after v18.5.0 Stable promotion and native delivery  
 **Qualification standard:** closure-grade G0–G16; not a lightweight cleanup  
-**Product scope:** no new user-facing capability; no execution scope; no decision-semantic changes.
+**Product scope:** no new user-facing capability; approved-behavior defect correction only; no execution scope; no protected decision-formula changes.
 
 ## Mission
 
 Transform the current flat/mixed repository into a predictable, Maven-archetype-like structure so an engineer can navigate DE.PULSE by responsibility and package ownership rather than by scanning hundreds of root filenames.
 
-This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md` and is accepted only at **10/10**.
+This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`, closes the mandatory escaped-defect set, and is accepted only at **10/10**.
 
 ## Non-negotiable rules
 
@@ -19,6 +19,25 @@ This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md` and is acc
 4. Preserve canonical shared state, fetch-once/calculate-once, Smart Provider Router v2, bounded work/backpressure, truthful ADR-GDI degradation, user isolation, US Equities Processing and No Execution boundaries.
 5. A structural move that exposes or requires a semantic defect fix is treated as a separate change and requalified from the earliest invalidated gate.
 6. v18.5.1 must complete the canonical G0–G16 process and native runtime delivery despite being a patch version.
+
+## Mandatory escaped-defect and implementation closure scope
+
+v18.5.1 is no longer accepted as structure-only equivalence work. It must preserve the repository-archetype mission **and** close the v18.5 behavior that escaped Major Closure:
+
+1. **COPY-18.5.1-001:** stale `v17` profile-preservation copy.
+2. **SYMBOL-18.5.1-001:** inert/inconsistent row removal in Day, Swing and Long, including final desk membership.
+3. **SYMBOL-18.5.1-002:** current desk membership is not visually distinguished from other memberships.
+4. **NAV-18.5.1-001:** live/SSE refresh can unexpectedly jump a user from mid-section to the page top or lose interaction state.
+5. **RESEARCH-v15.1.0-17-19-REOPENED:** approved Research ticker input, freshness placement and responsive top-area requirements require fresh closure, including truthful labels, action semantics, disabled states and evidence recovery.
+
+The release must also reconstruct and reconcile every approved v18 implementation and accepted defect against current source and actual packaged behavior. This includes verification of Smart Provider Router / TradeInsight placement; it is not declared missing or complete without evidence.
+
+These items are **CURRENT_RELEASE_BLOCKER**. A repository move may not hide, defer or claim equivalence for them. Each item requires:
+
+**origin → current observation → owner → fix/disposition → regression test → browser retest → macOS package retest → Windows package retest → closure evidence**.
+
+A repeated report reopens the original item, increments recurrence and triggers G16 root-cause/prevention work. Historical PASS evidence is invalid for an affected surface after relevant source, renderer, dependency or packaging changes.
+
 
 ## Target archetype
 
@@ -187,7 +206,9 @@ v18.5.1 receives the same seriousness as a Major Closure because repository/pack
 - Professional Trader/Investor acceptance;
 - renderer/browser/responsive/accessibility/role visibility regression;
 - security/auth/session/adversarial authorization/provider-rights fail-closed qualification;
-- approved-scope traceability and adaptive-governance gates.
+- approved-scope traceability and adaptive-governance gates;
+- requirement-linked regression coverage for COPY-18.5.1-001, SYMBOL-18.5.1-001/002, NAV-18.5.1-001 and RESEARCH-v15.1.0-17-19-REOPENED;
+- full v18 implementation-reconciliation ledger with no unexplained gaps.
 
 ### G11–G15 · immutable RC / full certification / native runtime / release assurance
 
@@ -234,4 +255,7 @@ v18.5.1 is complete only when:
 7. all canonical G0–G16 applicable gates and closure-grade regression suites pass;
 8. no approved product functionality, decision semantics or protected boundary changed;
 9. actual macOS Apple Silicon and Windows x64 artifacts pass runtime/provenance audit and are published in the GitHub Release;
-10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root.
+10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root;
+11. all five escaped-defect items pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
+12. the full v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
+13. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
