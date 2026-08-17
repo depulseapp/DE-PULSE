@@ -41,11 +41,11 @@ The ledger inventories:
 | Frozen v17 major-scope items | 20 |
 | v18 major workstreams | 8 |
 | v18.0–v18.5 release items/clauses/contracts/scenarios | 169 |
-| Recovered conversational commitments requiring explicit reconciliation | 7 |
+| Recovered conversational commitments requiring explicit reconciliation | 8 |
 | Mandatory functionality/utility remediations targeted to v18.3 but never sliced into v18.3 scope | 13 |
 | Confirmed implementation misses | 7 |
 | Confirmed escaped defect groups | 7 |
-| Total requirement/defect rows under explicit disposition | 283 |
+| Total requirement/defect rows under explicit disposition | 284 |
 
 The counts are inventory counts, not PASS counts.
 
@@ -82,6 +82,7 @@ A static marker or test-name check can support traceability but can never close 
 12. `NAV-18.5.1-001` — same-page/live refresh can lose scroll/focus context.
 13. `RESEARCH-v15.1.0-17-19-REOPENED` — Research ticker/freshness/top-area regression.
 14. `HOVER-18.5.1-001` — hovering a ticker/row causes repeated screen/table blinking during live updates; all ticker surfaces require stability proof.
+15. `HEADER-18.5.1-001` — approved three-tier header hierarchy and distinctive secondary Market Pulse Ribbon are not yet implemented; the existing ET/PT module must remain unchanged.
 
 ## Orphaned v18.3 remediation set
 
