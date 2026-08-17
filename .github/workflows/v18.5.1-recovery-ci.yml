@@ -165,7 +165,9 @@ jobs:
     name: G6/G9 · Qualified Chromium live interaction proof
     needs: [g0-inventory, fast-static, renderer-fast]
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 12
+    env:
+      CHROME_BIN: /usr/bin/google-chrome
     steps:
       - uses: actions/checkout@v7
         with:
@@ -173,13 +175,13 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
-      - name: Install qualified browser dependency
+      - name: Install lightweight Playwright driver
         shell: bash
         run: |
           set -euo pipefail
+          command -v google-chrome
           python -m pip install --disable-pip-version-check playwright
-          python -m playwright install --with-deps chromium
-      - name: Behavior-first live renderer regression
+      - name: Behavior-first live renderer regression using hosted Chrome
         run: python release/v18.5.1/browser_live_render_test.py
 
   qualified-summary:
