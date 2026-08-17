@@ -1,0 +1,120 @@
+name: DE.PULSE v18.5 | One-shot Documentation + Archive Sync
+
+on:
+  push:
+    branches: [v18.5-development]
+    paths:
+      - '.github/workflows/v18.5-documentation-archive-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Synchronize v18.5 documentation and archive policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          R=Path('.')
+          version='18.5.0'
+          channel='TEST'
+          build='v18.5.0-test-major-closure-release-assurance-20260816'
+
+          ident_path=R/'release_identity.json'
+          ident=json.loads(ident_path.read_text())
+          ident['stable_baseline']='v17.5.1'
+          ident['previous_stable']='v18.4.0'
+          ident['patch_predecessor']='v18.4.0'
+          ident_path.write_text(json.dumps(ident, indent=2)+'\n')
+
+          ci_path=R/'ci_pipeline_plan.json'
+          ci=json.loads(ci_path.read_text())
+          p=ci['policy']
+          p['current_slice']='v18.5-major-closure-release-assurance'
+          p['artifact_archive_required']=True
+          p['artifact_archive_primary']='GitHub Releases + immutable Stable tag'
+          p['artifact_archive_repository_evidence']='release/<version>/ + governance/RELEASE_ARTIFACT_ARCHIVE.md'
+          p['artifact_archive_historical_fallback']='ChatGPT Library /DE.PULSE/<version>/'
+          p['artifact_archive_rule']='G13 packages; G14 audits actual artifacts; G15 verifies exact source/fingerprint/SHA and publishes; G16 records final recovery index. No new top-level gate.'
+          ci_path.write_text(json.dumps(ci, indent=2)+'\n')
+
+          archive = '''# DE.PULSE — Release Artifact Archive & Recovery\n\n**Policy status:** PERMANENT from v18.5 Major Closure onward  \n**Primary durable recovery point:** GitHub Stable tag + GitHub Release assets  \n**Repository evidence:** `release/<version>/`  \n**Historical fallback/source of truth during backfill:** ChatGPT Library `/DE.PULSE/<version>/`\n\nThis policy is implemented inside existing G13/G14/G15/G16 responsibilities. It does **not** add a new top-level gate.\n\n## Where do I get a build?\n\n```mermaid\nflowchart TD\n    A[Choose DE.PULSE version] --> B{GitHub Release has runnable assets?}\n    B -->|Yes| C[Download macOS Apple Silicon or Windows x64 ZIP]\n    B -->|No| D{Immutable Stable tag exists?}\n    D -->|Yes| E[Use exact tagged source + certification evidence]\n    D -->|No / historical backfill| F[Use verified ChatGPT Library original]\n    F --> G[Verify SHA-256 against original manifest]\n    E --> H[Rebuild only as certified-source reconstruction]\n    C --> I[Verify SHA / provenance before running]\n    G --> I\n    H --> I\n```\n\n## Release storage model\n\n```mermaid\nflowchart LR\n    G13[G13 Native Packaging / Provenance] --> G14[G14 Actual Artifact Runtime Audit]\n    G14 --> G15[G15 Release Assurance / Promotion]\n    G15 --> TAG[Immutable Stable tag]\n    G15 --> REL[GitHub Release: source + macOS + Windows + SHA + evidence]\n    TAG --> G16[G16 Retrospective / Handoff]\n    REL --> G16\n    G16 --> IDX[Recovery index + handoff in repository]\n```\n\n## Canonical locations\n\n| Release family | Artifact status | Canonical / recovery location |\n|---|---|---|\n| v16.8.0 Stable | Original runnable artifacts preserved | ChatGPT Library `/DE.PULSE/v16.8.0/` |\n| v16.8.1 Stable | Original runnable artifacts preserved | ChatGPT Library `/DE.PULSE/v16.8.1/` |\n| v16.9.0 Stable | Original runnable artifacts preserved | ChatGPT Library `/DE.PULSE/v16.9.0/` |\n| v16.10.0 Stable | Original runnable artifacts preserved | ChatGPT Library `/DE.PULSE/v16.10.0/` |\n| v16.11.0 Stable | Original runnable artifacts + source + installer + final SHA + provenance preserved | ChatGPT Library `/DE.PULSE/v16.11.0/` |\n| v17.0.0 TEST | TEST source snapshot only | ChatGPT Library `/DE.PULSE/v17.0.0/` |\n| v17.1.0 TEST | TEST source snapshot only | ChatGPT Library `/DE.PULSE/v17.1.0/` |\n| v17.5.1 Stable | Authoritative complete Stable bundle preserved | ChatGPT Library `/DE.PULSE/v17.5.1/DE-PULSE-v17.5.1-STABLE.zip` |\n| v18 Stable lineage | Immutable Stable tags exist in GitHub; Release-asset coverage is being normalized/backfilled | GitHub repository `depulseapp/DE-PULSE` → **Releases** and **Tags** |\n| v18.1.0 Stable | GitHub Release assets confirmed: macOS Apple Silicon, Windows x64, source, SHA and G12/G14 evidence | GitHub Release tag `v18.1.0-stable` |\n| v18.5.0 Stable (when promoted) | MUST contain complete runnable/recovery set | GitHub Release tag `v18.5.0-stable` + repository `release/v18.5.0/` |\n\n### Historical v16.11 originals\n\nThe Library copy is cryptographically authoritative for backfill. Key files include:\n\n- `/DE.PULSE/v16.11.0/De-Pulse-v16.11.0-Stable-macOS.zip`\n- `/DE.PULSE/v16.11.0/De-Pulse-v16.11.0-Stable-Windows-x64.zip`\n- `/DE.PULSE/v16.11.0/De-Pulse-v16.11.0-Stable-Source.zip`\n- `/DE.PULSE/v16.11.0/De-Pulse-v16.11.0-Stable-SHA256.txt`\n- `/DE.PULSE/v16.11.0/De-Pulse-v16.11.0-Authoritative-Release-Index.json`\n- `/DE.PULSE/v16.11.0/DE-PULSE-v16.11.0-Authoritative-Major-Closure-Handoff-Adaptive-Roadmap-v17-BuildPlan.md`\n\n### Historical v17.5.1 original\n\n- `/DE.PULSE/v17.5.1/DE-PULSE-v17.5.1-STABLE.zip`\n\nThe v17.5.1 bundle contains the source ZIP, macOS ZIP, Windows ZIP, installer, QA/provenance/handoff and final SHA manifest.\n\n## Truth labels for archived artifacts\n\nEvery archived item must be one of:\n\n- **ORIGINAL** — exact historical artifact whose SHA matches the frozen manifest.\n- **CERTIFIED-SOURCE RECONSTRUCTION** — rebuilt later from an exact certified source snapshot/tag; never described as the original binary.\n- **TAG-ONLY** — immutable source identity exists but runnable assets have not yet been backfilled.\n- **TEST-SOURCE** — historical TEST source snapshot, not a Stable runnable release.\n\n## Required Stable GitHub Release contents\n\nStarting with v18.5 Stable, G15/G16 must leave a durable GitHub Release containing, where applicable:\n\n1. macOS Apple Silicon runnable ZIP;\n2. Windows x64 runnable ZIP;\n3. exact source ZIP;\n4. SHA-256 manifest / per-artifact SHA files;\n5. build provenance and authoritative release index;\n6. G12/G14/G15 certification evidence;\n7. final handoff / recovery instructions.\n\nA tag alone is not sufficient to claim binary archival. A Release page must actually list the runnable assets before documentation says they are stored in GitHub.\n'''
+          (R/'governance').mkdir(exist_ok=True)
+          (R/'governance/RELEASE_ARTIFACT_ARCHIVE.md').write_text(archive)
+
+          recovery='''# v18.5 Artifact & Recovery Contract\n\n- **Current candidate:** DE.PULSE v18.5.0 TEST\n- **Incoming Stable:** v18.4.0\n- **v18 provenance anchor:** v17.5.1\n- **Final Stable target:** GitHub tag/release `v18.5.0-stable`\n- **Release evidence directory:** `release/v18.5.0/`\n- **Archive policy:** `governance/RELEASE_ARTIFACT_ARCHIVE.md`\n\nAt G15, the exact certified Stable source/fingerprint/SHA must match the promoted tag and Release assets. At G16, the final handoff must explicitly list the GitHub Release/tag and recovery artifact names. Historical Library artifacts are fallback/backfill sources only and never override a newer immutable Stable tag.\n'''
+          (R/'release/v18.5.0').mkdir(parents=True, exist_ok=True)
+          (R/'release/v18.5.0/ARTIFACT-RECOVERY.md').write_text(recovery)
+
+          readme_path=R/'README.md'
+          readme=readme_path.read_text()
+          if readme.startswith('# DE.PULSE v18.4.0 STABLE'):
+              readme=readme.replace('# DE.PULSE v18.4.0 STABLE — Security / Commercial Readiness Hardening', '## Previous Stable — v18.4.0 STABLE — Security / Commercial Readiness Hardening', 1)
+          marker='## DE.PULSE v18.5.0 TEST — Major Closure & Release Assurance'
+          if marker not in readme:
+              intro='''# DE.PULSE v18.5.0 TEST — Major Closure & Release Assurance\n\n**Build:** `v18.5.0-test-major-closure-release-assurance-20260816`  \n**Channel:** TEST  \n**Current Stable baseline:** v18.4.0  \n**Major v18 provenance anchor:** v17.5.1  \n**Application bundle:** `De-Pulse-v18.5.0-TEST.app`  \n**Runtime/config:** `PersonalMarketTerminal-v18.5.0-TEST`\n\nv18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature: it reconstructs and re-certifies the approved v18 system across architecture/source quality, data utility/correlation, security, adaptive governance, UI/UX, performance/capacity/stability, PostgreSQL/shared-state behavior, native runtime and release assurance. ADR-GDI/runtime overload is release-blocking when self-inflicted load can delay or misstate decision-critical evidence. Mature ASBI/TDTI/AODR/adaptive-13F work remains later roadmap scope.\n\n### v18.5 release flow\n\n```mermaid\nflowchart LR\n    A[G0-G3 Baseline + Scope + Architecture] --> B[G4-G5 Dev Exit + FAST]\n    B --> C[G6 Integration / MEDIUM]\n    C --> D[G7 Data + Security + Adaptive]\n    D --> E[G8 Performance + Capacity + Stability]\n    E --> F[G9 Cross-module + UI/UX]\n    F --> G[G10 Pre-Freeze]\n    G --> H[G11 Immutable RC]\n    H --> I[G12 Full Certification]\n    I --> J[G13 Packaging + Provenance]\n    J --> K[G14 Actual Artifact Runtime Audit]\n    K --> L[G15 Promotion + GitHub Release]\n    L --> M[G16 Handoff + Recovery Index]\n```\n\n### Where are the artifacts?\n\n```mermaid\nflowchart TD\n    V[Pick a version] --> R[GitHub Releases / Tags]\n    R -->|Runnable assets listed| D[Download verified macOS/Windows package]\n    R -->|Historical gap| L[ChatGPT Library /DE.PULSE/version/]\n    L --> H[Verify original SHA manifest]\n    H --> B[Backfill GitHub truthfully as ORIGINAL or certified-source reconstruction]\n```\n\n**Primary forward location:** GitHub repository `depulseapp/DE-PULSE` → **Releases** + immutable Stable tag.  \n**Repository evidence:** `release/<version>/`.  \n**Canonical archive map:** `governance/RELEASE_ARTIFACT_ARCHIVE.md`.  \n**Historical original fallback:** ChatGPT Library `/DE.PULSE/<version>/`; v16.8.0 through v16.11.0 contain original Stable runnable packages, and `/DE.PULSE/v17.5.1/DE-PULSE-v17.5.1-STABLE.zip` is the authoritative v17 Stable bundle.\n\n'''
+              readme=intro+readme
+          readme_path.write_text(readme)
+
+          docs={
+            'renderer/docs/user.md': '''## v18.5.0 TEST — Major Closure & Release Assurance\n\nv18.5 is a separate TEST Major Closure over **v18.4.0 STABLE**. It does not add unrelated trading features. It re-certifies the approved v18 platform and treats runtime overload / intermittent DATA DEGRADED / slow response as release-blocking if local load can delay or misstate decision-critical evidence. Readiness must stay conservative and truthful under provider, database, queue/backpressure, restart, multi-user/fan-out and recovery pressure. The permanent **No Execution** boundary is unchanged.\n\nRelease recovery is now explicit: final Stable runnable packages belong in the GitHub `depulseapp/DE-PULSE` Release for `v18.5.0-stable`, with source/SHA/certification evidence. Historical originals remain available under ChatGPT Library `/DE.PULSE/<version>/` while GitHub backfill is normalized.\n\n''',
+            'renderer/docs/developer.md': '''## v18.5.0 TEST — Major Closure / ADR-GDI architecture\n\nv18.5 reconstructs the full approved v18 architecture rather than adding a parallel owner. ADR-GDI qualification covers provider failure/rate-limit/fallback, stale evidence, PostgreSQL pressure/unavailability, bounded queue/backpressure/load shedding, warm restart, multi-user/multi-symbol fan-out, background-job pressure, duplicate-work avoidance, degradation blast radius, recovery hysteresis, packaged degradation UX and truthful UNKNOWN/ABSTAIN/readiness behavior. The existing Provider Router, persistence owners, canonical propagation and protected deterministic formulas remain authoritative.\n\nArtifact durability is now a permanent G13/G15/G16 responsibility. Canonical policy: `governance/RELEASE_ARTIFACT_ARCHIVE.md`; candidate evidence: `release/v18.5.0/`; final Stable target: GitHub Release/tag `v18.5.0-stable`. Historical Library artifacts may prove/backfill originals, but reconstructed binaries must be labelled as reconstructions.\n\n''',
+            'renderer/docs/limitations.md': '''## v18.5.0 TEST — Major Closure truth boundaries\n\nv18.5 is not Stable until G0-G15 pass against one exact source and required native/runtime artifacts. Major Closure cannot guarantee provider availability, profitable decisions or zero degradation; it must instead prove bounded behavior and truthful UNKNOWN/ABSTAIN/readiness when evidence is stale, unavailable or overloaded. DE.PULSE remains **decision support, not a profit predictor**, actionable instruments remain **U.S.-listed only**, and the **No Execution** boundary is unchanged.\n\nGitHub is the required durable archive for future Stable releases, but documentation must not claim a binary is archived unless the Release page actually contains it. Historical v16/v17 originals remain in ChatGPT Library `/DE.PULSE/` during backfill.\n\n'''
+          }
+          for name, section in docs.items():
+              path=R/name; txt=path.read_text();
+              if f'## v{version} {channel}' not in '\n'.join(txt.splitlines()[:35]):
+                  first_nl=txt.find('\n')+1
+                  txt=txt[:first_nl]+'\n'+section+txt[first_nl:]
+                  path.write_text(txt)
+
+          manifest_path=R/'renderer/qa/manifest.json'
+          man=json.loads(manifest_path.read_text())
+          releases=man.setdefault('releases',[])
+          releases=[x for x in releases if str(x.get('version'))!='18.5.0']
+          releases.insert(0,{
+            'version':'18.5.0','date':'2026-08-16','status':'TEST',
+            'summary':'TEST v18 Major Closure & Release Assurance: fresh G0-G16 reconstruction of approved v18 scope, ADR-GDI/runtime-overload qualification, architecture/source/data/security/adaptive/performance/UI/native/release evidence, with permanent GitHub artifact archive/recovery contract; no unrelated product scope.',
+            'file':'v18.5.0.txt','buildId':build,'checkpoint':'release/v18.5.0/G1-IMMUTABLE-SCOPE.md'
+          })
+          man['releases']=releases
+          manifest_path.write_text(json.dumps(man, indent=2)+'\n')
+
+          qa='''DE.PULSE v18.5.0 TEST — Major Closure & Release Assurance\n\nBuild: v18.5.0-test-major-closure-release-assurance-20260816\nIncoming Stable: v18.4.0\nv18 provenance anchor: v17.5.1\nStatus: TEST / Major Closure in progress\n\nMission: reconstruct and re-certify the full approved v18 scope under G0-G16, including ADR-GDI/runtime-overload behavior, PostgreSQL/shared-state pressure, provider/backpressure/recovery truth, security/adaptive/data utility, UI/UX, native runtime, professional acceptance and release assurance. No Execution remains permanent.\n\nArtifact recovery: final Stable target is GitHub tag/release v18.5.0-stable; evidence lives under release/v18.5.0/ and governance/RELEASE_ARTIFACT_ARCHIVE.md. Historical original backfill source: ChatGPT Library /DE.PULSE/.\n'''
+          (R/'renderer/qa/v18.5.0.txt').write_text(qa)
+          PY
+
+      - name: Validate documentation governance and v18.5 frozen scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 documentation_governance_gate.py
+          python3 v18_5_scope_gate.py
+          python3 source_health_architecture_gate.py
+          python3 data_utility_gate.py
+
+      - name: Commit synchronized documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/v18.5-documentation-archive-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- release_identity.json ci_pipeline_plan.json README.md governance/RELEASE_ARTIFACT_ARCHIVE.md release/v18.5.0/ARTIFACT-RECOVERY.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md renderer/qa/manifest.json renderer/qa/v18.5.0.txt .github/workflows/v18.5-documentation-archive-sync.yml
+          git diff --cached --check
+          git commit -m 'v18.5: synchronize docs, provenance and artifact recovery'
+          git push origin HEAD:v18.5-development
