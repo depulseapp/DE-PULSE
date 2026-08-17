@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.5.1",
+  "phase": "DEVELOPMENT_COMPLETE_AWAITING_QUALIFICATION",
+  "g1Immutable": true,
+  "incomingStable": {
+    "tag": "v18.5.0-stable",
+    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680"
+  },
+  "sourceBinding": "DEFERRED_TO_QUALIFICATION_CHECKPOINT",
+  "qualityRule": "Optimize when required evidence runs, never which required evidence exists. Development evidence is not certification evidence.",
+  "items": [
+    {
+      "id": "COPY-18.5.1-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/setup.html", "renderer/login.html"],
+      "tests": ["release/v18.5.1/browser_auth_copy_test.py"],
+      "pending": ["G5 Chromium qualification", "G9 cross-module/UI qualification", "G14 packaged-runtime proof where applicable"]
+    },
+    {
+      "id": "SYMBOL-18.5.1-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/watchlist-v18.5.1.js", "renderer/watchlist-v18.5.1.css", "renderer/index.html"],
+      "inheritedCanonicalContract": ["v18.5.0 Stable /api/master-symbol/remove", "v18.5.0 Stable /api/master-symbol/restore"],
+      "tests": ["release/v18.5.1/browser_watchlist_membership_test.py"],
+      "pending": ["G5 Chromium all-membership-combination proof", "G9 full HTTP/cross-module persistence/isolation proof", "G6 SQLite/PostgreSQL continuity where applicable", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "SYMBOL-18.5.1-002",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/watchlist-v18.5.1.js", "renderer/watchlist-v18.5.1.css", "renderer/index.html"],
+      "tests": ["release/v18.5.1/browser_watchlist_membership_test.py"],
+      "pending": ["G5 Chromium current-desk/aria-current/final-membership-protection proof", "G9 responsive/accessibility/cross-module proof", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "NAV-18.5.1-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/live-dom-reconcile.js", "renderer/renderer.js", "renderer/index.html"],
+      "tests": ["release/v18.5.1/browser_live_render_test.py"],
+      "pending": ["G5 Chromium scroll/focus/selection preservation", "G9 full UI/cross-module regression", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "RESEARCH-v15.1.0-17-19-REOPENED",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/ui-v18.5.1.css", "renderer/index.html"],
+      "tests": ["release/v18.5.1/browser_ui_hierarchy_test.py"],
+      "pending": ["G5/G9 Chromium desktop/tablet/560px containment", "G9 responsive/professional-trader acceptance", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "VERSION-18.5.1-002",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["VERSION.txt", "release_identity.json", "app_bootstrap.go", "v18_test_profile.go", "renderer/index.html", "renderer/setup.html", "renderer/login.html"],
+      "tests": ["v18_test_profile_identity_test.go", "release/v18.5.1/browser_auth_copy_test.py"],
+      "pending": ["G0 release_identity.py --verify", "G5/full Go profile identity and migration proof", "G6 persistence/profile continuity", "G13/G14 package/runtime identity proof"]
+    },
+    {
+      "id": "HOVER-18.5.1-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/live-dom-reconcile.js", "renderer/renderer.js", "renderer/index.html"],
+      "tests": ["release/v18.5.1/browser_live_render_test.py"],
+      "pending": ["G5 Chromium DOM-identity/hover/focus proof", "G9 responsive UI regression", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "AUDIT-18-UI-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": ["renderer/live-dom-reconcile.js", "renderer/watchlist-v18.5.1.js", "renderer/watchlist-v18.5.1.css", "renderer/header-v18.5.1.js", "renderer/ui-v18.5.1.css", "renderer/index.html"],
+      "tests": ["release/v18.5.1/browser_live_render_test.py", "release/v18.5.1/browser_watchlist_membership_test.py", "release/v18.5.1/browser_ui_hierarchy_test.py", "release/v18.5.1/browser_auth_copy_test.py"],
+      "pending": ["G5 behavior-first Chromium qualification", "G9 full HTTP/responsive/professional-trader acceptance", "G14 actual packaged-runtime proof"]
+    },
+    {
+      "id": "AUDIT-18-CI-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": [".github/workflows/v18.5.1-recovery-ci.yml", "release/v18.5.1/QUALIFICATION_CHECKPOINT.json", "governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md", "governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md", "governance/ACTIVE_WORKFLOW_MANIFEST_V18_5.md", "adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md"],
+      "tests": ["qualification workflow checkpoint-contract", "G0-G5 cheap-first dependency chain", "G6-G9 gated parallel lanes", "G10 exact-SHA evidence binding"],
+      "pending": ["One deliberate exact-SHA checkpoint execution", "Proof ordinary development commits do not launch qualification", "G10 qualified evidence"]
+    },
+    {
+      "id": "AUDIT-18-QA-001",
+      "developmentStatus": "IMPLEMENTED_AWAITING_QUALIFICATION",
+      "source": [".github/workflows/v18.5.1-recovery-ci.yml", "release/v18.5.1/browser_live_render_test.py", "release/v18.5.1/browser_watchlist_membership_test.py", "release/v18.5.1/browser_auth_copy_test.py", "release/v18.5.1/browser_ui_hierarchy_test.py"],
+      "tests": ["G5 full Go", "G5 Chromium behavior", "G6 PostgreSQL continuity", "G7 security/data/adaptive", "G8 performance/race/shuffle", "G9 full HTTP/responsive/professional-trader", "G10 exact-SHA qualification"],
+      "pending": ["G0-G10 checkpoint execution", "G11 immutable RC", "G12 full certification", "G13 native packaging/provenance", "G14 macOS arm64 and Windows x64 actual-artifact runtime proof", "G15 release assurance", "G16 retrospective/handoff"]
+    }
+  ],
+  "developmentExitRule": "No item is CLOSED or PASS in this file. Qualification, RC, native artifact and release evidence remain mandatory and must bind to the exact checkpoint/RC source fingerprints."
+}
