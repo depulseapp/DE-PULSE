@@ -264,7 +264,7 @@ v18.5.1 establishes the complete reconciliation control plane, prevents further 
 |---|---|---|
 | A — release/profile truth | COPY-18.5.1-001 and VERSION-18.5.1-002 | Version-aware/release-neutral copy, explicit migration-identifier classification, fresh-install/upgrade/TEST-profile matrix and packaged proof. |
 | B — symbol/watchlist semantics | SYMBOL-18.5.1-001 and SYMBOL-18.5.1-002 across Day/Swing/Long | Explicit row-X contract, final-membership behavior, state/persistence tests and current-desk visual-state evidence. |
-| C — interaction continuity | NAV-18.5.1-001 | Root-cause removal for live/SSE rerender jumps, scroll/focus preservation tests and dwell/reload retest. |
+| C — interaction/render stability | NAV-18.5.1-001 and HOVER-18.5.1-001 | Root-cause removal for live/SSE rerender jumps and hover-triggered blinking; stable DOM/geometry/paint, scroll/focus preservation, pointer-dwell/repeated-update and reload tests. |
 | D — Research requirement recovery | Reopened v15.1.0 approved items 17–19 | Responsive layout, truthful labels/freshness/actions/disabled states, missing-evidence recovery and requirement-linked tests. |
 | E — full promise reconciliation | 48 inherited requirements, 20 v17 items, all v18 workstreams/release entries, 13 orphaned utility remediations, conversational commitments and accepted defects | Durable implementation ledger, unexplained-gap list, owners, decisions, regression IDs and actual-package evidence. |
 | F — confirmed orphan recovery | IMPL-18-TRADEINSIGHT-001 | Canonical Smart Router SHADOW adapter, configuration/entitlement, rights/provenance controls, tests and actual-package evidence. |
@@ -291,7 +291,7 @@ Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTE
 ### Gate binding
 
 - **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete inherited + v17 + v18 + 13-item utility remediation + conversational commitment + known-defect inventory.
-- **G1:** freeze the exact v18.5.1 assignments from the six escaped-defect groups, seven confirmed implementation-gap groups and 13-item utility carry-forward; explicitly place every unselected applicable row into a named/candidate next v18.x lane with owner and reason.
+- **G1:** freeze the exact v18.5.1 assignments from the seven escaped-defect groups, seven confirmed implementation-gap groups and 13-item utility carry-forward; explicitly place every unselected applicable row into a named/candidate next v18.x lane with owner and reason.
 - **G2–G3:** record canonical owner, blast radius, migration/state/API/UI impact, test IDs and package matrix for every row.
 - **G4:** implement fixes atomically with their tests; do not hide semantic changes inside structural moves.
 - **G5–G6:** pass source/unit and functional/integration coverage, including persistence, membership combinations and live-refresh behavior.
@@ -358,8 +358,8 @@ Candidate version numbers such as v18.6 or v18.7 are capacity, not fixed content
 
 | Wave | Primary work | Parallelizable lanes | Exit condition |
 |---|---|---|---|
-| 0 | Freeze 282-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
-| 1 | Escaped user defects | copy/version; symbol semantics; navigation; Research UI | focused tests + direct browser proof |
+| 0 | Freeze 283-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
+| 1 | Escaped user defects | copy/version; symbol semantics; hover/render stability; navigation; Research UI | focused tests + direct browser proof |
 | 2 | Confirmed implementation misses | TradeInsight; snapshot broker; session coordinator; routes/surfaces; docs; dependency register | canonical ownership + functional/security/performance proof |
 | 3 | Remaining utility remediations | Dashboard, Market Intelligence, Desks, Catalyst, Maintenance | all 13 remediation rows final |
 | 4 | Complete v17/v18 proof | backend, renderer, persistence, provider, security, docs lanes | every applicable row current and evidenced |
@@ -384,7 +384,7 @@ Only unaffected evidence with a matching fingerprint may be reused.
 
 All values must be achieved before G11:
 
-- requirement identity conservation: **282/282**;
+- requirement identity conservation: **283/283**;
 - applicable rows with owner: **100%**;
 - applicable rows with regression mapping: **100%**;
 - applicable user workflows with browser evidence: **100%**;
