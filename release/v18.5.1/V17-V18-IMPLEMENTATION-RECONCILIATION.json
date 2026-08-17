@@ -1,0 +1,2941 @@
+{
+  "schema": "DE.PULSE-V18.5.1-V17-V18-IMPLEMENTATION-RECONCILIATION-1",
+  "release": "v18.5.1",
+  "status": "OPEN_BLOCKING",
+  "createdAt": "2026-08-17",
+  "policy": "No historical PASS is current evidence. Every approved item must map origin -> current source/behavior -> owner -> fix or disposition -> regression -> browser/runtime proof -> macOS package -> Windows package -> closure.",
+  "allowedStatuses": [
+    "REVALIDATION_REQUIRED",
+    "REVALIDATION_REQUIRED_HIGH",
+    "REOPENED",
+    "NOT_IMPLEMENTED_CONFIRMED",
+    "FRESH_PASS",
+    "INTENTIONALLY_SUPERSEDED",
+    "NOT_APPLICABLE",
+    "ROADMAP_PLACED_FUTURE"
+  ],
+  "stableBlockedByStatuses": [
+    "REVALIDATION_REQUIRED",
+    "REVALIDATION_REQUIRED_HIGH",
+    "REOPENED",
+    "NOT_IMPLEMENTED_CONFIRMED"
+  ],
+  "authorities": [
+    "governance/APPROVED-SCOPE.md",
+    "governance/ROADMAP.md",
+    "governance/DECISION-LOG.md",
+    "renderer/qa/v15.1.2-approved-scope.json",
+    "v17_major_scope.json",
+    "v17_5_major_closure_scope_matrix.json",
+    "v18_major_scope.json",
+    "v18_delivery_slices.json",
+    "v18_0_scope.json",
+    "v18_0_1_scope.json",
+    "v18_0_2_scope.json",
+    "v18_0_3_scope.json",
+    "v18_0_4_scope.json",
+    "v18_0_5_scope.json",
+    "v18_0_6_scope.json",
+    "v18_1_scope.json",
+    "v18_2_scope.json",
+    "v18_3_scope.json",
+    "v18_4_scope.json",
+    "v18_5_scope.json",
+    "GitHub issues and accepted conversational commitments"
+  ],
+  "baseline": {
+    "currentStableTag": "v18.5.0-stable",
+    "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "reconciliationBranch": "v18.5.1-development"
+  },
+  "inheritedApprovedScope": {
+    "source": "renderer/qa/v15.1.2-approved-scope.json",
+    "declaredCount": 48,
+    "items": [
+      {
+        "id": "INHERITED-01",
+        "originId": 1,
+        "title": "Settings Quit action",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "func (a *Application) handleQuit"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-02",
+        "originId": 2,
+        "title": "Data Freshness targeted Refresh/Age reliability and stable refreshing layout",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v15.go",
+            "contains": "func (a *Application) handleTargetedRefresh"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-03",
+        "originId": 3,
+        "title": "More Context permanently expanded",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "context-more-always"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-04",
+        "originId": 4,
+        "title": "Research Decision Brief",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Research Decision Brief"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-05",
+        "originId": 5,
+        "title": "What Changed Since Last Review",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "What Changed Since Last Review"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-06",
+        "originId": 6,
+        "title": "Research Earnings deep dive",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Earnings Deep Dive"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-07",
+        "originId": 7,
+        "title": "Fundamentals interpretation",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Fundamentals Interpretation"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-08",
+        "originId": 8,
+        "title": "Research SEC & Ownership workspace",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "SEC & Ownership"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-09",
+        "originId": 9,
+        "title": "SEC layout/overflow containment",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/styles.css",
+            "contains": ".sec-transaction-table-wrap"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-10",
+        "originId": 10,
+        "title": "Unified Catalyst Timeline",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Catalyst Timeline"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-11",
+        "originId": 11,
+        "title": "Research Technical Context tab",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Technical Context"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-12",
+        "originId": 12,
+        "title": "Research Risk Register",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Risk Register"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-13",
+        "originId": 13,
+        "title": "Research canonical desk membership controls",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "deskMembershipStrip(sym)"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-14",
+        "originId": 14,
+        "title": "Research AI sourced-first workflow",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "AI Second Opinion Ready"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-15",
+        "originId": 15,
+        "title": "Expanded AI research evidence context",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "function v151ResearchAIContext"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-16",
+        "originId": 16,
+        "title": "Research navigation redesign",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "['sec','SEC & Ownership']"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-17",
+        "originId": 17,
+        "title": "Research ticker input consistency",
+        "status": "REOPENED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/styles.css",
+            "contains": ".ticker-control,.ticker-input"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-18",
+        "originId": 18,
+        "title": "Research freshness badge placement",
+        "status": "REOPENED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/styles.css",
+            "contains": ".research-target-status"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-19",
+        "originId": 19,
+        "title": "Research top-area responsive placement audit",
+        "status": "REOPENED",
+        "historicalEvidence": [
+          {
+            "file": "responsive_ui_test.py",
+            "contains": "research v2 placement hierarchy regression"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-20",
+        "originId": 20,
+        "title": "DESKS column re-audit Day/Swing/Long",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "historicalEvidence": [
+          {
+            "file": "responsive_ui_test.py",
+            "contains": "canonical desk-membership regression"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-21",
+        "originId": 21,
+        "title": "Desk transition reliability matrix",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "historicalEvidence": [
+          {
+            "file": "http_workflow_test.py",
+            "contains": "last desk protected"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-22",
+        "originId": 22,
+        "title": "Desk state resilience/idempotency",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "historicalEvidence": [
+          {
+            "file": "http_workflow_test.py",
+            "contains": "repeated add is idempotent"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-23",
+        "originId": 23,
+        "title": "Master Market Symbols add control",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Add to All Desks"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-24",
+        "originId": 24,
+        "title": "Master add means DAY + SWING + LONG with idempotency",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "historicalEvidence": [
+          {
+            "file": "v15.go",
+            "contains": "Added to Day, Swing and Long."
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-25",
+        "originId": 25,
+        "title": "Persist preparation/catalyst job state",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "Preparations         map[string]PreparationJobStatus"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-26",
+        "originId": 26,
+        "title": "Missed-window preparation catch-up",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "missed-window catch-up"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-27",
+        "originId": 27,
+        "title": "Professional Pre-Market Prep summary",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "critical datasets usable"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-28",
+        "originId": 28,
+        "title": "What Changed Since Last Checkpoint",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "What Changed Since Last Checkpoint"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-29",
+        "originId": 29,
+        "title": "Checkpoint severity/attention states",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "func checkpointAttention"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-30",
+        "originId": 30,
+        "title": "Candidate-level checkpoint exception list",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Requires Review"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-31",
+        "originId": 31,
+        "title": "Material SEC event-risk classification",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "materialSECFilingForTradingRisk"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-32",
+        "originId": 32,
+        "title": "Smarter EXTENDED detection",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "extendedAtMarketOpen"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-33",
+        "originId": 33,
+        "title": "Full Catalyst Watch reaction lifecycle",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "PREMARKET REACTION"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-34",
+        "originId": 34,
+        "title": "Professional catalyst reaction measurements",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "ReactionPercent"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-35",
+        "originId": 35,
+        "title": "Critical freshness gate before Ready/Complete",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "readinessFreshnessGate(freshSnap.Freshness, []string{\"Quotes\", \"VIX\", \"Intraday Bars\", \"News\", \"Earnings\", \"SEC Filings\"}, now)"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-36",
+        "originId": 36,
+        "title": "Readiness source/evidence traceability",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_0.go",
+            "contains": "Source    string `json:\"source,omitempty\"`"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-37",
+        "originId": 37,
+        "title": "One-click readiness drill-through",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "data-readiness-drill"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-38",
+        "originId": 38,
+        "title": "Preparation jobs avoid redundant broad refetches",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "func (e *Engine) runLowPriorityRefresh"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-39",
+        "originId": 39,
+        "title": "Trading Readiness Checkpoint Reliability gate/tests",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_1_test.go",
+            "contains": "TestV1431PremarketSnapshotAndMarketOpenCheckpoint"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-40",
+        "originId": 40,
+        "title": "Catalyst Watch lifecycle tests",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v14_3_1_test.go",
+            "contains": "TestV1431CatalystArmedThenTriggered"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-41",
+        "originId": 41,
+        "title": "Research v2 Professional Trader Acceptance",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "trader_acceptance_test.js",
+            "contains": "professional trader acceptance scenarios: PASS"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-42",
+        "originId": 42,
+        "title": "Approved Scope Traceability & Implementation Completeness gate",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "approved_scope_gate.py",
+            "contains": "Approved Scope Traceability & Implementation Completeness"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-43",
+        "originId": 43,
+        "title": "Detailed SEC Insider Transaction Intelligence",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "RecentInsiderTransactions"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-44",
+        "originId": 44,
+        "title": "Side panel cleanup + Maintenance readiness hierarchy",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "Trading Readiness & Catalyst Jobs"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-45",
+        "originId": 45,
+        "title": "Adaptive live Data Freshness Age",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/renderer.js",
+            "contains": "function updateLiveFreshnessAges"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-46",
+        "originId": 46,
+        "title": "Automatic stale-data recovery + priority refresh",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "main.go",
+            "contains": "func (e *Engine) autoFreshnessRecoveryLoop"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-47",
+        "originId": 47,
+        "title": "Data Freshness v2 dataset-specific age semantics and cadence",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "v15.go",
+            "contains": "CheckAgeMs"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      },
+      {
+        "id": "INHERITED-48",
+        "originId": 48,
+        "title": "Reason/Fallback column containment",
+        "status": "REVALIDATION_REQUIRED",
+        "historicalEvidence": [
+          {
+            "file": "renderer/styles.css",
+            "contains": ".v151-freshness-row>.freshness-reason"
+          }
+        ],
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "behavioral regression test",
+          "browser/UI evidence where applicable",
+          "macOS Apple Silicon package evidence",
+          "Windows x64 package evidence"
+        ]
+      }
+    ]
+  },
+  "v17": {
+    "source": "v17_major_scope.json",
+    "declaredCount": 20,
+    "closureMatrix": "v17_5_major_closure_scope_matrix.json",
+    "items": [
+      {
+        "id": "V17-01",
+        "title": "repository abstraction",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "PersistenceBackend / PersistenceManager",
+        "codeOwners": [
+          "persistence_repository.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_scope_gate.py",
+          "v17_0_persistence_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-02",
+        "title": "SQLite desktop persistence",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "native + Windows SQLite backends",
+        "codeOwners": [
+          "persistence_backend_sqlite.go",
+          "persistence_backend_windows.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_cross_platform_persistence_gate.py",
+          "v17_0_sqlite_backend_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-03",
+        "title": "PostgreSQL-ready repository contracts",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "storage-agnostic PersistenceBackend contract",
+        "codeOwners": [
+          "persistence_repository.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_scope_gate.py"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-04",
+        "title": "Global Symbol Registry",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "canonical symbol registry persistence",
+        "codeOwners": [
+          "persistence_repository.go",
+          "persistence_backend_sqlite.go",
+          "persistence_backend_windows.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_persistence_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-05",
+        "title": "Persistent Canonical State / Warm Start",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "truth-safe warm-start owner",
+        "codeOwners": [
+          "engine_core.go",
+          "persistence_repository.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_persistence_test.go",
+          "v17_3_performance_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-06",
+        "title": "structured evidence/history",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "persistent evidence and quote-history stores",
+        "codeOwners": [
+          "persistence_repository.go",
+          "persistence_intelligence.go",
+          "persistence_backend_sqlite.go"
+        ],
+        "historicalEvidence": [
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-07",
+        "title": "Decision Lineage/Reproducibility",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "immutable decision-lineage owner",
+        "codeOwners": [
+          "persistence_intelligence.go",
+          "persistence_backend_sqlite.go",
+          "persistence_backend_windows.go"
+        ],
+        "historicalEvidence": [
+          "v17_2_scope_gate.py",
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-08",
+        "title": "outcome/history foundation",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "separate later-outcome owner",
+        "codeOwners": [
+          "persistence_intelligence.go",
+          "persistence_backend_sqlite.go",
+          "persistence_backend_windows.go"
+        ],
+        "historicalEvidence": [
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-09",
+        "title": "derived feature store/incremental sync",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "source-hash incremental feature owner",
+        "codeOwners": [
+          "persistence_intelligence.go",
+          "persistence_backend_sqlite.go",
+          "persistence_backend_windows.go"
+        ],
+        "historicalEvidence": [
+          "v17_2_scope_gate.py",
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-10",
+        "title": "async/material-change persistence",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "coalesced persistence worker",
+        "codeOwners": [
+          "persistence_repository.go",
+          "canonical_pipeline.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_persistence_test.go",
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-11",
+        "title": "one canonical symbol pipeline",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "canonical quote propagation owner",
+        "codeOwners": [
+          "canonical_pipeline.go",
+          "runtime_live_loop.go",
+          "quote_providers.go"
+        ],
+        "historicalEvidence": [
+          "v17_2_scope_gate.py",
+          "v17_2_canonical_pipeline_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-12",
+        "title": "observability",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "runtime/provider/persistence diagnostics",
+        "codeOwners": [
+          "runtime_load_profile.go",
+          "runtime_observability.go",
+          "runtime_slo.go",
+          "renderer/renderer.js"
+        ],
+        "historicalEvidence": [
+          "v17_3_scope_gate.py",
+          "v17_3_performance_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-13",
+        "title": "runtime overload/root-cause profiling",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "runtime load profile owner",
+        "codeOwners": [
+          "runtime_load_profile.go",
+          "runtime_observability.go"
+        ],
+        "historicalEvidence": [
+          "v17_1_backpressure_test.go",
+          "v17_3_performance_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-14",
+        "title": "workload prioritization/backpressure",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "Tier 0-4 workload policy",
+        "codeOwners": [
+          "workload_controller.go",
+          "runtime_priority.go"
+        ],
+        "historicalEvidence": [
+          "v17_1_scope_gate.py",
+          "v17_1_backpressure_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-15",
+        "title": "bounded concurrency/queueing",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "bounded work-class queue owner",
+        "codeOwners": [
+          "workload_controller.go"
+        ],
+        "historicalEvidence": [
+          "v17_1_backpressure_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-16",
+        "title": "provider request/subscription budgeting",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "shared provider budget + live allocation",
+        "codeOwners": [
+          "runtime_observability.go",
+          "runtime_priority.go",
+          "runtime_live_loop.go"
+        ],
+        "historicalEvidence": [
+          "v17_1_scope_gate.py",
+          "v17_1_backpressure_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-17",
+        "title": "load shedding/background isolation",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "tier-aware shedding/background isolation",
+        "codeOwners": [
+          "workload_controller.go",
+          "runtime_jobs.go",
+          "opportunity_radar.go"
+        ],
+        "historicalEvidence": [
+          "v17_1_backpressure_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-18",
+        "title": "adaptive degradation reason codes",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "reasoned degradation owner",
+        "codeOwners": [
+          "runtime_degradation.go"
+        ],
+        "historicalEvidence": [
+          "v17_0_degradation_test.go",
+          "v17_1_backpressure_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-19",
+        "title": "performance/capacity/storage SLO acceptance",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "measurable runtime SLO owner",
+        "codeOwners": [
+          "runtime_slo.go",
+          "runtime_load_profile.go",
+          "persistence_repository.go"
+        ],
+        "historicalEvidence": [
+          "v17_3_scope_gate.py",
+          "v17_3_performance_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      },
+      {
+        "id": "V17-20",
+        "title": "migration/settings/watchlist/API-key continuity",
+        "status": "REVALIDATION_REQUIRED",
+        "canonicalOwner": "existing application state/config continuity",
+        "codeOwners": [
+          "app_state.go",
+          "app_bootstrap.go",
+          "persistence_repository.go"
+        ],
+        "historicalEvidence": [
+          "main_test.go",
+          "v17_0_persistence_test.go"
+        ],
+        "requiredCurrentEvidence": [
+          "current-source review",
+          "fresh regression execution",
+          "dependency sentinel",
+          "macOS package evidence where applicable",
+          "Windows package evidence where applicable"
+        ]
+      }
+    ]
+  },
+  "v18": {
+    "majorSource": "v18_major_scope.json",
+    "deliverySource": "v18_delivery_slices.json",
+    "workstreams": [
+      {
+        "id": "V18-WORKSTREAM-01",
+        "title": "v18.0 Identity & Secure Sessions",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "v18.0",
+        "historicalSliceStatus": "IN DEVELOPMENT",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-02",
+        "title": "Smart Intelligent Provider Router v2",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "smart-router-v2",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-03",
+        "title": "v18.1 Multi-User / My Market Symbols",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "v18.1",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-04",
+        "title": "TradeInsight SHADOW Intelligence",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "blocker": "IMPL-18-TRADEINSIGHT-001",
+        "deliverySlice": "tradeinsight-shadow",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-05",
+        "title": "v18.2 Admin / Presence / Session Operations",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "v18.2",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-06",
+        "title": "v18.3 PostgreSQL / Hosted Shared State",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "v18.3",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-07",
+        "title": "v18.4 Security + Commercial/Data-Rights Hardening",
+        "status": "REVALIDATION_REQUIRED",
+        "blocker": null,
+        "deliverySlice": "v18.4",
+        "historicalSliceStatus": "COMMITTED",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      },
+      {
+        "id": "V18-WORKSTREAM-08",
+        "title": "v18.5 Major Closure & Release Assurance",
+        "status": "REOPENED",
+        "blocker": "CLOSURE-18.5-REOPENED",
+        "deliverySlice": "v18.5",
+        "historicalSliceStatus": "MANDATORY",
+        "requiredCurrentEvidence": [
+          "current-source owner",
+          "current implementation behavior",
+          "fresh regression test",
+          "actual supported package evidence"
+        ]
+      }
+    ],
+    "releaseScopes": [
+      {
+        "source": "v18_0_scope.json",
+        "version": "18.0.0",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "V180-01",
+            "title": "Canonical roles and Principal",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-01",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-02",
+            "title": "Persistent user identity repository",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-02",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-03",
+            "title": "Persistent server-side session repository",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-03",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-04",
+            "title": "Argon2id local credentials",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-04",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-05",
+            "title": "Login UI and API",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-05",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-06",
+            "title": "Logout and server-side revocation",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-06",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-07",
+            "title": "Central authorization policy",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-07",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-08",
+            "title": "Role enforcement",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-08",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-09",
+            "title": "Bootstrap OWNER migration",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-09",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-10",
+            "title": "Rotation, revocation, idle and absolute expiry",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-11",
+            "title": "Secure cookie and CSRF shaping",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-12",
+            "title": "Migration continuity and isolated v18 TEST profile",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-12",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-13",
+            "title": "User-isolation principal foundation",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-13",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-14",
+            "title": "No deterministic market-logic change",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-14",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-15",
+            "title": "Canonical TEST release identity",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-15",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "V180-16",
+            "title": "Separate side-by-side TEST packaging",
+            "section": "items",
+            "id": "V18-0-SCOPE-V180-16",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_1_scope.json",
+        "version": "18.0.1",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_1_scope.json#scope-lock-1",
+            "title": "single canonical Provider Router enriched, never duplicated",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-2",
+            "title": "capability/entitlement registry with bounded revalidation and NOT_ENTITLED suppression",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-3",
+            "title": "dynamic deterministic Preferred vs Serving scoring and per-capability circuits",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-4",
+            "title": "provider latency/calls-avoided/usefulness-ready scorecard evidence",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-5",
+            "title": "Rapid Move short-window event detection integrated with canonical quote pipeline",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-6",
+            "title": "source/liquidity/mechanical/catalyst/market correlation before material alerting",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-7",
+            "title": "immediate banner plus Opportunity Radar/live-priority promotion",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-8",
+            "title": "point-in-time trace/outcome persistence and SHADOW-first adaptive foundation",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-9",
+            "title": "truthful TIERED_PARTIAL coverage; no false full-market surveillance claim",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-9",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_1_scope.json#scope-lock-10",
+            "title": "deterministic Day/Swing/Long formulas and No Execution Boundary unchanged",
+            "section": "scope_lock",
+            "id": "V18-0-1-SCOPE-V18-0-1-SCOPE-JSON-SCOPE-LOCK-10",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_2_scope.json",
+        "version": "18.0.2",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_2_scope.json#clauses-1",
+            "title": "Canonical source fingerprints normalize relative paths to POSIX separators.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-2",
+            "title": "Canonical source fingerprint file ordering is platform-independent.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-3",
+            "title": "CI, pre-freeze qualification and full certification share the canonical fingerprint utility.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-4",
+            "title": "Windows and macOS G14 must verify one exact source fingerprint from one exact source ZIP.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-5",
+            "title": "macOS native audit invocation must not depend on upload-preserved executable metadata.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-6",
+            "title": "Smart Router v2 and Rapid Move runtime behavior are inherited unchanged.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-7",
+            "title": "Protected deterministic Day/Swing/Long formulas remain unchanged.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_2_scope.json#clauses-8",
+            "title": "v17.5.1 Stable remains isolated and untouched.",
+            "section": "clauses",
+            "id": "V18-0-2-SCOPE-V18-0-2-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_3_scope.json",
+        "version": "18.0.3",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_3_scope.json#clauses-1",
+            "title": "Embedded renderer/auth resource paths use platform-neutral embedded-FS path semantics on every OS.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-2",
+            "title": "Real-Application tests isolate the effective os.UserConfigDir location on Linux, macOS and Windows.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-3",
+            "title": "Stable-to-TEST profile migration tests derive the same OS-specific config base used by production.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-4",
+            "title": "Windows file-permission tests do not misinterpret os.FileMode as Windows ACL evidence.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-5",
+            "title": "Windows G14 uses explicit PowerShell path/value binding for the Stable sentinel.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-6",
+            "title": "Canonical source fingerprint remains platform-independent and unchanged in ownership.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-7",
+            "title": "Smart Router v2 and Rapid Move runtime behavior are inherited unchanged.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-8",
+            "title": "Protected deterministic Day/Swing/Long formulas and the No Execution Boundary remain unchanged.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_3_scope.json#clauses-9",
+            "title": "v17.5.1 Stable remains isolated and untouched.",
+            "section": "clauses",
+            "id": "V18-0-3-SCOPE-V18-0-3-SCOPE-JSON-CLAUSES-9",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_4_scope.json",
+        "version": "18.0.4",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_4_scope.json#clauses-1",
+            "title": "Real-Application tests close the persistence backend before temporary profile cleanup on every OS.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-2",
+            "title": "Windows native tests must not fail because an open SQLite handle survives until t.TempDir cleanup.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-3",
+            "title": "Native G14 release identity verifies the canonical api/health buildId field rather than a nonexistent build field.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-4",
+            "title": "Native G14 continues to require exact source ZIP SHA-256 and canonical source fingerprint on macOS and Windows.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-5",
+            "title": "Smart Router v2 and Rapid Move production behavior are inherited unchanged.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-6",
+            "title": "Protected deterministic Day/Swing/Long formulas and the No Execution Boundary remain unchanged.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-7",
+            "title": "v17.5.1 Stable remains isolated and untouched.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_4_scope.json#clauses-8",
+            "title": "v18.0.3 remains an immutable failed native candidate and is never silently rewritten.",
+            "section": "clauses",
+            "id": "V18-0-4-SCOPE-V18-0-4-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_5_scope.json",
+        "version": "18.0.5",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_5_scope.json#clauses-1",
+            "title": "Tracked Symbols is the user-facing cross-desk symbol surface; implementation-facing Master Symbol Store wording is removed from the active user panel.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-2",
+            "title": "Cross-desk add/remove/remove-all mutations have one canonical helper path and preserve explicit-empty state across reload/restart.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-3",
+            "title": "Remove All includes symbols in disabled desks, clears Day/Swing/Long immediately, leaves Discovery staging untouched, and cannot silently rehydrate defaults.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-4",
+            "title": "Opportunity Radar keeps existing intelligence semantics while improving column hierarchy, numeric alignment, status pills, actions and narrow-width reflow.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-5",
+            "title": "Research Target alone is compacted; Technical Context and all existing Research evidence views remain intact.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-6",
+            "title": "USER and DEMO surfaces hide Data Engine/provider/subscription/capacity/queue/cache/scheduler/database/circuit/policy machinery and receive user-meaningful Data Status instead.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-7",
+            "title": "OWNER, SUPER_OWNER and ADMIN retain deep diagnostics in Maintenance and configuration surfaces.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-8",
+            "title": "MacBook, Windows desktop, large-screen and narrow/iPad layouts must not clip or overlap touched controls.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-9",
+            "title": "Protected deterministic Day/Swing/Long formulas remain unchanged.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-9",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-10",
+            "title": "No Execution Boundary remains unchanged.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-11",
+            "title": "v18.1 multi-user/My Market Symbols architecture is explicitly out of scope.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_5_scope.json#clauses-12",
+            "title": "v18.0.4 Stable remains immutable; TEST uses an isolated v18.0.5 runtime profile.",
+            "section": "clauses",
+            "id": "V18-0-5-SCOPE-V18-0-5-SCOPE-JSON-CLAUSES-12",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_0_6_scope.json",
+        "version": "18.0.6",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_0_6_scope.json#clauses-1",
+            "title": "Reuse the existing Smart Provider Router v2 and canonical provider reconciliation; no second routing or reconciliation owner.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-2",
+            "title": "Capability/entitlement states, per-capability circuits/cooldowns, latency and calls-avoided telemetry remain owned by the existing Router v2 foundation.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-3",
+            "title": "Provider Router SourceDisagreements must reflect canonical contemporaneous reconciliation CONFLICT truth without extra provider calls or duplicate storage.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-4",
+            "title": "Rapid Move remains the single event detector and gains explicit RAPID_MOVE versus MARKET_SHOCK classification from existing correlated market context.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-5",
+            "title": "Already-alerted Rapid Move states use bounded hysteresis so small retracements cannot thrash CONFIRMED/EXTENDED events back to EARLY/VALIDATING.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-6",
+            "title": "Deduped observations preserve the original provider event and window anchors so 1m/5m/20m outcomes remain point-in-time truthful under busy live updates.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-7",
+            "title": "Rapid Move adaptive learning is explicitly SHADOW with SHADOW → VALIDATED → APPROVED → PRODUCTION governance and no automatic policy promotion.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-8",
+            "title": "Outcome scorecards distinguish continued, reversed and faded/mixed outcomes and count market-shock alerts/hysteresis retention for Adaptive Intelligence evaluation.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-9",
+            "title": "Opportunity Radar and Smart Notifications reuse the existing canonical promotion path with MARKET SHOCK semantics when applicable; protected scoring formulas are not changed.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-9",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-10",
+            "title": "Coverage remains truthful TIERED_PARTIAL and no full-market surveillance claim is introduced.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-11",
+            "title": "Performance remains event-first and fetch-once/reuse; the hardening adds no broad polling, provider fan-out or raw tick warehousing.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_0_6_scope.json#clauses-12",
+            "title": "No Execution Boundary and protected deterministic Day/Swing/Long formulas remain unchanged; v18.1 multi-user architecture is out of scope.",
+            "section": "clauses",
+            "id": "V18-0-6-SCOPE-V18-0-6-SCOPE-JSON-CLAUSES-12",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_1_scope.json",
+        "version": "v18.1.0 TEST",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "MU-01",
+            "title": "Personal market state has one durable UserWorkspace owner keyed by immutable authenticated UserID.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-01",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-02",
+            "title": "The pre-v18.1 single-user Stable market state migrates exactly once into bootstrap OWNER workspace without data loss.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-02",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-03",
+            "title": "A newly authenticated user starts with an empty personal tracked/watchlist state and cannot inherit another user workspace.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-03",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-04",
+            "title": "Tracked Symbols, desk membership, watchlists, scope and selected ticker mutations affect only the requesting user workspace.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-04",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-05",
+            "title": "Profile export/import and AI default context use only the requesting user workspace; secrets remain excluded from export.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-05",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-06",
+            "title": "Bootstrap/state/runtime/quote/news/earnings/filing delivery is workspace-filtered so personal symbol ownership is not leaked across sessions.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-06",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-07",
+            "title": "Provider credentials, provider policy, global runtime settings and deterministic scoring configuration remain shared ADMIN-owned operational state.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-07",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-08",
+            "title": "Provider fetching, canonical evidence, Router v2, Rapid Move, Radar and deterministic scoring remain one shared canonical backend core.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-08",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-09",
+            "title": "The engine processing universe is the deduplicated union of user-required symbols; duplicate user interest never creates duplicate provider/scoring pipelines.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-09",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-10",
+            "title": "Removing a symbol from one workspace cannot remove it from the canonical processing universe while another workspace still requires it.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-11",
+            "title": "Broad-market Opportunity Radar and Rapid Move / Market Shock remain shared intelligence surfaces; personal watchlist isolation does not hide market-wide intelligence.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-12",
+            "title": "Persistence support covers SQLite and fallback backends and survives restart/reload with user ownership intact.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-12",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-13",
+            "title": "v18.1 TEST uses an isolated runtime profile cloned from v18.0.6 Stable on first run without writing into Stable.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-13",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-14",
+            "title": "v18.2 user administration, presence and session lifecycle UI/API is explicitly excluded from v18.1.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-14",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "MU-15",
+            "title": "Protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary remain unchanged.",
+            "section": "clauses",
+            "id": "V18-1-SCOPE-MU-15",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_2_scope.json",
+        "version": "18.2.0",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_2_scope.json#clauses-1",
+            "title": "canonical_identity_owner",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-2",
+            "title": "role_hierarchy",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-3",
+            "title": "user_lifecycle",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-4",
+            "title": "password_reset_revokes_sessions",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-5",
+            "title": "redacted_admin_views",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-6",
+            "title": "session_truth_presence",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-7",
+            "title": "sse_revocation",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-8",
+            "title": "admin_settings_ui",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-9",
+            "title": "normal_user_hidden",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-9",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-10",
+            "title": "v181_workspace_preserved",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-11",
+            "title": "no_v183_hosted_scope",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_2_scope.json#clauses-12",
+            "title": "no_execution_no_formula_change",
+            "section": "clauses",
+            "id": "V18-2-SCOPE-V18-2-SCOPE-JSON-CLAUSES-12",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_3_scope.json",
+        "version": "18.3.0",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_3_scope.json#clauses-1",
+            "title": "canonical_persistence_backend",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-2",
+            "title": "desktop_sqlite_default",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-3",
+            "title": "postgres_fail_closed",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-4",
+            "title": "repository_schema_parity",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-5",
+            "title": "bounded_transactions_pool",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-6",
+            "title": "shared_market_processing",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-7",
+            "title": "per_user_workspace_identity_isolation",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-8",
+            "title": "warm_start_truth",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-9",
+            "title": "hosted_runtime_health_readiness",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-9",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-10",
+            "title": "db_pool_query_observability",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-10",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-11",
+            "title": "backup_restore_migration_export",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-11",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-12",
+            "title": "postgres_load_contention_recovery",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-12",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-13",
+            "title": "adr_gdi_persistence_hardening",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-13",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-14",
+            "title": "no_execution_no_formula_change",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-14",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-15",
+            "title": "no_v184_scope_creep",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-15",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_3_scope.json#clauses-16",
+            "title": "mac_windows_native_targets_preserved",
+            "section": "clauses",
+            "id": "V18-3-SCOPE-V18-3-SCOPE-JSON-CLAUSES-16",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_4_scope.json",
+        "version": "18.4.0",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_4_scope.json#clauses-1",
+            "title": "secrets_security",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-2",
+            "title": "auth_session_csrf_cookie_hardening",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-3",
+            "title": "adversarial_authorization",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-4",
+            "title": "provider_entitlement_data_rights_metadata",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-5",
+            "title": "hosted_commercial_readiness",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-5",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-6",
+            "title": "quota_abuse_safeguards",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-6",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-7",
+            "title": "observability",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-7",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#clauses-8",
+            "title": "licensing_redistribution_ai_use_suitability",
+            "section": "clauses",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-CLAUSES-8",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#first-slice-1",
+            "title": "trusted_hosted_request_scheme",
+            "section": "firstSlice",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-FIRST-SLICE-1",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#first-slice-2",
+            "title": "same_origin_enforcement",
+            "section": "firstSlice",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-FIRST-SLICE-2",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#first-slice-3",
+            "title": "browser_security_headers_and_cookies",
+            "section": "firstSlice",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-FIRST-SLICE-3",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#first-slice-4",
+            "title": "login_abuse_throttling",
+            "section": "firstSlice",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-FIRST-SLICE-4",
+            "status": "REVALIDATION_REQUIRED"
+          },
+          {
+            "key": "v18_4_scope.json#first-slice-5",
+            "title": "recent_authentication_groundwork",
+            "section": "firstSlice",
+            "id": "V18-4-SCOPE-V18-4-SCOPE-JSON-FIRST-SLICE-5",
+            "status": "REVALIDATION_REQUIRED"
+          }
+        ]
+      },
+      {
+        "source": "v18_5_scope.json",
+        "version": "18.5.0",
+        "status": "REVALIDATION_REQUIRED",
+        "entries": [
+          {
+            "key": "v18_5_scope.json#closure-1",
+            "title": "full_v18_scope_traceability",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-1",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-2",
+            "title": "architecture_source_quality_developer_proofing",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-2",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-3",
+            "title": "data_utility_correlation_reuse",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-3",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-4",
+            "title": "performance_capacity_responsiveness_stability",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-4",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-5",
+            "title": "security_auth_session_authorization_abuse",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-5",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-6",
+            "title": "ui_ux_content_responsive_accessibility_runtime_truth",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-6",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-7",
+            "title": "adaptive_intelligence_governance",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-7",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-8",
+            "title": "principal_engineer_acceptance",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-8",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-9",
+            "title": "professional_trader_investor_acceptance",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-9",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#closure-10",
+            "title": "native_hosted_packaging_provenance_release_assurance",
+            "section": "closureDimensions",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-CLOSURE-10",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-1",
+            "title": "provider_failure_rate_limit_fallback_calls_avoided",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-1",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-2",
+            "title": "stale_evidence_freshness_slo",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-2",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-3",
+            "title": "source_disagreement",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-3",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-4",
+            "title": "consumer_aware_blast_radius",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-4",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-5",
+            "title": "postgres_pressure_slow_unavailable",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-5",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-6",
+            "title": "sqlite_desktop_continuity",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-6",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-7",
+            "title": "queue_saturation_bounded_backpressure",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-7",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-8",
+            "title": "workload_priority_graceful_load_shedding",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-8",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-9",
+            "title": "restart_warm_start_recovery",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-9",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-10",
+            "title": "multi_user_multi_symbol_fanout_shared_reuse",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-10",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-11",
+            "title": "background_job_pressure_duplicate_work_avoidance",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-11",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-12",
+            "title": "recovery_hysteresis",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-12",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-13",
+            "title": "unknown_degraded_abstain_truth",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-13",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-14",
+            "title": "packaged_runtime_degradation_ux_diagnostics",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-14",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#adr-gdi-15",
+            "title": "truthful_supported_operating_limits",
+            "section": "adrGdiRequiredScenarios",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-ADR-GDI-15",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#release-blocker-1",
+            "title": "self_inflicted_overload_delays_decision_critical_current_evidence",
+            "section": "releaseBlockers",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-RELEASE-BLOCKER-1",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#release-blocker-2",
+            "title": "self_inflicted_overload_stales_or_misstates_decision_critical_evidence",
+            "section": "releaseBlockers",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-RELEASE-BLOCKER-2",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#release-blocker-3",
+            "title": "narrow_dependency_failure_unnecessarily_degrades_unrelated_capabilities",
+            "section": "releaseBlockers",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-RELEASE-BLOCKER-3",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#release-blocker-4",
+            "title": "unbounded_queue_provider_or_database_pressure",
+            "section": "releaseBlockers",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-RELEASE-BLOCKER-4",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#release-blocker-5",
+            "title": "misleading_ready_healthy_or_non_abstain_state_under_required_evidence_failure",
+            "section": "releaseBlockers",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-RELEASE-BLOCKER-5",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-1",
+            "title": "no_execution_boundary",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-1",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-2",
+            "title": "deterministic_day_swing_long_formulas",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-2",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-3",
+            "title": "canonical_smart_provider_router",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-3",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-4",
+            "title": "gld_slv_uso_tradable_live_priority_exceptions",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-4",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-5",
+            "title": "shared_symbol_intelligence_global_registry_reuse",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-5",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-6",
+            "title": "desktop_sqlite_default_hosted_postgresql_shared_state",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-6",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-7",
+            "title": "fail_closed_commercial_data_rights_readiness",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-7",
+            "status": "REOPENED"
+          },
+          {
+            "key": "v18_5_scope.json#protected-8",
+            "title": "no_silent_adaptive_production_self_modification",
+            "section": "protectedContracts",
+            "id": "V18-5-SCOPE-V18-5-SCOPE-JSON-PROTECTED-8",
+            "status": "REOPENED"
+          }
+        ]
+      }
+    ]
+  },
+  "confirmedImplementationMisses": [
+    {
+      "id": "IMPL-18-TRADEINSIGHT-001",
+      "title": "TradeInsight SHADOW / SECONDARY integration",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "v18_major_scope.json",
+        "v18_delivery_slices.json",
+        "governance/APPROVED-SCOPE.md#INT-003",
+        "governance/DECISION-LOG.md#DEC-2026-08-13-005"
+      ],
+      "findings": [
+        "Explicitly deferred from v18.0",
+        "Never reassigned to v18.1-v18.5 immutable scope",
+        "No current provider adapter or endpoint reference",
+        "No secrets/config entry",
+        "No Smart Router capability/route/source mapping",
+        "No provider-rights metadata record",
+        "No integration/regression/package certification"
+      ],
+      "requiredClosure": [
+        "bounded SHADOW adapter through canonical Smart Router",
+        "approved capability roles only",
+        "entitlement and rights fail-closed",
+        "provenance/freshness/materiality",
+        "deterministic fixtures and live smoke when credentials permit",
+        "macOS and Windows packaged evidence"
+      ]
+    }
+  ],
+  "escapedDefects": [
+    {
+      "id": "COPY-18.5.1-001",
+      "aliases": [
+        "UX-18.5.1-001"
+      ],
+      "title": "Stale v17 profile-preservation copy",
+      "status": "REOPENED",
+      "origin": [
+        "GitHub issue #11"
+      ]
+    },
+    {
+      "id": "SYMBOL-18.5.1-001",
+      "title": "Day/Swing/Long row removal fails for final membership",
+      "status": "REOPENED",
+      "origin": [
+        "GitHub issue #12",
+        "INHERITED-21",
+        "INHERITED-22"
+      ]
+    },
+    {
+      "id": "SYMBOL-18.5.1-002",
+      "title": "Current desk membership not visually distinguished",
+      "status": "REOPENED",
+      "origin": [
+        "GitHub issue #12",
+        "INHERITED-20"
+      ]
+    },
+    {
+      "id": "NAV-18.5.1-001",
+      "title": "Live/same-page refresh jumps from mid-section to top or loses focus",
+      "status": "REOPENED",
+      "origin": [
+        "GitHub issue #12",
+        "earlier save/scroll preservation commitment"
+      ]
+    },
+    {
+      "id": "RESEARCH-v15.1.0-17-19-REOPENED",
+      "title": "Research ticker/freshness/top-area responsive regression",
+      "status": "REOPENED",
+      "origin": [
+        "INHERITED-17",
+        "INHERITED-18",
+        "INHERITED-19"
+      ]
+    }
+  ],
+  "conversationalCommitments": [
+    {
+      "id": "CONVO-V17-001",
+      "title": "Master Market Symbols compact control layout",
+      "status": "REVALIDATION_REQUIRED_HIGH"
+    },
+    {
+      "id": "CONVO-V17-002",
+      "title": "Pre-Market/Market Open exception-list UI consolidation",
+      "status": "REVALIDATION_REQUIRED_HIGH"
+    },
+    {
+      "id": "CONVO-V17-003",
+      "title": "Runtime overload / intermittent DATA DEGRADED / slow response",
+      "status": "REVALIDATION_REQUIRED_HIGH"
+    },
+    {
+      "id": "CONVO-V17-004",
+      "title": "External Dependency & Provider Readiness checkpoint plus User Action Required register",
+      "status": "REVALIDATION_REQUIRED"
+    },
+    {
+      "id": "CONVO-V17-005",
+      "title": "Adaptive role-aware User/Admin/Developer documentation and Documentation Impact Manifest",
+      "status": "REVALIDATION_REQUIRED"
+    },
+    {
+      "id": "CONVO-V18-001",
+      "title": "TradeInsight approved capability set and canonical-router-only SHADOW operation",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "links": [
+        "IMPL-18-TRADEINSIGHT-001"
+      ]
+    },
+    {
+      "id": "CONVO-V18-002",
+      "title": "Full actual-artifact Mac/Windows evidence for each affected workflow",
+      "status": "REVALIDATION_REQUIRED_HIGH"
+    }
+  ],
+  "roadmapPlacedNotCurrentMisses": [
+    {
+      "id": "ASBI-MATURE",
+      "status": "ROADMAP_PLACED_FUTURE",
+      "placement": "v20",
+      "note": "v18/v19 evidence foundation still requires reconciliation"
+    },
+    {
+      "id": "TDTI-MATURE",
+      "status": "ROADMAP_PLACED_FUTURE",
+      "placement": "v20",
+      "note": "v18/v19 two-sided evidence foundation still requires reconciliation"
+    },
+    {
+      "id": "AODR-MATURE",
+      "status": "ROADMAP_PLACED_FUTURE",
+      "placement": "v20",
+      "note": "dependency-compatible v18 foundation must be reconciled if present"
+    },
+    {
+      "id": "ADAPTIVE-13F-MATURE",
+      "status": "ROADMAP_PLACED_FUTURE",
+      "placement": "v20",
+      "note": "v18/v19 SEC 13F evidence foundation still requires reconciliation"
+    }
+  ],
+  "closureEvidenceRequired": [
+    "current source owner and exact commit",
+    "fresh automated regression ID/result",
+    "browser/UI evidence where applicable",
+    "macOS Apple Silicon actual package result",
+    "Windows x64 actual package result",
+    "approved disposition for any superseded/not-applicable item",
+    "G16 root cause and prevention for repeat escapes"
+  ]
+}
