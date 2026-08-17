@@ -9,6 +9,7 @@
     "REVALIDATION_REQUIRED_HIGH",
     "REOPENED",
     "NOT_IMPLEMENTED_CONFIRMED",
+    "PLACED_NEXT_V18",
     "FRESH_PASS",
     "INTENTIONALLY_SUPERSEDED",
     "NOT_APPLICABLE",
@@ -18,7 +19,8 @@
     "REVALIDATION_REQUIRED",
     "REVALIDATION_REQUIRED_HIGH",
     "REOPENED",
-    "NOT_IMPLEMENTED_CONFIRMED"
+    "NOT_IMPLEMENTED_CONFIRMED",
+    "PLACED_NEXT_V18"
   ],
   "authorities": [
     "governance/APPROVED-SCOPE.md",
@@ -3345,5 +3347,37 @@
         ]
       }
     ]
+  },
+  "adaptiveReleaseTrain": {
+    "model": "EVIDENCE_SELECTED_V18_X",
+    "policy": "Release numbers provide capacity; current evidence selects the smallest coherent scope. v18.5.1 is not predeclared as the final closure release.",
+    "adaptiveLoop": [
+      "OBSERVE",
+      "RECONCILE",
+      "PRIORITIZE",
+      "SLICE",
+      "BUILD",
+      "VALIDATE",
+      "MEASURE",
+      "LEARN",
+      "REPLAN"
+    ],
+    "currentSlice": {
+      "release": "v18.5.1",
+      "purpose": "audit, containment, anti-slicing enforcement and safest urgent recovery",
+      "planningState": "OPEN_G0_G3",
+      "finalMajorClosure": false,
+      "assignedIds": [],
+      "rule": "Before slice G1 closes, assign every applicable open row either to v18.5.1 or to PLACED_NEXT_V18 with target release/candidate lane, owner, reason, dependency and user impact."
+    },
+    "nextVersionCapacity": [
+      "v18.6",
+      "v18.7",
+      "additional v18.x as evidence requires"
+    ],
+    "sliceReleaseRule": "All IDs assigned to the current slice must have final evidence. Every remainder must be final, approved future-only, or PLACED_NEXT_V18 with complete placement metadata.",
+    "majorClosureRule": "No PLACED_NEXT_V18, REVALIDATION_REQUIRED, REVALIDATION_REQUIRED_HIGH, REOPENED or NOT_IMPLEMENTED_CONFIRMED row may remain.",
+    "finalClosureDesignation": "EVIDENCE_SELECTED_ONLY_AFTER_ZERO_GAP_READINESS",
+    "authority": "governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md"
   }
 }
