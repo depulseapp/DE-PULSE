@@ -95,8 +95,9 @@ Mandatory escaped-defect set:
 - **SYMBOL-18.5.1-002 — active desk state:** a symbol's membership in the current desk must be unmistakably distinguished from its memberships in other desks across Day, Swing and Long.
 - **NAV-18.5.1-001 — interaction continuity:** live/SSE refresh must not unexpectedly move a user from the middle of a section to the top or discard relevant focus/selection state.
 - **RESEARCH-v15.1.0-17-19-REOPENED — Research top area:** reopen the approved Research ticker-input consistency, freshness-badge placement and responsive-placement requirements. Correct layout density/alignment, truthful freshness and action semantics, disabled-state clarity, and evidence-incomplete recovery guidance.
+- **IMPL-18-TRADEINSIGHT-001 — orphaned committed workstream:** implement and certify the approved TradeInsight SHADOW / SECONDARY roles through the canonical Smart Router. Current source contains no adapter, endpoint/configuration, router capability, provider-rights record or integration test; this is a confirmed v18 implementation miss.
 
-v18.5.1 must also run a **full approved-implementation reconciliation**. Reconstruct every promised v18 implementation from approved scope, this roadmap, decision records, release evidence, accepted defect history and issue tracking—including Smart Provider Router / TradeInsight placement—and classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED` or `NOT_APPLICABLE`. Nothing is silently assumed complete because an earlier release once recorded PASS.
+v18.5.1 must also run a **full v17 + v18 approved-implementation reconciliation**. Reconstruct the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, every v18 major workstream, every v18.0–v18.5 release clause, accepted conversational commitment, defect history and issue record. Classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. Nothing is silently assumed complete because an earlier release once recorded PASS.
 
 Permanent anti-miss rules:
 
@@ -104,7 +105,7 @@ Permanent anti-miss rules:
 2. Every defect and implementation promise must preserve one durable chain: **origin → current observation → owner → fix/disposition → regression test → actual package proof → closure evidence**.
 3. A source, dependency, renderer or package change invalidates earlier PASS evidence for the affected surface and its dependents.
 4. Closure requires direct browser evidence plus actual macOS Apple Silicon and Windows x64 packaged-runtime evidence for affected user workflows.
-5. v18.5.1 Stable is blocked until the escaped-defect set and implementation reconciliation have no unexplained or unplaced gaps. Any intentional deferral requires an explicit approved roadmap placement and truthful user impact.
+5. v18.5.1 Stable is blocked until the escaped-defect set, confirmed implementation misses and full v17/v18 reconciliation have no unexplained or unplaced gaps. Any intentional deferral requires an explicit approved roadmap placement and truthful user impact.
 
 ---
 
