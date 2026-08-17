@@ -135,8 +135,9 @@ Classification: **CURRENT_RELEASE_BLOCKER**. v18.5.1 must close the following ev
 | SYMBOL-18.5.1-002 | Visually distinguish the current desk membership from other memberships on every desk. | Day/Swing/Long responsive screenshots plus state/selection assertions. |
 | NAV-18.5.1-001 | Preserve scroll, focus and relevant selection across live/SSE refresh; no unrequested jump to page top. | Mid-section dwell through repeated updates in browser and actual packages. |
 | RESEARCH-v15.1.0-17-19-REOPENED | Reclose approved Research input, freshness-badge and responsive top-area placement; make labels, controls, disabled states and evidence recovery truthful. | Requirement-level UI/state tests at desktop/tablet/narrow widths plus packaged-runtime evidence. |
+| IMPL-18-TRADEINSIGHT-001 | Implement the committed TradeInsight SHADOW / SECONDARY workstream through the canonical Smart Router; it is confirmed absent from current implementation. | Adapter/configuration, capability/rights/provenance controls, bounded SHADOW fixtures/live smoke, router integration and actual-package evidence. |
 
-A full v18 implementation-reconciliation ledger is also mandatory. It must compare approved scope, canonical roadmap, decision records, release evidence, accepted defects/issues, current source and actual packages. Each promise receives exactly one current disposition: `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED` or `NOT_APPLICABLE`. Smart Provider Router / TradeInsight placement is verified here rather than guessed.
+A full v17 + v18 implementation-reconciliation ledger is also mandatory. It covers the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, all v18 major workstreams and v18.0–v18.5 release entries, plus accepted conversational commitments and defects. Each promise receives exactly one current disposition: `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. TradeInsight is already classified `NOT_IMPLEMENTED` and blocking.
 
 Operational recurrence rule:
 
