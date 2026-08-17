@@ -59,7 +59,7 @@ A requirement cannot skip directly from planned or source-present to `FRESH_PASS
 
 ## 4. Frozen program inventory
 
-The authoritative ledger currently contains 285 rows:
+The authoritative ledger now contains 295 rows:
 
 - 48 inherited approved requirements;
 - 20 frozen v17 major items;
@@ -120,7 +120,7 @@ This is the recommended starting plan, subject to G0–G3 replanning after each 
 | v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; hover/render stability; scroll/focus continuity; Research top-area; three-tier header/Market Pulse Ribbon; adaptive CI control plane; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
 | v18.6 | Canonical utility/ownership recovery | shared Scanner/Radar acquisition; Session Intelligence Coordinator; Market Activity demotion; legacy route redirects; role-aware docs/impact manifest; dependency readiness register | These items share architecture, ownership, surface and governance dependencies. |
 | v18.7 | Provider intelligence + remaining consolidation | TradeInsight SHADOW/SECONDARY; remaining Dashboard/Market Intelligence/Desk/Catalyst/Maintenance remediation; provider-rights/readiness validation | External/provider work and larger consolidation need isolated rights, performance and regression qualification. |
-| v18.8+ | Major closure candidate or additional hardening | full 285-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
+| v18.8+ | Major closure candidate or additional hardening | full 295-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
 
 This table is not immutable scope. Each candidate becomes binding only when its own G1 closes. Findings may pull a dependency-compatible blocker earlier, split an unsafe slice or create another v18.x release.
 
@@ -142,7 +142,7 @@ If new evidence appears, the program creates another v18.x recovery/hardening sl
 ### Wave 0 — Reconstruct and freeze (G0–G3)
 
 - Freeze the exact v18.5.0 Stable source/package baseline and v18.5.1 branch.
-- Validate all 285 IDs, origins and counts.
+- Validate all 295 IDs, origins and counts.
 - Add code owner, build lane, dependency graph, regression ID and evidence matrix for every applicable row.
 - Record source/dependency/UI/state/persistence/security/package blast radius.
 - Reject any slice whose input/output ID count is not conserved.
@@ -300,7 +300,7 @@ Parallel execution may reduce elapsed time. It may never split requirement autho
 
 ## 8A. Adaptive CI recovery workstream
 
-`CI-ADAPTIVE-18.5.1-001` is a recovered implementation/process commitment and part of the 285-row authority.
+`CI-ADAPTIVE-18.5.1-001` is a recovered implementation/process commitment and part of the 295-row authority.
 
 Required recovery:
 
@@ -315,6 +315,25 @@ Required recovery:
 9. Feed G16 outcomes into a shadow/validated/approved planner proposal. No autonomous policy mutation.
 
 Candidate placement is v18.5.1 process hardening, subject to G1 assignment. If dependency analysis proves it unsafe to complete in the same slice, it must be `PLACED_NEXT_V18` with target release, owner, reason, dependency and user impact; it may not disappear.
+
+---
+
+## 8B. Independent audit recovery workstream
+
+The 2026-08-17 independent audit is incorporated as ten open control records: `AUDIT-18-UI-001`, `AUDIT-18-AI-001`, `AUDIT-18-AI-RIGHTS-001`, `AUDIT-18-PROVIDER-001`, `AUDIT-18-ARCH-001`, `AUDIT-18-CI-001`, `AUDIT-18-SECURITY-001`, `AUDIT-18-PROVENANCE-001`, `AUDIT-18-TRADER-001` and `AUDIT-18-QA-001`. The authoritative inventory is now **295 rows**.
+
+Recovery order:
+
+1. v18.5.1 closes the common full-render/live-update root cause and linked reopened defects, repairs active-branch CI coverage and establishes behavior-first browser regressions.
+2. v18.6 closes confirmed implementation misses plus AI bounded-context/cache/schema/eval, AI-egress rights and applicable secret/HTTP/security work.
+3. v18.7 establishes the modular archetype, durable workflows, supply-chain/SBOM, Provider Intelligence Ledger SHADOW and trader-learning foundations.
+4. Another v18.x slice is created if zero-gap or native evidence is not ready; no release number is forced into final closure.
+5. Mature provider/model adaptation and behavioral intelligence remain v19/v20 promotions, but their required v18 foundation rows must be freshly proven or explicitly placed.
+
+The audit does not retroactively invalidate sound v18 foundations. It invalidates closure claims that relied on source markers, historical PASS evidence or documentation without current behavior and exact-package proof.
+
+---
+
 
 ## 9. Promotion blockers
 
@@ -335,7 +354,7 @@ Stable promotion is forbidden with any:
 
 The v18 major Final Closure is complete only when:
 
-1. all 285 rows are conserved and explicitly dispositioned;
+1. all 295 rows are conserved and explicitly dispositioned;
 2. every applicable v17/v18 item is `FRESH_PASS` or has a narrowly approved superseded/not-applicable disposition with proof;
 3. every confirmed miss and reopened defect is fixed and regression-proven;
 4. all 13 orphaned remediation records are closed;

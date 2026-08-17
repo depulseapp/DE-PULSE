@@ -193,7 +193,7 @@ v18.5.1 is the audit/containment and urgent-recovery entry slice. It is not auto
 
 The v18.x program executes these ordered waves across as many coherent minor releases as evidence requires:
 
-1. reconstruct/freeze the complete 285-row inventory;
+1. reconstruct/freeze the complete 295-row inventory;
 2. fix escaped user defects;
 3. implement confirmed misses;
 4. close all 13 orphaned utility remediations;
@@ -227,6 +227,50 @@ Roadmap invariants:
 8. G16 converts telemetry and recurrent failures into a versioned proposal that follows `SHADOW → VALIDATED → APPROVED → PRODUCTION`; the planner cannot silently self-modify mandatory quality policy.
 
 Canonical detailed contract: `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`.
+
+---
+
+## 6D. Independent v18 audit integration and adaptive-maturity binding
+
+Status: **GOVERNANCE_BOUND_OPEN · IMPLEMENTATION/EVIDENCE REQUIRED**.
+
+Source audit baseline: `v18.5.1-development@05825b7fd73d4bc74620256548db7149c5337ac8`, independently reviewed on 2026-08-17 across the root production Go corpus, renderer/admin/auth UI, Go/JavaScript tests, provider/AI/learning/security paths, adaptive authorities, workflow inventory and the reconciliation ledger.
+
+The audit findings are permanent requirement records. Their presence in documentation never closes them. Ten audit records extend the authoritative v17/v18 inventory from **285 to 295 rows**; links to reopened defects or prior CI controls preserve both identities and never double-close either record.
+
+| Audit ID | Permanent finding / outcome | Candidate placement |
+|---|---|---|
+| `AUDIT-18-UI-001` | Replace quote/SSE-driven full `#main.innerHTML` remounts with keyed incremental live updates; preserve hover, focus, selection and stable scroll anchors; link all seven reopened UI defects. | v18.5.1 |
+| `AUDIT-18-AI-001` | Correct nested evidence byte-bounding and semantic compaction; fingerprint provider/model/prompt/safety/schema in cache with TTL/invalidation; enforce Structured Outputs where supported; add golden, contradiction, citation and prompt-injection evals. | v18.6 |
+| `AUDIT-18-AI-RIGHTS-001` | Enforce provider×dataset AI-egress rights before external-model use; entitlement/API-key availability never implies AI/commercial/redistribution permission. | v18.6 |
+| `AUDIT-18-PROVIDER-001` | Add a Provider Intelligence Ledger, budgeted rotating SHADOW comparison and evidence-based premium-provider promotion gate measuring freshness, completeness, disagreement/truth, unique evidence, usefulness, missed/false alerts and cost. | v18.7 SHADOW; v19 maturation |
+| `AUDIT-18-ARCH-001` | Gradually extract root `package main`, renderer, CSS and duplicated platform persistence into canonical domains/components; add a stable developer/build archetype without a rewrite or feature drift. | v18.7 |
+| `AUDIT-18-CI-001` | Repair active-branch CI coverage immediately; replace 11 stale/version-copied workflows with durable `ci-fast`, `ci-qualified` and `release` workflows governed by `CI-ADAPTIVE-18.5.1-001`. | v18.5.1 trigger containment; v18.7 consolidation |
+| `AUDIT-18-SECURITY-001` | Add OS credential vaults, explicit provider HTTP transports/timeouts, SSE-aware server limits, external-link/CSP hardening, CodeQL, `govulncheck`, dependency review, secret scanning and SBOM generation. | v18.6–v18.7 |
+| `AUDIT-18-PROVENANCE-001` | Future Stable releases require verified signed tags and/or keyless artifact attestations in addition to hashes and no-rebuild provenance. | next final v18.x Stable |
+| `AUDIT-18-TRADER-001` | Extend descriptive learning into regime/session/liquidity/catalyst-conditioned validation, alert-usefulness/miss tracking, evidence-thesis changes and SHADOW next-state probability foundations; setup score remains explicitly not win probability and No Execution remains permanent. | v18.7 foundation; v19/v20 maturity |
+| `AUDIT-18-QA-001` | Replace marker-only confidence with behavior-first browser/API/state/native evidence: hover+dwell+live updates, mid-scroll/focus, symbol semantics, cross-desk/role/viewport, cumulative layout stability, AI schema/eval, provider-rights and exact packages. | starts v18.5.1; final-closure blocker |
+
+### AI/learning maturity ladder
+
+- **M0 — canonical evidence/provenance/freshness:** current strong foundation.
+- **M1 — frozen decisions, later outcomes, replay and descriptive calibration:** current partial/strong foundation.
+- **M2 — provider/data-quality usefulness and feedback labels:** v18.7 SHADOW foundation.
+- **M3 — regime/horizon-conditioned calibrated next-state probabilities:** v19 candidate after sample sufficiency.
+- **M4 — cost-aware provider/model ensemble and challenger policies:** v19 SHADOW/validated only.
+- **M5 — governed continual learning with drift, proposal, approval and rollback:** later maturity; never silent production self-modification.
+
+LLMs remain evidence extractors, contradiction detectors, synthesizers and explainers. Deterministic/statistical code owns price truth, numeric calculations, calibration and promotion measurements. An autonomous agent framework is not required for the current No Execution product.
+
+### Adaptive release placement
+
+1. **v18.5.1:** seven reopened defects plus `AUDIT-18-UI-001`, active-branch containment from `AUDIT-18-CI-001`, and the first binding `AUDIT-18-QA-001` browser regressions. It remains an urgent recovery slice, not final closure.
+2. **v18.6:** seven confirmed implementation misses, AI correctness/evals, rights-aware AI egress and the applicable security/transport/secret-vault work.
+3. **v18.7:** modular archetype, durable adaptive CI, Provider Intelligence Ledger SHADOW foundation, trader-learning foundations, supply-chain/SBOM and final v17/v18 reconciliation.
+4. **v18.8 or further v18.x:** created only if zero-gap readiness or native exact-package evidence requires another hardening slice.
+5. **v19/v20:** mature provider usefulness, calibrated next-state/adaptive policies, ASBI/TDTI/AODR/adaptive-13F as already governed future scope.
+
+No final v18 closure designation is allowed while any audit record is `REOPENED`, `NOT_IMPLEMENTED_CONFIRMED`, `REVALIDATION_REQUIRED`, unowned, untested, evidence-stale or incompletely placed.
 
 ---
 

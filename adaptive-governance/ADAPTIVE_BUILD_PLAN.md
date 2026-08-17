@@ -360,7 +360,7 @@ Candidate version numbers such as v18.6 or v18.7 are capacity, not fixed content
 
 | Wave | Primary work | Parallelizable lanes | Exit condition |
 |---|---|---|---|
-| 0 | Freeze 285-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
+| 0 | Freeze 295-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
 | 1 | Escaped user defects | copy/version; symbol semantics; hover/render stability; navigation; Research UI | focused tests + direct browser proof |
 | 2 | Confirmed implementation misses | TradeInsight; snapshot broker; session coordinator; routes/surfaces; docs; dependency register | canonical ownership + functional/security/performance proof |
 | 3 | Remaining utility remediations | Dashboard, Market Intelligence, Desks, Catalyst, Maintenance | all 13 remediation rows final |
@@ -386,7 +386,7 @@ Only unaffected evidence with a matching fingerprint may be reused.
 
 All values must be achieved before G11:
 
-- requirement identity conservation: **285/285**;
+- requirement identity conservation: **295/295**;
 - applicable rows with owner: **100%**;
 - applicable rows with regression mapping: **100%**;
 - applicable user workflows with browser evidence: **100%**;
@@ -435,6 +435,34 @@ The lane passes only when:
 - exact final-candidate G13/G14/G15 evidence remains mandatory and publication performs no rebuild.
 
 Detailed authority: `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`.
+
+---
+
+## 12D. Independent-audit controlled build packets
+
+The ten `AUDIT-18-*` records are mandatory build inputs and increase the conserved authority to **295 rows**. Each packet must retain its subfindings; closing one subfinding cannot close the parent.
+
+| Packet | Mandatory implementation and acceptance | Required proof |
+|---|---|---|
+| `AUDIT-18-UI-001` | Patch quote/timestamp/status cells in place; structural renders only for real membership/layout change; keyed hover/focus/selection; semantic scroll anchor capture/restore; explicitly resolve final-desk removal semantics and update labels/backend/tests together; implement the unchanged-size ET/PT Market Pulse Ribbon and tertiary instruments strip in stable containers. | Playwright hover+dwell under live/SSE events; mid-section scroll/focus; add/remove/undo; Day/Swing/Long highlight contrast; Research/header responsive; reduced motion; CLS/repaint budget; macOS/Windows package retest. |
+| `AUDIT-18-AI-001` | Bound the actual nested evidence envelope by bytes/tokens; rank compaction by materiality/contradiction/role instead of first-N order; cache key includes provider, requested/actual model, prompt, safety, schema and routing versions; TTL/invalidation; strict schema capability with safe abstention. | Unit/property tests for byte bounds and cache isolation; golden evidence corpus; citation/contradiction/missing-evidence scores; injection/schema-escape corpus; continuous model/prompt eval with cost/latency. |
+| `AUDIT-18-AI-RIGHTS-001` | Canonical provider×dataset rights registry; AI-egress allow/deny decision bound to evidence; fail closed when AI-use rights are unknown; redacted diagnostics. | Denied-egress integration tests; approved-evidence fixtures; cross-provider/fallback proof; no secret/raw-rights leakage; exact-package behavior. |
+| `AUDIT-18-PROVIDER-001` | Persist provider observations and downstream consumption/outcome links; rotating low-cost shadow sampling; disagreement/truth anchors; usefulness and cost-per-useful-evidence scorecards; paid-provider promotion proposal only after measured lift and rights approval. | Dataset/session/regime fixtures; bounded call-budget/load tests; avoided-call telemetry; no production auto-promotion; sample-depth/confidence report; rollback. |
+| `AUDIT-18-ARCH-001` | Strangler extraction into platform, market data/router, intelligence, persistence and web store/component domains; shared persistence semantics with thin OS adapters; tokens/components/page CSS; stable Makefile/Taskfile commands and release-scaffold manifest. | Deterministic equivalence; dependency graph; source-size/override trend; no duplicate owner; incremental package tests; no wholesale rewrite or protected-formula drift. |
+| `AUDIT-18-CI-001` | Current branch cannot bypass CI; durable fast/qualified/release workflows; caches, cancellation, bounded matrices, least privilege, short dev retention, exact-candidate native lanes and no-rebuild publication; retire active historical copies after evidence inventory. | Workflow lint/fixture tests; branch/path trigger matrix; selected/skipped reason record; cost/runtime/cache metrics; macOS+Windows final-candidate provenance. |
+| `AUDIT-18-SECURITY-001` | Keychain/Credential Manager on desktop and injected hosted secrets; explicit per-provider clients; response-header/idle/connection/request deadlines; SSE-compatible server timeout policy; external-link interstitial/allow policy; CSP class migration; CodeQL, `govulncheck`, dependency/secret review and SBOM. | Security unit/integration tests, abuse/fault injection, secret migration/rollback, dependency scan outputs, SBOM bound to candidate, no provider data/credential disclosure. |
+| `AUDIT-18-PROVENANCE-001` | Sign the immutable Stable source tag and/or publish keyless artifact attestations; preserve existing hashes, source binding and no-rebuild publication. | Verification command/output for source tag and each artifact; identity mismatch negative test. |
+| `AUDIT-18-TRADER-001` | Add regime/session/liquidity/sector/catalyst conditioning only with sample sufficiency; measure false, duplicate, late and missed alerts; evidence-thesis change log without positions/P&L; SHADOW competing next-state probabilities with calibration/abstention. | Cutoff-safe replay; Brier/log-loss/calibration/coverage only for true probability outputs; sample/confidence labels; no setup-score probability conversion; no automatic formula/policy promotion. |
+| `AUDIT-18-QA-001` | Every source marker has a behavioral owner; user-reported interaction defects receive realistic event sequences and dwell; test contracts are reviewed when product semantics change; fresh source/behavior/package fingerprints. | G5 focused, G6 integration, G7 data/security/AI, G8 performance, G9 browser/UX, G10 conservation, G13–G15 exact packages. |
+
+### Slice and dependency rules
+
+- v18.5.1 owns the reopened defect set plus `AUDIT-18-UI-001`, `AUDIT-18-CI-001` containment and applicable `AUDIT-18-QA-001`.
+- v18.6 cannot start TradeInsight AI consumption until `AUDIT-18-AI-RIGHTS-001` is designed and fail-closed; AI routing work must jointly close `AUDIT-18-AI-001`.
+- v18.7 architecture extraction cannot change protected formulas, No Execution, U.S. Equities scope or user-visible semantics without a separately frozen requirement.
+- `AUDIT-18-PROVIDER-001` and `AUDIT-18-TRADER-001` enter production only through `SHADOW → VALIDATED → APPROVED → PRODUCTION`; v18 may close their required foundations while explicitly placing mature policy stages in v19/v20.
+- Security, rights, QA and provenance packets are cross-cutting dependencies, not optional cleanup.
+- G1 conservation is **295/295**. G10/G15 require all applicable audit subfindings, tests and evidence fingerprints to reconcile.
 
 ---
 

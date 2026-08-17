@@ -262,6 +262,29 @@ Process rules:
 
 ---
 
+## 12B. Independent-audit execution contract
+
+Applies to: `AUDIT-18-UI-001`, `AUDIT-18-AI-001`, `AUDIT-18-AI-RIGHTS-001`, `AUDIT-18-PROVIDER-001`, `AUDIT-18-ARCH-001`, `AUDIT-18-CI-001`, `AUDIT-18-SECURITY-001`, `AUDIT-18-PROVENANCE-001`, `AUDIT-18-TRADER-001` and `AUDIT-18-QA-001`.
+
+Every build/checkpoint begins by loading the ten `AUDIT-18-*` records from the reconciliation ledger together with their existing reopened-defect and CI links. The audit corpus is never reconstructed from conversation memory.
+
+1. **Classify and conserve.** Map each change to audit IDs, canonical owners, dependencies, user impact, rights and invalidated evidence. G1 must reconcile 295 identities.
+2. **Behavior before markers.** For UI/UX changes, write the real event sequence first: pointer/focus/scroll state plus repeated live updates and structural mutations. A class/token/source marker is supporting evidence only.
+3. **Incremental live rendering.** Quote/SSE events may patch keyed values; full surface remounts require an explicit structural reason. Capture semantic anchor, focus and selection before any unavoidable remount and restore them after layout stabilizes.
+4. **AI correctness and safety.** Freeze prompt/safety/schema/model/provider fingerprints; build the actual bounded evidence envelope; enforce schema capability or abstain; run golden, citation, contradiction, missing-evidence and injection evals on every affected change.
+5. **Rights-aware egress.** Resolve provider×dataset AI-use permission before external-model calls. Unknown or unbound rights deny egress and expose a truthful diagnostic; no API key or commercial plan infers permission.
+6. **Provider experiments.** Production uses one canonical route; bounded rotating shadow samples collect comparative evidence. Experiments cannot exceed budget/rights/backpressure controls or influence production before promotion approval.
+7. **Learning experiments.** Outcome/provider/model policies are versioned proposals. Use cutoff-safe data, sample-depth labels, calibration/drift measures and explicit rollback; protected formulas never self-modify.
+8. **Strangler architecture cleanup.** Move one canonical owner at a time behind stable interfaces, prove deterministic equivalence and retire the old owner in the same bounded packet. Do not perform a broad rewrite.
+9. **Security/supply chain.** Applicable changes run secret, dependency, vulnerability, SBOM and provenance lanes cheap-first. Desktop credential migration and HTTP timeout changes require failure/recovery tests.
+10. **CI truth.** The active branch must always match at least one durable workflow trigger. A workflow-trigger gap is a release blocker, not an infrastructure footnote.
+11. **Semantic test review.** When expected behavior changes—such as final-desk symbol removal—update requirement, UI copy, backend, undo/recovery and tests together. A historical test cannot override current frozen intent.
+12. **Evidence invalidation.** Any prompt/schema/router/rights/UI-store/workflow/security/provenance change invalidates its dependent PASS evidence even when the visible version string is unchanged.
+
+A checkpoint cannot report PASS while an applicable audit subfinding is absent, collapsed into a generic note, or supported only by historical/static evidence.
+
+---
+
 ## 13. 10/10 Process acceptance
 
 The Build Process is 10/10 only when it proves:

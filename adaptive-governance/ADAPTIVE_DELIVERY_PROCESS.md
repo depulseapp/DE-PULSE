@@ -226,6 +226,29 @@ Delivery cannot pass while `CI-ADAPTIVE-18.5.1-001` is unresolved for the applic
 
 ---
 
+## 12B. Independent-audit delivery contract
+
+Applies to: `AUDIT-18-UI-001`, `AUDIT-18-AI-001`, `AUDIT-18-AI-RIGHTS-001`, `AUDIT-18-PROVIDER-001`, `AUDIT-18-ARCH-001`, `AUDIT-18-CI-001`, `AUDIT-18-SECURITY-001`, `AUDIT-18-PROVENANCE-001`, `AUDIT-18-TRADER-001` and `AUDIT-18-QA-001`.
+
+Every v18.x delivery manifest must include the ten `AUDIT-18-*` records, their subfindings, release placement, source/test fingerprints and final/open status. The authoritative inventory is **295 rows** after audit integration.
+
+Delivery requirements:
+
+1. **UI/live runtime:** actual packaged macOS and Windows apps must dwell on Dashboard, Research and every desk while live/replayed SSE updates arrive; capture hover, focus, selected state, semantic scroll anchor, layout-shift/repaint observations and symbol mutation behavior.
+2. **AI:** ship a prompt/safety/schema/model/provider manifest, bounded-context proof, cache isolation/expiry proof, golden/injection eval summary, token/cost/latency telemetry and safe abstention behavior.
+3. **AI rights:** ship the provider×dataset AI-egress decision summary with secrets and contractual evidence redacted; blocked/unknown rights must remain blocked in the package.
+4. **Provider learning:** SHADOW comparisons must state sample size, dataset/session/regime, cost/calls, disagreement/truth limits, useful/missed/false evidence and non-production status. No paid-provider promotion occurs as an incidental release action.
+5. **Trader learning:** probability outputs, if any, require cutoff-safe calibration evidence and explicit distinction from setup scores; evidence-thesis logs cannot introduce positions, P&L, orders or execution.
+6. **Architecture:** package provenance identifies canonical owners and retired duplicates; refactors must preserve formulas, persisted profile compatibility, migration/rollback and cross-platform startup.
+7. **Security/supply chain:** include vulnerability/dependency results, SBOM, credential-storage migration evidence, HTTP/server fault tests, secret-scan result and any accepted risk with owner/expiry.
+8. **CI:** release evidence states which durable workflow selected each lane, why it ran/skipped, its fingerprint, runtime/cost/cache result and failure/retry class. A branch-trigger gap blocks delivery.
+9. **Provenance:** bind source commit, verified tag/attestation, artifact hashes, SBOM and G13/G14 results. Publication uploads certified artifacts without rebuilding.
+10. **Handoff:** G16 records every audit ID as final, explicitly future-placed or still blocking; it includes the maturity stage, next action, owner and invalidation conditions so a new chat never restarts from memory.
+
+No v18 final closure delivery may retain a reopened/not-implemented/revalidation audit row, an unresolved audit subfinding, unsigned/unattested future Stable provenance, or missing exact-package proof for affected macOS/Windows surfaces.
+
+---
+
 ## 13. 10/10 Delivery acceptance
 
 Delivery Process is 10/10 only when:

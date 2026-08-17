@@ -50,7 +50,7 @@
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
     "reconciliationBranch": "v18.5.1-development",
     "functionalityUtilityRemediations": 13,
-    "totalTrackedRows": 285
+    "totalTrackedRows": 295
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -3238,6 +3238,15 @@
     "activeVersionDriftAudit": {
       "result": "FAIL_CONFIRMED",
       "finding": "Active v17/v18.0.4/v18.4.0 strings remain in current user/runtime/profile paths."
+    },
+    "independentAudit20260817": {
+      "result": "GOVERNANCE_BOUND_OPEN",
+      "sourceCommit": "05825b7fd73d4bc74620256548db7149c5337ac8",
+      "authorityRowsAdded": 10,
+      "authoritativeTotal": 295,
+      "implementation": "NOT_STARTED",
+      "behavioralEvidence": "NOT_STARTED",
+      "nativeEvidence": "NOT_STARTED"
     }
   },
   "functionalityUtilityCarryForward": {
@@ -3446,10 +3455,22 @@
     "currentSlice": {
       "release": "v18.5.1",
       "purpose": "audit, containment, anti-slicing enforcement and safest urgent recovery",
-      "planningState": "OPEN_G0_G3",
+      "planningState": "G0_G1_AUDIT_BOUND_NOT_FROZEN",
       "finalMajorClosure": false,
-      "assignedIds": [],
-      "rule": "Before slice G1 closes, assign every applicable open row either to v18.5.1 or to PLACED_NEXT_V18 with target release/candidate lane, owner, reason, dependency and user impact."
+      "assignedIds": [
+        "COPY-18.5.1-001",
+        "SYMBOL-18.5.1-001",
+        "SYMBOL-18.5.1-002",
+        "NAV-18.5.1-001",
+        "RESEARCH-v15.1.0-17-19-REOPENED",
+        "VERSION-18.5.1-002",
+        "HOVER-18.5.1-001",
+        "AUDIT-18-UI-001",
+        "AUDIT-18-CI-001",
+        "AUDIT-18-QA-001"
+      ],
+      "rule": "Before slice G1 closes, assign every applicable open row either to v18.5.1 or to PLACED_NEXT_V18 with target release/candidate lane, owner, reason, dependency and user impact.",
+      "scopeFreezeState": "NOT_FROZEN_PENDING_G1"
     },
     "nextVersionCapacity": [
       "v18.6",
@@ -3460,5 +3481,275 @@
     "majorClosureRule": "No PLACED_NEXT_V18, REVALIDATION_REQUIRED, REVALIDATION_REQUIRED_HIGH, REOPENED or NOT_IMPLEMENTED_CONFIRMED row may remain.",
     "finalClosureDesignation": "EVIDENCE_SELECTED_ONLY_AFTER_ZERO_GAP_READINESS",
     "authority": "governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md"
+  },
+  "independentAudit20260817": {
+    "schema": "depulse-independent-audit-integration/v1",
+    "status": "GOVERNANCE_BOUND_OPEN",
+    "auditedSource": {
+      "branch": "v18.5.1-development",
+      "commit": "05825b7fd73d4bc74620256548db7149c5337ac8",
+      "date": "2026-08-17"
+    },
+    "inventory": {
+      "priorRows": 285,
+      "auditRows": 10,
+      "totalRows": 295,
+      "conservationRequired": true
+    },
+    "policy": [
+      "Documentation presence never closes an audit record.",
+      "Every subfinding requires owner, implementation, behavioral regression, fingerprint and applicable exact-package evidence.",
+      "Linked reopened defects and CI controls retain their own identities and cannot be double-closed.",
+      "Protected Day/Swing/Long formulas, No Execution and U.S. Equities boundaries remain unchanged.",
+      "SHADOW learning/provider/model policies cannot auto-promote."
+    ],
+    "findings": [
+      {
+        "id": "AUDIT-18-UI-001",
+        "title": "Incremental live rendering and interaction-state preservation",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "classification": "CURRENT_RELEASE_BLOCKER",
+        "candidateRelease": "v18.5.1",
+        "links": [
+          "HOVER-18.5.1-001",
+          "NAV-18.5.1-001",
+          "SYMBOL-18.5.1-001",
+          "SYMBOL-18.5.1-002",
+          "RESEARCH-v15.1.0-17-19-REOPENED",
+          "COPY-18.5.1-001",
+          "VERSION-18.5.1-002"
+        ],
+        "subFindings": [
+          "quote/SSE updates currently schedule full render()",
+          "render() replaces #main.innerHTML",
+          "hover/focus/selection/scroll require keyed preservation",
+          "final-desk removal semantics conflict with historical protection test",
+          "Market Pulse Ribbon and tertiary instruments require stable mounted containers"
+        ],
+        "requiredClosure": [
+          "incremental keyed live updates",
+          "semantic scroll/focus/selection preservation",
+          "explicit symbol removal contract plus undo/recovery",
+          "real browser hover+dwell/live-update regressions",
+          "cross-desk/research/header/reduced-motion/CLS evidence",
+          "macOS and Windows actual-package retest"
+        ]
+      },
+      {
+        "id": "AUDIT-18-AI-001",
+        "title": "AI bounded context, cache identity, strict schema and continuous evals",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.6",
+        "subFindings": [
+          "nested evidencePackage is not reduced by top-level key deletion",
+          "oversized JSON may remain oversized",
+          "first-N evidence compaction is order-biased",
+          "cache key omits provider/model/prompt/safety/schema fingerprint and TTL",
+          "JSON is prompt-requested rather than schema-enforced",
+          "no golden/citation/contradiction/injection continuous eval corpus"
+        ],
+        "requiredClosure": [
+          "semantic materiality compaction with hard byte/token bound",
+          "complete inference fingerprint and TTL/invalidation",
+          "Structured Outputs capability or safe abstention",
+          "golden and adversarial eval lane with cost/latency"
+        ]
+      },
+      {
+        "id": "AUDIT-18-AI-RIGHTS-001",
+        "title": "Provider and dataset rights-aware AI egress",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.6",
+        "subFindings": [
+          "rights diagnostics fail closed but are not consumed by AI routing",
+          "working API entitlement does not prove AI/commercial/redistribution rights"
+        ],
+        "requiredClosure": [
+          "canonical provider×dataset rights registry",
+          "fail-closed AI-egress policy",
+          "denied/approved integration fixtures",
+          "redacted diagnostics and exact-package proof"
+        ]
+      },
+      {
+        "id": "AUDIT-18-PROVIDER-001",
+        "title": "Provider Intelligence Ledger and evidence-based maturity gate",
+        "status": "ROADMAP_BOUND_FOUNDATION_OPEN",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.7",
+        "maturePlacement": "v19",
+        "subFindings": [
+          "Smart Router scores operational health, not downstream evidence usefulness",
+          "no provider outcome contribution, truth accuracy or cost-per-useful-evidence",
+          "premium migration lacks measured shadow promotion gate"
+        ],
+        "requiredClosure": [
+          "persist provider observations and consumption/outcome links",
+          "budgeted rotating SHADOW comparison",
+          "freshness/completeness/disagreement/unique-evidence/alert/cost scorecards",
+          "rights-aware promotion proposal with sample confidence and rollback"
+        ]
+      },
+      {
+        "id": "AUDIT-18-ARCH-001",
+        "title": "Gradual source and repository archetype modularization",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.7",
+        "subFindings": [
+          "325 root files and 84 production Go files in root package main",
+          "renderer and CSS are monolithic/override-heavy",
+          "platform persistence semantics are duplicated",
+          "11 version-specific workflows and no stable developer command surface"
+        ],
+        "requiredClosure": [
+          "strangler domain extraction",
+          "incremental UI store/components and CSS tokens",
+          "shared persistence semantics with thin adapters",
+          "stable build commands and release scaffold",
+          "deterministic equivalence and duplicate-owner retirement"
+        ]
+      },
+      {
+        "id": "AUDIT-18-CI-001",
+        "title": "Active-branch CI containment and durable workflow consolidation",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "classification": "CURRENT_RELEASE_PROCESS_HARDENING",
+        "candidateRelease": "v18.5.1",
+        "maturePlacement": "v18.7",
+        "links": [
+          "CI-ADAPTIVE-18.5.1-001"
+        ],
+        "subFindings": [
+          "v18.5 workflows listen to v18.5-development, not v18.5.1-development",
+          "current audited head has no attached status evidence",
+          "version-specific workflow copies contradict the durable CI contract"
+        ],
+        "requiredClosure": [
+          "active branch trigger proof",
+          "ci-fast/ci-qualified/release durable workflow architecture",
+          "cache/cancellation/retention/least-privilege evidence",
+          "exact-candidate native and no-rebuild publication"
+        ]
+      },
+      {
+        "id": "AUDIT-18-SECURITY-001",
+        "title": "Credential, HTTP, external-link and supply-chain hardening",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.6",
+        "completionLane": "v18.7",
+        "subFindings": [
+          "desktop secrets are plaintext JSON protected only by file permissions",
+          "AI/quote clients use http.DefaultClient in several paths",
+          "server timeout/header policy is incomplete for hosted/SSE operation",
+          "external links accept arbitrary http/https hosts",
+          "CSP retains unsafe-inline style dependence",
+          "no CodeQL, govulncheck, dependency review, secret scan or SBOM automation"
+        ],
+        "requiredClosure": [
+          "macOS Keychain and Windows Credential Manager migration with rollback",
+          "explicit provider transports and SSE-aware server limits",
+          "external-link/CSP hardening",
+          "cheap-first security automation and candidate-bound SBOM"
+        ]
+      },
+      {
+        "id": "AUDIT-18-PROVENANCE-001",
+        "title": "Verified Stable source and artifact attestations",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "classification": "FINAL_CLOSURE_BLOCKER",
+        "candidateRelease": "FINAL_V18_X",
+        "subFindings": [
+          "v18.5.0 annotated Stable tag is unsigned"
+        ],
+        "requiredClosure": [
+          "verified signed Stable tag and/or keyless artifact attestation",
+          "artifact/source/SBOM/hash binding",
+          "negative identity mismatch test",
+          "no-rebuild publication"
+        ]
+      },
+      {
+        "id": "AUDIT-18-TRADER-001",
+        "title": "Adaptive trader intelligence and calibrated next-state foundation",
+        "status": "ROADMAP_BOUND_FOUNDATION_OPEN",
+        "classification": "PLACED_NEXT_V18",
+        "candidateRelease": "v18.7",
+        "maturePlacement": "v19-v20",
+        "subFindings": [
+          "current calibration groups only horizon/score band/action",
+          "no provider usefulness or probabilistic next-state layer",
+          "no false/duplicate/late/missed alert ledger",
+          "no evidence-thesis change log",
+          "mature ASBI/TDTI/AODR/adaptive-13F are future scope rather than v18 implementations"
+        ],
+        "requiredClosure": [
+          "regime/session/liquidity/sector/catalyst conditioning with sample sufficiency",
+          "alert usefulness/miss tracking",
+          "non-portfolio evidence-thesis changes",
+          "SHADOW next-state probabilities with calibration/abstention",
+          "setup score never represented as win probability",
+          "no silent production promotion"
+        ]
+      },
+      {
+        "id": "AUDIT-18-QA-001",
+        "title": "Behavior-first regression and exact-package evidence effectiveness",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "classification": "CURRENT_RELEASE_BLOCKER",
+        "candidateRelease": "v18.5.1",
+        "completionLane": "FINAL_V18_X",
+        "subFindings": [
+          "large test volume did not reproduce live hover/scroll/focus defects",
+          "many UI gates assert source/markup presence rather than observable behavior",
+          "historical tests can encode outdated product semantics"
+        ],
+        "requiredClosure": [
+          "real browser event-sequence tests",
+          "semantic contract review for changed behavior",
+          "AI/provider/security/rights behavioral lanes",
+          "fresh fingerprints and macOS/Windows package dwell",
+          "zero marker-only closure claims"
+        ]
+      }
+    ],
+    "releasePlacement": {
+      "v18.5.1": [
+        "AUDIT-18-UI-001",
+        "AUDIT-18-CI-001",
+        "AUDIT-18-QA-001"
+      ],
+      "v18.6": [
+        "AUDIT-18-AI-001",
+        "AUDIT-18-AI-RIGHTS-001",
+        "AUDIT-18-SECURITY-001"
+      ],
+      "v18.7": [
+        "AUDIT-18-PROVIDER-001",
+        "AUDIT-18-ARCH-001",
+        "AUDIT-18-TRADER-001",
+        "AUDIT-18-CI-001",
+        "AUDIT-18-SECURITY-001"
+      ],
+      "FINAL_V18_X": [
+        "AUDIT-18-PROVENANCE-001",
+        "AUDIT-18-QA-001"
+      ],
+      "v19-v20": [
+        "AUDIT-18-PROVIDER-001",
+        "AUDIT-18-TRADER-001"
+      ]
+    },
+    "maturityLadder": {
+      "M0": "canonical evidence/provenance/freshness · current strong",
+      "M1": "frozen decisions/outcomes/replay/descriptive calibration · current partial/strong",
+      "M2": "provider/data-quality usefulness · v18.7 SHADOW foundation",
+      "M3": "regime/horizon next-state probabilities · v19 candidate",
+      "M4": "cost-aware provider/model challenger policies · v19 SHADOW/validated",
+      "M5": "governed continual learning with drift/approval/rollback · later maturity"
+    }
   }
 }
