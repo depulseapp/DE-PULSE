@@ -1,0 +1,65 @@
+{
+  "schema": "DE.PULSE-v18.5-SCOPE-1",
+  "version": "18.5.0",
+  "incomingStable": "v18.4.0",
+  "incomingStableTag": "v18.4.0-stable",
+  "incomingStableCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+  "incomingStableFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
+  "incomingStableSourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4",
+  "title": "Major Closure & Release Assurance",
+  "closureDimensions": [
+    "full_v18_scope_traceability",
+    "architecture_source_quality_developer_proofing",
+    "data_utility_correlation_reuse",
+    "performance_capacity_responsiveness_stability",
+    "security_auth_session_authorization_abuse",
+    "ui_ux_content_responsive_accessibility_runtime_truth",
+    "adaptive_intelligence_governance",
+    "principal_engineer_acceptance",
+    "professional_trader_investor_acceptance",
+    "native_hosted_packaging_provenance_release_assurance"
+  ],
+  "adrGdiRequiredScenarios": [
+    "provider_failure_rate_limit_fallback_calls_avoided",
+    "stale_evidence_freshness_slo",
+    "source_disagreement",
+    "consumer_aware_blast_radius",
+    "postgres_pressure_slow_unavailable",
+    "sqlite_desktop_continuity",
+    "queue_saturation_bounded_backpressure",
+    "workload_priority_graceful_load_shedding",
+    "restart_warm_start_recovery",
+    "multi_user_multi_symbol_fanout_shared_reuse",
+    "background_job_pressure_duplicate_work_avoidance",
+    "recovery_hysteresis",
+    "unknown_degraded_abstain_truth",
+    "packaged_runtime_degradation_ux_diagnostics",
+    "truthful_supported_operating_limits"
+  ],
+  "releaseBlockers": [
+    "self_inflicted_overload_delays_decision_critical_current_evidence",
+    "self_inflicted_overload_stales_or_misstates_decision_critical_evidence",
+    "narrow_dependency_failure_unnecessarily_degrades_unrelated_capabilities",
+    "unbounded_queue_provider_or_database_pressure",
+    "misleading_ready_healthy_or_non_abstain_state_under_required_evidence_failure"
+  ],
+  "protectedContracts": [
+    "no_execution_boundary",
+    "deterministic_day_swing_long_formulas",
+    "canonical_smart_provider_router",
+    "gld_slv_uso_tradable_live_priority_exceptions",
+    "shared_symbol_intelligence_global_registry_reuse",
+    "desktop_sqlite_default_hosted_postgresql_shared_state",
+    "fail_closed_commercial_data_rights_readiness",
+    "no_silent_adaptive_production_self_modification"
+  ],
+  "exclusions": [
+    "no_mature_asbi",
+    "no_mature_tdti",
+    "no_mature_aodr",
+    "no_mature_adaptive_13f",
+    "no_unnecessary_v19_scope_pull_forward",
+    "no_unrelated_visual_redesign",
+    "no_execution_features"
+  ]
+}
