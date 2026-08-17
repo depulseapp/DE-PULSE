@@ -1,4 +1,5 @@
 name: DE.PULSE v18.5.1 | Issue 12 Materializer
+# Triggered only by its own implementation inputs; product-source commits do not loop.
 
 on:
   push:
