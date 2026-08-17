@@ -1,7 +1,7 @@
 DE.PULSE v18.5.1
 Build: v18.5.1-test-recovery-20260817
 Channel: TEST
-Stable baseline: v18.5.0
+Stable baseline: v17.5.1
 Previous Stable: v18.5.0
 Scope: Recovery patch: correct live-render interaction stability, tracked-symbol removal and desk-membership semantics, Research/header responsive hierarchy, first-run profile wording, TEST/HOSTED profile isolation and canonical release identity; restore cost-aware behavior-first CI qualification without changing deterministic Day/Swing/Long formulas, provider intelligence, persistence truth, the U.S. Equities Processing Boundary or the permanent No Execution Boundary
 Application bundle: De-Pulse.app
