@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CERTIFICATION-PLAN-1",
-  "version": "18.5.0",
+  "version": "18.5.1",
   "checks": [
     {
       "id": "g0_release_environment",

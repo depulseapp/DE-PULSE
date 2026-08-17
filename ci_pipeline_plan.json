@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CICD-PLAN-2",
-  "version": "18.5.0",
+  "version": "18.5.1",
   "policy": {
     "light_max_concurrency": 4,
     "medium_max_concurrency": 2,
@@ -8,8 +8,8 @@
     "evidence_outside_source": true,
     "fingerprint_keyed": true,
     "immutable_rc_for_heavy": true,
-    "release_channel": "STABLE",
-    "baseline": "v18.4.0 Stable",
+    "release_channel": "TEST",
+    "baseline": "v18.5.0 Stable",
     "adaptive_release_learning": true,
     "learning_registry": "release_learning_registry.json",
     "learning_rule": "Adapt owning G0-G16 gate; do not append a new gate for lessons.",
