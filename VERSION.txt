@@ -1,11 +1,11 @@
-DE.PULSE v18.3.0
-Build: v18.3.0-stable-postgresql-hosted-shared-state-20260815
-Channel: STABLE
+DE.PULSE v18.4.0
+Build: v18.4.0-test-security-commercial-readiness-20260816
+Channel: TEST
 Stable baseline: v17.5.1
-Previous Stable: v18.2.0
-Scope: PostgreSQL / Hosted Shared State: add PostgreSQL repository parity beneath the canonical PersistenceBackend, migrations and bounded transactions/concurrency, one shared canonical market/runtime state with preserved per-user workspace isolation, explicit hosted browser/server runtime with truthful liveness/readiness, DB/query/pool observability, warm-start/restart reliability and bounded persistence pressure; preserve SQLite/local desktop as the default, one shared provider/scanner/intelligence pipeline, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary; no v18.4 commercial/data-rights scope
-Application bundle: De-Pulse.app
+Previous Stable: v18.3.0
+Scope: Security / Commercial Readiness Hardening: harden secrets/security and the auth/session/CSRF/cookie perimeter, adversarial authorization and fresh re-authentication for high-impact mutations, explicit provider entitlement/data-rights metadata with zero routing influence, hosted quota/abuse safeguards and aggregate observability, and fail-closed commercial/redistribution/AI-use readiness unless provider-specific rights evidence is bound; preserve v18.3 PostgreSQL/shared canonical state, desktop SQLite default, Smart Provider Router v2 execution behavior, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary
+Application bundle: De-Pulse-v18.4.0-TEST.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
-Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)
+Runtime/config continuity: PersonalMarketTerminal-v18.4.0-TEST (preserves compatible prior Stable settings and API keys)
 Release learning: adaptive G0-G16 Release Learning Registry active · Build Process v2 pre-freeze qualification + canonical identity enabled
 Adaptive contracts: US Equities Processing Boundary · Data Utility/Evidence Value · Performance/Scalability · Data Health/Freshness/Cache · Testing · Intelligence/Learning preserved

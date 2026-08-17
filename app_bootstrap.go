@@ -17,6 +17,6 @@ var finnhubAPIBaseURL = "https://finnhub.io/api/v1"
 var finnhubMinRequestInterval = 1100 * time.Millisecond
 
 const appName = "DE.PULSE"
-const appVersion = "18.3.0"
-const releaseChannel = "STABLE"
-const buildID = "v18.3.0-stable-postgresql-hosted-shared-state-20260815"
+const appVersion = "18.4.0"
+const releaseChannel = "TEST"
+const buildID = "v18.4.0-test-security-commercial-readiness-20260816"
