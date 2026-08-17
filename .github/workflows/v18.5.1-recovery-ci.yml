@@ -18,7 +18,7 @@ env:
 
 jobs:
   g0-inventory:
-    name: G0/G1 · Baseline, conservation and freeze materialization
+    name: G0/G1 · Baseline, identity, conservation and freeze materialization
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -35,30 +35,50 @@ jobs:
           git cat-file -e 'v18.5.0-stable^{commit}'
           test "$(git rev-parse 'v18.5.0-stable^{commit}')" = '0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680'
           git merge-base --is-ancestor 'v18.5.0-stable^{commit}' HEAD
+      - name: Materialize canonical v18.5.1 TEST identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --sync
+          python3 release_identity.py --verify
       - name: Materialize complete G1 placement and freeze overlay
         run: python3 release/v18.5.1/g1_scope_materialize.py --apply
       - name: Validate materialized G1 scope
         run: python3 release/v18.5.1/g1_scope_freeze_gate.py
-      - name: Commit generated G1 authority if changed
+      - name: Commit generated identity and G1 authority if changed
         id: freeze
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'depulseapp'
           git config user.email 'de.pulse.app@gmail.com'
-          git add release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json release/v18.5.1/G1-SCOPE-FREEZE.json
+          git add \
+            VERSION.txt \
+            app_bootstrap.go \
+            renderer/renderer.js \
+            renderer/index.html \
+            certification_plan.json \
+            ci_pipeline_plan.json \
+            release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json \
+            release/v18.5.1/G1-SCOPE-FREEZE.json
           if ! git diff --cached --quiet; then
-            git commit -m 'governance: freeze v18.5.1 G1 recovery scope'
+            git commit -m 'governance: materialize v18.5.1 identity and G1 recovery scope'
             git push origin HEAD:v18.5.1-development
           fi
           echo "freeze_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      - name: Refresh G1 diagnostics on frozen source
-        run: python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
+      - name: Reverify canonical identity and frozen scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          python3 release/v18.5.1/g1_scope_freeze_gate.py --diagnose
       - uses: actions/upload-artifact@v7
         with:
-          name: De-Pulse-v18.5.1-G1-Freeze
+          name: De-Pulse-v18.5.1-G0-G1-Freeze
           path: |
             evidence/v18.5.1-G1-scope-diagnostics.json
+            release_identity.json
+            VERSION.txt
             release/v18.5.1/V18.5.1-G1-PLACEMENT-MAP.json
             release/v18.5.1/G1-SCOPE-FREEZE.json
           if-no-files-found: error
@@ -73,8 +93,12 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.g0-inventory.outputs.freeze_commit }}
-      - name: Enforce hash-bound 295-row conservation and frozen ten-ID slice
-        run: python3 release/v18.5.1/g1_scope_freeze_gate.py
+      - name: Enforce identity + hash-bound 295-row conservation and frozen ten-ID slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          python3 release/v18.5.1/g1_scope_freeze_gate.py
 
   fast-static:
     name: G2-G5 · Cheap static qualification
@@ -93,6 +117,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 release_identity.py --verify
           python3 adaptive_resume_gate.py
           python3 source_health_architecture_gate.py
           python3 data_utility_gate.py
