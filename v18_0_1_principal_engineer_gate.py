@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import json, sys
+import json, subprocess, sys
 R=Path(__file__).resolve().parent
+
+# Compatibility entry point: old immutable releases keep their own historical
+# file content via tags. On the active v18.5 branch, do not require obsolete
+# v18.0.1 TEST-profile packaging; delegate to the current Principal Engineer
+# closure contract instead.
+try:
+    current=json.loads((R/'release_identity.json').read_text()).get('version','')
+except Exception:
+    current=''
+if current == '18.5.0':
+    result=subprocess.run([sys.executable, str(R/'v18_5_principal_engineer_gate.py')], cwd=R)
+    sys.exit(result.returncode)
+
 review=R/'renderer/qa/v18.0.1-principal-engineer-review.md'
 required_files=[
  'identity_model.go','password_argon2id.go','http_auth.go','v18_test_profile.go',
