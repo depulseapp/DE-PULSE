@@ -254,9 +254,9 @@ These items cannot silently disappear.
 
 ---
 
-## 12A. v18.5.1 escaped-defect and implementation-reconciliation plan
+## 12A. v18.5.1 audit, containment and urgent-recovery entry plan
 
-v18.5.1 combines repository-archetype closure with mandatory recovery of escaped v18.5 behavior. The recovery work is not optional cleanup and may not inherit a previous PASS for an affected surface.
+v18.5.1 establishes the complete reconciliation control plane, prevents further silent loss and executes the safest urgent recovery work. It does not have to compress every remaining v18 item into one patch. Any item not selected for v18.5.1 must be explicitly assigned to the next evidence-selected v18.x slice with owner, reason, dependency and user impact; it cannot remain an unbound backlog note.
 
 ### Required recovery lanes
 
@@ -291,15 +291,15 @@ Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTE
 ### Gate binding
 
 - **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete inherited + v17 + v18 + 13-item utility remediation + conversational commitment + known-defect inventory.
-- **G1:** freeze repository-archetype work together with the six escaped-defect groups, all seven confirmed implementation-gap groups, the 13-item utility carry-forward and full v17/v18 reconciliation; exclude unrelated redesign.
+- **G1:** freeze the exact v18.5.1 assignments from the six escaped-defect groups, seven confirmed implementation-gap groups and 13-item utility carry-forward; explicitly place every unselected applicable row into a named/candidate next v18.x lane with owner and reason.
 - **G2–G3:** record canonical owner, blast radius, migration/state/API/UI impact, test IDs and package matrix for every row.
 - **G4:** implement fixes atomically with their tests; do not hide semantic changes inside structural moves.
 - **G5–G6:** pass source/unit and functional/integration coverage, including persistence, membership combinations and live-refresh behavior.
 - **G9:** run direct UI/UX acceptance across Day/Swing/Long and Research at desktop, tablet and narrow widths, including scroll/focus continuity.
-- **G10:** reconcile all 48 inherited requirements, all 20 v17 items, every v18 workstream/release entry, all 13 utility remediations, every accepted conversational commitment and defect to fresh current evidence; no blank, orphaned or unexplained rows.
+- **G10:** for a slice release, every item assigned to that slice is final and every remaining applicable row has explicit next-v18.x placement; for the major closure release, all applicable 48 inherited, 20 v17, v18 workstream/release, 13 remediation, conversation and defect rows have fresh final evidence.
 - **G11–G12:** freeze one immutable RC only after reconciliation is clean, then run full certification.
 - **G13–G14:** build and directly exercise macOS Apple Silicon and Windows x64 artifacts; affected workflows cannot inherit v18.5 package evidence.
-- **G15:** block promotion for any reopened, not-implemented or unexplained item unless an intentional supersession/placement is explicitly approved.
+- **G15:** block slice promotion for any unresolved current-slice item or unexplained/unowned remainder. Block major closure for any reopened, not-implemented or next-slice placement.
 - **G16:** record root cause, why previous gates missed it, the new regression/prevention control and the next-release handoff.
 
 ---
@@ -341,7 +341,20 @@ A work packet with no parent IDs cannot enter G4. A parent ID with no work packe
 | G15 | Promotion rechecks ID conservation and exact artifact provenance. |
 | G16 | Recurrences, root causes, prevention and remaining future placements are explicit. |
 
-### Hardened final-closure execution board
+### Release selection and feedback loop
+
+After every v18.x slice:
+
+1. ingest defects, misses, performance/SLO results, provider usefulness, data-rights/dependency changes and package findings;
+2. invalidate evidence affected by the completed changes;
+3. reprioritize the still-open ledger by user impact, recurrence, dependency readiness, risk, cost and learning value;
+4. select the smallest coherent next slice;
+5. freeze that slice at G1;
+6. do not name a release “final closure” until the major-closure readiness conditions are already true.
+
+Candidate version numbers such as v18.6 or v18.7 are capacity, not fixed content. Their exact scope is chosen adaptively at G0–G3.
+
+### Adaptive v18.x execution board
 
 | Wave | Primary work | Parallelizable lanes | Exit condition |
 |---|---|---|---|
@@ -383,7 +396,7 @@ All values must be achieved before G11:
 - protected Day/Swing/Long formula drift: **0**;
 - No Execution or U.S. Equities boundary violations: **0**.
 
-The detailed execution authority is `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+The detailed execution authority is `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
 
 ---
 
