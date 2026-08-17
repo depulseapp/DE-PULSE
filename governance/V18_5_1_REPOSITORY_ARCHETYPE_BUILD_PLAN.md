@@ -1,19 +1,19 @@
-# DE.PULSE v18.5.1 — 10/10 Repository Archetype + Escaped-Defect Closure Build Plan
+# DE.PULSE v18.5.1 — Hardened Final Closure + 10/10 Repository Archetype Build Plan
 
-**Release type:** repository/source-architecture closure patch plus escaped-defect recovery  
+**Release type:** final v17/v18 implementation closure, escaped-defect recovery and repository/source-architecture hardening  
 **Dependency:** starts only after v18.5.0 Stable promotion and native delivery  
 **Qualification standard:** closure-grade G0–G16; not a lightweight cleanup  
-**Product scope:** no new user-facing capability; approved-behavior defect correction only; no execution scope; no protected decision-formula changes.
+**Product scope:** implement and prove already-approved v17/v18 commitments only; no unapproved expansion, execution scope or protected decision-formula change.
 
 ## Mission
 
-Transform the current flat/mixed repository into a predictable, Maven-archetype-like structure so an engineer can navigate DE.PULSE by responsibility and package ownership rather than by scanning hundreds of root filenames.
+Close every applicable v17/v18 implementation commitment and escaped defect, then leave the source in a predictable, Maven-archetype-like structure that an engineer can navigate by responsibility and package ownership.
 
-This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`, closes the mandatory escaped-defect set, and is accepted only at **10/10**.
+Product closure is the primary acceptance boundary; repository restructuring is a controlled hardening lane and may not delay, hide or invalidate requirement closure. This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`, follows `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`, and is accepted only at **10/10**.
 
 ## Non-negotiable rules
 
-1. **Structure changes must not change product behavior.**
+1. **Structure changes must preserve behavior; explicit requirement-linked defect fixes and approved missing implementations are separately qualified.**
 2. Every moved/deleted file must have an inventoried disposition and dependency/path analysis.
 3. Do not export or duplicate Go symbols merely to make package moves compile.
 4. Preserve canonical shared state, fetch-once/calculate-once, Smart Provider Router v2, bounded work/backpressure, truthful ADR-GDI degradation, user isolation, US Equities Processing and No Execution boundaries.
