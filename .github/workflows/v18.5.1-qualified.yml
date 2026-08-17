@@ -1,0 +1,324 @@
+name: DE.PULSE v18.5.1 | G6-G10 | Qualified Recovery
+
+on:
+  workflow_run:
+    workflows: ["DE.PULSE v18.5.1 | Recovery Control Plane"]
+    types: [completed]
+    branches: [v18.5.1-development]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v18.5.1-qualified
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  NODE_VERSION: '24'
+  PYTHONDONTWRITEBYTECODE: '1'
+  SOURCE_REF: ${{ github.event.workflow_run.head_sha || 'v18.5.1-development' }}
+
+jobs:
+  g6-integration-medium:
+    name: G6 · Integration & MEDIUM · PostgreSQL / continuity
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: depulse_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d depulse_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DEPULSE_TEST_POSTGRES_URL: postgres://postgres:postgres@127.0.0.1:5432/depulse_test?sslmode=disable
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Bind release identity and G1 scope
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          python3 release/v18.5.1/g1_scope_freeze_gate.py
+      - name: Real PostgreSQL 17 integration · no skips
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          listing="$(go test -tags postgres -list '^TestV183Postgres' ./...)"
+          printf '%s\n' "$listing" | tee evidence/v18.5.1-G6-postgres-selectors.log
+          for test in \
+            TestV183PostgresRepositoryParityAndWarmStart \
+            TestV183PostgresConcurrentWorkspaceWritesStayBounded \
+            TestV183PostgresConcurrentMigrationInitializationIsSerialized \
+            TestV183PostgresSQLiteArchiveMigratesWithoutLineageLoss \
+            TestV183PostgresPoolContentionWaitsWithinConfiguredBound \
+            TestV183PostgresHealthCheckReflectsClosedDatabase; do
+            printf '%s\n' "$listing" | grep -q "^${test}$" || { echo "::error::Missing PostgreSQL selector ${test}"; exit 1; }
+          done
+          go test -tags postgres -count=1 -v -run '^TestV183Postgres' ./... 2>&1 | tee evidence/v18.5.1-G6-postgres.log
+          if grep -q -- '--- SKIP: TestV183Postgres' evidence/v18.5.1-G6-postgres.log; then
+            echo '::error::Mandatory PostgreSQL test skipped'
+            exit 1
+          fi
+      - name: Desktop / readiness / multi-user continuity
+        shell: bash
+        run: |
+          set -euo pipefail
+          selector='^(TestV183DesktopPersistenceRemainsLocalByDefault|TestV183PostgresSelectionFailsClosedWhenUnavailableOrUnconfigured|TestV183ReadinessRequiresCanonicalPersistenceAndIdentity|TestV183PersistenceOutageReadinessRecoversWithBoundedHysteresis|TestV181ProcessingUnionDeduplicatesAndRetainsOtherOwner|TestV181SymbolEventFanoutTargetsWorkspaceOwners|TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth|TestV1851TestProfileIdentityTruth|TestV1851TestProfileClonesV1850StableWithoutMutatingSource)$'
+          go test -count=1 -v -run "$selector" ./... 2>&1 | tee evidence/v18.5.1-G6-continuity.log
+          python3 v17_0_cross_platform_persistence_gate.py 2>&1 | tee -a evidence/v18.5.1-G6-continuity.log
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G6-Integration
+          path: evidence/v18.5.1-G6-*.log
+          if-no-files-found: error
+          retention-days: 365
+
+  g7-data-security-adaptive:
+    name: G7 · Data, Security & Adaptive Intelligence
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Release / architecture / data governance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          python3 release/v18.5.1/g1_scope_freeze_gate.py
+          python3 source_health_architecture_gate.py
+          python3 data_utility_gate.py
+          python3 functionality_utility_checkpoint_gate.py
+          python3 data_health_policy_gate.py
+          python3 adaptive_resume_gate.py
+          go vet ./...
+      - name: Security, authorization and rights family
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          listing="$(go test -list '^TestV184' ./...)"
+          printf '%s\n' "$listing" | tee evidence/v18.5.1-G7-v184-selectors.log
+          printf '%s\n' "$listing" | grep -q '^TestV184' || { echo '::error::No v18.4 security/commercial family found'; exit 1; }
+          go test -count=1 -v -run '^TestV184' ./... 2>&1 | tee evidence/v18.5.1-G7-security.log
+          python3 v18_4_reauth_ui_gate.py 2>&1 | tee -a evidence/v18.5.1-G7-security.log
+          python3 independent_adversarial_authorization_gate.py 2>&1 | tee -a evidence/v18.5.1-G7-security.log
+      - name: Adaptive production-governance boundary
+        run: go test -count=1 -v -run '^TestV1806RapidMoveGovernanceIsExplicitAndCannotAutoPromote$' ./...
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G7-Data-Security-Adaptive
+          path: evidence/v18.5.1-G7-*.log
+          if-no-files-found: error
+          retention-days: 365
+
+  g8-performance-stability:
+    name: G8 · Performance, Capacity & Stability · ADR-GDI
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_REF }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: ADR-GDI and v18.5.1 focused families
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          go test -count=1 -v -run '^TestV(170|171|172|173|174|1801|1806|181|183|1851)' ./... 2>&1 | tee evidence/v18.5.1-G8-adr-gdi.log
+      - name: Performance and stability gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 v16_11_performance_stability_gate.py 2>&1 | tee evidence/v18.5.1-G8-performance.log
+          python3 v16_10_performance_gate.py 2>&1 | tee -a evidence/v18.5.1-G8-performance.log
+      - name: Focused race / CGO-disabled fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -race -count=1 -run '^(TestV171|TestV172|TestV173|TestV1806|TestV181|TestV1851)' ./...
+          CGO_ENABLED=0 go test -count=1 -run '^(TestV170|TestV171|TestV172|TestV173|TestV174|TestV1801|TestV1806|TestV181|TestV1851)' ./...
+      - name: Randomized full-suite order x3
+        shell: bash
+        run: |
+          set -euo pipefail
+          for n in 1 2 3; do
+            echo "Randomized pass $n"
+            go test -shuffle=on -count=1 ./...
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G8-Performance-Stability
+          path: evidence/v18.5.1-G8-*.log
+          if-no-files-found: error
+          retention-days: 365
+
+  g9-cross-module-ui-ux:
+    name: G9 · Cross-Module UI/UX · Behavior-first runtime truth
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CHROME_BIN: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_REF }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Renderer / deterministic / role-aware acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          node --check renderer/renderer.js
+          node --check renderer/live-dom-reconcile.js
+          node --check renderer/watchlist-v18.5.1.js
+          node --check renderer/header-v18.5.1.js
+          node renderer_logic_test.js
+          node v18_0_5_renderer_test.js
+          node v18_2_renderer_test.js
+          node deterministic_equivalence_test.js
+          node trader_acceptance_test.js
+      - name: Provision lightweight hosted Chromium driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v google-chrome
+          sudo ln -sf /usr/bin/google-chrome /usr/bin/chromium
+          python -m pip install --disable-pip-version-check playwright
+      - name: Full HTTP / responsive / professional runtime acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            python3 http_workflow_test.py
+            python3 responsive_ui_sharded_gate.py
+            python3 professional_expert_gate.py
+            node v17_5_real_money_acceptance_test.js
+            python3 v17_5_trader_investor_gate.py
+            python3 release/v18.5.1/browser_live_render_test.py
+            python3 release/v18.5.1/browser_watchlist_membership_test.py
+            python3 release/v18.5.1/browser_auth_copy_test.py
+            python3 release/v18.5.1/browser_ui_hierarchy_test.py
+          } 2>&1 | tee evidence/v18.5.1-G9-runtime-ui.log
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v18.5.1-G9-UI-UX-Runtime
+          path: evidence/v18.5.1-G9-runtime-ui.log
+          if-no-files-found: error
+          retention-days: 365
+
+  g10-prefreeze:
+    name: G10 · Pre-Freeze Qualification · Exact source binding
+    needs: [g6-integration-medium, g7-data-security-adaptive, g8-performance-stability, g9-cross-module-ui-ux]
+    if: ${{ always() && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Require G6-G9 green
+        env:
+          G6: ${{ needs.g6-integration-medium.result }}
+          G7: ${{ needs.g7-data-security-adaptive.result }}
+          G8: ${{ needs.g8-performance-stability.result }}
+          G9: ${{ needs.g9-cross-module-ui-ux.result }}
+        run: |
+          set -euo pipefail
+          test "$G6" = success
+          test "$G7" = success
+          test "$G8" = success
+          test "$G9" = success
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Re-bind exact candidate identity / scope / source
+        id: bind
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          python3 release/v18.5.1/g1_scope_freeze_gate.py
+          SHA="$(git rev-parse HEAD)"
+          FP="$(python3 ci_pipeline.py --fingerprint)"
+          echo "source_sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "source_fp=$FP" >> "$GITHUB_OUTPUT"
+      - name: Checkout branch and persist G10 machine evidence
+        uses: actions/checkout@v7
+        with:
+          ref: v18.5.1-development
+          fetch-depth: 0
+      - name: Record qualified source
+        env:
+          SOURCE_SHA: ${{ steps.bind.outputs.source_sha }}
+          SOURCE_FP: ${{ steps.bind.outputs.source_fp }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          payload={
+            'schemaVersion':1,
+            'release':'v18.5.1',
+            'gate':'G10',
+            'state':'PASS',
+            'qualifiedSourceCommit':os.environ['SOURCE_SHA'],
+            'sourceFingerprint':os.environ['SOURCE_FP'],
+            'workflowRunId':os.environ['RUN_ID'],
+            'checks':{
+              'G6IntegrationMedium':True,
+              'G7DataSecurityAdaptive':True,
+              'G8PerformanceCapacityStability':True,
+              'G9CrossModuleUIUX':True
+            },
+            'generatedAt':datetime.now(timezone.utc).isoformat()
+          }
+          with open('evidence/v18.5.1-G10-PASS.json','w',encoding='utf-8') as fh:
+            json.dump(payload,fh,indent=2,sort_keys=True); fh.write('\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evidence/v18.5.1-G10-PASS.json
+          git commit -m 'ci: record v18.5.1 G10 qualification [skip ci]'
+          git push origin HEAD:v18.5.1-development
