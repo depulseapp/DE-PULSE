@@ -239,6 +239,29 @@ No G17+.
 
 ---
 
+## 12A. Adaptive CI decision and execution loop
+
+Every change passes this loop before hosted execution is selected:
+
+`classify change → map canonical owners/dependencies → invalidate affected evidence → add historical-risk lanes → enforce mandatory gates → estimate runtime/cost → execute cheap-first → classify result → reuse or rerun smallest lane → learn at G16`.
+
+Process rules:
+
+1. The planner is advisory for optimization and additive risk detection; deterministic policy owns mandatory lanes.
+2. Required CI runs whenever it supplies necessary independent, platform, security, database, browser, immutable-artifact or release evidence. Budget does not overrule quality.
+3. `ci-fast` blocks `ci-qualified`; G10/G12 blocks native G13/G14; G13/G14 blocks G15; G15 blocks no-rebuild publication and G16.
+4. Independent lanes run in bounded parallel. Failed or cancelled prerequisites prevent dependent jobs from starting.
+5. Each job consumes a fixed source/evidence fingerprint and emits requirement IDs, selected reason, result, failure class, runtime, runner OS, cache result, retry relationship and artifact provenance.
+6. Unchanged PASS evidence is reused only when its source, dependencies, gate semantics and platform requirements still match.
+7. A retry is forbidden until the failure is classified as product, test/gate, harness, infrastructure, expected no-op or superseded. Retry only the failed and invalidated dependents.
+8. Workflow and native-harness changes receive their own tests: action/workflow lint, UTF-8 reads, OS-aware permission assertions and readiness probes based on actual process/port signals rather than fragile log timing.
+9. CI cannot edit/push product source or create/delete temporary committed workflows. Release publication receives the only narrowly scoped write capability.
+10. G16 reviews cost per trustworthy evidence, not raw spend alone. The $5 amount is a soft anomaly signal; prevention and quality remain binding.
+
+`CI-ADAPTIVE-18.5.1-001` and `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` are mandatory inputs to G1, G3, G10 and G16.
+
+---
+
 ## 13. 10/10 Process acceptance
 
 The Build Process is 10/10 only when it proves:

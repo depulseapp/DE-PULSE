@@ -3,29 +3,92 @@
 Status: PERMANENT BUILD / DELIVERY GOVERNANCE
 
 ## Objective
-Use GitHub Actions only when hosted execution materially adds evidence that cannot be obtained more efficiently elsewhere. GitHub is the durable source/release archive, not the default compute engine for every development change.
+Optimize **cost per trustworthy, non-duplicative evidence**. GitHub Actions runs whenever hosted execution is required for quality, reproducibility, platform truth, security or immutable release evidence. Spend is optimized through selection and reuse; it is never capped by lowering assurance.
+
+Control ID: `CI-ADAPTIVE-18.5.1-001`.
 
 ## Default execution model
-1. Ordinary source edits, repository cleanup, documentation, inventory, dependency analysis, governance updates and release preparation MUST NOT trigger hosted GitHub Actions automatically.
-2. Development qualification should prefer local/tooling execution and the least-expensive suitable environment.
-3. Linux-hosted GitHub jobs are used only when remote reproducibility, service containers, immutable-artifact binding or independent CI evidence materially adds value.
-4. macOS Apple Silicon and Windows x64 GitHub-hosted runners are reserved for the exact **final release candidate / Stable deliverables** that require native packaging and actual-artifact runtime certification, or for a proven platform-specific defect that cannot be qualified elsewhere.
-5. A routine TEST-native pass MUST NOT be followed by an equivalent Stable-native pass when the Stable transition is behavior-preserving/identity-only and the final Stable source will receive fresh full certification. In that case, run native G13/G14/G15 once on the final Stable deliverables.
-6. A pre-Stable native pass is justified only when it resolves a material platform uncertainty that cannot safely wait for final Stable certification; it is not a default release step.
-7. Native runners MUST NOT run for documentation-only, governance-only, release-tooling-only or unrelated platform-neutral changes.
+1. Every change receives a machine-readable impact decision. Affected source/config/workflow changes run automatic cheap preflight; documentation/governance-only changes run only the relevant schema/link/gate checks.
+2. Development qualification may use local/tooling execution for fast feedback, but local success does not replace required independent CI evidence.
+3. Linux-hosted jobs provide remote reproducibility, service-container, browser, security, integration and immutable-artifact evidence when selected by impact or mandatory policy.
+4. macOS Apple Silicon and Windows x64 hosted runners are reserved for exact final-candidate packaging/runtime certification or an earlier proven platform-specific uncertainty.
+5. A routine TEST-native pass must not be duplicated by an equivalent Stable-native pass. Prefer one authoritative native pass on the exact final candidate unless source or relevant evidence changed.
+6. Native and other expensive jobs start only after their cheaper shared prerequisites pass.
+7. The planner may skip only fingerprint-proven unaffected lanes. Deterministic guardrails own all mandatory gates and may not be overridden by budget.
 
-## Trigger policy
-DE.PULSE release tooling commonly lives on non-default branches, so expensive release workflows use **dedicated intent-trigger files** rather than broad push triggers or default-branch-dependent manual dispatch.
+## Trigger and workflow policy
+Keep a small durable workflow surface:
 
-Required pattern:
-- each expensive workflow watches exactly one `.depulse-certification/triggers/<workflow>.json` path on its tooling branch;
-- ordinary commits cannot match that path and therefore cannot start the workflow;
-- a run is requested only by intentionally changing that trigger file with `run=true`, an incremented nonce, and any exact prerequisite run/commit/fingerprint values required by the workflow;
-- the workflow must validate the trigger contents before doing expensive work;
-- one trigger file controls one workflow only;
-- updating workflow/source/docs files alone must not start release certification.
+- `ci-fast.yml`: automatic cheap preflight with precise path/requirement classification;
+- `ci-qualified.yml`: reusable affected-area qualification invoked by the planner or `workflow_dispatch`;
+- `release.yml`: exact-candidate G10/G12/G13/G14/G15/G16 orchestration and no-rebuild publication.
 
-If an automatic development workflow is justified later, it MUST use narrow path filters, cheap-first prerequisite jobs, and cancellation/concurrency controls. Expensive jobs require explicit dependencies so they cannot start before cheaper prerequisite gates pass.
+Requirements:
+
+- use reusable workflows/composite actions and version/config inputs rather than copying TEST/Stable implementations;
+- use `workflow_dispatch` inputs for diagnostics; do not commit temporary/one-shot workflows or trigger-file churn merely to request a run;
+- CI must not edit, delete or push product/workflow source;
+- default token permissions are read-only; only isolated publication receives the narrow write permissions it requires;
+- use path filters, cheap-first dependencies, concurrency cancellation and bounded matrices;
+- workflow/config changes must trigger workflow lint and relevant harness tests;
+- stale historical/version-specific workflows must be retired from the active branch after inventory.
+
+## Adaptive evidence planner
+
+Planner input:
+
+`diff → canonical owners → dependency blast radius → invalidated evidence → historical failures → required lanes → estimated runtime/cost`
+
+Planner output must record:
+
+- requirement IDs and source/dependency fingerprints;
+- selected and skipped lanes with explicit reasons;
+- mandatory-policy overrides;
+- expected and actual runtime by runner OS;
+- estimated cost, cache hit/miss and artifact retention;
+- failure class, retry relationship and reused/invalidated evidence.
+
+The planner may add risk-responsive lanes and skip only unaffected lanes. It cannot waive release reconciliation, security, native, artifact-provenance or other mandatory evidence. Planner policy changes follow `SHADOW → VALIDATED → APPROVED → PRODUCTION`; no CI job silently self-modifies it.
+
+## Failure classification and retry
+
+Every non-PASS is classified before retry:
+
+- `PRODUCT_FAIL` — product behavior/source defect;
+- `GATE_TEST_FAIL` — incorrect or stale assertion/test contract;
+- `CI_HARNESS_FAIL` — orchestration, portability, readiness or artifact-handling defect;
+- `INFRA_FAIL` — runner/provider/network/service failure outside product truth;
+- `EXPECTED_NOOP` — correctly skipped/no-change result;
+- `SUPERSEDED` — obsolete evidence replaced by a newer authoritative run.
+
+Retry only the failed lane and dependent evidence invalidated by the correction. Preserve independent matching-fingerprint PASS evidence.
+
+## Portability, cache and retention controls
+
+- All text reads are explicitly UTF-8.
+- Permission assertions are OS-aware; POSIX mode expectations do not create false Windows failures.
+- Native readiness uses bounded process/port/health probes and captures diagnostics, not fragile timing against one log line.
+- Enable supported dependency caches and record cache effectiveness.
+- Development artifacts default to 3–7 days, failure diagnostics 7–14 days and RC evidence 30 days. Certified binaries, source, checksums and provenance remain in the immutable GitHub Release.
+- Optional controlled self-hosted runners may accelerate iterative native debugging; clean exact-candidate native release proof remains independently reproducible.
+
+## Budget policy
+
+The user budget—currently $5—is a **soft alert and learning signal**, not a hard quality ceiling. A separate higher emergency cap may stop runaway loops. A legitimate required CI lane must never be skipped, weakened or falsely marked PASS because of cost.
+
+When an alert is crossed, continue any already-authorized required evidence, diagnose duplicated work/cache misses/retries, replan the smallest remaining lane and record the decision for G16.
+
+## 2026-08-17 harness lessons
+
+Run `32009262146` demonstrated three CI-harness defects rather than product proof: default Windows text decoding rejected UTF-8 documents, a POSIX archive-permission assertion produced a Windows false failure, and native readiness timed out after the application had already logged a live local terminal. The later stable run `32049647088` completed G11, G12, macOS, Windows, G15 and G16.
+
+Permanent prevention:
+
+- test the harness on both target OS families before expensive certification;
+- distinguish harness/infra failure from product failure;
+- never discard successful native evidence merely because orchestration was inefficient;
+- treat the native lanes as necessary quality evidence and remove only duplicated orchestration.
+
 
 ## Evidence reuse
 Evidence may be reused only when all of the following are unchanged:

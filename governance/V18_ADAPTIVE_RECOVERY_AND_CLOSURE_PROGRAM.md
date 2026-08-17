@@ -59,14 +59,14 @@ A requirement cannot skip directly from planned or source-present to `FRESH_PASS
 
 ## 4. Frozen program inventory
 
-The authoritative ledger currently contains 282 rows:
+The authoritative ledger currently contains 285 rows:
 
 - 48 inherited approved requirements;
 - 20 frozen v17 major items;
 - 8 v18 major workstreams;
 - 169 v18.0–v18.5 release entries;
 - 13 orphaned functionality/utility remediations;
-- 8 recovered conversational commitments;
+- 9 recovered conversational commitments;
 - 7 confirmed implementation-miss groups;
 - 7 escaped-defect groups;
 - 4 approved future-only mature workstreams.
@@ -85,6 +85,7 @@ Mandatory outcomes:
 
 - establish and enforce the complete reconciliation ledger;
 - prevent new silent slicing or inherited PASS;
+- implement `CI-ADAPTIVE-18.5.1-001` so required CI evidence is selected adaptively, machine-recorded and never weakened by the $5 soft budget signal;
 - preserve every reported defect and missing implementation as a blocker or explicit next slice;
 - fix only urgent/high-confidence items that can be safely completed without hiding larger dependencies;
 - finish with an evidence-backed handoff to the next v18.x slice if open applicable work remains.
@@ -116,10 +117,10 @@ This is the recommended starting plan, subject to G0–G3 replanning after each 
 
 | Candidate | Primary objective | Candidate contents | Why this grouping |
 |---|---|---|---|
-| v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; hover/render stability; scroll/focus continuity; Research top-area; three-tier header/Market Pulse Ribbon; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
+| v18.5.1 | Trust recovery + anti-miss control plane | ledger/gate; version copy; symbol removal/highlighting; hover/render stability; scroll/focus continuity; Research top-area; three-tier header/Market Pulse Ribbon; adaptive CI control plane; exact next-slice placement | Direct user pain, repeated defects and high-confidence boundaries should be corrected first. |
 | v18.6 | Canonical utility/ownership recovery | shared Scanner/Radar acquisition; Session Intelligence Coordinator; Market Activity demotion; legacy route redirects; role-aware docs/impact manifest; dependency readiness register | These items share architecture, ownership, surface and governance dependencies. |
 | v18.7 | Provider intelligence + remaining consolidation | TradeInsight SHADOW/SECONDARY; remaining Dashboard/Market Intelligence/Desk/Catalyst/Maintenance remediation; provider-rights/readiness validation | External/provider work and larger consolidation need isolated rights, performance and regression qualification. |
-| v18.8+ | Major closure candidate or additional hardening | full 284-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
+| v18.8+ | Major closure candidate or additional hardening | full 285-row evidence convergence; cross-role/failure/load/native hardening; any newly revealed repair | Designate closure only if zero-gap readiness is already true; otherwise create another v18.x slice. |
 
 This table is not immutable scope. Each candidate becomes binding only when its own G1 closes. Findings may pull a dependency-compatible blocker earlier, split an unsafe slice or create another v18.x release.
 
@@ -141,10 +142,11 @@ If new evidence appears, the program creates another v18.x recovery/hardening sl
 ### Wave 0 — Reconstruct and freeze (G0–G3)
 
 - Freeze the exact v18.5.0 Stable source/package baseline and v18.5.1 branch.
-- Validate all 284 IDs, origins and counts.
+- Validate all 285 IDs, origins and counts.
 - Add code owner, build lane, dependency graph, regression ID and evidence matrix for every applicable row.
 - Record source/dependency/UI/state/persistence/security/package blast radius.
 - Reject any slice whose input/output ID count is not conserved.
+- Bind `CI-ADAPTIVE-18.5.1-001` to the ledger, count gate and G1/G3/G10/G16 evidence.
 - Do not create RC or Stable packaging.
 
 Exit: zero missing, duplicate, unowned or unplaced applicable IDs.
@@ -296,6 +298,24 @@ Use the CI/CD model inside G0–G16:
 
 Parallel execution may reduce elapsed time. It may never split requirement authority or create multiple competing closure ledgers.
 
+## 8A. Adaptive CI recovery workstream
+
+`CI-ADAPTIVE-18.5.1-001` is a recovered implementation/process commitment and part of the 285-row authority.
+
+Required recovery:
+
+1. Replace historical one-shot, self-editing and stale version-specific Actions with a minimal durable fast/qualified/release workflow architecture.
+2. Add an impact-and-risk planner that selects necessary lanes from changed ownership, dependencies, invalidated evidence and historical failures.
+3. Keep deterministic guardrails over all mandatory gates; budget and planner output cannot override quality.
+4. Make the current $5 amount a soft alert. Permit necessary CI and use a separate higher emergency cap only to stop runaway loops.
+5. Fix native harness portability: explicit UTF-8, OS-aware permission expectations, robust readiness probes and cross-platform harness tests.
+6. Enable caching, concurrency cancellation, bounded matrices, least-privilege permissions and evidence-based artifact retention.
+7. Record run reason, selected/skipped lanes, OS runtime/cost, cache result, failure class, retry and evidence reuse/invalidation.
+8. Run final macOS Apple Silicon and Windows x64 exact-candidate evidence after shared cheap prerequisites; publish without rebuilding.
+9. Feed G16 outcomes into a shadow/validated/approved planner proposal. No autonomous policy mutation.
+
+Candidate placement is v18.5.1 process hardening, subject to G1 assignment. If dependency analysis proves it unsafe to complete in the same slice, it must be `PLACED_NEXT_V18` with target release, owner, reason, dependency and user impact; it may not disappear.
+
 ## 9. Promotion blockers
 
 Stable promotion is forbidden with any:
@@ -315,7 +335,7 @@ Stable promotion is forbidden with any:
 
 The v18 major Final Closure is complete only when:
 
-1. all 282 rows are conserved and explicitly dispositioned;
+1. all 285 rows are conserved and explicitly dispositioned;
 2. every applicable v17/v18 item is `FRESH_PASS` or has a narrowly approved superseded/not-applicable disposition with proof;
 3. every confirmed miss and reopened defect is fixed and regression-proven;
 4. all 13 orphaned remediation records are closed;

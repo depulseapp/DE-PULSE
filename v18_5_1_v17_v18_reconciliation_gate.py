@@ -33,6 +33,7 @@ REQUIRED_BLOCKERS = {
     "NAV-18.5.1-001",
     "HOVER-18.5.1-001",
     "HEADER-18.5.1-001",
+    "CI-ADAPTIVE-18.5.1-001",
     "RESEARCH-v15.1.0-17-19-REOPENED",
     "VERSION-18.5.1-002",
     "IMPL-18-UTILITY-001",
@@ -244,9 +245,46 @@ def main() -> int:
     if silently_sliced:
         errors.append("audit assumption drift: v18.3 scope now contains remediation names; reclassify ledger")
 
+
+    release_entries = [
+        row
+        for scope in ledger.get("v18", {}).get("releaseScopes", [])
+        for row in scope.get("entries", [])
+    ]
+    tracked_rows = (
+        inherited_rows
+        + v17_rows
+        + workstreams
+        + release_entries
+        + carry_rows
+        + ledger.get("confirmedImplementationMisses", [])
+        + ledger.get("escapedDefects", [])
+        + ledger.get("conversationalCommitments", [])
+        + ledger.get("roadmapPlacedNotCurrentMisses", [])
+    )
+    tracked_ids = [row.get("id") for row in tracked_rows]
+    declared_total = ledger.get("baseline", {}).get("totalTrackedRows")
+    if declared_total != len(tracked_rows):
+        errors.append(
+            f"tracked-row conservation mismatch: baseline={declared_total}, actual={len(tracked_rows)}"
+        )
+    if any(not requirement_id for requirement_id in tracked_ids):
+        errors.append("tracked row lacks immutable ID")
+    duplicate_ids = sorted(
+        requirement_id
+        for requirement_id in set(tracked_ids)
+        if requirement_id and tracked_ids.count(requirement_id) > 1
+    )
+    if duplicate_ids:
+        errors.append("duplicate tracked requirement IDs: " + ", ".join(duplicate_ids))
+
     present_blockers = {
         row.get("id") for row in ledger.get("confirmedImplementationMisses", [])
-    } | {row.get("id") for row in ledger.get("escapedDefects", [])}
+    } | {
+        row.get("id") for row in ledger.get("escapedDefects", [])
+    } | {
+        row.get("id") for row in ledger.get("conversationalCommitments", [])
+    }
     missing_blockers = REQUIRED_BLOCKERS - present_blockers
     if missing_blockers:
         errors.append("known blocker missing from ledger: " + ", ".join(sorted(missing_blockers)))

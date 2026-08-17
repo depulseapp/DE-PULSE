@@ -165,6 +165,21 @@ Add/update:
 - path-reference gate preventing broken script/workflow links;
 - package ownership guidance / CODEOWNERS where useful.
 
+### 6. Adaptive GitHub Actions archetype
+
+Implement `CI-ADAPTIVE-18.5.1-001` as part of repository cleanup:
+
+- inventory all workflows and delete/retire obsolete v18.5 development, pre-freeze, discovery and one-shot variants from the active branch after dependency verification;
+- converge on durable `ci-fast.yml`, reusable `ci-qualified.yml` and `release.yml` ownership;
+- remove CI source-edit/self-delete/push patterns and use parameterized dispatch for diagnostics;
+- add action/workflow lint, PowerShell lint, UTF-8 and OS-aware native-harness tests;
+- enable supported dependency caching, bounded concurrency and evidence-based retention;
+- record planner decisions, failure classes, runtime/cost/cache telemetry and evidence fingerprints;
+- keep read-only permissions by default and isolate publication writes;
+- preserve final exact-candidate macOS Apple Silicon and Windows x64 proof regardless of budget.
+
+The $5 Actions budget is a soft telemetry threshold, not a completion criterion or quality ceiling.
+
 ## 10/10 Repository Archetype acceptance rubric
 
 **All ten dimensions must independently PASS. There is no averaging. A 9/10 result blocks v18.5.1 Stable.**
@@ -270,4 +285,5 @@ v18.5.1 is complete only when:
 12. every confirmed implementation-gap group is either completed now with required qualification or explicitly owned/placed by dependency and risk;
 13. all 13 orphaned remediation records have current-vs-next placement and required evidence defined;
 14. the full inherited + v17 + v18 ledger contains no unexplained, silently dropped, unowned or falsely inherited item;
-15. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
+15. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition;
+16. `CI-ADAPTIVE-18.5.1-001` is implemented: stale workflows are retired, mandatory evidence cannot be budget-skipped, and planner/failure/cost telemetry is enforced.

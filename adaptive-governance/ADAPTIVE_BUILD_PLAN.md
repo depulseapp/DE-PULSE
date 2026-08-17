@@ -274,6 +274,7 @@ v18.5.1 establishes the complete reconciliation control plane, prevents further 
 | J — dependency readiness | IMPL-17-DEPS-001 | Canonical dependency/readiness registry, User Action Required records, gate binding and role-safe operational proof. |
 | K — remaining utility carry-forward | Dashboard, Market Intelligence, three Desks, Catalyst Watch and Maintenance records | Fresh design/behavior/performance/package disposition; no registry-only or target-release-only closure. |
 | L — header information hierarchy | HEADER-18.5.1-001 | Preserve the existing ET/PT module unchanged; create a stable session-aware secondary Market Pulse Ribbon for market session, time, coverage and data control; move market instruments tertiary; place Sign Out in the Local Owner menu; prove responsive/accessibility/state truth with no animation-induced flicker or layout shift. |
+| M — adaptive CI control plane | CI-ADAPTIVE-18.5.1-001 | Durable fast/qualified/release workflows; impact-and-risk lane planner; deterministic mandatory-gate guardrails; cache/concurrency/retention/security hardening; native harness portability; failure taxonomy and per-run cost/evidence telemetry. The $5 budget is a soft alert, not a quality cap. |
 
 Each ledger row must contain:
 
@@ -359,7 +360,7 @@ Candidate version numbers such as v18.6 or v18.7 are capacity, not fixed content
 
 | Wave | Primary work | Parallelizable lanes | Exit condition |
 |---|---|---|---|
-| 0 | Freeze 284-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
+| 0 | Freeze 285-row scope and dependency graph | inventory, source mapping, test mapping, documentation impact | zero missing/duplicate/unowned/unplaced IDs |
 | 1 | Escaped user defects | copy/version; symbol semantics; hover/render stability; navigation; Research UI | focused tests + direct browser proof |
 | 2 | Confirmed implementation misses | TradeInsight; snapshot broker; session coordinator; routes/surfaces; docs; dependency register | canonical ownership + functional/security/performance proof |
 | 3 | Remaining utility remediations | Dashboard, Market Intelligence, Desks, Catalyst, Maintenance | all 13 remediation rows final |
@@ -385,7 +386,7 @@ Only unaffected evidence with a matching fingerprint may be reused.
 
 All values must be achieved before G11:
 
-- requirement identity conservation: **284/284**;
+- requirement identity conservation: **285/285**;
 - applicable rows with owner: **100%**;
 - applicable rows with regression mapping: **100%**;
 - applicable user workflows with browser evidence: **100%**;
@@ -398,6 +399,42 @@ All values must be achieved before G11:
 - No Execution or U.S. Equities boundary violations: **0**.
 
 The detailed execution authority is `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
+
+---
+
+## 12C. Adaptive CI build lane
+
+`CI-ADAPTIVE-18.5.1-001` is a ledger-backed work packet and cannot be sliced out as “process only.”
+
+### Planned implementation
+
+1. Retire obsolete or one-shot workflows from the active branch after inventory and replace them with a minimal durable set:
+   - `ci-fast.yml` for automatic cheap preflight on affected source/config/workflow changes;
+   - `ci-qualified.yml` as reusable impact-selected qualification;
+   - `release.yml` for G10/G12 through G16 orchestration and exact-candidate publication.
+2. Implement a deterministic planner input/output record containing changed paths, canonical owners, dependency fingerprint, affected requirements, prior failure classes, selected/skipped lanes with reasons, runtime/cost estimate and mandatory overrides.
+3. Run cheap preflight before expensive jobs: schema/gate tests, source checks, workflow lint, PowerShell lint, UTF-8/path/permission portability checks and native readiness-probe unit tests.
+4. Use dependency caches, concurrency cancellation and bounded matrices. Parallelize independent native lanes only after shared prerequisites are green; parallelism reduces elapsed time but does not itself reduce billed minutes.
+5. Keep workflow permissions read-only by default. Grant narrowly scoped write permission only to the final publication job.
+6. Prohibit committed diagnostic workflows, self-deleting workflows, CI-authored source commits and recursive push loops. Use parameterized `workflow_dispatch` inputs and reusable workflows for diagnostics.
+7. Retain development artifacts 3–7 days, failure diagnostics 7–14 days and RC evidence 30 days; place certified deliverables and provenance in the immutable GitHub Release.
+8. Treat optional controlled self-hosted runners as iterative native-debug support only. Final macOS Apple Silicon and Windows x64 proof remains clean, exact-candidate, independently reproducible evidence.
+9. Classify every failure before retry: `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP` or `SUPERSEDED`.
+10. Feed run telemetry into G16. Planner changes remain proposals until shadow replay, validation, approval and production promotion.
+
+### Build-lane acceptance
+
+The lane passes only when:
+
+- a source change cannot avoid required affected-area CI;
+- a documentation-only or proven-unaffected change cannot accidentally launch native certification;
+- mandatory gates cannot be skipped by the adaptive planner;
+- each selected/skipped lane has a machine-readable reason and evidence fingerprint;
+- the $5 signal can warn and replan but cannot reduce required evidence;
+- repeated harness/infra failures create prevention tests;
+- exact final-candidate G13/G14/G15 evidence remains mandatory and publication performs no rebuild.
+
+Detailed authority: `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`.
 
 ---
 

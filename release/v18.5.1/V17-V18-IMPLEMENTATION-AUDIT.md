@@ -41,11 +41,11 @@ The ledger inventories:
 | Frozen v17 major-scope items | 20 |
 | v18 major workstreams | 8 |
 | v18.0–v18.5 release items/clauses/contracts/scenarios | 169 |
-| Recovered conversational commitments requiring explicit reconciliation | 8 |
+| Recovered conversational commitments requiring explicit reconciliation | 9 |
 | Mandatory functionality/utility remediations targeted to v18.3 but never sliced into v18.3 scope | 13 |
 | Confirmed implementation misses | 7 |
 | Confirmed escaped defect groups | 7 |
-| Total requirement/defect rows under explicit disposition | 284 |
+| Total requirement/defect rows under explicit disposition | 285 |
 
 The counts are inventory counts, not PASS counts.
 
@@ -83,6 +83,7 @@ A static marker or test-name check can support traceability but can never close 
 13. `RESEARCH-v15.1.0-17-19-REOPENED` — Research ticker/freshness/top-area regression.
 14. `HOVER-18.5.1-001` — hovering a ticker/row causes repeated screen/table blinking during live updates; all ticker surfaces require stability proof.
 15. `HEADER-18.5.1-001` — approved three-tier header hierarchy and distinctive secondary Market Pulse Ribbon are not yet implemented; the existing ET/PT module must remain unchanged.
+16. `CI-ADAPTIVE-18.5.1-001` — adaptive GitHub Actions selection, durable workflows, failure taxonomy, native-harness portability and per-run cost/evidence telemetry are not yet implemented; the $5 budget must remain a soft signal rather than a quality ceiling.
 
 ## Orphaned v18.3 remediation set
 
@@ -101,6 +102,7 @@ Direct current-source failures are now bound for shared Scanner/Radar acquisitio
 - All 48 inherited approved product requirements, especially Research and desk/watchlist behavior.
 - All 20 v17 persistence/runtime/reliability items.
 - Every identity, Smart Router, multi-user, admin/presence, PostgreSQL, security/data-rights and closure clause from v18.
+- Adaptive CI control-plane implementation, including mandatory-lane guardrails, workflow cleanup, native-harness portability, failure classification and G16 telemetry.
 
 ## Status policy
 
@@ -135,11 +137,12 @@ A matching repeat report reopens the original row, increments recurrence and inv
 3. Reconcile all v18 workstreams and 169 release entries; implement TradeInsight through the canonical Smart Router.
 4. Close the 13 orphaned functionality/utility remediation rows with implementation or evidence-backed explicit disposition.
 5. Fix the seven escaped defect groups plus the confirmed documentation/dependency gaps and add behavioral regressions.
-6. At G0–G3, select the smallest coherent v18.5.1 scope and explicitly place every remainder into the next evidence-selected v18.x lane.
-7. Run the required cross-role, cross-desk, cross-viewport, restart/reload, failure/degradation and actual-package matrices for the frozen slice.
-8. Repeat reconciliation and adaptive reprioritization for v18.6+ until major-closure readiness is zero-gap.
-9. Freeze a major-closure RC only when no next-slice/open applicable row remains.
-10. Record at every G16 why prior gates missed each escape and which machine control prevents recurrence.
+6. Implement or explicitly next-place `CI-ADAPTIVE-18.5.1-001`; prove required CI cannot be silently omitted or budget-skipped.
+7. At G0–G3, select the smallest coherent v18.5.1 scope and explicitly place every remainder into the next evidence-selected v18.x lane.
+8. Run the required cross-role, cross-desk, cross-viewport, restart/reload, failure/degradation and actual-package matrices for the frozen slice.
+9. Repeat reconciliation and adaptive reprioritization for v18.6+ until major-closure readiness is zero-gap.
+10. Freeze a major-closure RC only when no next-slice/open applicable row remains.
+11. Record at every G16 why prior gates missed each escape and which machine control prevents recurrence.
 
 ## Non-miss future scope
 

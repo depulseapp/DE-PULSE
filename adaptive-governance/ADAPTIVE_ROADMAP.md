@@ -146,6 +146,7 @@ Classification: **CURRENT_RELEASE_BLOCKER**. v18.5.1 must close the following ev
 | IMPL-17-DEPS-001 | Add the External Dependency & Provider Readiness checkpoint and User Action Required register. | Registry/gate/UI-or-report evidence with ownership, blocker, action and proof fields. |
 | VERSION-18.5.1-002 | Eliminate or explicitly classify current obsolete release strings. | Source scan plus setup/runtime/TEST-profile packaged verification. |
 | UTILITY-v18.3-CARRY-FORWARD | Close all 13 mandatory remediation records that never entered v18.3 scope. | One current disposition and full evidence chain per row; no inherited registry-only PASS. |
+| CI-ADAPTIVE-18.5.1-001 | Establish an adaptive, evidence-efficient GitHub Actions control plane. CI runs whenever it adds required trustworthy evidence; the $5 budget is a soft signal, never a quality ceiling. | Machine-selected lanes plus deterministic mandatory gates, failure classification, cost/runtime/cache telemetry, durable workflows, native final-candidate proof and G16 learning. |
 
 A full v17 + v18 implementation-reconciliation ledger is also mandatory. It covers the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, all v18 major workstreams and v18.0–v18.5 release entries, all 13 orphaned functionality/utility remediations, plus accepted conversational commitments and defects. Each promise receives exactly one current disposition: `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. TradeInsight and six additional implementation-gap groups are already classified `NOT_IMPLEMENTED` and blocking.
 
@@ -192,7 +193,7 @@ v18.5.1 is the audit/containment and urgent-recovery entry slice. It is not auto
 
 The v18.x program executes these ordered waves across as many coherent minor releases as evidence requires:
 
-1. reconstruct/freeze the complete 284-row inventory;
+1. reconstruct/freeze the complete 285-row inventory;
 2. fix escaped user defects;
 3. implement confirmed misses;
 4. close all 13 orphaned utility remediations;
@@ -205,6 +206,27 @@ The v18.x program executes these ordered waves across as many coherent minor rel
 The final v18 closure version is chosen only when all applicable rows are ready for one immutable RC. If new evidence appears, another v18.x hardening slice is created rather than forcing closure. v19 planning may continue, but it cannot dilute or share the active v18 source/evidence lane before v18 G16.
 
 Canonical execution plan: `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
+
+---
+
+## 6C. Adaptive evidence-efficient CI roadmap control
+
+Classification: **CURRENT_RELEASE_PROCESS_HARDENING** and **FINAL-CLOSURE BLOCKER UNTIL IMPLEMENTED**.
+
+`CI-ADAPTIVE-18.5.1-001` permanently binds GitHub Actions to the requirement ledger and G0–G16. The objective is **cost per trustworthy, non-duplicative evidence**, not minimum spend.
+
+Roadmap invariants:
+
+1. Every change receives an impact decision: `diff → canonical owners → dependency blast radius → affected evidence → historical failures → required lanes → estimated runtime/cost`.
+2. The adaptive planner may add risk-responsive lanes and skip proven-unaffected lanes; deterministic guardrails still mandate security, reconciliation, immutable-RC, native-package and promotion evidence when applicable.
+3. The $5 Actions budget is an alert/learning threshold. It must not waive, defer or weaken required CI. A higher emergency cap may stop runaway automation, never a legitimate quality gate.
+4. Durable reusable workflows replace one-shot workflow commits, trigger-file churn and CI source-edit/push loops.
+5. Every run records why it ran, why lanes ran or were skipped, evidence fingerprints, runtime by OS, estimated cost, cache result, failure class, retry and evidence reuse/invalidation.
+6. Failures are classified as `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP` or `SUPERSEDED`; only the smallest affected/dependent lane reruns.
+7. macOS Apple Silicon and Windows x64 execute in parallel only after cheaper shared prerequisites pass and must certify the exact final candidate when native proof is required.
+8. G16 converts telemetry and recurrent failures into a versioned proposal that follows `SHADOW → VALIDATED → APPROVED → PRODUCTION`; the planner cannot silently self-modify mandatory quality policy.
+
+Canonical detailed contract: `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`.
 
 ---
 

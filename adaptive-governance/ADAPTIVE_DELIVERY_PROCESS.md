@@ -207,6 +207,25 @@ No issue silently disappears.
 
 ---
 
+## 12A. Adaptive CI delivery control
+
+Delivery uses the same evidence planner, but release guardrails are deterministic:
+
+- G10 and G12 must be green for the exact immutable candidate before native packaging starts.
+- macOS Apple Silicon and Windows x64 package/audit lanes run in parallel only after shared cheaper prerequisites pass.
+- Native evidence is never waived to meet a dollar target. The $5 budget is a soft alert and planning input, not a release gate.
+- A failed platform reruns only that platform and any evidence genuinely invalidated by the fix; the other platform PASS is preserved when fingerprints remain equivalent.
+- G15 binds hashes, provenance, source commit, requirement ledger and native audit outputs.
+- Publication uploads the already-certified artifacts and performs no rebuild.
+- Development diagnostics use short retention; RC evidence uses bounded retention; certified artifacts, checksums and provenance live in the GitHub Release.
+- Workflow permissions are read-only except for the isolated publication job.
+- Every release run records selected/skipped lanes, reason, runtime/cost estimate, cache result, failure class, evidence reuse and invalidation for G16 analysis.
+- G16 must distinguish quality-producing spend from avoidable orchestration, record the prevention action and hand the next release an updated—but not silently self-modified—planner proposal.
+
+Delivery cannot pass while `CI-ADAPTIVE-18.5.1-001` is unresolved for the applicable slice or while required native/exact-artifact evidence is missing.
+
+---
+
 ## 13. 10/10 Delivery acceptance
 
 Delivery Process is 10/10 only when:

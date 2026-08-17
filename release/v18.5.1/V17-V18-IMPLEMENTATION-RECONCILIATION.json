@@ -50,7 +50,7 @@
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
     "reconciliationBranch": "v18.5.1-development",
     "functionalityUtilityRemediations": 13,
-    "totalTrackedRows": 284
+    "totalTrackedRows": 285
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -3110,6 +3110,37 @@
         "market-session/coverage/data-state truth matrix",
         "no hover/live-update flicker or cumulative layout shift",
         "macOS Apple Silicon and Windows x64 actual-package proof"
+      ]
+    },
+    {
+      "id": "CI-ADAPTIVE-18.5.1-001",
+      "title": "Adaptive evidence-efficient GitHub Actions control plane",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "User-approved GitHub Actions quality/cost requirement 2026-08-17",
+        "governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md",
+        "GitHub Actions runs 32009262146 and 32049647088"
+      ],
+      "requirements": [
+        "Optimize cost per trustworthy non-duplicative evidence; do not minimize spend by lowering assurance.",
+        "Treat the current $5 budget as a soft alert and learning signal, not a hard CI or quality ceiling.",
+        "Run CI whenever impact, risk, independent reproducibility, security, platform or immutable release evidence requires it.",
+        "Select lanes from changed canonical owners, dependency blast radius, invalidated evidence and historical failures; deterministic guardrails own mandatory gates.",
+        "Use a minimal durable fast/qualified/release workflow architecture with reusable workflows and dispatch inputs; prohibit one-shot committed workflows and CI source-edit/push loops.",
+        "Use read-only permissions by default, dependency caching, concurrency cancellation, bounded matrices and evidence-based artifact retention.",
+        "Classify PRODUCT_FAIL, GATE_TEST_FAIL, CI_HARNESS_FAIL, INFRA_FAIL, EXPECTED_NOOP and SUPERSEDED before retrying only the smallest affected lane.",
+        "Make native harnesses portable with explicit UTF-8, OS-aware permissions and robust readiness probes.",
+        "Run final macOS Apple Silicon and Windows x64 exact-candidate proof when required and publish already-certified artifacts without rebuild.",
+        "Record run reason, selected/skipped lanes, runtime/cost/cache, failure class, retry, evidence reuse/invalidation and feed G16 through SHADOW to APPROVED planner evolution."
+      ],
+      "requiredClosure": [
+        "ledger-linked adaptive planner schema and deterministic mandatory-lane policy",
+        "durable ci-fast, ci-qualified and release workflow topology or evidence-backed equivalent",
+        "workflow security/lint/cache/concurrency/retention enforcement",
+        "cross-platform native-harness regression proving UTF-8, permission and readiness behavior",
+        "per-run selection/failure/cost/evidence telemetry consumed by G16",
+        "proof that budget alerts cannot skip required evidence",
+        "exact-candidate macOS Apple Silicon and Windows x64 package evidence when the slice reaches native certification"
       ]
     }
   ],
