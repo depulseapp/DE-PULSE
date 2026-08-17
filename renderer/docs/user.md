@@ -1,8 +1,8 @@
 # DE.PULSE — User documentation
 
-## v18.5.0 TEST — Major Closure & Release Assurance
+## v18.5.0 STABLE — Major Closure & Release Assurance
 
-v18.5 is a separate TEST Major Closure over **v18.4.0 STABLE**. It does not add unrelated trading features. It re-certifies the approved v18 platform and treats runtime overload / intermittent DATA DEGRADED / slow response as release-blocking if local load can delay or misstate decision-critical evidence. Readiness must stay conservative and truthful under provider, database, queue/backpressure, restart, multi-user/fan-out and recovery pressure. The permanent **No Execution** boundary is unchanged.
+v18.5 STABLE is the Major Closure over **v18.4.0 STABLE**. Final publication is gated by exact Stable G11-G15 certification, including required native artifacts. It does not add unrelated trading features. It re-certifies the approved v18 platform and treats runtime overload / intermittent DATA DEGRADED / slow response as release-blocking if local load can delay or misstate decision-critical evidence. Readiness must stay conservative and truthful under provider, database, queue/backpressure, restart, multi-user/fan-out and recovery pressure. The permanent **No Execution** boundary is unchanged.
 
 Release recovery is now explicit: final Stable runnable packages belong in the GitHub `depulseapp/DE-PULSE` Release for `v18.5.0-stable`, with source/SHA/certification evidence. Historical originals remain available under ChatGPT Library `/DE.PULSE/<version>/` while GitHub backfill is normalized.
 

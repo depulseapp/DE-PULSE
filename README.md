@@ -1,11 +1,11 @@
-# DE.PULSE v18.5.0 TEST — Major Closure & Release Assurance
+# DE.PULSE v18.5.0 STABLE — Major Closure & Release Assurance
 
-**Build:** `v18.5.0-test-major-closure-release-assurance-20260816`
-**Channel:** TEST
+**Build:** `v18.5.0-stable-major-closure-release-assurance-20260817`
+**Channel:** STABLE
 **Current Stable baseline:** v18.4.0
 **Major v18 provenance anchor:** v17.5.1
-**Application bundle:** `De-Pulse-v18.5.0-TEST.app`
-**Runtime/config:** `PersonalMarketTerminal-v18.5.0-TEST`
+**Application bundle:** `De-Pulse.app`
+**Runtime/config:** `PersonalMarketTerminal`
 
 v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature: it reconstructs and re-certifies the approved v18 system across architecture/source quality, data utility/correlation, security, adaptive governance, UI/UX, performance/capacity/stability, PostgreSQL/shared-state behavior, native runtime and release assurance. ADR-GDI/runtime overload is release-blocking when self-inflicted load can delay or misstate decision-critical evidence. Mature ASBI/TDTI/AODR/adaptive-13F work remains later roadmap scope.
 

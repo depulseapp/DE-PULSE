@@ -1,6 +1,6 @@
 # DE.PULSE — Developer documentation
 
-## v18.5.0 TEST — Major Closure / ADR-GDI architecture
+## v18.5.0 STABLE — Major Closure / ADR-GDI architecture
 
 v18.5 reconstructs the full approved v18 architecture rather than adding a parallel owner. ADR-GDI qualification covers provider failure/rate-limit/fallback, stale evidence, PostgreSQL pressure/unavailability, bounded queue/backpressure/load shedding, warm restart, multi-user/multi-symbol fan-out, background-job pressure, duplicate-work avoidance, degradation blast radius, recovery hysteresis, packaged degradation UX and truthful UNKNOWN/ABSTAIN/readiness behavior. The existing Provider Router, persistence owners, canonical propagation and protected deterministic formulas remain authoritative.
 

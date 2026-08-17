@@ -3,10 +3,10 @@
     {
       "version": "18.5.0",
       "date": "2026-08-16",
-      "status": "TEST",
-      "summary": "TEST v18 Major Closure & Release Assurance: fresh G0-G16 reconstruction of approved v18 scope, ADR-GDI/runtime-overload qualification, architecture/source/data/security/adaptive/performance/UI/native/release evidence, with permanent GitHub artifact archive/recovery contract; no unrelated product scope.",
+      "status": "STABLE",
+      "summary": "STABLE v18 Major Closure & Release Assurance: fresh G0-G16 reconstruction of approved v18 scope, ADR-GDI/runtime-overload qualification, architecture/source/data/security/adaptive/performance/UI/native/release evidence, with permanent GitHub artifact archive/recovery contract; no unrelated product scope.",
       "file": "v18.5.0.txt",
-      "buildId": "v18.5.0-test-major-closure-release-assurance-20260816",
+      "buildId": "v18.5.0-stable-major-closure-release-assurance-20260817",
       "checkpoint": "release/v18.5.0/G1-IMMUTABLE-SCOPE.md"
     },
     {
