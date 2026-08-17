@@ -266,13 +266,14 @@ v18.5.1 combines repository-archetype closure with mandatory recovery of escaped
 | B — symbol/watchlist semantics | SYMBOL-18.5.1-001 and SYMBOL-18.5.1-002 across Day/Swing/Long | Explicit row-X contract, final-membership behavior, state/persistence tests and current-desk visual-state evidence. |
 | C — interaction continuity | NAV-18.5.1-001 | Root-cause removal for live/SSE rerender jumps, scroll/focus preservation tests and dwell/reload retest. |
 | D — Research requirement recovery | Reopened v15.1.0 approved items 17–19 | Responsive layout, truthful labels/freshness/actions/disabled states, missing-evidence recovery and requirement-linked tests. |
-| E — full promise reconciliation | Every approved v18 implementation and accepted defect, including Smart Provider Router / TradeInsight placement | Durable implementation ledger, unexplained-gap list, owners, decisions, regression IDs and actual-package evidence. |
+| E — full promise reconciliation | 48 inherited requirements, 20 v17 items, all v18 workstreams/release entries, conversational commitments and accepted defects | Durable implementation ledger, unexplained-gap list, owners, decisions, regression IDs and actual-package evidence. |
+| F — confirmed orphan recovery | IMPL-18-TRADEINSIGHT-001 | Canonical Smart Router SHADOW adapter, configuration/entitlement, rights/provenance controls, tests and actual-package evidence. |
 
 Each ledger row must contain:
 
 `origin ID/source → user-visible promise → current source owner → current observed behavior → disposition → defect/implementation owner → fix or approved placement → regression test ID → browser evidence → macOS package evidence → Windows package evidence → closure approver`.
 
-Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED` and `NOT_APPLICABLE`. An inherited or historical PASS is not a current disposition.
+Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` and explicitly `ROADMAP_PLACED_FUTURE`. An inherited or historical PASS is not a current disposition.
 
 ### Recurrence and duplicate handling
 
@@ -284,13 +285,13 @@ Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTE
 
 ### Gate binding
 
-- **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete known-defect plus implementation-promise inventory.
-- **G1:** freeze repository-archetype work together with the five recovery items and full reconciliation; exclude unrelated redesign.
+- **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete inherited + v17 + v18 + conversational commitment + known-defect inventory.
+- **G1:** freeze repository-archetype work together with the five escaped-defect groups, TradeInsight implementation recovery and full v17/v18 reconciliation; exclude unrelated redesign.
 - **G2–G3:** record canonical owner, blast radius, migration/state/API/UI impact, test IDs and package matrix for every row.
 - **G4:** implement fixes atomically with their tests; do not hide semantic changes inside structural moves.
 - **G5–G6:** pass source/unit and functional/integration coverage, including persistence, membership combinations and live-refresh behavior.
 - **G9:** run direct UI/UX acceptance across Day/Swing/Long and Research at desktop, tablet and narrow widths, including scroll/focus continuity.
-- **G10:** reconcile every approved v18 promise and accepted defect to fresh or valid equivalence-bound evidence; no blank/unexplained rows.
+- **G10:** reconcile all 48 inherited requirements, all 20 v17 items, every v18 workstream/release entry, accepted conversational commitment and defect to fresh current evidence; no blank, orphaned or unexplained rows.
 - **G11–G12:** freeze one immutable RC only after reconciliation is clean, then run full certification.
 - **G13–G14:** build and directly exercise macOS Apple Silicon and Windows x64 artifacts; affected workflows cannot inherit v18.5 package evidence.
 - **G15:** block promotion for any reopened, not-implemented or unexplained item unless an intentional supersession/placement is explicitly approved.
