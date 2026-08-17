@@ -50,7 +50,7 @@
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
     "reconciliationBranch": "v18.5.1-development",
     "functionalityUtilityRemediations": 13,
-    "totalTrackedRows": 283
+    "totalTrackedRows": 284
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -3084,6 +3084,33 @@
       "id": "CONVO-V18-002",
       "title": "Full actual-artifact Mac/Windows evidence for each affected workflow",
       "status": "REVALIDATION_REQUIRED_HIGH"
+    },
+    {
+      "id": "HEADER-18.5.1-001",
+      "title": "Three-tier application header with a distinctive secondary Market Pulse Ribbon",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "User-approved header hierarchy refinement 2026-08-17",
+        "screenshot 3a8325f8-2931-4389-9054-1029ca3f08f2.png",
+        "screenshot 7ddbb6a0-da82-4516-81df-5d9a87078c06.png"
+      ],
+      "requirements": [
+        "Preserve the existing ET/PT time module exactly in density, dual-column structure, date, seconds and visual size; do not compact it.",
+        "Primary header contains brand/navigation/active context and a compact Local Owner account menu; Sign Out moves inside that menu.",
+        "Secondary header becomes a distinctive Market Pulse Ribbon containing market-session state, the unchanged ET/PT module, coverage state and data state/control.",
+        "Use stable session-aware color, layered depth, subtle gradient/border and clear grouping; no continuous animation, blinking, opacity cycling or layout movement.",
+        "Show running data state neutrally as Data Live with a Pause action; reserve red for actually stopped/error states and require confirmation for stopping.",
+        "Move market instruments to a visually quieter tertiary strip with responsive overflow/collapse behavior.",
+        "Preserve keyboard navigation, focus visibility, screen-reader labels, role-aware controls and truthful live/degraded/stopped states."
+      ],
+      "requiredClosure": [
+        "approved desktop/tablet/narrow design and implementation evidence",
+        "unchanged ET/PT module visual-regression assertion",
+        "primary/secondary/tertiary hierarchy and responsive overflow tests",
+        "market-session/coverage/data-state truth matrix",
+        "no hover/live-update flicker or cumulative layout shift",
+        "macOS Apple Silicon and Windows x64 actual-package proof"
+      ]
     }
   ],
   "roadmapPlacedNotCurrentMisses": [
