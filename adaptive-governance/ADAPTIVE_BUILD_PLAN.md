@@ -262,12 +262,17 @@ v18.5.1 combines repository-archetype closure with mandatory recovery of escaped
 
 | Lane | Scope | Required outputs |
 |---|---|---|
-| A — release/profile truth | COPY-18.5.1-001 | Version-aware copy, fresh-install/upgrade matrix and packaged proof. |
+| A — release/profile truth | COPY-18.5.1-001 and VERSION-18.5.1-002 | Version-aware/release-neutral copy, explicit migration-identifier classification, fresh-install/upgrade/TEST-profile matrix and packaged proof. |
 | B — symbol/watchlist semantics | SYMBOL-18.5.1-001 and SYMBOL-18.5.1-002 across Day/Swing/Long | Explicit row-X contract, final-membership behavior, state/persistence tests and current-desk visual-state evidence. |
 | C — interaction continuity | NAV-18.5.1-001 | Root-cause removal for live/SSE rerender jumps, scroll/focus preservation tests and dwell/reload retest. |
 | D — Research requirement recovery | Reopened v15.1.0 approved items 17–19 | Responsive layout, truthful labels/freshness/actions/disabled states, missing-evidence recovery and requirement-linked tests. |
-| E — full promise reconciliation | 48 inherited requirements, 20 v17 items, all v18 workstreams/release entries, conversational commitments and accepted defects | Durable implementation ledger, unexplained-gap list, owners, decisions, regression IDs and actual-package evidence. |
+| E — full promise reconciliation | 48 inherited requirements, 20 v17 items, all v18 workstreams/release entries, 13 orphaned utility remediations, conversational commitments and accepted defects | Durable implementation ledger, unexplained-gap list, owners, decisions, regression IDs and actual-package evidence. |
 | F — confirmed orphan recovery | IMPL-18-TRADEINSIGHT-001 | Canonical Smart Router SHADOW adapter, configuration/entitlement, rights/provenance controls, tests and actual-package evidence. |
+| G — acquisition/coordination remediation | IMPL-18-UTILITY-001 and IMPL-18-UTILITY-002 | Shared snapshot broker/cache, one Session Intelligence Coordinator, coalescing/provider-budget/restart/catch-up tests and package proof. |
+| H — surface/route remediation | IMPL-18-UTILITY-003 and IMPL-18-UTILITY-004 | Minimal Discovery hierarchy, canonical evidence homes, safe redirects/deep links and responsive package proof. |
+| I — documentation governance | IMPL-18-DOC-001 | Server-authoritative audience policy, role-composed UI/direct paths, Documentation Impact Manifest and cross-role security/package tests. |
+| J — dependency readiness | IMPL-17-DEPS-001 | Canonical dependency/readiness registry, User Action Required records, gate binding and role-safe operational proof. |
+| K — remaining utility carry-forward | Dashboard, Market Intelligence, three Desks, Catalyst Watch and Maintenance records | Fresh design/behavior/performance/package disposition; no registry-only or target-release-only closure. |
 
 Each ledger row must contain:
 
@@ -285,13 +290,13 @@ Allowed dispositions are only `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTE
 
 ### Gate binding
 
-- **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete inherited + v17 + v18 + conversational commitment + known-defect inventory.
-- **G1:** freeze repository-archetype work together with the five escaped-defect groups, TradeInsight implementation recovery and full v17/v18 reconciliation; exclude unrelated redesign.
+- **G0:** freeze the exact v18.5.0 Stable/package baseline and the complete inherited + v17 + v18 + 13-item utility remediation + conversational commitment + known-defect inventory.
+- **G1:** freeze repository-archetype work together with the six escaped-defect groups, all seven confirmed implementation-gap groups, the 13-item utility carry-forward and full v17/v18 reconciliation; exclude unrelated redesign.
 - **G2–G3:** record canonical owner, blast radius, migration/state/API/UI impact, test IDs and package matrix for every row.
 - **G4:** implement fixes atomically with their tests; do not hide semantic changes inside structural moves.
 - **G5–G6:** pass source/unit and functional/integration coverage, including persistence, membership combinations and live-refresh behavior.
 - **G9:** run direct UI/UX acceptance across Day/Swing/Long and Research at desktop, tablet and narrow widths, including scroll/focus continuity.
-- **G10:** reconcile all 48 inherited requirements, all 20 v17 items, every v18 workstream/release entry, accepted conversational commitment and defect to fresh current evidence; no blank, orphaned or unexplained rows.
+- **G10:** reconcile all 48 inherited requirements, all 20 v17 items, every v18 workstream/release entry, all 13 utility remediations, every accepted conversational commitment and defect to fresh current evidence; no blank, orphaned or unexplained rows.
 - **G11–G12:** freeze one immutable RC only after reconciliation is clean, then run full certification.
 - **G13–G14:** build and directly exercise macOS Apple Silicon and Windows x64 artifacts; affected workflows cannot inherit v18.5 package evidence.
 - **G15:** block promotion for any reopened, not-implemented or unexplained item unless an intentional supersession/placement is explicitly approved.
