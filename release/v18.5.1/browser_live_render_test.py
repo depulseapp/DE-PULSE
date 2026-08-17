@@ -5,6 +5,7 @@ This is intentionally a real Chromium test. It verifies the user-visible contrac
 that quote ticks update data without replacing/reordering the row under active
 interaction, while non-quote structural events retain the full-render path.
 """
+import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -84,7 +85,12 @@ function scheduleLiveRender(){
 def main() -> None:
     assert LIVE_RECONCILER.is_file(), f"missing reconciler: {LIVE_RECONCILER}"
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        launch_kwargs = {"headless": True}
+        chrome_bin = os.environ.get("CHROME_BIN", "").strip()
+        if chrome_bin:
+            assert Path(chrome_bin).is_file(), f"CHROME_BIN does not exist: {chrome_bin}"
+            launch_kwargs["executable_path"] = chrome_bin
+        browser = p.chromium.launch(**launch_kwargs)
         page_obj = browser.new_page(viewport={"width": 1000, "height": 700})
         page_obj.set_content(INITIAL_HTML)
         page_obj.add_script_tag(content=HARNESS)
@@ -98,7 +104,10 @@ def main() -> None:
               window.__nextHtml = next;
               window.__aaplNode = document.querySelector('[data-live-key="row:AAPL"]');
               const main = document.getElementById('main');
-              main.scrollTop = 125;
+              // Stay deliberately away from the maximum-scroll boundary. At the
+              // boundary Chromium may clamp by one CSS pixel after style/text
+              // reconciliation even though the viewport anchor is unchanged.
+              main.scrollTop = 80;
               const note = document.getElementById('note');
               note.focus();
               note.setSelectionRange(1, 4);
