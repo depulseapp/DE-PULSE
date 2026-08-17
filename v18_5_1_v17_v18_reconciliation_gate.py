@@ -17,6 +17,7 @@ BLOCKING = {
     "REVALIDATION_REQUIRED_HIGH",
     "REOPENED",
     "NOT_IMPLEMENTED_CONFIRMED",
+    "PLACED_NEXT_V18",
 }
 FINAL = {
     "FRESH_PASS",
@@ -123,12 +124,25 @@ def collect_status_rows(value: object, path: str = "ledger") -> list[tuple[str, 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "--slice-release",
+        action="store_true",
+        help="enforce the current evidence-selected v18.x slice; remaining work must have complete next-slice placement",
+    )
+    mode_group.add_argument(
+        "--major-closure",
+        action="store_true",
+        help="enforce zero-gap final v18 major closure",
+    )
+    mode_group.add_argument(
         "--release",
         action="store_true",
-        help="enforce final v18.5.1 closure; default validates complete inventory only",
+        help="backward-compatible alias for --major-closure",
     )
     args = parser.parse_args()
+    slice_mode = args.slice_release
+    major_mode = args.major_closure or args.release
 
     errors: list[str] = []
     ledger = load(LEDGER)
@@ -137,6 +151,18 @@ def main() -> int:
         errors.append("ledger schema drift")
     if ledger.get("release") != "v18.5.1":
         errors.append("ledger release drift")
+
+    train = ledger.get("adaptiveReleaseTrain", {})
+    current_slice = train.get("currentSlice", {})
+    if train.get("model") != "EVIDENCE_SELECTED_V18_X":
+        errors.append("adaptive release-train model missing or drifted")
+    if current_slice.get("release") != ledger.get("release"):
+        errors.append("current adaptive slice does not match ledger release")
+    if current_slice.get("finalMajorClosure") is not False:
+        errors.append("v18.5.1 must not be predeclared final major closure")
+    if train.get("finalClosureDesignation") != "EVIDENCE_SELECTED_ONLY_AFTER_ZERO_GAP_READINESS":
+        errors.append("final closure designation policy drift")
+
 
     inherited = load(ROOT / "renderer" / "qa" / "v15.1.2-approved-scope.json")
     inherited_rows = ledger.get("inheritedApprovedScope", {}).get("items", [])
@@ -230,23 +256,67 @@ def main() -> int:
             errors.append(f"unsupported status {status!r} at {path}")
 
     blockers = [(path, status, row) for path, status, row in status_rows if status in BLOCKING]
+    id_rows = {
+        row.get("id"): (path, status, row)
+        for path, status, row in status_rows
+        if row.get("id")
+    }
 
-    if args.release:
+    def validate_fresh_pass(path: str, row: dict) -> None:
+        evidence = row.get("closureEvidence")
+        if not isinstance(evidence, dict):
+            errors.append(f"FRESH_PASS lacks closureEvidence at {path}")
+            return
+        for key in ("sourceCommit", "regression", "macOS", "windows"):
+            if not evidence.get(key):
+                errors.append(f"FRESH_PASS lacks {key} evidence at {path}")
+
+    if slice_mode:
+        if current_slice.get("planningState") != "FROZEN":
+            errors.append("current slice G1 is not FROZEN")
+        assigned = current_slice.get("assignedIds", [])
+        if not assigned:
+            errors.append("current slice has no assigned requirement IDs")
+        if len(assigned) != len(set(assigned)):
+            errors.append("current slice contains duplicate requirement IDs")
+        for requirement_id in assigned:
+            hit = id_rows.get(requirement_id)
+            if not hit:
+                errors.append(f"current-slice ID missing from ledger: {requirement_id}")
+                continue
+            row_path, row_status, row = hit
+            if row_status not in FINAL:
+                errors.append(f"current-slice item is not final: {requirement_id}={row_status}")
+            if row_status == "FRESH_PASS":
+                validate_fresh_pass(row_path, row)
+
+        assigned_set = set(assigned)
+        for row_path, row_status, row in status_rows:
+            requirement_id = row.get("id")
+            if row_path == "ledger" or not requirement_id or requirement_id in assigned_set:
+                continue
+            if row_status == "PLACED_NEXT_V18":
+                for key in ("targetRelease", "owner", "reason", "userImpact"):
+                    if not row.get(key):
+                        errors.append(f"next-slice placement lacks {key}: {requirement_id}")
+            elif row_status not in FINAL:
+                errors.append(
+                    f"unassigned applicable row lacks final/next-slice disposition: "
+                    f"{requirement_id}={row_status}"
+                )
+            elif row_status == "FRESH_PASS":
+                validate_fresh_pass(row_path, row)
+
+    if major_mode:
         if ledger.get("status") != "CLOSED":
-            errors.append("release ledger is not CLOSED")
+            errors.append("major-closure ledger is not CLOSED")
         if blockers:
-            errors.append(f"{len(blockers)} blocking/revalidation rows remain")
-        for path, status, row in status_rows:
-            if status == "FRESH_PASS":
-                evidence = row.get("closureEvidence")
-                if not isinstance(evidence, dict):
-                    errors.append(f"FRESH_PASS lacks closureEvidence at {path}")
-                    continue
-                for key in ("sourceCommit", "regression", "macOS", "windows"):
-                    if not evidence.get(key):
-                        errors.append(f"FRESH_PASS lacks {key} evidence at {path}")
-            elif status not in FINAL and path != "ledger":
-                errors.append(f"non-final disposition at {path}: {status}")
+            errors.append(f"{len(blockers)} blocking/revalidation/next-slice rows remain")
+        for row_path, row_status, row in status_rows:
+            if row_status == "FRESH_PASS":
+                validate_fresh_pass(row_path, row)
+            elif row_status not in FINAL and row_path != "ledger":
+                errors.append(f"non-final major-closure disposition at {row_path}: {row_status}")
 
     if errors:
         print("v17/v18 implementation reconciliation gate: FAIL")
@@ -254,7 +324,7 @@ def main() -> int:
             print(f" - {error}")
         return 2
 
-    mode = "release" if args.release else "inventory"
+    mode = "slice-release" if slice_mode else "major-closure" if major_mode else "inventory"
     print(
         "v17/v18 implementation reconciliation gate: PASS"
         f" · mode={mode}"
@@ -263,7 +333,9 @@ def main() -> int:
         f" · v18-workstreams={len(workstreams)}"
         f" · v18-release-entries={sum(len(x.get('entries', [])) for x in ledger_scopes.values())}"
         f" · functionality-remediation={len(carry_rows)}"
-        f" · open-blocking/revalidation={len(blockers)}"
+        f" · current-slice={current_slice.get('release', 'unknown')}"
+        f" · slice-planning={current_slice.get('planningState', 'unknown')}"
+        f" · open-blocking/revalidation/next={len(blockers)}"
     )
     return 0
 
