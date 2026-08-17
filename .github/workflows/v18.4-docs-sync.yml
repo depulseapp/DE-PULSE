@@ -27,6 +27,7 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import json
 
           version='18.4.0'
           build='v18.4.0-test-security-commercial-readiness-20260816'
@@ -35,14 +36,13 @@ jobs:
           old=p.read_text()
           marker='# DE.PULSE v18.4.0 TEST — Security / Commercial Readiness Hardening'
           if not old.startswith(marker):
-              prior=old
-              first, rest=prior.split('\n',1)
+              first, rest=old.split('\n',1)
               prior='## Immediate Stable predecessor — v18.3.0 STABLE — PostgreSQL / Hosted Shared State\n'+rest
               current=f'''{marker}\n\n**Build:** `{build}`  \n**Channel:** TEST  \n**Current Stable baseline:** v18.3.0  \n**Major v18 provenance anchor:** v17.5.1  \n**Patch predecessor:** v18.3.0 STABLE  \n**Application bundle:** `De-Pulse-v18.4.0-TEST.app`  \n**Runtime/config:** `PersonalMarketTerminal-v18.4.0-TEST`\n\nv18.4 TEST hardens the existing secure multi-user/hosted platform without changing market-scoring formulas or provider routing authority. It adds fresh password re-authentication for high-impact mutations, hosted per-user request quotas with aggregate diagnostics, and explicit provider data-rights/commercial-readiness metadata. Commercial, redistribution and AI-use readiness remain fail-closed unless provider-specific evidence is bound; a working API key never implies legal/commercial approval.\n\nDesktop remains SQLite/local by default and hosted PostgreSQL/shared-state behavior from v18.3 is preserved. Smart Provider Router v2 execution, protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. v18.4 TEST uses an isolated profile cloned from the v18.3 Stable profile on first use.\n\n'''
               p.write_text(current+prior)
 
           docs={
-            'renderer/docs/user.md': '''## v18.4.0 TEST — Security / commercial readiness hardening\n\nv18.4 TEST adds fresh password confirmation for security-sensitive settings/admin changes, hosted request-abuse safeguards and explicit provider commercial/data-rights readiness. Normal research/market workflows are not re-auth gated. Provider commercial, redistribution and AI-use rights are never inferred from a configured API key; unreviewed rights remain visibly blocked/review-required in governance metadata.\n\nThe TEST build uses `PersonalMarketTerminal-v18.4.0-TEST` so the v18.3 Stable profile is not modified. Desktop storage remains SQLite by default; hosted PostgreSQL/shared-state behavior, Smart Provider Router execution, deterministic Day/Swing/Long formulas and the **No Execution** boundary remain unchanged.\n\n''',
+            'renderer/docs/user.md': '''## v18.4.0 TEST — Security / commercial readiness hardening\n\nv18.4 TEST adds fresh password confirmation for security-sensitive settings/admin changes, hosted request-abuse safeguards and explicit provider commercial/data-rights readiness. Normal research/market workflows are not re-auth gated. Provider commercial, redistribution and AI-use rights are never inferred from a configured API key; unreviewed rights remain blocked/review-required in governance metadata.\n\nThe TEST build uses `PersonalMarketTerminal-v18.4.0-TEST` so the v18.3 Stable profile is not modified. Desktop storage remains SQLite by default; hosted PostgreSQL/shared-state behavior, Smart Provider Router execution, deterministic Day/Swing/Long formulas and the **No Execution** boundary remain unchanged.\n\n''',
             'renderer/docs/developer.md': '''## v18.4.0 TEST — Security / commercial-readiness architecture\n\nv18.4 extends the existing HTTP security/auth boundary and runtime telemetry instead of creating parallel owners. Fresh re-authentication protects only high-impact mutations. Hosted mutation/expensive-work quotas are keyed from verified identity after canonical auth/CSRF resolution, use bounded in-memory windows, return deterministic HTTP 429/`Retry-After`, and expose aggregate counters without raw user/session/IP identifiers.\n\nProvider `DataRights` / `CommercialReadiness` metadata is governance-only and fails closed unless evidence plus explicit commercial/redistribution/AI-use approval are bound. Structural tests prevent those fields from entering Smart Router eligibility/scoring or executable routing. v18.3 PostgreSQL/shared-state owners and protected deterministic formulas are unchanged.\n\n''',
             'renderer/docs/limitations.md': '''## v18.4.0 TEST — commercial/data-rights boundary\n\nv18.4 does **not** assert that any provider is commercially approved, redistributable or approved for AI/LLM use merely because an endpoint is public, configured or operational. Current default provider rights are `UNREVIEWED` / `NOT_ASSERTED`, and commercial readiness is fail-closed until provider-specific evidence is bound. Legal/licensing interpretation remains an explicit review responsibility rather than an inferred runtime fact.\n\nHosted request quotas are abuse/capacity safeguards, not provider-entitlement limits and not a guarantee against upstream rate limits. They do not change desktop behavior or provider routing. v18.4 remains research/intelligence/decision support only; the **No Execution** boundary is unchanged.\n\n'''
           }
@@ -52,6 +52,22 @@ jobs:
                   first=lines[0]
                   rest=''.join(lines[1:]).lstrip('\n')
                   p.write_text(first+'\n'+section+rest)
+
+          mpath=Path('renderer/qa/manifest.json')
+          manifest=json.loads(mpath.read_text())
+          releases=manifest.setdefault('releases',[])
+          current={
+              'version':'18.4.0',
+              'date':'2026-08-16',
+              'status':'TEST',
+              'summary':'TEST Security / Commercial Readiness Hardening: fresh re-authentication for high-impact mutations, hosted quota/abuse safeguards with aggregate observability, explicit provider data-rights metadata, and fail-closed commercial/redistribution/AI-use readiness; v18.3 PostgreSQL/shared state, Smart Router execution, deterministic formulas and No Execution remain unchanged.',
+              'file':'v18.4.0.txt',
+              'buildId':build,
+              'checkpoint':'release/v18.4.0/G1-IMMUTABLE-SCOPE.md'
+          }
+          releases[:]=[x for x in releases if str(x.get('version'))!='18.4.0']
+          releases.insert(0,current)
+          mpath.write_text(json.dumps(manifest,indent=2)+'\n')
           PY
           python3 version_consistency_test.py
           python3 documentation_governance_gate.py
@@ -61,7 +77,7 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -- README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md
+          git add -- README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md renderer/qa/manifest.json
           if git diff --cached --quiet; then
             echo 'v18.4 docs sync: EXPECTED_NOOP'
             exit 0
