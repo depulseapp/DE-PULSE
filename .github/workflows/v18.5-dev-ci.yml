@@ -85,6 +85,23 @@ jobs:
           python3 data_utility_gate.py
           python3 functionality_utility_checkpoint_gate.py
           go vet ./...
+      - name: Full Go development exit
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -count=1 ./...
+      - name: Prove inherited closure test families exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          listing="$(go test -list '^TestV(170|171|172|174)' ./...)"
+          printf '%s\n' "$listing"
+          for prefix in TestV170 TestV171 TestV172 TestV174; do
+            if ! printf '%s\n' "$listing" | grep -q "^${prefix}"; then
+              echo "::error::No current Go tests matched required inherited family ${prefix}"
+              exit 1
+            fi
+          done
       - name: Inherited degradation / backpressure / readiness focused tests
         shell: bash
         run: |
@@ -119,6 +136,7 @@ jobs:
             'sourceFingerprint':sys.argv[1],
             'checks':{
               'staticSourceQuality':True,'sourceArchitecture':True,'dataUtility':True,'functionalityUtility':True,'vet':True,
+              'fullGo':True,'nonZeroInheritedTestFamilies':True,
               'v170PersistenceLoadDegradation':True,'v171PriorityBackpressureProviderBudget':True,
               'v172CanonicalPropagationLineage':True,'v174ReadinessTruth':True,
               'v1611PerformanceStability':True,'v1610RadarPerformance':True,
