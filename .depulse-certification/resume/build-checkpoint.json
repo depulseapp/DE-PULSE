@@ -1,14 +1,15 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.0",
-  "release": "v18.4.0",
-  "channel": "STABLE",
-  "branch": "main",
+  "release": "v18.5.0",
+  "channel": "TEST",
+  "branch": "v18.5-development",
   "incomingStable": {
-    "version": "v18.3.0",
-    "tag": "v18.3.0-stable",
-    "commit": "adc3adc88e92b53071f0fc0f23d00ce34f091e42",
-    "sourceFingerprint": "535d6c854874201501e62330f26683cdb252a97935fdc17c9816498146c71c5f"
+    "version": "v18.4.0",
+    "tag": "v18.4.0-stable",
+    "commit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
+    "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
+    "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
   },
   "certifiedStable": {
     "version": "v18.4.0",
@@ -18,62 +19,60 @@
     "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
     "sourceSha256": "05a9ebe601a77aff783900904eced5eb49e02fd19c8c7f1d8ba0a817d72c0ea4"
   },
-  "candidateSourceCommit": "8f3d0db3a7b7300f5954bd34af2541a0e04d6870",
-  "metadataHeadRule": "G16 resume/checkpoint/handoff metadata under .depulse-certification is fingerprint-excluded governance evidence. The immutable v18.4.0-stable tag at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 remains the certified product-source baseline for v18.5.",
-  "sourceFingerprint": "97eb553241eb98bda25f1867ea9f9ebfbaa4fe95e110960a8a4d5e7fc28eb05b",
-  "sourceFingerprintState": "FROZEN_CERTIFIED",
-  "codeStatus": "STABLE_CERTIFIED_CLOSED",
-  "implementationSummary": "v18.4 Security / Commercial Readiness Hardening is complete and Stable: fresh re-authentication for high-impact mutations, adversarial auth/session/CSRF/cookie hardening, hosted bounded request-abuse safeguards with aggregate observability, explicit provider entitlement/data-rights metadata with zero Smart Router influence, and fail-closed commercial/redistribution/AI-use readiness. v18.3 PostgreSQL/shared canonical state, desktop SQLite default, Smart Provider Router v2 execution, protected deterministic Day/Swing/Long behavior and the No Execution Boundary are preserved.",
-  "lastTrustworthyPass": "G16",
+  "candidateSourceCommit": "eebe3f48e686db09c220e97ff682c1a126bb3e28",
+  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling source being requalified; a later metadata-only checkpoint commit does not silently advance the product fingerprint.",
+  "sourceFingerprint": null,
+  "sourceFingerprintState": "PENDING_REQUALIFICATION",
+  "codeStatus": "V18_5_MAJOR_CLOSURE_IN_PROGRESS",
+  "implementationSummary": "v18.5 Major Closure is in qualification. Frozen scope contains 10 closure dimensions and 15 ADR-GDI scenarios. G6-G10 machinery now requires real PostgreSQL 17/no-skip integration, bounded load/backpressure/recovery evidence, runtime/browser truth, Principal Engineer and Professional Trader/Investor acceptance, and fail-closed native GitHub Release delivery. Repository-archetype cleanup is limited to safe hygiene before v18.5 Stable; deep behavior-preserving decomposition is reserved for closure-grade v18.5.1.",
+  "lastTrustworthyPass": "G3",
   "earliestRequiredResumeGate": "G0",
   "gates": {
-    "G0": {"status": "PASS", "reusable": true},
-    "G1": {"status": "PASS", "reusable": true},
-    "G2": {"status": "PASS", "reusable": true},
-    "G3": {"status": "PASS", "reusable": true},
-    "G4": {"status": "PASS", "reusable": true},
-    "G5": {"status": "PASS", "reusable": true},
-    "G6": {"status": "PASS", "reusable": true},
-    "G7": {"status": "PASS", "reusable": true},
-    "G8": {"status": "PASS", "reusable": true},
-    "G9": {"status": "PASS", "reusable": true},
-    "G10": {"status": "PASS", "reusable": true},
-    "G11": {"status": "PASS", "reusable": true},
-    "G12": {"status": "PASS", "reusable": true},
-    "G13": {"status": "PASS", "reusable": true},
-    "G14": {"status": "PASS", "reusable": true},
-    "G15": {"status": "PASS", "reusable": true},
-    "G16": {"status": "PASS", "reusable": false, "note": "Stable promotion, immutable tag, branch cleanup, retrospective and v18.5 handoff complete."}
+    "G0": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
+    "G1": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
+    "G2": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
+    "G3": {"status": "PASS", "reusable": true, "evidenceRun": 32006955040},
+    "G4": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G5": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G6": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G7": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G8": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G9": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G10": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G11": {"status": "NOT_STARTED", "reusable": false},
+    "G12": {"status": "NOT_STARTED", "reusable": false},
+    "G13": {"status": "NOT_STARTED", "reusable": false},
+    "G14": {"status": "NOT_STARTED", "reusable": false},
+    "G15": {"status": "NOT_STARTED", "reusable": false},
+    "G16": {"status": "NOT_STARTED", "reusable": false}
   },
   "blockingIssue": null,
   "knownResiduals": [
-    "Provider-specific commercial/redistribution/AI-use rights remain UNREVIEWED/NOT_ASSERTED until evidence is explicitly bound; v18.4 makes no legal/licensing determination."
+    "Provider-specific commercial/redistribution/AI-use rights remain UNREVIEWED/NOT_ASSERTED until evidence is explicitly bound; release logic remains fail closed.",
+    "v18.5 Stable is not deliverable until macOS Apple Silicon and Windows x64 runnable ZIPs, source ZIP, SHA manifest and certification evidence are visibly published on the GitHub Release."
   ],
   "resolvedIssues": [
-    "Fresh re-authentication protects high-impact admin/settings mutations without gating normal research/market workflows.",
-    "Hosted abuse quotas use verified identity after canonical auth/CSRF and retain no raw identity in quota keys.",
-    "Provider commercial readiness fails closed and remains structurally outside Smart Router scoring/eligibility/executable routing.",
-    "Canonical Stable desktop runtime uses PersonalMarketTerminal and preserves compatible prior Stable state while historical TEST state remains isolated.",
-    "v18.4 exact-source TEST G11-G15 certification passed with STABLE_PROMOTION_READY.",
-    "Identity-only Stable promotion was freshly recertified through exact-source Stable G11-G15 with PostgreSQL 17, macOS Apple Silicon and Windows x64 actual-runtime evidence.",
-    "main and immutable v18.4.0-stable were promoted from the exact certified Stable source, then all temporary v18.4 branches were removed."
+    "v18.5 TEST identity, README/docs/QA provenance and v18 family baseline anchor synchronized.",
+    "G4/G5 test-family selectors are existence-guarded so zero-match go test -run cannot create false green evidence.",
+    "v18.5 Major Closure matrix binds all 10 closure dimensions and all 15 frozen ADR-GDI scenarios.",
+    "Real PostgreSQL 17 integration path is wired with mandatory selector checks and skip rejection.",
+    "Inherited Windows SQLite packaging gate was updated to current newLocalPersistenceBackend ownership without weakening winsqlite3/API/compile checks.",
+    "Repository Structure Contract and closure-grade v18.5.1 Repository Archetype Build Plan are governed source."
   ],
   "adaptiveProcessLearning": {
-    "status": "COMPLETE",
-    "lessonsRecorded": 6,
+    "status": "IN_PROGRESS",
+    "lessonsRecorded": 4,
     "highestPriorityReusablePrevention": [
-      "One-shot release formalizers must be idempotent and retired before candidate freeze.",
-      "Release-identity synchronization must include README, in-app docs, QA manifest and resume checkpoints before G9/G10.",
-      "Commercial/data-rights metadata must fail closed and remain structurally separate from operational routing entitlement.",
-      "Stable identity promotion must remain bounded and receive fresh exact-source Stable G11-G15 recertification before publication.",
-      "Generated Python bytecode/cache must be disabled or removed before bounded source-diff checks.",
-      "Final Stable promotion must independently re-read G15 evidence and verify exact commit, fingerprint and source SHA before moving main or creating a tag."
+      "Release identity synchronization must include fingerprint-excluded resume checkpoints before G7/G10.",
+      "Every focused go test selector needs a non-zero existence guard.",
+      "Inherited gates must test current invariant/ownership contracts rather than obsolete symbol spellings.",
+      "A Stable tag alone is insufficient delivery; runnable native assets must be verified on the GitHub Release."
     ]
   },
-  "userDelivery": "READY",
+  "userDelivery": "NOT_READY",
   "handoff": ".depulse-certification/handoff/DE-PULSE-v18.4.0-Stable-to-v18.5-Handoff-2026-08-16.md",
   "nextBranch": "v18.5-development",
-  "nextStep": "Instantiate v18.5 Major Closure & Release Assurance from the completed v18.4 G16 metadata head while anchoring G0 product provenance to immutable tag v18.4.0-stable. Reconstruct full v18 scope and execute fresh G0-G16 closure with ADR-GDI/load/degradation as a release-blocking dimension.",
-  "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. Post-tag G16 metadata is governance-only. v18.5 must use fresh closure evidence, preserve the No Execution Boundary, and must not force mature ASBI/TDTI/AODR/13F adaptive engines into v18.5.",
-  "updatedAt": "2026-08-17T05:24:00Z"
+  "nextStep": "Run fresh exact-head G0-G10 after checkpoint synchronization; freeze G11 RC only after all G0-G10 jobs pass on one candidate product fingerprint. Then execute G11-G15 native certification and publish actual macOS/Windows/source/checksum assets before Stable promotion is accepted.",
+  "resumeInstructions": "Treat v18.4.0-stable at 8f3d0db3a7b7300f5954bd34af2541a0e04d6870 as immutable incoming product baseline. v18.5 must use fresh closure evidence for all 15 ADR-GDI scenarios and native delivery. Do not force mature ASBI/TDTI/AODR/adaptive-13F engines into v18.5.",
+  "updatedAt": "2026-08-17T07:45:00Z"
 }
