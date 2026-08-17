@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.5.0",
+  "purpose": "Current canonical ownership overrides for historical v15.1.2 approved-scope evidence markers after behavior-preserving decomposition/UX naming changes. The historical manifest remains unchanged.",
+  "overrides": {
+    "23": {
+      "title": "Master Market Symbols add control",
+      "reason": "The user-facing concept is now named Tracked Symbols; the canonical add control is data-master-add / Add Symbol and still adds the symbol to the shared Day/Swing/Long tracked set.",
+      "evidence": [
+        {"file": "renderer/renderer.js", "contains": "data-master-add>Add Symbol"}
+      ]
+    },
+    "25": {
+      "title": "Persist preparation/catalyst job state",
+      "reason": "Preparation state ownership moved into Engine cache persistence; saveCache persists Preparations and loadCache restores the map.",
+      "evidence": [
+        {"file": "engine_core.go", "contains": "Preparations: clone(e.preparations)"},
+        {"file": "engine_core.go", "contains": "if c.Preparations != nil"}
+      ]
+    }
+  }
+}
