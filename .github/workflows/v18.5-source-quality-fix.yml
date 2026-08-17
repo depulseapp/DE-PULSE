@@ -25,21 +25,13 @@ jobs:
           from pathlib import Path
           p = Path('provider_reconciliation.go')
           s = p.read_text()
-          old = '''// buildProviderReconciliation compares valid contemporaneous provider observations
-// without treating absence of a second source as agreement. Canonical provider choice
-// follows the Provider Router priority so reconciliation cannot create a parallel owner.
-func providerReconciliationConflictCount(rows []ProviderReconciliationDecision) int64 {'''
-          new = '''// providerReconciliationConflictCount counts only explicit cross-provider conflicts;
-// SINGLE SOURCE and STALE are intentionally not promoted into disagreement evidence.
-func providerReconciliationConflictCount(rows []ProviderReconciliationDecision) int64 {'''
+          old = "// buildProviderReconciliation compares valid contemporaneous provider observations\n// without treating absence of a second source as agreement. Canonical provider choice\n// follows the Provider Router priority so reconciliation cannot create a parallel owner.\nfunc providerReconciliationConflictCount(rows []ProviderReconciliationDecision) int64 {"
+          new = "// providerReconciliationConflictCount counts only explicit cross-provider conflicts;\n// SINGLE SOURCE and STALE are intentionally not promoted into disagreement evidence.\nfunc providerReconciliationConflictCount(rows []ProviderReconciliationDecision) int64 {"
           if old not in s:
               raise SystemExit('expected misplaced reconciliation comment block not found')
           s = s.replace(old, new, 1)
-          marker = '''func buildProviderReconciliation(router ProviderRouterSnapshot, observations map[string]map[string]Quote, canonical map[string]Quote, now int64) []ProviderReconciliationDecision {'''
-          replacement = '''// buildProviderReconciliation compares valid contemporaneous provider observations
-// without treating absence of a second source as agreement. Canonical provider choice
-// follows Provider Router priority so reconciliation cannot create a parallel owner.
-func buildProviderReconciliation(router ProviderRouterSnapshot, observations map[string]map[string]Quote, canonical map[string]Quote, now int64) []ProviderReconciliationDecision {'''
+          marker = "func buildProviderReconciliation(router ProviderRouterSnapshot, observations map[string]map[string]Quote, canonical map[string]Quote, now int64) []ProviderReconciliationDecision {"
+          replacement = "// buildProviderReconciliation compares valid contemporaneous provider observations\n// without treating absence of a second source as agreement. Canonical provider choice\n// follows Provider Router priority so reconciliation cannot create a parallel owner.\n" + marker
           if marker not in s:
               raise SystemExit('buildProviderReconciliation marker not found')
           s = s.replace(marker, replacement, 1)
