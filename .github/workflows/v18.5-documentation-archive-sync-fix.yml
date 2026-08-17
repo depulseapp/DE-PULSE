@@ -1,0 +1,62 @@
+name: DE.PULSE v18.5 | One-shot Documentation Archive Publisher Fix
+
+on:
+  push:
+    branches: [v18.5-development]
+    paths:
+      - '.github/workflows/v18.5-documentation-archive-sync-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Re-run validated documentation transformation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+          p=Path('.github/workflows/v18.5-documentation-archive-sync.yml')
+          s=p.read_text()
+          start=s.index("python3 - <<'PY'\n")+len("python3 - <<'PY'\n")
+          end=s.index("\n          PY", start)
+          code=textwrap.dedent(s[start:end])
+          exec(compile(code, str(p), 'exec'), {})
+          PY
+      - name: Normalize Markdown whitespace and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['README.md','governance/RELEASE_ARTIFACT_ARCHIVE.md']:
+              p=Path(name)
+              p.write_text('\n'.join(line.rstrip() for line in p.read_text().splitlines())+'\n')
+          PY
+          python3 documentation_governance_gate.py
+          python3 v18_5_scope_gate.py
+          python3 source_health_architecture_gate.py
+          python3 data_utility_gate.py
+      - name: Publish synchronized documentation and retire one-shot workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/v18.5-documentation-archive-sync.yml .github/workflows/v18.5-documentation-archive-sync-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- release_identity.json ci_pipeline_plan.json README.md governance/RELEASE_ARTIFACT_ARCHIVE.md release/v18.5.0/ARTIFACT-RECOVERY.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md renderer/qa/manifest.json renderer/qa/v18.5.0.txt .github/workflows/v18.5-documentation-archive-sync.yml .github/workflows/v18.5-documentation-archive-sync-fix.yml
+          git diff --cached --check
+          git commit -m 'v18.5: synchronize docs, provenance and artifact recovery'
+          git push origin HEAD:v18.5-development
