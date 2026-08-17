@@ -1,0 +1,32 @@
+/* DE.PULSE v18.5.1 — frozen Issue #12 watchlist semantics. */
+.desk-membership-pill.current-desk{
+  font-weight:900;
+  outline:2px solid currentColor;
+  outline-offset:1px;
+}
+.desk-membership-current{
+  display:inline-block;
+  margin-left:.35rem;
+  padding:.05rem .28rem;
+  border:1px solid currentColor;
+  border-radius:999px;
+  font-size:.58rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  line-height:1.15;
+}
+.desk-membership-pill.current-desk:focus-visible{
+  outline-width:3px;
+  outline-offset:2px;
+}
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
