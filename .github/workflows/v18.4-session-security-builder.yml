@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/v18.4-session-security-builder.yml'
       - '.depulse-build/v18_4_session_security_apply.py'
+      - '.depulse-build/v18_4_session_security_consumer.py'
       - '.depulse-build/v18_4_session_security_test.go.payload'
 
 permissions:
@@ -30,8 +31,10 @@ jobs:
       - name: Apply bounded session-security delta
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^^)" = '673fcd3b60d06eafb8e91244d0cdbbe88c001c4a'
+          git merge-base --is-ancestor '673fcd3b60d06eafb8e91244d0cdbbe88c001c4a' HEAD
+          git diff --exit-code '673fcd3b60d06eafb8e91244d0cdbbe88c001c4a...HEAD' -- '*.go'
           python3 .depulse-build/v18_4_session_security_apply.py
+          python3 .depulse-build/v18_4_session_security_consumer.py
           gofmt -w identity_model.go v18_4_session_security_test.go
       - name: Qualify session-security delta
         run: |
