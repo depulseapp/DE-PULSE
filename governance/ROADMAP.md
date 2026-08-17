@@ -107,6 +107,14 @@ Mandatory escaped-defect set:
 
 v18.5.1 must also run a **full v17 + v18 approved-implementation reconciliation**. Reconstruct the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, every v18 major workstream, every v18.0–v18.5 release clause, all 13 orphaned functionality/utility remediations, accepted conversational commitment, defect history and issue record. Classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. Nothing is silently assumed complete because an earlier release once recorded PASS.
 
+**Hardened Final Closure Build:** v18.5.1 now executes one controlled closure sequence: inventory freeze → escaped defects → confirmed implementation misses → all 13 utility remediations → complete v17/v18 evidence reconciliation → cross-cutting hardening → zero-gap G10 → one immutable RC → actual macOS/Windows audit → G16 prevention/handoff.
+
+The reconciliation ledger is the parent authority. Release slices must conserve the same immutable IDs; they cannot independently drop or close work. G1, G3, G10 and G15 block on any ID-count mismatch, missing owner/test/evidence binding, open recurrence, unexplained deferral or stale evidence fingerprint.
+
+No v19 implementation may share the v18.5.1 source/evidence/release lane until this closure reaches G16. Planning may continue, but it cannot dilute or bypass v18 closure.
+
+Detailed authority: `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+
 Permanent anti-miss rules:
 
 1. Before adding a report, search and compare it with prior requirements/defects. A reproducible recurrence reopens and escalates the original item; it is not discarded as a duplicate.
