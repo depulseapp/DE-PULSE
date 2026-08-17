@@ -14,13 +14,14 @@ Use the following hierarchy whenever DE.PULSE scope or a prior decision is quest
 2. **`governance/APPROVED-SCOPE.md`** — canonical base truth about approved product/roadmap scope.
 3. **`governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`** — canonical carry-forward + governance-to-implementation contract for previously approved/certified capabilities, ownership/RBAC/platform rules, active release obligations, unresolved defect continuity, and future-loss prevention.
 4. **`governance/ADAPTIVE-OPERATING-CONTRACT.md`** — canonical permanent engineering/build/release/delivery contract.
-5. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
-6. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
-7. **`governance/DECISION-LOG.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
-8. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
-9. **G16 handoff / release evidence** — what actually happened in that release and what carries forward.
-10. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
-11. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
+5. **`governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`** — permanent checkpoint-based CI/CD execution contract across Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process; optimizes execution timing without reducing evidence or release quality.
+6. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
+7. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
+8. **`governance/DECISION-LOG.md` plus approved material decision records under `governance/DECISION-*.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
+9. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
+10. **G16 handoff / release evidence** — what actually happened in that release and what carries forward.
+11. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
+12. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
 
 A governance document never proves a feature exists in code. A release/code artifact never silently changes approved product intent. Absence from a newer condensed summary does not by itself retire an approved or certified capability.
 
@@ -37,11 +38,12 @@ Read/search at minimum:
 - `governance/APPROVED-SCOPE.md`;
 - `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`;
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`;
+- `governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md` when build/CI/CD/checkpoint/cost/qualification/release execution is relevant;
 - `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md` when reliability, data freshness, provider/runtime/database pressure, degraded-state semantics, backpressure or recovery is relevant;
 - `governance/ROADMAP.md`;
-- `governance/DECISION-LOG.md`.
+- `governance/DECISION-LOG.md` and applicable `governance/DECISION-*.md` material decision records.
 
-When release-specific, also inspect the current `release/<version>/G1-IMMUTABLE-SCOPE.md`, active branch implementation evidence, latest G16/handoff, and relevant inherited Stable traceability.
+When release-specific, also inspect the current `release/<version>/G1-IMMUTABLE-SCOPE.md`, active branch implementation evidence, latest G16/handoff, relevant qualification checkpoint, and relevant inherited Stable traceability.
 
 ### COMPARE
 Compare the proposal semantically, not only by exact wording. Check aliases, renamed features, overlapping responsibilities, historical implementation, current canonical owners, and whether a newer summary merely omitted an older approved/certified capability.
@@ -70,7 +72,7 @@ Do not silently add material scope. User approval is required for genuinely new 
 ### UPDATE
 After approval:
 1. update the relevant canonical governance document/contract;
-2. append a Decision Log entry for material decisions;
+2. append/register a material Decision Log record;
 3. place the work in the Adaptive Roadmap/Build Plan or explicit release disposition;
 4. when a release reaches G1, snapshot the applicable scope into its immutable G1 file;
 5. preserve inherited Stable capability/defect/platform/rights truth where applicable.
@@ -101,9 +103,11 @@ The permanent model is:
 
 `Governance approved intent + continuity contract + inherited Stable truth`
 → `Adaptive Roadmap / Build Plan`
-→ `G0 baseline + omission/divergence audit`
-→ `G1 immutable release scope snapshot`
-→ `G2–G15 engineering / certification / delivery`
+→ `development batches with tests implemented alongside source`
+→ `deliberate exact-SHA Development Checkpoint`
+→ `G0–G5 FAST qualification`
+→ `G6–G10 qualification only after FAST green`
+→ `G11 immutable RC + G12–G15 certification/delivery`
 → `G16 retrospective + handoff`
 → `governance reconciliation when a permanent decision changed`
 
@@ -134,7 +138,7 @@ The full contract is `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`.
 
 ## 6. Efficiency Rule
 
-Do **not** rewrite all governance documents for every small patch.
+Do **not** rewrite all governance documents or run exhaustive CI for every small patch.
 
 Update governance only when:
 - approved product scope changes;
@@ -143,6 +147,8 @@ Update governance only when:
 - a decision is superseded/rejected;
 - G16 discovers a durable rule that must carry forward;
 - a reconciliation proves an older approved/certified capability or unresolved defect is missing from current canonical continuity.
+
+CI/CD follows `governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`: normal development commits are quiet by default, qualification is checkpoint-based and exact-SHA bound, cheap gates run before expensive gates, and release/native certification remains exhaustive.
 
 Release-specific implementation evidence remains under the release/QA evidence structure.
 
@@ -160,4 +166,4 @@ A score below 10 must be improved before the reconciliation itself is called 10/
 
 Before every new build plan or substantial DE.PULSE discussion, ask:
 
-> **Is this already approved, inherited/certified, partially covered, a refinement, conflicting, genuinely new, or still an unresolved defect — where is the canonical evidence, what release disposition applies, and how will implementation/runtime proof be obtained?**
+> **Is this already approved, inherited/certified, partially covered, a refinement, conflicting, genuinely new, or still an unresolved defect — where is the canonical evidence, what release disposition applies, what checkpoint/qualification evidence is required, and how will packaged-runtime proof be obtained?**
