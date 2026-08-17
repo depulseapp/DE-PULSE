@@ -17,6 +17,6 @@ var finnhubAPIBaseURL = "https://finnhub.io/api/v1"
 var finnhubMinRequestInterval = 1100 * time.Millisecond
 
 const appName = "DE.PULSE"
-const appVersion = "18.4.0"
-const releaseChannel = "STABLE"
-const buildID = "v18.4.0-stable-security-commercial-readiness-20260816"
+const appVersion = "18.5.0"
+const releaseChannel = "TEST"
+const buildID = "v18.5.0-test-major-closure-release-assurance-20260816"

@@ -1,11 +1,11 @@
-DE.PULSE v18.4.0
-Build: v18.4.0-stable-security-commercial-readiness-20260816
-Channel: STABLE
-Stable baseline: v17.5.1
-Previous Stable: v18.3.0
-Scope: Security / Commercial Readiness Hardening: harden secrets/security and the auth/session/CSRF/cookie perimeter, adversarial authorization and fresh re-authentication for high-impact mutations, explicit provider entitlement/data-rights metadata with zero routing influence, hosted quota/abuse safeguards and aggregate observability, and fail-closed commercial/redistribution/AI-use readiness unless provider-specific rights evidence is bound; preserve v18.3 PostgreSQL/shared canonical state, desktop SQLite default, Smart Provider Router v2 execution behavior, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary
-Application bundle: De-Pulse.app
+DE.PULSE v18.5.0
+Build: v18.5.0-test-major-closure-release-assurance-20260816
+Channel: TEST
+Stable baseline: v18.4.0
+Previous Stable: v18.4.0
+Scope: Major Closure & Release Assurance: reconstruct and re-certify the full approved v18 scope; close ADR-GDI/runtime-overload under realistic provider, database, backpressure, recovery, fan-out, background-job and degradation conditions; prove architecture/source quality, data utility/correlation, performance/capacity/stability, security, adaptive governance, UI/UX/runtime truth, Principal Engineer and Professional Trader/Investor acceptance, and native/hosted packaging/provenance; preserve deterministic Day/Swing/Long behavior, the canonical Smart Provider Router, desktop SQLite/hosted PostgreSQL contracts, fail-closed commercial-rights readiness and the permanent No Execution Boundary; do not pull mature ASBI/TDTI/AODR/adaptive-13F scope forward
+Application bundle: De-Pulse-v18.5.0-TEST.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
-Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)
+Runtime/config continuity: PersonalMarketTerminal-v18.5.0-TEST (preserves compatible prior Stable settings and API keys)
 Release learning: adaptive G0-G16 Release Learning Registry active · Build Process v2 pre-freeze qualification + canonical identity enabled
 Adaptive contracts: US Equities Processing Boundary · Data Utility/Evidence Value · Performance/Scalability · Data Health/Freshness/Cache · Testing · Intelligence/Learning preserved
