@@ -1,11 +1,56 @@
-# DE.PULSE v18.4.0 STABLE — Security / Commercial Readiness Hardening
+# DE.PULSE v18.5.0 TEST — Major Closure & Release Assurance
 
-**Build:** `v18.4.0-stable-security-commercial-readiness-20260816`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.3.0  
-**Major v18 provenance anchor:** v17.5.1  
-**Patch predecessor:** v18.3.0 STABLE  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.5.0-test-major-closure-release-assurance-20260816`
+**Channel:** TEST
+**Current Stable baseline:** v18.4.0
+**Major v18 provenance anchor:** v17.5.1
+**Application bundle:** `De-Pulse-v18.5.0-TEST.app`
+**Runtime/config:** `PersonalMarketTerminal-v18.5.0-TEST`
+
+v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature: it reconstructs and re-certifies the approved v18 system across architecture/source quality, data utility/correlation, security, adaptive governance, UI/UX, performance/capacity/stability, PostgreSQL/shared-state behavior, native runtime and release assurance. ADR-GDI/runtime overload is release-blocking when self-inflicted load can delay or misstate decision-critical evidence. Mature ASBI/TDTI/AODR/adaptive-13F work remains later roadmap scope.
+
+### v18.5 release flow
+
+```mermaid
+flowchart LR
+    A[G0-G3 Baseline + Scope + Architecture] --> B[G4-G5 Dev Exit + FAST]
+    B --> C[G6 Integration / MEDIUM]
+    C --> D[G7 Data + Security + Adaptive]
+    D --> E[G8 Performance + Capacity + Stability]
+    E --> F[G9 Cross-module + UI/UX]
+    F --> G[G10 Pre-Freeze]
+    G --> H[G11 Immutable RC]
+    H --> I[G12 Full Certification]
+    I --> J[G13 Packaging + Provenance]
+    J --> K[G14 Actual Artifact Runtime Audit]
+    K --> L[G15 Promotion + GitHub Release]
+    L --> M[G16 Handoff + Recovery Index]
+```
+
+### Where are the artifacts?
+
+```mermaid
+flowchart TD
+    V[Pick a version] --> R[GitHub Releases / Tags]
+    R -->|Runnable assets listed| D[Download verified macOS/Windows package]
+    R -->|Historical gap| L[ChatGPT Library /DE.PULSE/version/]
+    L --> H[Verify original SHA manifest]
+    H --> B[Backfill GitHub truthfully as ORIGINAL or certified-source reconstruction]
+```
+
+**Primary forward location:** GitHub repository `depulseapp/DE-PULSE` → **Releases** + immutable Stable tag.
+**Repository evidence:** `release/<version>/`.
+**Canonical archive map:** `governance/RELEASE_ARTIFACT_ARCHIVE.md`.
+**Historical original fallback:** ChatGPT Library `/DE.PULSE/<version>/`; v16.8.0 through v16.11.0 contain original Stable runnable packages, and `/DE.PULSE/v17.5.1/DE-PULSE-v17.5.1-STABLE.zip` is the authoritative v17 Stable bundle.
+
+## Previous Stable — v18.4.0 STABLE — Security / Commercial Readiness Hardening
+
+**Build:** `v18.4.0-stable-security-commercial-readiness-20260816`
+**Channel:** STABLE
+**Current Stable baseline:** v18.3.0
+**Major v18 provenance anchor:** v17.5.1
+**Patch predecessor:** v18.3.0 STABLE
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.4 STABLE hardens the existing secure multi-user/hosted platform without changing market-scoring formulas or provider routing authority. It adds fresh password re-authentication for high-impact mutations, hosted per-user request quotas with aggregate diagnostics, and explicit provider data-rights/commercial-readiness metadata. Commercial, redistribution and AI-use readiness remain fail-closed unless provider-specific evidence is bound; a working API key never implies legal/commercial approval.
@@ -14,12 +59,12 @@ Desktop remains SQLite/local by default and hosted PostgreSQL/shared-state behav
 
 ## Immediate Stable predecessor — v18.3.0 STABLE — PostgreSQL / Hosted Shared State
 
-**Build:** `v18.3.0-stable-postgresql-hosted-shared-state-20260815`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.2.0  
-**Major v18 provenance anchor:** v17.5.1  
-**Patch predecessor:** v18.2.0 STABLE  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.3.0-stable-postgresql-hosted-shared-state-20260815`
+**Channel:** STABLE
+**Current Stable baseline:** v18.2.0
+**Major v18 provenance anchor:** v17.5.1
+**Patch predecessor:** v18.2.0 STABLE
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.3.0 adds PostgreSQL repository parity beneath the existing storage-agnostic `PersistenceBackend`, bounded hosted DB pooling/transactions, shared-state observability, and an explicit hosted browser/server runtime with separate liveness and persistence-backed readiness. PostgreSQL is an explicit hosted selection and fails closed when unavailable; it never silently falls back to a local store.
@@ -28,78 +73,78 @@ Desktop macOS/Windows remain local-first and use the existing SQLite persistence
 
 ## Immediate Stable predecessor — v18.2.0 STABLE — Admin / Presence / Sessions
 
-**Build:** `v18.2.0-stable-admin-presence-sessions-20260814`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.2.0  
-**Major v18 provenance anchor:** v17.5.1  
-**Patch predecessor:** v18.1.0 STABLE  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.2.0-stable-admin-presence-sessions-20260814`
+**Channel:** STABLE
+**Current Stable baseline:** v18.2.0
+**Major v18 provenance anchor:** v17.5.1
+**Patch predecessor:** v18.1.0 STABLE
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.2.0 is the certified incoming Stable baseline. It extends the canonical `IdentityService` with role-aware user lifecycle operations, redacted user/session views, persisted-session presence truth, password reset/revocation lifecycle, SSE revocation enforcement, and privileged Settings administration while preserving v18.1 per-user isolation and shared intelligence.
 
 ## Previous Stable — v18.1.0 STABLE — Multi-User / My Market Symbols
 
-**Build:** `v18.1.0-stable-multi-user-my-market-symbols-20260814`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.1.0  
-**Major v18 provenance anchor:** v17.5.1  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.1.0-stable-multi-user-my-market-symbols-20260814`
+**Channel:** STABLE
+**Current Stable baseline:** v18.1.0
+**Major v18 provenance anchor:** v17.5.1
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.1.0 is the certified incoming Stable baseline for this promoted release. It provides durable per-user market workspaces while preserving one shared canonical market-data and intelligence core.
 
 ## Previous Stable — v18.0.6 STABLE — Smart Provider Router + Rapid Move / Market Shock Hardening
 
-**Build:** `v18.0.6-stable-smart-provider-router-rapid-move-market-shock-hardening-20260814`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.0.5  
-**Major v18 provenance anchor:** v17.5.1  
-**Patch predecessor:** v18.0.5 STABLE  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.0.6-stable-smart-provider-router-rapid-move-market-shock-hardening-20260814`
+**Channel:** STABLE
+**Current Stable baseline:** v18.0.5
+**Major v18 provenance anchor:** v17.5.1
+**Patch predecessor:** v18.0.5 STABLE
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.0.6 is the promoted Stable hardening slice over certified v18.0.5 Stable. It reuses the existing Smart Provider Router v2 and Rapid Move canonical pipelines rather than creating parallel engines. The slice closes source-disagreement telemetry, explicit MARKET_SHOCK classification, alert-state hysteresis, durable provider-time outcome anchors, and SHADOW learning governance/outcome scorecards. Protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. v18.1 multi-user architecture is explicitly out of scope.
 
 ## Previous Stable — v18.0.5 STABLE — UI/UX + Symbol Management Hardening
 
-**Build:** `v18.0.5-stable-ui-ux-symbol-management-hardening-20260814`  
-**Channel:** STABLE  
-**Current Stable baseline:** v18.0.4  
-**Major v18 provenance anchor:** v17.5.1  
-**Previous Stable:** v18.0.4  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.0.5-stable-ui-ux-symbol-management-hardening-20260814`
+**Channel:** STABLE
+**Current Stable baseline:** v18.0.4
+**Major v18 provenance anchor:** v17.5.1
+**Previous Stable:** v18.0.4
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.0.5 is the promoted Stable hardening patch over the certified v18.0.4 Stable source. It consolidates cross-desk Tracked Symbols mutations behind one canonical path, fixes Remove All persistence/rehydration behavior, refines Opportunity Radar and Research Target responsiveness, and hides implementation machinery from USER/DEMO surfaces while retaining privileged diagnostics. Protected deterministic Day/Swing/Long formulas, Smart Router/Rapid Move intelligence, and the permanent **No Execution Boundary** are unchanged. v18.1 multi-user architecture is explicitly out of scope.
 
 ## Previous Stable — v18.0.4 STABLE — Native Cross-Platform Closure
 
-**Build:** `v18.0.4-stable-native-cross-platform-closure-20260813`  
-**Channel:** STABLE  
-**Previous Stable:** v17.5.1  
-**Application bundle:** `De-Pulse.app`  
+**Build:** `v18.0.4-stable-native-cross-platform-closure-20260813`
+**Channel:** STABLE
+**Previous Stable:** v17.5.1
+**Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
 v18.0.4 is the promoted Stable release of the fully certified v18.0.x foundation. It carries the Windows SQLite lifecycle and native G14 identity hardening that cleared macOS Apple Silicon, Windows x64, and G15 Release Assurance. Stable promotion changes release identity and the canonical Stable runtime target only; Smart Router v2, Rapid Move, provider logic, scoring, protected deterministic Day/Swing/Long formulas, and the permanent No Execution Boundary remain unchanged. v18.0.1 through v18.0.3 remain immutable historical TEST candidates.
 
 ## Previous v18.0.3 TEST — Native Cross-Platform Runtime Portability Hardening
 
-**Build:** `v18.0.3-test-native-cross-platform-runtime-portability-hardening-20260813`  
-**Channel:** TEST  
-**Current Stable baseline:** v17.5.1  
-**Application bundle:** `De-Pulse-v18.0.3-TEST.app`  
+**Build:** `v18.0.3-test-native-cross-platform-runtime-portability-hardening-20260813`
+**Channel:** TEST
+**Current Stable baseline:** v17.5.1
+**Application bundle:** `De-Pulse-v18.0.3-TEST.app`
 **Runtime/config:** `PersonalMarketTerminal-v18.0.3-TEST`
 
 v18.0.3 is a release-blocker hardening patch discovered by native G14. It fixes Windows embedded-resource path normalization and makes real-Application tests isolate the OS-specific user-config location consistently across Linux, macOS and Windows. It also corrects Windows-only permission-test semantics and the native delivery harness. Smart Router v2, Rapid Move, provider logic, scoring, and protected deterministic Day/Swing/Long formulas remain unchanged. v18.0.2 remains an immutable failed native candidate and is not promoted.
 
 ## Inherited v18.0.1 Smart Router v2 + Rapid Move foundation
 
-**Build:** `v18.0.1-test-smart-router-v2-rapid-move-foundation-20260813`  
-**Channel:** TEST  
-**Current Stable baseline:** v17.5.1  
-**Patch predecessor:** v18.0.0 TEST  
-**Application bundle:** `De-Pulse-v18.0.1-TEST.app`  
+**Build:** `v18.0.1-test-smart-router-v2-rapid-move-foundation-20260813`
+**Channel:** TEST
+**Current Stable baseline:** v17.5.1
+**Patch predecessor:** v18.0.0 TEST
+**Application bundle:** `De-Pulse-v18.0.1-TEST.app`
 **Runtime/config:** `PersonalMarketTerminal-v18.0.1-TEST`
 
 v18.0.1 is the next isolated v18 TEST slice. It refactors the existing canonical Provider Router into Smart Intelligent Provider Router v2 foundations: provider×dataset×instrument×session capability/entitlement state, deterministic scoring, per-capability circuits, Preferred vs Serving truth, persistent NOT_ENTITLED cooldown/suppression, p50/p95 latency telemetry and provider-calls-avoided evidence. It does not create a second routing engine.
@@ -112,11 +157,11 @@ Adaptive behavior remains governed by **SHADOW → VALIDATED → APPROVED → PR
 
 ## Previous v18.0.0 TEST — Identity & Secure Session Foundation
 
-**Build:** `v18.0.0-test-identity-session-foundation-20260813`  
-**Channel:** TEST  
-**Current Stable baseline:** v17.5.1  
-**Previous Stable:** v17.5.1  
-**Application bundle:** `De-Pulse-v18-TEST.app`  
+**Build:** `v18.0.0-test-identity-session-foundation-20260813`
+**Channel:** TEST
+**Current Stable baseline:** v17.5.1
+**Previous Stable:** v17.5.1
+**Application bundle:** `De-Pulse-v18-TEST.app`
 **Runtime/config:** `PersonalMarketTerminal-v18-TEST`
 
 v18.0.0 is the first v18 security slice. It adds the canonical role/principal model, persistent local identities and server-side sessions, Argon2id credentials, login/logout, centralized authorization/RBAC foundations, bootstrap OWNER migration, session rotation/revocation with idle/absolute expiry, CSRF protection, and a separate TEST profile that clones compatible v17.5.1 settings/watchlists/API keys/persisted intelligence without mutating Stable.
@@ -129,11 +174,11 @@ The deterministic Day/Swing/Long Score/Action formulas, Provider Router authorit
 
 # DE.PULSE v16.11.0 — v16 Major Closure & Release Assurance
 
-**Build:** `v16.11.0-stable-v16-major-closure-release-assurance-20260812`  
-**Channel:** STABLE  
-**Current Stable baseline:** v16.11.0  
-**Previous Stable:** v16.10.0  
-**Original professional roadmap:** **30 FULL / 0 PARTIAL / 0 MISSING** — freshly revalidated from current source  
+**Build:** `v16.11.0-stable-v16-major-closure-release-assurance-20260812`
+**Channel:** STABLE
+**Current Stable baseline:** v16.11.0
+**Previous Stable:** v16.10.0
+**Original professional roadmap:** **30 FULL / 0 PARTIAL / 0 MISSING** — freshly revalidated from current source
 **v16.10 Opportunity & Decision Intelligence:** **10/10 preserved**
 
 v16.11.0 is the mandatory **Major Closure & Release Assurance** build before DE.PULSE can enter v17. It intentionally adds no unrelated product feature. It reconstructs the complete v16 family from current code, freshly exercises v16.1 through v16.10, performs broad production/regression/performance testing, runs independent senior-engineer and professional trader/investor reviews, reconciles data/source hygiene and adaptive-process lessons, and issues the v16 → v17 Go/No-Go decision.

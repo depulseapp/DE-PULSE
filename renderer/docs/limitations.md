@@ -1,5 +1,12 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.5.0 TEST — Major Closure truth boundaries
+
+v18.5 is not Stable until G0-G15 pass against one exact source and required native/runtime artifacts. Major Closure cannot guarantee provider availability, profitable decisions or zero degradation; it must instead prove bounded behavior and truthful UNKNOWN/ABSTAIN/readiness when evidence is stale, unavailable or overloaded. DE.PULSE remains **decision support, not a profit predictor**, actionable instruments remain **U.S.-listed only**, and the **No Execution** boundary is unchanged.
+
+GitHub is the required durable archive for future Stable releases, but documentation must not claim a binary is archived unless the Release page actually contains it. Historical v16/v17 originals remain in ChatGPT Library `/DE.PULSE/` during backfill.
+
+
 ## v18.4.0 STABLE — commercial/data-rights boundary
 
 v18.4 does **not** assert that any provider is commercially approved, redistributable or approved for AI/LLM use merely because an endpoint is public, configured or operational. Current default provider rights are `UNREVIEWED` / `NOT_ASSERTED`, and commercial readiness is fail-closed until provider-specific evidence is bound. Legal/licensing interpretation remains an explicit review responsibility rather than an inferred runtime fact.

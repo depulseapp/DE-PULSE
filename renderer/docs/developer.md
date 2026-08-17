@@ -1,5 +1,12 @@
 # DE.PULSE — Developer documentation
 
+## v18.5.0 TEST — Major Closure / ADR-GDI architecture
+
+v18.5 reconstructs the full approved v18 architecture rather than adding a parallel owner. ADR-GDI qualification covers provider failure/rate-limit/fallback, stale evidence, PostgreSQL pressure/unavailability, bounded queue/backpressure/load shedding, warm restart, multi-user/multi-symbol fan-out, background-job pressure, duplicate-work avoidance, degradation blast radius, recovery hysteresis, packaged degradation UX and truthful UNKNOWN/ABSTAIN/readiness behavior. The existing Provider Router, persistence owners, canonical propagation and protected deterministic formulas remain authoritative.
+
+Artifact durability is now a permanent G13/G15/G16 responsibility. Canonical policy: `governance/RELEASE_ARTIFACT_ARCHIVE.md`; candidate evidence: `release/v18.5.0/`; final Stable target: GitHub Release/tag `v18.5.0-stable`. Historical Library artifacts may prove/backfill originals, but reconstructed binaries must be labelled as reconstructions.
+
+
 ## v18.4.0 STABLE — Security / commercial-readiness architecture
 
 v18.4 extends the existing HTTP security/auth boundary and runtime telemetry instead of creating parallel owners. Fresh re-authentication protects only high-impact mutations. Hosted mutation/expensive-work quotas are keyed from verified identity after canonical auth/CSRF resolution, use bounded in-memory windows, return deterministic HTTP 429/`Retry-After`, and expose aggregate counters without raw user/session/IP identifiers.

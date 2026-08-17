@@ -34,7 +34,7 @@
     "resource_class_go_heavy_lane": 1,
     "resource_class_medium_other_max_parallel": 2,
     "current_major": "v18",
-    "current_slice": "v18.3-postgresql-hosted-shared-state",
+    "current_slice": "v18.5-major-closure-release-assurance",
     "major_scope": "v18_major_scope.json",
     "delivery_slices": "v18_delivery_slices.json",
     "build_resume_protocol": "adaptive-governance/BUILD_RESUME_PROTOCOL.md",
@@ -53,7 +53,12 @@
       "G14-windows",
       "G15",
       "G16"
-    ]
+    ],
+    "artifact_archive_required": true,
+    "artifact_archive_primary": "GitHub Releases + immutable Stable tag",
+    "artifact_archive_repository_evidence": "release/<version>/ + governance/RELEASE_ARTIFACT_ARCHIVE.md",
+    "artifact_archive_historical_fallback": "ChatGPT Library /DE.PULSE/<version>/",
+    "artifact_archive_rule": "G13 packages; G14 audits actual artifacts; G15 verifies exact source/fingerprint/SHA and publishes; G16 records final recovery index. No new top-level gate."
   },
   "stages": [
     {

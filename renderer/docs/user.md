@@ -1,5 +1,12 @@
 # DE.PULSE — User documentation
 
+## v18.5.0 TEST — Major Closure & Release Assurance
+
+v18.5 is a separate TEST Major Closure over **v18.4.0 STABLE**. It does not add unrelated trading features. It re-certifies the approved v18 platform and treats runtime overload / intermittent DATA DEGRADED / slow response as release-blocking if local load can delay or misstate decision-critical evidence. Readiness must stay conservative and truthful under provider, database, queue/backpressure, restart, multi-user/fan-out and recovery pressure. The permanent **No Execution** boundary is unchanged.
+
+Release recovery is now explicit: final Stable runnable packages belong in the GitHub `depulseapp/DE-PULSE` Release for `v18.5.0-stable`, with source/SHA/certification evidence. Historical originals remain available under ChatGPT Library `/DE.PULSE/<version>/` while GitHub backfill is normalized.
+
+
 ## v18.4.0 STABLE — Security / commercial readiness hardening
 
 v18.4 STABLE adds fresh password confirmation for security-sensitive settings/admin changes, hosted request-abuse safeguards and explicit provider commercial/data-rights readiness. Normal research/market workflows are not re-auth gated. Provider commercial, redistribution and AI-use rights are never inferred from a configured API key; unreviewed rights remain blocked/review-required in governance metadata.
