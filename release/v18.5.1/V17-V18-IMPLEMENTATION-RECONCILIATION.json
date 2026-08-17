@@ -46,7 +46,9 @@
   "baseline": {
     "currentStableTag": "v18.5.0-stable",
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
-    "reconciliationBranch": "v18.5.1-development"
+    "reconciliationBranch": "v18.5.1-development",
+    "functionalityUtilityRemediations": 13,
+    "totalTrackedRows": 282
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -2810,6 +2812,131 @@
         "deterministic fixtures and live smoke when credentials permit",
         "macOS and Windows packaged evidence"
       ]
+    },
+    {
+      "id": "IMPL-18-UTILITY-001",
+      "title": "Shared bounded broad-snapshot acquisition for Discovery Scanner and Opportunity Radar",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "functionality_utility_remediation.json — Discovery Scanner",
+        "functionality_utility_remediation.json — Opportunity Radar"
+      ],
+      "findings": [
+        "scanner.go performs its own Alpaca /v2/stocks/snapshots batches",
+        "opportunity_radar.go independently implements fetchOpportunitySnapshots against the same Alpaca endpoint",
+        "No shared snapshot broker/cache or in-flight coalescing owner is present"
+      ],
+      "requiredClosure": [
+        "one canonical bounded snapshot broker/cache",
+        "freshness and in-flight coalescing",
+        "distinct ranking behavior preserved",
+        "avoided-duplicate-call telemetry",
+        "concurrency/provider-budget regressions",
+        "macOS and Windows packaged evidence"
+      ]
+    },
+    {
+      "id": "IMPL-18-UTILITY-002",
+      "title": "Shared Session Intelligence Coordinator for Pre-Market and Market Open checkpoints",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "functionality_utility_remediation.json — Pre-Market Prep",
+        "functionality_utility_remediation.json — Market Open Prep"
+      ],
+      "findings": [
+        "Pre-Market Prep and Market Open Prep remain separately launched loops and handlers",
+        "No shared Session Intelligence Coordinator owner is present",
+        "Existing functions reuse some canonical state, but that does not close the explicit coordinator/duplicate-work contract"
+      ],
+      "requiredClosure": [
+        "single coordinator owner",
+        "temporal checkpoint semantics",
+        "canonical scheduler/router/cache reuse",
+        "no parallel acquisition or analysis pipeline",
+        "late/catch-up and restart tests",
+        "macOS and Windows packaged evidence"
+      ]
+    },
+    {
+      "id": "IMPL-18-UTILITY-003",
+      "title": "Remove Market Activity Seeds as a prominent normal-user surface",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "functionality_utility_remediation.json — Market Activity Seeds"
+      ],
+      "findings": [
+        "renderDiscovery still renders a full-width Live Market Activity Seeds / Most active / movers card"
+      ],
+      "requiredClosure": [
+        "retain market activity as reusable Discovery/Radar input",
+        "remove prominent equal-level user surface",
+        "preserve optional explanation/drill-down only",
+        "responsive browser and packaged evidence"
+      ]
+    },
+    {
+      "id": "IMPL-18-UTILITY-004",
+      "title": "Retire or redirect legacy standalone News/Earnings/Filings routes",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "functionality_utility_remediation.json — Legacy standalone News/Earnings/Filings routes"
+      ],
+      "findings": [
+        "renderer pageRenderer still maps news, earnings and filings to standalone renderers",
+        "renderNews, renderEarnings and renderFilings remain active direct pages rather than safe redirects"
+      ],
+      "requiredClosure": [
+        "ticker evidence routes to Research subviews",
+        "market-wide material events route to Market/Event Intelligence",
+        "safe redirect/regression coverage",
+        "no broken deep links",
+        "macOS and Windows packaged evidence"
+      ]
+    },
+    {
+      "id": "IMPL-18-DOC-001",
+      "title": "Role-aware documentation composition and Documentation Impact Manifest",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "CONVO-V17-005",
+        "adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md",
+        "renderer/qa/role-aware-tab-audit-v18.2.json"
+      ],
+      "findings": [
+        "renderDocumentation unconditionally exposes User, Developer and Limitations tabs",
+        "USER/DEMO and non-delegated ADMIN behavior conflicts with the frozen role-aware audit",
+        "No Documentation Impact Manifest exists in the current repository tree",
+        "documentation_governance_gate.py checks content tokens/history, not role composition or per-change manifest coverage"
+      ],
+      "requiredClosure": [
+        "server-authoritative documentation audience policy",
+        "role-composed tabs and direct-path enforcement",
+        "Documentation Impact Manifest bound to every material change",
+        "cross-role browser/security tests",
+        "macOS and Windows packaged evidence"
+      ]
+    },
+    {
+      "id": "IMPL-17-DEPS-001",
+      "title": "External Dependency & Provider Readiness checkpoint plus User Action Required register",
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "origin": [
+        "CONVO-V17-004"
+      ],
+      "findings": [
+        "Provider capability, entitlement and commercial-rights foundations exist",
+        "No canonical External Dependency & Provider Readiness checkpoint artifact/gate is present",
+        "No durable User Action Required register is present",
+        "Existing release G3 dependency notes do not replace a current, actionable dependency register"
+      ],
+      "requiredClosure": [
+        "canonical dependency/readiness registry",
+        "owner/status/blocker/user-action/evidence fields",
+        "release gate binding",
+        "role-safe UI or report surface",
+        "provider/database/package dependency coverage",
+        "fresh regression and package evidence"
+      ]
     }
   ],
   "escapedDefects": [
@@ -2861,6 +2988,31 @@
         "INHERITED-18",
         "INHERITED-19"
       ]
+    },
+    {
+      "id": "VERSION-18.5.1-002",
+      "title": "Active release/version drift across setup UI, renderer integrity copy and TEST-profile harness",
+      "status": "REOPENED",
+      "origin": [
+        "renderer/setup.html",
+        "renderer/renderer.js",
+        "v18_test_profile.go",
+        "opportunity_radar.go",
+        "runtime_degradation.go"
+      ],
+      "findings": [
+        "setup.html displays Existing v17 profile is preserved",
+        "renderer integrity mismatch instructs users about packaged v18.0.4 Stable renderer",
+        "v18_test_profile.go still names v18.4.0 TEST/HOSTED profiles and a v18.3.0 Stable prerequisite",
+        "current runtime messages still describe v17 load shedding and v17 process thresholds"
+      ],
+      "requiredClosure": [
+        "current release-neutral user copy",
+        "intentional migration identifiers explicitly classified and tested",
+        "current TEST/HOSTED profile contract",
+        "source scan blocking obsolete active-version strings",
+        "packaged UI/runtime verification"
+      ]
     }
   ],
   "conversationalCommitments": [
@@ -2882,12 +3034,18 @@
     {
       "id": "CONVO-V17-004",
       "title": "External Dependency & Provider Readiness checkpoint plus User Action Required register",
-      "status": "REVALIDATION_REQUIRED"
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "links": [
+        "IMPL-17-DEPS-001"
+      ]
     },
     {
       "id": "CONVO-V17-005",
       "title": "Adaptive role-aware User/Admin/Developer documentation and Documentation Impact Manifest",
-      "status": "REVALIDATION_REQUIRED"
+      "status": "NOT_IMPLEMENTED_CONFIRMED",
+      "links": [
+        "IMPL-18-DOC-001"
+      ]
     },
     {
       "id": "CONVO-V18-001",
@@ -2974,6 +3132,219 @@
     },
     "currentWindowsPackageAudit": {
       "result": "NOT_STARTED"
+    },
+    "functionalityUtilityCarryForwardAudit": {
+      "result": "FAIL_CONFIRMED_SLICING_ORPHAN",
+      "expectedTarget": "v18.3.0",
+      "records": 13,
+      "presentInV18_3ImmutableScope": 0,
+      "confirmedCurrentImplementationMissRows": 6,
+      "limitation": "The remaining seven rows still require fresh behavioral/design/package proof; none is closed by the old registry or plan."
+    },
+    "roleAwareDocumentationAudit": {
+      "result": "FAIL_CONFIRMED",
+      "findings": [
+        "unconditional Developer Documentation tab",
+        "no Documentation Impact Manifest"
+      ]
+    },
+    "externalDependencyReadinessAudit": {
+      "result": "FAIL_CONFIRMED",
+      "finding": "Lower-level provider capability foundations exist, but the promised checkpoint and actionable register do not."
+    },
+    "activeVersionDriftAudit": {
+      "result": "FAIL_CONFIRMED",
+      "finding": "Active v17/v18.0.4/v18.4.0 strings remain in current user/runtime/profile paths."
     }
+  },
+  "functionalityUtilityCarryForward": {
+    "source": "functionality_utility_remediation.json",
+    "checkpoint": "adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md",
+    "originalTargetRelease": "v18.3.0",
+    "slicingFinding": "All 13 records were marked mandatory v18.3 inputs, but none entered v18_3_scope.json. The prior gate checked durable plan presence, not assignment, implementation, behavioral proof, or closure.",
+    "status": "OPEN_BLOCKING",
+    "items": [
+      {
+        "id": "UTILITY-V18.3-01",
+        "name": "Dashboard",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "HIGH",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Merge overlapping Market Intelligence, alternative-context and options/context summary blocks into one compact Context Intelligence hierarchy while preserving Decision Queue and material risk priority.",
+          "Dashboard has one market/context summary hierarchy; deep evidence remains in canonical specialist surfaces; no lost material risk or decision input.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-02",
+        "name": "Market Intelligence",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "HIGH",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Recompose into Market State, Leadership & Liquidity, Events & Risk, Context Intelligence, and supporting research/validation sections; move implementation-learning machinery deeper or to Maintenance where appropriate.",
+          "All useful canonical evidence remains accessible without multiple equal-priority context homes or normal-user implementation machinery.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-03",
+        "name": "Day Trade Desk",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "HIGH",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Keep deterministic decision/plan/readiness and compact material event/risk context; move full repeated News/Earnings/SEC evidence to Research deep home.",
+          "Day workflow remains complete and faster to scan; protected formula unchanged; Research contains deep evidence.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-04",
+        "name": "Swing Desk",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "HIGH",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Keep deterministic swing decision/readiness plus compact material context; remove repeated deep ticker evidence in favor of Research drill-down.",
+          "Swing workflow preserves all material decisions/risks with no duplicate deep-evidence home.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-05",
+        "name": "Long-Term Desk",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "MEDIUM",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Retain horizon-relevant fundamental summary but route full SEC/ownership/catalyst evidence to Research.",
+          "Long-Term remains decision-complete while Research is the canonical detailed evidence destination.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-06",
+        "name": "Discovery Scanner",
+        "action": "CONSOLIDATE_ACQUISITION",
+        "priority": "HIGH",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-001"
+        ],
+        "requiredClosure": [
+          "Introduce one bounded canonical broad-snapshot broker/cache with freshness and in-flight request coalescing shared by Scanner and Opportunity Radar; preserve distinct ranking logic.",
+          "A fresh equivalent Alpaca snapshot batch is not independently fetched by Scanner and Radar for the same symbols/window; ranking behavior remains distinct and tested.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-07",
+        "name": "Opportunity Radar",
+        "action": "CONSOLIDATE_ACQUISITION",
+        "priority": "HIGH",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-001"
+        ],
+        "requiredClosure": [
+          "Consume the shared broad-snapshot broker/cache and canonical market-activity/event evidence; retain always-on promotion lifecycle and adaptive cadence.",
+          "Radar remains always-on/bounded but shares fresh acquisition with Scanner and records avoided duplicate calls.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-08",
+        "name": "Pre-Market Prep",
+        "action": "EXTEND_EXISTING_COORDINATOR",
+        "priority": "HIGH",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-002"
+        ],
+        "requiredClosure": [
+          "Formalize a Session Intelligence Coordinator and model Pre-Market Prep as a temporal freshness/prewarm checkpoint over canonical state and shared refresh scheduler/router/cache.",
+          "Pre-Market Prep owns no parallel market-analysis or broad provider acquisition pipeline and produces a concise readiness/change outcome.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-09",
+        "name": "Market Open Prep",
+        "action": "EXTEND_EXISTING_COORDINATOR",
+        "priority": "HIGH",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-002"
+        ],
+        "requiredClosure": [
+          "Place the 9:20–9:25 ET reconciliation checkpoint under the same Session Intelligence Coordinator, reusing canonical overnight/premarket evidence and only refreshing due material inputs.",
+          "Market Open Prep remains a distinct temporal checkpoint without duplicating Scanner/Radar/Event acquisition or analysis engines.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-10",
+        "name": "Earnings & Material Catalyst Reaction Watch",
+        "action": "EXTEND_EXISTING_OWNER",
+        "priority": "HIGH",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Make Event Intelligence the explicit lifecycle owner for scheduled/material trigger → reaction → outcome tracking; reuse canonical Earnings/News/SEC/quote/liquidity evidence and Rapid Move correlation.",
+          "No separate broad polling engine; event lifecycle remains selective, correlated, deduplicated and outcome-tracked.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-11",
+        "name": "Market Activity Seeds",
+        "action": "REMOVE_PROMINENT_SURFACE",
+        "priority": "MEDIUM",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-003"
+        ],
+        "requiredClosure": [
+          "Keep Market Activity as a reusable Discovery/Radar input and optional explanation/drill-down, but remove it as an equal/prominent normal-user decision surface.",
+          "Discovery still uses seeds; USER-facing hierarchy presents Radar/Scanner outcomes rather than raw acquisition ingredients.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-12",
+        "name": "Legacy standalone News/Earnings/Filings routes",
+        "action": "REMOVE_OR_RETIRE",
+        "priority": "HIGH",
+        "status": "NOT_IMPLEMENTED_CONFIRMED",
+        "links": [
+          "IMPL-18-UTILITY-004"
+        ],
+        "requiredClosure": [
+          "Retire or redirect legacy standalone evidence pages: ticker Earnings/SEC/News go to Research subviews; market-wide material events go to Market Intelligence/Event Intelligence.",
+          "No broken links; one canonical deep evidence home per workflow; legacy direct routes redirect safely or are removed with regression coverage.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      },
+      {
+        "id": "UTILITY-V18.3-13",
+        "name": "Maintenance",
+        "action": "CONSOLIDATE_PRESENTATION",
+        "priority": "MEDIUM",
+        "status": "REVALIDATION_REQUIRED_HIGH",
+        "links": [],
+        "requiredClosure": [
+          "Group preparation/event operational truth under Session & Event Intelligence diagnostics while preserving provider/runtime/cache/validation ownership; keep Settings as configuration only.",
+          "Operational visibility remains complete without repetitive equal-level job panels or user-facing intelligence duplication.",
+          "fresh current-source, browser/runtime and supported-package evidence"
+        ]
+      }
+    ]
   }
 }
