@@ -1,16 +1,16 @@
-# DE.PULSE v18.4.0 TEST — Security / Commercial Readiness Hardening
+# DE.PULSE v18.4.0 STABLE — Security / Commercial Readiness Hardening
 
-**Build:** `v18.4.0-test-security-commercial-readiness-20260816`  
-**Channel:** TEST  
+**Build:** `v18.4.0-stable-security-commercial-readiness-20260816`  
+**Channel:** STABLE  
 **Current Stable baseline:** v18.3.0  
 **Major v18 provenance anchor:** v17.5.1  
 **Patch predecessor:** v18.3.0 STABLE  
-**Application bundle:** `De-Pulse-v18.4.0-TEST.app`  
-**Runtime/config:** `PersonalMarketTerminal-v18.4.0-TEST`
+**Application bundle:** `De-Pulse.app`  
+**Runtime/config:** `PersonalMarketTerminal`
 
-v18.4 TEST hardens the existing secure multi-user/hosted platform without changing market-scoring formulas or provider routing authority. It adds fresh password re-authentication for high-impact mutations, hosted per-user request quotas with aggregate diagnostics, and explicit provider data-rights/commercial-readiness metadata. Commercial, redistribution and AI-use readiness remain fail-closed unless provider-specific evidence is bound; a working API key never implies legal/commercial approval.
+v18.4 STABLE hardens the existing secure multi-user/hosted platform without changing market-scoring formulas or provider routing authority. It adds fresh password re-authentication for high-impact mutations, hosted per-user request quotas with aggregate diagnostics, and explicit provider data-rights/commercial-readiness metadata. Commercial, redistribution and AI-use readiness remain fail-closed unless provider-specific evidence is bound; a working API key never implies legal/commercial approval.
 
-Desktop remains SQLite/local by default and hosted PostgreSQL/shared-state behavior from v18.3 is preserved. Smart Provider Router v2 execution, protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. v18.4 TEST uses an isolated profile cloned from the v18.3 Stable profile on first use.
+Desktop remains SQLite/local by default and hosted PostgreSQL/shared-state behavior from v18.3 is preserved. Smart Provider Router v2 execution, protected deterministic Day/Swing/Long formulas and the permanent **No Execution Boundary** remain unchanged. The Stable desktop build uses canonical `PersonalMarketTerminal` and preserves compatible prior Stable state; the historical v18.4 TEST profile remains isolated. The promoted Stable identity is recertified from its exact source before final immutable tag/publication.
 
 ## Immediate Stable predecessor — v18.3.0 STABLE — PostgreSQL / Hosted Shared State
 

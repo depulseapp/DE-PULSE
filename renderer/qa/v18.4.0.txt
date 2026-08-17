@@ -1,0 +1,15 @@
+DE.PULSE v18.4.0 STABLE — Security / Commercial Readiness Hardening
+Date: 2026-08-16
+Build ID: v18.4.0-stable-security-commercial-readiness-20260816
+Status: G0-G15 TEST certified · identity-only Stable candidate · exact-source Stable G11-G15 recertification required before immutable Stable tag
+
+Certified scope
+- Fresh password re-authentication for high-impact mutations without gating normal research/market workflows.
+- Hosted bounded request-abuse safeguards and aggregate observability without raw identity exposure.
+- Explicit provider entitlement/data-rights metadata with structural zero influence on Smart Provider Router scoring/eligibility/executable routing.
+- Commercial, redistribution and AI-use readiness remains fail-closed unless provider-specific rights evidence is explicitly bound.
+- v18.3 PostgreSQL/shared canonical state and desktop SQLite default preserved.
+- Protected deterministic Day/Swing/Long formulas unchanged.
+- Permanent No Execution Boundary preserved.
+
+Stable promotion changes release identity/runtime/documentation only; protected market/provider execution behavior is unchanged.

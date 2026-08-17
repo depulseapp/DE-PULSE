@@ -1,6 +1,6 @@
 # DE.PULSE — Capabilities & Limitations
 
-## v18.4.0 TEST — commercial/data-rights boundary
+## v18.4.0 STABLE — commercial/data-rights boundary
 
 v18.4 does **not** assert that any provider is commercially approved, redistributable or approved for AI/LLM use merely because an endpoint is public, configured or operational. Current default provider rights are `UNREVIEWED` / `NOT_ASSERTED`, and commercial readiness is fail-closed until provider-specific evidence is bound. Legal/licensing interpretation remains an explicit review responsibility rather than an inferred runtime fact.
 

@@ -1,6 +1,6 @@
 # DE.PULSE — Developer documentation
 
-## v18.4.0 TEST — Security / commercial-readiness architecture
+## v18.4.0 STABLE — Security / commercial-readiness architecture
 
 v18.4 extends the existing HTTP security/auth boundary and runtime telemetry instead of creating parallel owners. Fresh re-authentication protects only high-impact mutations. Hosted mutation/expensive-work quotas are keyed from verified identity after canonical auth/CSRF resolution, use bounded in-memory windows, return deterministic HTTP 429/`Retry-After`, and expose aggregate counters without raw user/session/IP identifiers.
 

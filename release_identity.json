@@ -2,13 +2,13 @@
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
   "version": "18.4.0",
   "display_version": "DE.PULSE v18.4.0",
-  "build_id": "v18.4.0-test-security-commercial-readiness-20260816",
-  "channel": "TEST",
+  "build_id": "v18.4.0-stable-security-commercial-readiness-20260816",
+  "channel": "STABLE",
   "stable_baseline": "v17.5.1",
   "previous_stable": "v18.3.0",
   "scope": "Security / Commercial Readiness Hardening: harden secrets/security and the auth/session/CSRF/cookie perimeter, adversarial authorization and fresh re-authentication for high-impact mutations, explicit provider entitlement/data-rights metadata with zero routing influence, hosted quota/abuse safeguards and aggregate observability, and fail-closed commercial/redistribution/AI-use readiness unless provider-specific rights evidence is bound; preserve v18.3 PostgreSQL/shared canonical state, desktop SQLite default, Smart Provider Router v2 execution behavior, protected deterministic Day/Swing/Long formulas and the permanent No Execution Boundary",
   "bundle_version": "18400",
-  "runtime_config": "PersonalMarketTerminal-v18.4.0-TEST",
+  "runtime_config": "PersonalMarketTerminal",
   "patch_predecessor": "v18.3.0",
-  "application_bundle": "De-Pulse-v18.4.0-TEST.app"
+  "application_bundle": "De-Pulse.app"
 }

@@ -3,10 +3,10 @@
     {
       "version": "18.4.0",
       "date": "2026-08-16",
-      "status": "TEST",
-      "summary": "TEST Security / Commercial Readiness Hardening: fresh re-authentication for high-impact mutations, hosted quota/abuse safeguards with aggregate observability, explicit provider data-rights metadata, and fail-closed commercial/redistribution/AI-use readiness; v18.3 PostgreSQL/shared state, Smart Router execution, deterministic formulas and No Execution remain unchanged.",
+      "status": "STABLE",
+      "summary": "STABLE Security / Commercial Readiness Hardening: fresh re-authentication for high-impact mutations, hosted quota/abuse safeguards with aggregate observability, explicit provider data-rights metadata, and fail-closed commercial/redistribution/AI-use readiness; v18.3 PostgreSQL/shared state, Smart Router execution, deterministic formulas and No Execution remain unchanged.",
       "file": "v18.4.0.txt",
-      "buildId": "v18.4.0-test-security-commercial-readiness-20260816",
+      "buildId": "v18.4.0-stable-security-commercial-readiness-20260816",
       "checkpoint": "release/v18.4.0/G1-IMMUTABLE-SCOPE.md"
     },
     {
