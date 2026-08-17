@@ -12,9 +12,12 @@ import (
 )
 
 const (
-	stableRuntimeConfigDirName  = "PersonalMarketTerminal"
-	v18TestRuntimeConfigDirName = "PersonalMarketTerminal-v18.4.0-TEST"
-	hostedRuntimeConfigDirName  = "PersonalMarketTerminal-v18.4.0-HOSTED"
+	stableRuntimeConfigDirName     = "PersonalMarketTerminal"
+	stableRuntimeProfileVersion   = "v18.5.0"
+	v18TestRuntimeProfileVersion  = "v18.5.1"
+	v18TestRuntimeConfigDirName    = "PersonalMarketTerminal-v18.5.1-TEST"
+	hostedRuntimeConfigDirName     = "PersonalMarketTerminal-v18.5.1-HOSTED"
+	v18TestProfileMigrationMarker = ".v18.5.1-test-profile-migration.json"
 )
 
 func resolveV18RuntimeConfig(base string) (string, error) {
@@ -38,15 +41,15 @@ func resolveV18RuntimeConfig(base string) (string, error) {
 	return prepareV18TestConfig(base)
 }
 
-// prepareV18TestConfig creates an isolated v18.4.0 TEST profile. On first launch it
-// clones the authoritative Stable profile so settings, watchlists, API keys and
-// persistent intelligence carry forward without allowing the TEST app to write
+// prepareV18TestConfig creates an isolated v18.5.1 TEST profile. On first launch it
+// clones the authoritative v18.5.0 Stable profile so settings, watchlists, API keys
+// and persistent intelligence carry forward without allowing the TEST app to write
 // into Stable's runtime directory.
 func prepareV18TestConfig(base string) (string, error) {
 	target := filepath.Join(base, v18TestRuntimeConfigDirName)
 	if st, err := os.Stat(target); err == nil {
 		if !st.IsDir() {
-			return "", fmt.Errorf("v18.4.0 TEST config path is not a directory: %s", target)
+			return "", fmt.Errorf("%s TEST config path is not a directory: %s", v18TestRuntimeProfileVersion, target)
 		}
 		return target, nil
 	} else if !os.IsNotExist(err) {
@@ -56,7 +59,7 @@ func prepareV18TestConfig(base string) (string, error) {
 	source := filepath.Join(base, stableRuntimeConfigDirName)
 	if st, err := os.Stat(source); err == nil && st.IsDir() {
 		if stableInstanceIsLive(source) {
-			return "", fmt.Errorf("v18.4.0 TEST first-run migration requires DE.PULSE v18.3.0 Stable to be closed once; Stable data was not modified")
+			return "", fmt.Errorf("%s TEST first-run migration requires DE.PULSE %s Stable to be closed once; Stable data was not modified", v18TestRuntimeProfileVersion, stableRuntimeProfileVersion)
 		}
 		tmp := target + ".migrating"
 		_ = os.RemoveAll(tmp)
@@ -69,11 +72,12 @@ func prepareV18TestConfig(base string) (string, error) {
 		}
 		marker, _ := json.MarshalIndent(map[string]any{
 			"source":        stableRuntimeConfigDirName,
-			"sourceVersion": "v18.3.0",
+			"sourceVersion": stableRuntimeProfileVersion,
 			"target":        v18TestRuntimeConfigDirName,
+			"targetVersion": v18TestRuntimeProfileVersion,
 			"migratedAt":    time.Now().UTC().Format(time.RFC3339Nano),
 		}, "", "  ")
-		if err := os.WriteFile(filepath.Join(tmp, ".v18.4.0-test-profile-migration.json"), append(marker, '\n'), 0600); err != nil {
+		if err := os.WriteFile(filepath.Join(tmp, v18TestProfileMigrationMarker), append(marker, '\n'), 0600); err != nil {
 			_ = os.RemoveAll(tmp)
 			return "", err
 		}
