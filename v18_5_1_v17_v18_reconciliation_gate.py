@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+"""Inventory and release gate for complete v17/v18 implementation reconciliation."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+LEDGER = ROOT / "release" / "v18.5.1" / "V17-V18-IMPLEMENTATION-RECONCILIATION.json"
+
+BLOCKING = {
+    "REVALIDATION_REQUIRED",
+    "REVALIDATION_REQUIRED_HIGH",
+    "REOPENED",
+    "NOT_IMPLEMENTED_CONFIRMED",
+}
+FINAL = {
+    "FRESH_PASS",
+    "INTENTIONALLY_SUPERSEDED",
+    "NOT_APPLICABLE",
+    "ROADMAP_PLACED_FUTURE",
+}
+REQUIRED_BLOCKERS = {
+    "IMPL-18-TRADEINSIGHT-001",
+    "COPY-18.5.1-001",
+    "SYMBOL-18.5.1-001",
+    "SYMBOL-18.5.1-002",
+    "NAV-18.5.1-001",
+    "RESEARCH-v15.1.0-17-19-REOPENED",
+}
+RELEASE_SCOPE_FILES = [
+    "v18_0_scope.json",
+    "v18_0_1_scope.json",
+    "v18_0_2_scope.json",
+    "v18_0_3_scope.json",
+    "v18_0_4_scope.json",
+    "v18_0_5_scope.json",
+    "v18_0_6_scope.json",
+    "v18_1_scope.json",
+    "v18_2_scope.json",
+    "v18_3_scope.json",
+    "v18_4_scope.json",
+    "v18_5_scope.json",
+]
+
+
+def load(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def slug(value: object) -> str:
+    result = re.sub(r"[^A-Z0-9]+", "-", str(value).upper()).strip("-")
+    return result[:80]
+
+
+def scope_entries(path: str, data: dict) -> list[dict]:
+    rows: list[dict] = []
+
+    def append(section: str, values: object) -> None:
+        if not isinstance(values, list):
+            return
+        for index, item in enumerate(values, 1):
+            if isinstance(item, dict):
+                key = item.get("id") or f"{path}#{section.replace('_', '-')}-{index}"
+                title = item.get("name") or item.get("requirement") or str(item)
+            else:
+                key = f"{path}#{section.replace('_', '-')}-{index}"
+                title = str(item)
+            rows.append(
+                {
+                    "id": f"{slug(path.replace('.json', ''))}-{slug(key)}",
+                    "title": title,
+                    "section": section,
+                }
+            )
+
+    append("items", data.get("items"))
+    append("scope_lock", data.get("scope_lock"))
+    append("clauses", data.get("clauses"))
+    append("firstSlice", data.get("firstSlice"))
+    append("closureDimensions", data.get("closureDimensions"))
+    append("adrGdiRequiredScenarios", data.get("adrGdiRequiredScenarios"))
+    append("releaseBlockers", data.get("releaseBlockers"))
+    append("protectedContracts", data.get("protectedContracts"))
+    return rows
+
+
+def collect_status_rows(value: object, path: str = "ledger") -> list[tuple[str, str, dict]]:
+    rows: list[tuple[str, str, dict]] = []
+    if isinstance(value, dict):
+        status = value.get("status")
+        if isinstance(status, str):
+            rows.append((path, status, value))
+        for key, child in value.items():
+            rows.extend(collect_status_rows(child, f"{path}.{key}"))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            rows.extend(collect_status_rows(child, f"{path}[{index}]"))
+    return rows
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--release",
+        action="store_true",
+        help="enforce final v18.5.1 closure; default validates complete inventory only",
+    )
+    args = parser.parse_args()
+
+    errors: list[str] = []
+    ledger = load(LEDGER)
+
+    if ledger.get("schema") != "DE.PULSE-V18.5.1-V17-V18-IMPLEMENTATION-RECONCILIATION-1":
+        errors.append("ledger schema drift")
+    if ledger.get("release") != "v18.5.1":
+        errors.append("ledger release drift")
+
+    inherited = load(ROOT / "renderer" / "qa" / "v15.1.2-approved-scope.json")
+    inherited_rows = ledger.get("inheritedApprovedScope", {}).get("items", [])
+    if inherited.get("count") != 48 or len(inherited.get("items", [])) != 48:
+        errors.append("canonical inherited approved scope is not 48")
+    if len(inherited_rows) != 48:
+        errors.append("ledger does not inventory all 48 inherited requirements")
+    inherited_origin = {row.get("originId") for row in inherited_rows}
+    if inherited_origin != {item.get("id") for item in inherited.get("items", [])}:
+        errors.append("inherited requirement IDs differ from canonical scope")
+
+    v17_major = load(ROOT / "v17_major_scope.json")
+    v17_matrix = load(ROOT / "v17_5_major_closure_scope_matrix.json")
+    v17_rows = ledger.get("v17", {}).get("items", [])
+    if len(v17_major.get("items", [])) != 20 or v17_matrix.get("scope_count") != 20:
+        errors.append("canonical v17 scope is not 20")
+    if [row.get("title") for row in v17_rows] != v17_major.get("items", []):
+        errors.append("ledger v17 items differ from canonical v17 major scope")
+    matrix_titles = [row.get("item") for row in v17_matrix.get("items", [])]
+    if matrix_titles != v17_major.get("items", []):
+        errors.append("v17 closure matrix differs from frozen v17 major scope")
+    for row in v17_matrix.get("items", []):
+        for ref in row.get("code_owners", []) + row.get("fresh_executable_evidence", []):
+            if not (ROOT / ref).exists():
+                errors.append(f"v17 evidence reference missing: {ref}")
+
+    v18_major = load(ROOT / "v18_major_scope.json")
+    delivery = load(ROOT / "v18_delivery_slices.json")
+    workstreams = ledger.get("v18", {}).get("workstreams", [])
+    if [row.get("title") for row in workstreams] != v18_major.get("workstreams", []):
+        errors.append("ledger v18 workstreams differ from canonical v18 major scope")
+    if len(workstreams) != len(delivery.get("slices", [])):
+        errors.append("v18 major workstream/delivery-slice cardinality mismatch")
+    for row in workstreams:
+        if not row.get("deliverySlice"):
+            errors.append(f"v18 workstream lacks delivery placement: {row.get('title')}")
+
+    ledger_scopes = {
+        scope.get("source"): scope for scope in ledger.get("v18", {}).get("releaseScopes", [])
+    }
+    for path in RELEASE_SCOPE_FILES:
+        if path not in ledger_scopes:
+            errors.append(f"release scope missing from ledger: {path}")
+            continue
+        canonical = scope_entries(path, load(ROOT / path))
+        recorded = [
+            {key: row.get(key) for key in ("id", "title", "section")}
+            for row in ledger_scopes[path].get("entries", [])
+        ]
+        if recorded != canonical:
+            errors.append(f"release-scope entry drift: {path}")
+
+    present_blockers = {
+        row.get("id") for row in ledger.get("confirmedImplementationMisses", [])
+    } | {row.get("id") for row in ledger.get("escapedDefects", [])}
+    missing_blockers = REQUIRED_BLOCKERS - present_blockers
+    if missing_blockers:
+        errors.append("known blocker missing from ledger: " + ", ".join(sorted(missing_blockers)))
+
+    allowed = set(ledger.get("allowedStatuses", []))
+    status_rows = collect_status_rows(ledger)
+    for path, status, _ in status_rows:
+        if status not in allowed and path != "ledger":
+            errors.append(f"unsupported status {status!r} at {path}")
+
+    blockers = [(path, status, row) for path, status, row in status_rows if status in BLOCKING]
+
+    if args.release:
+        if ledger.get("status") != "CLOSED":
+            errors.append("release ledger is not CLOSED")
+        if blockers:
+            errors.append(f"{len(blockers)} blocking/revalidation rows remain")
+        for path, status, row in status_rows:
+            if status == "FRESH_PASS":
+                evidence = row.get("closureEvidence")
+                if not isinstance(evidence, dict):
+                    errors.append(f"FRESH_PASS lacks closureEvidence at {path}")
+                    continue
+                for key in ("sourceCommit", "regression", "macOS", "windows"):
+                    if not evidence.get(key):
+                        errors.append(f"FRESH_PASS lacks {key} evidence at {path}")
+            elif status not in FINAL and path != "ledger":
+                errors.append(f"non-final disposition at {path}: {status}")
+
+    if errors:
+        print("v17/v18 implementation reconciliation gate: FAIL")
+        for error in errors:
+            print(f" - {error}")
+        return 2
+
+    mode = "release" if args.release else "inventory"
+    print(
+        "v17/v18 implementation reconciliation gate: PASS"
+        f" · mode={mode}"
+        f" · inherited={len(inherited_rows)}"
+        f" · v17={len(v17_rows)}"
+        f" · v18-workstreams={len(workstreams)}"
+        f" · v18-release-entries={sum(len(x.get('entries', [])) for x in ledger_scopes.values())}"
+        f" · open-blocking/revalidation={len(blockers)}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
