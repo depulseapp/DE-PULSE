@@ -149,13 +149,34 @@ jobs:
           node-version: '24'
       - name: JavaScript syntax
         run: node --check renderer/renderer.js
-      - name: Existing renderer contract gates
+      - name: Dependency-free renderer contract
+        run: python3 renderer_logic_test.py
+      - name: Prepare browser contract dependency
         shell: bash
         run: |
           set -euo pipefail
-          for gate in renderer_logic_test.py responsive_ui_test.py; do
-            if [ -f "$gate" ]; then python3 "$gate"; fi
-          done
+          python3 -m pip install --disable-pip-version-check playwright
+          if command -v chromium >/dev/null 2>&1; then
+            echo "Using hosted Chromium: $(command -v chromium)"
+          elif command -v google-chrome >/dev/null 2>&1; then
+            sudo ln -sf "$(command -v google-chrome)" /usr/bin/chromium
+            echo "Using hosted Google Chrome through /usr/bin/chromium"
+          elif command -v google-chrome-stable >/dev/null 2>&1; then
+            sudo ln -sf "$(command -v google-chrome-stable)" /usr/bin/chromium
+            echo "Using hosted Google Chrome Stable through /usr/bin/chromium"
+          else
+            python3 -m playwright install --with-deps chromium
+            chromium_path="$(python3 - <<'PY'
+from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    print(p.chromium.executable_path)
+PY
+)"
+            sudo ln -sf "$chromium_path" /usr/bin/chromium
+            echo "Using Playwright Chromium fallback through /usr/bin/chromium"
+          fi
+      - name: Responsive browser contract
+        run: python3 responsive_ui_test.py
 
   qualified-summary:
     name: G5 · Recovery qualification summary
