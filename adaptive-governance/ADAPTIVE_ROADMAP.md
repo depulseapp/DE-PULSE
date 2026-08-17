@@ -134,6 +134,7 @@ Classification: **CURRENT_RELEASE_BLOCKER**. v18.5.1 must close the following ev
 | SYMBOL-18.5.1-001 | Make row removal reliable across Day/Swing/Long, including final desk membership, with truthful counts and persistence. | All-desk membership matrix, API/state assertions, reload and packaged-runtime retest. |
 | SYMBOL-18.5.1-002 | Visually distinguish the current desk membership from other memberships on every desk. | Day/Swing/Long responsive screenshots plus state/selection assertions. |
 | NAV-18.5.1-001 | Preserve scroll, focus and relevant selection across live/SSE refresh; no unrequested jump to page top. | Mid-section dwell through repeated updates in browser and actual packages. |
+| HOVER-18.5.1-001 | Eliminate ticker/row hover-triggered screen or table blinking across all ticker surfaces during live updates. | Pointer-dwell plus repeated live/SSE update matrix proving stable DOM, geometry and paint across Day/Swing/Long, responsive browser widths and actual packages. |
 | RESEARCH-v15.1.0-17-19-REOPENED | Reclose approved Research input, freshness-badge and responsive top-area placement; make labels, controls, disabled states and evidence recovery truthful. | Requirement-level UI/state tests at desktop/tablet/narrow widths plus packaged-runtime evidence. |
 | IMPL-18-TRADEINSIGHT-001 | Implement the committed TradeInsight SHADOW / SECONDARY workstream through the canonical Smart Router; it is confirmed absent from current implementation. | Adapter/configuration, capability/rights/provenance controls, bounded SHADOW fixtures/live smoke, router integration and actual-package evidence. |
 | IMPL-18-UTILITY-001 | Consolidate Scanner/Radar snapshot acquisition into one bounded canonical broker/cache. | Shared-fetch/coalescing tests, avoided-call telemetry, provider-budget and package evidence. |
@@ -190,7 +191,7 @@ v18.5.1 is the audit/containment and urgent-recovery entry slice. It is not auto
 
 The v18.x program executes these ordered waves across as many coherent minor releases as evidence requires:
 
-1. reconstruct/freeze the complete 282-row inventory;
+1. reconstruct/freeze the complete 283-row inventory;
 2. fix escaped user defects;
 3. implement confirmed misses;
 4. close all 13 orphaned utility remediations;
