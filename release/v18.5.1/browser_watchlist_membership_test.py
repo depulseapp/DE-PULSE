@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Behavior-first Chromium proof for v18.5.1 Issue #12.
 
-The test executes the actual product helper/markup/bindings extracted from
-renderer.js, with only network/bootstrap/render dependencies stubbed. It proves:
-- desk row × uses the canonical global-remove endpoint, not one-desk demotion;
-- all 7 legal membership combinations remove to zero and Undo restores exactly;
-- membership-pill final-desk protection remains a separate one-desk contract;
-- the active current desk has visible + aria-current semantics.
+The harness loads the same watchlist-v18.5.1.js extension as renderer/index.html,
+while retaining the actual renderer.js membership-pill handler. Only network,
+bootstrap and render dependencies are stubbed. It proves:
+- desk row × uses canonical global tracked-symbol removal;
+- all 7 legal desk-membership combinations remove to zero;
+- Undo restores exact memberships and prior desk selections;
+- final membership-pill removal remains protected and separate;
+- the current desk is visible and exposed with aria-current.
 """
 import os
 from pathlib import Path
@@ -15,6 +17,9 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 RENDERER = ROOT / "renderer" / "renderer.js"
+EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
+INDEX = ROOT / "renderer" / "index.html"
+CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
 
 
 def between(text: str, start: str, end: str, label: str) -> str:
@@ -28,53 +33,44 @@ def between(text: str, start: str, end: str, label: str) -> str:
 
 
 def main() -> None:
-    source = RENDERER.read_text(encoding="utf-8")
-    helper = between(
-        source,
-        "async function removeTrackedSymbolEverywhere(symbol,ctx){",
-        "function bindDynamic(){",
-        "global-remove helper",
-    )
-    membership_fn = between(
-        source,
-        "function deskMembershipStrip(sym,currentDesk='')",
-        "function discoveryMembership",
-        "membership markup",
-    )
-    desk_remove_binding = between(
-        source,
-        "$$('[data-desk-remove]').forEach",
-        "\n $$('[data-add-desk]')",
-        "desk remove binding",
-    )
+    renderer = RENDERER.read_text(encoding="utf-8")
+    extension = EXTENSION.read_text(encoding="utf-8")
+    index = INDEX.read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
+
     membership_binding = between(
-        source,
+        renderer,
         "$$('[data-desk-membership]').forEach",
         "$$('[data-master-remove]').forEach",
-        "membership binding",
+        "actual membership-pill binding",
     )
 
-    assert "/api/master-symbol/remove" in helper
-    assert "/api/master-symbol/restore" in helper
-    assert "removeTrackedSymbolEverywhere(symbol,ctx)" in desk_remove_binding
-    assert "/api/desk/membership" not in desk_remove_binding
+    assert "watchlist-v18.5.1.js?v=18.5.1" in index
+    assert "watchlist-v18.5.1.css?v=18.5.1" in index
+    assert "/api/master-symbol/remove" in extension
+    assert "/api/master-symbol/restore" in extension
+    assert "bindGlobalTrackedSymbolRemoval" in extension
+    assert "aria-current=\"true\"" in extension
+    assert "CURRENT" in extension
+    assert "Remove ${symbol} from Tracked Symbols and all desks" in extension
+    assert "/api/desk/membership" not in extension, "extension must not duplicate one-desk membership semantics"
     assert "/api/desk/membership" in membership_binding
-    assert "aria-current=\"true\"" in membership_fn
-    assert "desk-membership-current" in membership_fn
-    assert "${deskMembershipStrip(sym,kind)}" in source
+    assert ".desk-membership-pill.current-desk" in css
+    assert ".desk-membership-current" in css
 
     harness = r"""
 const DESKS=['day','swing','long'];
+let page='day';
 let state={},runtime={},selected={day:'NVDA',swing:'NVDA',long:'NVDA'};
 window.__members={day:[],swing:[],long:[]};
 window.__calls=[];
 window.__renderCount=0;
 window.__toast=[];
-window.__currentDesk='day';
 function normalizeSymbol(v){return String(v||'').trim().toUpperCase()}
 function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
 function titleCaseText(v){return String(v||'').replace(/(^|[-_ ])([a-z])/g,(m,a,b)=>a+b.toUpperCase())}
 function deskWL(k){return {id:'wl-'+k,symbols:[...(window.__members[k]||[])]}}
+const deskCfg={day:{title:'Day Trade Desk'},swing:{title:'Swing Desk'},long:{title:'Long-Term Desk'}};
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 function captureSaveContext(){return {scrollY:window.scrollY}}
 function restoreSaveContext(){}
@@ -114,13 +110,18 @@ async function api(path,payload){
 }
 function mountDeskRemove(kind){
  const old=$('[data-desk-remove]');if(old)old.remove();
- const b=document.createElement('button');b.type='button';b.textContent='×';b.dataset.deskRemove=kind+':wl-'+kind+':NVDA';document.body.appendChild(b);return b;
+ const b=document.createElement('button');b.type='button';b.textContent='×';b.dataset.deskRemove=kind+':wl-'+kind+':NVDA';b.setAttribute('aria-label','legacy one-desk label');document.body.appendChild(b);return b;
 }
 function mountMembership(kind){
- const old=$('[data-desk-membership]');if(old)old.remove();
- const b=document.createElement('button');b.type='button';b.dataset.deskMembership=kind+':NVDA';b.setAttribute('aria-pressed',(window.__members[kind]||[]).includes('NVDA')?'true':'false');document.body.appendChild(b);return b;
+ let host=$('#membership-host');if(!host){host=document.createElement('div');host.id='membership-host';document.body.appendChild(host)}
+ host.innerHTML=deskMembershipStrip('NVDA');
+ return host.querySelector('[data-desk-membership="'+kind+':NVDA"]');
 }
+function deskMembershipStrip(){return ''}
 """
+
+    # Preserve the actual renderer membership-pill contract inside the base bind.
+    base_bind = "function bindDynamic(){\n" + membership_binding + "\n}"
 
     combos = [
         ("D", {"day"}),
@@ -140,27 +141,34 @@ function mountMembership(kind){
             kwargs["executable_path"] = chrome
         browser = p.chromium.launch(**kwargs)
         pg = browser.new_page(viewport={"width": 1000, "height": 700})
-        pg.set_content('<div id="header-notification"></div><pre id="state-output"></pre>')
+        pg.set_content('<div id="header-notification"></div><div id="membership-host"></div><pre id="state-output"></pre>')
         pg.add_script_tag(content=harness)
-        pg.add_script_tag(content=helper)
-        pg.add_script_tag(content=membership_fn)
+        pg.add_script_tag(content=base_bind)
+        pg.add_script_tag(content=extension)
 
         for name, active in combos:
             current = next(iter(active))
-            initial = {k: (["NVDA"] if k in active else []) for k in ("day", "swing", "long")}
+            initial = {k: (["NVDA"] if k in active else []) for k in DESKS}
+            selected_before = {
+                "day": "NVDA" if "day" in active else "SPY",
+                "swing": "NVDA" if "swing" in active else "QQQ",
+                "long": "NVDA" if "long" in active else "IWM",
+            }
             pg.evaluate(
                 """cfg=>{
                   window.__members=JSON.parse(JSON.stringify(cfg.members));
                   window.__calls=[];window.__toast=[];window.__masterUndo=null;
-                  selected={day:'NVDA',swing:'NVDA',long:'NVDA'};
-                  window.__currentDesk=cfg.current;
+                  selected={...cfg.selected};page=cfg.current;
+                  document.getElementById('membership-host').innerHTML=deskMembershipStrip('NVDA');
                   mountDeskRemove(cfg.current);
+                  bindDynamic();
                 }""",
-                {"members": initial, "current": current},
+                {"members": initial, "selected": selected_before, "current": current},
             )
-            # Bind using the actual renderer.js desk-row binding.
-            pg.add_script_tag(content=desk_remove_binding)
-            pg.locator('[data-desk-remove]').click()
+
+            row = pg.locator('[data-desk-remove]')
+            assert row.get_attribute("aria-label") == "Remove NVDA from Tracked Symbols and all desks", (name, row.get_attribute("aria-label"))
+            row.click()
             pg.wait_for_function("window.__calls.some(x=>x.path==='/api/bootstrap')")
             result = pg.evaluate(
                 """() => ({
@@ -173,42 +181,43 @@ function mountMembership(kind){
             )
             remove_calls = [x for x in result["calls"] if x["path"] == "/api/master-symbol/remove"]
             assert remove_calls == [{"path": "/api/master-symbol/remove", "payload": {"symbol": "NVDA"}}], (name, result)
-            assert all(not result["members"][k] for k in ("day", "swing", "long")), (name, result)
+            assert all(not result["members"][k] for k in DESKS), (name, result)
             assert not result["rowExists"], (name, result)
             assert result["undoExists"], (name, result)
 
             pg.locator('[data-master-undo]').click()
             pg.wait_for_function("window.__calls.some(x=>x.path==='/api/master-symbol/restore')")
             restored = pg.evaluate("({members:window.__members,calls:window.__calls,selected:{...selected}})")
-            expected = initial
-            assert restored["members"] == expected, (name, restored, expected)
+            assert restored["members"] == initial, (name, restored, initial)
+            assert restored["selected"] == selected_before, (name, restored, selected_before)
             restore = [x for x in restored["calls"] if x["path"] == "/api/master-symbol/restore"][-1]
             assert restore["payload"]["symbol"] == "NVDA", (name, restore)
-            assert restore["payload"]["membership"] == {k: (k in active) for k in ("day", "swing", "long")}, (name, restore)
+            assert restore["payload"]["membership"] == {k: (k in active) for k in DESKS}, (name, restore)
 
-            # Execute actual membership markup for the same legal combination.
-            markup = pg.evaluate(
-                """cfg=>{
-                  window.__members=JSON.parse(JSON.stringify(cfg.members));
-                  return deskMembershipStrip('NVDA',cfg.current);
-                }""",
+            # Current desk is inferred from the actual active page because the
+            # existing deskWatchlistCard calls deskMembershipStrip(sym) with one arg.
+            pg.evaluate(
+                """cfg=>{window.__members=JSON.parse(JSON.stringify(cfg.members));page=cfg.current;document.getElementById('membership-host').innerHTML=deskMembershipStrip('NVDA')}""",
                 {"members": initial, "current": current},
             )
-            pg.evaluate("html=>{let h=document.getElementById('membership-host');if(!h){h=document.createElement('div');h.id='membership-host';document.body.appendChild(h)}h.innerHTML=html}", markup)
             current_button = pg.locator(f'#membership-host [data-desk-membership="{current}:NVDA"]')
-            assert current_button.get_attribute("aria-current") == "true", (name, current, markup)
-            assert "CURRENT" in current_button.inner_text(), (name, current, markup)
-            assert "current-desk" in (current_button.get_attribute("class") or ""), (name, current, markup)
-            for k in ("day", "swing", "long"):
-                btn = pg.locator(f'#membership-host [data-desk-membership="{k}:NVDA"]')
-                assert btn.get_attribute("aria-pressed") == ("true" if k in active else "false"), (name, k, markup)
-                if k != current:
-                    assert btn.get_attribute("aria-current") is None, (name, k, markup)
+            assert current_button.get_attribute("aria-current") == "true", (name, current)
+            assert "CURRENT" in current_button.inner_text(), (name, current)
+            assert "current-desk" in (current_button.get_attribute("class") or ""), (name, current)
+            for kind in DESKS:
+                btn = pg.locator(f'#membership-host [data-desk-membership="{kind}:NVDA"]')
+                assert btn.get_attribute("aria-pressed") == ("true" if kind in active else "false"), (name, kind)
+                if kind != current:
+                    assert btn.get_attribute("aria-current") is None, (name, kind)
 
-        # Final membership pill remains protected; it must not silently become
-        # the global-removal contract.
-        pg.evaluate("""()=>{window.__members={day:['NVDA'],swing:[],long:[]};window.__calls=[];window.__toast=[];mountMembership('day')}""")
-        pg.add_script_tag(content=membership_binding)
+        # Final membership pill remains protected. This uses the actual original
+        # renderer.js one-desk handler through the extension's wrapped bindDynamic.
+        pg.evaluate(
+            """()=>{
+              window.__members={day:['NVDA'],swing:[],long:[]};window.__calls=[];window.__toast=[];page='day';
+              document.getElementById('membership-host').innerHTML=deskMembershipStrip('NVDA');bindDynamic();
+            }"""
+        )
         pg.locator('[data-desk-membership="day:NVDA"]').click()
         pg.wait_for_function("window.__calls.some(x=>x.path==='/api/desk/membership')")
         protected = pg.evaluate("({members:window.__members,calls:window.__calls,toast:window.__toast})")
@@ -220,7 +229,7 @@ function mountMembership(kind){
 
         browser.close()
 
-    print("PASS: Issue #12 row × globally removes all 7 membership combinations with exact Undo; membership-pill final protection and current-desk accessibility remain correct.")
+    print("PASS: production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.")
 
 
 if __name__ == "__main__":
