@@ -1,5 +1,11 @@
 # DE.PULSE — Developer documentation
 
+## v18.4.0 TEST — Security / commercial-readiness architecture
+
+v18.4 extends the existing HTTP security/auth boundary and runtime telemetry instead of creating parallel owners. Fresh re-authentication protects only high-impact mutations. Hosted mutation/expensive-work quotas are keyed from verified identity after canonical auth/CSRF resolution, use bounded in-memory windows, return deterministic HTTP 429/`Retry-After`, and expose aggregate counters without raw user/session/IP identifiers.
+
+Provider `DataRights` / `CommercialReadiness` metadata is governance-only and fails closed unless evidence plus explicit commercial/redistribution/AI-use approval are bound. Structural tests prevent those fields from entering Smart Router eligibility/scoring or executable routing. v18.3 PostgreSQL/shared-state owners and protected deterministic formulas are unchanged.
+
 ## v18.3.0 STABLE — PostgreSQL / hosted shared-state architecture
 
 Stable promotion switches the canonical desktop runtime/config to `PersonalMarketTerminal` while hosted mode continues to require explicit PostgreSQL selection. The v18.3 TEST profile remains historical isolation only; no persistence owner, provider pipeline, or deterministic scoring logic changes during promotion.

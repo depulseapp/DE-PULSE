@@ -1,5 +1,11 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.4.0 TEST — commercial/data-rights boundary
+
+v18.4 does **not** assert that any provider is commercially approved, redistributable or approved for AI/LLM use merely because an endpoint is public, configured or operational. Current default provider rights are `UNREVIEWED` / `NOT_ASSERTED`, and commercial readiness is fail-closed until provider-specific evidence is bound. Legal/licensing interpretation remains an explicit review responsibility rather than an inferred runtime fact.
+
+Hosted request quotas are abuse/capacity safeguards, not provider-entitlement limits and not a guarantee against upstream rate limits. They do not change desktop behavior or provider routing. v18.4 remains research/intelligence/decision support only; the **No Execution** boundary is unchanged.
+
 ## v18.3.0 STABLE — hosted persistence boundaries
 
 v18.3 STABLE has passed PostgreSQL 17 repository parity, migration/export, backup/restore, bounded contention/recovery, hosted liveness/readiness, and required macOS Apple Silicon / Windows x64 release certification. This does not by itself represent the broader commercial/data-rights/security hardening reserved for v18.4.

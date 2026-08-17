@@ -1,5 +1,11 @@
 # DE.PULSE — User documentation
 
+## v18.4.0 TEST — Security / commercial readiness hardening
+
+v18.4 TEST adds fresh password confirmation for security-sensitive settings/admin changes, hosted request-abuse safeguards and explicit provider commercial/data-rights readiness. Normal research/market workflows are not re-auth gated. Provider commercial, redistribution and AI-use rights are never inferred from a configured API key; unreviewed rights remain blocked/review-required in governance metadata.
+
+The TEST build uses `PersonalMarketTerminal-v18.4.0-TEST` so the v18.3 Stable profile is not modified. Desktop storage remains SQLite by default; hosted PostgreSQL/shared-state behavior, Smart Provider Router execution, deterministic Day/Swing/Long formulas and the **No Execution** boundary remain unchanged.
+
 ## v18.3.0 STABLE — PostgreSQL / hosted shared state
 
 v18.3 STABLE adds the certified hosted-state foundation without changing normal desktop storage. macOS and Windows desktop builds continue to use the existing local SQLite profile by default. A hosted build explicitly selects PostgreSQL; if that hosted database is unavailable or misconfigured, readiness fails instead of silently using a local substitute.
