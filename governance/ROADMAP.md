@@ -130,15 +130,14 @@ Permanent anti-miss rules:
 
 No fixed feature allocation is assumed. At each prior-slice G16 / next-slice G0–G3, choose from the still-open ledger using user impact, recurrence, dependency readiness, rights/security, performance/freshness risk, coupling, evidence invalidation and learning value.
 
-Candidate clusters include:
+Provisional evidence-selected sequence:
 
-- user-trust UI/state continuity;
-- provider/utility architecture and TradeInsight;
-- documentation/dependency readiness;
-- intelligence-surface consolidation;
-- full cross-cutting performance/security/native hardening.
+- **v18.5.1 candidate:** control plane plus repeated user-trust defects and exact next-slice placement.
+- **v18.6 candidate:** canonical utility/ownership recovery, route/surface cleanup, role-aware documentation and dependency readiness.
+- **v18.7 candidate:** TradeInsight/provider qualification plus remaining intelligence-surface consolidation.
+- **v18.8+ candidate:** full evidence convergence, cross-cutting hardening and major closure only if zero-gap ready.
 
-The final v18 closure release number is assigned only when the remaining applicable scope is ready for one immutable RC and 2/2 native artifact audit.
+This sequence is not frozen product scope. Each minor release becomes binding only at its own G1 and may be split or reordered from measured evidence. The final v18 closure release number is assigned only when the remaining applicable scope is ready for one immutable RC and 2/2 native artifact audit.
 
 ---
 
