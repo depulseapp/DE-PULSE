@@ -3162,7 +3162,6 @@
     "checkpoint": "adaptive-governance/FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md",
     "originalTargetRelease": "v18.3.0",
     "slicingFinding": "All 13 records were marked mandatory v18.3 inputs, but none entered v18_3_scope.json. The prior gate checked durable plan presence, not assignment, implementation, behavioral proof, or closure.",
-    "status": "OPEN_BLOCKING",
     "items": [
       {
         "id": "UTILITY-V18.3-01",
