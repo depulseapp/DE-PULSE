@@ -1,0 +1,12 @@
+{
+  "schema": "DE.PULSE-G0-G3-CONTRACT-1",
+  "version": "18.4.0",
+  "G0": {
+    "stable": "v18.3.0",
+    "commit": "35ef2a161e6a01c4f22fd0c9aecbe8920a7dace2",
+    "fingerprint": "d33c591287aae2c6b07b2be082494aaa76277a327f7d6ea01e87cae1dcbcd272"
+  },
+  "G1": "Security / Commercial Readiness Hardening frozen to v18_4_scope.json",
+  "G2": "Canonical owners remain http_auth/http security + identity/session + provider capability/rights + runtime observability; no duplicate PostgreSQL/market/scoring owners",
+  "G3": "Delta-first delivery: web/auth perimeter first; provider/data-rights and broader commercial suitability remain separate bounded slices; v18.5 closure excluded"
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "DE.PULSE-v18.4-SCOPE-1",
+  "version": "18.4.0",
+  "incomingStable": "v18.3.0",
+  "incomingStableCommit": "35ef2a161e6a01c4f22fd0c9aecbe8920a7dace2",
+  "incomingStableFingerprint": "d33c591287aae2c6b07b2be082494aaa76277a327f7d6ea01e87cae1dcbcd272",
+  "title": "Security / Commercial Readiness Hardening",
+  "clauses": [
+    "secrets_security",
+    "auth_session_csrf_cookie_hardening",
+    "adversarial_authorization",
+    "provider_entitlement_data_rights_metadata",
+    "hosted_commercial_readiness",
+    "quota_abuse_safeguards",
+    "observability",
+    "licensing_redistribution_ai_use_suitability"
+  ],
+  "firstSlice": [
+    "trusted_hosted_request_scheme",
+    "same_origin_enforcement",
+    "browser_security_headers_and_cookies",
+    "login_abuse_throttling",
+    "recent_authentication_groundwork"
+  ],
+  "exclusions": [
+    "no_v18_3_postgresql_rearchitecture",
+    "no_v18_5_major_closure_work",
+    "no_execution_features",
+    "no_deterministic_day_swing_long_formula_changes"
+  ]
+}
