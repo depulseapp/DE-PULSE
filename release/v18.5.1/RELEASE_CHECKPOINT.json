@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "release": "v18.5.1",
+  "status": "WAITING_FOR_G10",
+  "releaseCertificationRequested": false,
+  "qualifiedTestSourceSha": null,
+  "immutableRcSha": null,
+  "rcTag": null,
+  "checkpointId": null,
+  "requiredTargets": ["macos-arm64", "windows-x64"],
+  "requiredGates": ["G11", "G12", "G13", "G14", "G15"],
+  "promotionRule": "Do not request release certification until the exact v18.5.1 TEST source has G10 PASS. G11 freezes the promotion/RC source. Any source change invalidates affected evidence and requires requalification. G14 must run the actual macOS Apple Silicon and Windows x64 artifacts. No cost optimization may reduce required evidence.",
+  "notes": "Dormant checkpoint only. This file must not trigger native/release work while releaseCertificationRequested is false."
+}
