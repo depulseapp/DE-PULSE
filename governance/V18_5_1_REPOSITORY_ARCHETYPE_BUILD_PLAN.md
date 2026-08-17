@@ -1,15 +1,15 @@
-# DE.PULSE v18.5.1 — Hardened Final Closure + 10/10 Repository Archetype Build Plan
+# DE.PULSE v18.5.1 — Audit/Recovery + 10/10 Repository Archetype Build Plan
 
-**Release type:** final v17/v18 implementation closure, escaped-defect recovery and repository/source-architecture hardening  
+**Release type:** v18 audit/containment entry slice, selected urgent recovery and repository/source-architecture hardening  
 **Dependency:** starts only after v18.5.0 Stable promotion and native delivery  
 **Qualification standard:** closure-grade G0–G16; not a lightweight cleanup  
 **Product scope:** implement and prove already-approved v17/v18 commitments only; no unapproved expansion, execution scope or protected decision-formula change.
 
 ## Mission
 
-Close every applicable v17/v18 implementation commitment and escaped defect, then leave the source in a predictable, Maven-archetype-like structure that an engineer can navigate by responsibility and package ownership.
+Reconstruct every applicable v17/v18 commitment and escaped defect, implement the safest G1-selected urgent scope, explicitly place every remainder into the adaptive v18.x program, and leave the source in a predictable structure that supports later slices.
 
-Product closure is the primary acceptance boundary; repository restructuring is a controlled hardening lane and may not delay, hide or invalidate requirement closure. This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`, follows `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`, and is accepted only at **10/10**.
+Requirement continuity is the primary acceptance boundary; repository restructuring is a controlled hardening lane and may not hide or invalidate current or next-slice work. This release implements `governance/REPOSITORY_STRUCTURE_CONTRACT.md`, follows `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`, and is accepted only at **10/10** for its frozen slice.
 
 ## Non-negotiable rules
 
@@ -22,7 +22,7 @@ Product closure is the primary acceptance boundary; repository restructuring is 
 
 ## Mandatory escaped-defect and implementation closure scope
 
-v18.5.1 is no longer accepted as structure-only equivalence work. It must preserve the repository-archetype mission **and** close the v18.5 behavior that escaped Major Closure:
+v18.5.1 is no longer accepted as structure-only equivalence work. It must preserve the repository-archetype mission, reconstruct every escape/miss below and freeze which items are completed now versus explicitly assigned to the next v18.x slice:
 
 1. **COPY-18.5.1-001:** stale `v17` profile-preservation copy.
 2. **SYMBOL-18.5.1-001:** inert/inconsistent row removal in Day, Swing and Long, including final desk membership.
@@ -39,7 +39,7 @@ v18.5.1 is no longer accepted as structure-only equivalence work. It must preser
 13. **VERSION-18.5.1-002:** obsolete active release strings in setup, renderer, runtime and TEST-profile paths must be removed or explicitly classified and tested.
 14. **UTILITY-v18.3-CARRY-FORWARD:** all 13 mandatory `functionality_utility_remediation.json` records must receive current implementation/evidence disposition; none may inherit closure from plan presence.
 
-The release must reconstruct and reconcile all 48 inherited requirements, all 20 frozen v17 items, every v18 major workstream and v18.0–v18.5 release entry, all 13 orphaned functionality/utility remediations, accepted conversational commitments and defects against current source and actual packaged behavior. TradeInsight plus six additional implementation-gap groups are confirmed missing; six other escaped defect groups are reopened.
+The release must reconstruct all 48 inherited requirements, all 20 frozen v17 items, every v18 major workstream and v18.0–v18.5 release entry, all 13 orphaned remediations, accepted conversational commitments and defects. TradeInsight plus six additional implementation-gap groups are confirmed missing; six escaped defect groups are reopened. Items not frozen into v18.5.1 require explicit next-v18.x placement, owner, reason and user impact.
 
 These items are **CURRENT_RELEASE_BLOCKER**. A repository move may not hide, defer or claim equivalence for them. Each item requires:
 
@@ -266,8 +266,8 @@ v18.5.1 is complete only when:
 8. no approved product functionality, decision semantics or protected boundary changed;
 9. actual macOS Apple Silicon and Windows x64 artifacts pass runtime/provenance audit and are published in the GitHub Release;
 10. a developer unfamiliar with DE.PULSE history can locate the relevant subsystem and build/test/release path without scanning the repository root;
-11. all six escaped-defect groups pass requirement-linked browser, state/persistence and actual macOS/Windows packaged-runtime retest;
-12. all seven confirmed implementation-gap groups pass their canonical-owner, security/rights, behavioral, regression and actual-package qualification;
-13. all 13 orphaned functionality/utility remediation records have a fresh evidence-backed final disposition;
-14. the full inherited + v17 + v18 implementation-reconciliation ledger contains no unexplained, silently dropped or falsely inherited item;
+11. every escaped-defect group is either completed in the frozen v18.5.1 slice with required proof or explicitly owned/placed in the next v18.x slice;
+12. every confirmed implementation-gap group is either completed now with required qualification or explicitly owned/placed by dependency and risk;
+13. all 13 orphaned remediation records have current-vs-next placement and required evidence defined;
+14. the full inherited + v17 + v18 ledger contains no unexplained, silently dropped, unowned or falsely inherited item;
 15. every recurrence records why prior closure missed it and the regression/prevention control that now blocks repetition.
