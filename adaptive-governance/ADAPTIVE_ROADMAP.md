@@ -159,6 +159,51 @@ This overlay does not create G17+. The work is enforced through G0/G1 traceabili
 
 ---
 
+## 6B. Permanent Requirement Continuity & Slice-Conservation Contract
+
+The v17/v18 audit proved that adaptive methods are ineffective when they are descriptive rather than enforced. Effective immediately, the reconciliation ledger is the parent authority for every release slice.
+
+### Continuity invariants
+
+1. Every approved implementation, defect, remediation and accepted conversational commitment receives an immutable ID before G1 closes.
+2. Every slice lists its parent ledger IDs. A slice may refine work but cannot create a disconnected source of scope truth.
+3. A requirement moved or deferred must name the destination release/slice, owner, reason, user impact and next evidence checkpoint.
+4. Plan presence, source markers, test names and historical PASS records are traceability evidence only.
+5. Current functional closure requires implementation, fresh regression, current behavior and actual supported-package proof.
+6. Reproduced defects reopen the original row and invalidate affected/dependent evidence.
+7. Any source, dependency, renderer, state/persistence or package change invalidates evidence according to its recorded dependency fingerprint.
+8. G10 and G15 require zero missing, duplicate, open, unowned, untested or evidence-stale applicable rows.
+9. G16 must prove that the next runner can reconstruct every remaining item from GitHub without conversation memory.
+10. G0–G16 remains the only gate model; this contract strengthens G1/G3/G10/G15/G16 rather than creating G17.
+
+### Requirement conservation equation
+
+For every roadmap-to-build, build-to-slice, slice-to-RC and RC-to-Stable transition:
+
+`input IDs = implemented + intentionally superseded + not applicable + approved future placement + still open`
+
+The two sides must contain the same immutable IDs. A count or identity mismatch is a blocker, even if every individual slice reports PASS.
+
+### Hardened v18.5.1 Final Closure placement
+
+v18.5.1 is the last v18 closure build and executes these ordered waves:
+
+1. reconstruct/freeze the complete 282-row inventory;
+2. fix escaped user defects;
+3. implement confirmed misses;
+4. close all 13 orphaned utility remediations;
+5. freshly prove every applicable v17/v18 row;
+6. run cross-role, cross-desk, cross-viewport, restart, failure, load and security hardening;
+7. pass zero-gap G10;
+8. freeze one RC and audit actual macOS/Windows packages;
+9. complete G16 prevention and handoff.
+
+No v19 feature work begins until v18.5.1 reaches G16 or is explicitly separated without sharing source, evidence or release identity.
+
+Canonical execution plan: `governance/V18_5_1_HARDENED_FINAL_CLOSURE_BUILD_PLAN.md`.
+
+---
+
 ## 7. Governance-to-Implementation lifecycle
 
 Every applicable rule follows:
@@ -177,7 +222,7 @@ Documentation alone never closes a requirement.
 
 ## 8. Overlay retirement rule
 
-At v18.2 G16:
+At the active release G16:
 - move any genuinely permanent operational lesson into canonical/specialized contracts;
 - keep release-specific evidence in release/checkpoint history;
 - remove obsolete duplicated wording;
