@@ -18,14 +18,14 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
+  "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
   "metadataHeadRule": "candidateSourceCommit names the latest product/tooling/documentation/reconciled-source candidate. Later commits confined to .depulse-certification/resume are fingerprint-excluded metadata and may advance branch HEAD without inheriting evidence across any other source change.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "Executable local qualification exposed three G12 owners in sequence: missing v18.5.2 bundled QA release history, a stale v18.0.5 exact-source-string regression assertion after identity-chrome refactoring, and a browser scroll baseline captured before Playwright hover repositioning. All three focused regressions now pass. Candidate bbbfc095517d769409f64c1bdb43f5f260e14f48 includes the strict browser-test baseline correction and requires one fresh complete exact-source G0-G12 run.",
+  "sourceFingerprintReason": "Executable local qualification exposed four G12 owners in sequence: missing v18.5.2 bundled QA release history, a stale v18.0.5 exact-source-string regression assertion after identity-chrome refactoring, a browser scroll baseline captured before Playwright hover repositioning, and watchlist browser asset assertions hard-coded to the previous release cache-busting query. All four focused regressions now pass. Candidate c17370e68ca2e0303ba4a124a055af1fe10e665d binds the watchlist asset assertion to canonical release_identity.json and requires one fresh complete exact-source G0-G12 run.",
   "codeStatus": "V18_5_2_IMPLEMENTED_G12_FIXES_FOCUSED_PASS_AWAITING_FULL_REQUALIFICATION",
-  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, a main-reconciled mergeable branch, the no-cost exact-source lane, complete v18.5.2 QA release-history identity, refactor-safe v18.0.5 role/identity regression coverage, and a behavior-correct browser scroll baseline that measures DE.PULSE after hover establishment. Focused renderer, role/identity, and browser live-render tests pass; a fresh full exact-source G0-G12 run is still required.",
-  "lastTrustworthyPass": "FOCUSED_RENDERER_LOGIC_G12_QA_IDENTITY_PASS; FOCUSED_V18_0_5_ROLE_IDENTITY_REGRESSION_PASS; FOCUSED_BROWSER_LIVE_RENDER_SCROLL_FOCUS_SELECTION_PASS; DETERMINISTIC_TRADING_EQUIVALENCE_2403_OF_2403_PASS_ON_PRIOR_EXECUTABLE_RUN; NO_FULL_BBBFC095_G0_G12_OR_NATIVE_PASS_CLAIMED",
+  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, a main-reconciled mergeable branch, the no-cost exact-source lane, complete v18.5.2 QA release-history identity, refactor-safe v18.0.5 role/identity coverage, strict live-render scroll/focus/selection coverage, and release-identity-bound watchlist asset version coverage. Focused renderer, role/identity, live-render browser, and watchlist-membership browser tests pass; a fresh full exact-source G0-G12 run is still required.",
+  "lastTrustworthyPass": "FOCUSED_RENDERER_LOGIC_G12_QA_IDENTITY_PASS; FOCUSED_V18_0_5_ROLE_IDENTITY_REGRESSION_PASS; FOCUSED_BROWSER_LIVE_RENDER_SCROLL_FOCUS_SELECTION_PASS; FOCUSED_BROWSER_WATCHLIST_MEMBERSHIP_PASS; DETERMINISTIC_TRADING_EQUIVALENCE_2403_OF_2403_PASS_ON_PRIOR_EXECUTABLE_RUN; NO_FULL_C17370E_G0_G12_OR_NATIVE_PASS_CLAIMED",
   "earliestRequiredResumeGate": "G0",
   "gates": {
     "G0": {"status": "REQUALIFY", "reusable": false},
@@ -46,10 +46,10 @@
     "G15": {"status": "NOT_STARTED", "reusable": false},
     "G16": {"status": "NOT_STARTED", "reusable": false}
   },
-  "blockingIssue": "Run the canonical no-cost exact-source G0-G12 certification on candidate bbbfc095517d769409f64c1bdb43f5f260e14f48. If another genuine test failure appears, fix the earliest owner and requalify; only after PASS proceed to macOS Apple Silicon and Windows x64 G13-G15.",
+  "blockingIssue": "Run the canonical no-cost exact-source G0-G12 certification on candidate c17370e68ca2e0303ba4a124a055af1fe10e665d. If another genuine test failure appears, fix the earliest owner and requalify; only after PASS proceed to macOS Apple Silicon and Windows x64 G13-G15.",
   "knownResiduals": [
     "PR #13 is draft and unpromoted.",
-    "Candidate bbbfc095517d769409f64c1bdb43f5f260e14f48 requires one fresh full exact-source G0-G12 run.",
+    "Candidate c17370e68ca2e0303ba4a124a055af1fe10e665d requires one fresh full exact-source G0-G12 run.",
     "macOS Apple Silicon and Windows x64 G13-G15 package/runtime evidence is pending.",
     "Owner/Admin/User role-specific tab/navigation composition remains planned and not implemented by this checkpoint.",
     "TradeInsight adapter, secure key configuration, Smart Router SHADOW routes and promotion evidence remain not implemented.",
@@ -65,7 +65,8 @@
     "The no-cost local exact-source lane executes through G12.",
     "G12 stale QA release-history identity was corrected and renderer_logic_test.js passes.",
     "G12 stale v18.0.5 exact-source-string assertion was replaced with a behavior-preserving role visibility and identity-sync contract; v18_0_5_renderer_test.js passes.",
-    "G12 browser live-render scroll test now captures its exact baseline after Playwright hover establishment, preserving a strict zero-drift assertion against DE.PULSE; browser_live_render_test.py passes."
+    "G12 browser live-render scroll test now captures its exact baseline after Playwright hover establishment, preserving a strict zero-drift assertion against DE.PULSE; browser_live_render_test.py passes.",
+    "G12 watchlist membership browser test now derives the cache-busting query version from canonical release_identity.json instead of hard-coding the previous release; browser_watchlist_membership_test.py passes."
   ],
   "assistantPortability": {
     "status": "ENFORCED",
@@ -78,5 +79,5 @@
   "userDelivery": "NOT_READY",
   "nextBranch": "v18.5.2-development",
   "nextStep": "Pull the fingerprint-excluded checkpoint metadata, move any local manual-v18.5.2 evidence directory outside the checkout so git status is clean, then run release/v18.5.2/run_free_certification.sh on the exact branch head. If it passes, record exact evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15.",
-  "updatedAt": "2026-08-18T05:03:00Z"
+  "updatedAt": "2026-08-18T05:05:00Z"
 }
