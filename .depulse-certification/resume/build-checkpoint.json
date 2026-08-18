@@ -25,7 +25,7 @@
   "sourceFingerprintState": "CERTIFIED_STABLE_G0_G16_CLOSED",
   "codeStatus": "V18_5_2_AUTHORITATIVE_STABLE_COMPLETE",
   "implementationSummary": "v18.5.2 recovery is complete. Exact-source G0-G12 passed; actual packaged macOS Apple Silicon and Windows x64 G13/G14 passed; G15 authorized promotion; PR #13 merged with exact-head protection; Stable tag/release published from already-certified artifacts without rebuilding; G16 retrospective/handoff closed.",
-  "lastTrustworthyPass": "G0_G12_PASS_E9CA615CF7AB97AC476128C81EE9AE2D7340C0D9; FP_807DE082D43E83D1D3548BCA9350D13B72EF4DC71A848940B73B63E4B4D215B0; MAC_G13_G14_PASS_32102570376; WIN_G13_G14_PASS_32103078336; G15_PASS_32103078336; PROMOTION_D30E54DB4908CA57C52AE298CC4AD A3416FAB46B; PUBLICATION_PASS_32103499711; G16_PASS",
+  "lastTrustworthyPass": "G0_G12_PASS_E9CA615CF7AB97AC476128C81EE9AE2D7340C0D9; FP_807DE082D43E83D1D3548BCA9350D13B72EF4DC71A848940B73B63E4B4D215B0; MAC_G13_G14_PASS_32102570376; WIN_G13_G14_PASS_32103078336; G15_PASS_32103078336; PROMOTION_D30E54DB4908CA57C52AE298CC4ADA3416FAB46B; PUBLICATION_PASS_32103499711; G16_PASS",
   "earliestRequiredResumeGate": "NONE_V18_5_2_CLOSED",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
@@ -105,5 +105,5 @@
   "userDelivery": "DELIVERED_VIA_GITHUB_STABLE_RELEASE",
   "nextBranch": null,
   "nextStep": "No remaining v18.5.2 release action. Future authorized DE.PULSE work must begin by resolving the immutable v18.5.2-stable baseline and reconciling the remaining approved backlog/audit items before selecting the next release scope.",
-  "updatedAt": "2026-08-18T05:40:00Z"
+  "updatedAt": "2026-08-18T05:41:00Z"
 }
