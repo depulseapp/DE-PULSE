@@ -3,12 +3,12 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G10_FINAL_QUALIFICATION",
+  "candidateDisposition": "V18_6_0_G11_RELEASE_CERTIFICATION",
   "branch": "v18.6-development",
   "pullRequest": 16,
-  "candidateSourceCommit": "fa3b67fae64e2083c4aa0d5ea19aec300f434895",
+  "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
   "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_FINAL_G10",
+  "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
   "certifiedStable": {
     "version": "v18.5.2",
     "tag": "v18.5.2-stable",
@@ -18,12 +18,12 @@
     "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
-  "stableIdentityRule": "v18.5.2-stable at d30e54db4908ca57c52ae298cc4ada3416fab46b plus its certified source fingerprint and native artifact hashes remain the immutable Stable predecessor until v18.6.0 completes G11-G16 and is promoted. Candidate/checkpoint metadata never rewrites that Stable identity.",
-  "metadataHeadRule": "Only files under .depulse-certification are excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance as operational metadata after a candidate commit. handoff/CURRENT.md is included in the source fingerprint and must freeze with the product before G11; changing it after G11 requires a new candidate/fingerprint and requalification.",
-  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_FINAL_G10",
+  "stableIdentityRule": "v18.5.2-stable remains the immutable Stable predecessor until v18.6.0 completes G11-G16 and is promoted. Candidate/checkpoint metadata never rewrites that Stable identity.",
+  "metadataHeadRule": "Only files under .depulse-certification are excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance as operational metadata after a candidate commit. handoff/CURRENT.md is included in the source fingerprint and is frozen with the G10-qualified product candidate.",
+  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_G10_PASS",
   "implementationSummary": "All eight assigned v18.6 implementation/audit slices are code-complete. Canonical 18.6.0 identity, release-coupled asset cache identity, QA history, source-bound handoff, and owner-only branch-gated dispatcher into the existing release.yml G11-G16 workflow are aligned. No new top-level gate or workflow owner was introduced.",
-  "lastTrustworthyPass": "IMPLEMENTATION_HEAD_84efadd58b4b279e9055a1b5db4a78f3b41b693c_FAST_32182124289_QUALIFIED_32182124317_PASS; PREFREEZE_IDENTITY_FIXES_VALIDATED_INCREMENTALLY; FINAL_SOURCE fa3b67fae64e2083c4aa0d5ea19aec300f434895 REQUIRES FINAL FAST_AND_QUALIFIED",
-  "earliestRequiredResumeGate": "G10_PREFREEZE_EXACT_IDENTITY_FAST_QUALIFIED",
+  "lastTrustworthyPass": "G10 exact real-branch source aa72c8b2c7571d5633eb2e6dce622749704b1637: CI Fast #142 run 32185509389 PASS; CI Qualified #63 run 32185509377 PASS including Ubuntu/macOS/Windows portability, browser, renderer, full Go suite, race detector, randomized package order and evidence summary.",
+  "earliestRequiredResumeGate": "G11_IMMUTABLE_CANDIDATE_PROVENANCE",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
     "G1": {"status": "PASS", "reusable": true},
@@ -35,8 +35,8 @@
     "G7": {"status": "PASS", "reusable": true},
     "G8": {"status": "PASS", "reusable": true},
     "G9": {"status": "PASS", "reusable": true},
-    "G10": {"status": "IN_PROGRESS", "reusable": false},
-    "G11": {"status": "PENDING", "reusable": false},
+    "G10": {"status": "PASS", "reusable": true, "fastRun": 32185509389, "qualifiedRun": 32185509377},
+    "G11": {"status": "IN_PROGRESS", "reusable": false},
     "G12": {"status": "PENDING", "reusable": false},
     "G13": {"status": "PENDING", "reusable": false},
     "G14": {"status": "PENDING", "reusable": false},
@@ -49,22 +49,24 @@
     "windowsX64": {"status": "PASS", "runId": 32103078336, "artifact": "De-Pulse-v18.5.2-Stable-Windows-x64.zip", "sha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"},
     "publication": {"status": "PASS", "runId": 32103499711, "tag": "v18.5.2-stable", "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b", "rebuild": false}
   },
-  "blockingIssue": "G10_FINAL_EXACT_SOURCE_QUALIFICATION_PENDING",
+  "blockingIssue": "G11_RELEASE_WORKFLOW_DISPATCH_PENDING",
   "knownResiduals": [
     "TradeInsight remains governed shadow/future implementation work and must not gain production influence without its approved lifecycle.",
     "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required items and fail closed when absent or unapproved.",
-    "v18.6 native macOS Apple Silicon and Windows x64 G13/G14 artifacts do not exist until the immutable G11 candidate passes G12 and native packaging/runtime audit."
+    "v18.6 native macOS Apple Silicon and Windows x64 G13/G14 artifacts remain pending until G12 and native package/runtime audit complete."
   ],
-  "releaseBlockingResiduals": ["Fresh Fast + Qualified G10 PASS is required on candidate source fa3b67fae64e2083c4aa0d5ea19aec300f434895 before G11 freeze."],
+  "releaseBlockingResiduals": ["G11-G16 release certification and native artifact evidence remain required before Stable promotion."],
   "nextProcessWork": {
-    "id": "V18.6-G10-RC-FREEZE",
-    "classification": "RELEASE_CANDIDATE_PRE_FREEZE",
+    "id": "V18.6-G11-G16-RELEASE-CERTIFICATION",
+    "classification": "RELEASE_CERTIFICATION",
     "status": "IN_PROGRESS",
     "requirements": [
-      "obtain canonical CI Fast and CI Qualified PASS on the exact final candidate-bound source",
-      "fast-forward v18.6-development / PR #16 only after the isolated candidate is clean",
-      "create v18.6-release-certification at the exact G11 candidate",
-      "allow the owner-only ci-fast release dispatcher to invoke existing release.yml G11-G16 with publish=false"
+      "fast-forward v18.6-release-certification to this fingerprint-excluded metadata head so the canonical push dispatcher executes",
+      "G11 compute and bind immutable canonical Git-object fingerprint",
+      "G12 run release/v18.6.0/run_full_certification.sh",
+      "G13/G14 produce and audit macOS Apple Silicon and Windows x64 native packages",
+      "G15 bind both native evidence graphs without pre-merge publication",
+      "G16 retain adaptive handoff evidence"
     ]
   },
   "assistantPortability": {
@@ -76,7 +78,7 @@
     "temporaryWorkspaceAuthoritative": false
   },
   "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
-  "nextBranch": "v18.6-development",
-  "nextStep": "Complete final exact-source G10 qualification; then move the qualified canonical v18.6.0 candidate to v18.6-development / PR #16 and create v18.6-release-certification for G11-G16.",
-  "updatedAt": "2026-08-18T20:58:00Z"
+  "nextBranch": "v18.6-release-certification",
+  "nextStep": "Trigger the canonical release workflow from the release-certification branch and execute G11-G16 with publish=false.",
+  "updatedAt": "2026-08-18T21:09:00Z"
 }
