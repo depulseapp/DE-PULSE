@@ -15,7 +15,7 @@
 
 GitHub is authoritative. Start with `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff and the machine checkpoints against the immutable Stable tag/release and current repository state.
 
-`v18.5.2-stable` is the immutable product/release authority. `main` may contain later **post-release G16 operational metadata or handoff commits**; those do not redefine the certified Stable product source, native artifact hashes, or Stable tag. Do not infer a new product release from post-release documentation/checkpoint commits.
+`v18.5.2-stable` is the immutable product/release authority. `main` may contain later **post-release G16 operational metadata, governance or handoff commits**; those do not redefine the certified Stable product source, native artifact hashes, or Stable tag. Do not infer a new product release from post-release governance changes.
 
 ## v18.5.2 final result
 
@@ -79,24 +79,40 @@ Published release assets include both native packages, both G13/G14 evidence JSO
 
 1. **Preserve independent platform PASS.** macOS passed on the first native run and was never rerun merely because Windows failed. G15 reused the preserved exact macOS artifact.
 2. **Classify infrastructure/test-harness failures truthfully.** Earlier Actions pre-step failures were infrastructure failures, not product failures. Windows native attempts that stopped before build on fingerprint materialization were harness/provenance failures, not runtime failures.
-3. **Cross-platform source provenance must use canonical Git bytes.** Windows filesystem materialization produced a different byte fingerprint even for the exact Git commit. The successful Windows lane recomputed the certified fingerprint directly from raw Git object bytes and treated the materialized filesystem fingerprint as diagnostic only. Future process hardening should make this platform-neutral provenance method canonical without modifying the already-certified v18.5.2 source.
+3. **Cross-platform source provenance must use canonical Git bytes.** Windows filesystem materialization produced a different byte fingerprint even for the exact Git commit. The successful Windows lane recomputed the certified fingerprint directly from raw Git object bytes and treated the materialized filesystem fingerprint as diagnostic only.
 4. **Do not rebuild during publication.** Stable publication uploaded the exact artifacts already certified at G13/G14/G15.
 5. **Minimize unnecessary spend/reruns.** G0–G12 was not rerun after it became authoritative; macOS was not rerun for Windows-only harness fixes; publication performed verification/upload only.
-6. **Release identity and post-release metadata are separate.** The immutable Stable tag/release and artifact hashes define v18.5.2. Later G16 documentation/checkpoint commits on `main` are operational metadata and cannot silently redefine Stable.
+6. **Release identity and post-release metadata are separate.** The immutable Stable tag/release and artifact hashes define v18.5.2. Later G16/governance commits on `main` are operational metadata and cannot silently redefine Stable.
+7. **CI learning must converge, not sprawl.** The v18.5.2 recovery succeeded but created temporary native-delivery/monitor/retry/publication orchestration on a certification branch. The permanent response is now to harden one canonical CI implementation and remove orphaned workflows/branches rather than repeat that pattern.
+
+## Permanent post-v18.5.2 CI decision
+
+The Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process now require:
+
+- exactly three normal active workflow entry points: `ci-fast.yml`, `ci-qualified.yml`, `release.yml`;
+- release identity/gate/platform/retry as inputs rather than version-specific workflow files;
+- failure classification followed by same-workflow/same-lane rerun or resume;
+- preservation of independent matching-fingerprint PASS evidence;
+- repeated CI/harness lessons implemented into canonical shared tooling/tests, not merely documented;
+- a machine-enforced workflow allowlist;
+- Stable history in tags/Releases/evidence rather than permanent RC/retry/certification branches;
+- mandatory G16 workflow/branch cleanup and explicit retained-exception disposition.
+
+This is behavior-neutral process hardening and does not modify the immutable v18.5.2 Stable product.
 
 ## Truthful residuals after v18.5.2 closure
 
 - Owner/Admin/User role-specific tab/navigation composition remains future work; v18.5.2 does not claim it.
 - TradeInsight secure key configuration, adapter/normalization, Smart Router SHADOW routing, validation and promotion remain future work; no API key is committed.
-- Cross-platform fingerprint implementation should be hardened around canonical Git-object provenance in a future authorized release.
-- Native-certification/recovery orchestration branches are retained while they remain useful audit references; cleanup may occur later when evidence retention no longer depends on them.
+- Cross-platform fingerprint implementation must be hardened around canonical Git-object provenance in the permanent shared CI/release tooling.
+- The active repository still contains historical/version-specific workflows and many old operational branches; they require inventory/reconciliation/cleanup before normal v18.6 product implementation.
 
-None of these residuals blocks the certified v18.5.2 Stable release.
+None of these residuals invalidates the certified v18.5.2 Stable release.
 
 ## Exactly one next action
 
-For any future authorized DE.PULSE work, **start from the immutable `v18.5.2-stable` baseline and reconcile the remaining approved backlog/audit items before selecting the next release scope.** Do not infer or start a new major release merely from chat history.
+**Perform the behavior-neutral CI & Repository Hygiene Consolidation before normal v18.6 product implementation:** implement/validate the canonical `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`; fold v18.5.2 provenance/retry learning into shared tooling; add workflow allowlist/harness regressions; inventory and safely retire obsolete workflows and branches while preserving immutable tags/Releases/evidence.
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, resolve Stable through `v18.5.2-stable`, verify it maps to promotion commit `d30e54db4908ca57c52ae298cc4ada3416fab46b`, and read `.depulse-certification/resume/build-checkpoint.json` plus this handoff. Treat later `main` commits that only close G16 documentation/checkpoints as post-release operational metadata, not a new product baseline. Preserve G0–G16, the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, TradeInsight `NOT_IMPLEMENTED/NONE` truth, and the native package hashes recorded above.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, resolve Stable through `v18.5.2-stable`, verify it maps to promotion commit `d30e54db4908ca57c52ae298cc4ada3416fab46b`, and read `.depulse-certification/resume/build-checkpoint.json` plus this handoff. Treat later `main` commits that change only governance/handoff/checkpoints as post-release operational metadata, not a new product baseline. Before normal v18.6 product work, execute the CI & Repository Hygiene Consolidation defined across the four adaptive artifacts. Preserve G0–G16, the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, TradeInsight `NOT_IMPLEMENTED/NONE` truth, and the certified v18.5.2 package hashes.
