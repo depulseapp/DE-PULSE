@@ -3,30 +3,30 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.5.2",
   "channel": "STABLE",
-  "candidateDisposition": "G15_PASS_READY_FOR_PROMOTION",
-  "branch": "v18.5.2-development",
+  "candidateDisposition": "AUTHORITATIVE_STABLE_G16_CLOSED",
+  "branch": "main",
   "pullRequest": 13,
-  "incomingStable": {
-    "version": "v18.5.1",
-    "tag": "v18.5.1-stable",
-    "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
-    "buildId": "v18.5.1-stable-recovery-20260817"
-  },
   "certifiedStable": {
-    "version": "v18.5.1",
-    "tag": "v18.5.1-stable",
-    "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
-    "buildId": "v18.5.1-stable-recovery-20260817"
+    "version": "v18.5.2",
+    "tag": "v18.5.2-stable",
+    "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
+    "buildId": "v18.5.2-stable-hotfix-20260817",
+    "certifiedSourceCheckout": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
+    "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
+    "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
-  "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
-  "certifiedCheckoutHead": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
-  "metadataHeadRule": "candidateSourceCommit names the latest product/tooling/documentation/reconciled-source candidate. Later commits confined to .depulse-certification/resume are fingerprint-excluded metadata and may advance branch HEAD without invalidating exact-source or native evidence when canonical source/artifact identities remain unchanged.",
+  "stableIdentityRule": "v18.5.2-stable at d30e54db4908ca57c52ae298cc4ada3416fab46b plus the certified source fingerprint and native artifact hashes define the immutable v18.5.2 product release. Later main commits that only update G16 documentation/checkpoints are post-release operational metadata and do not redefine Stable.",
+  "postReleaseOperationalMetadata": {
+    "handoffCommit": "3fa2a3f541eaf27c7b92b356cdc636bcaf306bb5",
+    "releaseEvidenceCommit": "ead8b109b4bbbf48e2c8784c60954c04c7b19fb0",
+    "finalCheckpointCommitRule": "This file's own commit may advance main once more. That final fingerprint-excluded checkpoint advancement remains operational metadata."
+  },
   "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
-  "sourceFingerprintState": "CERTIFIED_G0_G15_PASS",
-  "codeStatus": "V18_5_2_G0_G15_CERTIFIED_READY_FOR_PROMOTION",
-  "implementationSummary": "Full canonical G0-G12 exact-source certification passed, followed by required native G13/G14 actual packaged-artifact audits on GitHub-hosted macOS Apple Silicon and Windows x64. G15 consumed both exact native evidence graphs and passed release assurance with promotionAuthorized=true.",
-  "lastTrustworthyPass": "G0_G12_EXACT_SOURCE_PASS_E9CA615CF7AB97AC476128C81EE9AE2D7340C0D9; SOURCE_FP_807DE082D43E83D1D3548BCA9350D13B72EF4DC71A848940B73B63E4B4D215B0; MACOS_G13_G14_PASS_RUN_32102570376_SHA256_91F7D64A433474C4EFBED0BD5C7D065508B2CE6EEAE0544B1C217849FE62A4AE; WINDOWS_G13_G14_PASS_RUN_32103078336_SHA256_6431562A67BCD55DB6EBAB2E6A09724006119910EA8ADBC358AFB8644A752326; G15_PASS_RUN_32103078336",
-  "earliestRequiredResumeGate": "G15_PROMOTION_THEN_G16",
+  "sourceFingerprintState": "CERTIFIED_STABLE_G0_G16_CLOSED",
+  "codeStatus": "V18_5_2_AUTHORITATIVE_STABLE_COMPLETE",
+  "implementationSummary": "v18.5.2 recovery is complete. Exact-source G0-G12 passed; actual packaged macOS Apple Silicon and Windows x64 G13/G14 passed; G15 authorized promotion; PR #13 merged with exact-head protection; Stable tag/release published from already-certified artifacts without rebuilding; G16 retrospective/handoff closed.",
+  "lastTrustworthyPass": "G0_G12_PASS_E9CA615CF7AB97AC476128C81EE9AE2D7340C0D9; FP_807DE082D43E83D1D3548BCA9350D13B72EF4DC71A848940B73B63E4B4D215B0; MAC_G13_G14_PASS_32102570376; WIN_G13_G14_PASS_32103078336; G15_PASS_32103078336; PROMOTION_D30E54DB4908CA57C52AE298CC4AD A3416FAB46B; PUBLICATION_PASS_32103499711; G16_PASS",
+  "earliestRequiredResumeGate": "NONE_V18_5_2_CLOSED",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
     "G1": {"status": "PASS", "reusable": true},
@@ -43,8 +43,8 @@
     "G12": {"status": "PASS", "reusable": true},
     "G13": {"status": "PASS", "reusable": true},
     "G14": {"status": "PASS", "reusable": true},
-    "G15": {"status": "PASS_PROMOTION_AUTHORIZED", "reusable": true},
-    "G16": {"status": "NOT_STARTED", "reusable": false}
+    "G15": {"status": "PASS_PROMOTED", "reusable": true},
+    "G16": {"status": "PASS_CLOSED", "reusable": true}
   },
   "nativeEvidence": {
     "macosAppleSilicon": {
@@ -52,10 +52,7 @@
       "runId": 32102570376,
       "artifactId": 9312071763,
       "artifact": "De-Pulse-v18.5.2-Stable-macOS-Apple-Silicon.zip",
-      "sha256": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae",
-      "host": "macOS 15.7.7 arm64",
-      "actualPackagedLaunch": "PASS",
-      "sqlite": "PASS libsqlite3 + migrations 1-4 + integrity"
+      "sha256": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae"
     },
     "windowsX64": {
       "status": "PASS",
@@ -63,10 +60,7 @@
       "artifactId": 9312257480,
       "artifact": "De-Pulse-v18.5.2-Stable-Windows-x64.zip",
       "sha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326",
-      "host": "Windows Server 2025 AMD64",
-      "actualPackagedLaunch": "PASS",
-      "sqlite": "PASS winsqlite3 + migrations 1-4 + integrity",
-      "provenance": "Exact certified Git-object fingerprint PASS; Windows filesystem byte fingerprint differs due platform materialization and is diagnostic only."
+      "provenance": "canonical raw Git-object fingerprint PASS; filesystem materialization fingerprint diagnostic only"
     },
     "g15": {
       "status": "PASS",
@@ -74,21 +68,31 @@
       "artifactId": 9312264020,
       "promotionAuthorized": true,
       "noExecutionBoundary": "PRESERVED"
+    },
+    "publication": {
+      "status": "PASS",
+      "runId": 32103499711,
+      "tag": "v18.5.2-stable",
+      "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
+      "releaseDraft": false,
+      "releasePrerelease": false,
+      "rebuild": false
     }
   },
-  "blockingIssue": "No certification blocker remains. Perform the authorized PR #13 promotion against its exact final head, establish the v18.5.2 Stable tag/release using the already-certified native artifacts without rebuilding, then complete G16 retrospective/handoff.",
+  "blockingIssue": null,
   "knownResiduals": [
-    "Owner/Admin/User role-specific tab/navigation composition remains planned and not implemented by v18.5.2.",
-    "TradeInsight adapter, secure key configuration, Smart Router SHADOW routes and promotion evidence remain not implemented.",
-    "Canonical filesystem fingerprinting showed Windows materialization variance; native Windows provenance was correctly rebound to exact Git-object bytes. Record a cross-platform fingerprint hardening proposal in G16 without changing the certified v18.5.2 source.",
-    "v19 must not begin before v18.5.2 G16 closure."
+    "Owner/Admin/User role-specific tab/navigation composition remains future work and is not claimed by v18.5.2.",
+    "TradeInsight secure key configuration, adapter/normalization, Smart Router SHADOW routes, validation and promotion remain future work with NONE production influence.",
+    "Future authorized process hardening should make canonical raw Git-object source fingerprinting explicit across platforms.",
+    "Audit/recovery orchestration branches may be retained until evidence cleanup is safe."
   ],
-  "resolvedIssues": [
-    "All four G12 discoveries were fixed and the full exact-source lane passed.",
-    "macOS Apple Silicon G13/G14 passed on an actual arm64 GitHub-hosted runner.",
-    "Windows x64 G13/G14 passed on an actual AMD64 GitHub-hosted runner using exact Git-object provenance and real winsqlite3 runtime.",
-    "G15 verified both package hashes/evidence graphs and authorized promotion.",
-    "No Execution Boundary remained preserved through G15."
+  "releaseBlockingResiduals": [],
+  "g16Learning": [
+    "Preserve independent native platform PASS when fingerprints/artifact identities remain equivalent.",
+    "Treat pre-build/checkout/provenance harness failures separately from product failures.",
+    "Use canonical Git-object bytes for cross-platform source provenance.",
+    "Never rebuild certified artifacts during publication.",
+    "Separate immutable Stable identity from post-release operational metadata."
   ],
   "assistantPortability": {
     "status": "ENFORCED",
@@ -98,8 +102,8 @@
     "chatMemoryRequired": false,
     "temporaryWorkspaceAuthoritative": false
   },
-  "userDelivery": "CERTIFIED_ASSETS_READY_NOT_YET_PROMOTED",
-  "nextBranch": "v18.5.2-development",
-  "nextStep": "Promote PR #13 at its exact final head; tag/publish v18.5.2 Stable with the already-certified native artifacts and hashes; then execute G16 without rebuilding certified artifacts.",
-  "updatedAt": "2026-08-18T05:34:00Z"
+  "userDelivery": "DELIVERED_VIA_GITHUB_STABLE_RELEASE",
+  "nextBranch": null,
+  "nextStep": "No remaining v18.5.2 release action. Future authorized DE.PULSE work must begin by resolving the immutable v18.5.2-stable baseline and reconciling the remaining approved backlog/audit items before selecting the next release scope.",
+  "updatedAt": "2026-08-18T05:40:00Z"
 }
