@@ -39,12 +39,12 @@ func v186DocumentationSessionForRole(t *testing.T, s *IdentityService, role User
 
 func TestV186DocumentationAudiencePathPolicy(t *testing.T) {
 	cases := map[string]documentationAudience{
-		"/docs/user.md":             documentationAudienceAuthenticated,
-		"/docs/limitations.md":      documentationAudienceAuthenticated,
-		"/docs/developer.md":        documentationAudienceDeveloper,
-		"/docs/./developer.md":      documentationAudienceDeveloper,
-		"/docs/unknown.md":          documentationAudienceAuthenticated,
-		"/api/bootstrap":            documentationAudienceNone,
+		"/docs/user.md":               documentationAudienceAuthenticated,
+		"/docs/limitations.md":        documentationAudienceAuthenticated,
+		"/docs/developer.md":          documentationAudienceDeveloper,
+		"/docs/./developer.md":        documentationAudienceDeveloper,
+		"/docs/unknown.md":            documentationAudienceAuthenticated,
+		"/api/bootstrap":              documentationAudienceNone,
 		"/renderer/docs/developer.md": documentationAudienceNone,
 	}
 	for raw, want := range cases {
