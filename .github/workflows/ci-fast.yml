@@ -114,36 +114,6 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  rc-freeze-sync:
-    name: Temporary isolated v18.6 RC identity synchronization
-    needs: fast
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/v18.6-identity-sync-development' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Synchronize canonical v18.6 release identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 tools/release/freeze_v18_6.py
-          if git diff --quiet; then
-            echo 'No identity changes required.'
-            exit 0
-          fi
-          git config user.name 'depulseapp-release-bot'
-          git config user.email 'de.pulse.app@gmail.com'
-          git add release_identity.json VERSION.txt app_bootstrap.go renderer/renderer.js renderer/index.html certification_plan.json ci_pipeline_plan.json README.md renderer/docs/user.md renderer/docs/developer.md renderer/docs/limitations.md
-          git commit -m 'v18.6: freeze canonical release identity'
-          git push origin HEAD:v18.6-identity-sync-development
-
   branch-hygiene:
     name: Remove only branches fully merged into main
     needs: fast
