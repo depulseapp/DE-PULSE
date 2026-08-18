@@ -1,0 +1,21 @@
+DE.PULSE v18.6.0 — Adaptive Utility & Intelligence Hardening
+Build: v18.6.0-stable-20260818
+Release target: STABLE; promotion remains gated by G11–G16 certification.
+
+Implemented and pre-freeze qualified scope:
+- Shared Scanner / Opportunity Radar broad-snapshot acquisition with bounded freshness-aware reuse, partial-miss fetching and in-flight coalescing.
+- One serialized Session Intelligence Coordinator for Pre-Market Prep and Market Open Prep.
+- Market Activity demoted to supporting drill-down and legacy evidence routes consolidated.
+- Role-aware documentation with server-authoritative privileged access.
+- Explicit external dependency/provider readiness and durable User Action Required governance.
+- Bounded AI semantic context, complete cache identity + TTL, strict structured output/citation validation, safe abstention and continuous-evaluation telemetry.
+- Provider×dataset rights-aware AI egress; unknown or denied content is withheld before external model calls.
+
+Protected invariants:
+- Deterministic Day/Swing/Long formulas unchanged.
+- Smart Provider Router remains sole provider-routing owner; provider count cannot change Market Mode.
+- U.S. Equities Processing Boundary preserved.
+- Permanent No Execution Boundary preserved.
+- Desktop SQLite / hosted PostgreSQL architecture preserved.
+
+Certification state at QA-history creation: implementation complete; canonical G10 exact-identity qualification in progress; G11–G16 not yet claimed.
