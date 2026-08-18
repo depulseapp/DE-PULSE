@@ -281,3 +281,84 @@
   .market-status-bar .btn{flex:0 0 auto}
   .sidebar{top:var(--v1851-chrome-h)!important}
 }
+
+
+/* v18.5.2 tracked-symbol interaction layout.
+   Desktop keeps the heading context and controls on one line; narrow screens
+   stack only when the available width can no longer keep the controls usable. */
+.master-symbols-heading-row{
+  display:grid;
+  grid-template-columns:minmax(250px,1fr) minmax(520px,auto);
+  align-items:center;
+  gap:24px;
+  min-width:0;
+}
+.master-symbols-copy{min-width:0}
+.master-symbols-copy>.eyebrow{display:block}
+.master-symbols-title-line{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.master-symbols-title-line h3{margin:4px 0 0}
+.master-symbols-title-line .count-pill{flex:0 0 auto;white-space:nowrap}
+.master-symbols-copy p{
+  margin:7px 0 0;
+  color:var(--muted);
+  line-height:1.45;
+}
+.master-symbols-heading-row .master-add-row{
+  display:grid!important;
+  grid-template-columns:minmax(220px,340px) auto auto!important;
+  align-items:center!important;
+  justify-content:end;
+  gap:9px!important;
+  margin:0!important;
+  min-width:0;
+}
+.master-symbols-heading-row .master-add-row .ticker-input{
+  grid-column:auto!important;
+  width:100%!important;
+  min-width:220px!important;
+  max-width:340px!important;
+}
+.master-symbols-heading-row .master-add-row .btn{
+  width:auto!important;
+  min-height:44px!important;
+  height:44px!important;
+}
+.master-symbol-chip-list{margin-top:16px}
+
+@media(max-width:1180px){
+  .master-symbols-heading-row{
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:14px;
+  }
+  .master-symbols-heading-row .master-add-row{
+    grid-template-columns:minmax(220px,1fr) auto auto!important;
+    width:100%;
+    justify-content:stretch;
+  }
+  .master-symbols-heading-row .master-add-row .ticker-input{
+    max-width:none!important;
+  }
+}
+
+@media(max-width:700px){
+  .master-symbols-heading-row .master-add-row{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .master-symbols-heading-row .master-add-row .ticker-input{
+    grid-column:1/-1!important;
+    min-width:0!important;
+  }
+  .master-symbols-heading-row .master-add-row .btn{width:100%!important}
+}
+
+@media(max-width:460px){
+  .master-symbols-heading-row .master-add-row{grid-template-columns:1fr!important}
+  .master-symbols-heading-row .master-add-row .ticker-input{grid-column:auto!important}
+  .master-symbols-title-line{align-items:flex-start;flex-direction:column;gap:5px}
+}
