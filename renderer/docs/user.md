@@ -1,5 +1,10 @@
 # DE.PULSE — User documentation
 
+## v18.5.1 STABLE — Recovery patch
+
+Incremental live updates preserve row identity/hover/focus/selection/scroll. Desk-row × removes a tracked symbol globally while desk pills retain final-membership protection; Undo restores exact memberships/selection. Research/header responsive hierarchy and version-neutral profile copy are hardened. Stable continuity uses the canonical PersonalMarketTerminal profile. No Execution is unchanged.
+
+
 ## v18.5.0 STABLE — Major Closure & Release Assurance
 
 v18.5 STABLE is the Major Closure over **v18.4.0 STABLE**. Final publication is gated by exact Stable G11-G15 certification, including required native artifacts. It does not add unrelated trading features. It re-certifies the approved v18 platform and treats runtime overload / intermittent DATA DEGRADED / slow response as release-blocking if local load can delay or misstate decision-critical evidence. Readiness must stay conservative and truthful under provider, database, queue/backpressure, restart, multi-user/fan-out and recovery pressure. The permanent **No Execution** boundary is unchanged.

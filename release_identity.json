@@ -2,13 +2,13 @@
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
   "version": "18.5.1",
   "display_version": "DE.PULSE v18.5.1",
-  "build_id": "v18.5.1-test-recovery-20260817",
-  "channel": "TEST",
+  "build_id": "v18.5.1-stable-recovery-20260817",
+  "channel": "STABLE",
   "stable_baseline": "v17.5.1",
   "previous_stable": "v18.5.0",
   "scope": "Recovery patch: correct live-render interaction stability, tracked-symbol removal and desk-membership semantics, Research/header responsive hierarchy, first-run profile wording, TEST/HOSTED profile isolation and canonical release identity; restore cost-aware behavior-first CI qualification without changing deterministic Day/Swing/Long formulas, provider intelligence, persistence truth, the U.S. Equities Processing Boundary or the permanent No Execution Boundary",
   "bundle_version": "18501",
-  "runtime_config": "PersonalMarketTerminal-v18.5.1-TEST",
+  "runtime_config": "PersonalMarketTerminal",
   "patch_predecessor": "v18.5.0",
   "application_bundle": "De-Pulse.app"
 }

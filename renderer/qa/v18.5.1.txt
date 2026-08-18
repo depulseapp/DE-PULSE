@@ -1,0 +1,6 @@
+DE.PULSE v18.5.1 STABLE
+Build ID: v18.5.1-stable-recovery-20260817
+Previous Stable: v18.5.0
+Scope: recovery patch for live-render interaction stability, tracked-symbol/desk semantics, responsive Research/header hierarchy, truthful profile copy and checkpoint-based behavior-first CI.
+Deterministic Day/Swing/Long formulas and the permanent No Execution boundary are unchanged.
+Promotion requires exact Stable G12 plus macOS Apple Silicon and Windows x64 actual packaged-runtime G14 evidence and G15 release assurance.

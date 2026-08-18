@@ -1,17 +1,20 @@
 {
   "schemaVersion": 1,
   "version": "18.5.1",
-  "status": "TEST",
+  "status": "STABLE",
   "date": "2026-08-17",
-  "buildId": "v18.5.1-test-recovery-20260817",
+  "buildId": "v18.5.1-stable-recovery-20260817",
   "previousStable": "v18.5.0",
   "majorProvenanceAnchor": "v17.5.1",
   "scopeFile": "release/v18.5.1/G1-SCOPE-FREEZE.json",
   "developmentEvidence": "release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json",
   "documentationImpact": "release/v18.5.1/DOCUMENTATION-IMPACT.md",
-  "qualificationStatus": "PENDING_REQUALIFICATION_AFTER_G11_BATCH",
-  "releaseCertificationStatus": "G11_PREFLIGHT_PASS_AWAITING_FRESH_G10",
-  "requiredNativeTargets": ["macos-arm64", "windows-x64"],
+  "qualificationStatus": "G0_G10_PASS",
+  "releaseCertificationStatus": "G11_G12_PASS",
+  "requiredNativeTargets": [
+    "macos-arm64",
+    "windows-x64"
+  ],
   "g11Learning": {
     "originalRcRun": 32084728612,
     "rendererDiagnosticRun": 32085179434,
@@ -22,5 +25,5 @@
       "Corrected renderer regression, content/copy audit, documentation typography and full responsive matrix all passed in the batched G11 preflight."
     ]
   },
-  "note": "Patch-candidate delta only. renderer/qa/manifest.json remains the durable promoted/historical release manifest until v18.5.1 reaches a certified promotion disposition. Fresh G0-G10 is mandatory after the G11 test/control-plane corrections before a new immutable RC is created."
+  "note": "PROMOTED: validated patch delta materialized into the durable QA manifest. Stable G12 and G13-G15 remain fail-closed until machine evidence passes."
 }

@@ -1,5 +1,10 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.5.1 STABLE — Truth boundaries
+
+This patch does not change deterministic market formulas, provider intelligence, U.S.-listed actionable scope or No Execution. Native macOS Apple Silicon and Windows x64 artifacts are not considered certified until G14 actual-runtime evidence and G15 assurance pass against the exact Stable source.
+
+
 ## v18.5.0 STABLE — Major Closure truth boundaries
 
 Final v18.5 STABLE publication requires G0-G15 to pass against one exact source and required native/runtime artifacts; the candidate must remain fail-closed until that evidence exists. Major Closure cannot guarantee provider availability, profitable decisions or zero degradation; it must instead prove bounded behavior and truthful UNKNOWN/ABSTAIN/readiness when evidence is stale, unavailable or overloaded. DE.PULSE remains **decision support, not a profit predictor**, actionable instruments remain **U.S.-listed only**, and the **No Execution** boundary is unchanged.

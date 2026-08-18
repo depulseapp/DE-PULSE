@@ -8,7 +8,7 @@
     "evidence_outside_source": true,
     "fingerprint_keyed": true,
     "immutable_rc_for_heavy": true,
-    "release_channel": "TEST",
+    "release_channel": "STABLE",
     "baseline": "v18.5.0 Stable",
     "adaptive_release_learning": true,
     "learning_registry": "release_learning_registry.json",

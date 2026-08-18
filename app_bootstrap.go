@@ -18,5 +18,5 @@ var finnhubMinRequestInterval = 1100 * time.Millisecond
 
 const appName = "DE.PULSE"
 const appVersion = "18.5.1"
-const releaseChannel = "TEST"
-const buildID = "v18.5.1-test-recovery-20260817"
+const releaseChannel = "STABLE"
+const buildID = "v18.5.1-stable-recovery-20260817"

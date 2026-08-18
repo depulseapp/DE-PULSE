@@ -1,5 +1,10 @@
 # DE.PULSE — Developer documentation
 
+## v18.5.1 STABLE — Recovery patch
+
+Certified RC source 97aeca6938410ed7dde6667186890902a7518289 passed G0-G12. Stable promotion changes release identity/QA history only; renderer live reconciliation, global symbol removal/restore reuse and checkpoint CI remain canonical. G13-G15 require exact-source/native evidence.
+
+
 ## v18.5.0 STABLE — Major Closure / ADR-GDI architecture
 
 v18.5 reconstructs the full approved v18 architecture rather than adding a parallel owner. ADR-GDI qualification covers provider failure/rate-limit/fallback, stale evidence, PostgreSQL pressure/unavailability, bounded queue/backpressure/load shedding, warm restart, multi-user/multi-symbol fan-out, background-job pressure, duplicate-work avoidance, degradation blast radius, recovery hysteresis, packaged degradation UX and truthful UNKNOWN/ABSTAIN/readiness behavior. The existing Provider Router, persistence owners, canonical propagation and protected deterministic formulas remain authoritative.

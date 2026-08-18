@@ -1,13 +1,13 @@
-# DE.PULSE v18.5.1 TEST — Documentation Impact
+# DE.PULSE v18.5.1 STABLE — Documentation Impact
 
-**Current candidate:** v18.5.1 TEST  
+**Current release:** v18.5.1 STABLE  
 **Immediate Stable predecessor:** v18.5.0 STABLE  
 **Major v18 provenance anchor:** v17.5.1 STABLE  
-**Build ID:** `v18.5.1-test-recovery-20260817`  
-**Runtime profile:** `PersonalMarketTerminal-v18.5.1-TEST`  
-**Status:** DEVELOPMENT COMPLETE / AWAITING QUALIFICATION
+**Build ID:** `v18.5.1-stable-recovery-20260817`  
+**Runtime profile:** `PersonalMarketTerminal`  
+**Status:** RC G11/G12 CERTIFIED / STABLE NATIVE DELIVERY IN PROGRESS
 
-This patch does not replace the long-lived User, Developer, or Capabilities & Limitations manuals. Those manuals retain the complete historical release narrative and are refreshed in full at meaningful Stable/material architecture boundaries. This release-specific impact record is the authoritative current-candidate delta while v18.5.1 remains TEST/RC.
+This patch does not replace the long-lived User, Developer, or Capabilities & Limitations manuals. Those manuals retain the complete historical release narrative and are refreshed in full at meaningful Stable/material architecture boundaries. This release-specific impact record is the authoritative current-candidate delta during v18.5.1 TEST/RC validation.
 
 ## User documentation impact
 
@@ -17,11 +17,11 @@ This patch does not replace the long-lived User, Developer, or Capabilities & Li
 - The active desk has a visible non-color-only `CURRENT` state plus `aria-current`; the selected ticker remains a separate state.
 - Research Target and header hierarchy are hardened for desktop/tablet/narrow widths. Both complete ET/PT clocks remain visible; market/data/start-stop status is a secondary layer and Market Instruments remains tertiary.
 - First-run wording is version-neutral and truthful: compatible prior Stable profile/data can be preserved without claiming an obsolete v17-specific migration.
-- v18.5.1 TEST uses an isolated `PersonalMarketTerminal-v18.5.1-TEST` profile cloned from v18.5.0 Stable on first use without writing into Stable.
+- v18.5.1 TEST uses an isolated `PersonalMarketTerminal` profile cloned from v18.5.0 Stable on first use without writing into Stable.
 
 ## Developer documentation impact
 
-- Canonical release identity is `18.5.1` / `TEST`, build `v18.5.1-test-recovery-20260817`.
+- Canonical release identity is `18.5.1` / `TEST`, build `v18.5.1-stable-recovery-20260817`.
 - `stable_baseline` remains the v18 major-family provenance anchor `v17.5.1`; `previous_stable` is the immediate certified predecessor `v18.5.0`.
 - `renderer/live-dom-reconcile.js` owns incremental live-update reconciliation; full structural navigation may still use the full renderer path.
 - `renderer/watchlist-v18.5.1.js` reuses the existing global master-symbol remove/restore API instead of creating a second backend removal owner.
@@ -36,7 +36,7 @@ This patch does not replace the long-lived User, Developer, or Capabilities & Li
 - Stale/cached/history-only evidence remains subject to existing freshness/degradation semantics; this patch does not loosen truthfulness or readiness rules.
 - The watchlist UI change does not create a portfolio, position, P&L or order-management concept; it only changes tracked-symbol membership semantics.
 - macOS Apple Silicon and Windows x64 actual packaged-runtime certification remain required before Stable promotion. No physical native macOS/Windows PASS is claimed by this development record.
-- G0-G10 qualification and G11-G15 native/release certification remain pending until executable evidence passes on the exact frozen source.
+- G0-G10 and immutable-RC G11-G12 are certified; Stable G12 plus G13-G15 native/release certification remain fail-closed until exact Stable-source and actual-artifact evidence passes.
 
 ## Historical continuity retained
 
