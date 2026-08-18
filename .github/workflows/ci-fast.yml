@@ -6,6 +6,8 @@ on:
     branches:
       - main
       - 'v*-development'
+      - 'v*-release-certification'
+      - 'v*-stable-promotion'
   workflow_dispatch:
 
 permissions:
@@ -113,6 +115,66 @@ jobs:
           path: ci-impact-plan.json
           if-no-files-found: error
           retention-days: 7
+
+  release-dispatch:
+    name: Dispatch canonical G11-G16 release workflow
+    needs: fast
+    if: ${{ github.event_name == 'push' && github.actor == github.repository_owner && (endsWith(github.ref, '-release-certification') || endsWith(github.ref, '-stable-promotion')) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - id: release
+        name: Resolve immutable release inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 release_identity.py --verify
+          version="$(python3 -c 'import json; print(json.load(open("release_identity.json"))["version"])')"
+          build_id="$(python3 -c 'import json; print(json.load(open("release_identity.json"))["build_id"])')"
+          release_line="${version%.*}"
+          script="release/v${version}/run_full_certification.sh"
+          test -f "$script"
+          case "$GITHUB_REF_NAME" in
+            "v${release_line}-release-certification") publish=false ;;
+            "v${release_line}-stable-promotion") publish=true ;;
+            *) echo "ERROR: release branch $GITHUB_REF_NAME does not match release identity $version" >&2; exit 2 ;;
+          esac
+          fingerprint="$(python3 source_fingerprint.py --mode git --commit "$GITHUB_SHA")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
+          echo "script=$script" >> "$GITHUB_OUTPUT"
+          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
+          echo "publish=$publish" >> "$GITHUB_OUTPUT"
+      - name: Dispatch exact candidate to canonical G11-G16 workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+          BUILD_ID: ${{ steps.release.outputs.build_id }}
+          CERTIFICATION_SCRIPT: ${{ steps.release.outputs.script }}
+          EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
+          PUBLISH: ${{ steps.release.outputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run release.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f candidate_sha="$GITHUB_SHA" \
+            -f version="$VERSION" \
+            -f build_id="$BUILD_ID" \
+            -f certification_script="$CERTIFICATION_SCRIPT" \
+            -f expected_source_fingerprint="$EXPECTED_FINGERPRINT" \
+            -f publish="$PUBLISH"
+          echo "PASS: dispatched release.yml for $GITHUB_SHA · v$VERSION · publish=$PUBLISH"
 
   branch-hygiene:
     name: Remove only branches fully merged into main
