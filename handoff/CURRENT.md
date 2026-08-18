@@ -5,7 +5,7 @@
 **Release:** `v18.6.0`  
 **Active branch:** `v18.6-development`  
 **Stable predecessor:** v18.5.2 STABLE / G0–G16 CLOSED  
-**Current candidate state:** v18.6.0 FINAL DISPATCH AUTHORIZATION FIX / FRESH G10 REQUIRED / NOT PROMOTED  
+**Current candidate state:** v18.6.0 CONNECTOR-SAFE CERTIFICATION FALLBACK / FRESH G10 REQUIRED / NOT PROMOTED  
 **Repository:** `depulseapp/DE-PULSE`  
 **Main release PR:** `#16`  
 **Stable predecessor tag:** `v18.5.2-stable`  
@@ -35,49 +35,53 @@ All eight assigned v18.6 implementation/audit slices remain code-complete:
 
 Protected deterministic Day/Swing/Long formulas remain unchanged. Smart Provider Router remains the sole provider-routing owner; provider count does not change Market Mode. GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, the U.S. Equities Processing Boundary and the permanent No Execution Boundary remain preserved.
 
-## Latest trustworthy qualification and why it must be repeated
+## Last exact-source G10 PASS and why it is now historical
 
-Exact source `7b8e3ab40a55edce8e4b16acbd3781a531f70585` eventually passed its blocked G10 retries after GitHub Actions allocation recovered:
+Source `8b516d8384f21b865d8e7ea318c1c2c48e08e44c` passed the final dispatcher-authorization qualification before the connector event behavior was fully understood:
 
-- CI Fast #181 / run `32190500889` / attempt 5 — PASS;
-- CI Qualified #78 / run `32190500878` / attempt 4 — PASS;
-- coverage included Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and qualified evidence summary.
+- CI Fast #198 / run `32193789742` / attempt 1 — PASS;
+- CI Qualified #85 / run `32193789745` / attempt 1 — PASS;
+- coverage included the dispatcher authorization/publish boundary, Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and final evidence summary.
 
-That evidence is trustworthy for `7b8e3ab...` but is now historical because the release dispatcher workflow was subsequently corrected. It **must not** be reused as G10 evidence for the new source.
+After that PASS, release-certification was reconciled and multiple fingerprint-excluded commits/merges were attempted to generate a normal branch `push` event. Connector-originated ref moves, PR merges and direct contents commits did not produce the expected dispatcher comments or discoverable push workflow run. PR-created/synchronized events, however, reliably execute Actions in this connected environment.
 
-## Release-dispatch defect discovered after G10
+Because the workflow source is now being extended with a connector-safe certification fallback, the `8b516d...` G10 evidence is historical and cannot be reused for the new source.
 
-The release-certification branch was reconciled without force-pushing and a metadata-only GitHub merge was used to produce a normal `web-flow` merge commit on `v18.6-release-certification`. The expected PR #16 dispatcher/run-ID comments still did not appear.
+## Final release-dispatch contract
 
-The remaining orchestration defect was the authorization expression in `ci-fast.yml`: it depended on `github.event.head_commit.author.username` as a fallback when `github.actor` was not the repository owner. That field is not a reliable authorization identity for a push event and should not control the release dispatcher.
+The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. No fourth workflow and no G17+ gate exists.
 
-The corrected contract is deliberately asymmetric:
+The dispatcher now supports two certification entry mechanisms plus one publication mechanism:
 
-1. **Release-certification branch:** an exact `v<release-line>-release-certification` push may enter the dispatcher without a user-identity gate. The dispatcher itself validates the release identity and exact branch, and the branch maps to `publish=false`. Therefore this path can certify but cannot publish Stable.
-2. **Stable-promotion branch:** publication remains owner-gated. The exact `v<release-line>-stable-promotion` push requires repository-owner authorization via `github.actor` or the push payload `sender.login`, and then maps to `publish=true`.
-3. `tools/ci/workflow_policy.py` now enforces this contract, rejects the unreliable `head_commit.author.username` authorization pattern, and requires the exact release-certification/promotion branch-to-publish mapping.
-4. The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. No fourth workflow and no G17+ gate exists.
+1. **Normal release-certification push (primary):** exact `v<release-line>-release-certification` push may dispatch. Release resolution validates the exact branch and forces `publish=false`.
+2. **Owner-gated PR certification fallback:** an owner-triggered `pull_request` whose **base** is exact `v<release-line>-release-certification` may dispatch certification using the immutable PR base ref/SHA, not the PR merge SHA or head SHA. It resolves `release_ref` from `pull_request.base.ref`, `candidate_sha` from `pull_request.base.sha`, and explicitly prohibits publication. This path exists because connected-app writes may suppress normal push-triggered Actions while pull-request Actions execute reliably.
+3. **Stable promotion:** exact `v<release-line>-stable-promotion` remains push-only and owner-gated via `github.actor` or push `sender.login`, and the resolver maps it to `publish=true`. There is deliberately **no pull-request fallback for Stable promotion**.
 
-This correction changes source-fingerprinted files, so a fresh exact-source Fast + Qualified G10 is mandatory before any new G11 run.
+`tools/ci/workflow_policy.py` enforces all of these invariants and rejects both the unreliable `head_commit.author.username` authorization pattern and any pull-request fallback targeting `*-stable-promotion`.
+
+The PR fallback changes only orchestration. It cannot publish Stable, cannot choose a non-release-certification base, and dispatches canonical `release.yml` against the existing release-certification branch/base SHA.
 
 ## Canonical G11–G16 contract after fresh G10
 
-After fresh G10 passes, advance `v18.6-release-certification` to the qualified candidate plus fingerprint-excluded evidence metadata. A normal push on that branch must let the Fast dispatcher:
+After fresh G10 passes, bind only fingerprint-excluded checkpoints and reconcile `v18.6-release-certification` to that qualified state. Then create an owner-controlled fingerprint-excluded trigger PR **targeting** `v18.6-release-certification` without merging it first. Its Fast lane must pass and the owner-gated PR fallback must:
 
-- resolve release version/build/certification script and canonical source fingerprint from the pushed SHA;
-- prove the pushed ref matches the release identity;
-- resolve the open release PR from `v18.6-development`;
-- post a dispatcher-active comment to PR #16 with the Fast/dispatcher run ID, exact SHA, fingerprint and `publish=false`;
-- reuse an existing `release.yml` run only when both `headBranch` and `headSha` match the exact candidate, otherwise dispatch a new exact-candidate run;
+- resolve the exact release-certification base ref and base SHA;
+- compute the canonical source fingerprint from that immutable base SHA;
+- force `publish=false`;
+- resolve release PR #16;
+- post a dispatcher-active comment to PR #16 with dispatcher run ID, release ref, exact candidate/base SHA, fingerprint and `publish=false`;
+- reuse a canonical release run only when both `headBranch` and `headSha` equal that release-certification base candidate, otherwise dispatch a new `release.yml` run;
 - post the canonical `release.yml` run ID/URL to PR #16.
 
-`release.yml` remains the sole G11–G16 owner. It performs exact-SHA G11 provenance, G12 full certification via `release/v18.6.0/run_full_certification.sh`, macOS Apple Silicon + Windows x64 G13/G14 native package/runtime audit, G15 evidence binding, and G16 durable adaptive handoff. Pre-merge certification uses `publish=false`.
+Only after that durable run ID appears is G11 considered started.
 
-Stable publication is allowed only later through the exact Stable-promotion path and must remain no-rebuild, owner-gated, and evidence-bound.
+`release.yml` remains the sole G11–G16 owner. It performs exact-SHA G11 provenance, G12 full certification via `release/v18.6.0/run_full_certification.sh`, macOS Apple Silicon + Windows x64 G13/G14 native package/runtime audit, G15 evidence binding, and G16 durable adaptive handoff. Pre-merge certification remains `publish=false`.
+
+Stable publication is allowed only later through the exact Stable-promotion push path and must remain no-rebuild, owner-gated, and evidence-bound.
 
 ## Release sequence still required
 
-Fresh G10 on the final dispatcher source → G11 immutable candidate/provenance → G12 full certification → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff → only then no-rebuild Stable promotion.
+Fresh G10 on this connector-safe dispatcher source → bind excluded checkpoints → reconcile release-certification → owner-gated trigger PR into release-certification → require PR #16 canonical release run ID → G11 immutable candidate/provenance → G12 full certification → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff → only then no-rebuild Stable promotion.
 
 No v18.6 Stable tag, package, native artifact hash or publication claim is valid before those gates pass.
 
@@ -89,7 +93,7 @@ No v18.6 Stable tag, package, native artifact hash or publication claim is valid
 
 ## Exactly one next action
 
-**Obtain fresh canonical CI Fast + CI Qualified PASS on the final dispatcher authorization source; after both pass, bind only fingerprint-excluded checkpoints, reconcile `v18.6-release-certification` to that qualified state without rewriting source, and require the PR-posted canonical `release.yml` run ID before accepting G11.**
+**Obtain fresh canonical CI Fast + CI Qualified PASS on the connector-safe PR-certification fallback source; then bind only fingerprint-excluded checkpoints, reconcile `v18.6-release-certification`, open an owner-controlled fingerprint-excluded trigger PR into that branch, and require the PR #16 dispatcher plus canonical `release.yml` run-ID comments before accepting G11.**
 
 ## Provider-neutral continuation instruction
 
