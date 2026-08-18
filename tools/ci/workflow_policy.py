@@ -16,6 +16,20 @@ FORBIDDEN_FRAGMENTS = (
 )
 
 
+def run_gate(root: Path, filename: str, label: str) -> int:
+    gate = root / filename
+    if not gate.is_file():
+        print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
+        print(f"missing {filename}", file=sys.stderr)
+        return 1
+    result = subprocess.run([sys.executable, str(gate)], cwd=root, check=False)
+    if result.returncode != 0:
+        print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
+        print(f"{label} failed", file=sys.stderr)
+        return result.returncode
+    return 0
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
     workflows = root / ".github" / "workflows"
@@ -38,20 +52,15 @@ def main() -> int:
             print("forbidden one-off workflow naming: " + ", ".join(forbidden), file=sys.stderr)
         return 1
 
-    dependency_gate = root / "dependency_readiness_gate.py"
-    if not dependency_gate.is_file():
-        print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
-        print("missing dependency_readiness_gate.py", file=sys.stderr)
+    if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
         return 1
-    dependency_result = subprocess.run([sys.executable, str(dependency_gate)], cwd=root, check=False)
-    if dependency_result.returncode != 0:
-        print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
-        print("dependency/provider readiness contract failed", file=sys.stderr)
-        return dependency_result.returncode
+    if run_gate(root, "ai_continuous_eval_gate.py", "AI continuous eval/rights contract") != 0:
+        return 1
 
     print("DE.PULSE workflow policy: PASS")
     print("active workflows: " + ", ".join(present))
     print("dependency/provider readiness: PASS")
+    print("AI continuous eval/rights: PASS")
     return 0
 
 
