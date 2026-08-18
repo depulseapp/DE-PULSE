@@ -9,7 +9,8 @@
   "candidateSourceCommit":"1d8c4dfa530b205bbad443cb2eec4db6222fa6fe",
   "metadataHeadRule":"Release evidence metadata is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling/documentation candidate; later metadata-only updates do not allow evidence inheritance across a changed exact source.",
   "sourceFingerprint":null,
-  "sourceFingerprintState":"PENDING_REQUALIFICATION_AFTER_G11_BATCH",
+  "sourceFingerprintState":"PENDING_REQUALIFICATION",
+  "sourceFingerprintReason":"Fresh G0-G10 required after the complete G11 correction/preflight batch; descriptive reason is intentionally separate from the canonical machine state.",
   "evidence":{
     "Incoming-v18.5.0-Stable":{"status":"PASS"},
     "v18.5.1-Development-Complete":{"status":"IMPLEMENTED_AWAITING_FRESH_REQUALIFICATION","developmentEvidence":"release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json","documentationImpact":"release/v18.5.1/DOCUMENTATION-IMPACT.md","qaManifestDelta":"release/v18.5.1/QA-MANIFEST-DELTA.json"},
@@ -21,10 +22,12 @@
     "run-32084728612":{"status":"G11_PRODUCT_FAIL_TEST_CONTRACT","sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e","g11Freeze":"PASS","passedBeforeFailure":["adversarial authorization","HTTP/cross-module","Day/Swing/Long deterministic equivalence"],"failed":"inherited renderer QA-manifest assertion expected TEST candidate 18.5.1 at renderer/qa/manifest[0] although approved patch governance intentionally keeps promoted Stable 18.5.0 there until promotion","g12":"SKIPPED_BY_FAIL_FAST"},
     "run-32085179434":{"status":"TARGETED_DIAGNOSTIC_CONFIRMED","finding":"renderer_logic_test.js expected manifest.releases[0].version == 18.5.1; actual promoted Stable history correctly remained 18.5.0"},
     "run-32085526832":{"status":"G11_REMAINING_PREFLIGHT_PASS","sourceSha":"cd4fb2c0e0dbb28e2f4a501fee5829f1f94b9c74","passed":["patch-aware full inherited renderer regression","content/copy audit","documentation typography","responsive/layout 15/15 viewports"],"infrastructureCorrection":"Playwright explicitly provisioned before responsive matrix"},
+    "run-32085753804":{"status":"FAILED_FAST_MACHINE_STATE_FORMAT","sourceSha":"9539110f05f2def8e3b6c1f62ec935cea75d7bdd","passed":["Checkpoint contract","G0/G1 baseline/identity/scope","G1 immutable ten-ID scope","G5 renderer cheap lane"],"failed":"adaptive_resume_gate rejected descriptive sourceFingerprintState PENDING_REQUALIFICATION_AFTER_G11_BATCH","disposition":"machine state restored to canonical PENDING_REQUALIFICATION; descriptive reason moved to separate field; no product failure"},
     "v18.5.1-G11-G12":{"status":"BLOCKED_PENDING_FRESH_G0_G10_AND_NEW_IMMUTABLE_RC"},
     "v18.5.1-G13-G15":{"status":"NOT_STARTED_BLOCKED_ON_G12","nativeDeliveryRequired":["macOS Apple Silicon runnable ZIP","Windows x64 runnable ZIP","exact source ZIP","SHA-256 manifest","G12/G14/G15 evidence","actual packaged-runtime proof","publication reuses certified artifacts without rebuild"]}
   },
   "aiplcLessons":[
+    "Machine-state enums remain canonical; descriptive reasons live in separate fields so governance prose cannot break strict gates.",
     "Exact-SHA qualification is invalidated by source/test/control-plane changes even when product behavior is unchanged.",
     "Never move an immutable RC; preserve failed RC evidence and create a new RC after fresh qualification.",
     "After fail-fast RC failure, preflight the complete remaining gate set so findings are batched before expensive requalification.",
@@ -34,5 +37,5 @@
     "CI efficiency may reduce redundant execution, never evidence depth or macOS/Windows actual-artifact proof."
   ],
   "nextRequiredEvidence":"One fresh exact-SHA G0-G10 checkpoint for the complete G11 correction batch; then a new immutable RC, one G11-G12 run, identity-only Stable transition, G13-G15 native certification and G16.",
-  "updatedAt":"2026-08-18T00:45:00Z"
+  "updatedAt":"2026-08-18T00:50:00Z"
 }
