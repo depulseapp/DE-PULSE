@@ -6,20 +6,33 @@
   "branch":"v18.5.1-development",
   "incomingStable":{"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
   "certifiedStable":{"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","buildId":"v18.5.0-stable-major-closure-release-assurance-20260817","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
-  "candidateSourceCommit":"ca0be4911a8883d2bbe3642547674387fbc7b182",
-  "metadataHeadRule":"Release evidence metadata is fingerprint-excluded; candidateSourceCommit identifies the latest source/test candidate.",
+  "candidateSourceCommit":"1d8c4dfa530b205bbad443cb2eec4db6222fa6fe",
+  "metadataHeadRule":"Release evidence metadata is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling/documentation candidate; later metadata-only updates do not allow evidence inheritance across a changed exact source.",
   "sourceFingerprint":null,
-  "sourceFingerprintState":"PENDING_REQUALIFICATION",
+  "sourceFingerprintState":"PENDING_REQUALIFICATION_AFTER_G11_BATCH",
   "evidence":{
     "Incoming-v18.5.0-Stable":{"status":"PASS"},
-    "v18.5.1-Development-Complete":{"status":"IMPLEMENTED_AWAITING_REQUALIFICATION","developmentEvidence":"release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json","documentationImpact":"release/v18.5.1/DOCUMENTATION-IMPACT.md","qaManifestDelta":"release/v18.5.1/QA-MANIFEST-DELTA.json"},
+    "v18.5.1-Development-Complete":{"status":"IMPLEMENTED_AWAITING_FRESH_REQUALIFICATION","developmentEvidence":"release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json","documentationImpact":"release/v18.5.1/DOCUMENTATION-IMPACT.md","qaManifestDelta":"release/v18.5.1/QA-MANIFEST-DELTA.json"},
     "run-32081605253":{"status":"FAILED_EARLY_CONTROL_PLANE","disposition":"resume/evidence identity synchronized"},
     "run-32082204255":{"status":"FAILED_EARLY_DOCUMENTATION_GOVERNANCE","disposition":"provenance + patch documentation delta corrected"},
-    "run-32082651456":{"status":"FAILED_FAST_BROWSER_ORACLE","passed":["static/governance","focused Go","full Go","live-render Chromium"],"failed":"watchlist Python DESKS NameError","disposition":"oracle fixed; no product failure"},
-    "run-32083109313":{"status":"FAILED_FAST_UI_ORACLE","passed":["static/governance","focused Go","full Go","renderer syntax","live-render Chromium","watchlist seven-combination + Undo/final-desk/current-desk Chromium","auth-copy Chromium"],"failed":"Research desktop equal-top assertion","reason":"CSS intentionally uses align-items:end; measured primary/add bottoms were equal while heights/tops differed","disposition":"oracle now asserts bottom alignment within render-pixel tolerance and explicit end-alignment contract"},
-    "v18.5.1-G11-G15":{"status":"NOT_STARTED_BLOCKED_ON_G10","nativeDeliveryRequired":["macOS Apple Silicon runnable ZIP","Windows x64 runnable ZIP","exact source ZIP","SHA-256 manifest","G12/G14/G15 evidence","actual packaged-runtime proof"]}
+    "run-32082651456":{"status":"FAILED_FAST_BROWSER_ORACLE","disposition":"watchlist test harness DESKS NameError fixed; no product failure"},
+    "run-32083109313":{"status":"FAILED_FAST_UI_ORACLE","disposition":"Research hierarchy oracle aligned to intentional align-items:end geometry"},
+    "run-32083513389":{"status":"G0_G10_PASS","sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e","checkpoint":"CP-v18.5.1-DEV-COMPLETE-05","g10ArtifactId":9305996835,"g10ArtifactDigest":"sha256:26f8231cf5de8d882883a9c06e8de78dbee92dd462ffacd43a5f723407925790","checks":["G0-G5 FAST","G6 PostgreSQL 17 integration","G7 data/security/adaptive","G8 performance/race/5x shuffled full suite","G9 HTTP/responsive/pro-trader/browser","G10 exact-source evidence"]},
+    "run-32084728612":{"status":"G11_PRODUCT_FAIL_TEST_CONTRACT","sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e","g11Freeze":"PASS","passedBeforeFailure":["adversarial authorization","HTTP/cross-module","Day/Swing/Long deterministic equivalence"],"failed":"inherited renderer QA-manifest assertion expected TEST candidate 18.5.1 at renderer/qa/manifest[0] although approved patch governance intentionally keeps promoted Stable 18.5.0 there until promotion","g12":"SKIPPED_BY_FAIL_FAST"},
+    "run-32085179434":{"status":"TARGETED_DIAGNOSTIC_CONFIRMED","finding":"renderer_logic_test.js expected manifest.releases[0].version == 18.5.1; actual promoted Stable history correctly remained 18.5.0"},
+    "run-32085526832":{"status":"G11_REMAINING_PREFLIGHT_PASS","sourceSha":"cd4fb2c0e0dbb28e2f4a501fee5829f1f94b9c74","passed":["patch-aware full inherited renderer regression","content/copy audit","documentation typography","responsive/layout 15/15 viewports"],"infrastructureCorrection":"Playwright explicitly provisioned before responsive matrix"},
+    "v18.5.1-G11-G12":{"status":"BLOCKED_PENDING_FRESH_G0_G10_AND_NEW_IMMUTABLE_RC"},
+    "v18.5.1-G13-G15":{"status":"NOT_STARTED_BLOCKED_ON_G12","nativeDeliveryRequired":["macOS Apple Silicon runnable ZIP","Windows x64 runnable ZIP","exact source ZIP","SHA-256 manifest","G12/G14/G15 evidence","actual packaged-runtime proof","publication reuses certified artifacts without rebuild"]}
   },
-  "aiplcLessons":["Checkpoint CI has prevented four findings from reaching expensive native release work.","Three findings were control-plane/test-oracle defects rather than product failures; the process distinguished them instead of weakening product checks.","Geometry QA should test intended alignment/containment semantics rather than accidental coordinate equality.","CI efficiency may reduce redundant execution, never required evidence."],
-  "nextRequiredEvidence":"Fresh exact-SHA G0-G10 after Research hierarchy oracle correction; then immutable G11 RC and one G12-G15 native/release certification.",
-  "updatedAt":"2026-08-18T00:10:00Z"
+  "aiplcLessons":[
+    "Exact-SHA qualification is invalidated by source/test/control-plane changes even when product behavior is unchanged.",
+    "Never move an immutable RC; preserve failed RC evidence and create a new RC after fresh qualification.",
+    "After fail-fast RC failure, preflight the complete remaining gate set so findings are batched before expensive requalification.",
+    "Promoted QA history and TEST/RC release deltas are separate authorities; tests must understand that boundary.",
+    "Browser-dependent release gates must explicitly provision required runner dependencies.",
+    "Temporary diagnostics must be removed after the permanent release-specific plan captures the lesson.",
+    "CI efficiency may reduce redundant execution, never evidence depth or macOS/Windows actual-artifact proof."
+  ],
+  "nextRequiredEvidence":"One fresh exact-SHA G0-G10 checkpoint for the complete G11 correction batch; then a new immutable RC, one G11-G12 run, identity-only Stable transition, G13-G15 native certification and G16.",
+  "updatedAt":"2026-08-18T00:45:00Z"
 }
