@@ -1,0 +1,25 @@
+name: DE.PULSE v18.5.1 | RC Renderer Diagnostic
+
+on:
+  push:
+    branches: [v18.5.1-development]
+    paths:
+      - '.github/workflows/v18.5.1-renderer-rc-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  renderer:
+    name: Targeted immutable-RC renderer diagnostic
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ab86bb11b945402f997ac3a12b6e66c34ca3183e
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Run only failed G11 renderer regression
+        run: node renderer_logic_test.js
