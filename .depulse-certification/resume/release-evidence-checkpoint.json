@@ -6,8 +6,8 @@
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
   "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
   "dispatchTrigger": {
-    "sequence": 3,
-    "purpose": "Produce the normal GitHub merge/push event on the exact release-certification branch after final G10 so the canonical dispatcher can post and launch the G11-G16 release run.",
+    "sequence": 4,
+    "purpose": "Direct contents commit on the exact release-certification branch after final G10 to emit the canonical push event for G11-G16 dispatch.",
     "sourceFingerprintImpact": "NONE",
     "expectedPublish": false
   },
@@ -82,5 +82,5 @@
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
   "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from this exact release-certification push with publish=false, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T22:47:30Z"
+  "updatedAt": "2026-08-18T22:49:00Z"
 }
