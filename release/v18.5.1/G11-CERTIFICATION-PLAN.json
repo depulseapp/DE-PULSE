@@ -1,7 +1,7 @@
 {
   "schema": "DE.PULSE-V18.5.1-G11-CERTIFICATION-PLAN-1",
   "version": "18.5.1",
-  "purpose": "Release-specific immutable-RC G11 acceptance. Preserves inherited coverage while using the v18.5.1 patch-aware QA-manifest renderer gate.",
+  "purpose": "Release-specific immutable-RC G11 acceptance. Preserves inherited coverage while using the v18.5.1 patch-aware QA-manifest renderer gate and explicit browser-driver provisioning for responsive proof.",
   "checks": [
     {
       "id": "g11_v180_adversarial_auth",
@@ -55,8 +55,8 @@
       "id": "g11_responsive",
       "gate": "G11",
       "label": "Responsive/layout integrity · bounded 15-viewport shards",
-      "command": ["{python}", "responsive_ui_sharded_gate.py"],
-      "timeout_seconds": 300,
+      "command": ["bash", "-lc", "python3 -m pip install --disable-pip-version-check playwright && python3 responsive_ui_sharded_gate.py"],
+      "timeout_seconds": 360,
       "blocking": true
     }
   ]
