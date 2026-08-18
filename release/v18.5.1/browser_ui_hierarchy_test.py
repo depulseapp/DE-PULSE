@@ -72,10 +72,15 @@ def visible_box(page, selector):
     return box
 
 
+def bottom(box):
+    return box["y"] + box["height"]
+
+
 def main() -> None:
     assert "ui-v18.5.1.css?v=18.5.1" in INDEX
     assert "header-v18.5.1.js?v=18.5.1" in INDEX
     assert "grid-template-columns:minmax(260px,1.3fr)" in UI_CSS
+    assert "align-items:end!important" in UI_CSS
     assert "top:calc(var(--v1851-topbar-h) + var(--v1851-statusbar-h))" in UI_CSS
     assert "ensureSecondaryMarketStatus" in HEADER_JS
 
@@ -140,7 +145,11 @@ def main() -> None:
 
             if width == 1440:
                 assert primary["width"] > add["width"] > fresh["width"] * 0.95, (primary, add, fresh)
-                assert primary["y"] == add["y"], (primary, add)
+                # The desktop grid intentionally uses align-items:end. The
+                # controls have different heights, so their bottoms—not tops—
+                # must align within render-pixel tolerance.
+                assert abs(bottom(primary) - bottom(add)) <= 2, (primary, add)
+                assert abs(bottom(add) - bottom(fresh)) <= 2, (add, fresh)
             elif width == 900:
                 assert primary["width"] > add["width"], (primary, add)
                 assert primary["y"] < add["y"], (primary, add)
