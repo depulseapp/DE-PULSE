@@ -5,7 +5,7 @@
 **Release:** `v18.6.0`  
 **Active branch:** `v18.6-development`  
 **Stable predecessor:** v18.5.2 STABLE / G0–G16 CLOSED  
-**Current candidate state:** v18.6.0 G10 REQUALIFICATION AFTER RELEASE-OBSERVABILITY HARDENING / NOT PROMOTED  
+**Current candidate state:** v18.6.0 G10 REQUALIFICATION AFTER FINAL RELEASE-RUN OBSERVABILITY HARDENING / NOT PROMOTED  
 **Repository:** `depulseapp/DE-PULSE`  
 **Main release PR:** `#16`  
 **Stable predecessor tag:** `v18.5.2-stable`  
@@ -18,7 +18,7 @@
 
 Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, actual branch/PR/check state and the immutable Stable predecessor tag/release. The last trustworthy PASS is the highest exact-source gate evidence visible in GitHub. Never resume from model memory alone. `v18.5.2-stable` remains the current certified product authority until v18.6.0 completes G11–G16 and is promoted.
 
-`source_fingerprint.py` excludes `.depulse-certification` but **does not exclude `handoff/CURRENT.md` or workflow definitions**. Machine resume/evidence checkpoints may advance as fingerprint-excluded operational metadata after a candidate commit, while this handoff and `.github/workflows/*.yml` are candidate-bound source. Any source-bound change after qualification requires a new fingerprint and fresh G10 before G11.
+`source_fingerprint.py` excludes `.depulse-certification` but **does not exclude `handoff/CURRENT.md` or workflow definitions**. Machine resume/evidence checkpoints may advance as fingerprint-excluded operational metadata after a candidate commit. This handoff and `.github/workflows/*.yml` are candidate-bound source; any change to them requires a new candidate fingerprint and fresh G10 before G11.
 
 ## v18.6.0 implementation state
 
@@ -35,39 +35,36 @@ All eight assigned v18.6 implementation/audit slices are code-complete:
 
 Protected deterministic Day/Swing/Long formulas remain unchanged. Smart Provider Router remains the sole provider-routing owner; provider count does not change Market Mode. GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, the U.S. Equities Processing Boundary and the permanent No Execution Boundary are preserved.
 
-## Qualification evidence
+## Qualification history
 
 The hardened implementation head `84efadd58b4b279e9055a1b5db4a78f3b41b693c` passed CI Fast `32182124289` and CI Qualified `32182124317`.
 
-The canonical v18.6 release candidate source `aa72c8b2c7571d5633eb2e6dce622749704b1637` then passed real-branch G10:
+The canonical v18.6 release-candidate source `aa72c8b2c7571d5633eb2e6dce622749704b1637` passed real-branch G10 via CI Fast #142 / `32185509389` and CI Qualified #63 / `32185509377`.
 
-- CI Fast #142 / run `32185509389` — PASS;
-- CI Qualified #63 / run `32185509377` — PASS, including Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and evidence summary.
+After release-run observability hardening, source `9558ee44df55dd10f931f7435f4a8615b1b976ba` passed CI Fast #158 / `32187439582` and CI Qualified #69 / `32187439404`, including Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and final evidence summary. The qualification merge-tree fingerprint observed there was `6125035b40fbee5c1571e26a1ff3fdd3677000f962961b34f7bdd7b3161e717d`.
 
-The canonical product fingerprint observed after that qualification was `f7ae32d088563019f406abc70f4781a85b061fdd237ccabd9d4539ad8d1a3622`. Subsequent `.depulse-certification` checkpoint-only commits did not alter that fingerprint.
+That qualification then exposed one final pre-G11 compatibility concern: a candidate-only `workflow_dispatch` input is unnecessarily fragile while the workflow must also exist on the default branch. The final source therefore removes the candidate-only tracking input and places all run observability in the already-authorized Fast dispatcher. This final source requires one fresh Fast + Qualified G10 before G11.
 
-## Release delivery hardening after G10
+## Final release-run observability contract
 
-The first branch-gated certification attempt exposed an assistant/account portability gap: connected assistants could trigger `workflow_dispatch` but could not reliably enumerate that run later. The release machinery is therefore being hardened before G11 is frozen; no product behavior or protected trading logic changed.
+The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. No fourth workflow and no G17+ gate exists.
 
-The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. No new top-level gate or workflow was introduced.
+For exact `v<release-line>-release-certification` and `v<release-line>-stable-promotion` pushes, the owner-gated Fast dispatcher now:
 
-The permanent release path now requires:
+- resolves version/build/certification script and canonical candidate fingerprint from the pushed SHA;
+- resolves the open release PR from the canonical development branch;
+- posts a **dispatcher-active comment first**, including the Fast/dispatcher run ID, ref, exact SHA, fingerprint and publish mode;
+- searches existing `release.yml` workflow-dispatch runs and reuses one only when both `headBranch` and `headSha` match the exact candidate;
+- otherwise dispatches `release.yml` from the candidate branch itself using the stable/default-compatible input schema;
+- captures the canonical release workflow run ID/URL and posts a second PR comment with that durable lookup key.
 
-- owner-only push dispatch from exact `v<release-line>-release-certification` or `v<release-line>-stable-promotion` branches;
-- release workflow definition loaded from the candidate branch itself rather than implicitly from `main`;
-- idempotent reuse only when both release-run `headBranch` and `headSha` match the current candidate;
-- explicit capture of the release workflow run ID/URL;
-- durable tracking on the open v18.6 release PR;
-- G11 PASS and G16 PASS status comments from `release.yml` itself;
-- `publish=false` during pre-merge certification and `publish=true` only on the Stable-promotion path;
-- no rebuild during publication.
+This means another ChatGPT account, Claude, a human developer, or another authorized assistant can recover the exact G11–G16 run from GitHub PR #16 without needing the previous chat or an opaque Actions list operation.
 
-Because `ci-fast.yml`, `release.yml`, and this handoff are source-fingerprinted, this delivery hardening intentionally invalidates reuse of the earlier G10 evidence for the new source candidate. Fresh Fast + Qualified qualification is required before the observable G11 run becomes authoritative.
+`release.yml` remains the sole G11–G16 owner. It performs exact-SHA G11 provenance, G12 full certification, macOS Apple Silicon + Windows x64 G13/G14 native package/runtime audit, G15 evidence binding, optional no-rebuild publication, and G16 durable workflow artifact. Pre-merge certification uses `publish=false`; Stable publication is allowed only from the post-merge Stable-promotion path.
 
 ## Release sequence still required
 
-Fresh G10 on the final observable/idempotent release source → G11 immutable candidate/provenance → G12 full certification via `release/v18.6.0/run_full_certification.sh` → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff. Pre-merge certification uses `publish=false`; Stable publication remains prohibited until the certified candidate is promoted through the no-rebuild Stable-promotion path.
+Fresh G10 on this final dispatcher/source contract → G11 immutable candidate/provenance → G12 full certification via `release/v18.6.0/run_full_certification.sh` → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff. Stable publication remains prohibited until the certified candidate reaches the no-rebuild Stable-promotion path.
 
 No v18.6 Stable tag, package, native artifact hash or publication claim is valid before those gates pass.
 
@@ -79,8 +76,8 @@ No v18.6 Stable tag, package, native artifact hash or publication claim is valid
 
 ## Exactly one next action
 
-**Obtain fresh canonical CI Fast + CI Qualified PASS on the final source containing observable/idempotent release tracking, then update only fingerprint-excluded checkpoints, fast-forward `v18.6-release-certification` to that exact qualified metadata head, and follow the PR-recorded canonical release run through G11–G16 with `publish=false`.**
+**Obtain fresh canonical CI Fast + CI Qualified PASS on the final default-compatible, PR-audited dispatcher source; update only fingerprint-excluded checkpoints; fast-forward `v18.6-release-certification` to that qualified metadata head; then use the PR-posted canonical release run ID to execute and inspect G11–G16 with `publish=false`.**
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16 and exact GitHub checks/comments. Treat `v18.5.2-stable` as the immutable certified predecessor until v18.6.0 G11–G16 promotion is complete. Resume from the last trustworthy PASS and the single next action above. Preserve G0–G16, assistant/account independence, Smart Provider Router ownership, deterministic Day/Swing/Long formulas, the U.S. Equities Processing Boundary and permanent No Execution Boundary.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16 checks and PR comments. Treat `v18.5.2-stable` as the immutable certified predecessor until v18.6.0 G11–G16 promotion is complete. Resume from the last trustworthy PASS and the single next action above. Preserve G0–G16, assistant/account independence, Smart Provider Router ownership, deterministic Day/Swing/Long formulas, the U.S. Equities Processing Boundary and permanent No Execution Boundary.
