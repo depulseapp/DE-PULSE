@@ -41,7 +41,6 @@ jobs:
 
   renderer-certification:
     name: Renderer syntax, invariants and Chromium behavior
-    needs: checkpoint
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
@@ -49,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.checkpoint.outputs.source_sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
