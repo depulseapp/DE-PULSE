@@ -6,7 +6,7 @@
   "candidateDisposition": "V18_6_0_G10_PREFREEZE_RECONCILIATION",
   "branch": "v18.6-development",
   "pullRequest": 16,
-  "candidateSourceCommit": "b16041763bdc0bedd0df863f5d824ac132a508f9",
+  "candidateSourceCommit": "aed1f95ee1efe3ddb19e231fbf00373c8cad1d27",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "certifiedStable": {
@@ -19,10 +19,10 @@
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
   "stableIdentityRule": "v18.5.2-stable at d30e54db4908ca57c52ae298cc4ada3416fab46b plus its certified source fingerprint and native artifact hashes remain the immutable Stable predecessor until v18.6.0 completes G11-G16 and is promoted. Candidate/checkpoint metadata never rewrites that Stable identity.",
-  "metadataHeadRule": "Files under .depulse-certification/resume and handoff/CURRENT.md are operational resume metadata and are excluded from the product source fingerprint. They may describe a candidate without redefining its product bytes.",
+  "metadataHeadRule": "Only files under .depulse-certification are excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance as operational metadata after a candidate commit. handoff/CURRENT.md is included in the source fingerprint and must freeze with the product before G11; changing it after G11 requires a new candidate/fingerprint and requalification.",
   "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_G10_PREFREEZE",
-  "implementationSummary": "All eight assigned v18.6 implementation/audit slices are code-complete: watchlist remediation; shared Scanner/Radar broad-snapshot acquisition; Session Intelligence Coordinator; Market Activity/legacy route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context/cache/schema/evaluation hardening; and rights-aware fail-closed AI egress. Canonical 18.6.0 identity was generated on an isolated branch and is undergoing exact-SHA pre-freeze qualification.",
-  "lastTrustworthyPass": "V18_6_IMPLEMENTATION_HEAD_FAST_AND_QUALIFIED_PASS; 84efadd58b4b279e9055a1b5db4a78f3b41b693c FAST_PASS_32182124289 QUALIFIED_PASS_32182124317; CANONICAL_IDENTITY_HEAD_REQUIRES_RESUME_METADATA_RECONCILIATION_AND_FRESH_G10",
+  "implementationSummary": "All eight assigned v18.6 implementation/audit slices are code-complete: watchlist remediation; shared Scanner/Radar broad-snapshot acquisition; Session Intelligence Coordinator; Market Activity/legacy route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context/cache/schema/evaluation hardening; and rights-aware fail-closed AI egress. Canonical 18.6.0 identity, release-coupled cache identity and QA history are aligned; the candidate-bound handoff is now part of the exact product fingerprint.",
+  "lastTrustworthyPass": "V18_6_IMPLEMENTATION_HEAD_FAST_AND_QUALIFIED_PASS; 84efadd58b4b279e9055a1b5db4a78f3b41b693c FAST_PASS_32182124289 QUALIFIED_PASS_32182124317; CANONICAL_18_6_IDENTITY_PREFREEZE_FIXES_APPLIED; FINAL_EXACT_G10_PENDING",
   "earliestRequiredResumeGate": "G10_PREFREEZE_EXACT_IDENTITY_FAST_QUALIFIED",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
@@ -65,24 +65,24 @@
       "rebuild": false
     }
   },
-  "blockingIssue": "G10_RESUME_METADATA_RECONCILIATION_IN_PROGRESS",
+  "blockingIssue": "G10_FINAL_EXACT_SOURCE_QUALIFICATION_PENDING",
   "knownResiduals": [
     "TradeInsight remains governed shadow/future implementation work and must not gain production influence without its approved lifecycle.",
     "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required items and fail closed when absent or unapproved.",
     "v18.6 native macOS Apple Silicon and Windows x64 G13/G14 artifacts do not exist until the immutable G11 candidate passes G12 and native packaging/runtime audit."
   ],
   "releaseBlockingResiduals": [
-    "Fresh Fast + Qualified G10 PASS is required on the exact canonical v18.6.0 identity candidate before G11 freeze."
+    "Fresh Fast + Qualified G10 PASS is required on the exact final canonical v18.6.0 source fingerprint before G11 freeze."
   ],
   "nextProcessWork": {
     "id": "V18.6-G10-RC-FREEZE",
     "classification": "RELEASE_CANDIDATE_PRE_FREEZE",
     "status": "IN_PROGRESS",
     "requirements": [
-      "reconcile handoff and resume checkpoints to release_identity.json v18.6.0",
-      "obtain canonical CI Fast and CI Qualified PASS on the exact cleaned identity candidate",
+      "obtain canonical CI Fast and CI Qualified PASS on the exact final candidate-bound handoff/source fingerprint",
       "fast-forward v18.6-development / PR #16 only after the isolated candidate is clean",
-      "freeze immutable G11 source SHA and proceed through G12-G16 without rebuilding certified assets during promotion"
+      "freeze immutable G11 source SHA and canonical Git-object fingerprint",
+      "proceed through G12-G16 without rebuilding certified assets during promotion"
     ]
   },
   "assistantPortability": {
@@ -95,6 +95,6 @@
   },
   "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
   "nextBranch": "v18.6-development",
-  "nextStep": "Complete exact-identity G10 qualification, move the qualified canonical v18.6.0 candidate to v18.6-development / PR #16, then freeze G11 and execute G12-G16 release certification.",
-  "updatedAt": "2026-08-18T20:38:00Z"
+  "nextStep": "Complete exact-source G10 qualification, move the qualified canonical v18.6.0 candidate to v18.6-development / PR #16, then freeze G11 and execute G12-G16 release certification.",
+  "updatedAt": "2026-08-18T20:52:00Z"
 }
