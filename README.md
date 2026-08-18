@@ -1,15 +1,15 @@
-# DE.PULSE v18.5.1 STABLE — Recovery Patch & Release Assurance
+# DE.PULSE v18.5.2 STABLE — Hotfix Recovery Candidate
 
-**Build:** `v18.5.1-stable-recovery-20260817`
+**Build:** `v18.5.2-stable-hotfix-20260817`
 **Channel:** STABLE
-**Current Stable baseline:** v18.5.0
+**Current Stable baseline:** v18.5.1
 **Major v18 provenance anchor:** v17.5.1
 **Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
-v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature: it reconstructs and re-certifies the approved v18 system across architecture/source quality, data utility/correlation, security, adaptive governance, UI/UX, performance/capacity/stability, PostgreSQL/shared-state behavior, native runtime and release assurance. ADR-GDI/runtime overload is release-blocking when self-inflicted load can delay or misstate decision-critical evidence. Mature ASBI/TDTI/AODR/adaptive-13F work remains later roadmap scope.
+v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature and preserves the approved deterministic intelligence, U.S.-listed processing boundary, persistence truth, and permanent No Execution boundary.
 
-v18.5.1 is the certified recovery patch over v18.5.0 STABLE. It closes the frozen ten-ID recovery scope for live-render stability, tracked-symbol/desk semantics, responsive Research/header hierarchy, truthful profile copy and checkpoint-based behavior-first CI. Deterministic Day/Swing/Long formulas, provider intelligence, the U.S.-listed processing boundary and No Execution remain unchanged.
+v18.5.2 is the hotfix candidate over v18.5.1 STABLE. It restores all three desk pages, corrects the Market Pulse Ribbon and clock hierarchy, recovers Research reading space, stabilizes tracked-symbol entry during live updates, adds separately configurable display and sign-in names with password re-verification, and keeps the complete Save Settings row visible. Automatic GitHub Actions execution is paused while the account budget is unavailable; exact-source local G0–G12 plus native G13/G14 evidence remains required before G15 Stable promotion.
 
 ### v18.5 release flow
 
