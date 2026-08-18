@@ -7,21 +7,16 @@
     return String(value || '').trim().toUpperCase();
   }
 
-  deskMembershipStrip = function deskMembershipStripV1851(sym, currentDesk = '') {
+  deskMembershipStrip = function deskMembershipStripV186(sym) {
     const target = String(sym || '').toUpperCase();
-    const inferredDesk = ['day', 'swing', 'long'].includes(String(page || '').toLowerCase()) ? String(page).toLowerCase() : '';
-    const current = String(currentDesk || inferredDesk).toLowerCase();
     const items = [['day', 'DAY'], ['swing', 'SWING'], ['long', 'LONG']];
     return `<span class="desk-membership-strip" aria-label="Desk membership for ${esc(target)}">${items.map(([kind, label]) => {
       const active = (deskWL(kind).symbols || []).includes(target);
-      const isCurrent = active && kind === current;
       const deskName = kind === 'long' ? 'Long-Term' : kind === 'day' ? 'Day Trade' : 'Swing';
-      const title = isCurrent
-        ? `${label} is the current desk for ${target}`
-        : active
-          ? `${target} is in ${deskName} · click to remove when another desk remains`
-          : `Add ${target} to ${deskName}`;
-      return `<button type="button" class="desk-membership-pill ${active ? 'active' : ''}${isCurrent ? ' current-desk' : ''}" aria-pressed="${active ? 'true' : 'false'}"${isCurrent ? ' aria-current="true"' : ''} data-desk-membership="${kind}:${esc(target)}" title="${esc(title)}">${label}${isCurrent ? '<span class="desk-membership-current" aria-hidden="true">CURRENT</span><span class="sr-only"> current desk</span>' : ''}</button>`;
+      const title = active
+        ? `${target} is in ${deskName} · click to remove when another desk remains`
+        : `Add ${target} to ${deskName}`;
+      return `<button type="button" class="desk-membership-pill ${active ? 'active' : ''}" aria-pressed="${active ? 'true' : 'false'}" data-desk-membership="${kind}:${esc(target)}" title="${esc(title)}">${label}</button>`;
     }).join('')}</span>`;
   };
 
