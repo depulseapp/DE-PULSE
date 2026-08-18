@@ -1,14 +1,20 @@
 {
   "schemaVersion": 1,
   "release": "v18.5.1",
-  "status": "WAITING_FOR_G10",
-  "releaseCertificationRequested": false,
-  "qualifiedTestSourceSha": null,
-  "immutableRcSha": null,
+  "status": "RC_CERTIFICATION_REQUESTED",
+  "releaseCertificationRequested": true,
+  "stablePromotionRequested": false,
+  "qualifiedTestSourceSha": "ab86bb11b945402f997ac3a12b6e66c34ca3183e",
+  "immutableRcSha": "ab86bb11b945402f997ac3a12b6e66c34ca3183e",
+  "rcSourceSha": "ab86bb11b945402f997ac3a12b6e66c34ca3183e",
+  "rcBranch": "v18.5.1-rc-g10",
   "rcTag": null,
-  "checkpointId": null,
+  "checkpointId": "CP-v18.5.1-RC-01",
+  "g10RunId": 32083513389,
+  "g10ArtifactId": 9305996835,
+  "g10ArtifactDigest": "sha256:26f8231cf5de8d882883a9c06e8de78dbee92dd462ffacd43a5f723407925790",
   "requiredTargets": ["macos-arm64", "windows-x64"],
   "requiredGates": ["G11", "G12", "G13", "G14", "G15"],
-  "promotionRule": "Do not request release certification until the exact v18.5.1 TEST source has G10 PASS. G11 freezes the promotion/RC source. Any source change invalidates affected evidence and requires requalification. G14 must run the actual macOS Apple Silicon and Windows x64 artifacts. No cost optimization may reduce required evidence.",
-  "notes": "Dormant checkpoint only. This file must not trigger native/release work while releaseCertificationRequested is false."
+  "promotionRule": "G11 validates the immutable exact G10 source. G12 full certification must pass before any identity-only Stable transition. G13-G15 native certification remains blocked until G12 is green. G14 must run actual macOS Apple Silicon and Windows x64 artifacts. Publication must reuse certified artifacts without rebuilding. No cost optimization may reduce required evidence.",
+  "notes": "Exact G10-qualified TEST source is frozen as v18.5.1-rc-g10. This checkpoint requests G11-G12 only; Stable promotion remains false until authoritative G12 PASS."
 }
