@@ -19,67 +19,37 @@
     "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
     "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
-  "candidateSourceCommit": "5b74166fbd7d66284becbaa7186d56d87ab1c8fa",
-  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. candidateSourceCommit identifies the latest v18.5.1 product/tooling/documentation candidate; later metadata-only ledger updates do not advance its product fingerprint.",
+  "candidateSourceCommit": "c10285efb0ba86b81fd1a49a19f1d386f64c81a8",
+  "metadataHeadRule": "Release evidence under .depulse-certification is fingerprint-excluded. candidateSourceCommit identifies the latest v18.5.1 source/test candidate; later metadata-only ledger updates do not advance its product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "evidence": {
-    "Incoming-v18.5.0-Stable": {
-      "status": "PASS",
-      "sourceCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
-      "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
-      "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
+    "Incoming-v18.5.0-Stable": {"status":"PASS","sourceCommit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
+    "v18.5.1-Development-Complete": {"status":"IMPLEMENTED_AWAITING_REQUALIFICATION","candidateSourceCommit":"c10285efb0ba86b81fd1a49a19f1d386f64c81a8","developmentEvidence":"release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json","documentationImpact":"release/v18.5.1/DOCUMENTATION-IMPACT.md","qaManifestDelta":"release/v18.5.1/QA-MANIFEST-DELTA.json"},
+    "v18.5.1-Qualification-Run-32081605253": {"status":"FAILED_EARLY_CONTROL_PLANE","failed":"adaptive_resume_gate","disposition":"Resume/evidence checkpoint identity synchronized."},
+    "v18.5.1-Qualification-Run-32082204255": {"status":"FAILED_EARLY_DOCUMENTATION_GOVERNANCE","failed":"documentation_governance_gate","disposition":"Restored v17.5.1 provenance semantics and strict TEST/RC Documentation Impact + QA delta."},
+    "v18.5.1-Qualification-Run-32082651456": {
+      "status":"FAILED_FAST_BROWSER_ORACLE",
+      "sourceCommit":"8f9b4144742fd2bee9c690f67fa6626d3fa001b0",
+      "passed":["checkpoint-contract","G0/G1","G1 ten-ID","release identity","adaptive resume","source architecture","data utility","documentation governance","go vet","renderer cheap","focused affected Go","full Go","live-render Chromium"],
+      "failed":"browser_watchlist_membership_test.py",
+      "reason":"Python NameError: DESKS was not defined before constructing the seven membership combinations; no watchlist behavior assertion had run yet.",
+      "disposition":"Added Python DESKS=(day,swing,long) to the behavior test while retaining all seven-combination, Undo, final-membership protection and aria-current assertions."
     },
-    "v18.5.1-Development-Complete": {
-      "status": "IMPLEMENTED_AWAITING_REQUALIFICATION",
-      "candidateSourceCommit": "5b74166fbd7d66284becbaa7186d56d87ab1c8fa",
-      "developmentEvidence": "release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json",
-      "documentationImpact": "release/v18.5.1/DOCUMENTATION-IMPACT.md",
-      "qaManifestDelta": "release/v18.5.1/QA-MANIFEST-DELTA.json",
-      "requiredDecision": "One exact-SHA G0-G10 checkpoint must pass after the completed documentation/provenance batch; development evidence alone is not certification."
-    },
-    "v18.5.1-Qualification-Run-32081605253": {
-      "status": "FAILED_EARLY_CONTROL_PLANE",
-      "sourceCommit": "27b7d99fe375aaa6ffe281f1f5d35d3adee53937",
-      "passed": ["checkpoint-contract", "G0/G1 baseline-identity-frozen-scope", "G1 ten-ID scope", "renderer cheap lane"],
-      "failed": "adaptive_resume_gate",
-      "reason": "Resume/evidence checkpoints still identified v18.5.0/v18.5-development.",
-      "disposition": "Paired resume metadata synchronized before Checkpoint 02."
-    },
-    "v18.5.1-Qualification-Run-32082204255": {
-      "status": "FAILED_EARLY_DOCUMENTATION_GOVERNANCE",
-      "sourceCommit": "11116626d9f5e49b1ef73054d344dab239041dc7",
-      "passed": ["checkpoint-contract", "G0/G1 baseline-identity-frozen-scope", "G1 ten-ID scope", "release identity", "adaptive resume", "source architecture", "data utility", "renderer cheap lane"],
-      "failed": "documentation_governance_gate",
-      "reason": "Inherited gate expected current TEST candidate to be duplicated into three long-lived manuals/README/QA manifest and exposed incorrect v18 major provenance-anchor semantics.",
-      "disposition": "Restored stable_baseline=v17.5.1 / previous_stable=v18.5.0 and added strict TEST/RC Documentation Impact + QA manifest delta while retaining all historical manual/manifest checks."
-    },
-    "v18.5.1-G11-G15": {
-      "status": "NOT_STARTED_BLOCKED_ON_G10",
-      "nativeDeliveryRequired": [
-        "macOS Apple Silicon runnable ZIP",
-        "Windows x64 runnable ZIP",
-        "exact source ZIP",
-        "SHA-256 manifest",
-        "G12/G14/G15 certification evidence",
-        "actual packaged-runtime identity/profile/persistence/interaction proof",
-        "GitHub Release visibly listing runnable assets"
-      ]
-    }
+    "v18.5.1-G11-G15": {"status":"NOT_STARTED_BLOCKED_ON_G10","nativeDeliveryRequired":["macOS Apple Silicon runnable ZIP","Windows x64 runnable ZIP","exact source ZIP","SHA-256 manifest","G12/G14/G15 evidence","actual packaged-runtime proof","GitHub Release runnable assets"]}
   },
   "supersededOrFailedEvidence": [
-    {"runId":32081605253,"classification":"V18_5_1_CHECKPOINT_IDENTITY_DISCOVERY","reason":"Cheap gate stopped stale resume metadata before expensive lanes."},
-    {"runId":32082204255,"classification":"V18_5_1_DOCUMENTATION_SYNC_DISCOVERY","reason":"Cheap gate stopped current-candidate documentation/provenance drift before Go/browser/PostgreSQL/performance/native lanes."}
+    {"runId":32081605253,"classification":"CHECKPOINT_IDENTITY_DISCOVERY"},
+    {"runId":32082204255,"classification":"DOCUMENTATION_SYNC_DISCOVERY"},
+    {"runId":32082651456,"classification":"BEHAVIOR_TEST_ORACLE_DISCOVERY"}
   ],
   "aiplcLessons": [
-    "Checkpoint-based CI prevented two control-plane/documentation issues from consuming expensive deeper lanes.",
-    "Development source/tests are accumulated before deliberate qualification; failures are batched before requalification.",
-    "Resume/release evidence metadata must advance with canonical release identity.",
-    "Major-family provenance anchor and immediate Stable predecessor are distinct identity concepts.",
-    "TEST/RC patch documentation can be represented by a strict delta while promoted/manual history remains blocking and intact.",
-    "CI efficiency may remove redundant executions but never PostgreSQL, security, race/randomized, browser, performance or native-runtime evidence.",
-    "Stable delivery requires actual macOS arm64 and Windows x64 runnable artifacts and G14/G15 evidence, not a tag or source-only PASS."
+    "Checkpoint-based CI stopped all three discovered defects before PostgreSQL/performance/native lanes.",
+    "Static and Go PASS evidence is exact-run evidence but is not reused as a substitute for fresh affected-source qualification after the test-oracle change.",
+    "Behavior-test fixture/oracle correctness is itself part of QA quality; a harness crash is not a product failure.",
+    "CI efficiency may remove redundant executions but never required PostgreSQL, security, race/randomized, browser, performance or native evidence.",
+    "Stable delivery requires actual macOS arm64 and Windows x64 runnable artifacts plus G14/G15 evidence."
   ],
-  "nextRequiredEvidence": "Fresh exact-SHA v18.5.1 G0-G10 after the completed documentation/provenance batch; then immutable G11 RC and full G12-G15 native/release certification.",
-  "updatedAt": "2026-08-17T23:58:00Z"
+  "nextRequiredEvidence": "Fresh exact-SHA v18.5.1 G0-G10 after browser-oracle correction; then immutable G11 RC and one full G12-G15 native/release certification.",
+  "updatedAt": "2026-08-18T00:04:00Z"
 }
