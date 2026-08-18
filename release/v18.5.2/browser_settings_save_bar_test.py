@@ -96,7 +96,7 @@ def main() -> None:
             kwargs["executable_path"] = chrome
         browser = p.chromium.launch(**kwargs)
         page = browser.new_page()
-        for height in (900, 520, 420):
+        for height in (900, 520, 402):
             assert_visible_contract(page, height)
         browser.close()
     print("PASS: Settings content scrolls independently and the complete Save Settings bar remains visible at desktop window heights.")
