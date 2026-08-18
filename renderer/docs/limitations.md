@@ -1,5 +1,10 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.6.0 STABLE — Capabilities & limitations update
+
+AI and adaptive intelligence remain decision-support only. External AI receives only evidence that passes the explicit provider×dataset rights registry; unknown or denied rights are withheld. Model responses must satisfy the strict response schema and evidence-ID contract or DE.PULSE abstains/falls back. Context is materially ranked under a hard prompt envelope and cached inference expires. Provider count never changes Market Mode, deterministic Day/Swing/Long formulas remain canonical, and DE.PULSE still does not place, route, simulate, or execute trades.
+
+
 ## v18.5.2 STABLE — Hotfix candidate truth boundaries
 
 This patch corrects rendering, hierarchy, input stability, identity configuration, and viewport reachability only. It does not change deterministic Day/Swing/Long formulas, provider intelligence, persistence ownership, actionable U.S.-listed scope, or No Execution. The display name and sign-in username are configurable, but OWNER remains an authorization role and username changes require recent password confirmation. A local source/browser PASS does not certify macOS or Windows packages; G13/G14 runtime evidence and final hashes are still required before G15 promotion.

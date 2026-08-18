@@ -1,5 +1,10 @@
 # DE.PULSE — User documentation
 
+## v18.6.0 STABLE — Adaptive utility and intelligence hardening
+
+DE.PULSE now shares broad Scanner/Opportunity Radar snapshot acquisition, coordinates Pre-Market Prep and Market Open Prep through one serialized session-intelligence scheduler, and keeps low-value Market Activity / legacy evidence routes in supporting drill-down paths. Documentation is role-aware and privileged developer content is enforced server-side. Provider/dependency readiness is explicit and fail-closed. External AI research uses bounded material context, strict structured outputs, expiring cache identity, continuous-evaluation telemetry, and provider×dataset rights filtering before egress. Deterministic Day/Swing/Long formulas, the U.S. Equities Processing Boundary, Smart Provider Router ownership, and the permanent No Execution Boundary remain unchanged.
+
+
 ## v18.5.2 STABLE — Hotfix recovery candidate
 
 Day, Swing, and Long-Term desks render through a self-contained symbol normalizer. Complete ET/PT clocks live in the compact Market Pulse Ribbon, while Research keeps its full evidence hierarchy. Tracked-symbol typing survives live quote updates and Add Symbol succeeds on the first attempt. Settings now allows a password-reverified display name and sign-in username while OWNER remains a separate role. The full Save Settings row stays visible inside the application window. Deterministic formulas, U.S.-listed scope, and No Execution are unchanged. Promotion remains pending exact-source local and native package certification.

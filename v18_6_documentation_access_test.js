@@ -6,6 +6,7 @@ const assert=require('assert');
 
 const source=fs.readFileSync('renderer/documentation-access-v18.6.js','utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
+const releaseIdentity=JSON.parse(fs.readFileSync('release_identity.json','utf8'));
 const context=vm.createContext({console});
 vm.runInContext(`
 let authPrincipal={role:'USER'};
@@ -34,7 +35,7 @@ for(const role of ['ADMIN','OWNER','SUPER_OWNER']){
 vm.runInContext(`authPrincipal={role:'USER'};documentationTab='developer'`,context);
 vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert.strictEqual(vm.runInContext('documentationTab',context),'user','hydrate must not fetch forbidden developer docs');
-  assert(index.includes('<script src="documentation-access-v18.6.js?v=18.5.2"></script>'),'index must load v18.6 documentation access extension');
+  assert(index.includes(`<script src="documentation-access-v18.6.js?v=${releaseIdentity.version}"></script>`),'index must load v18.6 documentation access extension with canonical release cache identity');
   assert(!source.includes('/api/'),'composition extension must not create a parallel authorization API');
   console.log('v18.6 documentation access regression PASS');
 }).catch(err=>{console.error(err);process.exitCode=1});

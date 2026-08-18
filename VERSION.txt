@@ -1,9 +1,9 @@
-DE.PULSE v18.5.2
-Build: v18.5.2-stable-hotfix-20260817
+DE.PULSE v18.6.0
+Build: v18.6.0-stable-20260818
 Channel: STABLE
 Stable baseline: v17.5.1
-Previous Stable: v18.5.1
-Scope: Hotfix recovery: restore Day/Swing/Long desk rendering, move complete ET/PT clocks into the compact Market Pulse Ribbon, recover the full-width Research hierarchy, preserve tracked-symbol drafts and first-attempt adds across live quote reconciliation, align symbol controls beside their heading, add password-reverified configurable display name and sign-in username while preserving OWNER as a separate role, and keep the Settings save row inside the visible application viewport; retain deterministic Day/Swing/Long formulas, provider intelligence, persistence truth, the U.S. Equities Processing Boundary and the permanent No Execution Boundary
+Previous Stable: v18.5.2
+Scope: Adaptive utility and intelligence hardening: shared Scanner/Radar snapshot acquisition; serialized Session Intelligence Coordinator; supporting-surface and legacy-route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context, cache identity, strict schema and continuous evaluation; rights-aware fail-closed AI egress; preserve deterministic Day/Swing/Long formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary
 Application bundle: De-Pulse.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
 Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)
