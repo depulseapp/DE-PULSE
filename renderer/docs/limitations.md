@@ -1,5 +1,9 @@
 # DE.PULSE — Capabilities & Limitations
 
+## v18.5.2 STABLE — Hotfix candidate truth boundaries
+
+This patch corrects rendering, hierarchy, input stability, identity configuration, and viewport reachability only. It does not change deterministic Day/Swing/Long formulas, provider intelligence, persistence ownership, actionable U.S.-listed scope, or No Execution. The display name and sign-in username are configurable, but OWNER remains an authorization role and username changes require recent password confirmation. A local source/browser PASS does not certify macOS or Windows packages; G13/G14 runtime evidence and final hashes are still required before G15 promotion.
+
 ## v18.5.1 STABLE — Truth boundaries
 
 This patch does not change deterministic market formulas, provider intelligence, U.S.-listed actionable scope or No Execution. Native macOS Apple Silicon and Windows x64 artifacts are not considered certified until G14 actual-runtime evidence and G15 assurance pass against the exact Stable source.
