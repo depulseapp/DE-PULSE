@@ -1,0 +1,124 @@
+name: DE.PULSE v18.5.2 | Hotfix Certification
+
+on:
+  push:
+    branches: [v18.5.2-development]
+    paths:
+      - 'release/v18.5.2/HOTFIX_CHECKPOINT.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v18.5.2-hotfix-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  checkpoint:
+    name: Bind exact hotfix source
+    runs-on: ubuntu-24.04
+    outputs:
+      source_sha: ${{ steps.contract.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: v18.5.2-development
+          fetch-depth: 0
+      - id: contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          checkpoint = json.loads(pathlib.Path('release/v18.5.2/HOTFIX_CHECKPOINT.json').read_text())
+          if checkpoint.get('release') != 'v18.5.2' or checkpoint.get('certificationRequested') is not True:
+              raise SystemExit('invalid v18.5.2 hotfix checkpoint')
+          source = str(checkpoint.get('sourceSha') or '').strip()
+          if len(source) != 40:
+              raise SystemExit('sourceSha must be an exact commit SHA')
+          subprocess.run(['git','cat-file','-e',f'{source}^{{commit}}'],check=True)
+          subprocess.run(['git','merge-base','--is-ancestor',source,'HEAD'],check=True)
+          with pathlib.Path(os.environ['GITHUB_OUTPUT']).open('a') as out:
+              out.write(f'source_sha={source}\n')
+          print(f'Bound certification to {source}')
+          PY
+
+  go-certification:
+    name: Go format, vet and full suite
+    needs: checkpoint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.checkpoint.outputs.source_sha }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Formatting contract
+        run: |
+          gofmt -w identity_model.go http_auth.go http_api.go v18_5_2_display_name_test.go
+          git diff --exit-code
+      - run: go vet ./...
+      - run: go test -count=1 ./...
+
+  renderer-certification:
+    name: Renderer syntax, invariants and Chromium behavior
+    needs: checkpoint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CHROME_BIN: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.checkpoint.outputs.source_sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Syntax and protected deterministic contracts
+        run: |
+          node --check renderer/renderer.js
+          node --check renderer/live-dom-reconcile.js
+          node --check renderer/watchlist-v18.5.1.js
+          node --check renderer/header-v18.5.1.js
+          node deterministic_equivalence_test.js
+          node renderer_logic_test.js
+          node v18_0_5_renderer_test.js
+          python3 -m py_compile             release/v18.5.1/browser_live_render_test.py             release/v18.5.1/browser_watchlist_membership_test.py             release/v18.5.1/browser_auth_copy_test.py             release/v18.5.1/browser_ui_hierarchy_test.py             release/v18.5.2/browser_master_symbol_input_test.py             release/v18.5.2/browser_profile_display_name_test.py
+      - name: Install lightweight Playwright driver
+        run: |
+          command -v google-chrome
+          python -m pip install --disable-pip-version-check playwright
+      - name: Browser behavior contracts
+        run: |
+          python release/v18.5.1/browser_live_render_test.py
+          python release/v18.5.1/browser_watchlist_membership_test.py
+          python release/v18.5.1/browser_auth_copy_test.py
+          python release/v18.5.1/browser_ui_hierarchy_test.py
+          python release/v18.5.2/browser_master_symbol_input_test.py
+          python release/v18.5.2/browser_profile_display_name_test.py
+
+  summary:
+    name: Hotfix certification exit
+    if: ${{ always() }}
+    needs: [checkpoint, go-certification, renderer-certification]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require every hotfix lane green
+        env:
+          CHECKPOINT: ${{ needs.checkpoint.result }}
+          GO: ${{ needs.go-certification.result }}
+          RENDERER: ${{ needs.renderer-certification.result }}
+        run: |
+          test "$CHECKPOINT" = success
+          test "$GO" = success
+          test "$RENDERER" = success
