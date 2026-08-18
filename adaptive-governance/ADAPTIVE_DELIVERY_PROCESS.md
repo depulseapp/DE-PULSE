@@ -262,3 +262,9 @@ Delivery Process is 10/10 only when:
 8. AIPLC produces prevention, not just retries;
 9. G16 leaves reproducible provenance and a clean next-release seed;
 10. no promotion status is inferred or inflated without durable evidence.
+
+## 14. Portable G16 delivery handoff
+
+G16 delivery is incomplete until GitHub alone can onboard a newly authorized ChatGPT/Codex, Claude or human maintainer. Update `handoff/CURRENT.md` with delivered artifacts/hashes, actual residuals and exactly one next action; update the Build State Ledger after the candidate commit; and verify both root assistant adapters still point to the same vendor-neutral portability contract.
+
+Do not make ChatGPT Library, Claude Projects, a local Mac, email, chat history or a temporary AI workspace the only location of required source, evidence or continuation instructions. Those may be mirrors, never delivery authority.
