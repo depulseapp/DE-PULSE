@@ -16,7 +16,7 @@ on:
         required: false
         type: string
       lane:
-        description: Qualification lane
+        description: Qualification lane; full is explicit override
         required: true
         default: full
         type: choice
@@ -40,7 +40,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-qualified-${{ github.ref }}-${{ inputs.lane || 'full' }}
+  group: depulse-ci-qualified-${{ github.ref }}-${{ inputs.lane || 'adaptive' }}
   cancel-in-progress: true
 
 env:
@@ -51,13 +51,14 @@ env:
 
 jobs:
   context:
-    name: Resolve qualification identity
+    name: Resolve qualification identity and impact
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
       lane: ${{ steps.resolve.outputs.lane }}
       fingerprint: ${{ steps.resolve.outputs.fingerprint }}
+      process_only: ${{ steps.resolve.outputs.process_only }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -70,17 +71,27 @@ jobs:
         env:
           INPUT_SHA: ${{ inputs.candidate_sha }}
           INPUT_LANE: ${{ inputs.lane }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -euo pipefail
           sha="${INPUT_SHA:-$GITHUB_SHA}"
-          lane="${INPUT_LANE:-full}"
-          case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
           git cat-file -e "$sha^{commit}"
+          python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
+          planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
+          lane="${INPUT_LANE:-$planned}"
+          case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp lane=$lane"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned"
+      - name: Retain qualification impact plan
+        uses: actions/upload-artifact@v7
+        with:
+          name: DE-PULSE-qualified-impact-${{ github.sha }}
+          path: ci-qualified-impact-plan.json
+          if-no-files-found: error
+          retention-days: 7
 
   ci-harness:
     name: CI/harness contract
@@ -152,7 +163,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py
 
   backend:
     name: Qualified backend
