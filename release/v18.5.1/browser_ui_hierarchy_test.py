@@ -79,8 +79,8 @@ def bottom(box):
 
 
 def main() -> None:
-    assert "ui-v18.5.1.css?v=18.5.1" in INDEX
-    assert "header-v18.5.1.js?v=18.5.1" in INDEX
+    assert "ui-v18.5.1.css?v=18.5.2" in INDEX
+    assert "header-v18.5.1.js?v=18.5.2" in INDEX
     assert "grid-template-columns:minmax(260px,1.3fr)" in UI_CSS
     assert "align-items:end!important" in UI_CSS
     assert "top:calc(var(--v1851-topbar-h) + var(--v1851-statusbar-h))" in UI_CSS
