@@ -1,0 +1,281 @@
+name: DE.PULSE | CI Qualified
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'tools/ci/**'
+      - 'tools/release/**'
+      - 'source_fingerprint.py'
+      - 'release_identity.py'
+      - 'release_identity.json'
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact source SHA to qualify; blank uses triggering SHA
+        required: false
+        type: string
+      lane:
+        description: Qualification lane; full is explicit override
+        required: true
+        default: full
+        type: choice
+        options:
+          - full
+          - backend
+          - renderer
+          - browser
+          - ci-harness
+  workflow_call:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+      lane:
+        required: false
+        default: full
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-ci-qualified-${{ github.ref }}-${{ inputs.lane || 'adaptive' }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  NODE_VERSION: '24'
+  PYTHON_VERSION: '3.13'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  context:
+    name: Resolve qualification identity and impact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      lane: ${{ steps.resolve.outputs.lane }}
+      fingerprint: ${{ steps.resolve.outputs.fingerprint }}
+      process_only: ${{ steps.resolve.outputs.process_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - id: resolve
+        shell: bash
+        env:
+          INPUT_SHA: ${{ inputs.candidate_sha }}
+          INPUT_LANE: ${{ inputs.lane }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          sha="${INPUT_SHA:-$GITHUB_SHA}"
+          git cat-file -e "$sha^{commit}"
+          python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
+          planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
+          lane="${INPUT_LANE:-$planned}"
+          case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
+          fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "lane=$lane" >> "$GITHUB_OUTPUT"
+          echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned"
+      - name: Retain qualification impact plan
+        uses: actions/upload-artifact@v7
+        with:
+          name: DE-PULSE-qualified-impact-${{ github.sha }}
+          path: ci-qualified-impact-plan.json
+          if-no-files-found: error
+          retention-days: 7
+
+  ci-harness:
+    name: CI/harness contract
+    needs: context
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Workflow allowlist
+        run: python3 tools/ci/workflow_policy.py
+      - name: Git-object provenance regression
+        shell: bash
+        run: |
+          test "$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')" = "${{ needs.context.outputs.fingerprint }}"
+          python3 tools/ci/source_provenance_test.py
+      - name: Release identity
+        run: python3 release_identity.py --verify
+      - name: Python syntax
+        run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
+
+  portability:
+    name: CI portability (${{ matrix.os }})
+    needs: context
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Same canonical Git-object fingerprint on this OS
+        shell: bash
+        if: ${{ runner.os != 'Windows' }}
+        run: |
+          set -euo pipefail
+          actual="$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')"
+          test "$actual" = "${{ needs.context.outputs.fingerprint }}"
+          echo "$RUNNER_OS canonical fingerprint: $actual"
+      - name: Same canonical Git-object fingerprint on Windows
+        shell: pwsh
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          $actual=(python source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
+          if($actual -ne '${{ needs.context.outputs.fingerprint }}'){ throw "cross-platform fingerprint mismatch: $actual" }
+          Write-Host "$env:RUNNER_OS canonical fingerprint: $actual"
+      - name: Parse reusable macOS harness
+        if: ${{ runner.os == 'macOS' }}
+        shell: bash
+        run: bash -n tools/release/native_macos.sh
+      - name: Parse reusable Windows harness
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $tokens=$null; $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'tools/release/native_windows.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
+      - name: Parse reusable release assurance tooling
+        if: ${{ runner.os == 'Linux' }}
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py
+
+  backend:
+    name: Qualified backend
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'backend' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - name: gofmt
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad="$(gofmt -l $(git ls-files '*.go'))"
+          test -z "$bad" || { printf '%s\n' "$bad"; exit 1; }
+      - name: go vet
+        run: go vet ./...
+      - name: Full Go suite
+        run: go test -count=1 ./...
+      - name: Race detector
+        run: go test -race -count=1 ./...
+      - name: Randomized package order
+        run: go test -shuffle=on -count=1 ./...
+
+  renderer:
+    name: Qualified renderer contracts
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'renderer' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Renderer syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do node --check "$file"; done < <(find renderer -type f -name '*.js' -print0)
+      - name: Protected deterministic equivalence
+        run: node deterministic_equivalence_test.js
+      - name: Renderer logic regression
+        run: node renderer_logic_test.js
+      - name: v18.0.5 role/responsive regression
+        run: node v18_0_5_renderer_test.js
+
+  browser:
+    name: Qualified browser behavior
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      CHROME_BIN: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Browser prerequisites
+        run: python -m pip install --disable-pip-version-check playwright
+      - name: Live DOM reconciliation
+        run: python3 release/v18.5.1/browser_live_render_test.py
+      - name: Watchlist membership semantics
+        run: python3 release/v18.5.1/browser_watchlist_membership_test.py
+      - name: Master-symbol input semantics
+        run: python3 release/v18.5.2/browser_master_symbol_input_test.py
+      - name: Profile/display-name semantics
+        run: python3 release/v18.5.2/browser_profile_display_name_test.py
+      - name: Settings save-bar viewport
+        run: python3 release/v18.5.2/browser_settings_save_bar_test.py
+
+  evidence:
+    name: Qualified evidence summary
+    needs: [context, ci-harness, portability, backend, renderer, browser]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require selected lanes to pass
+        shell: bash
+        env:
+          LANE: ${{ needs.context.outputs.lane }}
+          HARNESS: ${{ needs.ci-harness.result }}
+          PORTABILITY: ${{ needs.portability.result }}
+          BACKEND: ${{ needs.backend.result }}
+          RENDERER: ${{ needs.renderer.result }}
+          BROWSER: ${{ needs.browser.result }}
+        run: |
+          set -euo pipefail
+          test "$HARNESS" = success
+          test "$PORTABILITY" = success
+          require(){ v="$1"; test "$v" = success || { echo "required lane result=$v"; exit 1; }; }
+          case "$LANE" in
+            full) require "$BACKEND"; require "$RENDERER"; require "$BROWSER" ;;
+            backend) require "$BACKEND" ;;
+            renderer) require "$RENDERER" ;;
+            browser) require "$BROWSER" ;;
+            ci-harness) ;;
+          esac
+          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }} with cross-platform portability"

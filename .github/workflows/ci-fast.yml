@@ -1,0 +1,120 @@
+name: DE.PULSE | CI Fast
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'v*-development'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-ci-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  NODE_VERSION: '24'
+  PYTHON_VERSION: '3.13'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  fast:
+    name: Fast impact-safe preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - id: impact
+        name: Deterministic impact plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$GITHUB_SHA" --github-output "$GITHUB_OUTPUT" --json-out ci-impact-plan.json
+      - uses: actions/setup-go@v7
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - uses: actions/setup-node@v6
+        if: ${{ steps.impact.outputs.node_required == 'true' }}
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Canonical workflow policy
+        run: python3 tools/ci/workflow_policy.py
+      - name: Platform-neutral source provenance regression
+        run: python3 tools/ci/source_provenance_test.py
+      - name: Release identity
+        run: python3 release_identity.py --verify
+      - name: Python syntax
+        run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
+      - name: Go formatting
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad="$(gofmt -l $(git ls-files '*.go'))"
+          if [ -n "$bad" ]; then
+            printf '%s\n' "$bad"
+            exit 1
+          fi
+      - name: Go vet
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        run: go vet ./...
+      - name: Go full unit/package suite
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        run: go test -count=1 ./...
+      - name: Renderer JavaScript syntax
+        if: ${{ steps.impact.outputs.node_required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do node --check "$file"; done < <(find renderer -type f -name '*.js' -print0)
+      - name: CI summary
+        shell: bash
+        run: |
+          {
+            echo '## DE.PULSE CI Fast'
+            echo "- SHA: $GITHUB_SHA"
+            echo "- process-only: ${{ steps.impact.outputs.process_only }}"
+            echo "- Go lane required: ${{ steps.impact.outputs.go_required }}"
+            echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
+            echo '- workflow policy: PASS'
+            echo '- Git-object provenance: PASS'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain impact plan
+        uses: actions/upload-artifact@v7
+        with:
+          name: DE-PULSE-ci-impact-${{ github.sha }}
+          path: ci-impact-plan.json
+          if-no-files-found: error
+          retention-days: 7
+
+  branch-hygiene:
+    name: Remove only branches fully merged into main
+    needs: fast
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Apply conservative branch hygiene
+        run: python3 tools/ci/branch_hygiene.py --apply --json-out branch-hygiene.json
+      - name: Retain cleanup report
+        uses: actions/upload-artifact@v7
+        with:
+          name: DE-PULSE-branch-hygiene-${{ github.sha }}
+          path: branch-hygiene.json
+          if-no-files-found: error
+          retention-days: 14

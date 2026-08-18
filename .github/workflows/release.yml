@@ -1,0 +1,327 @@
+name: DE.PULSE | Release G11-G16
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Immutable source candidate SHA
+        required: true
+        type: string
+      version:
+        description: Release version without leading v
+        required: true
+        type: string
+      build_id:
+        description: Exact runtime build ID
+        required: true
+        type: string
+      certification_script:
+        description: Repository-relative authoritative G12 certification script
+        required: true
+        default: release/v18.5.2/run_free_certification.sh
+        type: string
+      expected_source_fingerprint:
+        description: Optional expected canonical Git-object fingerprint
+        required: false
+        type: string
+      publish:
+        description: Publish already-certified assets after G15
+        required: true
+        default: false
+        type: boolean
+      promotion_sha:
+        description: Tag target; blank uses candidate SHA. Must preserve certified fingerprint.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: depulse-release-${{ inputs.version }}
+  cancel-in-progress: false
+
+env:
+  GO_VERSION: '1.26.6'
+  NODE_VERSION: '24'
+  PYTHON_VERSION: '3.13'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  g11:
+    name: G11 Immutable candidate/provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      fingerprint: ${{ steps.identity.outputs.fingerprint }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - id: identity
+        shell: bash
+        env:
+          EXPECTED_FP: ${{ inputs.expected_source_fingerprint }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
+          python3 release_identity.py --verify
+          python3 - <<'PY'
+          import json
+          r=json.load(open('release_identity.json'))
+          assert r['version']=='${{ inputs.version }}',r
+          assert r['build_id']=='${{ inputs.build_id }}',r
+          PY
+          fp="$(python3 source_fingerprint.py --mode git --commit '${{ inputs.candidate_sha }}')"
+          if [ -n "$EXPECTED_FP" ]; then test "$fp" = "$EXPECTED_FP"; fi
+          echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
+          echo "G11 fingerprint: $fp"
+
+  g12:
+    name: G12 Full certification
+    needs: g11
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    env:
+      CHROME_BIN: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Browser prerequisites
+        run: python -m pip install --disable-pip-version-check playwright
+      - name: Verify canonical CI and provenance
+        run: |
+          python3 tools/ci/workflow_policy.py
+          test "$(python3 source_fingerprint.py --mode git --commit '${{ inputs.candidate_sha }}')" = "${{ needs.g11.outputs.fingerprint }}"
+      - name: Authoritative full certification
+        env:
+          DEPULSE_EXPECTED_SHA: ${{ inputs.candidate_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          script='${{ inputs.certification_script }}'
+          test -f "$script"
+          bash "$script"
+      - name: Retain G12 evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G12
+          path: .depulse-certification/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  macos:
+    name: G13/G14 macOS Apple Silicon
+    needs: [g11, g12]
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      DEPULSE_CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+      DEPULSE_SOURCE_FINGERPRINT: ${{ needs.g11.outputs.fingerprint }}
+      DEPULSE_VERSION: ${{ inputs.version }}
+      DEPULSE_BUILD_ID: ${{ inputs.build_id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Native package + actual packaged runtime audit
+        run: bash tools/release/native_macos.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-macOS-Apple-Silicon
+          path: out/macos-arm64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  windows:
+    name: G13/G14 Windows x64
+    needs: [g11, g12]
+    runs-on: windows-2025
+    timeout-minutes: 40
+    env:
+      DEPULSE_CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+      DEPULSE_SOURCE_FINGERPRINT: ${{ needs.g11.outputs.fingerprint }}
+      DEPULSE_VERSION: ${{ inputs.version }}
+      DEPULSE_BUILD_ID: ${{ inputs.build_id }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Native package + actual packaged runtime audit
+        shell: pwsh
+        run: ./tools/release/native_windows.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-Windows-x64
+          path: out/windows-x64/**
+          if-no-files-found: error
+          retention-days: 90
+
+  g15:
+    name: G15 Release Assurance
+    needs: [g11, macos, windows]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-macOS-Apple-Silicon
+          path: collected/macos
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-Windows-x64
+          path: collected/windows
+      - name: Bind both native evidence graphs
+        run: |
+          python3 tools/release/g15_assurance.py \
+            --mac-evidence collected/macos/G13-G14-macOS-Apple-Silicon.json \
+            --windows-evidence collected/windows/G13-G14-Windows-x64.json \
+            --source-sha '${{ inputs.candidate_sha }}' \
+            --source-fingerprint '${{ needs.g11.outputs.fingerprint }}' \
+            --build-id '${{ inputs.build_id }}' \
+            --version '${{ inputs.version }}' \
+            --out-dir assurance
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G15-Release-Assurance
+          path: assurance/**
+          if-no-files-found: error
+          retention-days: 365
+
+  publish:
+    name: G15 Promotion / no-rebuild publication
+    needs: [g11, g15]
+    if: ${{ inputs.publish }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.promotion_sha || inputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-macOS-Apple-Silicon
+          path: release-assets/macos
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G13-G14-Windows-x64
+          path: release-assets/windows
+      - uses: actions/download-artifact@v8
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G15-Release-Assurance
+          path: release-assets/g15
+      - name: Verify promotion target preserves certified source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$(git rev-parse HEAD)"
+          git merge-base --is-ancestor '${{ inputs.candidate_sha }}' "$target"
+          test "$(python3 source_fingerprint.py --mode git --commit "$target")" = '${{ needs.g11.outputs.fingerprint }}'
+      - name: Publish exact certified assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v${{ inputs.version }}-stable"
+          target="$(git rev-parse HEAD)"
+          cat > release-notes.md <<EOF
+          # DE.PULSE v${{ inputs.version }} Stable
+
+          - G12 full certification: PASS
+          - macOS Apple Silicon G13/G14: PASS
+          - Windows x64 G13/G14: PASS
+          - G15 Release Assurance: PASS
+          - No Execution Boundary: PRESERVED
+          - Certified source: `${{ inputs.candidate_sha }}`
+          - Canonical source fingerprint: `${{ needs.g11.outputs.fingerprint }}`
+          - Build ID: `${{ inputs.build_id }}`
+          - Publication uses already-certified artifacts; no rebuild occurs here.
+          EOF
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '.object.sha')"
+            test "$ref" = "$target"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$target" --title "DE.PULSE v${{ inputs.version }} Stable" --notes-file release-notes.md
+          fi
+          gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber \
+            release-assets/macos/* \
+            release-assets/windows/* \
+            release-assets/g15/*
+          echo "PASS: published $tag without rebuilding certified assets"
+
+  g16:
+    name: G16 Adaptive release handoff evidence
+    needs: [g11, g15, publish]
+    if: ${{ always() && needs.g15.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Generate durable G16 workflow result
+        shell: bash
+        run: |
+          mkdir -p g16
+          cat > g16/G16-CI-DELIVERY-SUMMARY.json <<EOF
+          {
+            "schema": "DE.PULSE-G16-CI-DELIVERY-1",
+            "version": "v${{ inputs.version }}",
+            "candidateSha": "${{ inputs.candidate_sha }}",
+            "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
+            "buildId": "${{ inputs.build_id }}",
+            "g12": "PASS",
+            "g13g14MacOS": "PASS",
+            "g13g14Windows": "PASS",
+            "g15": "PASS",
+            "publication": "${{ needs.publish.result }}",
+            "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
+            "noRebuildPublication": true
+          }
+          EOF
+      - uses: actions/upload-artifact@v7
+        with:
+          name: De-Pulse-v${{ inputs.version }}-G16-Handoff
+          path: g16/**
+          if-no-files-found: error
+          retention-days: 365
