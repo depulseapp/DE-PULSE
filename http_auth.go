@@ -150,13 +150,14 @@ func (a *Application) handleUpdateProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 	var req struct {
+		Username    string `json:"username"`
 		DisplayName string `json:"displayName"`
 	}
 	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10)).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid profile request.")
 		return
 	}
-	if err := a.identity.updateDisplayName(p.UserID, req.DisplayName); err != nil {
+	if err := a.identity.updateProfile(p.UserID, req.Username, req.DisplayName); err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
