@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "v18.5.2",
-  "checkpointId": "hotfix-browser-go-20260817-4",
+  "checkpointId": "hotfix-browser-go-20260817-5",
   "sourceSha": "a4edac689fcad9a1c60e0d4066da4d44c0fb569a",
   "certificationRequested": true,
   "scope": [
