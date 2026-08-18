@@ -12,11 +12,11 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
+  "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
   "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation/reconciled-source candidate; actual GitHub objects and hashes control evidence reuse.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "The no-cost executable lane reached G12 twice. The first run exposed missing v18.5.2 bundled QA release history; the second run exposed a stale v18.0.5 exact source-string assertion after identity-chrome refactoring. Candidate e4c2ad2a401e14c10ccc20d6b77fed6b6353e632 includes both corrections and now requires a fresh complete G0-G12 run.",
+  "sourceFingerprintReason": "The no-cost executable lane reached G12 three times. It exposed missing v18.5.2 bundled QA release history, a stale v18.0.5 exact source-string assertion after identity-chrome refactoring, and a browser scroll baseline captured before Playwright hover repositioning. Candidate bbbfc095517d769409f64c1bdb43f5f260e14f48 includes all three corrections and now requires a fresh complete G0-G12 run.",
   "evidence": {
     "incoming-v18.5.1-stable": {
       "status": "PASS",
@@ -82,19 +82,37 @@
       "result": "v18.0.5 renderer / role visibility / responsive touched-surface acceptance: PASS",
       "contract": "Verify applyRoleSurfaceVisibility and syncIdentityChrome are both invoked and that syncIdentityChrome retains identity-principal/sign-out ownership, without depending on obsolete adjacent source text."
     },
+    "v18.5.2-local-exact-source-attempt-3": {
+      "status": "PRODUCT_FAIL_G12_TEST_BASELINE",
+      "sourceHead": "99ae6569eceb68543672b49b702f33b67913a763",
+      "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
+      "runner": "release/v18.5.2/run_free_certification.sh",
+      "earliestFailure": "browser_live_render_test.py captured scrollBefore=80 before Playwright hover; hover moved the target into view to 89 before DE.PULSE live reconciliation, causing the test to attribute Playwright positioning to the renderer",
+      "precedingEvidence": "Go suites PASS; deterministic trading equivalence 2403/2403 PASS; renderer_logic_test.js PASS; v18_0_5_renderer_test.js PASS",
+      "classification": "GENUINE_BROWSER_TEST_BASELINE_FAILURE"
+    },
+    "v18.5.2-G12-browser-live-render-test-hardening": {
+      "status": "FOCUSED_PASS",
+      "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
+      "changes": ["release/v18.5.1/browser_live_render_test.py"],
+      "productCodeChanged": false,
+      "validation": "python3 release/v18.5.1/browser_live_render_test.py",
+      "result": "PASS: v18.5.2 live quote rendering preserves DOM identity, focus, selection and scroll; structural events retain full render.",
+      "contract": "Establish hover first, then capture the exact pre-reconciliation scroll baseline; retain strict scrollAfter == scrollBefore with no tolerance."
+    },
     "v18.5.2-G0-G12": {
       "status": "REQUALIFY_CORRECTED_CANDIDATE",
       "runner": "release/v18.5.2/run_free_certification.sh",
       "workflow": ".github/workflows/v18.5.2-hotfix-certification.yml",
-      "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
+      "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
       "productTestFailureClaimed": false,
-      "note": "Both discovered G12 owners have focused PASS evidence; no full-pass claim is made until the complete canonical lane reruns on e4c2ad2a401e14c10ccc20d6b77fed6b6353e632."
+      "note": "All three discovered G12 owners have focused PASS evidence; no full-pass claim is made until the complete canonical lane reruns on bbbfc095517d769409f64c1bdb43f5f260e14f48."
     },
     "v18.5.2-G13-G15": {
       "status": "NOT_STARTED_BLOCKED_ON_G12",
       "requiredNativeTargets": ["macos-arm64", "windows-x64"]
     }
   },
-  "nextRequiredEvidence": "A fresh complete canonical exact-source v18.5.2 G0-G12 PASS for candidate e4c2ad2a401e14c10ccc20d6b77fed6b6353e632, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
-  "updatedAt": "2026-08-18T04:57:00Z"
+  "nextRequiredEvidence": "A fresh complete canonical exact-source v18.5.2 G0-G12 PASS for candidate bbbfc095517d769409f64c1bdb43f5f260e14f48, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
+  "updatedAt": "2026-08-18T05:04:00Z"
 }
