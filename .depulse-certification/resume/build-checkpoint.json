@@ -6,7 +6,7 @@
   "candidateDisposition": "V18_6_0_G11_RELEASE_CERTIFICATION",
   "branch": "v18.6-development",
   "pullRequest": 16,
-  "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
+  "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
   "certifiedStable": {
@@ -19,10 +19,10 @@
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
   "stableIdentityRule": "v18.5.2-stable remains the immutable Stable predecessor until v18.6.0 completes G11-G16 and is promoted. Candidate/checkpoint metadata never rewrites that Stable identity.",
-  "metadataHeadRule": "Only files under .depulse-certification are excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance as operational metadata after a candidate commit. handoff/CURRENT.md is included in the source fingerprint and is frozen with the G10-qualified product candidate.",
-  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_G10_PASS",
-  "implementationSummary": "All eight assigned v18.6 implementation/audit slices are code-complete. Canonical 18.6.0 identity, release-coupled asset cache identity, QA history, source-bound handoff, and owner-only branch-gated dispatcher into the existing release.yml G11-G16 workflow are aligned. No new top-level gate or workflow owner was introduced.",
-  "lastTrustworthyPass": "G10 exact real-branch source aa72c8b2c7571d5633eb2e6dce622749704b1637: CI Fast #142 run 32185509389 PASS; CI Qualified #63 run 32185509377 PASS including Ubuntu/macOS/Windows portability, browser, renderer, full Go suite, race detector, randomized package order and evidence summary.",
+  "metadataHeadRule": "Only files under .depulse-certification are excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance operationally after a candidate commit. handoff/CURRENT.md and workflow definitions are included in the source fingerprint and are frozen with the G10-qualified product candidate.",
+  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_FINAL_G10_PASS",
+  "implementationSummary": "All eight assigned v18.6 implementation/audit slices are code-complete. Canonical 18.6.0 identity and release-coupled assets are aligned. Release delivery is now owner-only, candidate-branch based, idempotent by headBranch+headSha, run-ID observable, and PR-auditable at dispatcher/G11/G16 while preserving the three canonical workflows and G0-G16 only.",
+  "lastTrustworthyPass": "Final source 9558ee44df55dd10f931f7435f4a8615b1b976ba: CI Fast #158 run 32187439582 PASS; CI Qualified #69 run 32187439404 PASS including Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and evidence summary.",
   "earliestRequiredResumeGate": "G11_IMMUTABLE_CANDIDATE_PROVENANCE",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
@@ -35,7 +35,7 @@
     "G7": {"status": "PASS", "reusable": true},
     "G8": {"status": "PASS", "reusable": true},
     "G9": {"status": "PASS", "reusable": true},
-    "G10": {"status": "PASS", "reusable": true, "fastRun": 32185509389, "qualifiedRun": 32185509377},
+    "G10": {"status": "PASS", "reusable": true, "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba", "fastRun": 32187439582, "fastRunNumber": 158, "qualifiedRun": 32187439404, "qualifiedRunNumber": 69},
     "G11": {"status": "IN_PROGRESS", "reusable": false},
     "G12": {"status": "PENDING", "reusable": false},
     "G13": {"status": "PENDING", "reusable": false},
@@ -49,7 +49,7 @@
     "windowsX64": {"status": "PASS", "runId": 32103078336, "artifact": "De-Pulse-v18.5.2-Stable-Windows-x64.zip", "sha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"},
     "publication": {"status": "PASS", "runId": 32103499711, "tag": "v18.5.2-stable", "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b", "rebuild": false}
   },
-  "blockingIssue": "G11_RELEASE_WORKFLOW_DISPATCH_PENDING",
+  "blockingIssue": "G11_CANONICAL_RELEASE_RUN_PENDING",
   "knownResiduals": [
     "TradeInsight remains governed shadow/future implementation work and must not gain production influence without its approved lifecycle.",
     "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required items and fail closed when absent or unapproved.",
@@ -61,12 +61,13 @@
     "classification": "RELEASE_CERTIFICATION",
     "status": "IN_PROGRESS",
     "requirements": [
-      "fast-forward v18.6-release-certification to this fingerprint-excluded metadata head so the canonical push dispatcher executes",
+      "fast-forward v18.6-release-certification to the final fingerprint-excluded G10 metadata head",
+      "capture the canonical release.yml run ID on PR #16",
       "G11 compute and bind immutable canonical Git-object fingerprint",
       "G12 run release/v18.6.0/run_full_certification.sh",
       "G13/G14 produce and audit macOS Apple Silicon and Windows x64 native packages",
       "G15 bind both native evidence graphs without pre-merge publication",
-      "G16 retain adaptive handoff evidence"
+      "G16 retain adaptive handoff evidence and PR-visible completion status"
     ]
   },
   "assistantPortability": {
@@ -74,11 +75,12 @@
     "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
     "entrypoints": ["AGENTS.md", "CLAUDE.md"],
     "authoritativeHandoff": "handoff/CURRENT.md",
+    "releaseRunTracking": "PR #16 comments + GitHub Actions run ID/URL",
     "chatMemoryRequired": false,
     "temporaryWorkspaceAuthoritative": false
   },
   "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
   "nextBranch": "v18.6-release-certification",
-  "nextStep": "Trigger the canonical release workflow from the release-certification branch and execute G11-G16 with publish=false.",
-  "updatedAt": "2026-08-18T21:09:00Z"
+  "nextStep": "Trigger and follow the PR-audited canonical release workflow from v18.6-release-certification through G11-G16 with publish=false.",
+  "updatedAt": "2026-08-18T21:28:00Z"
 }
