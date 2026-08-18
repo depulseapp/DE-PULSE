@@ -114,35 +114,6 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  rc-renderer-finalize:
-    name: Temporary isolated v18.6 renderer identity finalization
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/v18.6-identity-sync-development' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Finalize renderer and QA release identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 tools/release/finalize_v18_6_renderer_identity.py
-          if git diff --quiet --exit-code; then
-            echo 'No renderer identity changes required.'
-            exit 0
-          fi
-          git config user.name 'depulseapp-release-bot'
-          git config user.email 'de.pulse.app@gmail.com'
-          git add renderer/index.html renderer/qa/manifest.json renderer/qa/v18.6.0.txt VERSION.txt app_bootstrap.go renderer/renderer.js certification_plan.json ci_pipeline_plan.json
-          git commit -m 'v18.6: finalize renderer and QA release identity'
-          git push origin HEAD:v18.6-identity-sync-development
-
   branch-hygiene:
     name: Remove only branches fully merged into main
     needs: fast
