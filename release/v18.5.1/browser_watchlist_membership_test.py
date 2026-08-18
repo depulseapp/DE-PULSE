@@ -10,6 +10,7 @@ bootstrap and render dependencies are stubbed. It proves:
 - final membership-pill removal remains protected and separate;
 - the current desk is visible and exposed with aria-current.
 """
+import json
 import os
 from pathlib import Path
 
@@ -20,6 +21,7 @@ RENDERER = ROOT / "renderer" / "renderer.js"
 EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
 INDEX = ROOT / "renderer" / "index.html"
 CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
+RELEASE_IDENTITY = ROOT / "release_identity.json"
 DESKS = ("day", "swing", "long")
 
 
@@ -38,6 +40,7 @@ def main() -> None:
     extension = EXTENSION.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
     css = CSS.read_text(encoding="utf-8")
+    release_version = json.loads(RELEASE_IDENTITY.read_text(encoding="utf-8"))["version"]
 
     membership_binding = between(
         renderer,
@@ -46,8 +49,8 @@ def main() -> None:
         "actual membership-pill binding",
     )
 
-    assert "watchlist-v18.5.1.js?v=18.5.1" in index
-    assert "watchlist-v18.5.1.css?v=18.5.1" in index
+    assert f"watchlist-v18.5.1.js?v={release_version}" in index
+    assert f"watchlist-v18.5.1.css?v={release_version}" in index
     assert "/api/master-symbol/remove" in extension
     assert "/api/master-symbol/restore" in extension
     assert "bindGlobalTrackedSymbolRemoval" in extension
