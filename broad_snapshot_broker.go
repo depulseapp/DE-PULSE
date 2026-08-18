@@ -240,10 +240,10 @@ func (b *BroadSnapshotBroker) Acquire(
 		b.mu.Unlock()
 
 		payload, err := fetch(ctx, append([]string{}, missing...))
-		completedAt := time.Now()
-		if completedAt.Before(now) {
-			completedAt = now
-		}
+		// Use the caller's acquisition clock consistently for cache freshness and
+		// diagnostics. Production callers pass time.Now(); tests and replay paths
+		// may provide a deterministic clock and must not be contaminated by wall time.
+		completedAt := now
 
 		b.mu.Lock()
 		b.diag.ProviderFetches++
