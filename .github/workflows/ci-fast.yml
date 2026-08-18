@@ -1,0 +1,80 @@
+name: DE.PULSE | CI Fast
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'v*-development'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: depulse-ci-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: '1.26.6'
+  NODE_VERSION: '24'
+  PYTHON_VERSION: '3.13'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  fast:
+    name: Fast impact-safe preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Canonical workflow policy
+        run: python3 tools/ci/workflow_policy.py
+      - name: Platform-neutral source provenance regression
+        run: python3 tools/ci/source_provenance_test.py
+      - name: Release identity
+        run: python3 release_identity.py --verify
+      - name: Python syntax
+        run: python3 -m compileall -q tools/ci source_fingerprint.py
+      - name: Go formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          bad="$(gofmt -l $(git ls-files '*.go'))"
+          if [ -n "$bad" ]; then
+            printf '%s\n' "$bad"
+            exit 1
+          fi
+      - name: Go vet
+        run: go vet ./...
+      - name: Go full unit/package suite
+        run: go test -count=1 ./...
+      - name: Renderer JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do node --check "$file"; done < <(find renderer -type f -name '*.js' -print0)
+      - name: CI summary
+        shell: bash
+        run: |
+          {
+            echo '## DE.PULSE CI Fast'
+            echo "- SHA: $GITHUB_SHA"
+            echo '- workflow policy: PASS'
+            echo '- Git-object provenance: PASS'
+            echo '- gofmt/vet/tests: PASS'
+            echo '- renderer syntax: PASS'
+          } >> "$GITHUB_STEP_SUMMARY"
