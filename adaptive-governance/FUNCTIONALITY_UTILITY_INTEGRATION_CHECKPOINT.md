@@ -96,6 +96,23 @@ Raw availability never justifies collection or display. New data must declare:
 
 Independent corroboration must remain distinct from duplicated/syndicated evidence; repeated copies cannot inflate confidence.
 
+## Provider → Market Mode assessment
+
+Every new or materially changed provider capability must receive a durable Market Mode disposition before G3 and be revalidated at G7/G10:
+
+- `INTEGRATED` — canonical, freshness-qualified evidence may enter named Market Mode scopes only after its lifecycle permits production influence;
+- `CONTEXTUAL_ONLY` — may explain risk, confidence, contradictions or material changes, but cannot independently control a mode;
+- `NOT_RELEVANT` — useful elsewhere, with no Market Mode consumer;
+- `INTENTIONALLY_HIDDEN` — withheld from Market Modes because of rights, safety, quality or product-boundary constraints.
+
+Provider count never changes a mode. Every input must flow through the canonical Smart Provider Router and canonical state; no provider-specific mode engine is allowed. The assessment must name dataset/capability, router role, canonical owner, consumers, Market Mode scopes, freshness/independence/rights policy, degraded behavior, lifecycle, production influence and acceptance evidence.
+
+The smart/AI/LLM-style behavior belongs in evidence selection, usefulness learning, contradiction detection, synthesis and explanation. Deterministic/statistical code continues to own price truth, numeric Market Mode calculation, calibration and promotion measurement. LLM output cannot directly set a Market Mode or silently reweight protected Day/Swing/Long logic.
+
+All provider influence follows **SHADOW → VALIDATED → APPROVED → PRODUCTION**. `NOT_IMPLEMENTED`, `SHADOW` and `VALIDATED` rows have zero production Market Mode influence. Promotion requires sample sufficiency, cutoff-safe replay/live comparison, rollback and explicit approval.
+
+Maintain `provider_market_mode_integration_registry.json`. The existing `functionality_utility_checkpoint_gate.py` validates current Router/capability providers against this registry, so adding a provider without an assessment fails closed. TradeInsight is the first explicit future-provider case: its historical/corporate-action evidence may target integrated Swing/Long/Sector/Industry use after validation; congressional/Form 4/metadata remain contextual; Top Movers is not relevant to modes; rights-gated AI/MCP evidence is intentionally hidden.
+
 ## Background-job / checkpoint contract
 
 A new scheduled/background function must not become an independent mini-engine by default. It must first determine whether it is actually:
