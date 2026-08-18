@@ -507,3 +507,16 @@ The plan is 10/10 only when it can answer, with durable evidence:
 10. Can another conversation/runner resume from GitHub without guessing?
 11. Are all input requirement IDs conserved through every slice?
 12. Does every PASS have current behavior and exact-package evidence rather than historical/static evidence?
+
+## 15. Assistant-independent build planning
+
+Every release plan must include a provider-neutral continuity packet owned by GitHub:
+
+- `AGENTS.md` and `CLAUDE.md` remain thin adapters to one vendor-neutral contract;
+- `handoff/CURRENT.md` is the one current human-readable continuation record;
+- the Build State Ledger is the machine-readable release state and names exactly one next action;
+- the actual branch/PR/head/tag/check/artifact state is reconciled before either file is trusted;
+- permanent or active-release changes are reflected in the canonical Roadmap, Build Plan, Build Process and Delivery Process;
+- secrets and account-specific session material are never stored in continuity artifacts.
+
+The plan is not resumable until a newly authorized ChatGPT/Codex or Claude account can determine the same last trustworthy PASS and earliest resume gate without asking the user to reconstruct prior conversations.
