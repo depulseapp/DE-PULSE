@@ -68,7 +68,7 @@ jobs:
           if [ -n "$bad" ]; then
             printf '%s\n' "$bad"
             while IFS= read -r file; do
-              [ -n "$file" ] && gofmt -d "$file"
+              [ -n "$file" ] && gofmt -d "$file" || true
             done <<< "$bad"
             exit 1
           fi
