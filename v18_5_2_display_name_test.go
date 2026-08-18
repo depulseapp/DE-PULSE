@@ -9,14 +9,14 @@ import (
 	"testing"
 )
 
-func TestV1852ConfigurableDisplayNamePersistsWithoutChangingRoleOrSession(t *testing.T) {
+func TestV1852ConfigurableAccountIdentityPersistsWithoutChangingRoleOrSession(t *testing.T) {
 	persistence, identity := newIdentityTestService(t)
 	token, principal, err := identity.bootstrapOwnerSession()
 	if err != nil {
 		t.Fatal(err)
 	}
 	originalSession := principal.SessionID
-	if err := identity.updateDisplayName(principal.UserID, "  Deivaram   Venkatachalapathy  "); err != nil {
+	if err := identity.updateProfile(principal.UserID, "deivaram", "  Deivaram   Venkatachalapathy  "); err != nil {
 		t.Fatal(err)
 	}
 	resolved, err := identity.resolve(token, false)
@@ -26,7 +26,7 @@ func TestV1852ConfigurableDisplayNamePersistsWithoutChangingRoleOrSession(t *tes
 	if resolved.DisplayName != "Deivaram Venkatachalapathy" {
 		t.Fatalf("display name was not normalized: %+v", resolved)
 	}
-	if resolved.Role != RoleOwner || resolved.Username != "owner" || resolved.SessionID != originalSession {
+	if resolved.Role != RoleOwner || resolved.Username != "deivaram" || resolved.SessionID != originalSession {
 		t.Fatalf("display-name update changed identity authority or session: %+v", resolved)
 	}
 
@@ -43,7 +43,7 @@ func TestV1852ConfigurableDisplayNamePersistsWithoutChangingRoleOrSession(t *tes
 	}
 
 	app := &Application{identity: reloaded}
-	body := strings.NewReader(`{"displayName":"DV Market Desk"}`)
+	body := strings.NewReader(`{"username":"dv-owner","displayName":"DV Market Desk"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/profile", body)
 	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
 	req = req.WithContext(context.WithValue(req.Context(), identityContextKey{}, persisted))
@@ -58,11 +58,11 @@ func TestV1852ConfigurableDisplayNamePersistsWithoutChangingRoleOrSession(t *tes
 	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
 		t.Fatal(err)
 	}
-	if response.Principal.DisplayName != "DV Market Desk" || response.Principal.Role != RoleOwner || response.Principal.SessionID != originalSession {
+	if response.Principal.DisplayName != "DV Market Desk" || response.Principal.Username != "dv-owner" || response.Principal.Role != RoleOwner || response.Principal.SessionID != originalSession {
 		t.Fatalf("profile response changed role/session or omitted name: %+v", response.Principal)
 	}
 
-	if err := reloaded.updateDisplayName(principal.UserID, "   "); err == nil {
+	if err := reloaded.updateProfile(principal.UserID, "dv-owner", "   "); err == nil {
 		t.Fatal("blank display name accepted")
 	}
 	still, err := reloaded.resolve(token, false)
