@@ -17,6 +17,8 @@
 
 Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, actual branch/PR/check state and the immutable Stable predecessor tag/release. The last trustworthy PASS is the highest exact-source gate evidence visible in GitHub. Never resume from model memory alone. `v18.5.2-stable` remains the current certified product authority until v18.6.0 completes G11–G16 and is promoted.
 
+`source_fingerprint.py` excludes `.depulse-certification` but **does not exclude `handoff/CURRENT.md`**. Therefore the machine resume/evidence checkpoints may advance as fingerprint-excluded operational metadata after a product candidate, while this handoff is candidate-bound source and must be frozen with the product before G11. Changing this handoff after G11 requires a new candidate/fingerprint and requalification.
+
 ## v18.6.0 implementation state
 
 All eight assigned v18.6 implementation/audit slices are code-complete:
@@ -47,7 +49,7 @@ The canonical release identity was then generated in isolation. Candidate identi
 - major v18 provenance anchor `v17.5.1`;
 - runtime/config continuity `PersonalMarketTerminal`.
 
-The initial cleaned identity candidate `b16041763bdc0bedd0df863f5d824ac132a508f9` correctly surfaced a stale resume-metadata mismatch in CI Fast. The product candidate was not promoted or weakened; the fingerprint-excluded handoff/build/evidence checkpoints are now being reconciled to v18.6.0 and must obtain fresh exact-identity Fast + Qualified PASS before G11.
+Pre-freeze qualification correctly surfaced and closed stale resume identity, release-coupled asset cache versions, QA-history identity, and version-hardcoded regression assumptions. Those failures were not bypassed: the canonical identity tooling and regression contracts were hardened so future release freezes derive from `release_identity.json`. The remaining G10 requirement is a fresh Fast + Qualified PASS on the final candidate-bound handoff and exact source.
 
 ## Release sequence still required
 
@@ -63,7 +65,7 @@ No v18.6 Stable tag, package, native artifact hash or publication claim is valid
 
 ## Exactly one next action
 
-**Complete the fingerprint-excluded resume/checkpoint reconciliation, obtain fresh canonical CI Fast + CI Qualified PASS on the exact v18.6.0 identity candidate, fast-forward that qualified result to `v18.6-development` / PR #16, then freeze G11 and execute G12–G16 without rebuilding certified artifacts during promotion.**
+**Reconcile the fingerprint-excluded `.depulse-certification/resume` checkpoints to this final candidate-bound handoff, obtain fresh canonical CI Fast + CI Qualified PASS, fast-forward the qualified result to `v18.6-development` / PR #16, then freeze G11 and execute G12–G16 without rebuilding certified artifacts during promotion.**
 
 ## Provider-neutral continuation instruction
 
