@@ -103,7 +103,7 @@ def main() -> None:
         assert result["principal"]["username"] == "dv-owner", result
         assert result["principal"]["role"] == "OWNER", result
         assert result["header"] == "Deivaram Venkatachalapathy", result
-        assert "Username: owner" in result["title"] and "Role: OWNER" in result["title"], result
+        assert "Username: dv-owner" in result["title"] and "Role: OWNER" in result["title"], result
         assert "OWNER" in result["aria"], result
         assert not result["signoutHidden"], result
         assert result["renderCount"] == 1, result
