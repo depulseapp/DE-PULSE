@@ -9,11 +9,12 @@
       bar = document.createElement('div');
       bar.id = 'market-status-bar';
       bar.className = 'market-status-bar';
-      bar.setAttribute('aria-label', 'Market state and data coverage');
+      bar.setAttribute('aria-label', 'Market Pulse Ribbon: session, clocks, coverage and data control');
       topbar.insertAdjacentElement('afterend', bar);
     }
 
     const session = document.getElementById('market-session-context');
+    const clocks = document.querySelector('.market-clocks');
     const status = document.getElementById('runtime-status');
     const toggle = document.getElementById('runtime-toggle');
     let summary = document.getElementById('market-data-summary');
@@ -30,6 +31,7 @@
     }
 
     if (session && session.parentElement !== bar) bar.appendChild(session);
+    if (clocks && clocks.parentElement !== bar) bar.appendChild(clocks);
     if (status && status.parentElement !== summary) summary.insertBefore(status, summary.firstChild);
     if (summary.parentElement !== bar) bar.appendChild(summary);
     if (toggle && toggle.parentElement !== bar) bar.appendChild(toggle);
