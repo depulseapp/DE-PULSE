@@ -3,8 +3,8 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G10_FINAL_QUALIFICATION",
-  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance operationally after a candidate commit. handoff/CURRENT.md is source-fingerprinted and must freeze with the product before G11.",
+  "candidateDisposition": "V18_6_0_G11_RELEASE_CERTIFICATION",
+  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md remains frozen source.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -20,9 +20,9 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "fa3b67fae64e2083c4aa0d5ea19aec300f434895",
+    "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
     "sourceFingerprint": null,
-    "sourceFingerprintState": "PENDING_FINAL_G10",
+    "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
     "promotionState": "NOT_PROMOTED",
     "releaseDispatchPath": {
       "certificationBranch": "v18.6-release-certification",
@@ -34,20 +34,22 @@
     }
   },
   "evidence": {
-    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, implementation slices, governance contracts, Fast/Qualified implementation qualification and preserved protected invariants."},
+    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, implementation slices, governance contracts, implementation qualification and preserved protected invariants."},
     "G10": {
-      "status": "IN_PROGRESS",
-      "lastImplementationFastRun": 32182124289,
-      "lastImplementationQualifiedRun": 32182124317,
-      "candidateSourceCommit": "fa3b67fae64e2083c4aa0d5ea19aec300f434895",
-      "required": "Fresh canonical Fast + Qualified PASS on the final source-fingerprinted candidate and permanent release-dispatch governance."
+      "status": "PASS",
+      "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
+      "fastRun": 32185509389,
+      "fastRunNumber": 142,
+      "qualifiedRun": 32185509377,
+      "qualifiedRunNumber": 63,
+      "coverage": ["Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
-    "G11": {"status": "PENDING", "required": "Freeze exact v18.6.0 source SHA and canonical Git-object fingerprint."},
+    "G11": {"status": "IN_PROGRESS", "required": "Compute and bind exact v18.6.0 canonical Git-object fingerprint from the release-certification candidate."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
     "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; publication remains disabled on pre-merge certification branch."},
-    "G16": {"status": "PENDING", "required": "Durable adaptive release handoff after G15."}
+    "G16": {"status": "PENDING", "required": "Retain adaptive release handoff evidence after G15."}
   },
   "priorStableEvidence": {
     "release": "v18.5.2",
@@ -63,9 +65,9 @@
   "residuals": [
     "TradeInsight remains governed future/shadow work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where not already configured/approved.",
-    "No v18.6 native artifact or Stable publication claim is valid until G13-G16 complete."
+    "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
-  "releaseBlockingResiduals": ["Exact final canonical v18.6.0 Fast + Qualified G10 PASS is required on candidate source fa3b67fae64e2083c4aa0d5ea19aec300f434895 before G11 freeze."],
-  "nextRequiredEvidence": "Fresh G10 Fast + Qualified PASS on the final source-fingerprinted v18.6.0 candidate, followed by v18.6-release-certification G11-G16 evidence with publish=false.",
-  "updatedAt": "2026-08-18T20:59:00Z"
+  "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
+  "nextRequiredEvidence": "Canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
+  "updatedAt": "2026-08-18T21:10:00Z"
 }
