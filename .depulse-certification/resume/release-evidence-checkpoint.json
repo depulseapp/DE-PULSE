@@ -4,7 +4,7 @@
   "release": "v18.6.0",
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_RELEASE_CERTIFICATION",
-  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md remains frozen source.",
+  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -20,9 +20,10 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
+    "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
+    "qualificationMergeFingerprintObserved": "6125035b40fbee5c1571e26a1ff3fdd3677000f962961b34f7bdd7b3161e717d",
     "promotionState": "NOT_PROMOTED",
     "releaseDispatchPath": {
       "certificationBranch": "v18.6-release-certification",
@@ -31,32 +32,29 @@
       "promotionPublish": true,
       "dispatcher": ".github/workflows/ci-fast.yml",
       "canonicalReleaseWorkflow": ".github/workflows/release.yml",
-      "dispatchTrigger": {
-        "status": "REQUESTED",
-        "triggeredAt": "2026-08-18T21:14:00Z",
-        "g10ProductSource": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
-        "expectedCanonicalProductFingerprint": "f7ae32d088563019f406abc70f4781a85b061fdd237ccabd9d4539ad8d1a3622"
-      }
+      "workflowDefinitionRef": "candidate branch",
+      "idempotencyKey": "headBranch + headSha",
+      "tracking": "PR #16 comments include canonical release run ID/URL plus G11 and G16 status"
     }
   },
   "evidence": {
-    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, implementation slices, governance contracts, implementation qualification and preserved protected invariants."},
+    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
-      "fastRun": 32185509389,
-      "fastRunNumber": 142,
-      "qualifiedRun": 32185509377,
-      "qualifiedRunNumber": 63,
-      "canonicalProductFingerprintObserved": "f7ae32d088563019f406abc70f4781a85b061fdd237ccabd9d4539ad8d1a3622",
+      "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba",
+      "fastRun": 32187439582,
+      "fastRunNumber": 158,
+      "qualifiedRun": 32187439404,
+      "qualifiedRunNumber": 69,
+      "qualificationMergeFingerprintObserved": "6125035b40fbee5c1571e26a1ff3fdd3677000f962961b34f7bdd7b3161e717d",
       "coverage": ["Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
-    "G11": {"status": "IN_PROGRESS", "required": "Compute and bind exact v18.6.0 canonical Git-object fingerprint from the release-certification candidate."},
+    "G11": {"status": "IN_PROGRESS", "required": "Canonical release.yml run computes and binds the exact candidate Git-object fingerprint and posts it to PR #16."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
     "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; publication remains disabled on pre-merge certification branch."},
-    "G16": {"status": "PENDING", "required": "Retain adaptive release handoff evidence after G15."}
+    "G16": {"status": "PENDING", "required": "Retain adaptive release handoff evidence and PR-visible completion status after G15."}
   },
   "priorStableEvidence": {
     "release": "v18.5.2",
@@ -75,6 +73,6 @@
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "Canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
-  "updatedAt": "2026-08-18T21:14:00Z"
+  "nextRequiredEvidence": "PR-audited canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
+  "updatedAt": "2026-08-18T21:29:00Z"
 }
