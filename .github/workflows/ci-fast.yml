@@ -49,6 +49,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Canonical workflow policy
         run: python3 tools/ci/workflow_policy.py
+      - name: Watchlist membership regression contract
+        run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
         run: python3 adaptive_resume_gate.py
       - name: Platform-neutral source provenance regression
@@ -89,6 +91,7 @@ jobs:
             echo "- Go lane required: ${{ steps.impact.outputs.go_required }}"
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- workflow policy: PASS'
+            echo '- watchlist membership contract: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- Git-object provenance: PASS'
           } >> "$GITHUB_STEP_SUMMARY"
