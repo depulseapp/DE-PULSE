@@ -5,6 +5,17 @@
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
   "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source f706b205 is frozen after G10 PASS.",
+  "dispatchTrigger": {
+    "sequence": 9,
+    "purpose": "Single owner-controlled connector-safe trigger after restoring required assistant portability entrypoints in fingerprint-excluded checkpoint metadata.",
+    "releaseCertificationBaseSha": "10a89f2b94629aa83d588f5a893c0dd7e83334d6",
+    "qualifiedSourceCommit": "f706b205fcb36bc74ca31e113be6a6add3c2afdb",
+    "g10FastRun": 32198719049,
+    "g10QualifiedRun": 32198719053,
+    "sourceFingerprintImpact": "NONE",
+    "expectedPublish": false,
+    "mergeRequired": false
+  },
   "stable": {
     "tag":"v18.5.2-stable",
     "promotionCommit":"d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -21,17 +32,7 @@
     "qualificationHead":"9ae02646c6244f0a77e2114c734d05dc81479dc2",
     "sourceFingerprint":null,
     "sourceFingerprintState":"PENDING_G11_CANONICAL_FINGERPRINT",
-    "promotionState":"NOT_PROMOTED",
-    "releaseDispatchPath":{
-      "certificationBranch":"v18.6-release-certification",
-      "certificationPublish":false,
-      "promotionBranch":"v18.6-stable-promotion",
-      "promotionPublish":true,
-      "dispatcher":".github/workflows/ci-fast.yml",
-      "canonicalReleaseWorkflow":".github/workflows/release.yml",
-      "connectorFallback":"owner-triggered pull_request to exact release-certification base; immutable base SHA; publish=false",
-      "trackingTransport":"Actions evidence plus PR #16 connector binding if workflow token cannot comment"
-    }
+    "promotionState":"NOT_PROMOTED"
   },
   "evidence": {
     "G0-G9":{"status":"PASS"},
@@ -40,8 +41,7 @@
       "candidateSourceCommit":"f706b205fcb36bc74ca31e113be6a6add3c2afdb",
       "qualificationHead":"9ae02646c6244f0a77e2114c734d05dc81479dc2",
       "fastRun":32198719049,"fastRunNumber":250,
-      "qualifiedRun":32198719053,"qualifiedRunNumber":105,
-      "coverage":["v18.6 G12 browser-proof selection/cache-buster policy","Ubuntu portability","macOS portability","Windows portability","workflow/provenance contracts","renderer contracts","browser behavior","full Go suite","race detector","randomized package order","qualified evidence summary"]
+      "qualifiedRun":32198719053,"qualifiedRunNumber":105
     },
     "G11":{"status":"PENDING"},
     "G12":{"status":"PENDING","runner":"release/v18.6.0/run_full_certification.sh"},
@@ -55,7 +55,6 @@
     {"runId":32198058592,"G11":"PASS","G12":"FAIL_STALE_LEGACY_UI_HIERARCHY_CACHE_BUSTER","downstream":"SKIPPED"}
   ],
   "residuals":["TradeInsight remains governed future/shadow work until separately validated and approved.","Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved.","No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."],
-  "releaseBlockingResiduals":["G11-G16 and native macOS/Windows evidence remain required before Stable promotion."],
-  "nextRequiredEvidence":"One canonical non-publishing release.yml run on the reconciled f706b205 release-certification candidate, bound to PR #16, then G11-G16.",
-  "updatedAt":"2026-08-18T23:55:30Z"
+  "nextRequiredEvidence":"Canonical non-publishing release.yml run from exact base 10a89f2b, bound to PR #16, then G11-G16.",
+  "updatedAt":"2026-08-18T23:59:30Z"
 }
