@@ -1,0 +1,28 @@
+{
+  "schema": "DE.PULSE-PROVIDER-DATASET-AI-RIGHTS-1",
+  "policyVersion": "v18.6.0-ai-egress-rights-1",
+  "requireAllRights": ["commercialUse", "redistribution", "aiUse"],
+  "defaultDecision": "BLOCK",
+  "defaultReason": "Provider/dataset rights are not explicitly evidence-bound and approved.",
+  "records": [
+    {"provider":"finnhub","dataset":"fundamentals","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"finnhub","dataset":"earnings","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"finnhub","dataset":"news","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"finnhub","dataset":"derived","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"alpaca","dataset":"quotes","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"alpaca","dataset":"history","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"alpaca","dataset":"options","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"alpaca","dataset":"derived","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"fred","dataset":"macro","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"bls","dataset":"macro","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"eia","dataset":"energy","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"twelve-data","dataset":"market-context","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"yfinance","dataset":"market-context","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"cboe","dataset":"vix","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"marketaux","dataset":"news","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"sec-edgar","dataset":"filings","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"community","dataset":"community","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"depulse-derived","dataset":"derived","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"},
+    {"provider":"unknown","dataset":"unknown","commercialUse":"UNKNOWN","redistribution":"UNKNOWN","aiUse":"UNKNOWN","evidenceBound":false,"decision":"BLOCK"}
+  ]
+}
