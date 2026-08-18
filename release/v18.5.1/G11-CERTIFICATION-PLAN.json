@@ -1,0 +1,63 @@
+{
+  "schema": "DE.PULSE-V18.5.1-G11-CERTIFICATION-PLAN-1",
+  "version": "18.5.1",
+  "purpose": "Release-specific immutable-RC G11 acceptance. Preserves inherited coverage while using the v18.5.1 patch-aware QA-manifest renderer gate.",
+  "checks": [
+    {
+      "id": "g11_v180_adversarial_auth",
+      "gate": "G11",
+      "label": "Independent adversarial authorization regression",
+      "command": ["{python}", "independent_adversarial_authorization_gate.py"],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_http",
+      "gate": "G11",
+      "label": "HTTP/cross-module workflow regression",
+      "command": ["{python}", "http_workflow_test.py"],
+      "timeout_seconds": 180,
+      "blocking": true
+    },
+    {
+      "id": "g11_deterministic",
+      "gate": "G11",
+      "label": "Day/Swing/Long deterministic equivalence",
+      "command": ["node", "deterministic_equivalence_test.js"],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_renderer_v1851",
+      "gate": "G11",
+      "label": "Renderer logic regression with TEST/RC QA-delta governance",
+      "command": ["node", "release/v18.5.1/renderer_logic_v18_5_1_gate.js"],
+      "timeout_seconds": 120,
+      "blocking": true
+    },
+    {
+      "id": "g11_v180_content",
+      "gate": "G11",
+      "label": "Current UI/content terminology and release-copy audit",
+      "command": ["{python}", "content_copy_audit_test.py"],
+      "timeout_seconds": 90,
+      "blocking": true
+    },
+    {
+      "id": "g11_v180_typography",
+      "gate": "G11",
+      "label": "Documentation typography hierarchy",
+      "command": ["{python}", "v18_documentation_typography_gate.py"],
+      "timeout_seconds": 60,
+      "blocking": true
+    },
+    {
+      "id": "g11_responsive",
+      "gate": "G11",
+      "label": "Responsive/layout integrity · bounded 15-viewport shards",
+      "command": ["{python}", "responsive_ui_sharded_gate.py"],
+      "timeout_seconds": 300,
+      "blocking": true
+    }
+  ]
+}
