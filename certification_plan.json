@@ -37,6 +37,17 @@
       "blocking": true
     },
     {
+      "id": "g0_ai_account_portability",
+      "gate": "G0",
+      "label": "GitHub-backed ChatGPT/Codex/Claude account-independent resume",
+      "command": [
+        "{python}",
+        "adaptive_resume_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
       "id": "g1_v183_scope",
       "gate": "G1",
       "label": "v18.3 PostgreSQL / Hosted Shared State immutable scope",
