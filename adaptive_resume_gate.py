@@ -16,6 +16,10 @@ def need(ok, msg):
         errors.append(msg)
 
 required_docs = [
+    ROOT / 'AGENTS.md',
+    ROOT / 'CLAUDE.md',
+    ROOT / 'governance' / 'AI-ASSISTANT-PORTABILITY-CONTRACT.md',
+    ROOT / 'handoff' / 'CURRENT.md',
     ROOT / 'adaptive-governance' / 'BUILD_RESUME_PROTOCOL.md',
     ROOT / 'adaptive-governance' / 'ADAPTIVE_ROADMAP.md',
     ROOT / 'adaptive-governance' / 'ADAPTIVE_BUILD_PLAN.md',
@@ -34,8 +38,30 @@ if all(p.exists() for p in required_docs):
         'GitHub',
         'G16',
         'No Execution',
+        'handoff/CURRENT.md',
+        'AI-ASSISTANT-PORTABILITY-CONTRACT.md',
+        'Claude',
     ]:
         need(term in corpus, f'permanent resume governance missing required contract term: {term}')
+
+    contract = (ROOT / 'governance' / 'AI-ASSISTANT-PORTABILITY-CONTRACT.md').read_text(errors='ignore')
+    agents = (ROOT / 'AGENTS.md').read_text(errors='ignore')
+    claude = (ROOT / 'CLAUDE.md').read_text(errors='ignore')
+    handoff = (ROOT / 'handoff' / 'CURRENT.md').read_text(errors='ignore')
+    for adapter, text in [('AGENTS.md', agents), ('CLAUDE.md', claude)]:
+        need('governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md' in text, f'{adapter} must point to the vendor-neutral portability contract')
+        need('handoff/CURRENT.md' in text, f'{adapter} must point to the current authoritative handoff')
+        need('adaptive_resume_gate.py' in text, f'{adapter} must require the owning resume gate')
+    for term in [
+        'GitHub source-of-truth hierarchy',
+        'Mandatory fresh-session algorithm',
+        'Durable handoff rule',
+        'Secrets and account independence',
+        'No upload of an old chat handoff is required',
+    ]:
+        need(term in contract, f'portability contract missing required section/term: {term}')
+    need('SUPERSEDES ALL PRIOR CHAT HANDOFFS' in handoff, 'handoff/CURRENT.md must be the single current handoff authority')
+    need('Exactly one next action' in handoff, 'handoff/CURRENT.md must name exactly one next action')
 
 identity_path = ROOT / 'release_identity.json'
 checkpoint_path = ROOT / '.depulse-certification' / 'resume' / 'build-checkpoint.json'
@@ -56,6 +82,10 @@ try:
     need(policy.get('release_evidence_checkpoint') == '.depulse-certification/resume/release-evidence-checkpoint.json', 'CI plan missing release_evidence_checkpoint')
     need(policy.get('resume_reconciliation_required') is True, 'CI plan must require resume reconciliation')
     need(policy.get('checkpoint_metadata_excluded_from_product_fingerprint') is True, 'CI plan must mark checkpoint metadata fingerprint-excluded')
+    need(policy.get('ai_assistant_portability_contract') == 'governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md', 'CI plan missing canonical AI assistant portability contract')
+    need(policy.get('authoritative_handoff') == 'handoff/CURRENT.md', 'CI plan missing authoritative current handoff')
+    need(policy.get('assistant_account_independent') is True, 'CI plan must require assistant/account independence')
+    need(policy.get('ai_entrypoints') == ['AGENTS.md', 'CLAUDE.md'], 'CI plan AI entrypoints drift')
 except Exception as exc:
     errors.append(f'CI plan unreadable: {exc}')
 
@@ -84,6 +114,12 @@ try:
     need(all(f'G{i}' in gates for i in range(17)), 'checkpoint must contain G0-G16 states')
     need(cp.get('nextStep'), 'checkpoint nextStep missing')
     need('updatedAt' in cp, 'checkpoint updatedAt missing')
+    portability = cp.get('assistantPortability', {})
+    need(portability.get('status') == 'ENFORCED', 'checkpoint assistantPortability must be ENFORCED')
+    need(portability.get('authoritativeHandoff') == 'handoff/CURRENT.md', 'checkpoint authoritative handoff drift')
+    need(portability.get('entrypoints') == ['AGENTS.md', 'CLAUDE.md'], 'checkpoint assistant entrypoints drift')
+    need(f'**Release:** `v{release}`' in handoff, 'current handoff release must match checkpoint/release identity')
+    need(f"**Active branch:** `{cp.get('branch')}`" in handoff, 'current handoff branch must match checkpoint')
 except Exception as exc:
     errors.append(f'build checkpoint invalid/unreadable: {exc}')
 
@@ -103,4 +139,4 @@ if errors:
         print(' -', e)
     sys.exit(1)
 
-print('Adaptive Build Resume Contract: PASS · roadmap/build-plan/build-process/delivery-process integrated · checkpoint v2+ evidence reconciliation enforced · metadata fingerprint-excluded')
+print('Adaptive Build Resume Contract: PASS · GitHub-only ChatGPT/Codex/Claude portability enforced · current handoff + checkpoint reconciled · four adaptive layers integrated · metadata fingerprint-excluded')
