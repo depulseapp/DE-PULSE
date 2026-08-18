@@ -11,6 +11,12 @@ v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated produc
 
 v18.5.2 is the hotfix candidate over v18.5.1 STABLE. It restores all three desk pages, corrects the Market Pulse Ribbon and clock hierarchy, recovers Research reading space, stabilizes tracked-symbol entry during live updates, adds separately configurable display and sign-in names with password re-verification, and keeps the complete Save Settings row visible. Automatic GitHub Actions execution is paused while the account budget is unavailable; exact-source local G0–G12 plus native G13/G14 evidence remains required before G15 Stable promotion.
 
+## Resume with any AI assistant or account
+
+GitHub is the project source of truth. A fresh ChatGPT/Codex account starts with `AGENTS.md`; Claude starts with `CLAUDE.md`. Both lead to `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, `handoff/CURRENT.md`, the actual branch/PR state and the machine-readable Build State Ledger. Prior chat access or an uploaded handoff is not required when the repository is connected.
+
+Never resume from model memory alone. Run `python3 adaptive_resume_gate.py`, reconcile GitHub/checkpoint differences and continue from the last trustworthy PASS.
+
 ### v18.5 release flow
 
 ```mermaid
