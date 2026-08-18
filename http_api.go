@@ -23,6 +23,7 @@ func (a *Application) routes() http.Handler {
 	mux.HandleFunc("/api/auth/login", a.handleLogin)
 	mux.HandleFunc("/api/auth/logout", a.authAllowPasswordSetup(a.handleLogout))
 	mux.HandleFunc("/api/auth/set-password", a.authAllowPasswordSetup(a.handleSetPassword))
+	mux.HandleFunc("/api/auth/profile", a.auth(postOnly(a.handleUpdateProfile)))
 	mux.HandleFunc("/api/auth/rotate", a.auth(postOnly(a.handleRotateSession)))
 	mux.HandleFunc("/api/auth/reauth", a.auth(postOnly(a.handleReauthenticate)))
 	mux.HandleFunc("/api/bootstrap", a.auth(a.handleBootstrap))
