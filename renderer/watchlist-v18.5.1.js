@@ -7,6 +7,34 @@
     return String(value || '').trim().toUpperCase();
   }
 
+  function validDeskSymbol(symbol) {
+    return /^[A-Z][A-Z0-9.\-]{0,7}$/.test(normalizeTrackedSymbol(symbol));
+  }
+
+  async function addSymbolToDesk(symbol, desk) {
+    const sym = normalizeTrackedSymbol(symbol);
+    if (!validDeskSymbol(sym)) {
+      throw new Error('Enter a valid stock/ETF ticker.');
+    }
+    if (!DESKS.includes(desk)) {
+      throw new Error('Invalid trading desk.');
+    }
+
+    const membershipResult = await api('/api/desk/membership', {
+      symbol: sym,
+      desk,
+      active: true
+    });
+    const boot = await api('/api/bootstrap');
+    state = boot.state;
+    runtime = boot.runtime;
+
+    if (!(deskWL(desk).symbols || []).includes(sym)) {
+      throw new Error(`${sym} was not saved to the ${deskCfg[desk].title} watchlist.`);
+    }
+    return membershipResult;
+  }
+
   deskMembershipStrip = function deskMembershipStripV186(sym) {
     const target = String(sym || '').toUpperCase();
     const items = [['day', 'DAY'], ['swing', 'SWING'], ['long', 'LONG']];
@@ -76,6 +104,118 @@
     return res;
   }
 
+  function bindCanonicalDeskAdds() {
+    $$('[data-add-desk]').forEach(button => {
+      button.onclick = async () => {
+        const desk = button.dataset.addDesk;
+        const input = $(`[data-add-input="${desk}"]`);
+        const symbol = normalizeTrackedSymbol(input?.value || watchlistDraft[desk] || '');
+        if (!symbol) {
+          toast('Enter a Ticker', 'Enter a ticker such as NVDA.');
+          input?.focus();
+          return;
+        }
+
+        const ctx = captureSaveContext();
+        const original = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Adding…';
+        watchlistDraft[desk] = symbol;
+        try {
+          await addSymbolToDesk(symbol, desk);
+          selected[desk] = symbol;
+          watchlistDraft[desk] = '';
+          if (input) input.value = '';
+          const hasPrice = num(runtime?.quotes?.[symbol]?.price) > 0;
+          toast(
+            `${symbol} Added`,
+            hasPrice ? `${deskCfg[desk].title} · Market data ready.` : `${deskCfg[desk].title} · Saved. Waiting for market data.`,
+            'success'
+          );
+          updateChrome();
+          render();
+          restoreSaveContext(ctx);
+        } catch (err) {
+          watchlistDraft[desk] = symbol;
+          toast('Could Not Add Symbol', err.message, 'error');
+          render();
+          restoreSaveContext(ctx);
+          setTimeout(() => {
+            const next = $(`[data-add-input="${desk}"]`);
+            if (next) {
+              next.focus({ preventScroll: true });
+              next.setSelectionRange(next.value.length, next.value.length);
+            }
+          }, 0);
+        } finally {
+          if (button.isConnected) {
+            button.disabled = false;
+            button.textContent = original;
+          }
+        }
+      };
+    });
+
+    $$('[data-add-desk-table]').forEach(button => {
+      button.onclick = async () => {
+        const desk = button.dataset.addDeskTable;
+        const input = $(`[data-add-table-input="${desk}"]`);
+        const symbol = normalizeTrackedSymbol(input?.value || watchlistDraft[desk] || '');
+        if (!symbol) {
+          toast('Enter a Ticker', 'Enter a ticker such as NVDA.');
+          input?.focus();
+          return;
+        }
+
+        const ctx = captureSaveContext();
+        const original = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Adding…';
+        watchlistDraft[desk] = symbol;
+        try {
+          await addSymbolToDesk(symbol, desk);
+          selected[desk] = symbol;
+          watchlistDraft[desk] = '';
+          if (input) input.value = '';
+          toast(`${symbol} Added`, `${deskCfg[desk].title} · historical data is hydrating if needed.`, 'success');
+          updateChrome();
+          render();
+          restoreSaveContext(ctx);
+        } catch (err) {
+          watchlistDraft[desk] = symbol;
+          toast('Could Not Add Symbol', err.message, 'error');
+          render();
+          restoreSaveContext(ctx);
+        } finally {
+          if (button.isConnected) {
+            button.disabled = false;
+            button.textContent = original;
+          }
+        }
+      };
+    });
+
+    $$('[data-ai-add-desk]').forEach(button => {
+      button.onclick = async () => {
+        const [desk, rawSymbol] = String(button.dataset.aiAddDesk || '').split(':');
+        const symbol = normalizeTrackedSymbol(rawSymbol);
+        const ctx = captureSaveContext();
+        button.disabled = true;
+        try {
+          await addSymbolToDesk(symbol, desk);
+          selected[desk] = symbol;
+          toast(`${symbol} Added`, `${deskCfg[desk].title} watchlist.`, 'success');
+          render();
+          restoreSaveContext(ctx);
+        } catch (err) {
+          if (button.isConnected) button.disabled = false;
+          toast('Could Not Add Symbol', err.message, 'error');
+          restoreSaveContext(ctx);
+        }
+      };
+    });
+  }
+
   function bindGlobalTrackedSymbolRemoval() {
     $$('[data-master-remove]').forEach(button => {
       button.onclick = async event => {
@@ -117,12 +257,15 @@
     });
   }
 
-  bindDynamic = function bindDynamicV1851() {
+  bindDynamic = function bindDynamicV186() {
     baseBindDynamic();
+    bindCanonicalDeskAdds();
     bindGlobalTrackedSymbolRemoval();
   };
 
-  window.__v1851WatchlistContracts = Object.freeze({
+  window.__v186WatchlistContracts = Object.freeze({
+    addSymbolToDesk,
+    bindCanonicalDeskAdds,
     removeTrackedSymbolEverywhere,
     bindGlobalTrackedSymbolRemoval
   });
