@@ -81,6 +81,20 @@ func normalizeUsername(v string) string {
 	return strings.ToLower(strings.TrimSpace(v))
 }
 
+func normalizeDisplayName(v string) (string, error) {
+	v = strings.Join(strings.Fields(v), " ")
+	runes := []rune(v)
+	if len(runes) < 1 || len(runes) > 64 {
+		return "", errors.New("display name must be between 1 and 64 characters")
+	}
+	for _, r := range runes {
+		if r < 0x20 || r == 0x7f {
+			return "", errors.New("display name contains unsupported characters")
+		}
+	}
+	return v, nil
+}
+
 func validRole(r UserRole) bool {
 	switch r {
 	case RoleSuperOwner, RoleOwner, RoleAdmin, RoleUser, RoleDemo:
@@ -278,6 +292,35 @@ func (s *IdentityService) setPassword(userID, password string) (string, Principa
 		}
 	}
 	return s.createSessionLocked(s.state.Users[idx], "")
+}
+
+func (s *IdentityService) updateDisplayName(userID, displayName string) error {
+	displayName, err := normalizeDisplayName(displayName)
+	if err != nil {
+		return err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	idx := -1
+	for i := range s.state.Users {
+		if s.state.Users[i].ID == userID {
+			idx = i
+			break
+		}
+	}
+	if idx < 0 || s.state.Users[idx].Status != UserActive {
+		return errors.New("user unavailable")
+	}
+	previousName := s.state.Users[idx].DisplayName
+	previousUpdatedAt := s.state.Users[idx].UpdatedAt
+	s.state.Users[idx].DisplayName = displayName
+	s.state.Users[idx].UpdatedAt = s.now().UnixMilli()
+	if err := s.persistLocked(); err != nil {
+		s.state.Users[idx].DisplayName = previousName
+		s.state.Users[idx].UpdatedAt = previousUpdatedAt
+		return err
+	}
+	return nil
 }
 
 func sessionTokenHash(token string) string {
