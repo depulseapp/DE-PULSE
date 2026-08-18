@@ -306,3 +306,67 @@ At G0 and after interruption, load `AGENTS.md` or `CLAUDE.md`, then the vendor-n
 The process must produce the same result regardless of assistant vendor or ChatGPT/Claude user account. If GitHub is inaccessible, stop for repository connection; do not infer status from model memory. If continuity artifacts disagree with GitHub, classify the stale artifact, correct it and resume from the earliest invalidated G0–G16 owner.
 
 After meaningful work, commit candidate changes first and checkpoint metadata second so `candidateSourceCommit` can name the exact candidate while fingerprint-excluded metadata may advance branch HEAD safely.
+
+---
+
+## 15. Canonical CI retry/resume and continuous-improvement process
+
+The adaptive build process must operate one permanent CI system that evolves in place.
+
+### 15.1 Canonical workflow invariant
+
+Normal active CI is limited to:
+
+1. `ci-fast.yml` — cheap automatic preflight/impact classification;
+2. `ci-qualified.yml` — parameterized affected-area qualification through G10;
+3. `release.yml` — parameterized G11–G16 release orchestration.
+
+Release versions, RC identities, gates, lanes, OS targets and retry/resume points are parameters. A new release must not create a new workflow family.
+
+A workflow-allowlist gate must reject unapproved `.github/workflows/*.yml` additions unless the change explicitly modifies the permanent CI architecture and carries its own migration/rollback evidence.
+
+### 15.2 Same-workflow failure handling
+
+After a failure:
+
+- `INFRA_FAIL`: use GitHub failed-job rerun on the same workflow/SHA where possible;
+- `CI_HARNESS_FAIL`: fix the shared harness/tooling, add regression coverage, then dispatch/rerun the same workflow and affected lane;
+- `GATE_TEST_FAIL`: correct the canonical test contract and rerun that gate plus invalidated dependents in the same workflow family;
+- `PRODUCT_FAIL`: fix source and rerun the same workflow on the new SHA from the earliest invalidated gate;
+- `EXPECTED_NOOP`: record and continue without inventing a retry;
+- `SUPERSEDED`: preserve history but do not spend compute recreating obsolete evidence.
+
+The process must never respond to an ordinary lane failure by committing `*-retry.yml`, `*-monitor.yml`, `*-probe.yml`, `*-recovery.yml`, `*-certification.yml` or `*-publish.yml` workflow files.
+
+### 15.3 Independent PASS preservation
+
+Evidence reuse is lane-specific. If macOS G13/G14 passes and Windows fails, the macOS PASS remains authoritative when exact source, package contract, test semantics and artifact identity are unchanged. Repair and rerun Windows only; G15 consumes both matching evidence graphs.
+
+This principle applies to any independent lane whose dependency fingerprint remains valid.
+
+### 15.4 Learning must change the canonical system
+
+G16 process learning is incomplete until every material repeated CI/process failure has either:
+
+- changed the canonical workflow/tool/test and added regression/prevention evidence; or
+- received an explicit evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` disposition.
+
+A workaround that succeeds once but leaves the canonical implementation unchanged is temporary recovery, not adaptive maturity.
+
+The v18.5.2 Windows provenance lesson is the reference pattern: platform-specific filesystem materialization must not define canonical source identity; shared provenance tooling must derive identity from platform-neutral canonical Git object bytes and test this across supported runner families.
+
+### 15.5 Workflow and branch hygiene inside G16
+
+Before G16 closes:
+
+- inventory active workflows against the allowlist;
+- delete obsolete version-specific/diagnostic workflow files from the active branch after evidence is safely preserved in Git history/releases;
+- inventory branches and classify each as active, unique/unmerged, protected evidence dependency or obsolete;
+- preserve/reconcile unique content, then delete merged/obsolete RC/retry/certification/promotion/old-development branches;
+- converge to `main` + one active release development branch + short-lived feature/fix branches;
+- treat RC as immutable SHA/checkpoint and Stable as tag + GitHub Release;
+- record pre/post workflow count, branch count, removed items, retained exceptions and evidence/cost avoided.
+
+A release cannot claim 10/10 adaptive process maturity while known orphaned workflows or obsolete operational branches are intentionally left without disposition.
+
+This section permanently operationalizes the CI convergence rules from the Adaptive Roadmap/Build Plan and `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` without adding a new top-level gate.
