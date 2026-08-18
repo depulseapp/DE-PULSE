@@ -43,11 +43,13 @@ def release_dispatch_contract(workflows: Path) -> int:
         'candidate_sha="${PR_BASE_SHA:-}"',
         '"v${release_line}-release-certification") publish=false',
         '"v${release_line}-stable-promotion") publish=true',
+        'repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments',
     )
     missing = [fragment for fragment in required if fragment not in ci_fast]
     forbidden = (
         "github.event.head_commit.author.username",
         "endsWith(github.event.pull_request.base.ref, '-stable-promotion')",
+        "gh pr comment",
     )
     present_forbidden = [fragment for fragment in forbidden if fragment in ci_fast]
     if missing or present_forbidden:
@@ -57,7 +59,7 @@ def release_dispatch_contract(workflows: Path) -> int:
         if present_forbidden:
             print("release dispatcher forbidden contract fragments: " + ", ".join(present_forbidden), file=sys.stderr)
         return 1
-    print("release dispatcher push/PR-fallback authorization and publish boundary: PASS")
+    print("release dispatcher push/PR-fallback authorization, REST comment transport and publish boundary: PASS")
     return 0
 
 

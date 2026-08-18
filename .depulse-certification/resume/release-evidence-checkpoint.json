@@ -20,7 +20,7 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "2d39f8bb876a66925a9a6d9f43d9de7b711865e1",
+    "candidateSourceCommit": "eafc1d56aee2597b35f06c45f333d1275e801de0",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
     "promotionState": "NOT_PROMOTED",
@@ -34,6 +34,7 @@
       "primaryCertification": "exact release-certification push; publish=false",
       "connectorFallback": "owner-triggered pull_request to exact release-certification base; candidate is immutable PR base SHA; publish=false",
       "promotionAuthorization": "push-only repository-owner actor OR push sender on exact stable-promotion branch; publish=true",
+      "trackingTransport": "REST issue-comments endpoint; GraphQL gh pr comment forbidden in release dispatcher",
       "workflowDefinitionRef": "candidate branch",
       "idempotencyKey": "headBranch + headSha",
       "tracking": "PR #16 comments must include dispatcher-active and canonical release run ID/URL before G11 starts"
@@ -43,14 +44,14 @@
     "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "2d39f8bb876a66925a9a6d9f43d9de7b711865e1",
-      "fastRun": 32194706527,
-      "fastRunNumber": 212,
+      "candidateSourceCommit": "eafc1d56aee2597b35f06c45f333d1275e801de0",
+      "fastRun": 32195517663,
+      "fastRunNumber": 224,
       "fastRunAttempt": 1,
-      "qualifiedRun": 32194706503,
-      "qualifiedRunNumber": 90,
+      "qualifiedRun": 32195517662,
+      "qualifiedRunNumber": 95,
       "qualifiedRunAttempt": 1,
-      "coverage": ["connector-safe certification fallback policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
+      "coverage": ["REST tracking/connector-safe certification fallback policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
     "G11": {"status": "PENDING", "required": "PR #16 must contain the canonical release.yml run ID for the exact release-certification base candidate; that run computes and binds the canonical Git-object fingerprint."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
@@ -71,11 +72,11 @@
     "windowsArtifactSha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"
   },
   "residuals": [
-    "TradeInsight remains governed future/shadow work until separately validated and approved.",
+    "TradeInsight remains governed future/shadow implementation work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where not already configured/approved.",
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from the owner-gated pull_request certification fallback targeting exact v18.6-release-certification, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T22:56:30Z"
+  "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from one owner-gated pull_request certification fallback targeting exact v18.6-release-certification, followed by G11-G16 execution.",
+  "updatedAt": "2026-08-18T23:05:30Z"
 }
