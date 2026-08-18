@@ -12,11 +12,11 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
+  "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
   "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation/reconciled-source candidate; actual GitHub objects and hashes control evidence reuse.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "The executable local lane reached G12 on the prior branch head and found a stale bundled QA release-history identity. Candidate 7b1709c6718fc59896b1e87b5434ddc16e4d396a fixes that defect and now requires a fresh full exact-source G0-G12 run.",
+  "sourceFingerprintReason": "The no-cost executable lane reached G12 twice. The first run exposed missing v18.5.2 bundled QA release history; the second run exposed a stale v18.0.5 exact source-string assertion after identity-chrome refactoring. Candidate e4c2ad2a401e14c10ccc20d6b77fed6b6353e632 includes both corrections and now requires a fresh complete G0-G12 run.",
   "evidence": {
     "incoming-v18.5.1-stable": {
       "status": "PASS",
@@ -49,7 +49,7 @@
       "attemptsObserved": 3,
       "observation": "Jobs were created but all observed attempts completed failure before any workflow step record or downloadable job log existed. This remains infrastructure evidence, not a product-test result."
     },
-    "v18.5.2-local-exact-source-prior-attempt": {
+    "v18.5.2-local-exact-source-attempt-1": {
       "status": "PRODUCT_FAIL_G12",
       "sourceHead": "11e3953d7ce7cc507dea651eabf303be0c912b29",
       "runner": "release/v18.5.2/run_free_certification.sh",
@@ -64,19 +64,37 @@
       "validation": "node renderer_logic_test.js",
       "result": "renderer logic + v15.1.2 stability/UI regression tests: PASS"
     },
+    "v18.5.2-local-exact-source-attempt-2": {
+      "status": "PRODUCT_FAIL_G12_TEST_CONTRACT",
+      "sourceHead": "03c8ff1c6cf15e0c95c56991b2d2797060d7318a",
+      "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
+      "runner": "release/v18.5.2/run_free_certification.sh",
+      "earliestFailure": "v18_0_5_renderer_test.js asserted the obsolete literal sequence applyRoleSurfaceVisibility();const ident=... even though init() correctly calls applyRoleSurfaceVisibility();syncIdentityChrome(); and syncIdentityChrome owns identity-principal/sign-out updates",
+      "precedingEvidence": "Go suites PASS; deterministic trading equivalence 2403/2403 PASS; renderer_logic_test.js PASS",
+      "classification": "GENUINE_STALE_REGRESSION_TEST_FAILURE"
+    },
+    "v18.5.2-G12-role-identity-test-hardening": {
+      "status": "FOCUSED_PASS",
+      "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
+      "changes": ["v18_0_5_renderer_test.js"],
+      "productCodeChanged": false,
+      "validation": "node v18_0_5_renderer_test.js",
+      "result": "v18.0.5 renderer / role visibility / responsive touched-surface acceptance: PASS",
+      "contract": "Verify applyRoleSurfaceVisibility and syncIdentityChrome are both invoked and that syncIdentityChrome retains identity-principal/sign-out ownership, without depending on obsolete adjacent source text."
+    },
     "v18.5.2-G0-G12": {
       "status": "REQUALIFY_CORRECTED_CANDIDATE",
       "runner": "release/v18.5.2/run_free_certification.sh",
       "workflow": ".github/workflows/v18.5.2-hotfix-certification.yml",
-      "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
+      "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
       "productTestFailureClaimed": false,
-      "note": "The prior G12 failure was fixed; no full-pass claim is made for the corrected candidate until the complete canonical lane reruns."
+      "note": "Both discovered G12 owners have focused PASS evidence; no full-pass claim is made until the complete canonical lane reruns on e4c2ad2a401e14c10ccc20d6b77fed6b6353e632."
     },
     "v18.5.2-G13-G15": {
       "status": "NOT_STARTED_BLOCKED_ON_G12",
       "requiredNativeTargets": ["macos-arm64", "windows-x64"]
     }
   },
-  "nextRequiredEvidence": "A fresh complete canonical exact-source v18.5.2 G0-G12 PASS for corrected candidate 7b1709c6718fc59896b1e87b5434ddc16e4d396a, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
-  "updatedAt": "2026-08-18T04:49:00Z"
+  "nextRequiredEvidence": "A fresh complete canonical exact-source v18.5.2 G0-G12 PASS for candidate e4c2ad2a401e14c10ccc20d6b77fed6b6353e632, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
+  "updatedAt": "2026-08-18T04:57:00Z"
 }
