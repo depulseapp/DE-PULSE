@@ -13,17 +13,19 @@ jobs:
   g11-preflight:
     name: Targeted G11 remaining checks preflight
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: f30ac11c88419ea4dbfb2b9015221d401c066307
+          ref: cd4fb2c0e0dbb28e2f4a501fee5829f1f94b9c74
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+      - name: Provision responsive browser driver
+        run: python3 -m pip install --disable-pip-version-check playwright
       - name: Corrected inherited renderer regression
         run: node release/v18.5.1/renderer_logic_v18_5_1_gate.js
       - name: Current content / release-copy audit
