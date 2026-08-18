@@ -10,6 +10,8 @@
     "REOPENED",
     "NOT_IMPLEMENTED_CONFIRMED",
     "PLACED_NEXT_V18",
+    "GOVERNANCE_BOUND_OPEN",
+    "ROADMAP_BOUND_FOUNDATION_OPEN",
     "FRESH_PASS",
     "INTENTIONALLY_SUPERSEDED",
     "NOT_APPLICABLE",
@@ -50,7 +52,7 @@
     "currentStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
     "reconciliationBranch": "v18.5.1-development",
     "functionalityUtilityRemediations": 13,
-    "totalTrackedRows": 295
+    "totalTrackedRows": 296
   },
   "inheritedApprovedScope": {
     "source": "renderer/qa/v15.1.2-approved-scope.json",
@@ -3142,6 +3144,39 @@
         "proof that budget alerts cannot skip required evidence",
         "exact-candidate macOS Apple Silicon and Windows x64 package evidence when the slice reaches native certification"
       ]
+    },
+    {
+      "id": "CONVO-V18-003",
+      "title": "Permanent provider-to-Market-Mode adaptive integration assessment",
+      "status": "PLACED_NEXT_V18",
+      "targetRelease": "v18.6-v18.7",
+      "owner": "Functionality Utility checkpoint + Smart Provider Router + Market Intelligence",
+      "reason": "Provider routing and adaptive Market Mode evolution were planned separately; without an explicit cross-module disposition a provider capability could be implemented yet never integrated, intentionally excluded or tested against Market Modes.",
+      "userImpact": "Every current/future provider capability receives a visible, testable disposition so useful evidence is integrated efficiently and irrelevant/unsafe evidence cannot silently affect modes.",
+      "nextEvidenceCheckpoint": "G2/G3 provider registry validation; TradeInsight SHADOW implementation and G7/G10 behavioral evidence",
+      "links": [
+        "IMPL-18-TRADEINSIGHT-001",
+        "AUDIT-18-PROVIDER-001",
+        "AUDIT-18-TRADER-001"
+      ],
+      "requirements": [
+        "Every Router/capability provider is present in provider_market_mode_integration_registry.json.",
+        "Every capability is classified INTEGRATED, CONTEXTUAL_ONLY, NOT_RELEVANT or INTENTIONALLY_HIDDEN for named Market Mode scopes.",
+        "Provider count never changes a Market Mode; all evidence flows through the canonical Smart Provider Router and canonical state.",
+        "Smart/AI/LLM-style usefulness learning and synthesis remain explainable; deterministic/statistical code owns price truth, numeric Market Mode calculation, calibration and promotion measurement.",
+        "NOT_IMPLEMENTED, SHADOW and VALIDATED capabilities have no production Market Mode influence.",
+        "Production influence requires SHADOW -> VALIDATED -> APPROVED -> PRODUCTION, sample sufficiency, source-disagreement handling, rights approval, rollback and explicit approval.",
+        "Missing/stale/contradictory/rights-unknown evidence degrades, abstains or remains contextual rather than manufacturing confidence.",
+        "The existing Functionality Utility checkpoint automatically fails when a Router/capability provider lacks an assessment."
+      ],
+      "requiredClosure": [
+        "provider/Market Mode registry and blocking gate bound to G2/G10",
+        "TradeInsight capability-by-capability dispositions",
+        "current-provider coverage auto-derived from Router/capability sources",
+        "cutoff-safe SHADOW and source-disagreement fixtures",
+        "deterministic-equivalence and no-silent-formula-drift evidence",
+        "macOS and Windows actual-package evidence for affected visible behavior"
+      ]
     }
   ],
   "roadmapPlacedNotCurrentMisses": [
@@ -3243,10 +3278,18 @@
       "result": "GOVERNANCE_BOUND_OPEN",
       "sourceCommit": "05825b7fd73d4bc74620256548db7149c5337ac8",
       "authorityRowsAdded": 10,
-      "authoritativeTotal": 295,
+      "authoritativeTotal": 296,
       "implementation": "NOT_STARTED",
       "behavioralEvidence": "NOT_STARTED",
       "nativeEvidence": "NOT_STARTED"
+    },
+    "providerMarketModeAdaptiveMethod": {
+      "result": "GOVERNANCE_BOUND_OPEN",
+      "requirementId": "CONVO-V18-003",
+      "registry": "provider_market_mode_integration_registry.json",
+      "checkpoint": "functionality_utility_checkpoint_gate.py",
+      "implementation": "METHOD_ENFORCED_PROVIDER_IMPLEMENTATIONS_OPEN",
+      "limitation": "TradeInsight remains NOT_IMPLEMENTED and has zero production Market Mode influence until the governed lifecycle and package evidence close."
     }
   },
   "functionalityUtilityCarryForward": {
@@ -3493,8 +3536,9 @@
     "inventory": {
       "priorRows": 285,
       "auditRows": 10,
-      "totalRows": 295,
-      "conservationRequired": true
+      "totalRows": 296,
+      "conservationRequired": true,
+      "postAuditCommitments": 1
     },
     "policy": [
       "Documentation presence never closes an audit record.",

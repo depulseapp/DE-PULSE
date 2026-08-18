@@ -298,3 +298,11 @@ The Build Process is 10/10 only when it proves:
 - frozen G1 is protected;
 - one authoritative coordinator/state exists;
 - another runner/conversation can resume without guessing.
+
+## 14. Cross-assistant/account resume execution
+
+At G0 and after interruption, load `AGENTS.md` or `CLAUDE.md`, then the vendor-neutral portability contract, `handoff/CURRENT.md`, actual GitHub branch/PR/tag/check/artifact state and the Build State Ledger. Run `adaptive_resume_gate.py` before implementation or evidence reuse.
+
+The process must produce the same result regardless of assistant vendor or ChatGPT/Claude user account. If GitHub is inaccessible, stop for repository connection; do not infer status from model memory. If continuity artifacts disagree with GitHub, classify the stale artifact, correct it and resume from the earliest invalidated G0–G16 owner.
+
+After meaningful work, commit candidate changes first and checkpoint metadata second so `candidateSourceCommit` can name the exact candidate while fingerprint-excluded metadata may advance branch HEAD safely.

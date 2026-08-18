@@ -7,7 +7,8 @@ assert(tracked.includes('Tracked Symbols')&&tracked.includes('Add Symbol')&&trac
 assert(!tracked.includes('Master Symbol Store')&&!tracked.includes('Add to All Desks'));
 assert(renderer.includes('Remove from Tracked Symbols'));
 assert.strictEqual(L.diagnosticVisibilityForRole('USER'),false);assert.strictEqual(L.diagnosticVisibilityForRole('DEMO'),false);assert.strictEqual(L.diagnosticVisibilityForRole('ADMIN'),true);assert.strictEqual(L.diagnosticVisibilityForRole('OWNER'),true);assert.strictEqual(L.diagnosticVisibilityForRole('SUPER_OWNER'),true);
-assert(renderer.includes("applyRoleSurfaceVisibility();const ident=$('#identity-principal')"));
+assert(renderer.includes('applyRoleSurfaceVisibility();syncIdentityChrome();'),'bootstrap must apply role visibility and synchronize authenticated identity');
+assert(/function syncIdentityChrome\(\)\{[\s\S]*?#identity-principal[\s\S]*?#identity-signout/.test(renderer),'identity chrome sync must own principal and sign-out controls');
 assert(html.includes('sidebar-data-engine')&&html.includes('sidebar-engine-divider'));
 assert(renderer.includes('user-data-status')&&renderer.includes('without provider, queue, cache or scheduler internals'));
 assert(renderer.includes('opportunity-radar-head')&&renderer.includes('radar-status-pill')&&renderer.includes("isStaged?'Staged':'Stage'"));

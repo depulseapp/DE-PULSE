@@ -593,3 +593,11 @@ Measure applicable:
 - Professional Trader/Investor acceptance.
 
 Headline directional accuracy alone is insufficient for promotion.
+
+## 21. AI Assistant & Account Independence
+
+GitHub is the permanent project source of truth. DE.PULSE delivery may use ChatGPT/Codex, Claude, another assistant or human contributors, but no build may depend on access to one assistant’s memory, one user account, ChatGPT Library, Claude Projects or a temporary workspace.
+
+All four adaptive layers inherit `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`. Every meaningful checkpoint must leave the active branch, `handoff/CURRENT.md` and the GitHub-reconciled Build State Ledger sufficient for a fresh authorized account to execute the same resume decision. `AGENTS.md` and `CLAUDE.md` are entry adapters only; actual GitHub source, tags/releases, PR/check/artifact state and canonical governance remain authoritative.
+
+This requirement is enforced by `adaptive_resume_gate.py` inside G0/G2/G10 and by G16 handoff reconciliation. It creates no G17+ gate.

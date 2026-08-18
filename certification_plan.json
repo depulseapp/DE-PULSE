@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CERTIFICATION-PLAN-1",
-  "version": "18.5.1",
+  "version": "18.5.2",
   "checks": [
     {
       "id": "g0_release_environment",
@@ -27,11 +27,22 @@
     {
       "id": "g0_release_identity",
       "gate": "G0",
-      "label": "Canonical v18.4.0 STABLE release identity",
+      "label": "Canonical v18.5.2 STABLE hotfix identity",
       "command": [
         "{python}",
         "release_identity.py",
         "--verify"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g0_ai_account_portability",
+      "gate": "G0",
+      "label": "GitHub-backed ChatGPT/Codex/Claude account-independent resume",
+      "command": [
+        "{python}",
+        "adaptive_resume_gate.py"
       ],
       "timeout_seconds": 30,
       "blocking": true
@@ -65,6 +76,17 @@
       "command": [
         "{python}",
         "data_utility_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
+      "id": "g2_functionality_utility",
+      "gate": "G2",
+      "label": "Functionality Utility + provider Market Mode integration",
+      "command": [
+        "{python}",
+        "functionality_utility_checkpoint_gate.py"
       ],
       "timeout_seconds": 30,
       "blocking": true
@@ -440,7 +462,7 @@
     {
       "id": "g11_responsive",
       "gate": "G11",
-      "label": "Responsive/layout integrity \u00b7 bounded 15-viewport shards",
+      "label": "Responsive/layout integrity · bounded 15-viewport shards",
       "command": [
         "{python}",
         "responsive_ui_sharded_gate.py"

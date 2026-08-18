@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CICD-PLAN-2",
-  "version": "18.5.1",
+  "version": "18.5.2",
   "policy": {
     "light_max_concurrency": 4,
     "medium_max_concurrency": 2,
@@ -9,7 +9,7 @@
     "fingerprint_keyed": true,
     "immutable_rc_for_heavy": true,
     "release_channel": "STABLE",
-    "baseline": "v18.5.0 Stable",
+    "baseline": "v18.5.1 Stable",
     "adaptive_release_learning": true,
     "learning_registry": "release_learning_registry.json",
     "learning_rule": "Adapt owning G0-G16 gate; do not append a new gate for lessons.",
@@ -34,10 +34,18 @@
     "resource_class_go_heavy_lane": 1,
     "resource_class_medium_other_max_parallel": 2,
     "current_major": "v18",
-    "current_slice": "v18.5-major-closure-release-assurance",
+    "current_slice": "v18.5.2-hotfix-recovery",
     "major_scope": "v18_major_scope.json",
     "delivery_slices": "v18_delivery_slices.json",
     "build_resume_protocol": "adaptive-governance/BUILD_RESUME_PROTOCOL.md",
+    "ai_assistant_portability_contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
+    "ai_entrypoints": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "authoritative_handoff": "handoff/CURRENT.md",
+    "assistant_account_independent": true,
+    "temporary_workspace_authoritative": false,
     "resume_checkpoint": ".depulse-certification/resume/build-checkpoint.json",
     "release_evidence_checkpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
     "resume_reconciliation_required": true,
@@ -58,7 +66,9 @@
     "artifact_archive_primary": "GitHub Releases + immutable Stable tag",
     "artifact_archive_repository_evidence": "release/<version>/ + governance/RELEASE_ARTIFACT_ARCHIVE.md",
     "artifact_archive_historical_fallback": "ChatGPT Library /DE.PULSE/<version>/",
-    "artifact_archive_rule": "G13 packages; G14 audits actual artifacts; G15 verifies exact source/fingerprint/SHA and publishes; G16 records final recovery index. No new top-level gate."
+    "artifact_archive_rule": "G13 packages; G14 audits actual artifacts; G15 verifies exact source/fingerprint/SHA and publishes; G16 records final recovery index. No new top-level gate.",
+    "github_actions_mode": "MANUAL_ONLY_BUDGET_PAUSE",
+    "no_cost_certification_runner": "release/v18.5.2/run_free_certification.sh"
   },
   "stages": [
     {

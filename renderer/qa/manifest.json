@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "version": "18.5.2",
+      "date": "2026-08-17",
+      "status": "STABLE",
+      "summary": "v18.5.2 hotfix: restores Day/Swing/Long desk rendering, Market Pulse Ribbon clocks, Research hierarchy, tracked-symbol first-attempt add and draft preservation, responsive symbol controls, configurable identity, Settings save-bar visibility, provider-to-Market-Mode adaptive governance, and GitHub AI/account portability; deterministic formulas, U.S.-listed scope and No Execution remain unchanged.",
+      "file": "v18.5.2.txt",
+      "buildId": "v18.5.2-stable-hotfix-20260817",
+      "checkpoint": "release/v18.5.2/HOTFIX_CHECKPOINT.json"
+    },
+    {
       "version": "18.5.1",
       "date": "2026-08-17",
       "status": "STABLE",

@@ -143,6 +143,32 @@ func (a *Application) handleSetPassword(w http.ResponseWriter, r *http.Request) 
 	writeJSON(w, 200, map[string]any{"ok": true, "principal": np})
 }
 
+func (a *Application) handleUpdateProfile(w http.ResponseWriter, r *http.Request) {
+	p, ok := principalFromContext(r.Context())
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "Authentication required.")
+		return
+	}
+	var req struct {
+		Username    string `json:"username"`
+		DisplayName string `json:"displayName"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10)).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "Invalid profile request.")
+		return
+	}
+	if err := a.identity.updateProfile(p.UserID, req.Username, req.DisplayName); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	np, err := a.identity.resolve(sessionTokenFromRequest(r), false)
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required.")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "principal": np})
+}
+
 func (a *Application) authResolved(allowPasswordSetup bool, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if a.identity == nil {

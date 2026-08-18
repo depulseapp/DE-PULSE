@@ -1,0 +1,6 @@
+DE.PULSE v18.5.2 STABLE HOTFIX
+Build ID: v18.5.2-stable-hotfix-20260817
+Previous Stable: v18.5.1
+Scope: desktop recovery, interaction-state and hierarchy fixes, configurable identity, Settings viewport recovery, provider-to-Market-Mode adaptive governance, and GitHub-backed AI/account portability.
+Deterministic Day/Swing/Long formulas, U.S.-listed scope, provider truthfulness and the permanent No Execution boundary remain unchanged.
+Promotion still requires exact-source G0-G12 plus macOS Apple Silicon and Windows x64 G13-G14 native package/runtime evidence and G15 release assurance.

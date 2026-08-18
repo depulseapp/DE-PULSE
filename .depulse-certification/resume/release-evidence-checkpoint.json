@@ -1,41 +1,110 @@
 {
-  "schemaVersion":2,
-  "protocolVersion":"2.0",
-  "release":"v18.5.1",
-  "channel":"TEST",
-  "branch":"v18.5.1-development",
-  "incomingStable":{"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
-  "certifiedStable":{"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","buildId":"v18.5.0-stable-major-closure-release-assurance-20260817","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
-  "candidateSourceCommit":"1d8c4dfa530b205bbad443cb2eec4db6222fa6fe",
-  "metadataHeadRule":"Release evidence metadata is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest product/tooling/documentation candidate; later metadata-only updates do not allow evidence inheritance across a changed exact source.",
-  "sourceFingerprint":null,
-  "sourceFingerprintState":"PENDING_REQUALIFICATION",
-  "sourceFingerprintReason":"Fresh G0-G10 required after the complete G11 correction/preflight batch; descriptive reason is intentionally separate from the canonical machine state.",
-  "evidence":{
-    "Incoming-v18.5.0-Stable":{"status":"PASS"},
-    "v18.5.1-Development-Complete":{"status":"IMPLEMENTED_AWAITING_FRESH_REQUALIFICATION","developmentEvidence":"release/v18.5.1/DEVELOPMENT-EVIDENCE-MAP.json","documentationImpact":"release/v18.5.1/DOCUMENTATION-IMPACT.md","qaManifestDelta":"release/v18.5.1/QA-MANIFEST-DELTA.json"},
-    "run-32081605253":{"status":"FAILED_EARLY_CONTROL_PLANE","disposition":"resume/evidence identity synchronized"},
-    "run-32082204255":{"status":"FAILED_EARLY_DOCUMENTATION_GOVERNANCE","disposition":"provenance + patch documentation delta corrected"},
-    "run-32082651456":{"status":"FAILED_FAST_BROWSER_ORACLE","disposition":"watchlist test harness DESKS NameError fixed; no product failure"},
-    "run-32083109313":{"status":"FAILED_FAST_UI_ORACLE","disposition":"Research hierarchy oracle aligned to intentional align-items:end geometry"},
-    "run-32083513389":{"status":"G0_G10_PASS","sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e","checkpoint":"CP-v18.5.1-DEV-COMPLETE-05","g10ArtifactId":9305996835,"g10ArtifactDigest":"sha256:26f8231cf5de8d882883a9c06e8de78dbee92dd462ffacd43a5f723407925790","checks":["G0-G5 FAST","G6 PostgreSQL 17 integration","G7 data/security/adaptive","G8 performance/race/5x shuffled full suite","G9 HTTP/responsive/pro-trader/browser","G10 exact-source evidence"]},
-    "run-32084728612":{"status":"G11_PRODUCT_FAIL_TEST_CONTRACT","sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e","g11Freeze":"PASS","passedBeforeFailure":["adversarial authorization","HTTP/cross-module","Day/Swing/Long deterministic equivalence"],"failed":"inherited renderer QA-manifest assertion expected TEST candidate 18.5.1 at renderer/qa/manifest[0] although approved patch governance intentionally keeps promoted Stable 18.5.0 there until promotion","g12":"SKIPPED_BY_FAIL_FAST"},
-    "run-32085179434":{"status":"TARGETED_DIAGNOSTIC_CONFIRMED","finding":"renderer_logic_test.js expected manifest.releases[0].version == 18.5.1; actual promoted Stable history correctly remained 18.5.0"},
-    "run-32085526832":{"status":"G11_REMAINING_PREFLIGHT_PASS","sourceSha":"cd4fb2c0e0dbb28e2f4a501fee5829f1f94b9c74","passed":["patch-aware full inherited renderer regression","content/copy audit","documentation typography","responsive/layout 15/15 viewports"],"infrastructureCorrection":"Playwright explicitly provisioned before responsive matrix"},
-    "run-32085753804":{"status":"FAILED_FAST_MACHINE_STATE_FORMAT","sourceSha":"9539110f05f2def8e3b6c1f62ec935cea75d7bdd","passed":["Checkpoint contract","G0/G1 baseline/identity/scope","G1 immutable ten-ID scope","G5 renderer cheap lane"],"failed":"adaptive_resume_gate rejected descriptive sourceFingerprintState PENDING_REQUALIFICATION_AFTER_G11_BATCH","disposition":"machine state restored to canonical PENDING_REQUALIFICATION; descriptive reason moved to separate field; no product failure"},
-    "v18.5.1-G11-G12":{"status":"BLOCKED_PENDING_FRESH_G0_G10_AND_NEW_IMMUTABLE_RC"},
-    "v18.5.1-G13-G15":{"status":"NOT_STARTED_BLOCKED_ON_G12","nativeDeliveryRequired":["macOS Apple Silicon runnable ZIP","Windows x64 runnable ZIP","exact source ZIP","SHA-256 manifest","G12/G14/G15 evidence","actual packaged-runtime proof","publication reuses certified artifacts without rebuild"]}
+  "schemaVersion": 2,
+  "protocolVersion": "2.1-ai-portable",
+  "release": "v18.5.2",
+  "channel": "STABLE",
+  "candidateDisposition": "G15_PASS_READY_FOR_PROMOTION",
+  "branch": "v18.5.2-development",
+  "pullRequest": 13,
+  "incomingStable": {
+    "version": "v18.5.1",
+    "tag": "v18.5.1-stable",
+    "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
+    "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "aiplcLessons":[
-    "Machine-state enums remain canonical; descriptive reasons live in separate fields so governance prose cannot break strict gates.",
-    "Exact-SHA qualification is invalidated by source/test/control-plane changes even when product behavior is unchanged.",
-    "Never move an immutable RC; preserve failed RC evidence and create a new RC after fresh qualification.",
-    "After fail-fast RC failure, preflight the complete remaining gate set so findings are batched before expensive requalification.",
-    "Promoted QA history and TEST/RC release deltas are separate authorities; tests must understand that boundary.",
-    "Browser-dependent release gates must explicitly provision required runner dependencies.",
-    "Temporary diagnostics must be removed after the permanent release-specific plan captures the lesson.",
-    "CI efficiency may reduce redundant execution, never evidence depth or macOS/Windows actual-artifact proof."
-  ],
-  "nextRequiredEvidence":"One fresh exact-SHA G0-G10 checkpoint for the complete G11 correction batch; then a new immutable RC, one G11-G12 run, identity-only Stable transition, G13-G15 native certification and G16.",
-  "updatedAt":"2026-08-18T00:50:00Z"
+  "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
+  "certifiedCheckoutHead": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
+  "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
+  "sourceFingerprintState": "CERTIFIED_G0_G15_PASS",
+  "metadataHeadRule": "This checkpoint is fingerprint-excluded. Exact source evidence remains bound to certifiedCheckoutHead/candidateSourceCommit and canonical source fingerprint; native evidence remains bound to exact artifact hashes and run IDs.",
+  "evidence": {
+    "incoming-v18.5.1-stable": {
+      "status": "PASS",
+      "tag": "v18.5.1-stable",
+      "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208"
+    },
+    "v18.5.2-functionality-utility": {
+      "status": "PASS",
+      "summary": "19 audited items; 22 provider/Market Mode assessments across 12 providers"
+    },
+    "v18.5.2-reconciliation-inventory": {
+      "status": "PASS",
+      "summary": "296 unique conserved rows including independent-audit findings"
+    },
+    "v18.5.2-assistant-portability": {
+      "status": "PASS",
+      "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
+      "handoff": "handoff/CURRENT.md",
+      "entrypoints": ["AGENTS.md", "CLAUDE.md"]
+    },
+    "v18.5.2-actions-budget-diagnostic": {
+      "status": "INFRA_FAIL_HISTORICAL",
+      "runs": [32098538807, 32098674432],
+      "observation": "Earlier attempts failed before workflow step 1 while Actions budget was exhausted; no product failure was inferred."
+    },
+    "v18.5.2-G12-discoveries": {
+      "status": "CLOSED",
+      "items": [
+        {"owner": "QA bundled release history", "fixCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a", "result": "FOCUSED_PASS"},
+        {"owner": "v18.0.5 role/identity regression assertion", "fixCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632", "result": "FOCUSED_PASS"},
+        {"owner": "Playwright scroll baseline", "fixCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48", "result": "FOCUSED_PASS"},
+        {"owner": "watchlist cache-busting release binding", "fixCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d", "result": "FOCUSED_PASS"}
+      ]
+    },
+    "v18.5.2-G0-G12": {
+      "status": "PASS",
+      "lane": "NO_COST_LOCAL_EXACT_SOURCE",
+      "runner": "release/v18.5.2/run_free_certification.sh",
+      "certifiedCheckoutHead": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
+      "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
+      "terminalResult": "PASS: exact-source v18.5.2 source and browser certification completed.",
+      "deterministicEquivalence": "2403/2403 PASS"
+    },
+    "v18.5.2-G13-G14-macos-apple-silicon": {
+      "status": "PASS",
+      "runId": 32102570376,
+      "artifactId": 9312071763,
+      "artifactBundleDigest": "sha256:9cf40461df50b8c5cef0c2bda5fe5c71d6f7562a2b39baafb965ee0468936fe0",
+      "artifact": "De-Pulse-v18.5.2-Stable-macOS-Apple-Silicon.zip",
+      "artifactSha256": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae",
+      "host": "macOS 15.7.7 arm64 / Go 1.26.6",
+      "checks": ["exact source/fingerprint", "arm64 Mach-O", "native libsqlite3 linkage", "ad-hoc codesign", "clean extraction", "actual packaged launch", "health identity", "SQLite readiness", "migrations 1-4", "integrity", "root surface"]
+    },
+    "v18.5.2-windows-initial-native-attempt": {
+      "status": "HARNESS_FAIL_PRE_BUILD",
+      "runId": 32102570376,
+      "reason": "Windows materialized-filesystem byte fingerprint differed from the canonical certified fingerprint before build. Release identity and exact Git SHA matched."
+    },
+    "v18.5.2-windows-native-retry-1": {
+      "status": "HARNESS_FAIL_PRE_BUILD",
+      "runId": 32102825426,
+      "reason": "git-archive filesystem materialization retained the Windows-specific byte fingerprint; this proved the filesystem hash was not a reliable cross-platform provenance authority."
+    },
+    "v18.5.2-G13-G14-windows-x64": {
+      "status": "PASS",
+      "runId": 32103078336,
+      "artifactId": 9312257480,
+      "artifactBundleDigest": "sha256:c3fff203a21a6520b2b606ba5b09f1bbaedb9e9bdf5357c67009673060918c4b",
+      "artifact": "De-Pulse-v18.5.2-Stable-Windows-x64.zip",
+      "artifactSha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326",
+      "host": "Windows Server 2025 AMD64 / Go 1.26.6",
+      "provenance": "Canonical fingerprint recomputed directly from raw Git object bytes at the certified SHA and matched 807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0. Windows filesystem fingerprint remained diagnostic only.",
+      "checks": ["exact Git-object fingerprint", "release identity", "native Windows x64 build", "PE x64", "winsqlite3 runtime", "clean extraction", "actual packaged launch", "health identity", "SQLite readiness", "migrations 1-4", "integrity", "root surface"]
+    },
+    "v18.5.2-G15": {
+      "status": "PASS",
+      "runId": 32103078336,
+      "artifactId": 9312264020,
+      "artifactBundleDigest": "sha256:c200e2a97d59d33a469b43252458d45988fca61fc71f65dc30ee3a8f22fb17b2",
+      "promotionAuthorized": true,
+      "noExecutionBoundary": "PRESERVED",
+      "nativeArtifactHashes": {
+        "macOS Apple Silicon": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae",
+        "Windows x64": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"
+      },
+      "result": "PASS: preserved macOS + Windows retry satisfy v18.5.2 G15 release assurance."
+    }
+  },
+  "nextRequiredEvidence": "Promote PR #13 without rebuilding; publish/tag the already-certified artifacts and exact hashes; complete G16 retrospective/handoff and record the Windows filesystem-fingerprint portability improvement proposal.",
+  "updatedAt": "2026-08-18T05:34:00Z"
 }

@@ -238,7 +238,7 @@
 
   scheduleLiveRender = incrementalScheduleLiveRender;
   globalThis.__DEPULSE_LIVE_DOM__ = Object.freeze({
-    version: '18.5.1',
+    version: '18.5.2',
     renderLivePage,
     semanticKey
   });

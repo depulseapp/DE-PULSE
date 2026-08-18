@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavior-first Chromium proof for v18.5.1 Issue #12.
+"""Behavior-first Chromium proof for v18.5.2 tracked-symbol recovery.
 
 The harness loads the same watchlist-v18.5.1.js extension as renderer/index.html,
 while retaining the actual renderer.js membership-pill handler. Only network,
@@ -10,6 +10,7 @@ bootstrap and render dependencies are stubbed. It proves:
 - final membership-pill removal remains protected and separate;
 - the current desk is visible and exposed with aria-current.
 """
+import json
 import os
 from pathlib import Path
 
@@ -20,6 +21,7 @@ RENDERER = ROOT / "renderer" / "renderer.js"
 EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
 INDEX = ROOT / "renderer" / "index.html"
 CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
+RELEASE_IDENTITY = ROOT / "release_identity.json"
 DESKS = ("day", "swing", "long")
 
 
@@ -38,6 +40,7 @@ def main() -> None:
     extension = EXTENSION.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
     css = CSS.read_text(encoding="utf-8")
+    release_version = json.loads(RELEASE_IDENTITY.read_text(encoding="utf-8"))["version"]
 
     membership_binding = between(
         renderer,
@@ -46,14 +49,16 @@ def main() -> None:
         "actual membership-pill binding",
     )
 
-    assert "watchlist-v18.5.1.js?v=18.5.1" in index
-    assert "watchlist-v18.5.1.css?v=18.5.1" in index
+    assert f"watchlist-v18.5.1.js?v={release_version}" in index
+    assert f"watchlist-v18.5.1.css?v={release_version}" in index
     assert "/api/master-symbol/remove" in extension
     assert "/api/master-symbol/restore" in extension
     assert "bindGlobalTrackedSymbolRemoval" in extension
     assert "aria-current=\"true\"" in extension
     assert "CURRENT" in extension
     assert "Remove ${symbol} from Tracked Symbols and all desks" in extension
+    assert "function normalizeTrackedSymbol" in extension
+    assert "normalizeSymbol" not in extension, "extension must be self-contained; hidden globals masked the v18.5.1 desk crash"
     assert "/api/desk/membership" not in extension, "extension must not duplicate one-desk membership semantics"
     assert "/api/desk/membership" in membership_binding
     assert ".desk-membership-pill.current-desk" in css
@@ -67,7 +72,6 @@ window.__members={day:[],swing:[],long:[]};
 window.__calls=[];
 window.__renderCount=0;
 window.__toast=[];
-function normalizeSymbol(v){return String(v||'').trim().toUpperCase()}
 function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
 function titleCaseText(v){return String(v||'').replace(/(^|[-_ ])([a-z])/g,(m,a,b)=>a+b.toUpperCase())}
 function deskWL(k){return {id:'wl-'+k,symbols:[...(window.__members[k]||[])]}}
@@ -230,7 +234,7 @@ function deskMembershipStrip(){return ''}
 
         browser.close()
 
-    print("PASS: production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.")
+    print("PASS: self-contained production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.")
 
 
 if __name__ == "__main__":

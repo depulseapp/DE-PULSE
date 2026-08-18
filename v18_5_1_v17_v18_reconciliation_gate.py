@@ -18,6 +18,8 @@ BLOCKING = {
     "REOPENED",
     "NOT_IMPLEMENTED_CONFIRMED",
     "PLACED_NEXT_V18",
+    "GOVERNANCE_BOUND_OPEN",
+    "ROADMAP_BOUND_FOUNDATION_OPEN",
 }
 FINAL = {
     "FRESH_PASS",
@@ -27,6 +29,7 @@ FINAL = {
 }
 REQUIRED_BLOCKERS = {
     "IMPL-18-TRADEINSIGHT-001",
+    "CONVO-V18-003",
     "COPY-18.5.1-001",
     "SYMBOL-18.5.1-001",
     "SYMBOL-18.5.1-002",
@@ -261,6 +264,7 @@ def main() -> int:
         + ledger.get("escapedDefects", [])
         + ledger.get("conversationalCommitments", [])
         + ledger.get("roadmapPlacedNotCurrentMisses", [])
+        + ledger.get("independentAudit20260817", {}).get("findings", [])
     )
     tracked_ids = [row.get("id") for row in tracked_rows]
     declared_total = ledger.get("baseline", {}).get("totalTrackedRows")

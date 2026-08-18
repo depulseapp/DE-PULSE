@@ -8,6 +8,8 @@ Effective: v18.2 and all later releases
 
 DE.PULSE builds must be recoverable after chat interruption, tool/session loss, CI interruption, runner timeout, or handoff to a new conversation without depending on chat history or repeating already-proven work.
 
+Recovery is assistant- and account-independent. ChatGPT/Codex, Claude, a future AI assistant or a human developer must reach the same resume decision from GitHub. Root adapters `AGENTS.md` and `CLAUDE.md` point to the vendor-neutral `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`; neither adapter is a separate source of product truth.
+
 The protocol is an efficiency and recoverability mechanism only. It does **not** add a gate beyond G0–G16 and never permits weakening, bypassing, inventing, or reusing invalid release evidence.
 
 ## Authoritative recovery hierarchy
@@ -26,16 +28,19 @@ A checkpoint is never trusted by itself. It must be reconciled with the branch S
 
 At the start of a continuation or after an interruption:
 
-1. Detect the active release branch.
-2. Verify the immutable incoming Stable tag/commit/release.
-3. Read `.depulse-certification/resume/build-checkpoint.json`.
-4. Read the actual active-branch HEAD and canonical `release_identity.json`.
-5. Inspect the latest relevant CI runs and retained G10/G11/G12/G14/G15 artifacts.
-6. Compare the checkpoint source identity/fingerprint with the evidence source identity/fingerprint.
-7. Determine the **last trustworthy PASS**, not merely the last reported PASS.
-8. Classify any blocking failure using the Adaptive CI failure taxonomy.
-9. Resume at the next required step or earliest invalidated gate.
-10. Update the Build State Ledger after meaningful state transitions.
+1. Read the applicable root adapter, the portability contract and `handoff/CURRENT.md`.
+2. Detect the active release branch and open pull request from actual GitHub state.
+3. Verify the immutable incoming Stable tag/commit/release.
+4. Read `.depulse-certification/resume/build-checkpoint.json`.
+5. Read the actual active-branch HEAD and canonical `release_identity.json`.
+6. Inspect the latest relevant CI runs and retained G10/G11/G12/G14/G15 artifacts.
+7. Compare the checkpoint source identity/fingerprint with the evidence source identity/fingerprint.
+8. Determine the **last trustworthy PASS**, not merely the last reported PASS.
+9. Classify any blocking failure using the Adaptive CI failure taxonomy.
+10. Resume at the next required step or earliest invalidated gate.
+11. Update `handoff/CURRENT.md` and the Build State Ledger after meaningful state transitions.
+
+If a new assistant/account cannot access the private repository, it must request repository connection instead of reconstructing state from chat memory.
 
 ## Fingerprint and evidence-reuse rule
 

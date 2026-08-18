@@ -8,7 +8,7 @@
   --v1851-chrome-h:142px;
 }
 
-/* Primary header = identity, notification, complete ET/PT clocks and account. */
+/* Primary header = product identity, notification and account. */
 .topbar{
   height:var(--v1851-topbar-h)!important;
   min-height:var(--v1851-topbar-h)!important;
@@ -23,47 +23,56 @@
   overflow:visible!important;
   gap:7px!important;
 }
-.topbar .market-clocks{
+.market-status-bar .market-clocks{
   display:flex!important;
   gap:6px!important;
   min-width:0!important;
 }
-.topbar .market-clock,
-.topbar .market-clock:last-child{
+.market-status-bar .market-clock,
+.market-status-bar .market-clock:last-child{
   display:flex!important;
   min-width:112px!important;
   max-width:none!important;
   padding:5px 7px!important;
 }
-.topbar .market-clock-value small{
+.market-status-bar .market-clock-value small{
   display:block!important;
   font-size:5.8px!important;
   line-height:1!important;
   letter-spacing:.055em!important;
 }
-.topbar .market-clock-value time{
+.market-status-bar .market-clock-value time{
   display:block!important;
   font-size:8.5px!important;
   line-height:1.15!important;
 }
 
-/* Secondary header = market state, data coverage/detail and data control. */
+/* Secondary Market Pulse Ribbon = market state, complete ET/PT clocks, coverage/detail and data control. */
 .market-status-bar{
   min-height:var(--v1851-statusbar-h);
   height:var(--v1851-statusbar-h);
   position:sticky;
   top:var(--v1851-topbar-h);
   z-index:49;
-  display:grid;
-  grid-template-columns:auto minmax(220px,1fr) auto;
-  gap:12px;
+  display:flex;
   align-items:center;
+  justify-content:center;
   padding:4px 14px;
   border-bottom:1px solid var(--line);
   background:#08111a;
   overflow-x:auto;
   overflow-y:hidden;
   scrollbar-width:none;
+}
+.market-status-content{
+  flex:0 0 auto;
+  max-width:100%;
+  display:grid;
+  grid-template-columns:auto minmax(300px,620px) auto auto;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-inline:auto;
 }
 .market-status-bar::-webkit-scrollbar{display:none}
 .market-status-bar .market-session-context{
@@ -95,6 +104,7 @@
 }
 .market-data-summary{
   min-width:0;
+  width:clamp(300px,34vw,620px);
   display:flex;
   align-items:center;
   gap:10px;
@@ -111,6 +121,7 @@
 }
 .market-data-detail{
   min-width:0;
+  max-width:460px;
   color:var(--muted);
   font-size:7.5px;
   line-height:1.3;
@@ -138,11 +149,29 @@
 
 /* Research Target: target identity is primary, symbol ingestion/freshness secondary. */
 .research-command-v2{
-  grid-template-columns:minmax(0,1fr) minmax(210px,.34fr)!important;
-  gap:16px!important;
-  padding:16px 18px!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:14px!important;
+  padding:18px 20px!important;
   border-color:rgba(33,200,243,.22)!important;
 }
+.research-command-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.research-command-heading>div{min-width:0}
+.research-command-heading p{
+  margin:5px 0 0;
+  color:var(--muted);
+  line-height:1.45;
+  max-width:760px;
+}
+.research-command-heading>[data-research-back]{
+  flex:0 0 auto;
+  min-width:150px;
+}
+.research-command-symbol{min-width:0;width:100%}
 .research-command-v2 .research-command-symbol>.eyebrow{
   color:var(--cyan)!important;
   font-size:8.5px!important;
@@ -221,23 +250,25 @@
   .header-notification{display:none!important}
   .brand img{width:44px!important;height:44px!important;flex-basis:44px!important}
   .brand small{display:none!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:104px!important}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:104px!important}
   .identity-principal{display:none!important}
-  .market-status-bar{grid-template-columns:auto minmax(180px,1fr) auto;gap:8px;padding-inline:10px}
+  .market-status-content{grid-template-columns:auto minmax(260px,460px) auto auto;gap:8px}
   .market-status-bar .market-session-context{min-width:190px!important}
 }
 
 @media(max-width:700px){
+  .research-command-heading{align-items:stretch;flex-direction:column;gap:10px}
+  .research-command-heading>[data-research-back]{width:100%;min-width:0}
   .topbar{padding-inline:9px!important;gap:7px!important}
   .brand img{width:38px!important;height:38px!important;flex-basis:38px!important}
   .brand-name{font-size:14px!important}
   .brand-pulse{display:none!important}
-  .topbar .market-clocks{gap:4px!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:94px!important;padding-inline:5px!important}
-  .topbar .market-clock b{font-size:6px!important}
-  .topbar .market-clock-value small{font-size:5px!important}
-  .topbar .market-clock-value time{font-size:7.3px!important}
-  .market-status-bar{grid-template-columns:auto minmax(150px,1fr) auto;padding-inline:8px;gap:6px}
+  .market-status-bar .market-clocks{gap:4px!important}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:94px!important;padding-inline:5px!important}
+  .market-status-bar .market-clock b{font-size:6px!important}
+  .market-status-bar .market-clock-value small{font-size:5px!important}
+  .market-status-bar .market-clock-value time{font-size:7.3px!important}
+  .market-status-content{grid-template-columns:auto minmax(240px,390px) auto auto;gap:6px}
   .market-status-bar .market-session-context{min-width:174px!important}
   .market-data-detail{font-size:7px}
   .market-status-bar .btn{min-width:72px;padding-inline:8px}
@@ -254,10 +285,125 @@
   .brand img{width:34px!important;height:34px!important;flex-basis:34px!important}
   .brand-name{font-size:13px!important}
   .brand-version{display:none!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:84px!important}
-  .market-status-bar{display:flex;align-items:center;overflow-x:auto}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:84px!important}
+  .market-status-content{display:flex;align-items:center;width:max-content;max-width:none;margin-inline:0}
   .market-status-bar .market-session-context{min-width:165px!important;flex:0 0 165px}
-  .market-data-summary{min-width:190px;flex:1 0 190px}
+  .market-data-summary{width:190px;min-width:190px;flex:0 0 190px}
   .market-status-bar .btn{flex:0 0 auto}
   .sidebar{top:var(--v1851-chrome-h)!important}
+}
+
+
+/* v18.5.2 tracked-symbol interaction layout.
+   Desktop keeps the heading context and controls on one line; narrow screens
+   stack only when the available width can no longer keep the controls usable. */
+.master-symbols-heading-row{
+  display:grid;
+  grid-template-columns:minmax(250px,1fr) minmax(520px,auto);
+  align-items:center;
+  gap:24px;
+  min-width:0;
+}
+.master-symbols-copy{min-width:0}
+.master-symbols-copy>.eyebrow{display:block}
+.master-symbols-title-line{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.master-symbols-title-line h3{margin:4px 0 0}
+.master-symbols-title-line .count-pill{flex:0 0 auto;white-space:nowrap}
+.master-symbols-copy p{
+  margin:7px 0 0;
+  color:var(--muted);
+  line-height:1.45;
+}
+.master-symbols-heading-row .master-add-row{
+  display:grid!important;
+  grid-template-columns:minmax(220px,340px) auto auto!important;
+  align-items:center!important;
+  justify-content:end;
+  gap:9px!important;
+  margin:0!important;
+  min-width:0;
+}
+.master-symbols-heading-row .master-add-row .ticker-input{
+  grid-column:auto!important;
+  width:100%!important;
+  min-width:220px!important;
+  max-width:340px!important;
+}
+.master-symbols-heading-row .master-add-row .btn{
+  width:auto!important;
+  min-height:44px!important;
+  height:44px!important;
+}
+.master-symbol-chip-list{margin-top:16px}
+
+@media(max-width:1180px){
+  .master-symbols-heading-row{
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:14px;
+  }
+  .master-symbols-heading-row .master-add-row{
+    grid-template-columns:minmax(220px,1fr) auto auto!important;
+    width:100%;
+    justify-content:stretch;
+  }
+  .master-symbols-heading-row .master-add-row .ticker-input{
+    max-width:none!important;
+  }
+}
+
+@media(max-width:700px){
+  .master-symbols-heading-row .master-add-row{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .master-symbols-heading-row .master-add-row .ticker-input{
+    grid-column:1/-1!important;
+    min-width:0!important;
+  }
+  .master-symbols-heading-row .master-add-row .btn{width:100%!important}
+}
+
+@media(max-width:460px){
+  .master-symbols-heading-row .master-add-row{grid-template-columns:1fr!important}
+  .master-symbols-heading-row .master-add-row .ticker-input{grid-column:auto!important}
+  .master-symbols-title-line{align-items:flex-start;flex-direction:column;gap:5px}
+}
+
+
+/* v18.5.2 Settings viewport contract.
+   The Market Pulse Ribbon adds 44px of application chrome. Size the Settings
+   main region from the current chrome token so its dedicated save row is fully
+   visible without requiring the document to scroll to the extreme bottom. */
+.main:has(.settings-shell){
+  height:calc(100dvh - var(--v1851-chrome-h))!important;
+  min-height:0!important;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))!important;
+  overflow:hidden!important;
+}
+.main:has(.settings-shell)>.settings-shell{
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+}
+.settings-shell>.settings{
+  scroll-padding-bottom:16px;
+  overscroll-behavior:contain;
+}
+.settings-shell>.save-bar.settings-persistent-save{
+  position:relative!important;
+  inset:auto!important;
+  z-index:18!important;
+  min-height:54px;
+  box-sizing:border-box;
+}
+@media(max-width:790px){
+  .main:has(.settings-shell){
+    height:calc(100dvh - var(--v1851-chrome-h) - 46px)!important;
+    padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;
+  }
 }
