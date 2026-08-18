@@ -70,6 +70,17 @@
       "blocking": true
     },
     {
+      "id": "g2_functionality_utility",
+      "gate": "G2",
+      "label": "Functionality Utility + provider Market Mode integration",
+      "command": [
+        "{python}",
+        "functionality_utility_checkpoint_gate.py"
+      ],
+      "timeout_seconds": 30,
+      "blocking": true
+    },
+    {
       "id": "g7_fingerprint_portability",
       "gate": "G7",
       "label": "Cross-platform canonical source fingerprint portability",
