@@ -30,6 +30,8 @@ Identity-disabled local desktop operation retains its existing embedded-document
 | Legacy evidence-route retirement (`IMPL-18-UTILITY-004`) | Navigation consolidation | `SELF_DESCRIBING_UI` | Legacy market-wide evidence resolves to Market Intelligence; ticker evidence resolves to Research subviews. Navigation/browser proof is authoritative. |
 | Role-aware Documentation (`IMPL-18-DOC-001`) | Documentation audience and direct-path access | `MANIFEST_AND_POLICY` | This manifest records the audience contract. UI hides developer machinery from USER/DEMO and server direct-path enforcement independently denies it. |
 | External Dependency & Provider Readiness (`IMPL-17-DEPS-001`) | Owner/release-engineering setup, entitlement, rights and deployment readiness | `MANIFEST_AND_REGISTRY` | Canonical dependency/readiness and durable User Action Required registries record owner, capability, blocker, user action, rights/entitlement and evidence. CI binds the contract to existing G0–G16 gates only. |
+| AI bounded context/cache/schema/continuous eval (`AUDIT-18-AI-001`) | AI research reliability; deterministic decision authority unchanged | `DEVELOPER_EVIDENCE_AND_EVAL_POLICY` | Production inference uses semantic/materiality-ranked hard context limits, complete inference cache identity with TTL, strict response/citation validation, structured-output capability where supported, safe abstention/fallback, and a zero-live-provider offline continuous eval lane with bounded cost/latency telemetry. |
+| Rights-aware AI egress (`AUDIT-18-AI-RIGHTS-001`) | External AI evidence boundary | `MANIFEST_REGISTRY_AND_FAIL_CLOSED_RUNTIME` | `provider_dataset_ai_rights_registry.json` is the canonical provider × dataset AI-use source. Evidence leaves DE.PULSE only when commercial-use, redistribution and AI-use rights are all explicitly evidence-bound and approved. Unknown, missing or denied records are withheld before prompt construction; API entitlement never grants rights by inference. |
 
 ## Direct-path and composition proof required before G10
 
@@ -49,6 +51,17 @@ Identity-disabled local desktop operation retains its existing embedded-document
 - Durable user actions contain no secret values and bind only G0–G16.
 - CI/release runtime-policy versions have no source-of-truth drift.
 
+## AI hardening and AI-egress proof required before G10
+
+- `ai_continuous_eval_gate.py` passes through the canonical workflow policy in CI Fast and CI Qualified.
+- Offline continuous eval covers golden output, citations, contradictions, missing evidence, injection/adversarial text, bounded context, cache identity/TTL, strict schema abstention, approved/denied rights fixtures, structured-output request capability, and bounded cost/latency telemetry.
+- Normal CI makes zero live AI-provider calls; provider request-shape tests use an isolated transport.
+- Production context remains valid JSON and cannot exceed the v18.6 hard byte/token-upper-bound contract after semantic/materiality-aware compaction.
+- Cache reuse requires a complete inference identity covering evidence, task/scope, provider/model route, prompt, safety, schema, context and rights-policy fingerprints and a valid TTL.
+- Invalid, markdown-wrapped, missing-field, unknown-field or hallucinated-citation model output cannot become a successful production AI response.
+- Provider/dataset evidence is filtered before external prompt construction. Unknown/missing/denied rights fail closed; diagnostics expose counts/policy state rather than source text, URLs, credentials or other blocked evidence.
+- Deterministic Day/Swing/Long formulas, Market Mode and No Execution boundaries remain outside AI authority.
+
 ## Manifest maintenance contract
 
-Each later v18.6 material slice must append or update a row before its G10 evidence is accepted. `AUDIT-18-AI-001` and `AUDIT-18-AI-RIGHTS-001` therefore receive their final documentation dispositions in this manifest as those slices are implemented. G10 must fail review if a material v18.6 change has no disposition.
+All assigned v18.6 material slices now have an explicit documentation disposition. G10 must fail review if a later material change is added without updating this manifest.
