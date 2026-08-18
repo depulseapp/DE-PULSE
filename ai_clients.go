@@ -405,7 +405,7 @@ func generateGeminiResponse(ctx context.Context, key, model, systemPrompt, userP
 		"system_instruction": map[string]any{"parts": []any{map[string]any{"text": systemPrompt}}},
 		"contents":           []any{map[string]any{"role": "user", "parts": []any{map[string]any{"text": userPrompt}}}},
 		"generationConfig": map[string]any{
-			"maxOutputTokens": maxOutputTokens,
+			"maxOutputTokens":  maxOutputTokens,
 			"responseMimeType": "application/json",
 			"responseSchema":   aiStructuredOutputSchema(false),
 		},
