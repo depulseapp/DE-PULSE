@@ -310,3 +310,28 @@ At the active release G16:
 Every current and future release must be resumable from the connected GitHub repository by ChatGPT/Codex, Claude, another authorized assistant or a human developer without prior chat access. The durable path is root adapter → portability contract → `handoff/CURRENT.md` → actual branch/PR/tag/check/artifact state → Build State Ledger → canonical roadmap/build/delivery contracts.
 
 No roadmap item is considered safely carried forward when it exists only in model memory, chat, external file storage or a temporary workspace. G0/G2/G10/G16 use the existing Adaptive Resume gate to prevent missing or contradictory continuity artifacts; no new top-level gate is added.
+
+---
+
+## 11. Permanent CI convergence, learning and repository-hygiene roadmap
+
+Classification: **PERMANENT PROCESS GOVERNANCE / REQUIRED BEFORE NORMAL NEXT-RELEASE PRODUCT EXPANSION**.
+
+The v18.5.2 closure proved the value of lane-scoped retries and preserved evidence, but also exposed a governance-to-implementation gap: release-specific recovery, monitoring, retry and publication workflows/branches accumulated even though the canonical CI contract already required a small durable workflow surface. This gap must not repeat.
+
+Permanent roadmap direction:
+
+1. **Converge to exactly three active workflow entry points:** `.github/workflows/ci-fast.yml`, `.github/workflows/ci-qualified.yml` and `.github/workflows/release.yml`. Version, candidate SHA, gate/lane, platform, build ID and publication intent are inputs/configuration—not workflow filenames.
+2. **No release-specific workflow families.** New `vX.Y-*`, `*-retry`, `*-monitor`, `*-probe`, `*-recovery`, `*-certification` or `*-publish` workflow files are prohibited unless a deliberate, reviewed migration changes the permanent CI architecture. Diagnostics use parameterized `workflow_dispatch` inputs or reusable jobs/actions.
+3. **Improve the canonical workflow in place.** A recurring `CI_HARNESS_FAIL`, portability failure or stale test contract must update the shared CI/harness implementation and add regression coverage. Creating a parallel workaround workflow does not satisfy G16 prevention.
+4. **Resume the same gate/workflow.** `INFRA_FAIL` reruns failed jobs on the same workflow/SHA; `CI_HARNESS_FAIL` or `GATE_TEST_FAIL` fixes the canonical harness/test and reruns the same affected lane; `PRODUCT_FAIL` runs the same workflow on the corrected source SHA from the earliest invalidated gate. Independent matching-fingerprint PASS evidence is preserved.
+5. **Native lanes remain independent.** If macOS passes and Windows fails, retain macOS and rerun Windows only when source/package/evidence fingerprints permit reuse. G15 then consumes the preserved platform PASS plus the repaired platform PASS.
+6. **G16 is implementation, not documentation only.** A repeated CI/process lesson is not closed until the canonical workflow/tool/test is hardened or an explicit evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` disposition is recorded.
+7. **Workflow allowlist becomes machine-enforced.** Active-branch CI must fail if unapproved workflow files appear outside the canonical three-workflow surface.
+8. **Repository hygiene is a G16 closure responsibility.** Inventory and remove merged/obsolete RC, retry, certification, promotion-tooling and old development branches after their immutable tag/release/evidence is safe. Stable history lives in Git tags, GitHub Releases, hashes/provenance and Git history—not permanent operational branches.
+9. **Branch model converges to `main` + one active release development branch + genuinely short-lived feature/fix branches.** RC is an immutable SHA/checkpoint, not a permanent branch; Stable is an immutable tag + GitHub Release, not a branch.
+10. **Release artifacts remain durable; orchestration does not.** Certified packages, checksums, provenance and evidence stay in the immutable GitHub Release. Temporary workflow/branch machinery is retired after evidence is consumed.
+11. **The current workflow/branch backlog must be reconciled before normal v18.6 product implementation.** Preserve anything with unique unmerged content/evidence, retire the rest, and establish the canonical three-workflow engine as the only active CI surface.
+12. **Every future G16 measures convergence.** Required outputs include active workflow count, stale workflow count, active branch count, obsolete branch count, rerun/retry reasons, preserved evidence, duplicated compute avoided, and concrete canonical CI improvements implemented from the release.
+
+This strengthens `CI-ADAPTIVE-18.5.1-001`, `AUDIT-18-CI-001`, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md`; it adds no G17+ and does not alter product sequencing authority.
