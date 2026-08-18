@@ -8,16 +8,16 @@ import (
 )
 
 type LiveSubscriptionBudgetDiagnostics struct {
-	Provider          string `json:"provider"`
-	Capacity          int    `json:"capacity"`
-	NormalTarget      int    `json:"normalTarget"`
+	Provider         string `json:"provider"`
+	Capacity         int    `json:"capacity"`
+	NormalTarget     int    `json:"normalTarget"`
 	ReservedCapacity int    `json:"reservedCapacity"`
-	Active            int    `json:"active"`
-	Available         int    `json:"available"`
-	ReserveUsed       int    `json:"reserveUsed"`
-	UtilizationPct    int    `json:"utilizationPct"`
-	Saturated         bool   `json:"saturated"`
-	Connected         bool   `json:"connected"`
+	Active           int    `json:"active"`
+	Available        int    `json:"available"`
+	ReserveUsed      int    `json:"reserveUsed"`
+	UtilizationPct   int    `json:"utilizationPct"`
+	Saturated        bool   `json:"saturated"`
+	Connected        bool   `json:"connected"`
 }
 
 type RuntimeLoadDiagnostics struct {
