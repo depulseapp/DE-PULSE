@@ -3,8 +3,8 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G11_RELEASE_CERTIFICATION",
-  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
+  "candidateDisposition": "V18_6_0_G10_REQUALIFICATION_BLOCKED",
+  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after a candidate commit; handoff/CURRENT.md and workflow definitions remain source-fingerprinted.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -20,10 +20,9 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "f15ebe31e7f30c3fc0ad95b2a43c5859d59e7f46",
+    "candidateSourceCommit": "7b8e3ab40a55edce8e4b16acbd3781a531f70585",
     "sourceFingerprint": null,
-    "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
-    "qualificationMergeFingerprintObserved": "18deda02c7337297b1b64ae9c915ced5a1bdef03d0c7a25b38742988e99b3c83",
+    "sourceFingerprintState": "PENDING_REQUALIFICATION",
     "promotionState": "NOT_PROMOTED",
     "releaseDispatchPath": {
       "certificationBranch": "v18.6-release-certification",
@@ -32,29 +31,40 @@
       "promotionPublish": true,
       "dispatcher": ".github/workflows/ci-fast.yml",
       "canonicalReleaseWorkflow": ".github/workflows/release.yml",
+      "ownershipRule": "repository-owner actor OR repository-owner-authored head commit on exact release branch",
       "workflowDefinitionRef": "candidate branch",
       "idempotencyKey": "headBranch + headSha",
-      "tracking": "PR #16 comments include canonical release run ID/URL plus G11 and G16 status"
+      "tracking": "PR #16 comments + GitHub Actions run IDs once G10 unblocks"
     }
   },
   "evidence": {
     "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
-    "G10": {
-      "status": "PASS",
+    "lastTrustworthyG10": {
+      "status": "PASS_HISTORICAL_NOT_REUSABLE",
       "candidateSourceCommit": "f15ebe31e7f30c3fc0ad95b2a43c5859d59e7f46",
       "fastRun": 32188301203,
       "fastRunNumber": 169,
       "qualifiedRun": 32188301155,
       "qualifiedRunNumber": 74,
-      "qualificationMergeFingerprintObserved": "18deda02c7337297b1b64ae9c915ced5a1bdef03d0c7a25b38742988e99b3c83",
-      "coverage": ["Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
+      "qualificationMergeFingerprintObserved": "18deda02c7337297b1b64ae9c915ced5a1bdef03d0c7a25b38742988e99b3c83"
     },
-    "G11": {"status": "IN_PROGRESS", "required": "Canonical release.yml run computes and binds the exact candidate Git-object fingerprint and posts it to PR #16."},
+    "G10": {
+      "status": "BLOCKED",
+      "candidateSourceCommit": "7b8e3ab40a55edce8e4b16acbd3781a531f70585",
+      "blockingClass": "GITHUB_ACTIONS_ALLOCATION",
+      "fastRun": 32190500889,
+      "fastRunNumber": 181,
+      "qualifiedRun": 32190500878,
+      "qualifiedRunNumber": 78,
+      "fastRetryJob": 95883786595,
+      "observation": "Both canonical runs and the Fast retry failed before runner setup with no workflow steps/logs. No DE.PULSE test result was produced."
+    },
+    "G11": {"status": "PENDING", "required": "Fresh G10 PASS first, then compute/bind exact candidate Git-object fingerprint."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
     "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
-    "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; publication remains disabled on pre-merge certification branch."},
-    "G16": {"status": "PENDING", "required": "Retain adaptive release handoff evidence and PR-visible completion status after G15."}
+    "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; no pre-merge publication."},
+    "G16": {"status": "PENDING", "required": "Durable adaptive release handoff after G15."}
   },
   "priorStableEvidence": {
     "release": "v18.5.2",
@@ -70,9 +80,13 @@
   "residuals": [
     "TradeInsight remains governed future/shadow work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where not already configured/approved.",
-    "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
+    "No v18.6 Stable publication or native artifact claim is valid until fresh G10 and G11-G16 complete."
   ],
-  "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "PR-audited canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
-  "updatedAt": "2026-08-18T21:46:00Z"
+  "releaseBlockingResiduals": [
+    "GitHub Actions budget/runner allocation must allow canonical CI to start.",
+    "Fresh Fast + Qualified G10 PASS is required on source 7b8e3ab40a55edce8e4b16acbd3781a531f70585.",
+    "G11-G16 plus both native evidence graphs are required before Stable promotion."
+  ],
+  "nextRequiredEvidence": "After Actions allocation is restored: canonical Fast + Qualified PASS on 7b8e3ab40a55edce8e4b16acbd3781a531f70585, followed by PR-audited release.yml G11-G16 with publish=false.",
+  "updatedAt": "2026-08-18T22:01:00Z"
 }
