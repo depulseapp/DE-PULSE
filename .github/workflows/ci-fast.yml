@@ -84,6 +84,9 @@ jobs:
       - name: v18.6 surface consolidation regression
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         run: node v18_6_surface_consolidation_test.js
+      - name: v18.6 role-aware documentation regression
+        if: ${{ steps.impact.outputs.node_required == 'true' }}
+        run: node v18_6_documentation_access_test.js
       - name: CI summary
         shell: bash
         run: |
@@ -96,6 +99,7 @@ jobs:
             echo '- workflow policy: PASS'
             echo '- watchlist membership contract: PASS'
             echo '- v18.6 surface consolidation contract: PASS when renderer lane is selected'
+            echo '- v18.6 role-aware documentation contract: PASS when renderer lane is selected'
             echo '- adaptive resume portability: PASS'
             echo '- Git-object provenance: PASS'
           } >> "$GITHUB_STEP_SUMMARY"
