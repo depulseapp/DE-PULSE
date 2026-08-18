@@ -5,12 +5,6 @@
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
   "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
-  "dispatchTrigger": {
-    "sequence": 4,
-    "purpose": "Direct contents commit on the exact release-certification branch after final G10 to emit the canonical push event for G11-G16 dispatch.",
-    "sourceFingerprintImpact": "NONE",
-    "expectedPublish": false
-  },
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -26,7 +20,7 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "8b516d8384f21b865d8e7ea318c1c2c48e08e44c",
+    "candidateSourceCommit": "2d39f8bb876a66925a9a6d9f43d9de7b711865e1",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
     "promotionState": "NOT_PROMOTED",
@@ -37,8 +31,9 @@
       "promotionPublish": true,
       "dispatcher": ".github/workflows/ci-fast.yml",
       "canonicalReleaseWorkflow": ".github/workflows/release.yml",
-      "certificationAuthorization": "exact release-certification branch; resolver enforces publish=false",
-      "promotionAuthorization": "repository-owner actor OR push sender on exact stable-promotion branch; resolver enforces publish=true",
+      "primaryCertification": "exact release-certification push; publish=false",
+      "connectorFallback": "owner-triggered pull_request to exact release-certification base; candidate is immutable PR base SHA; publish=false",
+      "promotionAuthorization": "push-only repository-owner actor OR push sender on exact stable-promotion branch; publish=true",
       "workflowDefinitionRef": "candidate branch",
       "idempotencyKey": "headBranch + headSha",
       "tracking": "PR #16 comments must include dispatcher-active and canonical release run ID/URL before G11 starts"
@@ -48,16 +43,16 @@
     "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "8b516d8384f21b865d8e7ea318c1c2c48e08e44c",
-      "fastRun": 32193789742,
-      "fastRunNumber": 198,
+      "candidateSourceCommit": "2d39f8bb876a66925a9a6d9f43d9de7b711865e1",
+      "fastRun": 32194706527,
+      "fastRunNumber": 212,
       "fastRunAttempt": 1,
-      "qualifiedRun": 32193789745,
-      "qualifiedRunNumber": 85,
+      "qualifiedRun": 32194706503,
+      "qualifiedRunNumber": 90,
       "qualifiedRunAttempt": 1,
-      "coverage": ["dispatcher authorization/publish boundary", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
+      "coverage": ["connector-safe certification fallback policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
-    "G11": {"status": "PENDING", "required": "PR #16 must contain the canonical release.yml run ID for the exact release-certification candidate; that run computes and binds the canonical Git-object fingerprint."},
+    "G11": {"status": "PENDING", "required": "PR #16 must contain the canonical release.yml run ID for the exact release-certification base candidate; that run computes and binds the canonical Git-object fingerprint."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
     "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
@@ -81,6 +76,6 @@
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from this exact release-certification push with publish=false, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T22:49:00Z"
+  "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from the owner-gated pull_request certification fallback targeting exact v18.6-release-certification, followed by G11-G16 execution.",
+  "updatedAt": "2026-08-18T22:56:30Z"
 }
