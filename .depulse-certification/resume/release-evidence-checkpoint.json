@@ -30,7 +30,13 @@
       "promotionBranch": "v18.6-stable-promotion",
       "promotionPublish": true,
       "dispatcher": ".github/workflows/ci-fast.yml",
-      "canonicalReleaseWorkflow": ".github/workflows/release.yml"
+      "canonicalReleaseWorkflow": ".github/workflows/release.yml",
+      "dispatchTrigger": {
+        "status": "REQUESTED",
+        "triggeredAt": "2026-08-18T21:14:00Z",
+        "g10ProductSource": "aa72c8b2c7571d5633eb2e6dce622749704b1637",
+        "expectedCanonicalProductFingerprint": "f7ae32d088563019f406abc70f4781a85b061fdd237ccabd9d4539ad8d1a3622"
+      }
     }
   },
   "evidence": {
@@ -42,6 +48,7 @@
       "fastRunNumber": 142,
       "qualifiedRun": 32185509377,
       "qualifiedRunNumber": 63,
+      "canonicalProductFingerprintObserved": "f7ae32d088563019f406abc70f4781a85b061fdd237ccabd9d4539ad8d1a3622",
       "coverage": ["Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
     "G11": {"status": "IN_PROGRESS", "required": "Compute and bind exact v18.6.0 canonical Git-object fingerprint from the release-certification candidate."},
@@ -69,5 +76,5 @@
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
   "nextRequiredEvidence": "Canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
-  "updatedAt": "2026-08-18T21:10:00Z"
+  "updatedAt": "2026-08-18T21:14:00Z"
 }
