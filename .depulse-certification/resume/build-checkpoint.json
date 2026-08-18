@@ -19,21 +19,21 @@
     "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
     "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
   },
-  "candidateSourceCommit": "5b74166fbd7d66284becbaa7186d56d87ab1c8fa",
-  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest v18.5.1 product/tooling/documentation source requiring fresh exact-SHA qualification; later metadata-only ledger commits do not advance the product fingerprint.",
+  "candidateSourceCommit": "c10285efb0ba86b81fd1a49a19f1d386f64c81a8",
+  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest v18.5.1 source/test candidate requiring fresh exact-SHA qualification; later metadata-only ledger commits do not advance the product fingerprint.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "codeStatus": "V18_5_1_RECOVERY_QUALIFICATION",
-  "implementationSummary": "The frozen ten-ID recovery implementation is complete. Two cheap checkpoint attempts found only control-plane/documentation identity synchronization defects before affected Go/browser/deep qualification could run. Resume metadata, v18 provenance semantics, and patch-aware Documentation Impact/QA delta are now corrected as one batch without weakening historical/manual checks.",
-  "lastTrustworthyPass": "RUN_32082204255: RELEASE_IDENTITY_RESUME_ARCHITECTURE_DATA_UTILITY_RENDERER_CHEAP_PASS; DOCUMENTATION_GATE_FOUND_SYNC_GAPS; FULL_QUALIFICATION_NOT_YET_PASS",
+  "implementationSummary": "Frozen ten-ID implementation is complete. Checkpoint 03 passed release identity, resume, architecture, data utility, documentation governance, go vet, focused Go, full Go, renderer syntax and live-render Chromium. The watchlist Chromium harness then crashed before exercising Issue #12 because the Python desk matrix constant was missing; product behavior did not fail. The oracle now defines the same three-desk matrix used by the JavaScript harness.",
+  "lastTrustworthyPass": "RUN_32082651456: G0-G5_STATIC_GO_LIVE_RENDER_PASS; WATCHLIST_BROWSER_ORACLE_CRASHED_BEFORE_BEHAVIOR_ASSERTIONS; FULL_G0-G10_NOT_YET_PASS",
   "earliestRequiredResumeGate": "G0",
   "gates": {
     "G0": {"status": "REQUALIFY", "reusable": false},
     "G1": {"status": "REQUALIFY", "reusable": false},
-    "G2": {"status": "REQUALIFY_AFTER_DOC_BATCH", "reusable": false},
-    "G3": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G4": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G5": {"status": "PENDING_REQUALIFICATION", "reusable": false},
+    "G2": {"status": "REQUALIFY", "reusable": false},
+    "G3": {"status": "REQUALIFY", "reusable": false},
+    "G4": {"status": "REQUALIFY", "reusable": false},
+    "G5": {"status": "REQUALIFY_AFTER_BROWSER_ORACLE_FIX", "reusable": false},
     "G6": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G7": {"status": "PENDING_REQUALIFICATION", "reusable": false},
     "G8": {"status": "PENDING_REQUALIFICATION", "reusable": false},
@@ -46,41 +46,38 @@
     "G15": {"status": "NOT_STARTED", "reusable": false},
     "G16": {"status": "NOT_STARTED", "reusable": false}
   },
-  "blockingIssue": "Checkpoint 02 run 32082204255 passed release identity, adaptive resume, source architecture, data utility and renderer cheap lane, then stopped at documentation governance. The documentation batch now restores v17.5.1 major provenance semantics and introduces strict TEST/RC patch Documentation Impact + QA delta while preserving long-lived manuals and Stable manifest history.",
+  "blockingIssue": "Checkpoint 03 run 32082651456 reached the behavior-first Chromium lane. browser_live_render_test.py passed; browser_watchlist_membership_test.py raised NameError because the Python DESKS constant was absent. The test oracle was fixed without changing the product implementation or reducing the seven-combination/final-membership/current-desk assertions.",
   "knownResiduals": [
-    "Fresh exact-SHA G0-G10 has not yet passed after the complete documentation batch.",
-    "G11-G15 immutable RC, full certification, macOS Apple Silicon, Windows x64 actual-artifact runtime audit, provenance and release assurance remain mandatory.",
-    "No Stable promotion may be claimed from development or checkpoint evidence alone."
+    "Fresh exact-SHA G0-G10 has not yet passed after the watchlist browser-oracle fix.",
+    "Auth-copy and UI-hierarchy Chromium tests were skipped after the watchlist harness crash and must run on the next checkpoint.",
+    "G6 PostgreSQL, G7 data/security/adaptive, G8 race/randomized/performance and G9 full HTTP/UI remain blocked until FAST is green.",
+    "G11-G15 immutable RC, full certification, macOS Apple Silicon, Windows x64 actual-artifact runtime audit, provenance and release assurance remain mandatory."
   ],
   "resolvedIssues": [
-    "v18.5.1 exact release identity and isolated TEST profile are implemented.",
-    "The ten frozen G1 IDs are conserved and mapped to source/tests.",
-    "Ordinary development commits no longer invoke expensive qualification; deliberate exact-SHA checkpointing is required.",
-    "Checkpoint 01 stale v18.5.0 resume records were corrected without running expensive downstream lanes.",
-    "Checkpoint 02 documentation identity gaps were corrected as one batch.",
-    "stable_baseline again means v17.5.1 major-family provenance anchor; previous_stable means immediate v18.5.0 predecessor.",
-    "TEST/RC patch candidates now use strict release-specific Documentation Impact and QA delta instead of rewriting 38-80KB long-lived manuals per patch, while inherited manual/history checks remain blocking."
+    "v18.5.1 exact release identity and isolated TEST profile implemented.",
+    "Ten frozen G1 IDs conserved and mapped to source/tests.",
+    "Checkpoint-based cost-aware CI active; ordinary development commits are quiet.",
+    "Stale resume metadata and patch documentation/provenance semantics corrected.",
+    "Checkpoint 03 proved static governance/architecture/data utility, go vet, focused Go, full Go, renderer syntax and live-render Chromium on the exact candidate.",
+    "Watchlist browser oracle now declares the Python DAY/SWING/LONG matrix required by its seven-combination assertions."
   ],
   "adaptiveProcessLearning": {
     "status": "ACTIVE",
-    "lessonsRecorded": 10,
+    "lessonsRecorded": 11,
     "highestPriorityReusablePrevention": [
-      "Development commits are accumulated into deliberate qualification checkpoints instead of launching full CI per fix.",
-      "Checkpoint evidence is exact-SHA/fingerprint bound and cannot be inherited across source changes.",
-      "Cheap gates stop the graph before expensive PostgreSQL/performance/native lanes when governance or documentation identity is stale.",
+      "Develop first, qualify deliberate exact-SHA checkpoints, and reserve native release work for immutable RCs.",
+      "Cheap/FAST failures block PostgreSQL/performance/native spend.",
       "CI efficiency may eliminate redundant execution, never required evidence.",
-      "CI-generated evidence/control metadata must not recursively trigger qualification.",
-      "Patch documentation uses a strict delta until Stable/material boundaries, preventing huge redundant rewrites without losing historical/manual validation.",
-      "Major-family provenance anchor and immediate Stable predecessor are separate release-identity concepts.",
-      "Every focused Go selector needs a non-zero existence guard where zero-match could falsely pass.",
-      "Inherited gates test current invariants/ownership rather than obsolete point-release spellings.",
+      "Behavior tests must validate their own fixtures/oracles before they can claim product failure.",
+      "Patch documentation uses strict deltas while promoted/manual history remains blocking.",
+      "Major-family provenance anchor and immediate Stable predecessor are separate identity concepts.",
       "Actual macOS arm64 and Windows x64 packaged-runtime proof remains mandatory before Stable promotion."
     ]
   },
   "userDelivery": "NOT_READY",
   "handoff": "release/v18.5.1/V18.5.1-ADAPTIVE-RECOVERY-HANDOFF-2026-08-17.md",
   "nextBranch": "v18.5.1-development",
-  "nextStep": "Bind one final exact source SHA after this documentation batch and run G0-G10. If green, freeze immutable G11 RC and run the full native G12-G15 chain once.",
-  "resumeInstructions": "Treat v18.5.0-stable at 0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680 as immutable immediate Stable predecessor and v17.5.1 as the v18 major-family provenance anchor. Preserve all ten frozen v18.5.1 IDs and the permanent No Execution boundary. Do not claim qualification/native certification/Stable without fresh exact-source evidence.",
-  "updatedAt": "2026-08-17T23:58:00Z"
+  "nextStep": "Bind one exact source SHA after the browser-oracle fix and rerun G0-G10. If green, freeze immutable G11 RC and run the full native G12-G15 chain once.",
+  "resumeInstructions": "Treat v18.5.0-stable as immutable immediate Stable predecessor and v17.5.1 as v18 provenance anchor. Preserve all ten frozen IDs and No Execution. Do not claim qualification/native certification/Stable without fresh exact-source evidence.",
+  "updatedAt": "2026-08-18T00:04:00Z"
 }
