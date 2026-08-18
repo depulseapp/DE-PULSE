@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavior-first Chromium proof for v18.5.1 Issue #12.
+"""Behavior-first Chromium proof for v18.5.2 tracked-symbol recovery.
 
 The harness loads the same watchlist-v18.5.1.js extension as renderer/index.html,
 while retaining the actual renderer.js membership-pill handler. Only network,
@@ -54,6 +54,8 @@ def main() -> None:
     assert "aria-current=\"true\"" in extension
     assert "CURRENT" in extension
     assert "Remove ${symbol} from Tracked Symbols and all desks" in extension
+    assert "function normalizeTrackedSymbol" in extension
+    assert "normalizeSymbol" not in extension, "extension must be self-contained; hidden globals masked the v18.5.1 desk crash"
     assert "/api/desk/membership" not in extension, "extension must not duplicate one-desk membership semantics"
     assert "/api/desk/membership" in membership_binding
     assert ".desk-membership-pill.current-desk" in css
@@ -67,7 +69,6 @@ window.__members={day:[],swing:[],long:[]};
 window.__calls=[];
 window.__renderCount=0;
 window.__toast=[];
-function normalizeSymbol(v){return String(v||'').trim().toUpperCase()}
 function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
 function titleCaseText(v){return String(v||'').replace(/(^|[-_ ])([a-z])/g,(m,a,b)=>a+b.toUpperCase())}
 function deskWL(k){return {id:'wl-'+k,symbols:[...(window.__members[k]||[])]}}
@@ -230,7 +231,7 @@ function deskMembershipStrip(){return ''}
 
         browser.close()
 
-    print("PASS: production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.")
+    print("PASS: self-contained production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.")
 
 
 if __name__ == "__main__":
