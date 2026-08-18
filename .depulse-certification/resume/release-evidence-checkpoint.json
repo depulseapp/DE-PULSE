@@ -20,7 +20,8 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "eafc1d56aee2597b35f06c45f333d1275e801de0",
+    "candidateSourceCommit": "51be6afc444d8337821dd3c6ecaaecb1297dc84b",
+    "qualificationHead": "836322345886c9236e1da6ee774d73e6d27463b8",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
     "promotionState": "NOT_PROMOTED",
@@ -34,26 +35,26 @@
       "primaryCertification": "exact release-certification push; publish=false",
       "connectorFallback": "owner-triggered pull_request to exact release-certification base; candidate is immutable PR base SHA; publish=false",
       "promotionAuthorization": "push-only repository-owner actor OR push sender on exact stable-promotion branch; publish=true",
-      "trackingTransport": "REST issue-comments endpoint; GraphQL gh pr comment forbidden in release dispatcher",
+      "trackingTransport": "workflow REST issue-comment is best-effort; Actions job summary/log is authoritative dispatch evidence until connected GitHub app binds the exact run identity to PR #16",
       "workflowDefinitionRef": "candidate branch",
-      "idempotencyKey": "headBranch + headSha",
-      "tracking": "PR #16 comments must include dispatcher-active and canonical release run ID/URL before G11 starts"
+      "idempotencyKey": "headBranch + headSha"
     }
   },
   "evidence": {
     "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "eafc1d56aee2597b35f06c45f333d1275e801de0",
-      "fastRun": 32195517663,
-      "fastRunNumber": 224,
+      "candidateSourceCommit": "51be6afc444d8337821dd3c6ecaaecb1297dc84b",
+      "qualificationHead": "836322345886c9236e1da6ee774d73e6d27463b8",
+      "fastRun": 32196295742,
+      "fastRunNumber": 234,
       "fastRunAttempt": 1,
-      "qualifiedRun": 32195517662,
-      "qualifiedRunNumber": 95,
+      "qualifiedRun": 32196295782,
+      "qualifiedRunNumber": 99,
       "qualifiedRunAttempt": 1,
-      "coverage": ["REST tracking/connector-safe certification fallback policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
+      "coverage": ["non-blocking release-tracking/connector-safe certification policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
-    "G11": {"status": "PENDING", "required": "PR #16 must contain the canonical release.yml run ID for the exact release-certification base candidate; that run computes and binds the canonical Git-object fingerprint."},
+    "G11": {"status": "PENDING", "required": "Canonical release.yml run must exist for the exact release-certification candidate; its run ID, candidate SHA, fingerprint and publish=false state must be bound to PR #16 before G11 is accepted."},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
     "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
     "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
@@ -77,6 +78,6 @@
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "PR #16 dispatcher-active and canonical release.yml run-ID comments from one owner-gated pull_request certification fallback targeting exact v18.6-release-certification, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T23:05:30Z"
+  "nextRequiredEvidence": "One exact non-publishing canonical release.yml run from the reconciled v18.6-release-certification base, with its identity bound to PR #16 through workflow tracking or the connected GitHub app, followed by G11-G16 execution.",
+  "updatedAt": "2026-08-18T23:17:30Z"
 }
