@@ -4,7 +4,7 @@
   "release": "v18.6.0",
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G10_PREFREEZE_RECONCILIATION",
-  "metadataHeadRule": "Resume/evidence checkpoint and current-handoff metadata are excluded from the product source fingerprint and may advance operationally without redefining candidate product bytes or the immutable v18.5.2 Stable predecessor.",
+  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance operationally after a candidate commit. handoff/CURRENT.md is source-fingerprinted and must freeze with the product before G11.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -20,7 +20,7 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "isolatedIdentityCandidate": "b16041763bdc0bedd0df863f5d824ac132a508f9",
+    "candidateSourceCommit": "aed1f95ee1efe3ddb19e231fbf00373c8cad1d27",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G10_REQUALIFICATION",
     "promotionState": "NOT_PROMOTED"
@@ -34,8 +34,8 @@
       "status": "IN_PROGRESS",
       "lastImplementationFastRun": 32182124289,
       "lastImplementationQualifiedRun": 32182124317,
-      "identityCandidate": "b16041763bdc0bedd0df863f5d824ac132a508f9",
-      "required": "Fresh canonical Fast + Qualified PASS after resume metadata reconciliation."
+      "candidateSourceCommit": "aed1f95ee1efe3ddb19e231fbf00373c8cad1d27",
+      "required": "Fresh canonical Fast + Qualified PASS on the final source-fingerprinted handoff/candidate with reconciled excluded checkpoints."
     },
     "G11": {
       "status": "PENDING",
@@ -79,8 +79,8 @@
     "No v18.6 native artifact or Stable publication claim is valid until G13-G16 complete."
   ],
   "releaseBlockingResiduals": [
-    "Exact canonical v18.6.0 Fast + Qualified G10 PASS is still required before G11 freeze."
+    "Exact final canonical v18.6.0 Fast + Qualified G10 PASS is still required before G11 freeze."
   ],
-  "nextRequiredEvidence": "Fresh G10 Fast + Qualified PASS on the reconciled canonical v18.6.0 candidate, followed by G11-G16 release workflow evidence.",
-  "updatedAt": "2026-08-18T20:39:00Z"
+  "nextRequiredEvidence": "Fresh G10 Fast + Qualified PASS on the final source-fingerprinted v18.6.0 candidate, followed by G11-G16 release workflow evidence.",
+  "updatedAt": "2026-08-18T20:53:00Z"
 }
