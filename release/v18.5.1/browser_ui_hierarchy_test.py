@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium proof for v18.5.1 Research/header hierarchy recovery.
+"""Chromium proof for v18.5.2 Research/header hierarchy recovery.
 
 Uses the actual accumulated styles.css plus the final v18.5.1 override and the
 production header-v18.5.1.js extension. No product network calls are required.
@@ -37,8 +37,11 @@ HEADER_HTML = r"""
   <div class="workspace"><aside class="sidebar"></aside><main class="main">
     <div class="page research-page research-v2">
       <section class="card research-command research-command-v2">
+        <div class="research-command-heading">
+          <div><span class="eyebrow">Research Target</span><p>Select one symbol, confirm the complete Research evidence state, then review sourced analysis below.</p></div>
+          <button id="research-back" class="btn ghost" data-research-back>Back to Dashboard</button>
+        </div>
         <div class="research-command-symbol">
-          <span class="eyebrow">Research Target</span>
           <div class="research-target-grid">
             <label id="research-primary"><small>Choose from List</small><select class="ticker-control" data-research-symbol><option>NVDA</option></select></label>
             <label id="research-add"><small>Add Symbol</small><span class="research-add-symbol"><input class="ticker-input" placeholder="Ticker"><button class="btn">Load</button></span></label>
@@ -46,7 +49,6 @@ HEADER_HTML = r"""
           </div>
           <p class="research-origin-context">Opened from Dashboard · return context preserved.</p>
         </div>
-        <div class="research-command-actions"><button class="btn ghost">Back to Dashboard</button><span class="research-ai-ready">AI Second Opinion Ready</span><button class="btn">Ask AI</button></div>
       </section>
       <nav class="research-tabs research-tabs-v2" aria-label="Research views">
         <button>Overview</button><button>Earnings</button><button>Fundamentals</button><button>SEC &amp; Ownership</button><button>Catalysts</button><button>Technical Context</button>
@@ -83,6 +85,8 @@ def main() -> None:
     assert "align-items:end!important" in UI_CSS
     assert "top:calc(var(--v1851-topbar-h) + var(--v1851-statusbar-h))" in UI_CSS
     assert "ensureSecondaryMarketStatus" in HEADER_JS
+    assert "ribbon.appendChild(clocks)" in HEADER_JS
+    assert "research-command-heading" in UI_CSS
 
     with sync_playwright() as p:
         kwargs = {"headless": True}
@@ -112,17 +116,31 @@ def main() -> None:
             # Session/data controls leave the crowded primary runtime lane and
             # become the explicit secondary market-state layer.
             assert page.locator(".topbar .runtime #market-session-context").count() == 0, width
+            assert page.locator(".topbar .runtime .market-clocks").count() == 0, width
             assert page.locator(".topbar .runtime #runtime-status").count() == 0, width
             assert page.locator(".topbar .runtime #runtime-toggle").count() == 0, width
             assert page.locator("#market-status-bar #market-session-context").count() == 1, width
+            assert page.locator("#market-status-bar > .market-clocks").count() == 1, width
             assert page.locator("#market-status-bar #runtime-status").count() == 1, width
             assert page.locator("#market-status-bar #runtime-toggle").count() == 1, width
+
+            ribbon_order = page.locator("#market-status-bar > *").evaluate_all(
+                "(nodes)=>nodes.map(x=>x.id||x.className)"
+            )
+            assert ribbon_order[:4] == [
+                "market-session-context",
+                "market-clocks",
+                "market-data-summary",
+                "runtime-toggle",
+            ], (width, ribbon_order)
 
             # Both complete clocks remain visible at every required test width.
             for zone in ("et", "pt"):
                 visible_box(page, f"#zone-{zone}")
                 visible_box(page, f"#date-{zone}")
                 visible_box(page, f"#clock-{zone}")
+                clock_box = visible_box(page, f".market-clock:has(#clock-{zone})")
+                assert clock_box["width"] >= 84, (width, zone, clock_box)
                 assert page.locator(f"#date-{zone}").inner_text() == "AUG 17, 2026"
                 assert ":" in page.locator(f"#clock-{zone}").inner_text()
 
@@ -133,6 +151,16 @@ def main() -> None:
 
             # Research top area must remain contained and tabs must all remain
             # visible without becoming a horizontal page-scroller.
+            visible_box(page, ".research-command-heading")
+            visible_box(page, "#research-back")
+            assert page.locator(".research-command-v2 .research-command-actions").count() == 0, width
+            assert page.locator(".research-command-v2 [data-research-ai]").count() == 0, width
+            assert page.evaluate(
+                "document.querySelector('.research-command-v2').nextElementSibling.matches('.research-tabs-v2')"
+            ), width
+            assert page.evaluate(
+                "document.querySelector('.research-command-heading').nextElementSibling.matches('.research-command-symbol')"
+            ), width
             primary = visible_box(page, "#research-primary")
             add = visible_box(page, "#research-add")
             fresh = visible_box(page, "#research-freshness")
@@ -164,7 +192,7 @@ def main() -> None:
 
         browser.close()
 
-    print("PASS: v18.5.1 primary/secondary/tertiary header hierarchy and Research Target responsive hierarchy are behaviorally contained with complete ET/PT clocks.")
+    print("PASS: v18.5.2 primary/secondary/tertiary header hierarchy and Research Target responsive hierarchy are behaviorally contained with complete ET/PT clocks.")
 
 
 if __name__ == "__main__":
