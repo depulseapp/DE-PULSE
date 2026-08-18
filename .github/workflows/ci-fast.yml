@@ -78,3 +78,25 @@ jobs:
             echo '- gofmt/vet/tests: PASS'
             echo '- renderer syntax: PASS'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  branch-hygiene:
+    name: Remove only branches fully merged into main
+    needs: fast
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Apply conservative branch hygiene
+        run: python3 tools/ci/branch_hygiene.py --apply --json-out branch-hygiene.json
+      - name: Retain cleanup report
+        uses: actions/upload-artifact@v7
+        with:
+          name: DE-PULSE-branch-hygiene-${{ github.sha }}
+          path: branch-hygiene.json
+          if-no-files-found: error
+          retention-days: 14
