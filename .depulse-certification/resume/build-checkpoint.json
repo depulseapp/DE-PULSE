@@ -18,13 +18,13 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "ea57d63a5421e325a45b1413281584858e3fa214",
+  "candidateSourceCommit": "9c00553b711dac89c8c7095885200a4507d5647d",
   "metadataHeadRule": "candidateSourceCommit names the latest product/tooling/documentation candidate. Later commits confined to .depulse-certification/resume are fingerprint-excluded metadata and may advance branch HEAD without inheriting evidence across any other source change.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "v18.5.2 recovery plus checkpoint-triggered canonical exact-source workflow must complete one clean G0-G12 run before RC/native promotion evidence can be trusted.",
+  "sourceFingerprintReason": "v18.5.2 recovery plus observable checkpoint-triggered canonical exact-source workflow must complete one clean G0-G12 run before RC/native promotion evidence can be trusted.",
   "codeStatus": "V18_5_2_IMPLEMENTED_QUALIFICATION_REQUEST_READY",
-  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, and a checkpoint-triggered GitHub lane that executes the canonical run_free_certification.sh while ordinary source pushes remain quiet.",
+  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, and an observable checkpoint-triggered GitHub lane that executes the canonical run_free_certification.sh while ordinary source pushes remain quiet.",
   "lastTrustworthyPass": "FOCUSED_FUNCTIONALITY_UTILITY_AND_RECONCILIATION_INVENTORY_PASS; NO_FULL_V18_5_2_G0_G12_OR_NATIVE_PASS_CLAIMED",
   "earliestRequiredResumeGate": "G0",
   "gates": {
@@ -62,7 +62,7 @@
     "Adaptive Resume gate enforces assistant/account portability across all four adaptive layers.",
     "Provider-to-Market-Mode registry/gate covers 22 assessments across 12 providers.",
     "Reconciliation inventory conserves 296 unique rows and includes independent-audit findings.",
-    "v18.5.2 qualification workflow now executes the canonical exact-source certification runner from a deliberate fingerprint-excluded request."
+    "v18.5.2 qualification workflow executes the canonical exact-source runner from a deliberate fingerprint-excluded request and exposes PR-triggered runs for connected-tool inspection."
   ],
   "assistantPortability": {
     "status": "ENFORCED",
@@ -75,5 +75,5 @@
   "userDelivery": "NOT_READY",
   "nextBranch": "v18.5.2-development",
   "nextStep": "Resolve the exact-source certification run triggered by .depulse-certification/resume/qualification-request.json; if PASS, record the exact run/evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15; if FAIL, fix the earliest failing G0-G12 owner.",
-  "updatedAt": "2026-08-18T04:11:00Z"
+  "updatedAt": "2026-08-18T04:16:00Z"
 }
