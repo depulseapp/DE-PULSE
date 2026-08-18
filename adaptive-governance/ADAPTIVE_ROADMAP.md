@@ -137,7 +137,8 @@ Classification: **CURRENT_RELEASE_BLOCKER**. v18.5.1 must close the following ev
 | HOVER-18.5.1-001 | Eliminate ticker/row hover-triggered screen or table blinking across all ticker surfaces during live updates. | Pointer-dwell plus repeated live/SSE update matrix proving stable DOM, geometry and paint across Day/Swing/Long, responsive browser widths and actual packages. |
 | HEADER-18.5.1-001 | Implement the approved three-tier header: simplified primary header; distinctive, stable secondary Market Pulse Ribbon; quieter tertiary market-instrument strip. Preserve the current ET/PT clock component exactly rather than compacting it. | Desktop/tablet/narrow visual and interaction proof; session/coverage/data-state truth matrix; accessible owner/data controls; no flicker or layout shift; actual macOS/Windows package evidence. |
 | RESEARCH-v15.1.0-17-19-REOPENED | Reclose approved Research input, freshness-badge and responsive top-area placement; make labels, controls, disabled states and evidence recovery truthful. | Requirement-level UI/state tests at desktop/tablet/narrow widths plus packaged-runtime evidence. |
-| IMPL-18-TRADEINSIGHT-001 | Implement the committed TradeInsight SHADOW / SECONDARY workstream through the canonical Smart Router; it is confirmed absent from current implementation. | Adapter/configuration, capability/rights/provenance controls, bounded SHADOW fixtures/live smoke, router integration and actual-package evidence. |
+| IMPL-18-TRADEINSIGHT-001 | Implement the committed TradeInsight SHADOW / SECONDARY workstream through the canonical Smart Router; it is confirmed absent from current implementation. | Adapter/configuration, capability/rights/provenance controls, explicit provider → Market Mode disposition for every capability, bounded SHADOW fixtures/live smoke, router integration and actual-package evidence. |
+| CONVO-V18-003 | Make provider → Market Mode assessment a permanent adaptive method for every current/future provider. Provider count cannot change a mode; every capability is classified as integrated, contextual only, not relevant or intentionally hidden and follows the governed promotion lifecycle. | `provider_market_mode_integration_registry.json`, G2/G10 functionality/utility gate enforcement, Router/capability auto-coverage, TradeInsight assessment rows, deterministic-boundary and package evidence. |
 | IMPL-18-UTILITY-001 | Consolidate Scanner/Radar snapshot acquisition into one bounded canonical broker/cache. | Shared-fetch/coalescing tests, avoided-call telemetry, provider-budget and package evidence. |
 | IMPL-18-UTILITY-002 | Implement one Session Intelligence Coordinator for Pre-Market and Market Open checkpoints. | Canonical-owner tests, no-parallel-pipeline proof, restart/catch-up and package evidence. |
 | IMPL-18-UTILITY-003 | Remove Market Activity Seeds as a prominent normal-user surface. | Discovery hierarchy/browser/package proof with seed reuse preserved. |
@@ -193,7 +194,7 @@ v18.5.1 is the audit/containment and urgent-recovery entry slice. It is not auto
 
 The v18.x program executes these ordered waves across as many coherent minor releases as evidence requires:
 
-1. reconstruct/freeze the complete 295-row inventory;
+1. reconstruct/freeze the complete 296-row inventory;
 2. fix escaped user defects;
 3. implement confirmed misses;
 4. close all 13 orphaned utility remediations;
@@ -236,7 +237,7 @@ Status: **GOVERNANCE_BOUND_OPEN · IMPLEMENTATION/EVIDENCE REQUIRED**.
 
 Source audit baseline: `v18.5.1-development@05825b7fd73d4bc74620256548db7149c5337ac8`, independently reviewed on 2026-08-17 across the root production Go corpus, renderer/admin/auth UI, Go/JavaScript tests, provider/AI/learning/security paths, adaptive authorities, workflow inventory and the reconciliation ledger.
 
-The audit findings are permanent requirement records. Their presence in documentation never closes them. Ten audit records extend the authoritative v17/v18 inventory from **285 to 295 rows**; links to reopened defects or prior CI controls preserve both identities and never double-close either record.
+The audit findings are permanent requirement records. Their presence in documentation never closes them. Ten audit records extended the authoritative v17/v18 inventory from **285 to 295 rows**; `CONVO-V18-003` subsequently raises the conserved authority to **296 rows**. Links to reopened defects or prior CI controls preserve both identities and never double-close either record.
 
 | Audit ID | Permanent finding / outcome | Candidate placement |
 |---|---|---|
