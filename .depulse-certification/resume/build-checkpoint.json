@@ -3,9 +3,9 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.5.2",
   "channel": "STABLE",
-  "candidateDisposition": "AUTHORITATIVE_STABLE_G16_CLOSED",
-  "branch": "main",
-  "pullRequest": 13,
+  "candidateDisposition": "AUTHORITATIVE_STABLE_G16_CLOSED_POST_RELEASE_CONTINUITY_REPAIR",
+  "branch": "v18.6-development",
+  "pullRequest": null,
   "certifiedStable": {
     "version": "v18.5.2",
     "tag": "v18.5.2-stable",
@@ -15,21 +15,26 @@
     "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
-  "stableIdentityRule": "v18.5.2-stable at d30e54db4908ca57c52ae298cc4ada3416fab46b plus the certified source fingerprint and native artifact hashes define the immutable v18.5.2 product release. Later main commits that only update governance/G16 documentation/checkpoints are post-release operational metadata and do not redefine Stable.",
+  "stableIdentityRule": "v18.5.2-stable at d30e54db4908ca57c52ae298cc4ada3416fab46b plus the certified source fingerprint and native artifact hashes define immutable v18.5.2. Post-release CI, governance, handoff and checkpoint commits do not redefine Stable.",
   "postReleaseOperationalMetadata": {
-    "handoffCommit": "1848702f2380b62e5630c15753e9245c48033b81",
-    "adaptiveRoadmapCommit": "6b8d067fdc01956f5728efc185c3a9abbe5950be",
-    "adaptiveBuildPlanCommit": "30147329b31ff21753ba4f0d2ca12e5ac4c11c98",
-    "adaptiveBuildProcessCommit": "c7ad7821d384092d6fcad4cd47f6f59f8feaa026",
-    "adaptiveDeliveryProcessCommit": "c5d833889cb7ec46235b69d108d642ade5243b44",
-    "rule": "These governance/handoff commits are post-release operational metadata. They do not alter the immutable v18.5.2 Stable source or artifact identity."
+    "ciConsolidationPullRequest": 14,
+    "ciConsolidationCommit": "c6cf481a32a8151306e930574d2b8465cb1fd094",
+    "ciValidatedHead": "1ee74e1902860000e165d51bf349e7918dba851f",
+    "ciFastRun": 32106754569,
+    "ciQualifiedRun": 32106754567,
+    "continuityRepairCommits": [
+      "4748a4e2a4f90bc08d468bf5cfdeca8257c5dc3b",
+      "d585f6be590ca16ddf48dd6fe656a8047ea96139",
+      "b0dc00f6959428d8807b11928da151d33a0388d0"
+    ],
+    "rule": "These are post-release behavior-neutral CI/continuity changes. They do not alter the immutable v18.5.2 Stable product identity."
   },
   "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
   "sourceFingerprintState": "CERTIFIED_STABLE_G0_G16_CLOSED",
-  "codeStatus": "V18_5_2_AUTHORITATIVE_STABLE_COMPLETE",
-  "implementationSummary": "v18.5.2 recovery is complete. Exact-source G0-G12 passed; actual packaged macOS Apple Silicon and Windows x64 G13/G14 passed; G15 authorized promotion; PR #13 merged with exact-head protection; Stable tag/release published from already-certified artifacts without rebuilding; G16 retrospective/handoff closed. Post-release governance now makes canonical CI convergence and repository hygiene the next process action before normal v18.6 product work.",
-  "lastTrustworthyPass": "G0_G12_PASS_E9CA615CF7AB97AC476128C81EE9AE2D7340C0D9; FP_807DE082D43E83D1D3548BCA9350D13B72EF4DC71A848940B73B63E4B4D215B0; MAC_G13_G14_PASS_32102570376; WIN_G13_G14_PASS_32103078336; G15_PASS_32103078336; PROMOTION_D30E54DB4908CA57C52AE298CC4ADA3416FAB46B; PUBLICATION_PASS_32103499711; G16_PASS",
-  "earliestRequiredResumeGate": "NONE_V18_5_2_CLOSED",
+  "codeStatus": "V18_5_2_AUTHORITATIVE_STABLE_COMPLETE_POST_RELEASE_PROCESS_HARDENING",
+  "implementationSummary": "v18.5.2 remains authoritative Stable and G0-G16 closed. PR #14 completed the three-workflow CI/repository hygiene consolidation. Fresh-session reconciliation then found a schema-compatibility defect between adaptive_resume_gate.py and the certified-Stable checkpoint/handoff model; the repair is active on v18.6-development and is now enforced by canonical CI Fast.",
+  "lastTrustworthyPass": "V18_5_2_G0_G16_PASS; PR14_CI_QUALIFIED_PASS_32106754567; PR14_CI_FAST_PASS_32106754569; CONTINUITY_REPAIR_PENDING_NEW_CI_FAST",
+  "earliestRequiredResumeGate": "POST_RELEASE_CONTINUITY_REPAIR_CI_FAST",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
     "G1": {"status": "PASS", "reusable": true},
@@ -53,63 +58,40 @@
     "macosAppleSilicon": {
       "status": "PASS",
       "runId": 32102570376,
-      "artifactId": 9312071763,
       "artifact": "De-Pulse-v18.5.2-Stable-macOS-Apple-Silicon.zip",
       "sha256": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae"
     },
     "windowsX64": {
       "status": "PASS",
       "runId": 32103078336,
-      "artifactId": 9312257480,
       "artifact": "De-Pulse-v18.5.2-Stable-Windows-x64.zip",
-      "sha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326",
-      "provenance": "canonical raw Git-object fingerprint PASS; filesystem materialization fingerprint diagnostic only"
-    },
-    "g15": {
-      "status": "PASS",
-      "runId": 32103078336,
-      "artifactId": 9312264020,
-      "promotionAuthorized": true,
-      "noExecutionBoundary": "PRESERVED"
+      "sha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"
     },
     "publication": {
       "status": "PASS",
       "runId": 32103499711,
       "tag": "v18.5.2-stable",
       "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
-      "releaseDraft": false,
-      "releasePrerelease": false,
       "rebuild": false
     }
   },
-  "blockingIssue": null,
+  "blockingIssue": "RESUME_CONTRACT_SCHEMA_COMPATIBILITY_REPAIR_IN_PROGRESS",
   "knownResiduals": [
-    "Owner/Admin/User role-specific tab/navigation composition remains future work and is not claimed by v18.5.2.",
-    "TradeInsight secure key configuration, adapter/normalization, Smart Router SHADOW routes, validation and promotion remain future work with NONE production influence.",
-    "Canonical shared CI/release tooling must absorb the v18.5.2 raw Git-object provenance lesson before normal v18.6 product work.",
-    "Historical/version-specific workflow files and obsolete operational branches require inventory/reconciliation/cleanup before normal v18.6 product work."
+    "Owner/Admin/User role-specific tab/navigation composition remains future work.",
+    "TradeInsight governed implementation and promotion remain future work with NONE production influence.",
+    "Fifteen non-main branches remain for explicit semantic reconciliation after conservative branch hygiene.",
+    "Normal v18.6 product scope is not yet frozen; evidence-selected G0-G3/G1 work begins only after this continuity repair is merged."
   ],
   "releaseBlockingResiduals": [],
-  "g16Learning": [
-    "Preserve independent native platform PASS when fingerprints/artifact identities remain equivalent.",
-    "Treat pre-build/checkout/provenance harness failures separately from product failures.",
-    "Use canonical Git-object bytes for cross-platform source provenance.",
-    "Never rebuild certified artifacts during publication.",
-    "Separate immutable Stable identity from post-release operational metadata.",
-    "Canonical CI must improve in place: same workflow/lane retry-resume, no release-specific retry/monitor/publish workflow families, machine-enforced workflow allowlist, and mandatory G16 workflow/branch hygiene."
-  ],
   "nextProcessWork": {
-    "id": "CI-REPO-HYGIENE-CONSOLIDATION",
+    "id": "RESUME-CONTRACT-RECONCILIATION",
     "classification": "BEHAVIOR_NEUTRAL_PROCESS_HARDENING_BEFORE_NORMAL_V18_6_PRODUCT_WORK",
-    "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
+    "status": "IN_PROGRESS",
     "requirements": [
-      "fold v18.5.2 provenance/retry lessons into shared tooling",
-      "same-workflow failed-lane retry/resume",
-      "preserve independent matching-fingerprint PASS evidence",
-      "workflow allowlist and harness regression tests",
-      "retire obsolete version-specific workflows after validation",
-      "inventory/reconcile/remove obsolete RC/retry/certification/promotion/old-development branches",
-      "retain certified artifacts/evidence in immutable GitHub Releases and Git history"
+      "support certified-Stable and active-candidate resume checkpoint schemas without weakening identity checks",
+      "execute adaptive_resume_gate.py in canonical CI Fast",
+      "keep handoff and machine checkpoint branch/process state consistent",
+      "obtain CI Fast PASS and merge the repair to main"
     ]
   },
   "assistantPortability": {
@@ -120,8 +102,8 @@
     "chatMemoryRequired": false,
     "temporaryWorkspaceAuthoritative": false
   },
-  "userDelivery": "DELIVERED_VIA_GITHUB_STABLE_RELEASE",
-  "nextBranch": null,
-  "nextStep": "Before normal v18.6 product implementation, execute the behavior-neutral CI & Repository Hygiene Consolidation from immutable v18.5.2-stable: implement and validate ci-fast.yml, ci-qualified.yml and release.yml; fold v18.5.2 provenance/retry learning into shared tooling; add allowlist/harness regressions; inventory and safely retire obsolete workflows/branches while preserving immutable release evidence.",
-  "updatedAt": "2026-08-18T05:48:00Z"
+  "userDelivery": "V18_5_2_DELIVERED_VIA_GITHUB_STABLE_RELEASE",
+  "nextBranch": "v18.6-development",
+  "nextStep": "Finish and merge the behavior-neutral resume-contract reconciliation on v18.6-development: obtain canonical CI Fast PASS on the repaired adaptive_resume_gate.py, merge the repair to main, and only then begin v18.6 G0-G3 evidence-selected scope freeze.",
+  "updatedAt": "2026-08-18T16:50:00Z"
 }

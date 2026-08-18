@@ -1,118 +1,72 @@
 # DE.PULSE — Current Authoritative Handoff
 
-**Status:** v18.5.2 STABLE / G0–G16 CLOSED  
+**SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
+
+**Release:** `v18.5.2`  
+**Active branch:** `v18.6-development`  
+**Stable status:** v18.5.2 STABLE / G0–G16 CLOSED  
 **Repository:** `depulseapp/DE-PULSE`  
 **Stable tag:** `v18.5.2-stable`  
 **Stable promotion commit:** `d30e54db4908ca57c52ae298cc4ada3416fab46b`  
 **Certified source checkout:** `e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9`  
 **Certified source fingerprint:** `807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0`  
 **Runtime build ID:** `v18.5.2-stable-hotfix-20260817`  
-**PR #13:** merged  
-**Machine state:** `.depulse-certification/resume/build-checkpoint.json`  
-**Last updated:** 2026-08-17 America/Vancouver
+**Last updated:** 2026-08-18 America/Vancouver
 
-## Authority and resume rule
+## Resume rule
 
-GitHub is authoritative. Start with `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff and the machine checkpoints against the immutable Stable tag/release and current repository state.
+Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, actual branch/PR/check state and the immutable Stable tag/release. `v18.5.2-stable` remains the certified product authority; later process/governance/handoff commits do not redefine that release.
 
-`v18.5.2-stable` is the immutable product/release authority. `main` may contain later **post-release G16 operational metadata, governance or handoff commits**; those do not redefine the certified Stable product source, native artifact hashes, or Stable tag. Do not infer a new product release from post-release governance changes.
+## v18.5.2 certified release
 
-## v18.5.2 final result
+v18.5.2 remains fully closed and unchanged. Deterministic Day/Swing/Long formulas, the U.S. Equities Processing Boundary, the permanent No Execution Boundary and deterministic/statistical Market Mode ownership remain protected. TradeInsight remains `NOT_IMPLEMENTED` with `NONE` production influence until its governed implementation and validation lifecycle is complete.
 
-The desktop recovery is complete and promoted:
+Certified native packages remain:
 
-- Day, Swing and Long-Term desk rendering recovered;
-- complete ET/PT clocks retained in the compact Market Pulse Ribbon;
-- Research hierarchy/reading width recovered;
-- tracked-symbol draft and first-attempt add behavior recovered;
-- symbol controls aligned with responsive stacking;
-- configurable display/sign-in names added while OWNER remains a separate role;
-- Settings viewport/save-row behavior corrected;
-- deterministic Day/Swing/Long formulas remain protected;
-- U.S. Equities Processing and permanent No Execution boundaries remain intact.
+- macOS Apple Silicon SHA-256: `91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae`
+- Windows x64 SHA-256: `6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326`
 
-Provider → Market Mode governance remains in force with 22 capability assessments across 12 providers. Provider count alone cannot change a mode; deterministic/statistical code owns numeric Market Mode truth. TradeInsight remains `NOT_IMPLEMENTED` with `NONE` production influence until its adapter and lifecycle evidence close.
+## CI & Repository Hygiene Consolidation — completed
 
-## Certification and native delivery
+The behavior-neutral consolidation required before normal v18.6 product work was merged in PR #14 at `c6cf481a32a8151306e930574d2b8465cb1fd094`.
 
-### G0–G12 — PASS
+Normal active workflows are exactly:
 
-Canonical exact-source certification passed at checkout `e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9` with fingerprint `807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0`.
+1. `.github/workflows/ci-fast.yml`
+2. `.github/workflows/ci-qualified.yml`
+3. `.github/workflows/release.yml`
 
-Key protected result: deterministic trading equivalence **2403/2403 PASS**.
+The consolidation includes impact-selected lanes, workflow allowlisting, canonical Git-object cross-platform provenance, reusable native release harnesses, preserved independent platform PASS, same-workflow retry/resume, no-rebuild publication and conservative branch hygiene.
 
-Four G12 defects/test-contract defects were found and closed before the final full pass: bundled v18.5.2 QA identity, refactor-safe role/identity regression coverage, Playwright scroll baseline ordering, and release-bound watchlist cache-busting coverage.
+PR #14 final head `1ee74e1902860000e165d51bf349e7918dba851f` passed:
 
-### G13/G14 — PASS on both required native targets
+- CI Qualified run `32106754567` — SUCCESS
+- CI Fast run `32106754569` — SUCCESS
 
-**macOS Apple Silicon** — run `32102570376`
+The current remote inventory contains 16 branches including `main`. Automatic hygiene removes only tips already contained in `main`; unique/diverged tips remain for explicit reconciliation. `v18.6-development` was identical to post-consolidation `main` before the continuity repair below.
 
-- actual arm64 packaged artifact runtime audit PASS;
-- native `libsqlite3` linkage PASS;
-- clean extraction/code-sign verification PASS;
-- health/release identity PASS;
-- SQLite ready/integrity/migrations 1–4 PASS;
-- package: `De-Pulse-v18.5.2-Stable-macOS-Apple-Silicon.zip`;
-- SHA-256: `91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae`.
+## Resume-contract compatibility repair — active
 
-**Windows x64** — run `32103078336`
+Fresh-session reconciliation found a portability mismatch between `adaptive_resume_gate.py` and the certified-Stable checkpoint schema. The gate expected development-style top-level fields while the Stable checkpoint keeps certified identity inside `certifiedStable` and Stable/post-release identity rules.
 
-- actual AMD64 packaged artifact runtime audit PASS;
-- PE x64 and real `winsqlite3` runtime PASS;
-- clean extraction/launch PASS;
-- health/release identity PASS;
-- SQLite ready/integrity/migrations 1–4 PASS;
-- package: `De-Pulse-v18.5.2-Stable-Windows-x64.zip`;
-- SHA-256: `6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326`.
+Current repair commits on `v18.6-development`:
 
-### G15 — PASS
+- `4748a4e2a4f90bc08d468bf5cfdeca8257c5dc3b` — support both active-candidate and certified-Stable checkpoint schemas while preserving identity validation;
+- `d585f6be590ca16ddf48dd6fe656a8047ea96139` — run the adaptive resume portability gate inside canonical CI Fast.
 
-Run `32103078336` consumed the preserved macOS PASS and final Windows PASS, verified both exact package hashes/evidence graphs, preserved the No Execution Boundary, and returned `promotionAuthorized=true`.
+This is behavior-neutral process/continuity hardening and does not modify v18.5.2 Stable product behavior.
 
-PR #13 was then promoted with exact-head protection. Merge/promotion commit: `d30e54db4908ca57c52ae298cc4ada3416fab46b`.
+## Residuals
 
-Stable publication run `32103499711` re-downloaded and re-verified the already-certified artifacts, created `v18.5.2-stable` at the promotion commit, uploaded the certified packages/evidence without rebuilding, and verified the release is neither draft nor prerelease.
-
-Published release assets include both native packages, both G13/G14 evidence JSON files, G15 assurance JSON, and the G15 SHA-256 manifest.
-
-## G16 retrospective / reusable learning
-
-1. **Preserve independent platform PASS.** macOS passed on the first native run and was never rerun merely because Windows failed. G15 reused the preserved exact macOS artifact.
-2. **Classify infrastructure/test-harness failures truthfully.** Earlier Actions pre-step failures were infrastructure failures, not product failures. Windows native attempts that stopped before build on fingerprint materialization were harness/provenance failures, not runtime failures.
-3. **Cross-platform source provenance must use canonical Git bytes.** Windows filesystem materialization produced a different byte fingerprint even for the exact Git commit. The successful Windows lane recomputed the certified fingerprint directly from raw Git object bytes and treated the materialized filesystem fingerprint as diagnostic only.
-4. **Do not rebuild during publication.** Stable publication uploaded the exact artifacts already certified at G13/G14/G15.
-5. **Minimize unnecessary spend/reruns.** G0–G12 was not rerun after it became authoritative; macOS was not rerun for Windows-only harness fixes; publication performed verification/upload only.
-6. **Release identity and post-release metadata are separate.** The immutable Stable tag/release and artifact hashes define v18.5.2. Later G16/governance commits on `main` are operational metadata and cannot silently redefine Stable.
-7. **CI learning must converge, not sprawl.** The v18.5.2 recovery succeeded but created temporary native-delivery/monitor/retry/publication orchestration on a certification branch. The permanent response is now to harden one canonical CI implementation and remove orphaned workflows/branches rather than repeat that pattern.
-
-## Permanent post-v18.5.2 CI decision
-
-The Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process now require:
-
-- exactly three normal active workflow entry points: `ci-fast.yml`, `ci-qualified.yml`, `release.yml`;
-- release identity/gate/platform/retry as inputs rather than version-specific workflow files;
-- failure classification followed by same-workflow/same-lane rerun or resume;
-- preservation of independent matching-fingerprint PASS evidence;
-- repeated CI/harness lessons implemented into canonical shared tooling/tests, not merely documented;
-- a machine-enforced workflow allowlist;
-- Stable history in tags/Releases/evidence rather than permanent RC/retry/certification branches;
-- mandatory G16 workflow/branch cleanup and explicit retained-exception disposition.
-
-This is behavior-neutral process hardening and does not modify the immutable v18.5.2 Stable product.
-
-## Truthful residuals after v18.5.2 closure
-
-- Owner/Admin/User role-specific tab/navigation composition remains future work; v18.5.2 does not claim it.
-- TradeInsight secure key configuration, adapter/normalization, Smart Router SHADOW routing, validation and promotion remain future work; no API key is committed.
-- Cross-platform fingerprint implementation must be hardened around canonical Git-object provenance in the permanent shared CI/release tooling.
-- The active repository still contains historical/version-specific workflows and many old operational branches; they require inventory/reconciliation/cleanup before normal v18.6 product implementation.
-
-None of these residuals invalidates the certified v18.5.2 Stable release.
+- Role-specific tab/navigation composition remains future work.
+- TradeInsight implementation and governed promotion remain future work with `NONE` production influence.
+- Fifteen non-main branches remain for explicit semantic reconciliation.
+- Normal v18.6 product scope is not frozen yet; G1 must be evidence-selected from the conserved recovery ledger.
 
 ## Exactly one next action
 
-**Perform the behavior-neutral CI & Repository Hygiene Consolidation before normal v18.6 product implementation:** implement/validate the canonical `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`; fold v18.5.2 provenance/retry learning into shared tooling; add workflow allowlist/harness regressions; inventory and safely retire obsolete workflows and branches while preserving immutable tags/Releases/evidence.
+**Finish and merge the resume-contract reconciliation on `v18.6-development`: update the machine build checkpoint to this active branch/process state, obtain canonical CI Fast PASS on the repaired portability gate, merge the repair to `main`, and only then begin v18.6 G0–G3 evidence-selected scope freeze.**
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, resolve Stable through `v18.5.2-stable`, verify it maps to promotion commit `d30e54db4908ca57c52ae298cc4ada3416fab46b`, and read `.depulse-certification/resume/build-checkpoint.json` plus this handoff. Treat later `main` commits that change only governance/handoff/checkpoints as post-release operational metadata, not a new product baseline. Before normal v18.6 product work, execute the CI & Repository Hygiene Consolidation defined across the four adaptive artifacts. Preserve G0–G16, the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, TradeInsight `NOT_IMPLEMENTED/NONE` truth, and the certified v18.5.2 package hashes.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, verify `v18.5.2-stable` at promotion commit `d30e54db4908ca57c52ae298cc4ada3416fab46b`, inspect `v18.6-development`, actual PR/check state, `handoff/CURRENT.md` and both resume checkpoints, then resume the single next action above. Preserve G0–G16, GitHub account/assistant independence, the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, TradeInsight `NOT_IMPLEMENTED/NONE` truth and the certified v18.5.2 package hashes.

@@ -104,10 +104,19 @@ try:
     release = str(cp.get('release', '')).lstrip('v')
     need(release == str(ident.get('version', '')).lstrip('v'), 'checkpoint release must match canonical release identity')
     need(cp.get('branch'), 'checkpoint branch missing')
-    candidate = cp.get('candidateSourceCommit')
-    need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidateSourceCommit must be a Git SHA')
-    need(cp.get('metadataHeadRule'), 'checkpoint metadataHeadRule missing')
-    fp = cp.get('sourceFingerprint')
+
+    certified = cp.get('certifiedStable', {}) if isinstance(cp.get('certifiedStable'), dict) else {}
+    candidate = cp.get('candidateSourceCommit') or certified.get('candidateSourceCommit') or certified.get('certifiedSourceCheckout')
+    need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidate source commit must be a Git SHA')
+
+    metadata_rule = cp.get('metadataHeadRule') or cp.get('stableIdentityRule')
+    if not metadata_rule:
+        post_release = cp.get('postReleaseOperationalMetadata', {})
+        if isinstance(post_release, dict):
+            metadata_rule = post_release.get('rule')
+    need(bool(metadata_rule), 'checkpoint metadata/stable identity rule missing')
+
+    fp = cp.get('sourceFingerprint') or certified.get('sourceFingerprint')
     fp_state = cp.get('sourceFingerprintState')
     need((isinstance(fp, str) and re.fullmatch(r'[0-9a-f]{64}', fp)) or (fp is None and fp_state in {'PENDING_REQUALIFICATION','NOT_FROZEN'}), 'checkpoint source fingerprint must be verified SHA-256 or explicitly pending')
     gates = cp.get('gates', {})
@@ -129,7 +138,12 @@ try:
     need(isinstance(schema, int) and schema >= 2, 'release evidence checkpoint schemaVersion must be v2 or later')
     need(str(ev.get('release', '')).lstrip('v') == str(ident.get('version', '')).lstrip('v'), 'release evidence checkpoint release mismatch')
     need(isinstance(ev.get('evidence'), dict), 'release evidence checkpoint evidence map missing')
-    need(ev.get('metadataHeadRule'), 'release evidence checkpoint metadataHeadRule missing')
+    evidence_metadata_rule = ev.get('metadataHeadRule')
+    if not evidence_metadata_rule:
+        post_release = ev.get('postReleaseOperationalMetadata', {})
+        if isinstance(post_release, dict):
+            evidence_metadata_rule = post_release.get('rule')
+    need(bool(evidence_metadata_rule), 'release evidence checkpoint metadata/stable identity rule missing')
 except Exception as exc:
     errors.append(f'release evidence checkpoint invalid/unreadable: {exc}')
 
