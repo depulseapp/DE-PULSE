@@ -53,9 +53,17 @@
   ],
   "knownResiduals":["TradeInsight remains governed shadow/future work until separately validated and approved.","External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required and fail closed when absent or unapproved.","v18.6 native macOS Apple Silicon and Windows x64 evidence remains pending."],
   "releaseBlockingResiduals":["G11-G16 remain required before Stable promotion."],
-  "assistantPortability":{"status":"ENFORCED","authoritativeHandoff":"handoff/CURRENT.md","releaseRunTracking":"GitHub Actions run identity + PR #16 binding","chatMemoryRequired":false},
+  "assistantPortability":{
+    "status":"ENFORCED",
+    "contract":"governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
+    "entrypoints":["AGENTS.md","CLAUDE.md"],
+    "authoritativeHandoff":"handoff/CURRENT.md",
+    "releaseRunTracking":"GitHub Actions run identity + PR #16 binding",
+    "chatMemoryRequired":false,
+    "temporaryWorkspaceAuthoritative":false
+  },
   "userDelivery":"V18_6_0_IN_PROGRESS_NOT_PROMOTED",
   "nextBranch":"v18.6-release-certification",
   "nextStep":"Reconcile release-certification to this G10-qualified state, create one unmerged excluded trigger PR, dispatch one canonical release.yml run with publish=false, bind its identity to PR #16, and continue G11-G16.",
-  "updatedAt":"2026-08-18T23:55:30Z"
+  "updatedAt":"2026-08-18T23:58:30Z"
 }
