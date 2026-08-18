@@ -49,11 +49,15 @@ The canonical release identity was then generated in isolation. Candidate identi
 - major v18 provenance anchor `v17.5.1`;
 - runtime/config continuity `PersonalMarketTerminal`.
 
-Pre-freeze qualification correctly surfaced and closed stale resume identity, release-coupled asset cache versions, QA-history identity, and version-hardcoded regression assumptions. Those failures were not bypassed: the canonical identity tooling and regression contracts were hardened so future release freezes derive from `release_identity.json`. The remaining G10 requirement is a fresh Fast + Qualified PASS on the final candidate-bound handoff and exact source.
+Pre-freeze qualification correctly surfaced and closed stale resume identity, release-coupled asset cache versions, QA-history identity, and version-hardcoded regression assumptions. Those failures were not bypassed: the canonical identity tooling and regression contracts were hardened so future release freezes derive from `release_identity.json`.
+
+The canonical Fast workflow now also contains an **owner-only release dispatcher inside the existing G0–G16 workflow model**. An exact `v18.6-release-certification` branch runs Fast and then dispatches the existing `release.yml` G11–G16 workflow with `publish=false`. After pre-promotion G11–G16 closure and merge, an exact `v18.6-stable-promotion` branch can run the same full release workflow with `publish=true`, preserving the existing no-rebuild publication contract. This adds no fourth workflow and no G17+ gate; `ci-fast.yml`, `ci-qualified.yml`, and `release.yml` remain the canonical workflow set.
+
+The remaining G10 requirement is a fresh Fast + Qualified PASS on this final candidate-bound handoff and exact source, including the release-dispatch governance change.
 
 ## Release sequence still required
 
-G10 pre-freeze exact-identity qualification → G11 immutable RC/provenance → G12 full certification via `release/v18.6.0/run_full_certification.sh` → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance and no-rebuild promotion → G16 adaptive retrospective/handoff.
+G10 pre-freeze exact-identity qualification → G11 immutable RC/provenance → G12 full certification via `release/v18.6.0/run_full_certification.sh` → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff. The pre-merge certification branch uses `publish=false`; Stable publication occurs only from the post-merge `v18.6-stable-promotion` path with `publish=true` and already-certified artifacts within that run.
 
 No v18.6 Stable tag, package, native artifact hash or publication claim is valid before those gates pass.
 
@@ -65,7 +69,7 @@ No v18.6 Stable tag, package, native artifact hash or publication claim is valid
 
 ## Exactly one next action
 
-**Reconcile the fingerprint-excluded `.depulse-certification/resume` checkpoints to this final candidate-bound handoff, obtain fresh canonical CI Fast + CI Qualified PASS, fast-forward the qualified result to `v18.6-development` / PR #16, then freeze G11 and execute G12–G16 without rebuilding certified artifacts during promotion.**
+**Reconcile the fingerprint-excluded `.depulse-certification/resume` checkpoints to this final candidate-bound source, obtain fresh canonical CI Fast + CI Qualified PASS, fast-forward the qualified result to `v18.6-development` / PR #16, then create `v18.6-release-certification` at that exact candidate to execute G11–G16 with publication disabled.**
 
 ## Provider-neutral continuation instruction
 
