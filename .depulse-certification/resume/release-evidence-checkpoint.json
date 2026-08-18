@@ -12,11 +12,11 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "9c00553b711dac89c8c7095885200a4507d5647d",
-  "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation candidate; actual GitHub objects and hashes control evidence reuse.",
+  "candidateSourceCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
+  "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation/reconciled-source candidate; actual GitHub objects and hashes control evidence reuse.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "No complete exact-source v18.5.2 G0-G12 result has yet been recorded for the observable checkpoint-triggered candidate.",
+  "sourceFingerprintReason": "No complete exact-source v18.5.2 G0-G12 result has been recorded for the reconciled candidate because the current Actions job does not start workflow steps.",
   "evidence": {
     "incoming-v18.5.1-stable": {
       "status": "PASS",
@@ -37,17 +37,27 @@
       "handoff": "handoff/CURRENT.md",
       "entrypoints": ["AGENTS.md", "CLAUDE.md"]
     },
+    "v18.5.2-main-reconciliation": {
+      "status": "PASS",
+      "mergeCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
+      "mainCommit": "5957c51d081cd20d1eb650437f46b2b4971a905f",
+      "summary": "PR conflict was isolated to the certification workflow; reconciled merge preserves the deliberate checkpoint workflow and current branch tree."
+    },
     "v18.5.2-G0-G12": {
-      "status": "QUALIFICATION_REQUEST_READY",
+      "status": "BLOCKED_ON_EXECUTION_INFRA",
       "runner": "release/v18.5.2/run_free_certification.sh",
       "workflow": ".github/workflows/v18.5.2-hotfix-certification.yml",
-      "candidateSourceCommit": "9c00553b711dac89c8c7095885200a4507d5647d"
+      "candidateSourceCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
+      "workflowRun": 32098538807,
+      "workflowAttempts": 2,
+      "classification": "INFRA_FAIL",
+      "observation": "GitHub created the job twice but both attempts completed failure before any step record or downloadable job log existed; no G0-G12 product-test failure is claimed."
     },
     "v18.5.2-G13-G15": {
       "status": "NOT_STARTED_BLOCKED_ON_G12",
       "requiredNativeTargets": ["macos-arm64", "windows-x64"]
     }
   },
-  "nextRequiredEvidence": "Resolve one clean exact-source v18.5.2 G0-G12 run, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
-  "updatedAt": "2026-08-18T04:17:00Z"
+  "nextRequiredEvidence": "A successfully started canonical exact-source v18.5.2 G0-G12 run for the reconciled candidate, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
+  "updatedAt": "2026-08-18T04:21:00Z"
 }
