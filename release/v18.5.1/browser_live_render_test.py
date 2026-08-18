@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavior-first browser proof for v18.5.1 incremental live rendering.
+"""Behavior-first browser proof for v18.5.2 incremental live rendering.
 
 This is intentionally a real Chromium test. It verifies the user-visible contract
 that quote ticks update data without replacing/reordering the row under active
@@ -21,6 +21,16 @@ INITIAL_HTML = """
 <main id="main">
   <div class="page">
     <div class="spacer">top</div>
+    <section data-live-key="master-market-symbols">
+      <div data-live-key="master-symbols-heading">
+        <div>Tracked Symbols</div>
+        <div data-live-key="master-symbol-controls">
+          <input id="master-symbol-input" data-master-add-input data-live-key="master-symbol-input" value="" aria-label="Add tracked ticker">
+          <button data-master-add>Add Symbol</button><button data-master-remove-all>Remove All</button>
+        </div>
+      </div>
+      <div data-live-key="master-symbol-list"><span data-master-symbol="AAPL">AAPL</span></div>
+    </section>
     <section data-live-key="quote-list">
       <article data-live-key="row:AAPL" class="quote neutral">
         <button data-symbol="AAPL">AAPL</button>
@@ -40,6 +50,16 @@ INITIAL_HTML = """
 NEXT_HTML = """
 <div class="page">
   <div class="spacer">top</div>
+  <section data-live-key="master-market-symbols">
+    <div data-live-key="master-symbols-heading">
+      <div>Tracked Symbols</div>
+      <div data-live-key="master-symbol-controls">
+        <input id="master-symbol-input" data-master-add-input data-live-key="master-symbol-input" value="server-draft" aria-label="Add tracked ticker">
+        <button data-master-add>Add Symbol</button><button data-master-remove-all>Remove All</button>
+      </div>
+    </div>
+    <div data-live-key="master-symbol-list"><span data-master-symbol="AAPL">AAPL</span></div>
+  </section>
   <section data-live-key="quote-list">
     <article data-live-key="row:MSFT" class="quote negative">
       <button data-symbol="MSFT">MSFT</button>
@@ -97,7 +117,7 @@ def main() -> None:
         page_obj.add_script_tag(path=str(LIVE_RECONCILER))
 
         assert page_obj.evaluate("Boolean(window.__DEPULSE_LIVE_DOM__)")
-        assert page_obj.evaluate("window.__DEPULSE_LIVE_DOM__.version") == "18.5.1"
+        assert page_obj.evaluate("window.__DEPULSE_LIVE_DOM__.version") == "18.5.2"
 
         page_obj.evaluate(
             """next => {
@@ -159,6 +179,48 @@ def main() -> None:
         assert result["scrollAfter"] == result["scrollBefore"], result
         assert result["renderExecuted"] == 1, result
 
+        # The tracked-symbol draft is a keyed interaction surface. Even if a
+        # quote reconciliation runs while it is focused, it must preserve the
+        # exact node, typed value, focus and selection.
+        typing_next = NEXT_HTML.replace("$101.25", "$102.00").replace(
+            'value="server-draft"', 'value="server-replacement"'
+        )
+        page_obj.evaluate(
+            """next => {
+              window.__nextHtml = next;
+              const input = document.getElementById('master-symbol-input');
+              window.__masterInputNode = input;
+              input.focus();
+              input.value = 'NVDA';
+              input.setSelectionRange(2, 4);
+            }""",
+            typing_next,
+        )
+        page_obj.evaluate("scheduleLiveRender('AAPL')")
+        page_obj.wait_for_timeout(450)
+        draft_result = page_obj.evaluate(
+            """() => {
+              const input = document.getElementById('master-symbol-input');
+              return {
+                sameNode: window.__masterInputNode === input,
+                focused: document.activeElement === input,
+                value: input.value,
+                selectionStart: input.selectionStart,
+                selectionEnd: input.selectionEnd,
+                price: document.querySelector('[data-live-key="price:AAPL"]').textContent,
+                fullRenderCalls: window.__fullRenderCalls,
+                fullScheduleCalls: window.__fullScheduleCalls
+              };
+            }"""
+        )
+        assert draft_result["sameNode"], draft_result
+        assert draft_result["focused"], draft_result
+        assert draft_result["value"] == "NVDA", draft_result
+        assert (draft_result["selectionStart"], draft_result["selectionEnd"]) == (2, 4), draft_result
+        assert draft_result["price"] == "$102.00", draft_result
+        assert draft_result["fullRenderCalls"] == 0, draft_result
+        assert draft_result["fullScheduleCalls"] == 0, draft_result
+
         # A structural event (empty symbol) must still use renderer.js's original
         # full-render contract; the incremental layer is quote-selective.
         page_obj.evaluate("scheduleLiveRender('')")
@@ -170,7 +232,7 @@ def main() -> None:
 
         browser.close()
 
-    print("PASS: v18.5.1 live quote rendering preserves DOM identity, focus, selection and scroll; structural events retain full render.")
+    print("PASS: v18.5.2 live quote rendering preserves DOM identity, focus, selection and scroll; structural events retain full render.")
 
 
 if __name__ == "__main__":
