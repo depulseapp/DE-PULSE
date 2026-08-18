@@ -12,16 +12,17 @@ Use the following hierarchy whenever DE.PULSE scope or a prior decision is quest
 
 1. **Actual source / packaged release evidence** — truth about what is actually implemented and delivered.
 2. **`governance/APPROVED-SCOPE.md`** — canonical base truth about approved product/roadmap scope.
-3. **`governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`** — canonical carry-forward + governance-to-implementation contract for previously approved/certified capabilities, ownership/RBAC/platform rules, active release obligations, unresolved defect continuity, and future-loss prevention.
-4. **`governance/ADAPTIVE-OPERATING-CONTRACT.md`** — canonical permanent engineering/build/release/delivery contract.
-5. **`governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`** — permanent checkpoint-based CI/CD execution contract across Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process; optimizes execution timing without reducing evidence or release quality.
-6. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
-7. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
-8. **`governance/DECISION-LOG.md` plus approved material decision records under `governance/DECISION-*.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
-9. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
-10. **G16 handoff / release evidence** — what actually happened in that release and what carries forward.
-11. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
-12. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
+3. **`governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`** — permanent GitHub-backed, vendor/account-independent resume and handoff contract.
+4. **`governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`** — canonical carry-forward + governance-to-implementation contract for previously approved/certified capabilities, ownership/RBAC/platform rules, active release obligations, unresolved defect continuity, and future-loss prevention.
+5. **`governance/ADAPTIVE-OPERATING-CONTRACT.md`** — canonical permanent engineering/build/release/delivery contract.
+6. **`governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`** — permanent checkpoint-based CI/CD execution contract across Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process; optimizes execution timing without reducing evidence or release quality.
+7. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
+8. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
+9. **`governance/DECISION-LOG.md` plus approved material decision records under `governance/DECISION-*.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
+10. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
+11. **`handoff/CURRENT.md` plus G16/release evidence** — the one current human continuation report and what actually happened in the release.
+12. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
+13. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
 
 A governance document never proves a feature exists in code. A release/code artifact never silently changes approved product intent. Absence from a newer condensed summary does not by itself retire an approved or certified capability.
 
@@ -36,6 +37,7 @@ Before treating a proposed DE.PULSE idea as new, use:
 ### LOOKUP
 Read/search at minimum:
 - `governance/APPROVED-SCOPE.md`;
+- `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md` when resuming, changing assistant/account, or producing a handoff;
 - `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`;
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`;
 - `governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md` when build/CI/CD/checkpoint/cost/qualification/release execution is relevant;
