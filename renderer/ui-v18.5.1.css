@@ -8,7 +8,7 @@
   --v1851-chrome-h:142px;
 }
 
-/* Primary header = identity, notification, complete ET/PT clocks and account. */
+/* Primary header = product identity, notification and account. */
 .topbar{
   height:var(--v1851-topbar-h)!important;
   min-height:var(--v1851-topbar-h)!important;
@@ -23,31 +23,31 @@
   overflow:visible!important;
   gap:7px!important;
 }
-.topbar .market-clocks{
+.market-status-bar .market-clocks{
   display:flex!important;
   gap:6px!important;
   min-width:0!important;
 }
-.topbar .market-clock,
-.topbar .market-clock:last-child{
+.market-status-bar .market-clock,
+.market-status-bar .market-clock:last-child{
   display:flex!important;
   min-width:112px!important;
   max-width:none!important;
   padding:5px 7px!important;
 }
-.topbar .market-clock-value small{
+.market-status-bar .market-clock-value small{
   display:block!important;
   font-size:5.8px!important;
   line-height:1!important;
   letter-spacing:.055em!important;
 }
-.topbar .market-clock-value time{
+.market-status-bar .market-clock-value time{
   display:block!important;
   font-size:8.5px!important;
   line-height:1.15!important;
 }
 
-/* Secondary header = market state, data coverage/detail and data control. */
+/* Secondary Market Pulse Ribbon = market state, complete ET/PT clocks, coverage/detail and data control. */
 .market-status-bar{
   min-height:var(--v1851-statusbar-h);
   height:var(--v1851-statusbar-h);
@@ -55,7 +55,7 @@
   top:var(--v1851-topbar-h);
   z-index:49;
   display:grid;
-  grid-template-columns:auto minmax(220px,1fr) auto;
+  grid-template-columns:auto auto minmax(220px,1fr) auto;
   gap:12px;
   align-items:center;
   padding:4px 14px;
@@ -221,9 +221,9 @@
   .header-notification{display:none!important}
   .brand img{width:44px!important;height:44px!important;flex-basis:44px!important}
   .brand small{display:none!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:104px!important}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:104px!important}
   .identity-principal{display:none!important}
-  .market-status-bar{grid-template-columns:auto minmax(180px,1fr) auto;gap:8px;padding-inline:10px}
+  .market-status-bar{grid-template-columns:auto auto minmax(180px,1fr) auto;gap:8px;padding-inline:10px}
   .market-status-bar .market-session-context{min-width:190px!important}
 }
 
@@ -232,12 +232,12 @@
   .brand img{width:38px!important;height:38px!important;flex-basis:38px!important}
   .brand-name{font-size:14px!important}
   .brand-pulse{display:none!important}
-  .topbar .market-clocks{gap:4px!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:94px!important;padding-inline:5px!important}
-  .topbar .market-clock b{font-size:6px!important}
-  .topbar .market-clock-value small{font-size:5px!important}
-  .topbar .market-clock-value time{font-size:7.3px!important}
-  .market-status-bar{grid-template-columns:auto minmax(150px,1fr) auto;padding-inline:8px;gap:6px}
+  .market-status-bar .market-clocks{gap:4px!important}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:94px!important;padding-inline:5px!important}
+  .market-status-bar .market-clock b{font-size:6px!important}
+  .market-status-bar .market-clock-value small{font-size:5px!important}
+  .market-status-bar .market-clock-value time{font-size:7.3px!important}
+  .market-status-bar{grid-template-columns:auto auto minmax(150px,1fr) auto;padding-inline:8px;gap:6px}
   .market-status-bar .market-session-context{min-width:174px!important}
   .market-data-detail{font-size:7px}
   .market-status-bar .btn{min-width:72px;padding-inline:8px}
@@ -254,7 +254,7 @@
   .brand img{width:34px!important;height:34px!important;flex-basis:34px!important}
   .brand-name{font-size:13px!important}
   .brand-version{display:none!important}
-  .topbar .market-clock,.topbar .market-clock:last-child{min-width:84px!important}
+  .market-status-bar .market-clock,.market-status-bar .market-clock:last-child{min-width:84px!important}
   .market-status-bar{display:flex;align-items:center;overflow-x:auto}
   .market-status-bar .market-session-context{min-width:165px!important;flex:0 0 165px}
   .market-data-summary{min-width:190px;flex:1 0 190px}
