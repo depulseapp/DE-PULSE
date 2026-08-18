@@ -12,11 +12,11 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "a236014e1dea18c68f1cc1070c9e3782ca0abf8e",
+  "candidateSourceCommit": "ea57d63a5421e325a45b1413281584858e3fa214",
   "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation candidate; actual GitHub objects and hashes control evidence reuse.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "No complete exact-source v18.5.2 G0-G12 result has been recorded after the recovery and portability changes.",
+  "sourceFingerprintReason": "No complete exact-source v18.5.2 G0-G12 result has yet been recorded for the checkpoint-triggered candidate.",
   "evidence": {
     "incoming-v18.5.1-stable": {
       "status": "PASS",
@@ -38,13 +38,15 @@
       "entrypoints": ["AGENTS.md", "CLAUDE.md"]
     },
     "v18.5.2-G0-G12": {
-      "status": "NOT_RUN_AFTER_COMPLETE_CHANGESET"
+      "status": "QUALIFICATION_REQUEST_READY",
+      "runner": "release/v18.5.2/run_free_certification.sh",
+      "workflow": ".github/workflows/v18.5.2-hotfix-certification.yml"
     },
     "v18.5.2-G13-G15": {
       "status": "NOT_STARTED_BLOCKED_ON_G12",
       "requiredNativeTargets": ["macos-arm64", "windows-x64"]
     }
   },
-  "nextRequiredEvidence": "One clean exact-source no-cost v18.5.2 G0-G12 run, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
-  "updatedAt": "2026-08-18T04:00:00Z"
+  "nextRequiredEvidence": "Resolve one clean exact-source v18.5.2 G0-G12 run, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
+  "updatedAt": "2026-08-18T04:12:00Z"
 }
