@@ -3,10 +3,10 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
+  "candidateDisposition": "V18_6_0_G12_BROWSER_HARNESS_REMEDIATION_G10",
   "branch": "v18.6-development",
   "pullRequest": 16,
-  "candidateSourceCommit": "a84b7028f8723f47f11a59e2225c10ddf1a38e3b",
+  "candidateSourceCommit": "f706b205fcb36bc74ca31e113be6a6add3c2afdb",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
   "certifiedStable": {
@@ -18,11 +18,11 @@
     "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
-  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source a84b7028 is frozen after G10 PASS.",
-  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_G12_HARNESS_REMEDIATED_G10_PASS",
-  "implementationSummary": "All eight v18.6 product slices remain code-complete. G12 no longer executes the obsolete v18.5.1 CURRENT/aria-current watchlist proof; the historical file remains, the v18.6 aria-pressed proof remains mandatory, and the watchlist contract prevents reintroduction of the contradictory legacy proof.",
-  "lastTrustworthyPass": "Exact source a84b7028f8723f47f11a59e2225c10ddf1a38e3b at qualification head 66fd480c3fcf91f1ce56a6077dff323625aaf0b3: CI Fast #242 run 32197304582 PASS; CI Qualified #102 run 32197304782 PASS including harness contract, Ubuntu/macOS/Windows portability, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and qualified evidence summary.",
-  "earliestRequiredResumeGate": "G11_CANONICAL_RELEASE_RUN",
+  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint. Browser proofs, certification harness, workflow policy and handoff are source-fingerprinted.",
+  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_SECOND_G12_HARNESS_REMEDIATION_G10_RUNNING",
+  "implementationSummary": "All eight v18.6 product slices remain code-complete. Source f706b205 adds a dedicated v18.6 UI hierarchy browser proof tied to canonical release identity, replaces the stale v18.5.1 hierarchy proof in G12, retains compatible behavior tests, and hardens workflow policy against reintroducing superseded v18.5.1 hierarchy/watchlist proofs.",
+  "lastTrustworthyPass": "Historical source a84b7028 passed Fast #242 / Qualified #102 and G11 in release run 32198058592. That run passed the first watchlist-harness failure point and then failed only on the v18.5.1 UI hierarchy hard-coded asset cache-buster ui-v18.5.1.css?v=18.5.2. Source f706b205 contains the consolidated second harness remediation and requires fresh G10.",
+  "earliestRequiredResumeGate": "G10_SECOND_G12_HARNESS_REMEDIATION",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
     "G1": {"status": "PASS", "reusable": true},
@@ -34,17 +34,7 @@
     "G7": {"status": "PASS", "reusable": true},
     "G8": {"status": "PASS", "reusable": true},
     "G9": {"status": "PASS", "reusable": true},
-    "G10": {
-      "status": "PASS",
-      "reusable": true,
-      "candidateSourceCommit": "a84b7028f8723f47f11a59e2225c10ddf1a38e3b",
-      "qualificationHead": "66fd480c3fcf91f1ce56a6077dff323625aaf0b3",
-      "fastRun": 32197304582,
-      "fastRunNumber": 242,
-      "qualifiedRun": 32197304782,
-      "qualifiedRunNumber": 102,
-      "coverage": ["G12 watchlist harness anti-regression", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "browser behavior", "renderer contracts", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
-    },
+    "G10": {"status": "IN_PROGRESS", "reusable": false, "candidateSourceCommit": "f706b205fcb36bc74ca31e113be6a6add3c2afdb", "required": "Fresh canonical Fast + Qualified PASS."},
     "G11": {"status": "PENDING", "reusable": false},
     "G12": {"status": "PENDING", "reusable": false},
     "G13": {"status": "PENDING", "reusable": false},
@@ -52,20 +42,16 @@
     "G15": {"status": "PENDING", "reusable": false},
     "G16": {"status": "PENDING", "reusable": false}
   },
-  "supersededReleaseRun": {
-    "runId": 32196711609,
-    "candidate": "659f4e59286ede7c8627d5cefa7deceab792c8b3",
-    "fingerprint": "22b14764656a08d3677eb05187232afde3029b5f35ea7f5c21b3f85b7d41f242",
-    "G11": "PASS",
-    "G12": "FAIL_STALE_LEGACY_WATCHLIST_HARNESS",
-    "downstream": "SKIPPED"
-  },
+  "supersededReleaseRuns": [
+    {"runId":32196711609,"G11":"PASS","G12":"FAIL_STALE_LEGACY_WATCHLIST_HARNESS","downstream":"SKIPPED"},
+    {"runId":32198058592,"candidate":"a6b58016f4921e5927579fc4eae4ea5e81f026ad","fingerprint":"f38e3815307382ec111c54558b36b503a06ab143fb1a5b84a279e0f48f1092ba","G11":"PASS","G12":"FAIL_STALE_LEGACY_UI_HIERARCHY_CACHE_BUSTER","downstream":"SKIPPED"}
+  ],
   "knownResiduals": [
     "TradeInsight remains governed shadow/future work until separately validated and approved.",
     "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required and fail closed when absent or unapproved.",
     "v18.6 native macOS Apple Silicon and Windows x64 evidence remains pending."
   ],
-  "releaseBlockingResiduals": ["G11-G16 remain required before Stable promotion."],
+  "releaseBlockingResiduals": ["Fresh G10 on source f706b205 and G11-G16 remain required before Stable promotion."],
   "assistantPortability": {
     "status": "ENFORCED",
     "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
@@ -76,6 +62,6 @@
   },
   "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
   "nextBranch": "v18.6-release-certification",
-  "nextStep": "Reconcile release-certification to this G10-qualified state, create one unmerged excluded trigger PR, dispatch one canonical release.yml run with publish=false, bind its identity to PR #16, and continue G11-G16.",
-  "updatedAt": "2026-08-18T23:35:30Z"
+  "nextStep": "Complete one fresh Fast + Qualified G10 pair on f706b205; if PASS, bind excluded checkpoints and proceed directly to one new G11-G16 release run with publish=false.",
+  "updatedAt": "2026-08-18T23:47:30Z"
 }
