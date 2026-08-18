@@ -9,8 +9,15 @@
       bar = document.createElement('div');
       bar.id = 'market-status-bar';
       bar.className = 'market-status-bar';
-      bar.setAttribute('aria-label', 'Market Pulse Ribbon: session, clocks, coverage and data control');
+      bar.setAttribute('aria-label', 'Market Pulse Ribbon: session, coverage, clocks and data control');
       topbar.insertAdjacentElement('afterend', bar);
+    }
+
+    let content = bar.querySelector('.market-status-content');
+    if (!content) {
+      content = document.createElement('div');
+      content.className = 'market-status-content';
+      bar.appendChild(content);
     }
 
     const session = document.getElementById('market-session-context');
@@ -30,11 +37,15 @@
       summary.appendChild(detail);
     }
 
-    if (session && session.parentElement !== bar) bar.appendChild(session);
-    if (clocks && clocks.parentElement !== bar) bar.appendChild(clocks);
     if (status && status.parentElement !== summary) summary.insertBefore(status, summary.firstChild);
-    if (summary.parentElement !== bar) bar.appendChild(summary);
-    if (toggle && toggle.parentElement !== bar) bar.appendChild(toggle);
+
+    // Keep the ribbon compact and deterministic: market state, coverage,
+    // complete clocks, then the data control. appendChild also repairs order
+    // when this extension is hot-reloaded over an older ribbon.
+    if (session) content.appendChild(session);
+    content.appendChild(summary);
+    if (clocks) content.appendChild(clocks);
+    if (toggle) content.appendChild(toggle);
     return bar;
   }
 
