@@ -82,9 +82,12 @@ node v18_0_5_renderer_test.js
 node v18_6_surface_consolidation_test.js
 node v18_6_documentation_access_test.js
 
+# Historical v18.5.1 watchlist-membership proof intentionally remains in the
+# repository but is not executed for v18.6: it asserts the superseded
+# CURRENT/aria-current model. v18.6 uses aria-pressed membership state and its
+# dedicated browser proof below.
 browser_tests=(
   release/v18.5.1/browser_live_render_test.py
-  release/v18.5.1/browser_watchlist_membership_test.py
   release/v18.5.1/browser_auth_copy_test.py
   release/v18.5.1/browser_ui_hierarchy_test.py
   release/v18.5.2/browser_master_symbol_input_test.py
