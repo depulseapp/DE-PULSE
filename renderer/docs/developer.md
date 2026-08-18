@@ -1,5 +1,9 @@
 # DE.PULSE — Developer documentation
 
+## v18.5.2 STABLE — Hotfix recovery candidate
+
+The patch removes the undeclared watchlist normalizer dependency, makes live DOM reconciliation preserve master-symbol draft ownership, moves header clocks through the existing extension layer, restores Research hierarchy without changing evidence logic, adds a recent-authenticated self-profile mutation, and sizes the Settings shell from the complete three-tier chrome token. GitHub Actions is manual-only during the budget pause; `release/v18.5.2/run_free_certification.sh` records exact-source local evidence. The immutable v18.5.1 Stable tag is unchanged, and G13/G14 native artifact evidence is required before G15 promotion.
+
 ## v18.5.1 STABLE — Recovery patch
 
 Certified RC source 97aeca6938410ed7dde6667186890902a7518289 passed G0-G12. Stable promotion changes release identity/QA history only; renderer live reconciliation, global symbol removal/restore reuse and checkpoint CI remain canonical. G13-G15 require exact-source/native evidence.
