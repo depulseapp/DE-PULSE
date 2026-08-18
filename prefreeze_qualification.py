@@ -155,6 +155,7 @@ def main():
         ('version', [py, 'version_consistency_test.py'], 30),
         ('documentation', [py, 'documentation_governance_gate.py'], 60),
         ('data_utility', [py, 'data_utility_gate.py'], 45),
+        ('functionality_utility', [py, 'functionality_utility_checkpoint_gate.py'], 45),
         ('data_health', [py, 'data_health_policy_gate.py'], 30),
         ('source_health', [py, 'source_health_architecture_gate.py'], 120),
         ('content', [py, 'content_copy_audit_test.py'], 60),
