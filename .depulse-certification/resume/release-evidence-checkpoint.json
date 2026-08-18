@@ -5,6 +5,17 @@
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
   "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
+  "dispatchTrigger": {
+    "sequence": 6,
+    "purpose": "Single owner-controlled connector-safe trigger after final non-blocking tracking G10 PASS.",
+    "releaseCertificationBaseSha": "659f4e59286ede7c8627d5cefa7deceab792c8b3",
+    "qualifiedSourceCommit": "51be6afc444d8337821dd3c6ecaaecb1297dc84b",
+    "g10FastRun": 32196295742,
+    "g10QualifiedRun": 32196295782,
+    "sourceFingerprintImpact": "NONE",
+    "expectedPublish": false,
+    "mergeRequired": false
+  },
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -78,6 +89,6 @@
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "One exact non-publishing canonical release.yml run from the reconciled v18.6-release-certification base, with its identity bound to PR #16 through workflow tracking or the connected GitHub app, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T23:17:30Z"
+  "nextRequiredEvidence": "Canonical release.yml run ID from this exact release-certification base, then PR #16 binding and G11-G16 execution with publish=false.",
+  "updatedAt": "2026-08-18T23:18:30Z"
 }
