@@ -85,7 +85,7 @@ def main() -> None:
     assert "align-items:end!important" in UI_CSS
     assert "top:calc(var(--v1851-topbar-h) + var(--v1851-statusbar-h))" in UI_CSS
     assert "ensureSecondaryMarketStatus" in HEADER_JS
-    assert "ribbon.appendChild(clocks)" in HEADER_JS
+    assert "content.appendChild(clocks)" in HEADER_JS
     assert "research-command-heading" in UI_CSS
 
     with sync_playwright() as p:
@@ -120,19 +120,22 @@ def main() -> None:
             assert page.locator(".topbar .runtime #runtime-status").count() == 0, width
             assert page.locator(".topbar .runtime #runtime-toggle").count() == 0, width
             assert page.locator("#market-status-bar #market-session-context").count() == 1, width
-            assert page.locator("#market-status-bar > .market-clocks").count() == 1, width
+            assert page.locator("#market-status-bar .market-status-content > .market-clocks").count() == 1, width
             assert page.locator("#market-status-bar #runtime-status").count() == 1, width
             assert page.locator("#market-status-bar #runtime-toggle").count() == 1, width
 
-            ribbon_order = page.locator("#market-status-bar > *").evaluate_all(
+            ribbon_order = page.locator("#market-status-bar .market-status-content > *").evaluate_all(
                 "(nodes)=>nodes.map(x=>x.id||x.className)"
             )
             assert ribbon_order[:4] == [
                 "market-session-context",
-                "market-clocks",
                 "market-data-summary",
+                "market-clocks",
                 "runtime-toggle",
             ], (width, ribbon_order)
+            if width == 1440:
+                ribbon_content = visible_box(page, ".market-status-content")
+                assert ribbon_content["width"] < status["width"] - 80, (status, ribbon_content)
 
             # Both complete clocks remain visible at every required test width.
             for zone in ("et", "pt"):
