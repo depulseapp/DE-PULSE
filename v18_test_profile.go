@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	stableRuntimeConfigDirName     = "PersonalMarketTerminal"
+	stableRuntimeConfigDirName    = "PersonalMarketTerminal"
 	stableRuntimeProfileVersion   = "v18.5.0"
 	v18TestRuntimeProfileVersion  = "v18.5.1"
-	v18TestRuntimeConfigDirName    = "PersonalMarketTerminal-v18.5.1-TEST"
-	hostedRuntimeConfigDirName     = "PersonalMarketTerminal-v18.5.1-HOSTED"
+	v18TestRuntimeConfigDirName   = "PersonalMarketTerminal-v18.5.1-TEST"
+	hostedRuntimeConfigDirName    = "PersonalMarketTerminal-v18.5.1-HOSTED"
 	v18TestProfileMigrationMarker = ".v18.5.1-test-profile-migration.json"
 )
 
