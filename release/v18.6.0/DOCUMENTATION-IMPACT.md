@@ -29,6 +29,7 @@ Identity-disabled local desktop operation retains its existing embedded-document
 | Market Activity surface demotion (`IMPL-18-UTILITY-003`) | Discovery presentation | `SELF_DESCRIBING_UI` | Market Activity Seeds remain visible only as a labeled supporting-input drill-down; no user action or interpretation contract is added. |
 | Legacy evidence-route retirement (`IMPL-18-UTILITY-004`) | Navigation consolidation | `SELF_DESCRIBING_UI` | Legacy market-wide evidence resolves to Market Intelligence; ticker evidence resolves to Research subviews. Navigation/browser proof is authoritative. |
 | Role-aware Documentation (`IMPL-18-DOC-001`) | Documentation audience and direct-path access | `MANIFEST_AND_POLICY` | This manifest records the audience contract. UI hides developer machinery from USER/DEMO and server direct-path enforcement independently denies it. |
+| External Dependency & Provider Readiness (`IMPL-17-DEPS-001`) | Owner/release-engineering setup, entitlement, rights and deployment readiness | `MANIFEST_AND_REGISTRY` | Canonical dependency/readiness and durable User Action Required registries record owner, capability, blocker, user action, rights/entitlement and evidence. CI binds the contract to existing G0–G16 gates only. |
 
 ## Direct-path and composition proof required before G10
 
@@ -39,6 +40,15 @@ Identity-disabled local desktop operation retains its existing embedded-document
 - Programmatic/UI attempt to select `developer` while unauthorized normalizes to user documentation and never triggers a privileged document fetch.
 - Server checks reuse canonical session resolution and role hierarchy; renderer visibility is never accepted as authorization evidence.
 
+## Dependency/readiness proof required before G10
+
+- `dependency_readiness_gate.py` passes in CI Fast and CI Qualified.
+- Provider operational entitlement remains separate from contractual data rights.
+- All provider-rights evidence remains fail closed until explicitly bound.
+- Desktop SQLite and conditional hosted PostgreSQL remain the only canonical persistence architecture.
+- Durable user actions contain no secret values and bind only G0–G16.
+- CI/release runtime-policy versions have no source-of-truth drift.
+
 ## Manifest maintenance contract
 
-Each later v18.6 material slice must append or update a row before its G10 evidence is accepted. `IMPL-17-DEPS-001`, `AUDIT-18-AI-001`, and `AUDIT-18-AI-RIGHTS-001` therefore receive their final documentation dispositions in this manifest as those slices are implemented. G10 must fail review if a material v18.6 change has no disposition.
+Each later v18.6 material slice must append or update a row before its G10 evidence is accepted. `AUDIT-18-AI-001` and `AUDIT-18-AI-RIGHTS-001` therefore receive their final documentation dispositions in this manifest as those slices are implemented. G10 must fail review if a material v18.6 change has no disposition.
