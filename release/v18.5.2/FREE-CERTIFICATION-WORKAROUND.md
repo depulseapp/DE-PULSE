@@ -28,6 +28,7 @@ DEPULSE_EXPECTED_SHA="$(git rev-parse HEAD)" \
 The runner performs:
 
 - canonical identity and version consistency;
+- adaptive functionality utility and provider-to-Market-Mode integration enforcement;
 - `gofmt` drift detection and `go vet`;
 - full, race-enabled, and randomized Go suites;
 - renderer syntax and deterministic-equivalence contracts;
