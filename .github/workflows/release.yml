@@ -33,10 +33,6 @@ on:
         description: Tag target; blank uses candidate SHA. Must preserve certified fingerprint.
         required: false
         type: string
-      tracking_pr:
-        description: Optional open release PR number for durable G11/G16 status comments
-        required: false
-        type: string
 
 permissions:
   contents: read
@@ -57,9 +53,6 @@ jobs:
     name: G11 Immutable candidate/provenance
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    permissions:
-      contents: read
-      issues: write
     outputs:
       fingerprint: ${{ steps.identity.outputs.fingerprint }}
     steps:
@@ -88,15 +81,6 @@ jobs:
           if [ -n "$EXPECTED_FP" ]; then test "$fp" = "$EXPECTED_FP"; fi
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
           echo "G11 fingerprint: $fp"
-      - name: Record G11 on release PR
-        if: ${{ inputs.tracking_pr != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TRACKING_PR: ${{ inputs.tracking_pr }}
-          FP: ${{ steps.identity.outputs.fingerprint }}
-        shell: bash
-        run: |
-          gh pr comment "$TRACKING_PR" --repo "$GITHUB_REPOSITORY" --body "✅ DE.PULSE v${{ inputs.version }} G11 PASS · immutable candidate \`${{ inputs.candidate_sha }}\` · canonical fingerprint \`${FP}\` · release run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}. G12 full certification is next."
 
   g12:
     name: G12 Full certification
@@ -314,9 +298,6 @@ jobs:
     if: ${{ always() && needs.g15.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
-    permissions:
-      contents: read
-      issues: write
     steps:
       - name: Generate durable G16 workflow result
         shell: bash
@@ -344,11 +325,3 @@ jobs:
           path: g16/**
           if-no-files-found: error
           retention-days: 365
-      - name: Record G16 on release PR
-        if: ${{ inputs.tracking_pr != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TRACKING_PR: ${{ inputs.tracking_pr }}
-        shell: bash
-        run: |
-          gh pr comment "$TRACKING_PR" --repo "$GITHUB_REPOSITORY" --body "✅ DE.PULSE v${{ inputs.version }} G11–G16 certification PASS · candidate \`${{ inputs.candidate_sha }}\` · fingerprint \`${{ needs.g11.outputs.fingerprint }}\` · G12 PASS · macOS Apple Silicon G13/G14 PASS · Windows x64 G13/G14 PASS · G15 PASS · publication=${{ needs.publish.result }} · release run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
