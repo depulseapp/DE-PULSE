@@ -198,7 +198,9 @@ jobs:
         run: |
           set -euo pipefail
           body="🚦 DE.PULSE v${VERSION} release dispatcher active · Fast/dispatcher run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · ref \`${RELEASE_REF}\` · candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. The next comment binds the canonical G11–G16 release run ID."
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null
+          if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
+            echo "::warning::PR tracking comment unavailable to workflow token; continuing certification and retaining release identity in Actions evidence."
+          fi
       - id: dispatch
         name: Reuse or dispatch exact candidate release run
         env:
@@ -250,9 +252,20 @@ jobs:
           fi
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           echo "run_url=$run_url" >> "$GITHUB_OUTPUT"
+          {
+            echo '## DE.PULSE release dispatch'
+            echo "- release ref: \`$RELEASE_REF\`"
+            echo "- candidate: \`$CANDIDATE_SHA\`"
+            echo "- fingerprint: \`$EXPECTED_FINGERPRINT\`"
+            echo "- publish: \`$PUBLISH\`"
+            echo "- canonical release run ID: \`$run_id\`"
+            echo "- canonical release run: $run_url"
+          } >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$TRACKING_PR" ]; then
             body="🔗 DE.PULSE v${VERSION} canonical G11–G16 release run: ${run_url} · run ${run_id} · candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. This run ID is the durable release-certification lookup key for any assistant/account."
-            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null
+            if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
+              echo "::warning::Canonical run comment unavailable to workflow token; run identity remains retained in this Actions job and may be bound to PR #16 by the connected GitHub app."
+            fi
           fi
 
   branch-hygiene:
