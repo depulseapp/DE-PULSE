@@ -5,6 +5,8 @@ on:
     branches: [v18.5.2-development]
     paths:
       - 'release/v18.5.2/HOTFIX_CHECKPOINT.json'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
