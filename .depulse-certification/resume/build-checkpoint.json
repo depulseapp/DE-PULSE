@@ -8,7 +8,7 @@
   "pullRequest": 16,
   "candidateSourceCommit": "f15ebe31e7f30c3fc0ad95b2a43c5859d59e7f46",
   "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
+  "sourceFingerprintState": "NOT_FROZEN",
   "certifiedStable": {
     "version": "v18.5.2",
     "tag": "v18.5.2-stable",
@@ -61,7 +61,6 @@
     "classification": "RELEASE_CERTIFICATION",
     "status": "IN_PROGRESS",
     "requirements": [
-      "fast-forward v18.6-release-certification to the final fingerprint-excluded G10 metadata head",
       "capture the canonical release.yml run ID on PR #16",
       "G11 compute and bind immutable canonical Git-object fingerprint",
       "G12 run release/v18.6.0/run_full_certification.sh",
@@ -82,5 +81,5 @@
   "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
   "nextBranch": "v18.6-release-certification",
   "nextStep": "Trigger and follow the PR-audited canonical release workflow from v18.6-release-certification through G11-G16 with publish=false.",
-  "updatedAt": "2026-08-18T21:45:00Z"
+  "updatedAt": "2026-08-18T21:52:00Z"
 }
