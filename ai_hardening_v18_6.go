@@ -13,16 +13,16 @@ import (
 )
 
 const (
-	aiContextPolicyVersion       = "v18.6-ai-context-v1"
-	aiSchemaPolicyVersion        = "v18.6-ai-schema-v1"
-	aiCachePolicyVersion         = "v18.6-ai-cache-v1"
-	aiEvalPolicyVersion          = "v18.6-ai-eval-v1"
-	aiRightsEgressPolicyVersion  = "v18.6.0-ai-egress-rights-1"
-	aiMaxPromptBytes             = 24000
-	aiMaxPromptTokenUpperBound   = 24000
-	aiMaxTaskBytes               = 4000
-	aiMaxEvidenceForPrompt       = 32
-	aiCacheMaxEntries            = 256
+	aiContextPolicyVersion      = "v18.6-ai-context-v1"
+	aiSchemaPolicyVersion       = "v18.6-ai-schema-v1"
+	aiCachePolicyVersion        = "v18.6-ai-cache-v1"
+	aiEvalPolicyVersion         = "v18.6-ai-eval-v1"
+	aiRightsEgressPolicyVersion = "v18.6.0-ai-egress-rights-1"
+	aiMaxPromptBytes            = 24000
+	aiMaxPromptTokenUpperBound  = 24000
+	aiMaxTaskBytes              = 4000
+	aiMaxEvidenceForPrompt      = 32
+	aiCacheMaxEntries           = 256
 )
 
 const aiInferenceCacheTTL = 15 * time.Minute
@@ -31,14 +31,14 @@ const aiInferenceCacheTTL = 15 * time.Minute
 var providerDatasetAIRightsRegistryJSON []byte
 
 type AIContextDiagnostics struct {
-	PolicyVersion         string `json:"policyVersion"`
-	OriginalEvidence      int    `json:"originalEvidence"`
-	SentEvidence          int    `json:"sentEvidence"`
-	Compacted             bool   `json:"compacted"`
-	PromptBytes           int    `json:"promptBytes"`
-	TokenUpperBound       int    `json:"tokenUpperBound"`
-	MaxBytes              int    `json:"maxBytes"`
-	MaxTokenUpperBound    int    `json:"maxTokenUpperBound"`
+	PolicyVersion      string `json:"policyVersion"`
+	OriginalEvidence   int    `json:"originalEvidence"`
+	SentEvidence       int    `json:"sentEvidence"`
+	Compacted          bool   `json:"compacted"`
+	PromptBytes        int    `json:"promptBytes"`
+	TokenUpperBound    int    `json:"tokenUpperBound"`
+	MaxBytes           int    `json:"maxBytes"`
+	MaxTokenUpperBound int    `json:"maxTokenUpperBound"`
 }
 
 type AIDatasetRightsRecord struct {
@@ -46,9 +46,9 @@ type AIDatasetRightsRecord struct {
 	Dataset        string `json:"dataset"`
 	CommercialUse  string `json:"commercialUse"`
 	Redistribution string `json:"redistribution"`
-	AIUse           string `json:"aiUse"`
-	EvidenceBound   bool   `json:"evidenceBound"`
-	Decision        string `json:"decision"`
+	AIUse          string `json:"aiUse"`
+	EvidenceBound  bool   `json:"evidenceBound"`
+	Decision       string `json:"decision"`
 }
 
 type aiDatasetRightsRegistryDocument struct {
