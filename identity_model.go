@@ -294,7 +294,11 @@ func (s *IdentityService) setPassword(userID, password string) (string, Principa
 	return s.createSessionLocked(s.state.Users[idx], "")
 }
 
-func (s *IdentityService) updateDisplayName(userID, displayName string) error {
+func (s *IdentityService) updateProfile(userID, username, displayName string) error {
+	username = normalizeUsername(username)
+	if !validAdminUsername(username) {
+		return errors.New("username must be 3 to 64 characters using letters, numbers, dot, underscore or hyphen")
+	}
 	displayName, err := normalizeDisplayName(displayName)
 	if err != nil {
 		return err
@@ -305,17 +309,23 @@ func (s *IdentityService) updateDisplayName(userID, displayName string) error {
 	for i := range s.state.Users {
 		if s.state.Users[i].ID == userID {
 			idx = i
-			break
+			continue
+		}
+		if normalizeUsername(s.state.Users[i].Username) == username {
+			return errors.New("username already exists")
 		}
 	}
 	if idx < 0 || s.state.Users[idx].Status != UserActive {
 		return errors.New("user unavailable")
 	}
+	previousUsername := s.state.Users[idx].Username
 	previousName := s.state.Users[idx].DisplayName
 	previousUpdatedAt := s.state.Users[idx].UpdatedAt
+	s.state.Users[idx].Username = username
 	s.state.Users[idx].DisplayName = displayName
 	s.state.Users[idx].UpdatedAt = s.now().UnixMilli()
 	if err := s.persistLocked(); err != nil {
+		s.state.Users[idx].Username = previousUsername
 		s.state.Users[idx].DisplayName = previousName
 		s.state.Users[idx].UpdatedAt = previousUpdatedAt
 		return err
