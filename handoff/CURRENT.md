@@ -1,80 +1,102 @@
 # DE.PULSE — Current Authoritative Handoff
 
-**Status:** ACTIVE / SUPERSEDES ALL PRIOR CHAT HANDOFFS  
+**Status:** v18.5.2 STABLE / G0–G16 CLOSED  
 **Repository:** `depulseapp/DE-PULSE`  
-**Release:** `v18.5.2`  
-**Active branch:** `v18.5.2-development`  
-**Pull request:** `#13` — draft / unpromoted / mergeable  
-**Incoming Stable:** `v18.5.1-stable` at `deae3ef001a37bbddcae2ea5ae213805f3832208`  
+**Stable tag:** `v18.5.2-stable`  
+**Stable promotion commit:** `d30e54db4908ca57c52ae298cc4ada3416fab46b`  
+**Certified source checkout:** `e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9`  
+**Certified source fingerprint:** `807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0`  
+**Runtime build ID:** `v18.5.2-stable-hotfix-20260817`  
+**PR #13:** merged  
 **Machine state:** `.depulse-certification/resume/build-checkpoint.json`  
 **Last updated:** 2026-08-17 America/Vancouver
 
-## How to resume
+## Authority and resume rule
 
-Do not trust this narrative by itself. First read `AGENTS.md` or `CLAUDE.md`, then reconcile this file and the machine checkpoint against the actual GitHub branch/PR HEAD, tags, checks and artifacts. GitHub is authoritative; chat memory is optional.
+GitHub is authoritative. Start with `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff and the machine checkpoints against the immutable Stable tag/release and current repository state.
 
-## Current outcome
+`v18.5.2-stable` is the immutable product/release authority. `main` may contain later **post-release G16 operational metadata or handoff commits**; those do not redefine the certified Stable product source, native artifact hashes, or Stable tag. Do not infer a new product release from post-release documentation/checkpoint commits.
 
-PR #13 contains the v18.5.2 desktop recovery work:
+## v18.5.2 final result
 
-- Day, Swing and Long-Term desk render recovery;
-- compact Market Pulse Ribbon with complete ET/PT clocks;
-- restored Research hierarchy and reading width;
-- first-attempt tracked-symbol addition with draft preservation;
-- symbol controls aligned beside the heading with responsive stacking;
-- configurable display and sign-in names while OWNER remains a separate role;
-- Settings viewport sizing so the Save Settings bar is usable;
-- checkpoint-triggered exact-source certification through the canonical `run_free_certification.sh` runner while ordinary source pushes remain quiet.
+The desktop recovery is complete and promoted:
 
-The adaptive provider → Market Mode method is also committed:
+- Day, Swing and Long-Term desk rendering recovered;
+- complete ET/PT clocks retained in the compact Market Pulse Ribbon;
+- Research hierarchy/reading width recovered;
+- tracked-symbol draft and first-attempt add behavior recovered;
+- symbol controls aligned with responsive stacking;
+- configurable display/sign-in names added while OWNER remains a separate role;
+- Settings viewport/save-row behavior corrected;
+- deterministic Day/Swing/Long formulas remain protected;
+- U.S. Equities Processing and permanent No Execution boundaries remain intact.
 
-- 22 capability assessments across 12 providers;
-- Router/capability auto-coverage at G2/G10;
-- provider count cannot change a mode;
-- deterministic/statistical code owns numeric Market Mode truth;
-- TradeInsight remains `NOT_IMPLEMENTED` with `NONE` production influence until its adapter and lifecycle evidence close.
+Provider → Market Mode governance remains in force with 22 capability assessments across 12 providers. Provider count alone cannot change a mode; deterministic/statistical code owns numeric Market Mode truth. TradeInsight remains `NOT_IMPLEMENTED` with `NONE` production influence until its adapter and lifecycle evidence close.
 
-The permanent portability update keeps vendor/account-independent continuity through GitHub, root adapters for ChatGPT/Codex and Claude, this repository-resident current handoff, and machine enforcement through the existing Adaptive Resume gate.
+## Certification and native delivery
 
-## Certification execution finding
+### G0–G12 — PASS
 
-The v18.5.2 branch was reconciled with current `main`; the prior PR conflict was isolated to `.github/workflows/v18.5.2-hotfix-certification.yml`, and the reconciled PR is mergeable while still draft/unpromoted.
+Canonical exact-source certification passed at checkout `e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9` with fingerprint `807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0`.
 
-GitHub Actions created exact-source certification jobs, including run `32098538807` (retried once) and reconciled-candidate run `32098674432`, but every observed attempt failed before workflow step 1. GitHub returned no step records and no downloadable job log. Therefore these attempts are classified `INFRA_FAIL`, not `PRODUCT_FAIL`, and **no G0–G12 product-test failure is claimed**.
+Key protected result: deterministic trading equivalence **2403/2403 PASS**.
 
-The temporary PR-synchronize diagnostic trigger has been removed. The permanent automatic trigger is again only a change to `.depulse-certification/resume/qualification-request.json` on `v18.5.2-development`; ordinary source pushes remain quiet.
+Four G12 defects/test-contract defects were found and closed before the final full pass: bundled v18.5.2 QA identity, refactor-safe role/identity regression coverage, Playwright scroll baseline ordering, and release-bound watchlist cache-busting coverage.
 
-## Truthful open work
+### G13/G14 — PASS on both required native targets
 
-- PR #13 remains draft and must not be merged/promoted from documentation, focused checks, or pre-step Actions failures alone.
-- Obtain an execution environment that actually starts the canonical exact-source v18.5.2 G0–G12 runner. GitHub Actions is currently failing before step 1 in the observed runs; this chat container also cannot clone the private repository over the network.
-- Once execution starts, classify/fix the earliest genuine G0–G12 failure if one exists; otherwise record PASS evidence.
-- Complete actual macOS Apple Silicon and Windows x64 package/runtime G13–G15 evidence after G0–G12 passes.
-- Verify the reported desktop fixes in the exact candidate packages.
-- Owner/Admin/User-specific tab and navigation composition remains planned and not implemented by this portability/certification change.
-- TradeInsight key configuration, adapter, normalization, Smart Router SHADOW routes, validation and promotion remain open. Never commit the API key.
-- Reconcile and close or explicitly place remaining v18 audit rows; do not begin v19 before v18.5.2 recovery is closed.
+**macOS Apple Silicon** — run `32102570376`
 
-## Validation completed before full exact-source execution
+- actual arm64 packaged artifact runtime audit PASS;
+- native `libsqlite3` linkage PASS;
+- clean extraction/code-sign verification PASS;
+- health/release identity PASS;
+- SQLite ready/integrity/migrations 1–4 PASS;
+- package: `De-Pulse-v18.5.2-Stable-macOS-Apple-Silicon.zip`;
+- SHA-256: `91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae`.
 
-- Functionality Utility checkpoint passed with 22 provider/Market Mode assessments across 12 providers.
-- v17/v18 reconciliation inventory passed with 296 unique conserved rows.
-- Continuity artifacts and their owning gate are validated as part of this change.
-- PR #13 is reconciled with current `main` and mergeable.
-- The v18.5.2 GitHub qualification workflow calls the canonical exact-source runner and keeps ordinary source pushes quiet.
-- Actions pre-step failures are durably classified as infrastructure failures; no false application failure or G0–G12 PASS is recorded.
-- Native package certification is not claimed.
+**Windows x64** — run `32103078336`
+
+- actual AMD64 packaged artifact runtime audit PASS;
+- PE x64 and real `winsqlite3` runtime PASS;
+- clean extraction/launch PASS;
+- health/release identity PASS;
+- SQLite ready/integrity/migrations 1–4 PASS;
+- package: `De-Pulse-v18.5.2-Stable-Windows-x64.zip`;
+- SHA-256: `6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326`.
+
+### G15 — PASS
+
+Run `32103078336` consumed the preserved macOS PASS and final Windows PASS, verified both exact package hashes/evidence graphs, preserved the No Execution Boundary, and returned `promotionAuthorized=true`.
+
+PR #13 was then promoted with exact-head protection. Merge/promotion commit: `d30e54db4908ca57c52ae298cc4ada3416fab46b`.
+
+Stable publication run `32103499711` re-downloaded and re-verified the already-certified artifacts, created `v18.5.2-stable` at the promotion commit, uploaded the certified packages/evidence without rebuilding, and verified the release is neither draft nor prerelease.
+
+Published release assets include both native packages, both G13/G14 evidence JSON files, G15 assurance JSON, and the G15 SHA-256 manifest.
+
+## G16 retrospective / reusable learning
+
+1. **Preserve independent platform PASS.** macOS passed on the first native run and was never rerun merely because Windows failed. G15 reused the preserved exact macOS artifact.
+2. **Classify infrastructure/test-harness failures truthfully.** Earlier Actions pre-step failures were infrastructure failures, not product failures. Windows native attempts that stopped before build on fingerprint materialization were harness/provenance failures, not runtime failures.
+3. **Cross-platform source provenance must use canonical Git bytes.** Windows filesystem materialization produced a different byte fingerprint even for the exact Git commit. The successful Windows lane recomputed the certified fingerprint directly from raw Git object bytes and treated the materialized filesystem fingerprint as diagnostic only. Future process hardening should make this platform-neutral provenance method canonical without modifying the already-certified v18.5.2 source.
+4. **Do not rebuild during publication.** Stable publication uploaded the exact artifacts already certified at G13/G14/G15.
+5. **Minimize unnecessary spend/reruns.** G0–G12 was not rerun after it became authoritative; macOS was not rerun for Windows-only harness fixes; publication performed verification/upload only.
+6. **Release identity and post-release metadata are separate.** The immutable Stable tag/release and artifact hashes define v18.5.2. Later G16 documentation/checkpoint commits on `main` are operational metadata and cannot silently redefine Stable.
+
+## Truthful residuals after v18.5.2 closure
+
+- Owner/Admin/User role-specific tab/navigation composition remains future work; v18.5.2 does not claim it.
+- TradeInsight secure key configuration, adapter/normalization, Smart Router SHADOW routing, validation and promotion remain future work; no API key is committed.
+- Cross-platform fingerprint implementation should be hardened around canonical Git-object provenance in a future authorized release.
+- Native-certification/recovery orchestration branches are retained while they remain useful audit references; cleanup may occur later when evidence retention no longer depends on them.
+
+None of these residuals blocks the certified v18.5.2 Stable release.
 
 ## Exactly one next action
 
-Run the canonical exact-source certification in an execution environment that can actually start it, using the existing fingerprint-excluded qualification request or a clean local checkout:
-
-```bash
-bash release/v18.5.2/run_free_certification.sh
-```
-
-If it produces a genuine test failure, fix the earliest failing G0–G12 owner. If it passes, record the exact evidence in the machine checkpoints and proceed to exact-source macOS Apple Silicon and Windows x64 G13–G15. Do not merge PR #13 before those requirements close.
+For any future authorized DE.PULSE work, **start from the immutable `v18.5.2-stable` baseline and reconcile the remaining approved backlog/audit items before selecting the next release scope.** Do not infer or start a new major release merely from chat history.
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read the root repository instructions, reconcile `handoff/CURRENT.md` and `.depulse-certification/resume/build-checkpoint.json` against the actual GitHub branch/PR HEAD and latest Stable tag, run/inspect `adaptive_resume_gate.py`, and resume the exactly-one next action. Treat observed Actions runs `32098538807` and `32098674432` as pre-step `INFRA_FAIL` evidence rather than product failures unless later GitHub evidence proves otherwise. Use the deliberate qualification request and canonical exact-source runner; ordinary source pushes remain quiet. Do not rely on prior chat memory, do not assume TradeInsight or Owner/Admin/User tabs are implemented, preserve G0–G16 and all permanent product boundaries, and update durable GitHub checkpoint/evidence before ending.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, resolve Stable through `v18.5.2-stable`, verify it maps to promotion commit `d30e54db4908ca57c52ae298cc4ada3416fab46b`, and read `.depulse-certification/resume/build-checkpoint.json` plus this handoff. Treat later `main` commits that only close G16 documentation/checkpoints as post-release operational metadata, not a new product baseline. Preserve G0–G16, the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, TradeInsight `NOT_IMPLEMENTED/NONE` truth, and the native package hashes recorded above.
