@@ -21,34 +21,14 @@ env:
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
-  checkpoint:
-    name: Bind exact hotfix source
-    runs-on: ubuntu-24.04
-    outputs:
-      source_sha: ${{ steps.source.outputs.source_sha }}
-    steps:
-      - id: source
-        name: Bind PR head or pushed commit
-        env:
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-          EVENT_SHA: ${{ github.sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          source_sha="${PR_HEAD:-$EVENT_SHA}"
-          test "${#source_sha}" = 40
-          echo "source_sha=$source_sha" >> "$GITHUB_OUTPUT"
-          echo "Bound certification to $source_sha"
-
   go-certification:
     name: Go format, vet and full suite
-    needs: checkpoint
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ needs.checkpoint.outputs.source_sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -85,7 +65,7 @@ jobs:
           node deterministic_equivalence_test.js
           node renderer_logic_test.js
           node v18_0_5_renderer_test.js
-          python3 -m py_compile             release/v18.5.1/browser_live_render_test.py             release/v18.5.1/browser_watchlist_membership_test.py             release/v18.5.1/browser_auth_copy_test.py             release/v18.5.1/browser_ui_hierarchy_test.py             release/v18.5.2/browser_master_symbol_input_test.py             release/v18.5.2/browser_profile_display_name_test.py
+          python3 -m py_compile             release/v18.5.1/browser_live_render_test.py             release/v18.5.1/browser_watchlist_membership_test.py             release/v18.5.1/browser_auth_copy_test.py             release/v18.5.1/browser_ui_hierarchy_test.py             release/v18.5.2/browser_master_symbol_input_test.py             release/v18.5.2/browser_profile_display_name_test.py             release/v18.5.2/browser_settings_save_bar_test.py
       - name: Install lightweight Playwright driver
         run: |
           command -v google-chrome
@@ -98,19 +78,18 @@ jobs:
           python release/v18.5.1/browser_ui_hierarchy_test.py
           python release/v18.5.2/browser_master_symbol_input_test.py
           python release/v18.5.2/browser_profile_display_name_test.py
+          python release/v18.5.2/browser_settings_save_bar_test.py
 
   summary:
     name: Hotfix certification exit
     if: ${{ always() }}
-    needs: [checkpoint, go-certification, renderer-certification]
+    needs: [go-certification, renderer-certification]
     runs-on: ubuntu-24.04
     steps:
       - name: Require every hotfix lane green
         env:
-          CHECKPOINT: ${{ needs.checkpoint.result }}
           GO: ${{ needs.go-certification.result }}
           RENDERER: ${{ needs.renderer-certification.result }}
         run: |
-          test "$CHECKPOINT" = success
           test "$GO" = success
           test "$RENDERER" = success
