@@ -4,15 +4,12 @@
   "release": "v18.6.0",
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
-  "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints may advance operationally after the source-fingerprinted G10 candidate; handoff/CURRENT.md and workflow definitions remain frozen source.",
+  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source a84b7028 is frozen after G10 PASS.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
-    "certifiedSourceCheckout": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
-    "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
     "buildId": "v18.5.2-stable-hotfix-20260817",
-    "publicationRunId": 32103499711,
     "releaseState": "PUBLISHED_NON_DRAFT_NON_PRERELEASE"
   },
   "currentCandidate": {
@@ -20,8 +17,8 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "51be6afc444d8337821dd3c6ecaaecb1297dc84b",
-    "qualificationHead": "836322345886c9236e1da6ee774d73e6d27463b8",
+    "candidateSourceCommit": "a84b7028f8723f47f11a59e2225c10ddf1a38e3b",
+    "qualificationHead": "66fd480c3fcf91f1ce56a6077dff323625aaf0b3",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
     "promotionState": "NOT_PROMOTED",
@@ -32,52 +29,43 @@
       "promotionPublish": true,
       "dispatcher": ".github/workflows/ci-fast.yml",
       "canonicalReleaseWorkflow": ".github/workflows/release.yml",
-      "primaryCertification": "exact release-certification push; publish=false",
-      "connectorFallback": "owner-triggered pull_request to exact release-certification base; candidate is immutable PR base SHA; publish=false",
-      "promotionAuthorization": "push-only repository-owner actor OR push sender on exact stable-promotion branch; publish=true",
-      "trackingTransport": "workflow REST issue-comment is best-effort; Actions job summary/log is authoritative dispatch evidence until connected GitHub app binds the exact run identity to PR #16",
-      "workflowDefinitionRef": "candidate branch",
-      "idempotencyKey": "headBranch + headSha"
+      "connectorFallback": "owner-triggered pull_request to exact release-certification base; immutable base SHA; publish=false",
+      "trackingTransport": "Actions evidence plus PR #16 connector binding if workflow token cannot comment"
     }
   },
   "evidence": {
-    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
+    "G0-G9": {"status": "PASS"},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "51be6afc444d8337821dd3c6ecaaecb1297dc84b",
-      "qualificationHead": "836322345886c9236e1da6ee774d73e6d27463b8",
-      "fastRun": 32196295742,
-      "fastRunNumber": 234,
-      "fastRunAttempt": 1,
-      "qualifiedRun": 32196295782,
-      "qualifiedRunNumber": 99,
-      "qualifiedRunAttempt": 1,
-      "coverage": ["non-blocking release-tracking/connector-safe certification policy", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
+      "candidateSourceCommit": "a84b7028f8723f47f11a59e2225c10ddf1a38e3b",
+      "qualificationHead": "66fd480c3fcf91f1ce56a6077dff323625aaf0b3",
+      "fastRun": 32197304582,
+      "fastRunNumber": 242,
+      "qualifiedRun": 32197304782,
+      "qualifiedRunNumber": 102,
+      "coverage": ["G12 watchlist harness anti-regression", "Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
-    "G11": {"status": "PENDING", "required": "Canonical release.yml run must exist for the exact release-certification candidate; its run ID, candidate SHA, fingerprint and publish=false state must be bound to PR #16 before G11 is accepted."},
+    "G11": {"status": "PENDING"},
     "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
-    "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
-    "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
-    "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; publication remains disabled on pre-merge certification branch."},
-    "G16": {"status": "PENDING", "required": "Retain adaptive release handoff evidence and PR-visible completion status after G15."}
+    "G13-G14-macOS-Apple-Silicon": {"status": "PENDING"},
+    "G13-G14-Windows-x64": {"status": "PENDING"},
+    "G15": {"status": "PENDING"},
+    "G16": {"status": "PENDING"}
   },
-  "priorStableEvidence": {
-    "release": "v18.5.2",
-    "G0-G12": "PASS",
-    "G13-G14-macOS-Apple-Silicon": "PASS",
-    "G13-G14-Windows-x64": "PASS",
-    "G15": "PASS",
-    "stablePublication": "PASS",
-    "G16": "PASS_CLOSED",
-    "macOSArtifactSha256": "91f7d64a433474c4efbed0bd5c7d065508b2ce6eeae0544b1c217849fe62a4ae",
-    "windowsArtifactSha256": "6431562a67bcd55db6ebab2e6a09724006119910ea8adbc358afb8644a752326"
+  "supersededReleaseRun": {
+    "runId": 32196711609,
+    "candidate": "659f4e59286ede7c8627d5cefa7deceab792c8b3",
+    "fingerprint": "22b14764656a08d3677eb05187232afde3029b5f35ea7f5c21b3f85b7d41f242",
+    "G11": "PASS",
+    "G12": "FAIL_STALE_LEGACY_WATCHLIST_HARNESS",
+    "downstream": "SKIPPED"
   },
   "residuals": [
-    "TradeInsight remains governed future/shadow implementation work until separately validated and approved.",
-    "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where not already configured/approved.",
+    "TradeInsight remains governed future/shadow work until separately validated and approved.",
+    "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved.",
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
-  "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
-  "nextRequiredEvidence": "One exact non-publishing canonical release.yml run from the reconciled v18.6-release-certification base, with its identity bound to PR #16 through workflow tracking or the connected GitHub app, followed by G11-G16 execution.",
-  "updatedAt": "2026-08-18T23:17:30Z"
+  "releaseBlockingResiduals": ["G11-G16 and native macOS/Windows evidence remain required before Stable promotion."],
+  "nextRequiredEvidence": "One canonical non-publishing release.yml run on the reconciled harness-remediated release-certification candidate, bound to PR #16, then G11-G16.",
+  "updatedAt": "2026-08-18T23:35:30Z"
 }

@@ -4,116 +4,92 @@
 
 **Release:** `v18.6.0`  
 **Active branch:** `v18.6-development`  
-**Stable predecessor:** v18.5.2 STABLE / G0–G16 CLOSED  
-**Current candidate state:** v18.6.0 NON-BLOCKING RELEASE TRACKING FIX / FRESH G10 REQUIRED / NOT PROMOTED  
+**Stable predecessor:** `v18.5.2-stable` / G0–G16 CLOSED  
+**Current candidate state:** v18.6.0 G12 HARNESS REMEDIATION / FRESH G10 REQUIRED / NOT PROMOTED  
 **Repository:** `depulseapp/DE-PULSE`  
 **Main release PR:** `#16`  
-**Stable predecessor tag:** `v18.5.2-stable`  
-**Stable predecessor promotion commit:** `d30e54db4908ca57c52ae298cc4ada3416fab46b`  
-**Stable predecessor certified source fingerprint:** `807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0`  
 **v18.6 runtime build ID:** `v18.6.0-stable-20260818`  
 **Last updated:** 2026-08-18 America/Vancouver
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, actual branch/PR/check state and the immutable Stable predecessor tag/release. Never resume from model memory alone. `v18.5.2-stable` remains the certified product authority until v18.6.0 completes G11–G16 and is promoted.
+Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, PR #16, current checks, the release-certification branch, and the immutable Stable predecessor. Never resume from model memory alone.
 
-`source_fingerprint.py` excludes `.depulse-certification` but **does not exclude `handoff/CURRENT.md` or workflow definitions**. Machine resume/evidence checkpoints may advance as fingerprint-excluded operational metadata after a source candidate. This handoff and `.github/workflows/*.yml` are candidate-bound source; any change to them requires fresh G10 before G11.
+`source_fingerprint.py` excludes `.depulse-certification` only. Workflow, certification-harness, test-contract, and this handoff are source-fingerprinted. Any change to them requires fresh G10 before G11.
 
-## v18.6.0 implementation state
+## Product / architecture state
 
-All eight assigned v18.6 implementation/audit slices remain code-complete:
+All eight assigned v18.6 implementation/audit slices remain code-complete: watchlist remediation; shared Scanner/Radar broad-snapshot acquisition; serialized Session Intelligence Coordinator; Market Activity/legacy-route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context/cache/schema/evaluation hardening; and provider×dataset rights-aware fail-closed AI egress.
 
-- watchlist membership/add remediation with regression coverage;
-- shared Scanner / Opportunity Radar broad-snapshot acquisition with bounded cache, freshness reuse, partial-miss fetch and coalescing;
-- one serialized Session Intelligence Coordinator for Pre-Market Prep and Market Open Prep;
-- Market Activity demotion to supporting drill-down plus legacy evidence-route consolidation;
-- role-aware documentation with server-authoritative privileged access and Documentation Impact evidence;
-- external dependency/provider readiness with durable User Action Required tracking and fail-closed entitlement/rights governance;
-- bounded AI context, full cache identity + TTL, strict structured-output/citation validation, safe abstention and continuous-evaluation telemetry;
-- provider×dataset rights-aware AI egress with unknown/denied evidence withheld before external model calls.
+Protected invariants remain unchanged:
+- deterministic Day/Swing/Long formulas;
+- Smart Provider Router is the sole provider-routing owner and provider count never changes Market Mode;
+- GLD/SLV/USO remain tradable live exceptions;
+- desktop SQLite / hosted PostgreSQL architecture;
+- U.S. Equities Processing Boundary;
+- permanent No Execution Boundary;
+- exactly three canonical workflows: `ci-fast.yml`, `ci-qualified.yml`, `release.yml`;
+- G0–G16 is the only top-level gate model.
 
-Protected deterministic Day/Swing/Long formulas remain unchanged. Smart Provider Router remains the sole provider-routing owner; provider count does not change Market Mode. GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, the U.S. Equities Processing Boundary and the permanent No Execution Boundary remain preserved.
+## Last trustworthy qualification and release evidence
 
-## Last exact-source G10 PASS and final orchestration finding
+Source `51be6afc444d8337821dd3c6ecaaecb1297dc84b`, exercised at metadata head `836322345886c9236e1da6ee774d73e6d27463b8`, passed final G10:
+- CI Fast #234 / run `32196295742` — PASS;
+- CI Qualified #99 / run `32196295782` — PASS;
+- Ubuntu/macOS/Windows portability, workflow/provenance, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and evidence summary all passed.
 
-Source `eafc1d56aee2597b35f06c45f333d1275e801de0` passed the REST-tracking connector-safe qualification:
+Release-certification base `659f4e59286ede7c8627d5cefa7deceab792c8b3` was dispatched through trigger PR #24 without merging it. Dispatcher CI Fast #238 / run `32196732001` passed. It resolved:
+- release ref `v18.6-release-certification`;
+- candidate `659f4e59286ede7c8627d5cefa7deceab792c8b3`;
+- canonical Git-object source fingerprint `22b14764656a08d3677eb05187232afde3029b5f35ea7f5c21b3f85b7d41f242`;
+- `publish=false`;
+- canonical `release.yml` run `32196711609`.
 
-- CI Fast #224 / run `32195517663` / attempt 1 — PASS;
-- CI Qualified #95 / run `32195517662` / attempt 1 — PASS;
-- coverage included REST tracking/connector-safe dispatcher policy, Ubuntu/macOS/Windows portability, workflow/provenance contracts, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and final evidence summary.
+Workflow-token PR comments remain unavailable with HTTP 403, but this is non-blocking observability only. Exact run identity is retained in Actions evidence and was durably bound to PR #16 through the connected GitHub app.
 
-The release-certification branch was then reconciled to base candidate `5086a2156c15fa25df1d869e3f2875e6eb397bca`, preserving the final G10 source and excluded checkpoint metadata. Trigger PR #23 proved the remaining path precisely:
+Canonical release run `32196711609`:
+- G11 immutable candidate/provenance — PASS;
+- G12 full certification — FAIL;
+- G13/G14 macOS, G13/G14 Windows, G15 and G16 — correctly skipped;
+- no Stable publication occurred.
 
-- Fast preflight passed;
-- the release-dispatch job ran;
-- release identity passed for `18.6.0` / `v18.6.0-stable-20260818`;
-- immutable release ref resolved to `v18.6-release-certification`;
-- immutable candidate resolved to base SHA `5086a2156c15fa25df1d869e3f2875e6eb397bca`;
-- canonical source fingerprint resolved to `2837843eb9ec67f8edb88052efcb1defe954c0b0419d4f29d1a040d722401231`;
-- `publish=false` was enforced;
-- the workflow token still received HTTP 403 `Resource not accessible by integration` when posting the REST issue comment to PR #16, despite the job exposing `Issues: write`.
+## G12 failure classification
 
-The remaining defect is therefore **tracking transport permission only**, not release identity, source provenance, product code, runner allocation, or certification authorization.
+The G12 failure is a **certification-harness contradiction, not a demonstrated product regression**.
 
-## Final release-tracking contract
+`release/v18.5.1/browser_watchlist_membership_test.py` asserts the historical `CURRENT` / `aria-current="true"` / `current-desk` watchlist model. The v18.6 contract intentionally replaced that model with Day/Swing/Long `aria-pressed` membership state and explicitly requires `CURRENT`, `aria-current`, and `current-desk` to be absent. `release/v18.6.0/browser_watchlist_membership_test.py` proves the current semantics, and `tools/ci/watchlist_membership_contract.py` already binds CI Qualified to that v18.6 proof.
 
-PR comments are observability evidence and must not be allowed to block otherwise-valid non-publishing certification. The dispatcher therefore now:
+`release/v18.6.0/run_full_certification.sh` incorrectly executed **both** the obsolete v18.5.1 membership proof and the v18.6 replacement against the same current production extension. The old test failed first at `assert "aria-current=\"true\"" in extension`, making the G12 list internally contradictory.
 
-1. attempts both PR #16 tracking comments through the REST issue-comments endpoint;
-2. treats an integration-level comment denial as a warning rather than a certification failure;
-3. continues to dispatch/reuse canonical `release.yml` only after exact release ref, candidate SHA, fingerprint and `publish=false` have been resolved;
-4. writes the canonical release run ID/URL, release ref, candidate SHA, fingerprint and publish state into the Actions job summary/log regardless of PR-comment permission;
-5. allows the connected GitHub app to bind that already-proven run identity to PR #16 after the dispatcher run, using the connector's own comment capability.
+## Remediation
 
-`tools/ci/workflow_policy.py` continues to require the REST endpoint and forbid GraphQL `gh pr comment`. This is deliberately not a relaxation of G11 identity or publication controls: failure to comment may not block dispatch, but G11 is accepted only after the exact canonical release run is identified and its identity is durably bound to PR #16 by either the workflow or connected GitHub app.
+The v18.5.1 historical test file remains untouched for audit/history. The v18.6 G12 execution list now excludes only `release/v18.5.1/browser_watchlist_membership_test.py` and continues to run the v18.6 browser membership proof plus all other retained browser regressions.
 
-Because `ci-fast.yml` and this handoff are source-fingerprinted, the `eafc1d56...` G10 evidence becomes historical after this non-blocking tracking correction. One fresh exact-source G10 is required; no other source changes are planned before G11.
+`tools/ci/watchlist_membership_contract.py` is hardened to require:
+- CI Qualified uses `release/v18.6.0/browser_watchlist_membership_test.py`;
+- G12 full certification also includes that v18.6 proof;
+- G12 must not invoke the contradictory v18.5.1 CURRENT/aria-current membership proof.
 
-## Final release-dispatch contract
+This preserves regression coverage while preventing the stale semantic contract from silently re-entering v18.6 certification.
 
-The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. No fourth workflow and no G17+ gate exists.
+Because the G12 script, watchlist contract, and this handoff are source-fingerprinted, the prior G10/G11 evidence cannot certify the remediated source. Fresh G10 is mandatory before a new G11/G12 run.
 
-The dispatcher supports two certification entry mechanisms plus one publication mechanism:
+## Release orchestration contract
 
-1. **Normal release-certification push (primary):** exact `v<release-line>-release-certification` push may dispatch. Release resolution validates the exact branch and forces `publish=false`.
-2. **Owner-gated PR certification fallback:** an owner-triggered `pull_request` whose **base** is exact `v<release-line>-release-certification` may dispatch certification using the immutable PR base ref/SHA, not the PR merge SHA or head SHA. It resolves `release_ref` from `pull_request.base.ref`, `candidate_sha` from `pull_request.base.sha`, and explicitly prohibits publication.
-3. **Stable promotion:** exact `v<release-line>-stable-promotion` remains push-only and owner-gated via `github.actor` or push `sender.login`, and the resolver maps it to `publish=true`. There is deliberately **no pull-request fallback for Stable promotion**.
+Certification remains non-publishing. The primary path is exact `v<release-line>-release-certification` push with `publish=false`; the connector-safe fallback is an owner-triggered pull request whose base is exact release-certification, using immutable base ref/SHA and forcing `publish=false`. Stable promotion remains exact `*-stable-promotion`, push-only, owner-gated, evidence-bound, and no-rebuild. There is no PR fallback for Stable publication.
 
-The PR fallback cannot publish Stable, cannot choose a non-release-certification base, and dispatches canonical `release.yml` against the existing release-certification branch/base SHA.
-
-## Canonical G11–G16 contract after fresh G10
-
-After fresh G10 passes, bind only fingerprint-excluded checkpoints and reconcile `v18.6-release-certification` to that qualified state. Then create one owner-controlled fingerprint-excluded trigger PR **targeting** `v18.6-release-certification` without merging it. Its Fast lane must pass and the owner-gated PR fallback must:
-
-- resolve the exact release-certification base ref and base SHA;
-- compute the canonical source fingerprint from that immutable base SHA;
-- force `publish=false`;
-- dispatch or reuse a canonical `release.yml` run only when both `headBranch` and `headSha` match that exact release-certification candidate;
-- retain the canonical release run ID/URL in the dispatcher job summary/log;
-- attempt REST tracking comments without treating integration-level comment permission failure as a release failure;
-- if the workflow token cannot comment, bind the dispatcher/run identity to PR #16 through the connected GitHub app before accepting G11.
-
-`release.yml` remains the sole G11–G16 owner. It performs exact-SHA G11 provenance, G12 full certification via `release/v18.6.0/run_full_certification.sh`, macOS Apple Silicon + Windows x64 G13/G14 native package/runtime audit, G15 evidence binding, and G16 durable adaptive handoff. Pre-merge certification remains `publish=false`.
-
-Stable publication is allowed only later through the exact Stable-promotion push path and must remain no-rebuild, owner-gated, and evidence-bound.
-
-## Release sequence still required
-
-Fresh G10 on this final non-blocking tracking source → bind excluded checkpoints → reconcile release-certification → one owner-gated trigger PR → canonical release run ID → bind run identity to PR #16 if workflow token cannot → G11 immutable candidate/provenance → G12 full certification → G13 native packaging/provenance → G14 actual packaged runtime audit on macOS Apple Silicon and Windows x64 → G15 release assurance → G16 adaptive release handoff → only then no-rebuild Stable promotion.
-
-No v18.6 Stable tag, package, native artifact hash or publication claim is valid before those gates pass.
-
-## Known residuals / User Action Required
-
-- TradeInsight remains governed future/shadow implementation work until separately validated and approved; it has no automatic production influence merely because other providers exist.
-- Deployment-specific provider keys, entitlements and commercial/redistribution/AI-use rights remain User Action Required where not already configured or approved and fail closed when required.
-- v18.6 native macOS Apple Silicon and Windows x64 evidence remains pending until G13/G14 passes on the final G11 candidate.
+PR tracking through the workflow token is best-effort. A comment denial cannot block certification after exact release ref/SHA/fingerprint/publish state is proven. The dispatcher retains canonical run identity in Actions logs/summary; the connected GitHub app binds that exact identity to PR #16 when required.
 
 ## Exactly one next action
 
-**Obtain one fresh canonical CI Fast + CI Qualified PASS on this final non-blocking tracking source; then bind only fingerprint-excluded checkpoints, reconcile `v18.6-release-certification`, open one owner-controlled fingerprint-excluded trigger PR, capture the canonical `release.yml` run ID from workflow output, bind that identity to PR #16 through the connected GitHub app if necessary, and continue G11–G16 with `publish=false`.**
+**Qualify the consolidated G12-harness remediation as one fresh G10 candidate (Fast + Qualified). If both pass, bind only fingerprint-excluded checkpoints, reconcile `v18.6-release-certification`, create one unmerged fingerprint-excluded trigger PR, dispatch one canonical `release.yml` run with `publish=false`, bind its exact identity to PR #16, and continue G11 → G12 → G13/G14 macOS + Windows → G15 → G16. Do not promote Stable unless every gate passes.**
+
+## Known residuals / User Action Required
+
+- TradeInsight remains governed future/shadow implementation work until separately validated and approved; it gains no production influence automatically.
+- Deployment-specific provider keys, entitlements and commercial/redistribution/AI-use rights remain User Action Required where absent or unapproved and fail closed.
+- v18.6 native macOS Apple Silicon and Windows x64 evidence remains pending until the remediated candidate passes G12 and native G13/G14.
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16 checks/comments and release branch state. Treat `v18.5.2-stable` as the immutable certified predecessor until v18.6.0 G11–G16 promotion is complete. Resume from the last trustworthy exact-source PASS and the single next action above. Preserve G0–G16, assistant/account independence, Smart Provider Router ownership, deterministic Day/Swing/Long formulas, the U.S. Equities Processing Boundary and permanent No Execution Boundary.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, then inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16, active certification PR/checks, and the release-certification branch. Treat `v18.5.2-stable` as immutable Stable until v18.6 G11–G16 and no-rebuild promotion complete. Resume from the exact trustworthy evidence above, not chat memory. Preserve G0–G16, assistant/account independence, Smart Provider Router ownership, deterministic desk formulas, U.S. Equities Processing Boundary and permanent No Execution Boundary.
