@@ -41,8 +41,8 @@ func v186FixturePackage() AIResearchPackage {
 			{ID: "ev-1", Kind: "news", Label: "Material news", Summary: "A material sourced event.", Source: "Finnhub", Roles: []string{"event", "catalyst", "risk"}, Timestamp: 200},
 			{ID: "ev-2", Kind: "market", Label: "Market state", Summary: "A lower-priority market observation.", Source: "DE.PULSE Market Intelligence", Roles: []string{"market", "base"}, Timestamp: 100},
 		},
-		EventEvidenceIDs: []string{"ev-1"},
-		RiskEvidenceIDs:  []string{"ev-1"},
+		EventEvidenceIDs:  []string{"ev-1"},
+		RiskEvidenceIDs:   []string{"ev-1"},
 		MarketEvidenceIDs: []string{"ev-2"},
 	}
 }
@@ -203,7 +203,7 @@ func TestV186AIRightsApprovedDeniedFixtures(t *testing.T) {
 		BaseEvidenceIDs:  []string{"mystery"},
 	}
 	rights := map[string]AIDatasetRightsRecord{
-		aiRightsKey("finnhub", "news"): {Provider: "finnhub", Dataset: "news", CommercialUse: "APPROVED", Redistribution: "APPROVED", AIUse: "APPROVED", EvidenceBound: true, Decision: "ALLOW"},
+		aiRightsKey("finnhub", "news"):      {Provider: "finnhub", Dataset: "news", CommercialUse: "APPROVED", Redistribution: "APPROVED", AIUse: "APPROVED", EvidenceBound: true, Decision: "ALLOW"},
 		aiRightsKey("sec-edgar", "filings"): {Provider: "sec-edgar", Dataset: "filings", CommercialUse: "APPROVED", Redistribution: "APPROVED", AIUse: "DENIED", EvidenceBound: true, Decision: "DENY"},
 	}
 	filtered, diag := filterAIResearchPackageForEgressWithRegistry(pkg, rights)
