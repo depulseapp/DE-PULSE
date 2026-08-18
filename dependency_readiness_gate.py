@@ -15,6 +15,7 @@ DOC_IMPACT_PATH = ROOT / "release" / "v18.6.0" / "DOCUMENTATION-IMPACT.md"
 ENV_POLICY_PATH = ROOT / "release_environment_policy.json"
 FAST_PATH = ROOT / ".github" / "workflows" / "ci-fast.yml"
 QUALIFIED_PATH = ROOT / ".github" / "workflows" / "ci-qualified.yml"
+WORKFLOW_POLICY_PATH = ROOT / "tools" / "ci" / "workflow_policy.py"
 
 REQUIRED_CATEGORIES = {"PROVIDER", "DATABASE", "PACKAGE_RUNTIME", "CREDENTIAL_CONFIG"}
 ALLOWED_STATUSES = {
@@ -95,11 +96,9 @@ def main() -> int:
         if dep_id in ids:
             fail(f"duplicate dependency id {dep_id}")
         ids.add(dep_id)
-
         for field in ("category", "owner", "capability", "status", "blocker", "userAction", "rightsEntitlement"):
             if not str(row.get(field, "")).strip():
                 fail(f"{dep_id} missing required field {field}")
-
         category = row["category"]
         categories.add(category)
         if category not in REQUIRED_CATEGORIES:
@@ -107,7 +106,6 @@ def main() -> int:
         counts[category] += 1
         if row["status"] not in ALLOWED_STATUSES:
             fail(f"{dep_id} has unsupported status {row['status']}")
-
         evidence = row.get("evidence")
         if not isinstance(evidence, list) or not evidence:
             fail(f"{dep_id} must bind evidence")
@@ -118,7 +116,6 @@ def main() -> int:
             all_evidence.add(raw.split("#", 1)[0])
             if not evidence_path(raw).exists():
                 fail(f"{dep_id} evidence does not exist: {raw}")
-
         if category == "PROVIDER" and row["owner"] == MARKET_PROVIDER_OWNER:
             if "REVIEW_REQUIRED" not in row["rightsEntitlement"]:
                 fail(f"{dep_id} market-data rights must remain fail-closed review-required")
@@ -134,7 +131,6 @@ def main() -> int:
         fail("package/runtime coverage must include build, governance, browser and security tooling")
     if counts["CREDENTIAL_CONFIG"] < 3:
         fail("credential/config coverage is unexpectedly narrow")
-
     missing_evidence = REQUIRED_EVIDENCE - all_evidence
     if missing_evidence:
         fail(f"canonical evidence coverage missing: {sorted(missing_evidence)}")
@@ -145,7 +141,6 @@ def main() -> int:
         fail("user-action registry policyVersion must be v18.6.0")
     if "IMPL-17-DEPS-001" not in actions.get("scopeRequirement", ""):
         fail("user-action registry is not bound to IMPL-17-DEPS-001")
-
     action_rows = actions.get("actions")
     if not isinstance(action_rows, list) or not action_rows:
         fail("durable User Action Required register must not be empty")
@@ -192,17 +187,17 @@ def main() -> int:
     fast_go = workflow_go_version(fast_text, "CI Fast")
     qualified_go = workflow_go_version(qualified_text, "CI Qualified")
     if not preferred or fast_go != preferred or qualified_go != preferred:
-        fail(
-            "Go runtime source-of-truth drift: "
-            f"policy preferred={preferred!r}, fast={fast_go!r}, qualified={qualified_go!r}"
-        )
+        fail("Go runtime source-of-truth drift: " f"policy preferred={preferred!r}, fast={fast_go!r}, qualified={qualified_go!r}")
     minor = ".".join(preferred.split(".")[:2])
     if minor not in approved:
         fail(f"preferred Go version {preferred} is outside approved minor lines {sorted(approved)}")
 
+    policy_text = WORKFLOW_POLICY_PATH.read_text(encoding="utf-8")
+    if "dependency_readiness_gate.py" not in policy_text:
+        fail("canonical workflow policy does not execute dependency_readiness_gate.py")
     for workflow_name, text in (("CI Fast", fast_text), ("CI Qualified", qualified_text)):
-        if "dependency_readiness_gate.py" not in text:
-            fail(f"{workflow_name} does not bind dependency_readiness_gate.py")
+        if "tools/ci/workflow_policy.py" not in text:
+            fail(f"{workflow_name} does not execute the canonical workflow policy")
 
     print(
         "PASS: dependency/provider readiness registry "
