@@ -46,6 +46,10 @@ python3 release_identity.py --verify
 python3 version_consistency_test.py
 
 echo
+echo "[G2/G10] Adaptive functionality, provider and Market Mode integration"
+python3 functionality_utility_checkpoint_gate.py
+
+echo
 echo "[G10/G12] Go formatting, vet, deterministic suite, race and randomized order"
 unformatted="$(gofmt -l identity_model.go http_auth.go http_api.go v18_5_2_display_name_test.go)"
 if [[ -n "$unformatted" ]]; then
