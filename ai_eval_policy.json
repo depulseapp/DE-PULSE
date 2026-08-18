@@ -1,0 +1,25 @@
+{
+  "schema": "DE.PULSE-AI-CONTINUOUS-EVAL-1",
+  "policyVersion": "v18.6-ai-eval-v1",
+  "requiredLanes": [
+    "golden",
+    "citation",
+    "contradiction",
+    "missing-evidence",
+    "injection-adversarial",
+    "bounded-context",
+    "cache-identity-ttl",
+    "strict-schema-abstention",
+    "rights-approved-denied",
+    "structured-output-capability",
+    "cost-latency-telemetry"
+  ],
+  "budgets": {
+    "maxPromptBytes": 24000,
+    "maxPromptTokenUpperBound": 24000,
+    "cacheTTLSeconds": 900,
+    "maxCacheEntries": 256,
+    "liveProviderCallsInCI": 0
+  },
+  "releaseRule": "Every lane must pass offline in normal CI. Live-provider evaluation is optional release evidence and may not bypass rights, cost or secret controls."
+}
