@@ -9,7 +9,8 @@
   "candidateSourceCommit": "1d8c4dfa530b205bbad443cb2eec4db6222fa6fe",
   "metadataHeadRule": "Resume/checkpoint metadata is fingerprint-excluded governance evidence; candidateSourceCommit identifies the latest v18.5.1 product/tooling/documentation source requiring fresh exact-SHA qualification. Later metadata-only commits do not inherit qualification across source changes.",
   "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_REQUALIFICATION_AFTER_G11_BATCH",
+  "sourceFingerprintState": "PENDING_REQUALIFICATION",
+  "sourceFingerprintReason": "Fresh G0-G10 required after the complete G11 correction/preflight batch; descriptive reason is intentionally separate from the canonical machine state.",
   "codeStatus": "V18_5_1_G11_FINDINGS_RESOLVED_AWAITING_G0_G10",
   "implementationSummary": "The frozen ten-ID implementation remains complete. Checkpoint 05 achieved full exact-SHA G0-G10 PASS on ab86bb11b945402f997ac3a12b6e66c34ca3183e. The first immutable RC then exposed one inherited renderer regression incompatible with the approved patch QA-delta model. A targeted diagnostic identified the stale manifest assertion; a release-specific patch-aware renderer gate was added. Batched G11 preflight then proved corrected renderer, content/copy, typography and all 15 responsive viewports, after explicitly provisioning Playwright. Temporary diagnostic workflows were removed and the durable G11 plan now owns these requirements.",
   "lastTrustworthyPass": "G0_G10_RUN_32083513389_PASS_ON_AB86BB11; G11_REMAINING_PREFLIGHT_RUN_32085526832_PASS_ON_CD4FB2C; CURRENT_SOURCE_CHANGED_AND_REQUIRES_FRESH_G0_G10",
@@ -50,8 +51,9 @@
   ],
   "adaptiveProcessLearning": {
     "status":"ACTIVE",
-    "lessonsRecorded":15,
+    "lessonsRecorded":16,
     "highestPriorityReusablePrevention":[
+      "Machine-state enums remain canonical and descriptive reasons live in separate fields so governance prose cannot break strict gates.",
       "Development/test/control-plane source changes after G10 invalidate exact-SHA qualification and require fresh G0-G10 before a new RC.",
       "Never move an immutable RC branch; create a new immutable RC for a changed source.",
       "Preflight the complete fail-fast remainder after the first RC failure so findings are batched before requalification.",
@@ -64,5 +66,5 @@
   "userDelivery":"NOT_READY",
   "nextBranch":"v18.5.1-development",
   "nextStep":"Run one fresh exact-SHA G0-G10 checkpoint for the complete G11 correction batch. If green, create a new immutable RC, run G11-G12 once, then perform the identity-only Stable transition and G13-G15 native certification without rebuilding certified artifacts.",
-  "updatedAt":"2026-08-18T00:45:00Z"
+  "updatedAt":"2026-08-18T00:49:00Z"
 }
