@@ -160,6 +160,17 @@ jobs:
           echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
           echo "publish=$publish" >> "$GITHUB_OUTPUT"
           echo "tracking_pr=$tracking_pr" >> "$GITHUB_OUTPUT"
+      - name: Announce dispatcher execution on release PR
+        if: ${{ steps.release.outputs.tracking_pr != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRACKING_PR: ${{ steps.release.outputs.tracking_pr }}
+          VERSION: ${{ steps.release.outputs.version }}
+          EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
+          PUBLISH: ${{ steps.release.outputs.publish }}
+        shell: bash
+        run: |
+          gh pr comment "$TRACKING_PR" --repo "$GITHUB_REPOSITORY" --body "🚦 DE.PULSE v${VERSION} release dispatcher active · Fast/dispatcher run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · ref \`${GITHUB_REF_NAME}\` · candidate \`${GITHUB_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. The next comment binds the canonical G11–G16 release run ID."
       - id: dispatch
         name: Reuse or dispatch exact candidate release run
         env:
@@ -190,8 +201,7 @@ jobs:
               -f build_id="$BUILD_ID" \
               -f certification_script="$CERTIFICATION_SCRIPT" \
               -f expected_source_fingerprint="$EXPECTED_FINGERPRINT" \
-              -f publish="$PUBLISH" \
-              -f tracking_pr="$TRACKING_PR"
+              -f publish="$PUBLISH"
             run_id=""
             run_url=""
             for _ in $(seq 1 30); do
@@ -211,7 +221,7 @@ jobs:
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           echo "run_url=$run_url" >> "$GITHUB_OUTPUT"
           if [ -n "$TRACKING_PR" ]; then
-            gh pr comment "$TRACKING_PR" --repo "$GITHUB_REPOSITORY" --body "DE.PULSE v${VERSION} release certification tracking: ${run_url} · run ${run_id} · candidate \`${GITHUB_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. This is the canonical G11–G16 run for this exact candidate."
+            gh pr comment "$TRACKING_PR" --repo "$GITHUB_REPOSITORY" --body "🔗 DE.PULSE v${VERSION} canonical G11–G16 release run: ${run_url} · run ${run_id} · candidate \`${GITHUB_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. This run ID is the durable release-certification lookup key for any assistant/account."
           fi
 
   branch-hygiene:
