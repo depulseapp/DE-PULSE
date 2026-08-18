@@ -38,6 +38,14 @@
     "major_scope": "v18_major_scope.json",
     "delivery_slices": "v18_delivery_slices.json",
     "build_resume_protocol": "adaptive-governance/BUILD_RESUME_PROTOCOL.md",
+    "ai_assistant_portability_contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
+    "ai_entrypoints": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "authoritative_handoff": "handoff/CURRENT.md",
+    "assistant_account_independent": true,
+    "temporary_workspace_authoritative": false,
     "resume_checkpoint": ".depulse-certification/resume/build-checkpoint.json",
     "release_evidence_checkpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
     "resume_reconciliation_required": true,
