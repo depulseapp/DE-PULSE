@@ -67,6 +67,9 @@ jobs:
           bad="$(gofmt -l $(git ls-files '*.go'))"
           if [ -n "$bad" ]; then
             printf '%s\n' "$bad"
+            while IFS= read -r file; do
+              [ -n "$file" ] && gofmt -d "$file"
+            done <<< "$bad"
             exit 1
           fi
       - name: Go vet
