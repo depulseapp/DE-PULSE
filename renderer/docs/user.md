@@ -1,5 +1,9 @@
 # DE.PULSE — User documentation
 
+## v18.5.2 STABLE — Hotfix recovery candidate
+
+Day, Swing, and Long-Term desks render through a self-contained symbol normalizer. Complete ET/PT clocks live in the compact Market Pulse Ribbon, while Research keeps its full evidence hierarchy. Tracked-symbol typing survives live quote updates and Add Symbol succeeds on the first attempt. Settings now allows a password-reverified display name and sign-in username while OWNER remains a separate role. The full Save Settings row stays visible inside the application window. Deterministic formulas, U.S.-listed scope, and No Execution are unchanged. Promotion remains pending exact-source local and native package certification.
+
 ## v18.5.1 STABLE — Recovery patch
 
 Incremental live updates preserve row identity/hover/focus/selection/scroll. Desk-row × removes a tracked symbol globally while desk pills retain final-membership protection; Undo restores exact memberships/selection. Research/header responsive hierarchy and version-neutral profile copy are hardened. Stable continuity uses the canonical PersonalMarketTerminal profile. No Execution is unchanged.
