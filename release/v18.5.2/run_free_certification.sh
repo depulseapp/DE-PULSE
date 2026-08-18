@@ -46,6 +46,10 @@ python3 release_identity.py --verify
 python3 version_consistency_test.py
 
 echo
+echo "[G0/G2/G10] GitHub-backed assistant/account portability and resume state"
+python3 adaptive_resume_gate.py
+
+echo
 echo "[G2/G10] Adaptive functionality, provider and Market Mode integration"
 python3 functionality_utility_checkpoint_gate.py
 
