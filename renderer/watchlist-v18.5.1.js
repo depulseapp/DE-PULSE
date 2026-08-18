@@ -3,6 +3,10 @@
 
   const baseBindDynamic = bindDynamic;
 
+  function normalizeTrackedSymbol(value) {
+    return String(value || '').trim().toUpperCase();
+  }
+
   deskMembershipStrip = function deskMembershipStripV1851(sym, currentDesk = '') {
     const target = String(sym || '').toUpperCase();
     const inferredDesk = ['day', 'swing', 'long'].includes(String(page || '').toLowerCase()) ? String(page).toLowerCase() : '';
@@ -22,7 +26,7 @@
   };
 
   async function removeTrackedSymbolEverywhere(symbol, ctx) {
-    const sym = normalizeSymbol(symbol);
+    const sym = normalizeTrackedSymbol(symbol);
     if (!sym) return null;
 
     const selectedBefore = Object.fromEntries(DESKS.map(kind => [kind, selected[kind] || '']));
@@ -94,7 +98,7 @@
 
     $$('[data-desk-remove]').forEach(button => {
       const [, , rawSymbol] = String(button.dataset.deskRemove || '').split(':');
-      const symbol = normalizeSymbol(rawSymbol);
+      const symbol = normalizeTrackedSymbol(rawSymbol);
       button.setAttribute('aria-label', `Remove ${symbol} from Tracked Symbols and all desks`);
       button.title = `Remove ${symbol} from all desks`;
       button.onclick = async event => {
