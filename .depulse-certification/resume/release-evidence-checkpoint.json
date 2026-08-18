@@ -5,6 +5,17 @@
   "channel": "STABLE",
   "candidateDisposition": "V18_6_0_G11_DISPATCH_PENDING",
   "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source a84b7028 is frozen after G10 PASS.",
+  "dispatchTrigger": {
+    "sequence": 7,
+    "purpose": "Single owner-controlled connector-safe trigger after G12 stale watchlist harness remediation and fresh G10 PASS.",
+    "releaseCertificationBaseSha": "a6b58016f4921e5927579fc4eae4ea5e81f026ad",
+    "qualifiedSourceCommit": "a84b7028f8723f47f11a59e2225c10ddf1a38e3b",
+    "g10FastRun": 32197304582,
+    "g10QualifiedRun": 32197304782,
+    "sourceFingerprintImpact": "NONE",
+    "expectedPublish": false,
+    "mergeRequired": false
+  },
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -66,6 +77,6 @@
     "No v18.6 Stable publication claim is valid until G11-G16 complete and promotion is explicitly executed."
   ],
   "releaseBlockingResiduals": ["G11-G16 and native macOS/Windows evidence remain required before Stable promotion."],
-  "nextRequiredEvidence": "One canonical non-publishing release.yml run on the reconciled harness-remediated release-certification candidate, bound to PR #16, then G11-G16.",
-  "updatedAt": "2026-08-18T23:35:30Z"
+  "nextRequiredEvidence": "Canonical non-publishing release.yml run from exact base a6b58016, bound to PR #16, then G11-G16.",
+  "updatedAt": "2026-08-18T23:36:30Z"
 }
