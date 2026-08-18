@@ -36,19 +36,28 @@ def release_dispatch_contract(workflows: Path) -> int:
         "endsWith(github.ref, '-release-certification')",
         "endsWith(github.ref, '-stable-promotion')",
         "github.event.sender.login == github.repository_owner",
+        "github.event_name == 'pull_request'",
+        "endsWith(github.event.pull_request.base.ref, '-release-certification')",
+        "github.actor == github.repository_owner",
+        'release_ref="${PR_BASE_REF:-}"',
+        'candidate_sha="${PR_BASE_SHA:-}"',
         '"v${release_line}-release-certification") publish=false',
         '"v${release_line}-stable-promotion") publish=true',
     )
     missing = [fragment for fragment in required if fragment not in ci_fast]
-    forbidden = "github.event.head_commit.author.username"
-    if missing or forbidden in ci_fast:
+    forbidden = (
+        "github.event.head_commit.author.username",
+        "endsWith(github.event.pull_request.base.ref, '-stable-promotion')",
+    )
+    present_forbidden = [fragment for fragment in forbidden if fragment in ci_fast]
+    if missing or present_forbidden:
         print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
         if missing:
             print("release dispatcher contract missing: " + ", ".join(missing), file=sys.stderr)
-        if forbidden in ci_fast:
-            print("release dispatcher uses unreliable head_commit author authorization", file=sys.stderr)
+        if present_forbidden:
+            print("release dispatcher forbidden contract fragments: " + ", ".join(present_forbidden), file=sys.stderr)
         return 1
-    print("release dispatcher authorization/publish boundary: PASS")
+    print("release dispatcher push/PR-fallback authorization and publish boundary: PASS")
     return 0
 
 
