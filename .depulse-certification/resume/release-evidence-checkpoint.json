@@ -20,10 +20,10 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba",
+    "candidateSourceCommit": "f15ebe31e7f30c3fc0ad95b2a43c5859d59e7f46",
     "sourceFingerprint": null,
     "sourceFingerprintState": "PENDING_G11_CANONICAL_FINGERPRINT",
-    "qualificationMergeFingerprintObserved": "6125035b40fbee5c1571e26a1ff3fdd3677000f962961b34f7bdd7b3161e717d",
+    "qualificationMergeFingerprintObserved": "18deda02c7337297b1b64ae9c915ced5a1bdef03d0c7a25b38742988e99b3c83",
     "promotionState": "NOT_PROMOTED",
     "releaseDispatchPath": {
       "certificationBranch": "v18.6-release-certification",
@@ -41,12 +41,12 @@
     "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, all eight implementation/audit slices, governance contracts and preserved protected invariants."},
     "G10": {
       "status": "PASS",
-      "candidateSourceCommit": "9558ee44df55dd10f931f7435f4a8615b1b976ba",
-      "fastRun": 32187439582,
-      "fastRunNumber": 158,
-      "qualifiedRun": 32187439404,
-      "qualifiedRunNumber": 69,
-      "qualificationMergeFingerprintObserved": "6125035b40fbee5c1571e26a1ff3fdd3677000f962961b34f7bdd7b3161e717d",
+      "candidateSourceCommit": "f15ebe31e7f30c3fc0ad95b2a43c5859d59e7f46",
+      "fastRun": 32188301203,
+      "fastRunNumber": 169,
+      "qualifiedRun": 32188301155,
+      "qualifiedRunNumber": 74,
+      "qualificationMergeFingerprintObserved": "18deda02c7337297b1b64ae9c915ced5a1bdef03d0c7a25b38742988e99b3c83",
       "coverage": ["Ubuntu portability", "macOS portability", "Windows portability", "workflow/provenance contracts", "renderer contracts", "browser behavior", "full Go suite", "race detector", "randomized package order", "qualified evidence summary"]
     },
     "G11": {"status": "IN_PROGRESS", "required": "Canonical release.yml run computes and binds the exact candidate Git-object fingerprint and posts it to PR #16."},
@@ -74,5 +74,5 @@
   ],
   "releaseBlockingResiduals": ["G11-G16 release certification and both native package/runtime evidence graphs remain required before Stable promotion."],
   "nextRequiredEvidence": "PR-audited canonical release.yml execution from v18.6-release-certification with G11 through G16 and publish=false.",
-  "updatedAt": "2026-08-18T21:29:00Z"
+  "updatedAt": "2026-08-18T21:46:00Z"
 }
