@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "release": "v18.5.2",
-  "requestId": "v18.5.2-exact-source-20260817-003",
-  "candidateSourceCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
+  "requestId": "v18.5.2-exact-source-20260817-004",
+  "candidateSourceCommit": "aa96a4bf052d7d83abd9d0fc1a16df89468fc84a",
   "qualificationRequested": true,
   "runner": "release/v18.5.2/run_free_certification.sh",
   "requiredRange": "G0-G12",
   "branch": "v18.5.2-development",
-  "reason": "Deliberate exact-source certification request bound to the main-reconciled candidate; ordinary source pushes remain quiet.",
-  "requestedAt": "2026-08-18T04:22:00Z"
+  "reason": "Final deliberate exact-source certification request for the main-reconciled, documented candidate. Ordinary source pushes remain quiet. If execution infrastructure fails before step 1, preserve INFRA_FAIL classification and do not claim a product failure.",
+  "requestedAt": "2026-08-18T04:27:00Z"
 }
