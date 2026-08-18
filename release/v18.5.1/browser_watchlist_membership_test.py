@@ -20,6 +20,7 @@ RENDERER = ROOT / "renderer" / "renderer.js"
 EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
 INDEX = ROOT / "renderer" / "index.html"
 CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
+DESKS = ("day", "swing", "long")
 
 
 def between(text: str, start: str, end: str, label: str) -> str:
