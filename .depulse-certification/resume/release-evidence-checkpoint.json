@@ -13,10 +13,11 @@
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
   "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
-  "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation/reconciled-source candidate; actual GitHub objects and hashes control evidence reuse.",
-  "sourceFingerprint": null,
-  "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "The no-cost executable lane reached G12 four times. It exposed missing v18.5.2 bundled QA release history, a stale v18.0.5 exact source-string assertion after identity-chrome refactoring, a browser scroll baseline captured before Playwright hover repositioning, and watchlist asset assertions hard-coded to the previous release cache-busting query. Candidate c17370e68ca2e0303ba4a124a055af1fe10e665d includes all four corrections and now requires a fresh complete G0-G12 run.",
+  "certifiedCheckoutHead": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
+  "metadataHeadRule": "Release evidence metadata is fingerprint-excluded. candidateSourceCommit controls the product/tooling/documentation/reconciled-source candidate; later .depulse-certification/resume commits may advance branch HEAD without invalidating evidence when the canonical source fingerprint is unchanged.",
+  "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
+  "sourceFingerprintState": "CERTIFIED_G0_G12_PASS",
+  "sourceFingerprintReason": "The complete canonical local exact-source lane passed at checkout e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9. The certified canonical source fingerprint is 807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0.",
   "evidence": {
     "incoming-v18.5.1-stable": {
       "status": "PASS",
@@ -32,7 +33,7 @@
       "summary": "296 unique conserved rows; independent audit findings included"
     },
     "v18.5.2-assistant-portability": {
-      "status": "IMPLEMENTED_AWAITING_EXACT_SOURCE_CERTIFICATION",
+      "status": "PASS",
       "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
       "handoff": "handoff/CURRENT.md",
       "entrypoints": ["AGENTS.md", "CLAUDE.md"]
@@ -41,96 +42,95 @@
       "status": "PASS",
       "mergeCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
       "mainCommit": "5957c51d081cd20d1eb650437f46b2b4971a905f",
-      "summary": "PR conflict was isolated to the certification workflow; reconciled merge preserved the deliberate checkpoint workflow and restored mergeability."
+      "summary": "The branch was reconciled with main and PR #13 restored to mergeable state."
     },
     "v18.5.2-actions-diagnostic": {
       "status": "INFRA_FAIL",
       "runs": [32098538807, 32098674432],
       "attemptsObserved": 3,
-      "observation": "Jobs were created but all observed attempts completed failure before any workflow step record or downloadable job log existed. This remains infrastructure evidence, not a product-test result."
+      "observation": "Observed GitHub Actions attempts failed before workflow step 1 and produced no downloadable job log; these remain infrastructure evidence, not product failures."
     },
     "v18.5.2-local-exact-source-attempt-1": {
       "status": "PRODUCT_FAIL_G12",
       "sourceHead": "11e3953d7ce7cc507dea651eabf303be0c912b29",
-      "runner": "release/v18.5.2/run_free_certification.sh",
-      "earliestFailure": "renderer_logic_test.js QA history identity assertion: bundled manifest newest version was 18.5.1 while renderer expected 18.5.2",
-      "precedingEvidence": "deterministic trading equivalence 2403/2403 PASS; canonical run executed through G12",
+      "earliestFailure": "bundled QA history newest version 18.5.1 while renderer expected 18.5.2",
       "classification": "GENUINE_TEST_FAILURE"
     },
     "v18.5.2-G12-qa-identity-fix": {
       "status": "FOCUSED_PASS",
       "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
-      "changes": ["renderer/qa/manifest.json", "renderer/qa/v18.5.2.txt"],
-      "validation": "node renderer_logic_test.js",
-      "result": "renderer logic + v15.1.2 stability/UI regression tests: PASS"
+      "validation": "node renderer_logic_test.js"
     },
     "v18.5.2-local-exact-source-attempt-2": {
       "status": "PRODUCT_FAIL_G12_TEST_CONTRACT",
       "sourceHead": "03c8ff1c6cf15e0c95c56991b2d2797060d7318a",
-      "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
-      "runner": "release/v18.5.2/run_free_certification.sh",
-      "earliestFailure": "v18_0_5_renderer_test.js asserted the obsolete literal sequence applyRoleSurfaceVisibility();const ident=... even though init() correctly calls applyRoleSurfaceVisibility();syncIdentityChrome(); and syncIdentityChrome owns identity-principal/sign-out updates",
-      "precedingEvidence": "Go suites PASS; deterministic trading equivalence 2403/2403 PASS; renderer_logic_test.js PASS",
+      "earliestFailure": "obsolete literal source-sequence assertion in v18_0_5_renderer_test.js",
       "classification": "GENUINE_STALE_REGRESSION_TEST_FAILURE"
     },
     "v18.5.2-G12-role-identity-test-hardening": {
       "status": "FOCUSED_PASS",
       "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
-      "changes": ["v18_0_5_renderer_test.js"],
       "productCodeChanged": false,
-      "validation": "node v18_0_5_renderer_test.js",
-      "result": "v18.0.5 renderer / role visibility / responsive touched-surface acceptance: PASS",
-      "contract": "Verify applyRoleSurfaceVisibility and syncIdentityChrome are both invoked and that syncIdentityChrome retains identity-principal/sign-out ownership, without depending on obsolete adjacent source text."
+      "validation": "node v18_0_5_renderer_test.js"
     },
     "v18.5.2-local-exact-source-attempt-3": {
       "status": "PRODUCT_FAIL_G12_TEST_BASELINE",
       "sourceHead": "99ae6569eceb68543672b49b702f33b67913a763",
-      "candidateSourceCommit": "e4c2ad2a401e14c10ccc20d6b77fed6b6353e632",
-      "runner": "release/v18.5.2/run_free_certification.sh",
-      "earliestFailure": "browser_live_render_test.py captured scrollBefore=80 before Playwright hover; hover moved the target into view to 89 before DE.PULSE live reconciliation, causing the test to attribute Playwright positioning to the renderer",
-      "precedingEvidence": "Go suites PASS; deterministic trading equivalence 2403/2403 PASS; renderer_logic_test.js PASS; v18_0_5_renderer_test.js PASS",
+      "earliestFailure": "Playwright hover repositioned scroll before the test baseline was captured",
       "classification": "GENUINE_BROWSER_TEST_BASELINE_FAILURE"
     },
     "v18.5.2-G12-browser-live-render-test-hardening": {
       "status": "FOCUSED_PASS",
       "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
-      "changes": ["release/v18.5.1/browser_live_render_test.py"],
       "productCodeChanged": false,
-      "validation": "python3 release/v18.5.1/browser_live_render_test.py",
-      "result": "PASS: v18.5.2 live quote rendering preserves DOM identity, focus, selection and scroll; structural events retain full render.",
-      "contract": "Establish hover first, then capture the exact pre-reconciliation scroll baseline; retain strict scrollAfter == scrollBefore with no tolerance."
+      "validation": "python3 release/v18.5.1/browser_live_render_test.py"
     },
     "v18.5.2-local-exact-source-attempt-4": {
       "status": "PRODUCT_FAIL_G12_TEST_VERSION_BINDING",
       "sourceHead": "4ae64ced82539a79521f524d4f629f7561489a26",
-      "candidateSourceCommit": "bbbfc095517d769409f64c1bdb43f5f260e14f48",
-      "runner": "release/v18.5.2/run_free_certification.sh",
-      "earliestFailure": "browser_watchlist_membership_test.py required watchlist-v18.5.1.js?v=18.5.1 even though renderer/index.html correctly cache-busts the retained v18.5.1 asset filename with the current v18.5.2 release query",
-      "precedingEvidence": "Go suites PASS; deterministic trading equivalence 2403/2403 PASS; renderer_logic_test.js PASS; v18_0_5_renderer_test.js PASS; browser_live_render_test.py PASS",
+      "earliestFailure": "watchlist browser asset assertion hard-coded previous release query",
       "classification": "GENUINE_STALE_BROWSER_TEST_VERSION_ASSERTION"
     },
     "v18.5.2-G12-watchlist-membership-test-hardening": {
       "status": "FOCUSED_PASS",
       "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
-      "changes": ["release/v18.5.1/browser_watchlist_membership_test.py"],
       "productCodeChanged": false,
-      "validation": "python3 release/v18.5.1/browser_watchlist_membership_test.py",
-      "result": "PASS: self-contained production watchlist extension globally removes all 7 membership combinations with exact Undo/selection restoration; one-desk protection and current-desk accessibility remain correct.",
-      "contract": "Derive the expected cache-busting query from canonical release_identity.json while retaining the production watchlist-v18.5.1 asset filename and all behavioral membership assertions."
+      "validation": "python3 release/v18.5.1/browser_watchlist_membership_test.py"
     },
     "v18.5.2-G0-G12": {
-      "status": "REQUALIFY_CORRECTED_CANDIDATE",
+      "status": "PASS",
+      "lane": "NO_COST_LOCAL_EXACT_SOURCE",
       "runner": "release/v18.5.2/run_free_certification.sh",
       "workflow": ".github/workflows/v18.5.2-hotfix-certification.yml",
       "candidateSourceCommit": "c17370e68ca2e0303ba4a124a055af1fe10e665d",
-      "productTestFailureClaimed": false,
-      "note": "All four discovered G12 owners have focused PASS evidence; no full-pass claim is made until the complete canonical lane reruns on c17370e68ca2e0303ba4a124a055af1fe10e665d."
+      "certifiedCheckoutHead": "e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9",
+      "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0",
+      "localEvidencePath": "/Users/deva93v/Downloads/depulse-v18.5.2-cert/.depulse-certification/manual-v18.5.2/e9ca615cf7ab97ac476128c81ee9ae2d7340c0d9/certification-result.json",
+      "terminalResult": "PASS: exact-source v18.5.2 source and browser certification completed.",
+      "deterministicEquivalence": "2403/2403 PASS",
+      "next": "G13/G14 native macOS Apple Silicon and Windows x64 packaging/runtime audit before G15 promotion"
     },
-    "v18.5.2-G13-G15": {
-      "status": "NOT_STARTED_BLOCKED_ON_G12",
-      "requiredNativeTargets": ["macos-arm64", "windows-x64"]
+    "v18.5.2-G13-macos-arm64": {
+      "status": "NOT_STARTED",
+      "required": true
+    },
+    "v18.5.2-G14-macos-arm64": {
+      "status": "NOT_STARTED",
+      "required": true
+    },
+    "v18.5.2-G13-windows-x64": {
+      "status": "NOT_STARTED",
+      "required": true
+    },
+    "v18.5.2-G14-windows-x64": {
+      "status": "NOT_STARTED",
+      "required": true,
+      "note": "Actual Windows x64 execution is mandatory; cross-compilation alone cannot satisfy G14."
+    },
+    "v18.5.2-G15": {
+      "status": "BLOCKED_ON_G13_G14"
     }
   },
-  "nextRequiredEvidence": "A fresh complete canonical exact-source v18.5.2 G0-G12 PASS for candidate c17370e68ca2e0303ba4a124a055af1fe10e665d, followed by actual macOS Apple Silicon and Windows x64 G13-G15 artifact/runtime evidence.",
-  "updatedAt": "2026-08-18T05:06:00Z"
+  "nextRequiredEvidence": "Actual packaged-artifact G13/G14 PASS on macOS Apple Silicon and Windows x64 for the certified fingerprint, followed by G15 release assurance/promotion.",
+  "updatedAt": "2026-08-18T05:15:00Z"
 }
