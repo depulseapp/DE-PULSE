@@ -304,3 +304,9 @@ At the active release G16:
 ## 9. Permanent invariant
 
 **`governance/ROADMAP.md` is the single product roadmap authority. This file is only a resumable active-release operational overlay. G0–G16 remains permanent, and efficiency comes from evidence reuse, checkpoints, bounded lanes and AIPLC—not more roadmap layers or more gates.**
+
+## 10. Assistant/account portability invariant
+
+Every current and future release must be resumable from the connected GitHub repository by ChatGPT/Codex, Claude, another authorized assistant or a human developer without prior chat access. The durable path is root adapter → portability contract → `handoff/CURRENT.md` → actual branch/PR/tag/check/artifact state → Build State Ledger → canonical roadmap/build/delivery contracts.
+
+No roadmap item is considered safely carried forward when it exists only in model memory, chat, external file storage or a temporary workspace. G0/G2/G10/G16 use the existing Adaptive Resume gate to prevent missing or contradictory continuity artifacts; no new top-level gate is added.
