@@ -268,3 +268,67 @@ Delivery Process is 10/10 only when:
 G16 delivery is incomplete until GitHub alone can onboard a newly authorized ChatGPT/Codex, Claude or human maintainer. Update `handoff/CURRENT.md` with delivered artifacts/hashes, actual residuals and exactly one next action; update the Build State Ledger after the candidate commit; and verify both root assistant adapters still point to the same vendor-neutral portability contract.
 
 Do not make ChatGPT Library, Claude Projects, a local Mac, email, chat history or a temporary AI workspace the only location of required source, evidence or continuation instructions. Those may be mirrors, never delivery authority.
+
+---
+
+## 15. Canonical release workflow, publication and G16 hygiene contract
+
+Delivery must use the permanent `.github/workflows/release.yml` orchestration. A release-specific delivery workflow is not a normal release artifact.
+
+### 15.1 One release workflow, parameterized by evidence identity
+
+`release.yml` accepts the immutable candidate/release inputs and owns the G11–G16 dependency graph:
+
+**G11 immutable candidate → G12 certification → G13/G14 macOS + Windows in parallel → G15 assurance → no-rebuild publication → G16 delivery/handoff checks.**
+
+Version, candidate SHA, source fingerprint, build ID, target platform, resume gate/lane and publication intent are inputs. Do not create per-release `native-delivery`, `native-retry`, `native-monitor`, `certification` or `publish-stable` workflows.
+
+### 15.2 Delivery retry semantics
+
+- transient runner/network/provider failure → rerun the failed job on the same release workflow and immutable candidate;
+- platform-specific harness failure → fix shared platform tooling, add prevention test and rerun only that platform lane;
+- platform-specific product/package failure → correct source/package owner, invalidate only dependent evidence and run the same `release.yml` lane for the new valid candidate;
+- independent platform PASS stays reusable if exact identity/evidence requirements remain equivalent;
+- G15 does not rerun until both required platform evidence graphs are valid;
+- publication never rebuilds or repackages certified artifacts.
+
+A one-off workflow may be used only as explicitly approved migration tooling for changing the permanent CI architecture itself; it must carry deletion/retirement criteria before it is merged and cannot become the default response to a failed release lane.
+
+### 15.3 Stable archival model
+
+Permanent release history is stored as:
+
+- immutable Stable tag;
+- GitHub Release;
+- certified native artifacts;
+- hashes/checksum manifest;
+- provenance/attestation/evidence;
+- Git history and release-scoped evidence records.
+
+Long-lived RC, retry, certification, promotion or Stable branches are not the archival model.
+
+### 15.4 G16 delivery cleanup is mandatory
+
+G16 cannot close until repository delivery hygiene has an explicit disposition:
+
+1. verify final Stable tag/release and package hashes;
+2. inventory release-created/temporary branches and workflows;
+3. preserve unique unmerged evidence/content where required;
+4. delete obsolete merged RC/retry/certification/promotion branches when safe;
+5. delete obsolete release-specific workflow files from the active branch when safe;
+6. confirm certified artifacts/evidence remain durable in the GitHub Release/history;
+7. record any branch/workflow intentionally retained, owner, reason and removal condition;
+8. report pre/post active workflow and branch counts;
+9. verify the next release starts from the canonical Stable baseline with the three-workflow CI surface only.
+
+Known clutter is not silently carried forward as “history.” Git history and immutable Releases provide history; active workflow/branch surfaces are operational machinery and must remain intentionally small.
+
+### 15.5 Delivery learning closes only through prevention
+
+For repeated build/delivery failures, G16 documentation alone is insufficient. Delivery must point to the canonical workflow/tool/test change that prevents recurrence, or to an evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` conclusion.
+
+This is the permanent feedback loop:
+
+**failure → classification → root cause → canonical fix → regression test → same-lane rerun → preserved independent evidence → G15 → no-rebuild publication → G16 cleanup/learning → improved next release.**
+
+This section strengthens the existing Adaptive CI delivery control and repository-structure contracts without changing G0–G16.
