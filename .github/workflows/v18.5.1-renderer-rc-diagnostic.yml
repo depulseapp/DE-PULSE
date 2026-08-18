@@ -1,4 +1,4 @@
-name: DE.PULSE v18.5.1 | RC Renderer Diagnostic
+name: DE.PULSE v18.5.1 | G11 Remaining Preflight
 
 on:
   push:
@@ -10,16 +10,25 @@ permissions:
   contents: read
 
 jobs:
-  renderer:
-    name: Targeted immutable-RC renderer diagnostic
+  g11-preflight:
+    name: Targeted G11 remaining checks preflight
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ab86bb11b945402f997ac3a12b6e66c34ca3183e
+          ref: f30ac11c88419ea4dbfb2b9015221d401c066307
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - name: Run only failed G11 renderer regression
-        run: node renderer_logic_test.js
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Corrected inherited renderer regression
+        run: node release/v18.5.1/renderer_logic_v18_5_1_gate.js
+      - name: Current content / release-copy audit
+        run: python3 content_copy_audit_test.py
+      - name: Documentation typography hierarchy
+        run: python3 v18_documentation_typography_gate.py
+      - name: Responsive/layout 15-viewport shards
+        run: python3 responsive_ui_sharded_gate.py
