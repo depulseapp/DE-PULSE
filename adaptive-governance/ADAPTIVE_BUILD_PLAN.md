@@ -520,3 +520,58 @@ Every release plan must include a provider-neutral continuity packet owned by Gi
 - secrets and account-specific session material are never stored in continuity artifacts.
 
 The plan is not resumable until a newly authorized ChatGPT/Codex or Claude account can determine the same last trustworthy PASS and earliest resume gate without asking the user to reconstruct prior conversations.
+
+---
+
+## 16. Permanent CI convergence and repository-hygiene build plan
+
+Every active release plan must use **one evolving CI implementation**, not create release-specific workflow copies.
+
+### Canonical workflow surface
+
+The only normal active workflow entry points are:
+
+- `.github/workflows/ci-fast.yml` — automatic cheap preflight and impact classification;
+- `.github/workflows/ci-qualified.yml` — parameterized affected-area G4–G10 qualification and same-lane retry/resume;
+- `.github/workflows/release.yml` — parameterized G11–G16 orchestration, independent native lanes, G15 assurance and no-rebuild publication.
+
+Version, source SHA, release identity, build ID, gate, lane, platform and resume point are inputs/configuration. They must not create `vX.Y-*`, `*-retry`, `*-monitor`, `*-probe`, `*-recovery`, `*-certification` or `*-publish` workflow families.
+
+### Failure/retry planning
+
+For every failed lane, record the classification and exact evidence invalidation before any rerun:
+
+- `INFRA_FAIL` → rerun failed job(s) on the same workflow and same SHA;
+- `CI_HARNESS_FAIL` → fix the shared harness/workflow, add regression coverage, rerun the same affected lane;
+- `GATE_TEST_FAIL` → fix the canonical test contract, rerun that gate plus only its invalidated dependents;
+- `PRODUCT_FAIL` → correct source, then run the same workflow on the new SHA from the earliest invalidated gate;
+- independent PASS lanes remain reusable when source/package/test/platform fingerprints still match.
+
+A workaround workflow is not an acceptable prevention action when the canonical workflow can own the fix.
+
+### Mandatory hygiene work packet
+
+Before normal v18.6 product implementation, plan and close a behavior-neutral CI/repository consolidation packet that:
+
+1. inventories every active workflow and branch;
+2. preserves unique unmerged content/evidence before removal;
+3. implements the three canonical workflows using reusable scripts/actions rather than duplicated YAML logic;
+4. folds v18.5.2 lessons—especially canonical Git-object provenance and platform-independent source identity—into shared tooling;
+5. adds workflow/harness regression tests for Linux, macOS and Windows assumptions;
+6. adds a machine-enforced workflow allowlist preventing unapproved workflow sprawl;
+7. removes obsolete version-specific workflow files from active `main` after validation;
+8. reconciles and removes merged/obsolete RC, retry, certification, promotion-tooling and old development branches after immutable tag/release/evidence safety is proven;
+9. converges the branch model to `main` + one active release development branch + short-lived feature/fix branches;
+10. treats RC as an immutable SHA/checkpoint and Stable as tag + GitHub Release rather than long-lived branches;
+11. records workflow/branch counts and cleanup disposition in G16.
+
+### Learning-to-implementation rule
+
+A CI/process finding is not complete merely because G16 documents it. The build plan must schedule one of:
+
+- a canonical workflow/tool/test improvement with regression evidence; or
+- an explicit `NO_IMPLEMENTATION_CHANGE_REQUIRED` disposition with supporting evidence.
+
+Repeated harness/process defects without a canonical prevention change are release-process blockers.
+
+This section is permanent and strengthens `CI-ADAPTIVE-18.5.1-001`, `AUDIT-18-CI-001`, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md` without adding G17+.
