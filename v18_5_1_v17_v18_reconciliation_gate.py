@@ -262,6 +262,7 @@ def main() -> int:
         + ledger.get("escapedDefects", [])
         + ledger.get("conversationalCommitments", [])
         + ledger.get("roadmapPlacedNotCurrentMisses", [])
+        + ledger.get("independentAudit20260817", {}).get("findings", [])
     )
     tracked_ids = [row.get("id") for row in tracked_rows]
     declared_total = ledger.get("baseline", {}).get("totalTrackedRows")
