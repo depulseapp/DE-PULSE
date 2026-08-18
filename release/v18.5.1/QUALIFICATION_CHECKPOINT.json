@@ -4,7 +4,7 @@
   "status": "QUALIFICATION_REQUESTED",
   "qualificationRequested": true,
   "releaseCertificationRequested": false,
-  "sourceSha": "8f9b4144742fd2bee9c690f67fa6626d3fa001b0",
-  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-03",
-  "notes": "Final batched development qualification after Checkpoint 01 stale resume identity and Checkpoint 02 documentation/provenance findings were corrected together. Run cheap-first G0-G5, then automatically unlock G6-G10 only if FAST is green. No per-fix workflows. CI efficiency may eliminate redundant execution, never required evidence. G11-G15 remains blocked until exact G10 PASS and immutable RC."
+  "sourceSha": "e38b75e12d10e57b90c4ce8d687084e16cf09fe3",
+  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-04",
+  "notes": "Batched requalification after the Checkpoint 03 watchlist Chromium oracle NameError was fixed without changing product semantics or reducing the seven-combination/final-membership/current-desk assertions. Run cheap-first G0-G5, then automatically unlock G6-G10 only if FAST is green. No per-fix workflows. CI efficiency may eliminate redundant execution, never required evidence. G11-G15 remains blocked until exact G10 PASS and immutable RC."
 }
