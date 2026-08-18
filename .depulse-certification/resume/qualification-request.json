@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "release": "v18.5.2",
-  "requestId": "v18.5.2-exact-source-20260817-002",
-  "candidateSourceCommit": "9c00553b711dac89c8c7095885200a4507d5647d",
+  "requestId": "v18.5.2-exact-source-20260817-003",
+  "candidateSourceCommit": "d31551ecd045141a6df3fc88e3cce1df05879019",
   "qualificationRequested": true,
   "runner": "release/v18.5.2/run_free_certification.sh",
   "requiredRange": "G0-G12",
   "branch": "v18.5.2-development",
-  "reason": "Deliberate checkpoint-triggered exact-source certification; ordinary source pushes remain quiet; PR trigger is inspection-only and heavy work runs only for this request delta.",
-  "requestedAt": "2026-08-18T04:18:00Z"
+  "reason": "Deliberate exact-source certification request bound to the main-reconciled candidate; ordinary source pushes remain quiet.",
+  "requestedAt": "2026-08-18T04:22:00Z"
 }
