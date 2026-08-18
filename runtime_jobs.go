@@ -17,7 +17,7 @@ func minPositive(a, b float64) float64 {
 
 func (e *Engine) startLive(ctx context.Context, key string) {
 	e.mu.Lock()
-	e.health = map[string]string{"quotes": "connecting", "quotes-rest": "loading", "alpaca-stream": "checking", "alpaca-live": "checking", "vix": "detecting", "history": "loading", "news": "loading", "earnings": "loading", "filings": "loading", "fundamentals": "loading", "global": "loading", "global-direct": "checking", "fx-direct": "checking", "macro-rates": "loading", "fred-rates": "checking", "treasury": "loading", "bls-actuals": "loading", "bea-actuals": "loading", "eia-actuals": "checking", "macro-events": "loading", "event-mode": "ready", "options": "checking", "signal-validation": "ready", "cache-refresh": "ready", "pre-market-prep": "READY · awaiting scheduled window", "market-open-prep": "READY · awaiting scheduled window", "catalyst-watch": "READY · event driven", "market-calendar": "checking", "market-activity": "checking", "corporate-actions": "checking", "symbol-intelligence": "checking", "provider-capabilities": "checking", "ai": "ready"}
+	e.health = map[string]string{"quotes": "connecting", "quotes-rest": "loading", "alpaca-stream": "checking", "alpaca-live": "checking", "vix": "detecting", "history": "loading", "news": "loading", "earnings": "loading", "filings": "loading", "fundamentals": "loading", "global": "loading", "global-direct": "checking", "fx-direct": "checking", "macro-rates": "loading", "fred-rates": "checking", "treasury": "loading", "bls-actuals": "loading", "bea-actuals": "loading", "eia-actuals": "checking", "macro-events": "loading", "event-mode": "ready", "options": "checking", "signal-validation": "ready", "cache-refresh": "ready", "pre-market-prep": "READY · awaiting scheduled window", "market-open-prep": "READY · awaiting scheduled window", "session-intelligence-coordinator": "READY · scheduler active", "catalyst-watch": "READY · event driven", "market-calendar": "checking", "market-activity": "checking", "corporate-actions": "checking", "symbol-intelligence": "checking", "provider-capabilities": "checking", "ai": "ready"}
 	e.mu.Unlock()
 	e.app.broadcastRuntime()
 	e.app.mu.RLock()
@@ -135,9 +135,7 @@ func (e *Engine) startLive(ctx context.Context, key string) {
 
 	}
 	e.wg.Add(1)
-	go func() { defer e.wg.Done(); e.preMarketPrepLoop(ctx, key, alpacaKey, alpacaSecret) }()
-	e.wg.Add(1)
-	go func() { defer e.wg.Done(); e.marketOpenPrepLoop(ctx) }()
+	go func() { defer e.wg.Done(); e.sessionIntelligenceCoordinatorLoop(ctx, key, alpacaKey, alpacaSecret) }()
 	e.wg.Add(1)
 	go func() { defer e.wg.Done(); e.weeklyIntegrityLoop(ctx) }()
 }
