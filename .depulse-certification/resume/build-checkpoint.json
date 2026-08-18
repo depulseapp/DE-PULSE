@@ -4,80 +4,25 @@
   "release": "v18.5.1",
   "channel": "TEST",
   "branch": "v18.5.1-development",
-  "incomingStable": {
-    "version": "v18.5.0",
-    "tag": "v18.5.0-stable",
-    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
-    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
-    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
-  },
-  "certifiedStable": {
-    "version": "v18.5.0",
-    "tag": "v18.5.0-stable",
-    "commit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
-    "buildId": "v18.5.0-stable-major-closure-release-assurance-20260817",
-    "sourceFingerprint": "904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a",
-    "sourceSha256": "f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"
-  },
-  "candidateSourceCommit": "c10285efb0ba86b81fd1a49a19f1d386f64c81a8",
-  "metadataHeadRule": "Resume/checkpoint metadata under .depulse-certification is fingerprint-excluded governance evidence. candidateSourceCommit identifies the latest v18.5.1 source/test candidate requiring fresh exact-SHA qualification; later metadata-only ledger commits do not advance the product fingerprint.",
+  "incomingStable": {"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
+  "certifiedStable": {"version":"v18.5.0","tag":"v18.5.0-stable","commit":"0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680","buildId":"v18.5.0-stable-major-closure-release-assurance-20260817","sourceFingerprint":"904c576bd15891075e3ad4c6a341417c6542bd7eb5c318b1c29563794251796a","sourceSha256":"f7e641694f2b58a4c338fb2e79bc7b566f5f26f9a0c0e28715c730dbf392872a"},
+  "candidateSourceCommit": "ca0be4911a8883d2bbe3642547674387fbc7b182",
+  "metadataHeadRule": "Resume/checkpoint metadata is fingerprint-excluded governance evidence; candidateSourceCommit identifies the latest v18.5.1 source/test candidate requiring exact-SHA qualification.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
   "codeStatus": "V18_5_1_RECOVERY_QUALIFICATION",
-  "implementationSummary": "Frozen ten-ID implementation is complete. Checkpoint 03 passed release identity, resume, architecture, data utility, documentation governance, go vet, focused Go, full Go, renderer syntax and live-render Chromium. The watchlist Chromium harness then crashed before exercising Issue #12 because the Python desk matrix constant was missing; product behavior did not fail. The oracle now defines the same three-desk matrix used by the JavaScript harness.",
-  "lastTrustworthyPass": "RUN_32082651456: G0-G5_STATIC_GO_LIVE_RENDER_PASS; WATCHLIST_BROWSER_ORACLE_CRASHED_BEFORE_BEHAVIOR_ASSERTIONS; FULL_G0-G10_NOT_YET_PASS",
+  "implementationSummary": "Frozen ten-ID implementation is complete. Checkpoint 04 proved static/governance, focused Go, full Go, renderer syntax, live DOM, all seven watchlist membership combinations with Undo/final-membership/current-desk semantics, and auth-copy Chromium. The only failure was a Research geometry oracle demanding equal top coordinates despite the CSS contract using align-items:end; measured bottoms were equal. The test now asserts the actual end-alignment contract.",
+  "lastTrustworthyPass": "RUN_32083109313: STATIC_GO_LIVE_RENDER_WATCHLIST_AUTH_COPY_PASS; RESEARCH_UI_ORACLE_MISMATCHED_END_ALIGNED_GRID; G6-G10_SKIPPED",
   "earliestRequiredResumeGate": "G0",
   "gates": {
-    "G0": {"status": "REQUALIFY", "reusable": false},
-    "G1": {"status": "REQUALIFY", "reusable": false},
-    "G2": {"status": "REQUALIFY", "reusable": false},
-    "G3": {"status": "REQUALIFY", "reusable": false},
-    "G4": {"status": "REQUALIFY", "reusable": false},
-    "G5": {"status": "REQUALIFY_AFTER_BROWSER_ORACLE_FIX", "reusable": false},
-    "G6": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G7": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G8": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G9": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G10": {"status": "PENDING_REQUALIFICATION", "reusable": false},
-    "G11": {"status": "NOT_STARTED", "reusable": false},
-    "G12": {"status": "NOT_STARTED", "reusable": false},
-    "G13": {"status": "NOT_STARTED", "reusable": false},
-    "G14": {"status": "NOT_STARTED", "reusable": false},
-    "G15": {"status": "NOT_STARTED", "reusable": false},
-    "G16": {"status": "NOT_STARTED", "reusable": false}
+    "G0":{"status":"REQUALIFY","reusable":false},"G1":{"status":"REQUALIFY","reusable":false},"G2":{"status":"REQUALIFY","reusable":false},"G3":{"status":"REQUALIFY","reusable":false},"G4":{"status":"REQUALIFY","reusable":false},"G5":{"status":"REQUALIFY_AFTER_UI_ORACLE_FIX","reusable":false},"G6":{"status":"PENDING_REQUALIFICATION","reusable":false},"G7":{"status":"PENDING_REQUALIFICATION","reusable":false},"G8":{"status":"PENDING_REQUALIFICATION","reusable":false},"G9":{"status":"PENDING_REQUALIFICATION","reusable":false},"G10":{"status":"PENDING_REQUALIFICATION","reusable":false},"G11":{"status":"NOT_STARTED","reusable":false},"G12":{"status":"NOT_STARTED","reusable":false},"G13":{"status":"NOT_STARTED","reusable":false},"G14":{"status":"NOT_STARTED","reusable":false},"G15":{"status":"NOT_STARTED","reusable":false},"G16":{"status":"NOT_STARTED","reusable":false}
   },
-  "blockingIssue": "Checkpoint 03 run 32082651456 reached the behavior-first Chromium lane. browser_live_render_test.py passed; browser_watchlist_membership_test.py raised NameError because the Python DESKS constant was absent. The test oracle was fixed without changing the product implementation or reducing the seven-combination/final-membership/current-desk assertions.",
-  "knownResiduals": [
-    "Fresh exact-SHA G0-G10 has not yet passed after the watchlist browser-oracle fix.",
-    "Auth-copy and UI-hierarchy Chromium tests were skipped after the watchlist harness crash and must run on the next checkpoint.",
-    "G6 PostgreSQL, G7 data/security/adaptive, G8 race/randomized/performance and G9 full HTTP/UI remain blocked until FAST is green.",
-    "G11-G15 immutable RC, full certification, macOS Apple Silicon, Windows x64 actual-artifact runtime audit, provenance and release assurance remain mandatory."
-  ],
-  "resolvedIssues": [
-    "v18.5.1 exact release identity and isolated TEST profile implemented.",
-    "Ten frozen G1 IDs conserved and mapped to source/tests.",
-    "Checkpoint-based cost-aware CI active; ordinary development commits are quiet.",
-    "Stale resume metadata and patch documentation/provenance semantics corrected.",
-    "Checkpoint 03 proved static governance/architecture/data utility, go vet, focused Go, full Go, renderer syntax and live-render Chromium on the exact candidate.",
-    "Watchlist browser oracle now declares the Python DAY/SWING/LONG matrix required by its seven-combination assertions."
-  ],
-  "adaptiveProcessLearning": {
-    "status": "ACTIVE",
-    "lessonsRecorded": 11,
-    "highestPriorityReusablePrevention": [
-      "Develop first, qualify deliberate exact-SHA checkpoints, and reserve native release work for immutable RCs.",
-      "Cheap/FAST failures block PostgreSQL/performance/native spend.",
-      "CI efficiency may eliminate redundant execution, never required evidence.",
-      "Behavior tests must validate their own fixtures/oracles before they can claim product failure.",
-      "Patch documentation uses strict deltas while promoted/manual history remains blocking.",
-      "Major-family provenance anchor and immediate Stable predecessor are separate identity concepts.",
-      "Actual macOS arm64 and Windows x64 packaged-runtime proof remains mandatory before Stable promotion."
-    ]
-  },
-  "userDelivery": "NOT_READY",
-  "handoff": "release/v18.5.1/V18.5.1-ADAPTIVE-RECOVERY-HANDOFF-2026-08-17.md",
-  "nextBranch": "v18.5.1-development",
-  "nextStep": "Bind one exact source SHA after the browser-oracle fix and rerun G0-G10. If green, freeze immutable G11 RC and run the full native G12-G15 chain once.",
-  "resumeInstructions": "Treat v18.5.0-stable as immutable immediate Stable predecessor and v17.5.1 as v18 provenance anchor. Preserve all ten frozen IDs and No Execution. Do not claim qualification/native certification/Stable without fresh exact-source evidence.",
-  "updatedAt": "2026-08-18T00:04:00Z"
+  "blockingIssue": "Checkpoint 04 run 32083109313 passed browser_live_render_test.py, browser_watchlist_membership_test.py and browser_auth_copy_test.py. browser_ui_hierarchy_test.py then failed because desktop primary/add top y values differed by 8px while their bottoms were exactly equal under .research-target-grid{align-items:end}. Oracle corrected to bottom alignment with two-pixel render tolerance and explicit CSS contract assertion.",
+  "knownResiduals": ["Fresh exact-SHA G0-G10 must pass after UI oracle correction.","G6 PostgreSQL, G7 data/security/adaptive, G8 performance/race/randomized and G9 full HTTP/UI remain unexecuted until FAST green.","G11-G15 immutable RC + macOS arm64 + Windows x64 actual-artifact certification remain mandatory."],
+  "resolvedIssues": ["All ten frozen IDs remain source/test mapped.","Static/governance, focused/full Go, live-render, watchlist seven-combination, Undo, final-membership protection, current-desk accessibility and auth-copy behavior have fresh passing checkpoint evidence.","Research hierarchy oracle now tests actual end-aligned grid geometry rather than equal top coordinates."],
+  "adaptiveProcessLearning": {"status":"ACTIVE","lessonsRecorded":12,"highestPriorityReusablePrevention":["Develop first; qualify deliberate exact-SHA checkpoints; native only after immutable RC.","Cheap/FAST failures block expensive lanes.","CI efficiency removes redundant execution, never evidence.","Behavior-test fixture/oracle correctness is QA quality.","Geometry tests must assert intended layout semantics (alignment/containment), not accidental coordinate equality.","macOS arm64 and Windows x64 packaged-runtime proof remain mandatory."]},
+  "userDelivery":"NOT_READY",
+  "nextBranch":"v18.5.1-development",
+  "nextStep":"Run one exact-SHA G0-G10 checkpoint after the UI oracle correction. If green, freeze G11 RC and run one full G12-G15 native certification.",
+  "updatedAt":"2026-08-18T00:10:00Z"
 }
