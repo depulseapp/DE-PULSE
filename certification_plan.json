@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CERTIFICATION-PLAN-1",
-  "version": "18.5.2",
+  "version": "18.6.0",
   "checks": [
     {
       "id": "g0_release_environment",
@@ -462,7 +462,7 @@
     {
       "id": "g11_responsive",
       "gate": "G11",
-      "label": "Responsive/layout integrity · bounded 15-viewport shards",
+      "label": "Responsive/layout integrity \u00b7 bounded 15-viewport shards",
       "command": [
         "{python}",
         "responsive_ui_sharded_gate.py"

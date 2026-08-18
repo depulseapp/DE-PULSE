@@ -1,5 +1,10 @@
 # DE.PULSE — Developer documentation
 
+## v18.6.0 STABLE — Adaptive utility and intelligence hardening
+
+The v18.6 release consolidates broad snapshot acquisition behind the shared broker, replaces duplicate prep scheduling with the Session Intelligence Coordinator, demotes supporting Market Activity and retires legacy evidence routes, makes documentation access server-authoritative by role, and adds machine-enforced dependency/provider readiness. AI inference now uses a hard semantic context envelope, full provider/model/prompt/schema/rights-aware cache identity with TTL, strict schema/citation validation and safe abstention, continuous evaluation telemetry, and fail-closed provider×dataset egress rights. No parallel provider router, authentication model, persistence owner, deterministic scoring formula, or execution path is introduced.
+
+
 ## v18.5.2 STABLE — Hotfix recovery candidate
 
 The patch removes the undeclared watchlist normalizer dependency, makes live DOM reconciliation preserve master-symbol draft ownership, moves header clocks through the existing extension layer, restores Research hierarchy without changing evidence logic, adds a recent-authenticated self-profile mutation, and sizes the Settings shell from the complete three-tier chrome token. GitHub Actions is manual-only during the budget pause; `release/v18.5.2/run_free_certification.sh` records exact-source local evidence. The immutable v18.5.1 Stable tag is unchanged, and G13/G14 native artifact evidence is required before G15 promotion.

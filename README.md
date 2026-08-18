@@ -1,13 +1,13 @@
-# DE.PULSE v18.5.2 STABLE — Hotfix Recovery Candidate
+# DE.PULSE v18.6.0 STABLE — Adaptive Utility & Intelligence Hardening
 
-**Build:** `v18.5.2-stable-hotfix-20260817`
+**Build:** `v18.6.0-stable-20260818`
 **Channel:** STABLE
-**Current Stable baseline:** v18.5.1
+**Current Stable baseline:** v18.5.2
 **Major v18 provenance anchor:** v17.5.1
 **Application bundle:** `De-Pulse.app`
 **Runtime/config:** `PersonalMarketTerminal`
 
-v18.5 is the mandatory v18 Major Closure before v19. It adds no unrelated product feature and preserves the approved deterministic intelligence, U.S.-listed processing boundary, persistence truth, and permanent No Execution boundary.
+v18.6.0 is the adaptive utility and intelligence hardening release over v18.5.2 STABLE. It shares broad Scanner/Radar acquisition, serializes session-preparation scheduling, consolidates supporting evidence surfaces, enforces role-aware documentation and provider/dependency readiness, and hardens AI context, cache, schema, evaluation and rights-aware egress. Deterministic Day/Swing/Long formulas, Smart Provider Router ownership, the U.S. Equities Processing Boundary and permanent No Execution Boundary are preserved.
 
 v18.5.2 is the hotfix candidate over v18.5.1 STABLE. It restores all three desk pages, corrects the Market Pulse Ribbon and clock hierarchy, recovers Research reading space, stabilizes tracked-symbol entry during live updates, adds separately configurable display and sign-in names with password re-verification, and keeps the complete Save Settings row visible. Automatic GitHub Actions execution is paused while the account budget is unavailable; exact-source local G0–G12 plus native G13/G14 evidence remains required before G15 Stable promotion.
 
