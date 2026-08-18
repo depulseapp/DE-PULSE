@@ -57,7 +57,14 @@ jobs:
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
       lane: ${{ steps.resolve.outputs.lane }}
+      fingerprint: ${{ steps.resolve.outputs.fingerprint }}
     steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
       - id: resolve
         shell: bash
         env:
@@ -68,8 +75,12 @@ jobs:
           sha="${INPUT_SHA:-$GITHUB_SHA}"
           lane="${INPUT_LANE:-full}"
           case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
+          git cat-file -e "$sha^{commit}"
+          fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
+          echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane"
 
   ci-harness:
     name: CI/harness contract
@@ -87,11 +98,61 @@ jobs:
       - name: Workflow allowlist
         run: python3 tools/ci/workflow_policy.py
       - name: Git-object provenance regression
-        run: python3 tools/ci/source_provenance_test.py
+        shell: bash
+        run: |
+          test "$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')" = "${{ needs.context.outputs.fingerprint }}"
+          python3 tools/ci/source_provenance_test.py
       - name: Release identity
         run: python3 release_identity.py --verify
       - name: Python syntax
         run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
+
+  portability:
+    name: CI portability (${{ matrix.os }})
+    needs: context
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Same canonical Git-object fingerprint on this OS
+        shell: bash
+        if: ${{ runner.os != 'Windows' }}
+        run: |
+          set -euo pipefail
+          actual="$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')"
+          test "$actual" = "${{ needs.context.outputs.fingerprint }}"
+          echo "$RUNNER_OS canonical fingerprint: $actual"
+      - name: Same canonical Git-object fingerprint on Windows
+        shell: pwsh
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          $actual=(python source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
+          if($actual -ne '${{ needs.context.outputs.fingerprint }}'){ throw "cross-platform fingerprint mismatch: $actual" }
+          Write-Host "$env:RUNNER_OS canonical fingerprint: $actual"
+      - name: Parse reusable macOS harness
+        if: ${{ runner.os == 'macOS' }}
+        shell: bash
+        run: bash -n tools/release/native_macos.sh
+      - name: Parse reusable Windows harness
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $tokens=$null; $errors=$null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'tools/release/native_windows.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
+      - name: Parse reusable release assurance tooling
+        if: ${{ runner.os == 'Linux' }}
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py
 
   backend:
     name: Qualified backend
@@ -180,7 +241,7 @@ jobs:
 
   evidence:
     name: Qualified evidence summary
-    needs: [context, ci-harness, backend, renderer, browser]
+    needs: [context, ci-harness, portability, backend, renderer, browser]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -190,12 +251,14 @@ jobs:
         env:
           LANE: ${{ needs.context.outputs.lane }}
           HARNESS: ${{ needs.ci-harness.result }}
+          PORTABILITY: ${{ needs.portability.result }}
           BACKEND: ${{ needs.backend.result }}
           RENDERER: ${{ needs.renderer.result }}
           BROWSER: ${{ needs.browser.result }}
         run: |
           set -euo pipefail
           test "$HARNESS" = success
+          test "$PORTABILITY" = success
           require(){ v="$1"; test "$v" = success || { echo "required lane result=$v"; exit 1; }; }
           case "$LANE" in
             full) require "$BACKEND"; require "$RENDERER"; require "$BROWSER" ;;
@@ -204,4 +267,4 @@ jobs:
             browser) require "$BROWSER" ;;
             ci-harness) ;;
           esac
-          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}"
+          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }} with cross-platform portability"
