@@ -131,11 +131,14 @@ def main() -> None:
               const note = document.getElementById('note');
               note.focus();
               note.setSelectionRange(1, 4);
-              window.__scrollBefore = main.scrollTop;
             }""",
             NEXT_HTML,
         )
         page_obj.hover('[data-live-key="row:AAPL"]')
+        # Playwright may scroll the target into view while establishing hover.
+        # Capture the preservation baseline only after that user-interaction
+        # positioning is complete, immediately before DE.PULSE reconciles.
+        page_obj.evaluate("window.__scrollBefore = document.getElementById('main').scrollTop")
         page_obj.evaluate("scheduleLiveRender('AAPL')")
         page_obj.wait_for_timeout(450)
 
