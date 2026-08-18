@@ -3,7 +3,7 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G10_PREFREEZE_RECONCILIATION",
+  "candidateDisposition": "V18_6_0_G10_FINAL_QUALIFICATION",
   "metadataHeadRule": "Only .depulse-certification is excluded by the canonical source fingerprint. Resume/evidence checkpoints there may advance operationally after a candidate commit. handoff/CURRENT.md is source-fingerprinted and must freeze with the product before G11.",
   "stable": {
     "tag": "v18.5.2-stable",
@@ -20,47 +20,34 @@
     "buildId": "v18.6.0-stable-20260818",
     "branch": "v18.6-development",
     "pullRequest": 16,
-    "candidateSourceCommit": "aed1f95ee1efe3ddb19e231fbf00373c8cad1d27",
+    "candidateSourceCommit": "fa3b67fae64e2083c4aa0d5ea19aec300f434895",
     "sourceFingerprint": null,
-    "sourceFingerprintState": "PENDING_G10_REQUALIFICATION",
-    "promotionState": "NOT_PROMOTED"
+    "sourceFingerprintState": "PENDING_FINAL_G10",
+    "promotionState": "NOT_PROMOTED",
+    "releaseDispatchPath": {
+      "certificationBranch": "v18.6-release-certification",
+      "certificationPublish": false,
+      "promotionBranch": "v18.6-stable-promotion",
+      "promotionPublish": true,
+      "dispatcher": ".github/workflows/ci-fast.yml",
+      "canonicalReleaseWorkflow": ".github/workflows/release.yml"
+    }
   },
   "evidence": {
-    "G0-G9": {
-      "status": "PASS",
-      "basis": "Immutable v18.6 scope, implementation slices, governance contracts, Fast/Qualified implementation qualification and preserved protected invariants."
-    },
+    "G0-G9": {"status": "PASS", "basis": "Immutable v18.6 scope, implementation slices, governance contracts, Fast/Qualified implementation qualification and preserved protected invariants."},
     "G10": {
       "status": "IN_PROGRESS",
       "lastImplementationFastRun": 32182124289,
       "lastImplementationQualifiedRun": 32182124317,
-      "candidateSourceCommit": "aed1f95ee1efe3ddb19e231fbf00373c8cad1d27",
-      "required": "Fresh canonical Fast + Qualified PASS on the final source-fingerprinted handoff/candidate with reconciled excluded checkpoints."
+      "candidateSourceCommit": "fa3b67fae64e2083c4aa0d5ea19aec300f434895",
+      "required": "Fresh canonical Fast + Qualified PASS on the final source-fingerprinted candidate and permanent release-dispatch governance."
     },
-    "G11": {
-      "status": "PENDING",
-      "required": "Freeze exact v18.6.0 source SHA and canonical Git-object fingerprint."
-    },
-    "G12": {
-      "status": "PENDING",
-      "runner": "release/v18.6.0/run_full_certification.sh"
-    },
-    "G13-G14-macOS-Apple-Silicon": {
-      "status": "PENDING",
-      "required": "Native package, provenance binding, and actual packaged runtime audit."
-    },
-    "G13-G14-Windows-x64": {
-      "status": "PENDING",
-      "required": "Native package, provenance binding, and actual packaged runtime audit."
-    },
-    "G15": {
-      "status": "PENDING",
-      "required": "Bind both native evidence graphs and promote already-certified artifacts without rebuild."
-    },
-    "G16": {
-      "status": "PENDING",
-      "required": "Durable adaptive retrospective and handoff after G15."
-    }
+    "G11": {"status": "PENDING", "required": "Freeze exact v18.6.0 source SHA and canonical Git-object fingerprint."},
+    "G12": {"status": "PENDING", "runner": "release/v18.6.0/run_full_certification.sh"},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
+    "G13-G14-Windows-x64": {"status": "PENDING", "required": "Native package, provenance binding, and actual packaged runtime audit."},
+    "G15": {"status": "PENDING", "required": "Bind both native evidence graphs; publication remains disabled on pre-merge certification branch."},
+    "G16": {"status": "PENDING", "required": "Durable adaptive release handoff after G15."}
   },
   "priorStableEvidence": {
     "release": "v18.5.2",
@@ -78,9 +65,7 @@
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where not already configured/approved.",
     "No v18.6 native artifact or Stable publication claim is valid until G13-G16 complete."
   ],
-  "releaseBlockingResiduals": [
-    "Exact final canonical v18.6.0 Fast + Qualified G10 PASS is still required before G11 freeze."
-  ],
-  "nextRequiredEvidence": "Fresh G10 Fast + Qualified PASS on the final source-fingerprinted v18.6.0 candidate, followed by G11-G16 release workflow evidence.",
-  "updatedAt": "2026-08-18T20:53:00Z"
+  "releaseBlockingResiduals": ["Exact final canonical v18.6.0 Fast + Qualified G10 PASS is required on candidate source fa3b67fae64e2083c4aa0d5ea19aec300f434895 before G11 freeze."],
+  "nextRequiredEvidence": "Fresh G10 Fast + Qualified PASS on the final source-fingerprinted v18.6.0 candidate, followed by v18.6-release-certification G11-G16 evidence with publish=false.",
+  "updatedAt": "2026-08-18T20:59:00Z"
 }
