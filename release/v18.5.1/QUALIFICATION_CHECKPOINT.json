@@ -1,10 +1,10 @@
 {
-  "schemaVersion":1,
-  "release":"v18.5.1",
-  "status":"QUALIFICATION_REQUESTED",
-  "qualificationRequested":true,
-  "releaseCertificationRequested":false,
-  "sourceSha":"ab86bb11b945402f997ac3a12b6e66c34ca3183e",
-  "checkpointId":"CP-v18.5.1-DEV-COMPLETE-05",
-  "notes":"Batched exact-SHA requalification after Checkpoint 04 proved live-render, all seven watchlist combinations with Undo/final-membership/current-desk semantics, auth-copy, static/governance and focused/full Go, then exposed a Research geometry oracle mismatch. The oracle now asserts the actual align-items:end bottom-alignment contract. Run cheap-first G0-G5 and automatically unlock G6-G10 only if FAST is green. No per-fix workflows; quality/evidence depth unchanged."
+  "schemaVersion": 1,
+  "release": "v18.5.1",
+  "status": "QUALIFICATION_REQUESTED",
+  "qualificationRequested": true,
+  "releaseCertificationRequested": false,
+  "sourceSha": "9539110f05f2def8e3b6c1f62ec935cea75d7bdd",
+  "checkpointId": "CP-v18.5.1-DEV-COMPLETE-06",
+  "notes": "Fresh exact-SHA requalification after the first immutable RC exposed an inherited renderer QA-manifest assertion incompatible with the approved TEST/RC QA-delta model. The full G11 remainder was batched before requalification: patch-aware inherited renderer regression PASS, content/copy PASS, documentation typography PASS, responsive/layout 15/15 PASS after explicit Playwright provisioning. Temporary diagnostic workflows were removed. Run cheap-first G0-G5, then automatically unlock G6-G10 only if FAST is green. No evidence depth reduced; old RC remains immutable historical evidence."
 }
