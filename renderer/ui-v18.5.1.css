@@ -373,3 +373,37 @@
   .master-symbols-heading-row .master-add-row .ticker-input{grid-column:auto!important}
   .master-symbols-title-line{align-items:flex-start;flex-direction:column;gap:5px}
 }
+
+
+/* v18.5.2 Settings viewport contract.
+   The Market Pulse Ribbon adds 44px of application chrome. Size the Settings
+   main region from the current chrome token so its dedicated save row is fully
+   visible without requiring the document to scroll to the extreme bottom. */
+.main:has(.settings-shell){
+  height:calc(100dvh - var(--v1851-chrome-h))!important;
+  min-height:0!important;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))!important;
+  overflow:hidden!important;
+}
+.main:has(.settings-shell)>.settings-shell{
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+}
+.settings-shell>.settings{
+  scroll-padding-bottom:16px;
+  overscroll-behavior:contain;
+}
+.settings-shell>.save-bar.settings-persistent-save{
+  position:relative!important;
+  inset:auto!important;
+  z-index:18!important;
+  min-height:54px;
+  box-sizing:border-box;
+}
+@media(max-width:790px){
+  .main:has(.settings-shell){
+    height:calc(100dvh - var(--v1851-chrome-h) - 46px)!important;
+    padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
