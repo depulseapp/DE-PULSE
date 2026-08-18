@@ -18,17 +18,17 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "aa96a4bf052d7d83abd9d0fc1a16df89468fc84a",
+  "candidateSourceCommit": "7b1709c6718fc59896b1e87b5434ddc16e4d396a",
   "metadataHeadRule": "candidateSourceCommit names the latest product/tooling/documentation/reconciled-source candidate. Later commits confined to .depulse-certification/resume are fingerprint-excluded metadata and may advance branch HEAD without inheriting evidence across any other source change.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "v18.5.2 recovery, current main reconciliation, CI trigger cleanup, and authoritative handoff are bound into this candidate; one clean exact-source G0-G12 run is still required before RC/native promotion evidence can be trusted.",
-  "codeStatus": "V18_5_2_IMPLEMENTED_AWAITING_EXECUTABLE_G0_G12",
-  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, a main-reconciled mergeable branch, and a deliberate qualification-request-only exact-source workflow. Observed GitHub Actions jobs fail before any workflow step/log starts; this is classified INFRA_FAIL, not product failure.",
-  "lastTrustworthyPass": "FOCUSED_FUNCTIONALITY_UTILITY_AND_RECONCILIATION_INVENTORY_PASS; NO_FULL_V18_5_2_G0_G12_OR_NATIVE_PASS_CLAIMED",
+  "sourceFingerprintReason": "The first executable local exact-source run reached G12 and exposed a bundled QA-history identity mismatch. The v18.5.2 QA manifest/history was corrected in candidate 7b1709c6718fc59896b1e87b5434ddc16e4d396a; a fresh clean exact-source G0-G12 run is required for this corrected candidate.",
+  "codeStatus": "V18_5_2_IMPLEMENTED_G12_IDENTITY_FIX_AWAITING_FULL_REQUALIFICATION",
+  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, a main-reconciled mergeable branch, the no-cost exact-source lane, and the G12-discovered v18.5.2 QA release-history identity correction. The focused renderer regression now passes; full exact-source G0-G12 must be rerun on the corrected candidate.",
+  "lastTrustworthyPass": "FOCUSED_RENDERER_LOGIC_AFTER_G12_IDENTITY_FIX_PASS; DETERMINISTIC_TRADING_EQUIVALENCE_2403_OF_2403_PASS_ON_PRIOR_EXECUTABLE_RUN; NO_FULL_CORRECTED_CANDIDATE_G0_G12_OR_NATIVE_PASS_CLAIMED",
   "earliestRequiredResumeGate": "G0",
   "gates": {
-    "G0": {"status": "BLOCKED_ON_EXECUTION_INFRA", "reusable": false},
+    "G0": {"status": "REQUALIFY", "reusable": false},
     "G1": {"status": "REQUALIFY", "reusable": false},
     "G2": {"status": "REQUALIFY", "reusable": false},
     "G3": {"status": "REQUALIFY", "reusable": false},
@@ -39,17 +39,17 @@
     "G8": {"status": "REQUALIFY", "reusable": false},
     "G9": {"status": "REQUALIFY", "reusable": false},
     "G10": {"status": "REQUALIFY", "reusable": false},
-    "G11": {"status": "BLOCKED_ON_G10", "reusable": false},
-    "G12": {"status": "BLOCKED_ON_G11", "reusable": false},
+    "G11": {"status": "REQUALIFY", "reusable": false},
+    "G12": {"status": "REQUALIFY_AFTER_FIX", "reusable": false},
     "G13": {"status": "NOT_STARTED", "reusable": false},
     "G14": {"status": "NOT_STARTED", "reusable": false},
     "G15": {"status": "NOT_STARTED", "reusable": false},
     "G16": {"status": "NOT_STARTED", "reusable": false}
   },
-  "blockingIssue": "Execution infrastructure must successfully start the canonical v18.5.2 exact-source certification job. Diagnostic Actions runs 32098538807 (two attempts) and 32098674432 failed before any workflow step/log existed. Once execution starts on the current candidate, fix the earliest genuine G0-G12 failure if any; only after PASS proceed to macOS Apple Silicon and Windows x64 G13-G15.",
+  "blockingIssue": "Run the canonical no-cost exact-source G0-G12 certification on corrected candidate 7b1709c6718fc59896b1e87b5434ddc16e4d396a. If another genuine test failure appears, fix the earliest owner and requalify; only after PASS proceed to macOS Apple Silicon and Windows x64 G13-G15.",
   "knownResiduals": [
     "PR #13 is draft and unpromoted.",
-    "Exact-source G0-G12 certification has not executed on the current candidate because available execution lanes are blocked before test execution; no product-test failure is claimed.",
+    "The corrected v18.5.2 candidate requires one fresh full exact-source G0-G12 run.",
     "macOS Apple Silicon and Windows x64 G13-G15 package/runtime evidence is pending.",
     "Owner/Admin/User role-specific tab/navigation composition remains planned and not implemented by this checkpoint.",
     "TradeInsight adapter, secure key configuration, Smart Router SHADOW routes and promotion evidence remain not implemented.",
@@ -58,12 +58,12 @@
   "resolvedIssues": [
     "Repository has one vendor-neutral AI Assistant & Account Portability Contract.",
     "AGENTS.md and CLAUDE.md point new accounts to the same canonical GitHub recovery path.",
-    "handoff/CURRENT.md is the repository-resident current human handoff and records the execution-infrastructure blocker.",
     "Adaptive Resume gate enforces assistant/account portability across all four adaptive layers.",
     "Provider-to-Market-Mode registry/gate covers 22 assessments across 12 providers.",
     "Reconciliation inventory conserves 296 unique rows and includes independent-audit findings.",
     "PR #13 merge conflict with main was reconciled; current PR is mergeable while remaining draft/unpromoted.",
-    "Temporary PR-synchronize diagnostic trigger was removed; the sole automatic Actions trigger is the fingerprint-excluded qualification request."
+    "A local exact-source run successfully executed through G12, proving the no-cost lane is usable.",
+    "G12 exposed stale bundled QA release history at v18.5.1; v18.5.2 manifest/history was added and renderer_logic_test.js now passes."
   ],
   "assistantPortability": {
     "status": "ENFORCED",
@@ -75,6 +75,6 @@
   },
   "userDelivery": "NOT_READY",
   "nextBranch": "v18.5.2-development",
-  "nextStep": "Run the canonical exact-source qualification in an execution environment that can start jobs. If it starts and fails, fix the earliest genuine G0-G12 owner; if it passes, record exact evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15.",
-  "updatedAt": "2026-08-18T04:25:00Z"
+  "nextStep": "Pull the fingerprint-excluded checkpoint metadata, then run release/v18.5.2/run_free_certification.sh on the clean exact branch head. If it passes, record exact evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15.",
+  "updatedAt": "2026-08-18T04:48:00Z"
 }
