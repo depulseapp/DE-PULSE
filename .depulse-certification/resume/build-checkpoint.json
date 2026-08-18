@@ -18,13 +18,13 @@
     "commit": "deae3ef001a37bbddcae2ea5ae213805f3832208",
     "buildId": "v18.5.1-stable-recovery-20260817"
   },
-  "candidateSourceCommit": "a236014e1dea18c68f1cc1070c9e3782ca0abf8e",
+  "candidateSourceCommit": "ea57d63a5421e325a45b1413281584858e3fa214",
   "metadataHeadRule": "candidateSourceCommit names the latest product/tooling/documentation candidate. Later commits confined to .depulse-certification/resume are fingerprint-excluded metadata and may advance branch HEAD without inheriting evidence across any other source change.",
   "sourceFingerprint": null,
   "sourceFingerprintState": "PENDING_REQUALIFICATION",
-  "sourceFingerprintReason": "v18.5.2 recovery and portability governance require one clean exact-source no-cost G0-G12 run before RC/native promotion evidence can be trusted.",
-  "codeStatus": "V18_5_2_IMPLEMENTED_AWAITING_EXACT_SOURCE_AND_NATIVE_CERTIFICATION",
-  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance and AI/account-independent GitHub continuity. Focused static/governance checks passed; full exact-source and native package certification remain open.",
+  "sourceFingerprintReason": "v18.5.2 recovery plus checkpoint-triggered canonical exact-source workflow must complete one clean G0-G12 run before RC/native promotion evidence can be trusted.",
+  "codeStatus": "V18_5_2_IMPLEMENTED_QUALIFICATION_REQUEST_READY",
+  "implementationSummary": "PR #13 contains desktop recovery, configurable identity, Settings viewport correction, provider-to-Market-Mode adaptive governance, AI/account-independent GitHub continuity, and a checkpoint-triggered GitHub lane that executes the canonical run_free_certification.sh while ordinary source pushes remain quiet.",
   "lastTrustworthyPass": "FOCUSED_FUNCTIONALITY_UTILITY_AND_RECONCILIATION_INVENTORY_PASS; NO_FULL_V18_5_2_G0_G12_OR_NATIVE_PASS_CLAIMED",
   "earliestRequiredResumeGate": "G0",
   "gates": {
@@ -46,22 +46,23 @@
     "G15": {"status": "NOT_STARTED", "reusable": false},
     "G16": {"status": "NOT_STARTED", "reusable": false}
   },
-  "blockingIssue": "Run the complete no-cost exact-source v18.5.2 certification on a clean checkout, then produce and audit actual macOS Apple Silicon and Windows x64 artifacts before any G15 promotion.",
+  "blockingIssue": "Resolve the deliberate exact-source v18.5.2 qualification request, then produce and audit actual macOS Apple Silicon and Windows x64 artifacts before any G15 promotion.",
   "knownResiduals": [
     "PR #13 is draft and unpromoted.",
-    "Exact-source G0-G12 free certification is pending.",
+    "Exact-source G0-G12 certification is pending.",
     "macOS Apple Silicon and Windows x64 G13-G15 package/runtime evidence is pending.",
     "Owner/Admin/User role-specific tab/navigation composition remains planned and not implemented by this checkpoint.",
     "TradeInsight adapter, secure key configuration, Smart Router SHADOW routes and promotion evidence remain not implemented.",
     "v19 must not begin before v18.5.2 recovery closure."
   ],
   "resolvedIssues": [
-    "Repository now has one vendor-neutral AI Assistant & Account Portability Contract.",
+    "Repository has one vendor-neutral AI Assistant & Account Portability Contract.",
     "AGENTS.md and CLAUDE.md point new accounts to the same canonical GitHub recovery path.",
     "handoff/CURRENT.md is the repository-resident current human handoff.",
     "Adaptive Resume gate enforces assistant/account portability across all four adaptive layers.",
     "Provider-to-Market-Mode registry/gate covers 22 assessments across 12 providers.",
-    "Reconciliation inventory conserves 296 unique rows and includes independent-audit findings."
+    "Reconciliation inventory conserves 296 unique rows and includes independent-audit findings.",
+    "v18.5.2 qualification workflow now executes the canonical exact-source certification runner from a deliberate fingerprint-excluded request."
   ],
   "assistantPortability": {
     "status": "ENFORCED",
@@ -73,6 +74,6 @@
   },
   "userDelivery": "NOT_READY",
   "nextBranch": "v18.5.2-development",
-  "nextStep": "On a clean checkout of the actual v18.5.2-development HEAD, run bash release/v18.5.2/run_free_certification.sh; if PASS, checkpoint the exact evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15.",
-  "updatedAt": "2026-08-18T04:00:00Z"
+  "nextStep": "Resolve the exact-source certification run triggered by .depulse-certification/resume/qualification-request.json; if PASS, record the exact run/evidence and proceed to macOS Apple Silicon and Windows x64 G13-G15; if FAIL, fix the earliest failing G0-G12 owner.",
+  "updatedAt": "2026-08-18T04:11:00Z"
 }
