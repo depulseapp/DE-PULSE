@@ -11,9 +11,9 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Engineering branch:** `v18.6.4-development`  
-**Current PR:** `#48` — Packet C Chrome + WebKit primary browser routing  
-**Current slice:** Phase 0 Packet C — Chrome + WebKit primary browser-risk routing; process-only, not a product Stable build  
+**Engineering branch:** `v18.6.5-development`  
+**Current PR:** Packet D Draft PR from `v18.6.5-development` to `main`; resolve the live PR number from GitHub rather than model memory  
+**Current slice:** Phase 0 Packet D — durable CI evidence and telemetry; process-only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
 
 `Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
@@ -29,6 +29,7 @@ For current operating state also read:
 - `adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md`
 - `adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md`
 - `adaptive-governance/V18_6_1_CURRENT_RECONCILIATION.md`
+- `release/v18.6.1/stable-evidence-manifest.json`
 
 ## Immutable v18.6.1 Stable evidence
 
@@ -38,6 +39,7 @@ For current operating state also read:
 - Canonical Release #24: run `32279232665` · G11–G16 PASS including macOS Apple Silicon and Windows x64 native evidence and same-run publication.
 - Stable tag: `v18.6.1-stable` → `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`.
 - Measured v18.6.1 clock: first Draft PR to final Stable = **1h 56m 20s**; final canonical G11–G16 run = **6m 43s**.
+- Packet D adds a retrospective compact Stable evidence manifest bound to the authoritative release-evidence checkpoint. It does not redefine the immutable Stable tag/binaries.
 
 Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, deterministic Day/Swing/Long truth, Smart Provider Router ownership, provider/Market-Mode rules, GLD/SLV/USO tradable exceptions and Adaptive Intelligence governance.
 
@@ -47,56 +49,64 @@ Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, d
 
 Merged PR #46 at `a3beb28322c2c53227bac037e546d6863c8d279e`.
 
-Delivered Impact Planner v2, planner self-test, side-effect-free Release Rehearsal, workflow-policy integration, current adaptive operating overlays and an honest v18.6.1 reconciliation baseline. Final Fast #381 and Qualified #133 passed through the intended process-only path.
+Delivered Impact Planner v2, planner self-test, side-effect-free Release Rehearsal, workflow-policy integration, current adaptive operating overlays and an honest v18.6.1 reconciliation baseline. Final Fast #381 and Qualified #133 passed.
 
 ### Packet B — COMPLETE
 
 Merged PR #47 at `31b697d175317f0132c0a3fff7283beb1b79662d`.
 
-Delivered immutable Action pins for Fast/Qualified, the canonical CI dependency lock, Playwright `1.62.0` pin, safe pip caching, the reproducibility/permission gate and workflow-policy integration. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice. Final Fast #384 and Qualified #134 passed; no Stable release was triggered.
+Delivered immutable Action pins for Fast/Qualified, canonical CI dependency lock, Playwright `1.62.0` pin, safe pip caching and reproducibility/permission gate. Final Fast #384 and Qualified #134 passed. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice.
 
-### Packet C — ACTIVE
+### Packet C — COMPLETE
 
-Browser policy is explicit:
+Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
 
-- **Chrome and WebKit are the two primary browser engines for DE.PULSE.**
-- Chrome keeps the broad behavioral regression suite.
-- WebKit is the co-primary cross-engine compatibility gate for core UI/interaction behavior.
-- A normal `full` candidate and an explicit `browser` candidate require both Chrome and WebKit.
-- Renderer/UI changes require WebKit even when qualification is otherwise narrowed.
-- Changes to the WebKit compatibility harness itself require a real WebKit run so the harness cannot merge unexecuted.
-- Backend-only or provider-only narrowed work does not incur browser runtime when browser behavior is unaffected.
-- Other browser engines remain secondary/risk-directed unless future evidence justifies promotion.
+Browser policy:
 
-Primary WebKit scope covers high-value engine-sensitive contracts: watchlist/global-remove, canonical `DESKS`, no deprecated `CURRENT` semantics, failure preservation, short-height Settings save-bar behavior and centered header alert layout.
+- Chrome and WebKit are the two primary engines.
+- Chrome carries broad behavioral regression.
+- WebKit carries co-primary cross-engine compatibility.
+- `full`/`browser` qualification requires both; renderer/UI and WebKit-harness risk requires WebKit.
+- backend/provider/process-only work avoids browser runtime when unaffected.
+- other engines remain secondary/risk-directed.
 
-Current Packet C implementation:
+Final Packet C exact-head evidence:
 
-1. `.github/workflows/ci-qualified.yml` propagates `webkit_required`, names Chrome/WebKit as primary gates and binds WebKit into exact-head Qualified evidence.
-2. `tools/ci/webkit_targeted_test.py` is the primary WebKit core compatibility proof.
-3. `tools/ci/browser_risk_routing_gate.py` enforces primary-browser routing, secondary-engine suppression and efficient WebKit setup.
-4. `tools/ci/impact_plan.py` / `impact_plan_self_test.py` require WebKit for renderer/UI and WebKit-harness changes while backend/provider-only narrowed work remains browser-free.
-5. `tools/ci/workflow_policy.py` permanently enforces the Chrome + WebKit co-primary contract.
+- Fast #393 / run `32296746701`: PASS.
+- Qualified #138 / run `32296793338`: PASS.
+- CI-harness: PASS.
+- Ubuntu/macOS/Windows portability: PASS.
+- real macOS WebKit core compatibility: PASS.
+- unrelated backend/renderer/Chrome product lanes: correctly SKIPPED for the process-only Packet C candidate.
 
-### Packet C first qualification finding
+Packet C also proved the failure taxonomy in practice: initial Linux WebKit dependency amplification was `CI_HARNESS_FAIL`; two subsequent WebKit assertion failures were production-fixture mismatches in the new test harness and were fixed without changing product runtime or weakening assertions.
 
-- Fast #386 on head `03de0322e2a9c591f31c2fd20db52ea56d1c900d`: PASS.
-- Qualified #135 (`32289410670`) correctly selected CI-harness + Ubuntu/macOS/Windows portability + self-validating WebKit. Harness and all portability jobs passed; backend/renderer/Chrome product lanes were correctly skipped.
-- WebKit did **not** reach product assertions because `playwright install --with-deps webkit` on Ubuntu attempted to install 181 OS packages / about 114 MB from slow apt mirrors and exceeded the 20-minute lane budget.
-- Classified `CI_HARNESS_FAIL`, not product failure. No quality gate was bypassed.
-- Corrective design: run the WebKit primary compatibility job on `macos-15`, install the exact pinned Playwright package, then `playwright install webkit` without Linux `--with-deps`. The policy gate now explicitly prohibits reintroducing `--with-deps webkit` dependency amplification.
-- PR #48 was returned to Draft for the correction. The same branch/PR must earn new exact-head Fast and Qualified evidence before merge.
+### Packet D — ACTIVE
 
-No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
+Branch `v18.6.5-development` is assembled before PR opening to avoid preparatory `synchronize` amplification.
 
-## Remaining Phase 0 packets
+Scope:
 
-1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, WebKit/browser setup timing and cache opportunity measurement, and generic workflow linting if still outstanding.
-2. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving deterministic equivalence and required Chrome/WebKit/native evidence before deleting former owners.
+1. Durable `release/v18.6.1/stable-evidence-manifest.json` bound to the authoritative checkpoint.
+2. `stable_evidence_gate.py` verifies Stable candidate, source fingerprint, run IDs and native/G15/G16 artifact digests.
+3. `ci_telemetry.py` + self-test records per-job queue/runtime/platform consumption.
+4. Qualified records Linux/macOS/Windows runner minutes, Chrome/WebKit setup duration and pip cache-hit state when applicable.
+5. Qualified counts current-PR Fast/Qualified/Release runs and warns on abnormal amplification without blocking legitimate fixes.
+6. Compact telemetry JSON retained 30 days plus job summary.
+7. Currency cost is intentionally not invented; GitHub billing remains authoritative.
+8. `workflow_structural_lint.py` provides zero-network generic structural checks in addition to semantic workflow policy.
+9. Impact Planner treats only the exact retrospective Stable manifest path as process-only; executable release files remain full-qualification scope.
+10. Current Roadmap / Build Plan / Build Process / Delivery Process / CI Efficiency Contract are synchronized to this operating model.
+
+Expected Packet D qualification: process-only `ci-harness` + Ubuntu/macOS/Windows portability. WebKit should remain skipped because Packet D observes browser metrics but does not change renderer/WebKit behavior. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
+
+## Remaining Phase 0
+
+**Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving deterministic equivalence and required Chrome/WebKit/native evidence before deleting former owners.
 
 ## After Phase 0
 
-Adaptive v18.x priority order: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability/consolidation → controlled TradeInsight SHADOW integration. Then perform v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
+Adaptive v18.x priority order: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability/consolidation → controlled TradeInsight SHADOW integration. Then v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
 
 ## Repository/source-age rule
 
@@ -104,8 +114,8 @@ Do not modify or delete files because GitHub says they are several days old. His
 
 ## External/open governance item
 
-Repository `main` branch protection/ruleset remains an external governance item. Do not report it as fixed unless GitHub confirms an authorized branch-protection/ruleset change.
+Repository `main` branch protection/ruleset is still disabled as of the post-Packet-C live check. Do not report it as fixed unless GitHub confirms an authorized branch-protection/ruleset change.
 
 ## Exactly one next action
 
-Require exact-head Fast on the corrected Packet C head. Only after Fast passes, mark the same PR #48 Ready and require Qualified CI-harness + portability + actual primary WebKit success. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Open exactly one Draft PR from fully assembled `v18.6.5-development` to `main`. Require one exact-head Fast candidate. Only after Fast passes, mark the same PR Ready and require Qualified `ci-harness` + portability + telemetry evidence. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
