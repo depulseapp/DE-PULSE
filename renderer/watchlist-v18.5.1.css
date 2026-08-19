@@ -1,23 +1,19 @@
-/* DE.PULSE v18.5.1 — frozen Issue #12 watchlist semantics. */
-.desk-membership-pill.current-desk{
-  font-weight:900;
-  outline:2px solid currentColor;
-  outline-offset:1px;
+/* DE.PULSE v18.6 — desk membership is represented only by the pressed state of Day/Swing/Long. */
+.desk-membership-pill.active,
+.desk-membership-pill[aria-pressed="true"]{
+  font-weight:900!important;
+  border-color:rgba(73,221,247,.88)!important;
+  background:rgba(33,200,243,.20)!important;
+  color:#b6f3ff!important;
+  box-shadow:inset 0 0 0 1px rgba(73,221,247,.18), inset 0 2px 5px rgba(0,0,0,.28)!important;
 }
-.desk-membership-current{
-  display:inline-block;
-  margin-left:.35rem;
-  padding:.05rem .28rem;
-  border:1px solid currentColor;
-  border-radius:999px;
-  font-size:.58rem;
-  font-weight:900;
-  letter-spacing:.04em;
-  line-height:1.15;
+button.desk-membership-pill[aria-pressed="true"]:hover{
+  background:rgba(33,200,243,.24)!important;
+  border-color:rgba(73,221,247,.98)!important;
 }
-.desk-membership-pill.current-desk:focus-visible{
-  outline-width:3px;
-  outline-offset:2px;
+button.desk-membership-pill:focus-visible{
+  outline:2px solid rgba(73,221,247,.55)!important;
+  outline-offset:2px!important;
 }
 .sr-only{
   position:absolute!important;

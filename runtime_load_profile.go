@@ -35,6 +35,7 @@ type RuntimeLoadDiagnostics struct {
 	Workload                 []WorkClassDiagnostics              `json:"workload"`
 	ProviderRequests         []ProviderRequestDiagnostics        `json:"providerRequests,omitempty"`
 	LiveSubscriptions        []LiveSubscriptionBudgetDiagnostics `json:"liveSubscriptions,omitempty"`
+	BroadSnapshots           BroadSnapshotBrokerDiagnostics      `json:"broadSnapshots"`
 	HTTP                     HTTPRuntimeDiagnostics              `json:"http"`
 	ProviderCallsAvoided     int64                               `json:"providerCallsAvoided"`
 	CanonicalReuseHitRatePct int                                 `json:"canonicalReuseHitRatePct"`
@@ -118,6 +119,7 @@ func (e *Engine) sampleRuntimeLoad() {
 		liveSubscriptionBudget("Alpaca IEX", alpacaPlanMaxSymbols, alpacaActiveTarget, alpacaActive, alpacaConnected),
 		liveSubscriptionBudget("Finnhub", finnhubPlanMaxSymbols, finnhubActiveTarget, finnhubActive, finnhubConnected),
 	}
+	broadSnapshots := e.broadSnapshotDiagnostics()
 	httpDiag := HTTPRuntimeDiagnostics{}
 	if e.app != nil && e.app.httpTelemetry != nil {
 		httpDiag = e.app.httpTelemetry.Diagnostics()
@@ -150,6 +152,7 @@ func (e *Engine) sampleRuntimeLoad() {
 		Workload:                 workload,
 		ProviderRequests:         providers,
 		LiveSubscriptions:        liveSubscriptions,
+		BroadSnapshots:           broadSnapshots,
 		HTTP:                     httpDiag,
 		ProviderCallsAvoided:     avoided,
 		CanonicalReuseHitRatePct: reuseRate,

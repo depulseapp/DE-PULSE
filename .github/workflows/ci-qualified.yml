@@ -242,7 +242,7 @@ jobs:
       - name: Live DOM reconciliation
         run: python3 release/v18.5.1/browser_live_render_test.py
       - name: Watchlist membership semantics
-        run: python3 release/v18.5.1/browser_watchlist_membership_test.py
+        run: python3 release/v18.6.0/browser_watchlist_membership_test.py
       - name: Master-symbol input semantics
         run: python3 release/v18.5.2/browser_master_symbol_input_test.py
       - name: Profile/display-name semantics

@@ -109,17 +109,30 @@ func (a *Application) GenerateAIForUser(ctx context.Context, userID string, req 
 		}
 		return AIResponse{}, errors.New("configure at least one AI provider key in Settings")
 	}
-	cacheKey := aiCacheKey(req, pkg, routing.Policy)
-	if cached, ok := a.loadAICache(cacheKey); ok {
+
+	// Provider/dataset rights are evaluated before any external AI request. A
+	// missing/invalid rights registry fails closed by producing an evidence-empty
+	// package; the task itself can still be answered as an explicit abstention.
+	pkg, rightsDiag, rightsErr := filterAIResearchPackageForEgress(pkg)
+	userPrompt, boundedPkg, contextDiag, err := buildBoundedAIUserPrompt(task, pkg)
+	if err != nil {
+		a.recordAIInferenceTelemetry("context-budget-failure", 0, 0, 0, 0, contextDiag, rightsDiag, false, false, false)
+		return AIResponse{}, err
+	}
+	pkg = boundedPkg
+
+	cacheKey := aiInferenceCacheKey(req, task, pkg, routing, settings)
+	if cached, ok := a.loadAICacheV186(cacheKey, time.Now()); ok {
 		cached.CacheHit = true
-		cached.RouteReason = "Material Evidence Package unchanged; reused cached AI second opinion without another provider call."
+		cached.RouteReason = "Inference identity unchanged across evidence, provider/model route, prompt, safety, rights and schema policies; reused a TTL-valid AI second opinion without another provider call."
 		cached.EvidencePackageID = pkg.PackageID
 		cached.EvidenceSnapshotID = pkg.EvidenceSnapshotID
+		cached.SafetyWarnings = append([]string(nil), pkg.SafetyWarnings...)
+		a.recordAIInferenceTelemetry("cache-hit", 0, cached.InputTokens, cached.OutputTokens, 0, contextDiag, rightsDiag, true, false, false)
 		return cached, nil
 	}
 
 	systemPrompt := aiSystemPrompt()
-	userPrompt := buildAIUserPrompt(task, pkg)
 	a.engine.setHealth("ai", "loading")
 	startAt := time.Now()
 	var text, model, requestedModel, providerLabel, providerID, mode string
@@ -128,6 +141,9 @@ func (a *Application) GenerateAIForUser(ctx context.Context, userID string, req 
 	var fallback bool
 	var lastErr error
 	var routeReason string
+	var structured aiStructuredPayload
+	var sawSchemaFailure bool
+	var sawProviderFailure bool
 
 	for i, candidate := range routing.Candidates {
 		providerID = candidate.Provider
@@ -158,28 +174,51 @@ func (a *Application) GenerateAIForUser(ctx context.Context, userID string, req 
 			lastErr = errors.New("unsupported AI route")
 		}
 		if lastErr == nil && strings.TrimSpace(text) != "" {
-			break
+			var schemaErr error
+			structured, schemaErr = parseAIStructuredPayloadStrict(text, pkg)
+			if schemaErr == nil {
+				break
+			}
+			sawSchemaFailure = true
+			lastErr = fmt.Errorf("AI provider response failed strict schema/citation validation: %w", schemaErr)
 		}
 		if lastErr == nil {
 			lastErr = errors.New("AI provider returned no text")
 		}
-		if isContextLimitError(lastErr) {
-			pkg = compactAIResearchPackage(pkg, 12)
-			userPrompt = buildAIUserPrompt(task, pkg)
-			routeReason = candidate.Reason + " Provider context limit encountered; subsequent fallback uses a smaller evidence package without changing the material package identity."
+		if !sawSchemaFailure {
+			sawProviderFailure = true
+		}
+		if isContextLimitError(lastErr) && len(pkg.Evidence) > 0 {
+			pkg = semanticCompactAIPackage(pkg, minInt(len(pkg.Evidence), 12))
+			var compactErr error
+			userPrompt, pkg, contextDiag, compactErr = buildBoundedAIUserPrompt(task, pkg)
+			if compactErr != nil {
+				lastErr = compactErr
+				break
+			}
+			cacheKey = aiInferenceCacheKey(req, task, pkg, routing, settings)
+			routeReason = candidate.Reason + " Provider context limit encountered; subsequent fallback uses a smaller materiality-ranked evidence package with a new cache identity."
 		}
 	}
 	if lastErr != nil || strings.TrimSpace(text) == "" {
+		latency := time.Since(startAt).Milliseconds()
 		a.engine.setHealth("ai", "degraded")
 		if lastErr == nil {
 			lastErr = errors.New("AI response did not contain text")
 		}
+		a.recordAIInferenceTelemetry("safe-abstention", latency, inputTokens, outputTokens, cost, contextDiag, rightsDiag, false, sawSchemaFailure, sawProviderFailure)
 		return AIResponse{}, lastErr
 	}
 
 	latency := time.Since(startAt).Milliseconds()
-	structured := sanitizeAIResponse(parseAIStructuredPayload(text), pkg)
+	structured = sanitizeAIResponse(structured, pkg)
 	a.engine.setHealth("ai", "ready")
+	if rightsDiag.WithheldItems > 0 {
+		routeReason += fmt.Sprintf(" Rights-aware egress withheld %d unapproved provider/dataset evidence item(s).", rightsDiag.WithheldItems)
+	}
+	if rightsErr != nil {
+		routeReason += " Rights registry verification failed closed; no unverified provider/dataset evidence was sent."
+	}
 	response := AIResponse{
 		Text: strings.TrimSpace(text), Verdict: structured.Verdict, Confidence: structured.Confidence,
 		BullCase: structured.BullCase, BaseCase: structured.BaseCase, BearCase: structured.BearCase,
@@ -194,6 +233,7 @@ func (a *Application) GenerateAIForUser(ctx context.Context, userID string, req 
 		RouteReason: routeReason, CacheHit: false, SafetyWarnings: pkg.SafetyWarnings,
 	}
 	a.storeAICache(cacheKey, response)
+	a.recordAIInferenceTelemetry("success", latency, inputTokens, outputTokens, cost, contextDiag, rightsDiag, false, sawSchemaFailure, sawProviderFailure)
 	return response, nil
 }
 
@@ -263,7 +303,19 @@ func generateOpenRouterResponse(ctx context.Context, key, mode, specific, system
 			map[string]any{"role": "system", "content": systemPrompt},
 			map[string]any{"role": "user", "content": userPrompt},
 		},
-		"provider":   map[string]any{"sort": "throughput", "allow_fallbacks": true},
+		"provider": map[string]any{
+			"sort":               "throughput",
+			"allow_fallbacks":    true,
+			"require_parameters": true,
+		},
+		"response_format": map[string]any{
+			"type": "json_schema",
+			"json_schema": map[string]any{
+				"name":   "depulse_research",
+				"strict": true,
+				"schema": aiStructuredOutputSchema(true),
+			},
+		},
 		"usage":      map[string]any{"include": true},
 		"max_tokens": maxOutputTokens,
 	}
@@ -306,7 +358,20 @@ func generateOpenAICompatibleResponse(ctx context.Context, endpoint, key, model,
 	if maxOutputTokens <= 0 {
 		maxOutputTokens = 1400
 	}
-	payload := map[string]any{"model": model, "instructions": systemPrompt, "input": userPrompt, "max_output_tokens": maxOutputTokens}
+	payload := map[string]any{
+		"model":             model,
+		"instructions":      systemPrompt,
+		"input":             userPrompt,
+		"max_output_tokens": maxOutputTokens,
+		"text": map[string]any{
+			"format": map[string]any{
+				"type":   "json_schema",
+				"name":   "depulse_research",
+				"strict": true,
+				"schema": aiStructuredOutputSchema(true),
+			},
+		},
+	}
 	if includeStore {
 		payload["store"] = false
 	}
@@ -336,7 +401,15 @@ func generateGeminiResponse(ctx context.Context, key, model, systemPrompt, userP
 	if maxOutputTokens <= 0 {
 		maxOutputTokens = 1400
 	}
-	body, _ := json.Marshal(map[string]any{"system_instruction": map[string]any{"parts": []any{map[string]any{"text": systemPrompt}}}, "contents": []any{map[string]any{"role": "user", "parts": []any{map[string]any{"text": userPrompt}}}}, "generationConfig": map[string]any{"maxOutputTokens": maxOutputTokens}})
+	body, _ := json.Marshal(map[string]any{
+		"system_instruction": map[string]any{"parts": []any{map[string]any{"text": systemPrompt}}},
+		"contents":           []any{map[string]any{"role": "user", "parts": []any{map[string]any{"text": userPrompt}}}},
+		"generationConfig": map[string]any{
+			"maxOutputTokens":  maxOutputTokens,
+			"responseMimeType": "application/json",
+			"responseSchema":   aiStructuredOutputSchema(false),
+		},
+	})
 	endpoint := "https://generativelanguage.googleapis.com/v1beta/models/" + url.PathEscape(model) + ":generateContent"
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, strings.NewReader(string(body)))
 	if err != nil {
@@ -470,6 +543,9 @@ type aiStructuredPayload struct {
 	Details         string   `json:"details"`
 }
 
+// parseAIStructuredPayload remains for compatibility with historical tests and
+// diagnostics. Production inference uses parseAIStructuredPayloadStrict and
+// never accepts this lenient fallback as a successful AI result.
 func parseAIStructuredPayload(text string) aiStructuredPayload {
 	raw := strings.TrimSpace(text)
 	if strings.HasPrefix(raw, "```") {

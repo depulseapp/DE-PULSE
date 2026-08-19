@@ -1,0 +1,51 @@
+{
+  "schema": "DE.PULSE-USER-ACTION-REQUIRED-1",
+  "policyVersion": "v18.6.0",
+  "scopeRequirement": "IMPL-17-DEPS-001 / CONVO-V17-004",
+  "actions": [
+    {
+      "id": "UA-RIGHTS-001",
+      "dependencyIds": ["DEP-PROV-LIVE-EQUITY", "DEP-PROV-MACRO-OFFICIAL", "DEP-PROV-MARKET-CONTEXT", "DEP-PROV-NEWS-FALLBACK"],
+      "state": "OPEN",
+      "owner": "SUPER_OWNER / OWNER",
+      "severity": "RELEASE_BLOCKING",
+      "condition": "Before commercialization, redistribution or external AI/LLM egress of provider-derived evidence.",
+      "action": "Bind provider-specific evidence that explicitly approves each intended commercial-use, redistribution and AI-use right. Do not infer permission from a working key, public endpoint or current technical availability.",
+      "verification": "provider_data_rights.go remains fail closed until provider-specific evidence is bound; G7/G10/G15 evidence records the disposition.",
+      "gateBindings": ["G7", "G10", "G15"]
+    },
+    {
+      "id": "UA-HOSTED-POSTGRES-001",
+      "dependencyIds": ["DEP-DB-POSTGRES", "DEP-CONFIG-HOSTED"],
+      "state": "CONDITIONAL",
+      "owner": "Release Engineering / SUPER_OWNER",
+      "severity": "DEPLOYMENT_BLOCKING",
+      "condition": "When producing or deploying the hosted runtime.",
+      "action": "Build the hosted binary with -tags postgres, set DEPULSE_PERSISTENCE_BACKEND=postgres, provide DEPULSE_DATABASE_URL through the deployment secret store, and configure hosted origin/proxy values for the actual topology.",
+      "verification": "Hosted artifact/runtime audit proves PostgreSQL backend selection and health without exposing the connection string.",
+      "gateBindings": ["G3", "G13", "G14", "G15"]
+    },
+    {
+      "id": "UA-LIVE-EQUITY-001",
+      "dependencyIds": ["DEP-PROV-LIVE-EQUITY", "DEP-CONFIG-LIVE-EQUITY"],
+      "state": "CONDITIONAL",
+      "owner": "SUPER_OWNER / OWNER",
+      "severity": "CAPABILITY_BLOCKING",
+      "condition": "When live primary U.S. equity capability is enabled rather than demo/degraded fallback operation.",
+      "action": "Configure valid Finnhub and Alpaca credentials in secret storage and verify operational entitlement/health. Do not change Market Mode based on provider count.",
+      "verification": "Provider capability registry reports truthful operational state while Smart Provider Router remains the sole routing owner.",
+      "gateBindings": ["G7", "G10"]
+    },
+    {
+      "id": "UA-AI-PROVIDER-001",
+      "dependencyIds": ["DEP-PROV-AI-MODELS", "DEP-CONFIG-AI"],
+      "state": "CONDITIONAL",
+      "owner": "SUPER_OWNER / OWNER",
+      "severity": "CAPABILITY_BLOCKING",
+      "condition": "When optional AI research generation is enabled.",
+      "action": "Configure the credential for the selected AI provider. This satisfies only model API access; provider-derived source evidence still requires explicit AI-use rights before external egress.",
+      "verification": "Selected model provider is operational and the separate rights-aware AI-egress gate allows only evidence with approved AI-use rights.",
+      "gateBindings": ["G7", "G10", "G15"]
+    }
+  ]
+}

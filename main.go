@@ -45,7 +45,7 @@ func main() {
 		log.Fatal(err)
 	}
 	port := listener.Addr().(*net.TCPAddr).Port
-	server := &http.Server{Handler: securityPerimeter(app.routes()), ReadHeaderTimeout: 10 * time.Second}
+	server := &http.Server{Handler: securityPerimeter(app.protectDocumentationHTTP(app.routes())), ReadHeaderTimeout: 10 * time.Second}
 	app.server = server
 	rawURL := fmt.Sprintf("http://127.0.0.1:%d/", port)
 	if hosted {

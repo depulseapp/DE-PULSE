@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"sort"
 	"strings"
@@ -243,25 +242,12 @@ func (p *ProviderTelemetry) Diagnostics() []ProviderRequestDiagnostics {
 }
 
 func (e *Engine) providerGetJSONTier(ctx context.Context, provider string, tier WorkTier, client *http.Client, rawURL string, headers map[string]string, out any) error {
-	if e == nil {
-		return getJSON(ctx, client, rawURL, headers, out)
-	}
-	tier = workTierFromContext(ctx, tier)
-	if ok, reason := e.providerTelemetry.Allow(provider, tier); !ok {
-		return fmt.Errorf("%s deferred: %s", workTierLabel(tier), reason)
-	}
-	release, ok := e.workload.AcquireTier(ctx, "provider-rest", tier)
-	if !ok {
-		if err := ctx.Err(); err != nil {
+	if e != nil {
+		if handled, err := e.acquireSharedBroadSnapshots(ctx, provider, tier, client, rawURL, headers, out); handled {
 			return err
 		}
-		return fmt.Errorf("provider request rejected by bounded workload budget")
 	}
-	defer release()
-	done := e.providerTelemetry.begin(provider)
-	err := getJSON(ctx, client, rawURL, headers, out)
-	done(err)
-	return err
+	return e.providerGetJSONTierUncached(ctx, provider, tier, client, rawURL, headers, out)
 }
 
 func (e *Engine) shouldShedTier(tier WorkTier) bool {

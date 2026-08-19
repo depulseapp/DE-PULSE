@@ -1,14 +1,14 @@
 {
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
-  "version": "18.5.2",
-  "display_version": "DE.PULSE v18.5.2",
-  "build_id": "v18.5.2-stable-hotfix-20260817",
+  "version": "18.6.0",
+  "display_version": "DE.PULSE v18.6.0",
+  "build_id": "v18.6.0-stable-20260818",
   "channel": "STABLE",
   "stable_baseline": "v17.5.1",
-  "previous_stable": "v18.5.1",
-  "scope": "Hotfix recovery: restore Day/Swing/Long desk rendering, move complete ET/PT clocks into the compact Market Pulse Ribbon, recover the full-width Research hierarchy, preserve tracked-symbol drafts and first-attempt adds across live quote reconciliation, align symbol controls beside their heading, add password-reverified configurable display name and sign-in username while preserving OWNER as a separate role, and keep the Settings save row inside the visible application viewport; retain deterministic Day/Swing/Long formulas, provider intelligence, persistence truth, the U.S. Equities Processing Boundary and the permanent No Execution Boundary",
-  "bundle_version": "18502",
+  "previous_stable": "v18.5.2",
+  "scope": "Adaptive utility and intelligence hardening: shared Scanner/Radar snapshot acquisition; serialized Session Intelligence Coordinator; supporting-surface and legacy-route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context, cache identity, strict schema and continuous evaluation; rights-aware fail-closed AI egress; preserve deterministic Day/Swing/Long formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary",
+  "bundle_version": "18600",
   "runtime_config": "PersonalMarketTerminal",
-  "patch_predecessor": "v18.5.1",
+  "patch_predecessor": "v18.5.2",
   "application_bundle": "De-Pulse.app"
 }

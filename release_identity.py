@@ -4,6 +4,17 @@ import argparse, json, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 IDENTITY=ROOT/'release_identity.json'
+RELEASE_COUPLED_ASSETS=(
+    'renderer.js',
+    'live-dom-reconcile.js',
+    'watchlist-v18.5.1.js',
+    'watchlist-v18.5.1.css',
+    'header-v18.5.1.js',
+    'ui-v18.5.1.css',
+    'surface-consolidation-v18.6.js',
+    'surface-consolidation-v18.6.css',
+    'documentation-access-v18.6.js',
+)
 
 def load():
     x=json.loads(IDENTITY.read_text())
@@ -36,7 +47,8 @@ def sync(x):
     p.write_text(s)
     p=ROOT/'renderer/index.html'; s=p.read_text()
     s=re.sub(r'<title>DE\.PULSE v[^<]+</title>', f"<title>DE.PULSE v{x['version']}</title>", s)
-    s=re.sub(r'renderer\.js\?v=[0-9.]+', f"renderer.js?v={x['version']}", s)
+    for asset in RELEASE_COUPLED_ASSETS:
+        s=re.sub(rf'{re.escape(asset)}\?v=[0-9.]+', f"{asset}?v={x['version']}", s)
     p.write_text(s)
     for name in ('certification_plan.json','ci_pipeline_plan.json'):
         p=ROOT/name; d=json.loads(p.read_text()); d['version']=x['version']
@@ -52,6 +64,7 @@ def verify(x):
     errs=[]
     version=(ROOT/'VERSION.txt').read_text()
     boot=(ROOT/'app_bootstrap.go').read_text()
+    index=(ROOT/'renderer/index.html').read_text()
     cert=json.loads((ROOT/'certification_plan.json').read_text())
     ci=json.loads((ROOT/'ci_pipeline_plan.json').read_text())
     checks=[
@@ -61,11 +74,11 @@ def verify(x):
       (f'const releaseChannel = "{x["channel"]}"' in boot,'release channel'),
       (f"const EXPECTED_RELEASE_VERSION='{x['version']}';" in (ROOT/'renderer/renderer.js').read_text(),'renderer version'),
       (f"const EXPECTED_BUILD_ID='{x['build_id']}';" in (ROOT/'renderer/renderer.js').read_text(),'renderer build'),
-      (f"<title>DE.PULSE v{x['version']}</title>" in (ROOT/'renderer/index.html').read_text(),'HTML title'),
-      (f"renderer.js?v={x['version']}" in (ROOT/'renderer/index.html').read_text(),'renderer asset version'),
+      (f"<title>DE.PULSE v{x['version']}</title>" in index,'HTML title'),
       (cert.get('version')==x['version'],'certification plan version'),(ci.get('version')==x['version'],'CI plan version'),
       (ci.get('policy',{}).get('baseline')==x['previous_stable']+' Stable','CI baseline'),
     ]
+    checks.extend((f"{asset}?v={x['version']}" in index,f'{asset} cache-bust version') for asset in RELEASE_COUPLED_ASSETS)
     errs.extend(label for ok,label in checks if not ok)
     if errs: raise SystemExit('Release identity: FAIL · '+', '.join(errs))
     print(f"Release identity: PASS · {x['version']} · {x['build_id']}")
