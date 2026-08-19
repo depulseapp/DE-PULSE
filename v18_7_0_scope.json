@@ -1,0 +1,36 @@
+{
+  "schema": "DE.PULSE-V18.7.0-SCOPE-1",
+  "version": "18.7.0",
+  "title": "Runtime Reliability & Data Truth",
+  "status": "G1_FROZEN",
+  "stableBaseline": "v18.6.1-stable",
+  "engineeringBaselineCommit": "f1a9e0d0d76d4be565ac9355a09f77a33a3338a7",
+  "scope": [
+    "Close verified remaining ADR-GDI gaps without rebuilding existing reliability controls.",
+    "Make DATA DEGRADED semantics capability-scoped and impact-oriented, with canonical reason taxonomy and explicit affected consumers.",
+    "Preserve truthful critical-data usability and require ABSTAIN/NO RELIABLE EDGE when required decision evidence is not trustworthy.",
+    "Add recovery hysteresis so one transient success cannot immediately clear a genuine degraded condition.",
+    "Audit and harden provider/capability health aggregation using the existing Provider Router and capability-state owners.",
+    "Prove dataset/session-aware freshness SLO behavior using the existing freshness and runtime SLO owners.",
+    "Audit and generalize duplicate-work suppression/single-flight only where verified gaps remain; retain the existing broad snapshot broker and canonical reuse path.",
+    "Audit bounded retries, capability circuits, request budgets, queue/backpressure and load shedding; strengthen only missing behavior.",
+    "Preserve source-disagreement truth through the existing provider reconciliation owner; no averaging or parallel reconciliation engine.",
+    "Run realistic deterministic/synthetic active-market pressure and latency qualification, with bounded live-provider smoke only when live behavior is the subject under test."
+  ],
+  "outOfScope": [
+    "No new provider or external service.",
+    "No parallel provider router, freshness engine, reliability engine or decision engine.",
+    "No execution, paper trading, order routing, P&L, portfolio or journal features.",
+    "No TradeInsight production promotion.",
+    "No broad renderer redesign or unrelated UI modularization.",
+    "No Stable publication until exact-head G0-G16 evidence supports a release-capable candidate."
+  ],
+  "permanentBoundaries": [
+    "U.S. Equities Processing only",
+    "No Execution",
+    "Smart Provider Router v2 is sole provider-routing authority",
+    "Deterministic Day/Swing/Long market truth remains protected",
+    "GLD/SLV/USO remain actionable tradable exceptions",
+    "Adaptive reliability changes with production impact follow SHADOW -> VALIDATED -> APPROVED -> PRODUCTION"
+  ]
+}
