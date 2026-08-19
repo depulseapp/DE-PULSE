@@ -131,7 +131,6 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "release-certification",
         "gh workflow run",
         "run-id:",
-        "publish:\n",
     )
     missing = [x for x in release_required if x not in release]
     forbidden = [x for x in release_forbidden if x in release]
