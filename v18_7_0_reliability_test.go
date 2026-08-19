@@ -16,7 +16,7 @@ func containsString(values []string, want string) bool {
 
 func TestV1870CanonicalReasonTaxonomyKeepsCompatibilityLabel(t *testing.T) {
 	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "LIVE"}, {Dataset: "VIX", State: "FRESH"}}
-	load := RuntimeLoadDiagnostics{Workload: []WorkClassDiagnostics{{Class: "provider-rest", Queued: 8, MaxQueue: 8, OldestQueueAgeMs: 2500}}}
+	load := RuntimeLoadDiagnostics{Workload: []WorkClassDiagnostics{{Class: "provider-rest", Queued: 8, MaxQueue: 8, OldestQueueAgeMs: 0}}}
 	got := deriveRuntimeDegradation("running", "live", FeedDiagnostics{MarketSession: "regular"}, fresh, ProviderRouterSnapshot{}, load)
 	if got.Code != "LOCAL LOAD" {
 		t.Fatalf("compatibility display label changed unexpectedly: %+v", got)
@@ -61,6 +61,20 @@ func TestV1870OptionalStalenessIsolatedFromCriticalDecisionTruth(t *testing.T) {
 	}
 	if containsString(got.AffectedConsumers, "Day") {
 		t.Fatalf("fundamentals-only degradation must not contaminate Day: %+v", got)
+	}
+}
+
+func TestV1870UnknownCriticalEvidenceFailsClosed(t *testing.T) {
+	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "UNAVAILABLE"}, {Dataset: "VIX", State: "STALE"}}
+	got := deriveRuntimeDegradation("running", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "connected-idle"}, fresh, ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
+	if got.Code != "DATA DEGRADED" || got.ReasonCode != "UNKNOWN" {
+		t.Fatalf("unattributed critical evidence loss must be explicit UNKNOWN, got %+v", got)
+	}
+	if got.CriticalUsable || !got.Abstain || got.PressureState != "DEGRADED" {
+		t.Fatalf("insufficient required evidence must fail closed: %+v", got)
+	}
+	if !containsString(got.AffectedConsumers, "Day") || !containsString(got.AffectedConsumers, "Market Regime") {
+		t.Fatalf("critical UNKNOWN blast radius must include quote/VIX decision consumers: %+v", got)
 	}
 }
 
