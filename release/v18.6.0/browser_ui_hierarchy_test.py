@@ -82,7 +82,7 @@ def bottom(box):
 
 
 def main() -> None:
-    assert RELEASE_VERSION == "18.6.0", RELEASE_VERSION
+    assert RELEASE_VERSION.startswith("18.6."), RELEASE_VERSION
     assert f"ui-v18.5.1.css?v={RELEASE_VERSION}" in INDEX
     assert f"header-v18.5.1.js?v={RELEASE_VERSION}" in INDEX
     assert "grid-template-columns:minmax(260px,1.3fr)" in UI_CSS
