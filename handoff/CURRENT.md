@@ -2,6 +2,8 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
+**Release:** `v18.6.0`  
+**Active branch:** `v18.6-development`  
 **Certified Stable:** `v18.6.0-stable`  
 **Stable promotion commit:** `2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c`  
 **Certified source:** `d375852d846f8c9f0045ac929da1830b85ad629e`  
@@ -12,9 +14,11 @@
 **Repository:** `depulseapp/DE-PULSE`  
 **Last updated:** 2026-08-19 America/Vancouver
 
+`Active branch` above intentionally preserves the certified v18.6 checkpoint identity required by the permanent resume contract; v18.6 product work is closed and the next product branch is `v18.6.1-development`.
+
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone. Resume from the last trustworthy PASS recorded in GitHub evidence.
 
 ## Current Stable truth
 
