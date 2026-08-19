@@ -12,6 +12,7 @@
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
 **Engineering branch:** `v18.6.4-development`  
+**Current PR:** `#48` — Packet C Chrome + WebKit primary browser routing  
 **Current slice:** Phase 0 Packet C — Chrome + WebKit primary browser-risk routing; process-only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
 
@@ -56,32 +57,41 @@ Delivered immutable Action pins for Fast/Qualified, the canonical CI dependency 
 
 ### Packet C — ACTIVE
 
-Browser policy is now explicit:
+Browser policy is explicit:
 
 - **Chrome and WebKit are the two primary browser engines for DE.PULSE.**
 - Chrome keeps the broad behavioral regression suite.
 - WebKit is the co-primary cross-engine compatibility gate for core UI/interaction behavior.
 - A normal `full` candidate and an explicit `browser` candidate require both Chrome and WebKit.
 - Renderer/UI changes require WebKit even when qualification is otherwise narrowed.
-- Changes to the WebKit compatibility harness itself also require a real WebKit run so the harness cannot merge unexecuted.
-- Backend-only or provider-only narrowed work does not incur WebKit runtime when browser behavior is not affected.
+- Changes to the WebKit compatibility harness itself require a real WebKit run so the harness cannot merge unexecuted.
+- Backend-only or provider-only narrowed work does not incur browser runtime when browser behavior is unaffected.
 - Other browser engines remain secondary/risk-directed unless future evidence justifies promotion.
 
-Primary WebKit scope currently covers the highest-value engine-sensitive contracts: watchlist/global-remove, canonical `DESKS`, no deprecated `CURRENT` semantics, failure preservation, short-height Settings save-bar behavior and centered header alert layout.
+Primary WebKit scope covers high-value engine-sensitive contracts: watchlist/global-remove, canonical `DESKS`, no deprecated `CURRENT` semantics, failure preservation, short-height Settings save-bar behavior and centered header alert layout.
 
-Current Packet C files:
+Current Packet C implementation:
 
-1. `.github/workflows/ci-qualified.yml` — propagates `webkit_required`, names Chrome/WebKit as primary gates, runs WebKit for full/browser/UI-risk candidates and binds its result into exact-head Qualified evidence.
-2. `tools/ci/webkit_targeted_test.py` — primary WebKit core compatibility proof.
-3. `tools/ci/browser_risk_routing_gate.py` — static primary-browser routing contract and secondary-engine suppression.
-4. `tools/ci/impact_plan.py` / `impact_plan_self_test.py` — renderer/UI and WebKit-harness changes request WebKit evidence while backend/provider-only work does not.
-5. `tools/ci/workflow_policy.py` — permanently enforces the Chrome + WebKit co-primary contract.
+1. `.github/workflows/ci-qualified.yml` propagates `webkit_required`, names Chrome/WebKit as primary gates and binds WebKit into exact-head Qualified evidence.
+2. `tools/ci/webkit_targeted_test.py` is the primary WebKit core compatibility proof.
+3. `tools/ci/browser_risk_routing_gate.py` enforces primary-browser routing, secondary-engine suppression and efficient WebKit setup.
+4. `tools/ci/impact_plan.py` / `impact_plan_self_test.py` require WebKit for renderer/UI and WebKit-harness changes while backend/provider-only narrowed work remains browser-free.
+5. `tools/ci/workflow_policy.py` permanently enforces the Chrome + WebKit co-primary contract.
 
-Expected Packet C self-validation: process-only → Fast → Qualified CI-harness + Ubuntu/macOS/Windows portability **plus one real WebKit compatibility job**, because Packet C changes the WebKit compatibility harness itself. Backend/renderer/Chrome product suites remain skipped for this process-only packet. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
+### Packet C first qualification finding
+
+- Fast #386 on head `03de0322e2a9c591f31c2fd20db52ea56d1c900d`: PASS.
+- Qualified #135 (`32289410670`) correctly selected CI-harness + Ubuntu/macOS/Windows portability + self-validating WebKit. Harness and all portability jobs passed; backend/renderer/Chrome product lanes were correctly skipped.
+- WebKit did **not** reach product assertions because `playwright install --with-deps webkit` on Ubuntu attempted to install 181 OS packages / about 114 MB from slow apt mirrors and exceeded the 20-minute lane budget.
+- Classified `CI_HARNESS_FAIL`, not product failure. No quality gate was bypassed.
+- Corrective design: run the WebKit primary compatibility job on `macos-15`, install the exact pinned Playwright package, then `playwright install webkit` without Linux `--with-deps`. The policy gate now explicitly prohibits reintroducing `--with-deps webkit` dependency amplification.
+- PR #48 was returned to Draft for the correction. The same branch/PR must earn new exact-head Fast and Qualified evidence before merge.
+
+No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
 
 ## Remaining Phase 0 packets
 
-1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, and generic workflow linting if still outstanding.
+1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, WebKit/browser setup timing and cache opportunity measurement, and generic workflow linting if still outstanding.
 2. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving deterministic equivalence and required Chrome/WebKit/native evidence before deleting former owners.
 
 ## After Phase 0
@@ -98,4 +108,4 @@ Repository `main` branch protection/ruleset remains an external governance item.
 
 ## Exactly one next action
 
-Open one Draft PR from `v18.6.4-development` to `main` for Packet C, require exact-head Fast, then mark the same PR Ready only after Fast passes. Qualified must pass CI-harness + portability + the self-validating primary WebKit job. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Require exact-head Fast on the corrected Packet C head. Only after Fast passes, mark the same PR #48 Ready and require Qualified CI-harness + portability + actual primary WebKit success. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
