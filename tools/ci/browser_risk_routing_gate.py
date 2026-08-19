@@ -25,33 +25,34 @@ def main() -> int:
 
     required = (
         "webkit_required: ${{ steps.resolve.outputs.webkit_required }}",
-        "name: Qualified Chrome behavior",
-        "webkit:\n    name: Targeted WebKit compatibility",
-        "if: ${{ needs.context.outputs.webkit_required == 'true' }}",
+        "name: Primary Chrome behavior",
+        "webkit:\n    name: Primary WebKit compatibility",
+        "needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser'",
         "python -m playwright install --with-deps webkit",
         "python3 tools/ci/webkit_targeted_test.py",
         "needs: [context, ci-harness, portability, backend, renderer, browser, webkit]",
         "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
         "WEBKIT: ${{ needs.webkit.result }}",
-        'if [ "$WEBKIT_REQUIRED" = true ]; then',
+        'if [ "$WEBKIT_REQUIRED" = true ] || [ "$LANE" = full ] || [ "$LANE" = browser ]; then',
         'test "$WEBKIT" = skipped',
-        "targeted WebKit required=$WEBKIT_REQUIRED",
+        "Chrome+WebKit primary browser policy",
     )
     for token in required:
         if token not in qualified:
-            errors.append(f"Qualified targeted-WebKit contract missing: {token}")
+            errors.append(f"Qualified Chrome+WebKit primary contract missing: {token}")
 
     forbidden = (
         "matrix:\n        browser: [chromium, webkit]",
         "matrix:\n        browser: [chrome, webkit]",
-        "needs.context.outputs.lane == 'backend' && needs.context.outputs.webkit_required",
+        "firefox.launch",
+        "playwright install --with-deps firefox",
     )
     for token in forbidden:
         if token in qualified:
-            errors.append(f"full duplicate browser matrix or backend WebKit coupling prohibited: {token}")
+            errors.append(f"secondary-engine/default-matrix expansion prohibited: {token}")
 
     if "playwright install" in fast or "webkit_targeted_test.py" in fast:
-        errors.append("Fast must never install/run WebKit")
+        errors.append("Fast must never install/run browser engines")
 
     test_required = (
         "p.webkit.launch(headless=True)",
@@ -59,20 +60,21 @@ def main() -> int:
         "aria-pressed",
         "settings-persistent-save",
         "text-align:center!important",
-        "Chrome remains the primary browser qualification target",
+        "Chrome and WebKit are the primary browser qualification engines",
     )
     for token in test_required:
         if token not in webkit_test:
-            errors.append(f"targeted WebKit proof missing compatibility assertion: {token}")
+            errors.append(f"primary WebKit proof missing compatibility assertion/contract: {token}")
 
     if errors:
         return fail(errors)
 
     print("DE.PULSE browser risk routing gate: PASS")
-    print("Chrome primary full behavioral qualification: PASS")
-    print("WebKit conditional on renderer/UI impact signal: PASS")
-    print("Fast/backend-only WebKit suppression: PASS")
-    print("targeted Safari-sensitive contract scope: PASS")
+    print("Chrome primary broad behavioral qualification: PASS")
+    print("WebKit co-primary compatibility qualification: PASS")
+    print("full/browser/UI-risk WebKit requirement: PASS")
+    print("Fast/backend-only unnecessary browser suppression: PASS")
+    print("other browser engines remain secondary by default: PASS")
     return 0
 
 
