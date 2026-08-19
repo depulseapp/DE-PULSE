@@ -54,11 +54,11 @@ jobs:
       fingerprint: ${{ steps.resolve.outputs.fingerprint }}
       process_only: ${{ steps.resolve.outputs.process_only }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha || inputs.candidate_sha || github.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - id: resolve
@@ -88,11 +88,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Workflow allowlist and efficiency contract
@@ -118,11 +118,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Same canonical Git-object fingerprint on this OS
@@ -151,7 +151,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py
 
   backend:
     name: Qualified backend
@@ -160,11 +160,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -190,11 +190,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Renderer syntax
@@ -218,15 +218,17 @@ jobs:
     env:
       CHROME_BIN: /usr/bin/google-chrome
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: tools/ci/browser-requirements.txt
       - name: Browser prerequisites
-        run: python -m pip install --disable-pip-version-check playwright
+        run: python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
       - name: Live DOM reconciliation
         run: python3 release/v18.5.1/browser_live_render_test.py
       - name: Watchlist membership semantics
