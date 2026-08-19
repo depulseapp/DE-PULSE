@@ -350,12 +350,15 @@ jobs:
             ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '.object.sha')"
             test "$ref" = "$target"
           else
-            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$target" --title "DE.PULSE v${{ inputs.version }} Stable" --notes-file release-notes.md
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$target" --title "DE.PULSE v18.6.0 Stable" --notes-file release-notes.md
           fi
           gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber \
-            release-assets/macos/* \
-            release-assets/windows/* \
-            release-assets/g15/*
+            "release-assets/macos/De-Pulse-v${{ inputs.version }}-Stable-macOS-Apple-Silicon.zip" \
+            "release-assets/windows/De-Pulse-v${{ inputs.version }}-Stable-Windows-x64.zip" \
+            "release-assets/macos/G13-G14-macOS-Apple-Silicon.json" \
+            "release-assets/windows/G13-G14-Windows-x64.json" \
+            "release-assets/g15/G15-Release-Assurance.json" \
+            promotion-verification.json
           echo "PASS: published $tag from certification run ${{ inputs.certification_run_id }} without rebuilding certified assets"
 
   g16:

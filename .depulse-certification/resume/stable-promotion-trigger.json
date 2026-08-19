@@ -1,8 +1,0 @@
-{
-  "purpose": "final exact-artifact v18.6.0 Stable promotion",
-  "publish": true,
-  "certificationRunId": 32223201049,
-  "releaseCandidateCommit": "1437ce716f62f14e16386ce0caf3219c33849ee7",
-  "sourceFingerprint": "2a5cd4da532b5498b135d421d2aa9ea723eeb94fb4595d43e2862f24ccafd9a1",
-  "updatedAt": "2026-08-19T06:31:00Z"
-}
