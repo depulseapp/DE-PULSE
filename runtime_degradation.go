@@ -109,10 +109,14 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 	}
 
 	for _, class := range load.Workload {
-		if class.Class == "provider-rest" && class.Queued > 0 && class.OldestQueueAgeMs >= 2000 {
+		if class.Class != "provider-rest" || class.Queued <= 0 {
+			continue
+		}
+		queueSaturated := class.MaxQueue > 0 && class.Queued >= class.MaxQueue
+		if queueSaturated || class.OldestQueueAgeMs >= 2000 {
 			out.Code = "LOCAL LOAD"
 			out.ReasonCode = "LOCAL_OVERLOAD"
-			if class.MaxQueue > 0 && class.Queued >= class.MaxQueue {
+			if queueSaturated {
 				out.ReasonCode = "QUEUE_SATURATED"
 			}
 			out.Detail = "Provider work is queued behind the bounded shared request budget"
@@ -205,6 +209,21 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 			return finalizeRuntimeDegradation(out)
 		}
 	}
+
+	// Fail closed when required live decision evidence is unusable but the
+	// narrower network/provider/load classifiers cannot yet attribute a cause.
+	// UNKNOWN is truthful here; absence of a diagnosis must never look healthy.
+	if !critical {
+		out.Code = "DATA DEGRADED"
+		out.ReasonCode = "UNKNOWN"
+		out.Detail = "Required decision evidence is stale, unavailable, or otherwise insufficient; no narrower recovery cause has been proven yet"
+		out.Affected = bad
+		if len(out.Affected) == 0 {
+			out.Affected = []string{"Quotes", "VIX"}
+		}
+		return finalizeRuntimeDegradation(out)
+	}
+
 	if status == "degraded" {
 		out.Code = "PROVIDER DEGRADED"
 		out.ReasonCode = "UNKNOWN"
