@@ -208,6 +208,10 @@ def main() -> int:
         return 1
     if canonical_workflow_contract(workflows) != 0:
         return 1
+    if run_gate(root, "tools/ci/impact_plan_self_test.py", "CI impact planner v2 contract") != 0:
+        return 1
+    if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
+        return 1
     if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
         return 1
     if run_gate(root, "ai_continuous_eval_gate.py", "AI continuous eval/rights contract") != 0:
@@ -216,6 +220,8 @@ def main() -> int:
     print("DE.PULSE workflow policy: PASS")
     print("active workflows: " + ", ".join(present))
     print("branch/retry event-amplification prevention: PASS")
+    print("CI impact planner v2 self-test: PASS")
+    print("pre-merge release rehearsal: PASS")
     print("dependency/provider readiness: PASS")
     print("AI continuous eval/rights: PASS")
     return 0
