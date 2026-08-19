@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   actions: read
+  statuses: read
 
 concurrency:
   group: depulse-release-${{ github.event.pull_request.number }}
@@ -77,19 +78,21 @@ jobs:
           candidate_fp="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
           test "$source_fp" = "$candidate_fp"
 
-          require_success() {
-            workflow="$1"
-            runs="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$workflow" --commit "$source_head_sha" --event pull_request --limit 30 --json headSha,status,conclusion)"
-            RUNS="$runs" SHA="$source_head_sha" WORKFLOW="$workflow" python3 - <<'PY'
+          statuses="$(gh api "repos/$GITHUB_REPOSITORY/commits/$source_head_sha/statuses?per_page=100")"
+          require_status() {
+            context="$1"
+            STATUSES="$statuses" CONTEXT="$context" python3 - <<'PY'
           import json, os
-          runs=json.loads(os.environ['RUNS'])
-          sha=os.environ['SHA']
-          good=[r for r in runs if r.get('headSha')==sha and r.get('status')=='completed' and r.get('conclusion')=='success']
-          assert good, f"no successful {os.environ['WORKFLOW']} pull-request run for exact source head {sha}"
+          statuses=json.loads(os.environ['STATUSES'])
+          context=os.environ['CONTEXT']
+          matches=[s for s in statuses if s.get('context')==context]
+          matches.sort(key=lambda s: s.get('created_at',''), reverse=True)
+          assert matches, f"missing exact-head commit status {context}"
+          assert matches[0].get('state')=='success', (context, matches[0].get('state'))
           PY
           }
-          require_success ci-fast.yml
-          require_success ci-qualified.yml
+          require_status 'DE.PULSE/fast-head'
+          require_status 'DE.PULSE/qualified-head'
 
           echo "candidate_sha=$candidate_sha" >> "$GITHUB_OUTPUT"
           echo "source_head_sha=$source_head_sha" >> "$GITHUB_OUTPUT"
@@ -104,8 +107,8 @@ jobs:
             echo "- qualified source head: \`$source_head_sha\`"
             echo "- merged candidate: \`$candidate_sha\`"
             echo "- fingerprint: \`$candidate_fp\`"
-            echo '- exact-head CI Fast: PASS'
-            echo '- exact-head CI Qualified: PASS'
+            echo '- exact-head DE.PULSE/fast-head status: PASS'
+            echo '- exact-head DE.PULSE/qualified-head status: PASS'
             echo '- source-head → merged-candidate fingerprint equivalence: PASS'
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -355,13 +358,15 @@ jobs:
           {
             "schema": "DE.PULSE-G16-CI-DELIVERY-3",
             "version": "v${{ needs.g11.outputs.version }}",
-            "sourcePullRequest": "${{ needs.g11.outputs.source_pr }}",
-            "g10QualifiedHead": "${{ needs.g11.outputs.source_head_sha }}",
+            "sourcePr": "${{ needs.g11.outputs.source_pr }}",
+            "qualifiedSourceHead": "${{ needs.g11.outputs.source_head_sha }}",
             "candidateSha": "${{ needs.g11.outputs.candidate_sha }}",
             "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
             "buildId": "${{ needs.g11.outputs.build_id }}",
             "releaseRunId": "${{ github.run_id }}",
             "mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH",
+            "g10FastExactHead": "PASS",
+            "g10QualifiedExactHead": "PASS",
             "g12": "PASS",
             "g13g14MacOS": "PASS",
             "g13g14Windows": "PASS",
