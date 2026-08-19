@@ -30,8 +30,13 @@ PY
 evidence_root="${DEPULSE_EVIDENCE_DIR:-$repo_root/.depulse-certification/v18.6.1/$source_sha}"
 mkdir -p "$evidence_root"
 started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+renderer_preload="$repo_root/tools/ci/release_identity_renderer_preload.js"
 
-# Full inherited certification; evidence is nested under the current patch run.
+# Full inherited certification; the Node preload makes direct source-reading
+# renderer regressions use the canonical patch identity while keeping the
+# inherited renderer implementation itself frozen. Product runtime identity is
+# enforced by renderer/watchlist-desk-contract-v18.6.1.js.
+NODE_OPTIONS="--require=$renderer_preload${NODE_OPTIONS:+ $NODE_OPTIONS}" \
 DEPULSE_EVIDENCE_DIR="$evidence_root/inherited-v18.6.0" \
 DEPULSE_EXPECTED_SHA="$source_sha" \
   bash release/v18.6.0/run_full_certification.sh
