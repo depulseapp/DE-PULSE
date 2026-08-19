@@ -11,9 +11,9 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Engineering branch:** `v18.6.5-development`  
-**Current PR:** Packet D Draft PR from `v18.6.5-development` to `main`; resolve the live PR number from GitHub rather than model memory  
-**Current slice:** Phase 0 Packet D — durable CI evidence and telemetry; process-only, not a product Stable build  
+**Engineering branch:** `v18.6.6-development`  
+**Current PR:** Packet E Draft PR has not been opened yet; resolve live GitHub state rather than model memory  
+**Current slice:** Phase 0 Packet E — Renderer Modularization Foundation / Documentation capability owner  
 **Last updated:** 2026-08-19 America/Vancouver
 
 `Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
@@ -39,7 +39,7 @@ For current operating state also read:
 - Canonical Release #24: run `32279232665` · G11–G16 PASS including macOS Apple Silicon and Windows x64 native evidence and same-run publication.
 - Stable tag: `v18.6.1-stable` → `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`.
 - Measured v18.6.1 clock: first Draft PR to final Stable = **1h 56m 20s**; final canonical G11–G16 run = **6m 43s**.
-- Packet D adds a retrospective compact Stable evidence manifest bound to the authoritative release-evidence checkpoint. It does not redefine the immutable Stable tag/binaries.
+- `release/v18.6.1/stable-evidence-manifest.json` is a retrospective compact index bound to the authoritative checkpoint; it does not redefine the immutable Stable tag/binaries.
 
 Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, deterministic Day/Swing/Long truth, Smart Provider Router ownership, provider/Market-Mode rules, GLD/SLV/USO tradable exceptions and Adaptive Intelligence governance.
 
@@ -61,52 +61,69 @@ Delivered immutable Action pins for Fast/Qualified, canonical CI dependency lock
 
 Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
 
-Browser policy:
+- Chrome + WebKit are the two primary engines.
+- Final Fast #393 / run `32296746701`: PASS.
+- Final Qualified #138 / run `32296793338`: PASS.
+- CI-harness + Ubuntu/macOS/Windows portability + real macOS WebKit all passed for the Packet C proof.
 
-- Chrome and WebKit are the two primary engines.
-- Chrome carries broad behavioral regression.
-- WebKit carries co-primary cross-engine compatibility.
-- `full`/`browser` qualification requires both; renderer/UI and WebKit-harness risk requires WebKit.
-- backend/provider/process-only work avoids browser runtime when unaffected.
-- other engines remain secondary/risk-directed.
+### Packet D — COMPLETE
 
-Final Packet C exact-head evidence:
+Merged PR #49 at `2885de409c86f771d582f09f54e0f6c564f6c59d`.
 
-- Fast #393 / run `32296746701`: PASS.
-- Qualified #138 / run `32296793338`: PASS.
-- CI-harness: PASS.
-- Ubuntu/macOS/Windows portability: PASS.
-- real macOS WebKit core compatibility: PASS.
-- unrelated backend/renderer/Chrome product lanes: correctly SKIPPED for the process-only Packet C candidate.
+Delivered:
 
-Packet C also proved the failure taxonomy in practice: initial Linux WebKit dependency amplification was `CI_HARNESS_FAIL`; two subsequent WebKit assertion failures were production-fixture mismatches in the new test harness and were fixed without changing product runtime or weakening assertions.
+1. repo-durable v18.6.1 Stable evidence manifest + drift gate;
+2. Qualified queue/runtime/platform telemetry;
+3. Linux/macOS/Windows runner-minute visibility;
+4. browser setup-duration/pip-cache signals;
+5. PR Fast/Qualified/Release amplification warnings;
+6. compact 30-day telemetry evidence;
+7. zero-network workflow structural lint.
 
-### Packet D — ACTIVE
+Final Packet D:
 
-Branch `v18.6.5-development` is assembled before PR opening to avoid preparatory `synchronize` amplification.
+- Fast #396: PASS.
+- Qualified #139: PASS through process-only CI-harness + Ubuntu/macOS/Windows portability.
+- Telemetry artifact `9382124423`, digest `sha256:e3208d7f634b2548195982062053193c56981f8d0a6370e378d5e4844765e615`.
+- Telemetry reported Fast 2 / Qualified 1 / Release 0 = `OK`; Linux 0.48 runner-min, macOS 0.17, Windows 0.33 for measured completed jobs; Chrome/WebKit setup values correctly null because browser lanes were skipped.
 
-Scope:
+### Packet E — ACTIVE
 
-1. Durable `release/v18.6.1/stable-evidence-manifest.json` bound to the authoritative checkpoint.
-2. `stable_evidence_gate.py` verifies Stable candidate, source fingerprint, run IDs and native/G15/G16 artifact digests.
-3. `ci_telemetry.py` + self-test records per-job queue/runtime/platform consumption.
-4. Qualified records Linux/macOS/Windows runner minutes, Chrome/WebKit setup duration and pip cache-hit state when applicable.
-5. Qualified counts current-PR Fast/Qualified/Release runs and warns on abnormal amplification without blocking legitimate fixes.
-6. Compact telemetry JSON retained 30 days plus job summary.
-7. Currency cost is intentionally not invented; GitHub billing remains authoritative.
-8. `workflow_structural_lint.py` provides zero-network generic structural checks in addition to semantic workflow policy.
-9. Impact Planner treats only the exact retrospective Stable manifest path as process-only; executable release files remain full-qualification scope.
-10. Current Roadmap / Build Plan / Build Process / Delivery Process / CI Efficiency Contract are synchronized to this operating model.
+Fresh G0–G3 renderer inventory:
 
-Expected Packet D qualification: process-only `ci-harness` + Ubuntu/macOS/Windows portability. WebKit should remain skipped because Packet D observes browser metrics but does not change renderer/WebKit behavior. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
+- current `renderer/renderer.js`: about 425 KB;
+- current `renderer/styles.css`: about 316 KB;
+- `renderer/index.html` loads the classic monolith before specialized compatibility/feature scripts;
+- older file dates do not imply junk or safe deletion.
 
-## Remaining Phase 0
+Bound first strangler capability: **Documentation**.
 
-**Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving deterministic equivalence and required Chrome/WebKit/native evidence before deleting former owners.
+Current branch implementation:
+
+1. `renderer/documentation-ui.js` is a new capability-oriented active runtime owner for Documentation Markdown, hydration and view rendering.
+2. `renderer/index.html` loads it immediately after `renderer.js` and before `documentation-access-v18.6.js`.
+3. `documentation-access-v18.6.js` remains the role-access decorator and registers itself in Documentation ownership metadata.
+4. Owner registry state is deliberately truthful: `ACTIVE_OWNER_WITH_LEGACY_FALLBACK`.
+5. Old Documentation functions remain physically in `renderer.js` as inactive fallback for this first strangler step; no claim of full source deletion is made.
+6. Remaining dependency on legacy `architectureDiagram` is explicit in owner metadata and is a later extraction target.
+7. `tools/ci/renderer_owner_contract.py` enforces load order, single owner load, capability-oriented naming, fallback truth, access wrapping and Chrome/WebKit evidence wiring.
+8. Existing `v18_6_documentation_access_test.js` is owner-aware for Fast.
+9. `documentation_ui_owner_test.js` provides direct renderer-owner/Markdown/hydration/access integration proof.
+10. `tools/ci/documentation_owner_browser_test.py` runs the same focused owner behavior on Chrome and WebKit.
+11. Qualified renderer, Chrome and WebKit lanes explicitly execute the new owner proofs.
+12. `tools/ci/workflow_policy.py` permanently requires renderer-owner evidence so this foundation cannot silently disappear.
+
+Packet E changes renderer/product source plus CI wiring. Impact Planner must therefore fail closed to **full Qualified**, with WebKit required. Deterministic market math remains unchanged and must still pass.
+
+No Stable Release is expected from Packet E because neither `release_identity.json` nor `.github/workflows/release.yml` is changed.
+
+## Packet E physical-deletion rule
+
+Do not delete the monolith fallback simply because the new owner is active. Physical deletion is allowed only after no consumer depends on it, direct equivalence evidence exists, Chrome + WebKit pass, deterministic/renderer logic remains green, and the owner state can truthfully move to a no-fallback designation.
 
 ## After Phase 0
 
-Adaptive v18.x priority order: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability/consolidation → controlled TradeInsight SHADOW integration. Then v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
+Run fresh G0–G3 and select the next coherent v18.x product slice from current reconciliation/evidence. Provisional priority remains: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability → controlled TradeInsight SHADOW integration. Then v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
 
 ## Repository/source-age rule
 
@@ -114,8 +131,8 @@ Do not modify or delete files because GitHub says they are several days old. His
 
 ## External/open governance item
 
-Repository `main` branch protection/ruleset is still disabled as of the post-Packet-C live check. Do not report it as fixed unless GitHub confirms an authorized branch-protection/ruleset change.
+Repository `main` branch protection/ruleset remains disabled as of the latest checked state. Do not report it as fixed unless GitHub confirms an authorized branch-protection/ruleset change.
 
 ## Exactly one next action
 
-Open exactly one Draft PR from fully assembled `v18.6.5-development` to `main`. Require one exact-head Fast candidate. Only after Fast passes, mark the same PR Ready and require Qualified `ci-harness` + portability + telemetry evidence. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Finish Packet E containment/self-consistency checks on the fully assembled `v18.6.6-development` branch before opening a Draft PR. Then open exactly one Draft PR to `main`, require one exact-head Fast candidate, mark the same PR Ready only after Fast passes, and require full Qualified including renderer + Chrome + WebKit direct Documentation-owner proofs. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.

@@ -153,7 +153,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/workflow_structural_lint.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/documentation_owner_browser_test.py tools/ci/renderer_owner_contract.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/workflow_structural_lint.py
 
   backend:
     name: Qualified backend
@@ -210,6 +210,8 @@ jobs:
         run: node --require ./tools/ci/release_identity_renderer_preload.js renderer_logic_test.js
       - name: v18.0.5 role/responsive regression
         run: node v18_0_5_renderer_test.js
+      - name: Documentation capability owner regression
+        run: node documentation_ui_owner_test.js
 
   browser:
     name: Primary Chrome behavior
@@ -254,6 +256,8 @@ jobs:
         run: python3 release/v18.5.2/browser_profile_display_name_test.py
       - name: Settings save-bar viewport
         run: python3 release/v18.5.2/browser_settings_save_bar_test.py
+      - name: Documentation owner Chrome compatibility
+        run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome
 
   webkit:
     name: Primary WebKit compatibility
@@ -287,6 +291,8 @@ jobs:
           echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
       - name: Primary WebKit core compatibility
         run: python3 tools/ci/webkit_targeted_test.py
+      - name: Documentation owner WebKit compatibility
+        run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit
 
   evidence:
     name: Qualified evidence summary
