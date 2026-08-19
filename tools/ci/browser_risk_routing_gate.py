@@ -28,7 +28,8 @@ def main() -> int:
         "name: Primary Chrome behavior",
         "webkit:\n    name: Primary WebKit compatibility",
         "needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser'",
-        "python -m playwright install --with-deps webkit",
+        "runs-on: macos-15",
+        "python -m playwright install webkit",
         "python3 tools/ci/webkit_targeted_test.py",
         "needs: [context, ci-harness, portability, backend, renderer, browser, webkit]",
         "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
@@ -46,10 +47,11 @@ def main() -> int:
         "matrix:\n        browser: [chrome, webkit]",
         "firefox.launch",
         "playwright install --with-deps firefox",
+        "playwright install --with-deps webkit",
     )
     for token in forbidden:
         if token in qualified:
-            errors.append(f"secondary-engine/default-matrix expansion prohibited: {token}")
+            errors.append(f"secondary-engine/default-matrix or dependency amplification prohibited: {token}")
 
     if "playwright install" in fast or "webkit_targeted_test.py" in fast:
         errors.append("Fast must never install/run browser engines")
@@ -71,8 +73,9 @@ def main() -> int:
 
     print("DE.PULSE browser risk routing gate: PASS")
     print("Chrome primary broad behavioral qualification: PASS")
-    print("WebKit co-primary compatibility qualification: PASS")
+    print("WebKit co-primary macOS compatibility qualification: PASS")
     print("full/browser/UI-risk WebKit requirement: PASS")
+    print("WebKit apt dependency amplification prevention: PASS")
     print("Fast/backend-only unnecessary browser suppression: PASS")
     print("other browser engines remain secondary by default: PASS")
     return 0
