@@ -210,6 +210,8 @@ def main() -> int:
         return 1
     if run_gate(root, "tools/ci/impact_plan_self_test.py", "CI impact planner v2 contract") != 0:
         return 1
+    if run_gate(root, "tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract") != 0:
+        return 1
     if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
         return 1
     if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
@@ -221,6 +223,7 @@ def main() -> int:
     print("active workflows: " + ", ".join(present))
     print("branch/retry event-amplification prevention: PASS")
     print("CI impact planner v2 self-test: PASS")
+    print("CI reproducibility/dependency/permission contract: PASS")
     print("pre-merge release rehearsal: PASS")
     print("dependency/provider readiness: PASS")
     print("AI continuous eval/rights: PASS")

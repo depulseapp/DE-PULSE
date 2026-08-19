@@ -1,0 +1,3 @@
+# DE.PULSE browser CI dependency lock.
+# Update only through a governed CI-harness change with browser compatibility evidence.
+playwright==1.62.0
