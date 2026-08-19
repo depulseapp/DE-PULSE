@@ -90,7 +90,7 @@ def classify_path(path: str) -> set[str]:
     if path.startswith(("adaptive-governance/", "governance/", "handoff/", ".depulse-certification/")):
         classes.add("CERTIFICATION_GOVERNANCE")
 
-    if path.startswith("renderer/") or path.endswith((".html", ".css")):
+    if path.startswith(("renderer/", "tests/renderer/", "tests/browser/")) or path.endswith((".html", ".css")):
         classes.add("RENDERER_UI")
     if path.endswith(".go") or path in {"go.mod", "go.sum"}:
         classes.add("BACKEND")

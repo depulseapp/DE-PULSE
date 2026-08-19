@@ -55,6 +55,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Canonical workflow policy
         run: python3 tools/ci/workflow_policy.py
+      - name: Conserved v17/v18 requirement-ledger integrity
+        run: python3 v18_5_1_v17_v18_reconciliation_gate.py
       - name: Watchlist membership regression contract
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
@@ -90,12 +92,12 @@ jobs:
         run: |
           set -euo pipefail
           while IFS= read -r -d '' file; do node --check "$file"; done < <(find renderer -type f -name '*.js' -print0)
-      - name: v18.6 surface consolidation regression
+      - name: Surface consolidation regression
         if: ${{ steps.impact.outputs.node_required == 'true' }}
-        run: node v18_6_surface_consolidation_test.js
-      - name: v18.6 role-aware documentation regression
+        run: node tests/renderer/surface_consolidation_test.js
+      - name: Role-aware documentation regression
         if: ${{ steps.impact.outputs.node_required == 'true' }}
-        run: node v18_6_documentation_access_test.js
+        run: node tests/renderer/documentation_access_test.js
       - name: Record exact-head Fast status
         if: ${{ github.event_name == 'pull_request' }}
         env:
@@ -121,6 +123,8 @@ jobs:
             echo "- Go lane required: ${{ steps.impact.outputs.go_required }}"
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- workflow policy: PASS'
+            echo '- legacy test/gate inventory: PASS (via workflow policy)'
+            echo '- conserved v17/v18 ledger integrity: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- Git-object provenance: PASS'
             echo '- exact-head status: DE.PULSE/fast-head'

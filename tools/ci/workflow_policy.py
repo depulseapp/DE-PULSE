@@ -72,6 +72,8 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "DE.PULSE/fast-head",
         "branch-hygiene:",
         "tools/ci/branch_hygiene.py --apply",
+        "node tests/renderer/surface_consolidation_test.js",
+        "node tests/renderer/documentation_access_test.js",
         "release dispatch: NOT PERMITTED from CI Fast",
     )
     fast_forbidden = (
@@ -84,13 +86,15 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "actions: write",
         "DE-PULSE-ci-impact-${{ github.sha }}",
         "needs: fast",
+        "node v18_6_surface_consolidation_test.js",
+        "node v18_6_documentation_access_test.js",
     )
     missing = [x for x in fast_required if x not in ci_fast]
     forbidden = [x for x in fast_forbidden if x in ci_fast]
     if missing:
-        return fail("CI Fast efficiency/exact-head contract missing", missing)
+        return fail("CI Fast efficiency/exact-head/capability-test contract missing", missing)
     if forbidden:
-        return fail("CI Fast duplicate-trigger/dispatcher contract violated", forbidden)
+        return fail("CI Fast duplicate-trigger/dispatcher/legacy-test contract violated", forbidden)
 
     qualified_required = (
         "types: [ready_for_review]",
@@ -195,6 +199,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
 
     print("CI Fast single-event exact-head development contract: PASS")
     print("CI Fast main-push test suppression + hygiene-only contract: PASS")
+    print("CI Fast capability-oriented renderer test paths: PASS")
     print("CI Qualified ready-candidate exact-head contract: PASS")
     print("Chrome + WebKit co-primary browser contract: PASS")
     print("Documentation renderer-owner primary-engine evidence: PASS")
@@ -234,6 +239,8 @@ def main() -> int:
         return 1
     if run_gate(root, "tools/ci/impact_plan_self_test.py", "CI impact planner v2 contract") != 0:
         return 1
+    if run_gate(root, "tools/ci/legacy_test_gate_inventory.py", "legacy test/gate inventory contract") != 0:
+        return 1
     if run_gate(root, "tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract") != 0:
         return 1
     if run_gate(root, "tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract") != 0:
@@ -256,6 +263,7 @@ def main() -> int:
     print("branch/retry event-amplification prevention: PASS")
     print("zero-network workflow structural lint: PASS")
     print("CI impact planner v2 self-test: PASS")
+    print("legacy test/gate inventory contract: PASS")
     print("CI reproducibility/dependency/permission contract: PASS")
     print("Chrome/WebKit primary browser routing contract: PASS")
     print("capability-oriented renderer ownership contract: PASS")
