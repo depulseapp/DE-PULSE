@@ -11,8 +11,8 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Engineering branch:** `v18.6.3-development`  
-**Current slice:** Phase 0 Packet B — CI reproducibility hardening; process-only, not a product Stable build  
+**Engineering branch:** `v18.6.4-development`  
+**Current slice:** Phase 0 Packet C — Chrome-primary targeted-WebKit browser-risk routing; process-only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
 
 `Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
@@ -44,40 +44,50 @@ Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, d
 
 ### Packet A — COMPLETE
 
-Merged PR #46 to `main` at `a3beb28322c2c53227bac037e546d6863c8d279e`.
+Merged PR #46 at `a3beb28322c2c53227bac037e546d6863c8d279e`.
+
+Delivered Impact Planner v2, planner self-test, side-effect-free Release Rehearsal, workflow-policy integration, current adaptive operating overlays and an honest v18.6.1 reconciliation baseline. Final Fast #381 and Qualified #133 passed through the intended process-only path.
+
+### Packet B — COMPLETE
+
+Merged PR #47 at `31b697d175317f0132c0a3fff7283beb1b79662d`.
 
 Delivered:
 
-1. Impact Planner v2 change classes, conservative fail-closed routing, WebKit planning signal and failure taxonomy.
-2. Planner self-test.
-3. Side-effect-free Release Rehearsal for G11–G16 topology, exact-head/fingerprint contracts, Stable-tag behavior and no-rebuild publication.
-4. Workflow policy integration of the planner/rehearsal safeguards.
-5. Current Adaptive Roadmap / Build Plan / Build Process / Delivery Process overlays.
-6. Honest v18.6.1 reconciliation baseline without inventing missing historical ledger rows.
+1. Immutable 40-hex SHA pins for third-party Actions in Fast/Qualified with readable version comments.
+2. `tools/ci/ci_dependency_lock.json` as canonical CI dependency record.
+3. Playwright `1.62.0` pin through `tools/ci/browser-requirements.txt`.
+4. Safe setup-python pip cache keyed by the browser requirements lock.
+5. `tools/ci/reproducibility_gate.py` for movable Action refs, lock drift, unpinned Playwright and scoped permission expansion.
+6. Workflow-policy integration of the reproducibility gate.
+7. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice so native G11–G16 spend is useful.
 
-Packet A final exact-head Fast #381 and Qualified #133 passed; Qualified correctly used CI-harness + Ubuntu/macOS/Windows portability and skipped irrelevant product suites. No new Stable release was triggered.
+Packet B had one legitimate gate-parser defect on its first Fast attempt; it was fixed on the same branch/PR. Final Fast #384 and Qualified #134 passed; Qualified used CI-harness + Ubuntu/macOS/Windows portability and skipped product suites. No Stable release was triggered.
 
-### Packet B — ACTIVE
+### Packet C — ACTIVE
 
-Goal: make routine CI dependencies reproducible and auditable without spending a release-only native certification run.
+Browser strategy is explicitly usage/risk aligned:
 
-Current branch scope:
+- **Chrome is the primary/default browser behavioral qualification target** and keeps the broad browser regression suite.
+- **WebKit is a selective secondary compatibility guardrail**, not a duplicate full matrix.
+- Impact Planner `webkit_required=true` only when `RENDERER_UI` changes are present.
+- Backend/provider/process-only changes must not incur WebKit runtime.
+- Targeted WebKit scope focuses on browser-engine-sensitive contracts: watchlist/global-remove and DESKS/no-CURRENT semantics, failure handling, short-height Settings save-bar behavior and centered header alert layout.
+- Exact-head Qualified evidence requires WebKit success whenever the impact signal says it is required; otherwise the WebKit job must be skipped.
 
-1. Pin third-party GitHub Actions in `ci-fast.yml` and `ci-qualified.yml` to immutable 40-hex commits, retaining readable upstream version comments.
-2. Add `tools/ci/ci_dependency_lock.json` as the canonical Action/browser dependency record.
-3. Pin Playwright to `1.62.0` through `tools/ci/browser-requirements.txt`.
-4. Use setup-python's pip cache keyed by the pinned browser requirements file; no separate cache Action is added.
-5. Add `tools/ci/reproducibility_gate.py` to reject movable Action refs, dependency-lock drift, unpinned Playwright and scoped permission expansion.
-6. Run the reproducibility gate through canonical `tools/ci/workflow_policy.py`.
-7. Keep `release.yml` Action pinning explicitly deferred to the next release-capable product slice so changing it does not create a process-only G11–G16/macOS/Windows spend.
+Current Packet C files:
 
-Expected Packet B path: Draft PR → Fast exact-head → same PR Ready → Qualified `ci-harness` + portability → merge → main-push hygiene. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` is changed.
+1. `.github/workflows/ci-qualified.yml` — propagates `webkit_required`, keeps Chrome as the full browser lane, adds a conditional targeted WebKit job and binds its result into Qualified evidence.
+2. `tools/ci/webkit_targeted_test.py` — focused Safari/WebKit compatibility proof.
+3. `tools/ci/browser_risk_routing_gate.py` — static routing contract ensuring no full Chrome+WebKit matrix and no Fast/backend-only WebKit coupling.
+4. `tools/ci/workflow_policy.py` — permanently enforces browser-risk routing.
+
+Expected Packet C path: Draft PR → Fast exact-head → same PR Ready → Qualified `ci-harness` + portability → merge → main-push hygiene. Because Packet C changes CI tooling only, `webkit_required` should be false for Packet C itself; the routing gate proves the conditional wiring and the first future renderer/UI candidate will execute the WebKit lane. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
 
 ## Remaining Phase 0 packets
 
-1. **Packet C — Browser Risk Routing:** connect Impact Planner `webkit_required` to a focused Qualified WebKit lane for renderer/UI-sensitive changes without duplicating backend-only work.
-2. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest plus lane runtime/queue/cache/failure taxonomy and cost trend evidence.
-3. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving equivalence and browser/native evidence before deleting former owners.
+1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, and carry forward generic workflow linting if not already incorporated by the end of Packet C.
+2. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving equivalence and browser/native evidence before deleting former owners.
 
 ## After Phase 0
 
@@ -93,4 +103,4 @@ Repository `main` branch protection/ruleset remains an external governance item.
 
 ## Exactly one next action
 
-Open one Draft PR from `v18.6.3-development` to `main` for Packet B, require exact-head Fast, then mark the same PR Ready only after Fast passes and require Qualified `ci-harness` + portability. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Open one Draft PR from `v18.6.4-development` to `main` for Packet C, require exact-head Fast, then mark the same PR Ready only after Fast passes and require Qualified `ci-harness` + portability. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
