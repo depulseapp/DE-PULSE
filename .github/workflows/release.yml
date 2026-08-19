@@ -157,6 +157,7 @@ jobs:
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G12
           path: .depulse-certification/**
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30
 
