@@ -9,7 +9,6 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOWS = ROOT / ".github" / "workflows"
 ALLOWED = ("ci-fast.yml", "ci-qualified.yml", "release.yml")
 TOP_LEVEL = {"name", "on", "permissions", "concurrency", "env", "jobs"}
-MAPPING_RE = re.compile(r"^(\s*)(?:-\s+)?([A-Za-z0-9_.${}\[\]'\" -]+):(?:\s|$)")
 
 
 def fail(errors: list[str]) -> int:
@@ -17,6 +16,27 @@ def fail(errors: list[str]) -> int:
     for error in errors:
         print(f" - {error}", file=sys.stderr)
     return 1
+
+
+def github_expressions_balanced(text: str) -> bool:
+    """Validate only GitHub expression openers.
+
+    Literal `}}` is valid inside shell/Python/JSON content, so comparing global
+    opener/closer counts creates false positives. Every `${{` must instead find
+    its own subsequent `}}`; unrelated closing braces are intentionally ignored.
+    """
+    position = 0
+    while True:
+        start = text.find("${{", position)
+        if start < 0:
+            return True
+        end = text.find("}}", start + 3)
+        if end < 0:
+            return False
+        nested = text.find("${{", start + 3, end)
+        if nested >= 0:
+            return False
+        position = end + 2
 
 
 def lint_file(path: Path) -> list[str]:
@@ -31,8 +51,8 @@ def lint_file(path: Path) -> list[str]:
         errors.append(f"{relative}: tab indentation is prohibited")
     if any(line.rstrip() != line for line in lines):
         errors.append(f"{relative}: trailing whitespace")
-    if text.count("${{") != text.count("}}"):
-        errors.append(f"{relative}: unbalanced GitHub expression delimiters")
+    if not github_expressions_balanced(text):
+        errors.append(f"{relative}: unbalanced or nested GitHub expression delimiters")
 
     top_seen: set[str] = set()
     jobs_line = None
@@ -89,8 +109,25 @@ def lint_file(path: Path) -> list[str]:
     return errors
 
 
-def main() -> int:
+def self_test() -> list[str]:
     errors: list[str] = []
+    valid = "run: echo '${{ github.sha }}' && python -c 'print({\"x\": {}})'\n"
+    missing_close = "run: echo '${{ github.sha'\n"
+    nested = "run: echo '${{ github.event && ${{ github.sha }} }}'\n"
+    extra_literal_close = "run: python -c 'print({{\"x\":1}})'\n"
+    if not github_expressions_balanced(valid):
+        errors.append("self-test rejected a valid GitHub expression with literal shell/JSON braces")
+    if github_expressions_balanced(missing_close):
+        errors.append("self-test accepted an unclosed GitHub expression")
+    if github_expressions_balanced(nested):
+        errors.append("self-test accepted nested GitHub expression openers")
+    if not github_expressions_balanced(extra_literal_close):
+        errors.append("self-test rejected unrelated literal closing braces")
+    return errors
+
+
+def main() -> int:
+    errors: list[str] = self_test()
     present = sorted(p.name for p in WORKFLOWS.glob("*.y*ml") if p.is_file())
     if present != sorted(ALLOWED):
         errors.append(f"workflow set mismatch: {present}")
@@ -103,6 +140,7 @@ def main() -> int:
     if errors:
         return fail(errors)
     print("DE.PULSE workflow structural lint: PASS")
+    print("GitHub-expression parser self-test: PASS")
     print("workflow set / top-level mappings / duplicate job ids: PASS")
     print("indentation / whitespace / GitHub-expression balance: PASS")
     return 0
