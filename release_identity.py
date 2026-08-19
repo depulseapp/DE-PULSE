@@ -55,7 +55,7 @@ def sync(x):
         f"Application bundle: {x['application_bundle']}\n"
         "Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible\n"
         f"Runtime/config continuity: {x['runtime_config']} (preserves compatible prior Stable settings and API keys)\n"
-        "Release learning: adaptive G0-G16 Release Learning Registry active · Build Process v2 pre-freeze qualification + canonical identity enabled\n"
+        "Release learning: adaptive G0-G16 Release Learning Registry active · streamlined one-branch/one-PR exact-head Fast + Qualified + one Release G11-G16 lifecycle\n"
         "Adaptive contracts: US Equities Processing Boundary · Data Utility/Evidence Value · Performance/Scalability · Data Health/Freshness/Cache · Testing · Intelligence/Learning preserved\n"
     )
     p=ROOT/'app_bootstrap.go'; s=p.read_text()
