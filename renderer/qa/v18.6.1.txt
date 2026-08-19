@@ -1,0 +1,21 @@
+DE.PULSE v18.6.1 Stable QA Record
+Date: 2026-08-19
+Build: v18.6.1-stable-20260819
+
+Scope
+- Remove deprecated CURRENT watchlist wording and preserve membership-only Day/Swing/Long toggle semantics.
+- Fix global removal from desk rows and Master Market Store when the watchlist extension is loaded as a separate classic script.
+- Cover all seven legal desk-membership combinations, exact-membership Undo, rapid repeated activation and backend failure behavior.
+- Center the header alert within the available lane between product branding and runtime/account controls.
+- Preserve the complete inherited v18.6.0 certification matrix and all permanent product boundaries.
+
+Qualification evidence
+- Exact-head CI Fast required before candidate qualification.
+- CI Qualified covers backend, deterministic renderer, browser behavior, watchlist membership and v18.6.1 global-remove edge semantics.
+- Stable promotion requires one canonical G11-G16 Release run with macOS Apple Silicon and Windows x64 actual packaged-runtime audits.
+
+Boundaries preserved
+- U.S. Equities Processing Boundary.
+- Permanent No Execution Boundary.
+- Deterministic Day/Swing/Long formulas unchanged.
+- Smart Provider Router ownership unchanged.
