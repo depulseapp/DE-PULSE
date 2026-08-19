@@ -18,7 +18,7 @@
 
 ## Phase 0 — Post-v18.6.1 engineering hardening
 
-Purpose: eliminate remaining process debt exposed by the v18.6.1 trial before starting a broad feature slice.
+Purpose: eliminate remaining process and maintainability debt exposed by the v18.6.1 trial before starting a broad feature slice.
 
 ### Packet A — CI decision intelligence and release rehearsal — COMPLETE
 
@@ -40,34 +40,52 @@ Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
 - Other engines remain secondary/risk-directed.
 - Final exact-head Fast #393 and Qualified #138 passed, including real WebKit compatibility and Ubuntu/macOS/Windows portability.
 
-### Packet D — Durable evidence and CI observability — ACTIVE
+### Packet D — Durable evidence and CI observability — COMPLETE
 
-Goals:
+Merged PR #49 at `2885de409c86f771d582f09f54e0f6c564f6c59d`.
 
-- durable v18.6.1 Stable evidence manifest bound to the authoritative release checkpoint;
+- repo-durable v18.6.1 Stable evidence manifest bound to the authoritative checkpoint;
+- Stable evidence drift gate;
 - Qualified per-job queue/runtime/platform telemetry;
-- Linux/macOS/Windows runner-consumption visibility without inventing currency billing rates;
+- Linux/macOS/Windows runner-consumption visibility without fabricated currency rates;
 - Chrome/WebKit dependency setup duration and pip-cache hit signals;
 - PR-level Fast/Qualified/Release amplification warnings;
 - compact 30-day operational telemetry artifact plus job summary;
-- zero-network generic workflow structural lint in addition to DE.PULSE semantic workflow policy;
-- self-tests/gates that keep telemetry, Stable evidence and impact routing truthful.
+- zero-network generic workflow structural lint in addition to DE.PULSE semantic workflow policy.
 
-Packet D is process/evidence only. The Stable evidence manifest is explicitly retrospective and does not redefine the immutable `v18.6.1-stable` artifact. Its exact path is treated as process-only by Impact Planner while executable/versioned release scripts remain full-qualification scope.
+Final Packet D Fast #396 and Qualified #139 passed. Qualified correctly selected CI-harness + Ubuntu/macOS/Windows portability and skipped product/browser lanes. Telemetry reported Fast 2 / Qualified 1 / Release 0 as `OK`, correctly recognizing the one legitimate lint correction rather than a loop.
 
-### Packet E — Renderer maintainability — PLANNED, INCREMENTAL
+### Packet E — Renderer modularization foundation — ACTIVE
 
-Do not rewrite the monolithic renderer. Use a strangler approach by canonical capability owner:
+Fresh source inventory shows the current classic renderer is still layered: `renderer.js` is about 425 KB, `styles.css` about 316 KB, and `index.html` loads the monolith before compatibility/feature layers. File age is not a cleanup signal; active ownership is.
 
-1. Watchlist.
-2. Session/header.
-3. Research.
-4. Documentation.
-5. Admin.
-6. Opportunity/Discovery.
-7. Shared UI state.
+Packet E uses a strangler model rather than a monolith rewrite. The first bound capability is **Documentation** because it is lower trading-risk, already has an explicit role-access decorator, and its rendering/hydration/Markdown lifecycle is embedded in the monolith.
 
-For each extraction: extract → deterministic/equivalence proof → Chrome + WebKit proof → native proof where relevant → remove the old duplicate owner. Historical/versioned assets remain until proven unreferenced and safely removable.
+Current Packet E scope:
+
+1. Add capability-oriented `renderer/documentation-ui.js` as the active runtime owner for Documentation Markdown, hydration and view rendering.
+2. Load it after `renderer.js` and before `documentation-access-v18.6.js`, so the existing role-access policy decorates the new owner rather than competing with it.
+3. Register renderer ownership metadata and the access decorator explicitly.
+4. Retain the monolith Documentation implementations as an **inactive legacy fallback** for this first strangler step; do not pretend physical deletion is complete.
+5. Keep the transitional dependency on monolith `architectureDiagram` explicit; it is a later extraction target rather than hidden coupling.
+6. Add a renderer owner contract that prevents version-stacked new owner naming, duplicate loads, load-order drift, untracked fallback deletion, or loss of primary-engine evidence.
+7. Extend the existing Fast role-access regression so it proves the new owner.
+8. Require direct owner evidence in Qualified renderer plus both primary engines: Chrome and WebKit.
+9. Preserve deterministic market truth; Documentation extraction must not modify scoring/market math.
+
+Packet E is renderer/product source and therefore must receive full Qualified coverage plus WebKit. It does not change release identity or the canonical Release workflow, so it does not manufacture a new Stable release by itself.
+
+### Physical-deletion rule after Packet E
+
+A runtime owner can move before the legacy source is deleted. Physical removal from `renderer.js` occurs only when:
+
+- no runtime/reference consumer depends on the fallback;
+- direct equivalence evidence exists;
+- Chrome + WebKit owner behavior passes;
+- renderer logic/deterministic tests stay green;
+- the capability owner contract is updated from `ACTIVE_OWNER_WITH_LEGACY_FALLBACK` to a no-fallback state.
+
+This prevents a risky big-bang renderer rewrite while still reducing active ownership ambiguity immediately.
 
 ## Adaptive v18.x product work after Phase 0
 
@@ -92,7 +110,7 @@ Remove duplicate internal pipelines, not user-facing capabilities.
 
 ### Workstream D — Renderer architecture consolidation
 
-Gradually replace version-stacked implementation ownership with capability-oriented modules such as `watchlist`, `session-intelligence-ui`, `research-ui`, `admin-ui`, and shared state. Release version belongs in release identity, not permanently in every module filename.
+Continue capability-oriented ownership after the Documentation proof. Candidate sequence is evidence-selected, not fixed; higher-risk Watchlist/Session/Research owners require stronger transition evidence than Documentation. New long-lived owners use capability names such as `watchlist.js`, `session-intelligence-ui.js`, `research-ui.js`, `admin-ui.js`, and shared UI state rather than accumulating release-version filenames.
 
 ### Workstream E — TradeInsight controlled integration
 
