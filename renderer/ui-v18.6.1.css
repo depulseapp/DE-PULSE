@@ -1,0 +1,17 @@
+/* DE.PULSE v18.6.1 — header notification alignment correction.
+   Presentation only. Keep notifications centered in the complete middle header
+   lane between product identity and the runtime/account controls. */
+.topbar > .header-notification{
+  justify-self:stretch!important;
+  align-self:center!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin-inline:0!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+}
+.topbar > .header-notification .header-notification-text,
+.topbar > .header-notification .toast-title{
+  text-align:center!important;
+}
