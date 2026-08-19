@@ -2,6 +2,8 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
+**Release:** `v18.6.1`  
+**Active branch:** `main`  
 **Certified Stable:** `v18.6.1-stable`  
 **Stable target / certified merged candidate:** `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`  
 **Qualified v18.6.1 source head:** `5c3fae486f3e4b4a39a0b1d549916aea9e1295fd`  
@@ -9,9 +11,11 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Active engineering branch:** `v18.6.2-development`  
+**Engineering branch:** `v18.6.2-development`  
 **Current slice:** post-v18.6.1 engineering hardening; process/governance only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
+
+`Release` and `Active branch` above intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records the current in-flight branch without mutating Stable checkpoint identity.
 
 ## Resume rule
 
@@ -70,4 +74,4 @@ Repository `main` branch protection/ruleset was previously observed as not prote
 
 ## Exactly one next action
 
-Open one Draft PR from `v18.6.2-development` to `main`, let Fast validate the exact head, mark that same PR Ready only after Fast passes, then require Qualified `ci-harness` + portability. Fix any legitimate source/gate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Continue the one Draft PR from `v18.6.2-development` to `main`, let Fast validate the new exact head, mark that same PR Ready only after Fast passes, then require Qualified `ci-harness` + portability. Fix any legitimate source/gate defect on the same branch/PR; do not create retry/certification/promotion branches.
