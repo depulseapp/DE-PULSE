@@ -33,6 +33,9 @@ def run_gate(root: Path, filename: str, label: str) -> int:
 def release_dispatch_contract(workflows: Path) -> int:
     ci_fast = (workflows / "ci-fast.yml").read_text(encoding="utf-8")
     release = (workflows / "release.yml").read_text(encoding="utf-8")
+    root = workflows.parents[1]
+    verifier_path = root / "tools" / "release" / "verify_promotion_evidence.py"
+    verifier = verifier_path.read_text(encoding="utf-8") if verifier_path.is_file() else ""
 
     ci_required = (
         "types: [opened, synchronize, reopened, closed]",
@@ -78,14 +81,10 @@ def release_dispatch_contract(workflows: Path) -> int:
         "github-token: ${{ github.token }}",
         "repository: ${{ github.repository }}",
         "run-id: ${{ inputs.certification_run_id }}",
-        "G13-G14-macOS-Apple-Silicon.json",
-        "G13-G14-Windows-x64.json",
-        "G15-Release-Assurance.json",
-        "certifiedSourceSha",
-        "sourceFingerprint",
-        "artifactSha256",
-        "noExecutionBoundary",
-        "promotionAuthorized",
+        "tools/release/verify_promotion_evidence.py",
+        '--certified-run-head "$CANDIDATE_SHA"',
+        '--source-fingerprint "$EXPECTED_FP"',
+        "--out promotion-verification.json",
         "gh release create",
         "gh release upload",
         "G12/G13/G14/G15 are not rerun in promotion mode",
@@ -98,6 +97,22 @@ def release_dispatch_contract(workflows: Path) -> int:
     )
     release_present_forbidden = [fragment for fragment in release_forbidden if fragment in release]
 
+    verifier_required = (
+        "DE.PULSE-STABLE-PROMOTION-VERIFY-1",
+        "DE.PULSE-G15-ASSURANCE-2",
+        "DE.PULSE-G13-G14-NATIVE-2",
+        "certifiedSourceSha",
+        "sourceFingerprint",
+        "artifactSha256",
+        "noExecutionBoundary",
+        "promotionAuthorized",
+        "all(v == 'PASS' for v in evidence_checks.values())",
+        "noRebuild",
+    )
+    verifier_missing = [fragment for fragment in verifier_required if fragment not in verifier]
+    if not verifier_path.is_file():
+        verifier_missing.insert(0, "tools/release/verify_promotion_evidence.py")
+
     # Native/package and full-cert jobs must be explicitly suppressed in publish mode.
     for job_marker in ("g12:\n", "macos:\n", "windows:\n", "g15:\n"):
         pos = release.find(job_marker)
@@ -108,7 +123,7 @@ def release_dispatch_contract(workflows: Path) -> int:
         if "!inputs.publish" not in window:
             release_missing.append(f"{job_marker.strip()} publish=false guard")
 
-    if ci_missing or ci_present_forbidden or release_missing or release_present_forbidden:
+    if ci_missing or ci_present_forbidden or release_missing or release_present_forbidden or verifier_missing:
         print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
         if ci_missing:
             print("release dispatcher contract missing: " + ", ".join(ci_missing), file=sys.stderr)
@@ -118,6 +133,8 @@ def release_dispatch_contract(workflows: Path) -> int:
             print("no-rebuild release contract missing: " + ", ".join(release_missing), file=sys.stderr)
         if release_present_forbidden:
             print("no-rebuild release contract forbidden fragments: " + ", ".join(release_present_forbidden), file=sys.stderr)
+        if verifier_missing:
+            print("promotion evidence verifier contract missing: " + ", ".join(verifier_missing), file=sys.stderr)
         return 1
 
     print("release dispatcher certification + merged-PR Stable promotion authorization: PASS")

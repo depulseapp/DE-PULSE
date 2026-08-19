@@ -5,7 +5,7 @@
 **Release:** `v18.6.0`  
 **Active branch:** `v18.6-development`  
 **Stable predecessor:** `v18.5.2-stable` / G0–G16 CLOSED  
-**Current candidate state:** v18.6.0 PROMOTION-PATH HARDENING / FRESH G10 REQUIRED / NOT PROMOTED  
+**Operational state:** read fingerprint-excluded checkpoints + PR #16 for the live gate/promotion state; this handoff defines the durable v18.6 release contract  
 **Repository:** `depulseapp/DE-PULSE`  
 **Main release PR:** `#16`  
 **v18.6 runtime build ID:** `v18.6.0-stable-20260818`  
@@ -71,9 +71,11 @@ Release-certification keeps its existing owner-gated unmerged PR fallback with `
 
 `tools/ci/workflow_policy.py` owns regression prevention for this separation, cross-run artifact reuse, publish-mode job suppression, evidence validation, and the merged-PR-only Stable promotion rule.
 
-## Why fresh qualification is mandatory
+## Durable qualification and promotion rule
 
-`.github/workflows/ci-fast.yml`, `.github/workflows/release.yml`, `tools/ci/workflow_policy.py`, and this handoff are source-fingerprinted. Therefore run `32199369265` cannot be reused as certification for this hardened source. Fresh Fast + Qualified G10 must pass on the exact new source, followed by one fresh `publish=false` G11–G16 certification run. After that, Stable promotion must reuse that new run's exact artifacts without recertification or rebuild.
+This handoff is intentionally state-neutral after the promotion-path hardening source is frozen. Live progress belongs in the fingerprint-excluded `.depulse-certification/resume/` checkpoints and PR #16 metadata. Do not edit this handoff merely to record gate progression.
+
+For any source-fingerprinted change, fresh Fast + Qualified G10 is mandatory before G11. Once exact-source G10 passes, run one `publish=false` G11–G16 certification. If that certification passes, merge/promote only through the evidence-bound promotion-reuse path, which must publish the exact certified artifacts without rerunning G12/G13/G14/G15. After a verified `v18.6.0-stable` publication, the checkpoints may record Stable completion without changing this source-fingerprinted handoff.
 
 ## Known residuals / User Action Required
 
@@ -83,7 +85,7 @@ Release-certification keeps its existing owner-gated unmerged PR fallback with `
 
 ## Exactly one next action
 
-**Run one fresh canonical Fast + Qualified G10 qualification on the exact promotion-hardened v18.6 source. If both pass, bind fingerprint-excluded checkpoints, execute exactly one fresh `publish=false` G11–G16 certification run, then merge PR #16 and execute evidence-bound promotion-reuse from that successful certification run without rerunning G12/G13/G14/G15.**
+**Read `.depulse-certification/resume/build-checkpoint.json` and `release-evidence-checkpoint.json`, reconcile PR #16 and current GitHub Actions, and resume from the earliest incomplete G0–G16/promotion step. If the current source has not yet passed G10, run exactly one Fast + Qualified pair. If G10 is PASS but G11–G16 is incomplete, run one `publish=false` certification. If G11–G16 is PASS and Stable is not published, perform evidence-bound promotion-reuse. If `v18.6.0-stable` is already verified, no release action remains.**
 
 ## Provider-neutral continuation instruction
 
