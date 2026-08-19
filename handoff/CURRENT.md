@@ -2,6 +2,8 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
+**Release:** `v18.6.0`  
+**Active branch:** `v18.6-development`  
 **Certified Stable:** `v18.6.0-stable`  
 **Stable promotion commit:** `2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c`  
 **Certified source:** `d375852d846f8c9f0045ac929da1830b85ad629e`  
