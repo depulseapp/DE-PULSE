@@ -3,8 +3,8 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G10_PASS_AWAITING_FRESH_G11_G16",
-  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source f005942a is frozen after final promotion-path hardening.",
+  "candidateDisposition": "V18_6_0_G11_G16_PASS_READY_FOR_NO_REBUILD_PROMOTION",
+  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source f005942a is frozen and certified.",
   "stable": {
     "tag": "v18.5.2-stable",
     "promotionCommit": "d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -18,21 +18,30 @@
     "pullRequest": 16,
     "candidateSourceCommit": "f005942af74d0d72686068696bf44b43a68e4052",
     "qualificationHead": "1ac0d208fb410488fbe10823545dc6ab80fa891e",
-    "releaseCandidateCommit": null,
+    "releaseCandidateCommit": "d5e6721818686f30d737db20c91967215c4cd470",
+    "mainMergeCommit": "6c937146467874f7c4fd88b630a4b46be4dfb58d",
     "sourceFingerprint": "eb0e75e32bcdb7c98b6768b1581e31849325140b0d80a82675cde0a51b58fb0e",
-    "promotionState": "NOT_READY_G11_G16_PENDING",
-    "canonicalReleaseRun": null,
+    "promotionState": "READY_NOT_PROMOTED",
+    "canonicalReleaseRun": 32220888186,
     "publish": false
   },
   "evidence": {
     "G0-G9": {"status": "PASS"},
     "G10": {"status": "PASS", "fastRun": 32220442055, "fastRunNumber": 283, "qualifiedRun": 32220442032, "qualifiedRunNumber": 119},
-    "G11": {"status": "PENDING"},
-    "G12": {"status": "PENDING"},
-    "G13-G14-macOS-Apple-Silicon": {"status": "PENDING"},
-    "G13-G14-Windows-x64": {"status": "PENDING"},
-    "G15": {"status": "PENDING"},
-    "G16": {"status": "PENDING"}
+    "G11": {"status": "PASS", "runId": 32220888186, "candidate": "d5e6721818686f30d737db20c91967215c4cd470", "sourceFingerprint": "eb0e75e32bcdb7c98b6768b1581e31849325140b0d80a82675cde0a51b58fb0e"},
+    "G12": {"status": "PASS", "runId": 32220888186},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32220888186, "artifactId": 9354022957, "archiveDigest": "sha256:f0f087564efb3a7266d8037da34cb7c3c26e4ae9bd685aeb074f6df70e3740f1", "runtimeHealthReadinessRoot": "PASS", "sqliteMigrations": [1,2,3,4]},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32220888186, "artifactId": 9354041625, "archiveDigest": "sha256:a9432b8479be1fea51595067d43f6a71d57551a2e03aa28a8403bce2726c9682", "runtimeHealthReadinessRoot": "PASS", "sqliteMigrations": [1,2,3,4]},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32220888186, "artifactId": 9354045922, "archiveDigest": "sha256:c0eb454b35a781de2e4dd9c68e1d013bb6a184c43ec41b8e9dd216dd302aafdf"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32220888186, "artifactId": 9354048068, "archiveDigest": "sha256:e23b629ebfc9107d13fcb68fb6ecad67fbdca414f2e18486fe9e3dcc01cf859e"}
+  },
+  "promotionContract": {
+    "mode": "EXACT_CERTIFIED_ARTIFACT_REUSE",
+    "certificationRunId": 32220888186,
+    "noRebuild": true,
+    "requiredPromotionBranch": "v18.6-stable-promotion",
+    "requiredTag": "v18.6.0-stable",
+    "verifier": "tools/release/verify_promotion_evidence.py"
   },
   "historicalCertifiedRun": {
     "runId": 32199369265,
@@ -43,7 +52,7 @@
     "TradeInsight remains governed future/shadow work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved."
   ],
-  "releaseBlockingResiduals": ["Fresh publish=false G11-G16 certification is required for final source fingerprint eb0e75e3 before Stable promotion."],
-  "nextRequiredEvidence": "Reconcile v18.6-release-certification to this exact G10-qualified tree, dispatch one publish=false release.yml run, and require G11-G16 PASS before merge/promotion.",
-  "updatedAt": "2026-08-19T05:50:00Z"
+  "releaseBlockingResiduals": [],
+  "nextRequiredEvidence": "Execute owner-controlled merged-PR Stable promotion on v18.6-stable-promotion. Promotion must reuse run 32220888186 artifacts, skip G12/G13/G14/G15 rebuild jobs, publish v18.6.0-stable, then verify tag/release/assets before closing Stable.",
+  "updatedAt": "2026-08-19T06:01:00Z"
 }
