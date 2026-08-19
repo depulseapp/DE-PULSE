@@ -108,6 +108,9 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
         "WEBKIT: ${{ needs.webkit.result }}",
         "Chrome+WebKit primary browser policy",
+        "run: node documentation_ui_owner_test.js",
+        "run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome",
+        "run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit",
         "actions: read",
         "Collect CI telemetry",
         "tools/ci/ci_telemetry.py",
@@ -128,7 +131,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     missing = [x for x in qualified_required if x not in qualified]
     forbidden = [x for x in qualified_forbidden if x in qualified]
     if missing:
-        return fail("CI Qualified candidate/exact-head/primary-browser/telemetry contract missing", missing)
+        return fail("CI Qualified candidate/exact-head/primary-browser/renderer-owner/telemetry contract missing", missing)
     if forbidden:
         return fail("CI Qualified must not run routine updates or promote secondary engines by default", forbidden)
 
@@ -194,6 +197,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("CI Fast main-push test suppression + hygiene-only contract: PASS")
     print("CI Qualified ready-candidate exact-head contract: PASS")
     print("Chrome + WebKit co-primary browser contract: PASS")
+    print("Documentation renderer-owner primary-engine evidence: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
     print("secondary browser engines remain risk-directed: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
@@ -234,6 +238,8 @@ def main() -> int:
         return 1
     if run_gate(root, "tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract") != 0:
         return 1
+    if run_gate(root, "tools/ci/renderer_owner_contract.py", "capability-oriented renderer ownership contract") != 0:
+        return 1
     if run_gate(root, "tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract") != 0:
         return 1
     if run_gate(root, "tools/ci/stable_evidence_gate.py", "durable Stable evidence contract") != 0:
@@ -252,6 +258,7 @@ def main() -> int:
     print("CI impact planner v2 self-test: PASS")
     print("CI reproducibility/dependency/permission contract: PASS")
     print("Chrome/WebKit primary browser routing contract: PASS")
+    print("capability-oriented renderer ownership contract: PASS")
     print("CI telemetry/amplification contract: PASS")
     print("durable Stable evidence contract: PASS")
     print("pre-merge release rehearsal: PASS")
