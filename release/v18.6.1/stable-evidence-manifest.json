@@ -1,0 +1,55 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.6.1",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.6.1-stable-20260819",
+  "stableTag": "v18.6.1-stable",
+  "certifiedCandidate": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+  "qualifiedSourceHead": "5c3fae486f3e4b4a39a0b1d549916aea9e1295fd",
+  "sourceFingerprint": "b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75",
+  "runs": {
+    "fast": 32279055139,
+    "qualified": 32279113032,
+    "productFullQualified": 32276304863,
+    "canonicalReleaseG11G16": 32279232665
+  },
+  "gates": {
+    "G0-G9": "PASS",
+    "G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "macOSAppleSilicon": {
+      "artifactId": 9375328774,
+      "digest": "sha256:ab36d804637dc0264c2f09511c1a592ec44ca3d553e760795b00ca0782dadb50"
+    },
+    "windowsX64": {
+      "artifactId": 9375346052,
+      "digest": "sha256:c4f6fc934cd9ab896ced08486aa6c7a1cfcbae647ad7c54435495768641fe0d9"
+    },
+    "g15ReleaseAssurance": {
+      "artifactId": 9375357805,
+      "digest": "sha256:261338f7a62e59fa98f11acc81b58deac0814f592f44aaeb252aafcf3831295b"
+    },
+    "g16Closure": {
+      "artifactId": 9375375860,
+      "digest": "sha256:cbb59e11311264d02c5e0c221788aeb2642e612dd8c760b14deb4502c54d7b22"
+    }
+  },
+  "productEvidence": {
+    "watchlistGlobalRemove": "PASS: all seven non-empty Day/Swing/Long membership combinations; desk row; Master Market Store; Undo; double activation; backend failure; no CURRENT",
+    "headerAlertCentering": "PASS"
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true
+  }
+}
