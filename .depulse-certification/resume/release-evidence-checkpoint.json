@@ -3,7 +3,7 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G10_PASS_AWAITING_FRESH_G11_G16",
+  "candidateDisposition": "V18_6_0_G10_PASS_FINAL_F005_G11_TRIGGER",
   "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; source f005942a is frozen after final promotion-path hardening.",
   "stable": {
     "tag": "v18.5.2-stable",
@@ -34,16 +34,16 @@
     "G15": {"status": "PENDING"},
     "G16": {"status": "PENDING"}
   },
-  "historicalCertifiedRun": {
-    "runId": 32199369265,
-    "sourceFingerprint": "e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
-    "status": "PASS_HISTORICAL_NOT_REUSABLE_AFTER_SOURCE_HARDENING"
-  },
+  "historicalCertifiedRuns": [
+    {"runId":32199369265,"sourceFingerprint":"e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27","status":"PASS_HISTORICAL_NOT_REUSABLE_AFTER_SOURCE_HARDENING"},
+    {"runId":32220651006,"sourceFingerprint":"c9a1fb57c6ce083fa6a85b9947b9f0704c16dee788a4e7dd71a442ca2ddce87d","status":"PASS_HISTORICAL_NOT_REUSABLE_AFTER_F005_VERIFIER_HARDENING"}
+  ],
+  "trigger":{"purpose":"FINAL_F005_G11_G16_CERTIFICATION","baseCandidate":"d5e6721818686f30d737db20c91967215c4cd470","mergeProhibited":true},
   "residuals": [
     "TradeInsight remains governed future/shadow work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved."
   ],
   "releaseBlockingResiduals": ["Fresh publish=false G11-G16 certification is required for final source fingerprint eb0e75e3 before Stable promotion."],
-  "nextRequiredEvidence": "Reconcile v18.6-release-certification to this exact G10-qualified tree, dispatch one publish=false release.yml run, and require G11-G16 PASS before merge/promotion.",
-  "updatedAt": "2026-08-19T05:50:00Z"
+  "nextRequiredEvidence": "One publish=false release.yml run on exact base d5e67218; require G11-G16 PASS before main merge or promotion.",
+  "updatedAt": "2026-08-19T05:56:00Z"
 }
