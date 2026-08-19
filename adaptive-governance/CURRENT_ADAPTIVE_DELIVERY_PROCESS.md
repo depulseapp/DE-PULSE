@@ -7,11 +7,11 @@ This document is the current delivery overlay for `ADAPTIVE_DELIVERY_PROCESS.md`
 
 ## Delivery objective
 
-Deliver the smallest coherent high-value change with complete affected-risk evidence, predictable runner cost, immutable provenance and a handoff another authorized AI/account can resume from immediately.
+Deliver the smallest coherent high-value change with complete affected-risk evidence, predictable runner consumption, immutable provenance and a handoff another authorized AI/account can resume from immediately.
 
 ## Normal delivery path
 
-`development branch → Draft PR → Fast → same PR Ready → Qualified → merge → Release only when required → Stable`
+`development branch → batch coherent work → Draft PR → Fast → same PR Ready → Qualified → merge → Release only when required → Stable`
 
 Expected normal counts for a clean slice:
 
@@ -21,7 +21,7 @@ Expected normal counts for a clean slice:
 - 1 Qualified candidate run;
 - 1 Release G11–G16 run only for a release-capable merge.
 
-Legitimate source fixes may add Fast/Qualified attempts on the same branch/PR. Infrastructure retries do not create branches or new product identities.
+Legitimate source fixes may add Fast/Qualified attempts on the same branch/PR. Infrastructure retries do not create branches or new product identities. Preparatory file writes should be batched before opening the PR whenever practical so they do not create avoidable `synchronize` runs.
 
 ## Delivery checkpoints
 
@@ -31,12 +31,14 @@ Legitimate source fixes may add Fast/Qualified attempts on the same branch/PR. I
 - Scope and permanent boundaries confirmed.
 - Impact/risk classes identified.
 - No duplicate architecture owner introduced.
+- Coherent branch work assembled before PR open where practical.
 
 ### Draft PR / Fast
 
 - Draft communicates that source may still move.
 - Fast provides cheap exact-head feedback.
 - Superseded Fast work may be cancelled.
+- One logical correction should normally produce one new candidate SHA and one Fast synchronization.
 
 ### Ready / Qualified
 
@@ -45,7 +47,8 @@ Legitimate source fixes may add Fast/Qualified attempts on the same branch/PR. I
 - Process-only changes use harness + portability.
 - Product/mixed changes use full affected product qualification.
 - Release Rehearsal is mandatory for CI/release-tooling risk.
-- Targeted WebKit becomes mandatory when the dedicated hardening packet connects the current `webkit_required` signal to execution.
+- Chrome + WebKit are co-primary browser engines; both are required for full/browser qualification, and WebKit is also required for renderer/UI or WebKit-harness risk.
+- Qualified records compact telemetry for queue/runtime/platform runner use, browser dependency setup/cache signals and workflow amplification.
 
 ### Merge
 
@@ -77,24 +80,29 @@ Every failure must be classified before choosing a retry action:
 - `EXPECTED_NOOP`: retain as intentional evidence.
 - `SUPERSEDED`: obsolete run may be cancelled/ignored in favor of newer exact head.
 
-## Efficiency telemetry target
+Repeated same-SHA infrastructure retries are bounded: retry only when there is a reasonable recovery signal; otherwise stop and investigate rather than consume Actions in a loop.
 
-For each completed slice, G16 should increasingly report:
+## Efficiency telemetry
 
-- number of branches and PRs;
-- Fast/Qualified/Release run counts;
-- queue time and execution time by lane;
-- native-runner use;
-- cache hit/miss where meaningful;
-- failure category counts;
-- avoided duplicate work;
-- end-to-end time from first Draft PR to completion/Stable.
+For each Qualified candidate, retain compact operational evidence for:
 
-The desired trend is fewer duplicate events and lower irrelevant runner use, not fewer quality checks for affected risk.
+- exact candidate SHA and selected lane;
+- Fast/Qualified/Release counts on the PR branch;
+- queue time and execution time per completed job;
+- Linux/macOS/Windows runner minutes;
+- Chrome/WebKit dependency setup duration and pip cache-hit state where applicable;
+- amplification warnings above conservative thresholds.
+
+Telemetry records platform consumption, not invented dollar values. Actual currency cost remains the billing system's authority. Telemetry warnings are diagnostic: they surface event amplification but never justify skipping required quality checks.
 
 ## Artifact/evidence retention
 
-Transient CI logs may expire. Stable truth must become durable through a compact release evidence manifest containing source SHA/fingerprint, canonical run IDs, artifact hashes, required gate states and tool/dependency versions. This is a planned hardening packet; existing immutable release evidence is preserved until then.
+Transient CI logs may expire. Two layers are retained:
+
+1. **Stable truth:** repo-durable compact Stable evidence manifest bound to the authoritative release evidence checkpoint, including source/fingerprint, canonical run IDs, artifact hashes and gate states.
+2. **Operational CI telemetry:** compact Qualified JSON artifact retained for 30 days plus a human-readable job summary.
+
+A retrospective Stable manifest does not redefine an already published immutable tag/binary.
 
 ## Repository hygiene after delivery
 
@@ -106,4 +114,4 @@ Transient CI logs may expire. Stable truth must become durable through a compact
 
 ## Delivery quality rule
 
-Optimization may change scheduling, lane selection, caching or runner choice. It may never bypass exact-source provenance, affected functional evidence, deterministic truth checks, provider/data/security/rights controls, required native Stable proof, same-artifact publication, G0–G16 governance or permanent product boundaries.
+Optimization may change scheduling, lane selection, caching or runner choice. It may never bypass exact-source provenance, affected functional evidence, Chrome + WebKit browser proof when required, deterministic truth checks, provider/data/security/rights controls, required native Stable proof, same-artifact publication, G0–G16 governance or permanent product boundaries.
