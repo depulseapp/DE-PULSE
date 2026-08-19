@@ -4,6 +4,13 @@
 This is an owning-check inside existing G0/G2/G10 qualification, not a new gate.
 Checkpoint metadata is deliberately fingerprint-excluded so recording progress
 cannot mutate the product candidate it describes.
+
+The resume model intentionally distinguishes two truths during an in-flight
+release slice:
+1) the immutable last certified Stable checkpoint/release evidence; and
+2) the current canonical release candidate identity + engineering branch.
+Preparing a new candidate must never rewrite prior Stable PASS evidence merely
+so version strings match.
 """
 from pathlib import Path
 import json, re, sys
@@ -11,9 +18,11 @@ import json, re, sys
 ROOT = Path(__file__).resolve().parent
 errors = []
 
+
 def need(ok, msg):
     if not ok:
         errors.append(msg)
+
 
 required_docs = [
     ROOT / 'AGENTS.md',
@@ -29,6 +38,7 @@ required_docs = [
 for p in required_docs:
     need(p.exists(), f'missing permanent resume governance document: {p.relative_to(ROOT)}')
 
+handoff = ''
 if all(p.exists() for p in required_docs):
     corpus = '\n'.join(p.read_text(errors='ignore') for p in required_docs)
     for term in [
@@ -74,6 +84,11 @@ except Exception as exc:
     ident = {}
     errors.append(f'release identity unreadable: {exc}')
 
+identity_release = str(ident.get('version', '')).lstrip('v')
+identity_build = str(ident.get('build_id', ''))
+identity_previous_stable = str(ident.get('previous_stable', '')).lstrip('v')
+identity_stable_baseline = str(ident.get('stable_baseline', '')).lstrip('v')
+
 try:
     plan = json.loads(plan_path.read_text())
     policy = plan.get('policy', {})
@@ -97,15 +112,22 @@ try:
 except Exception as exc:
     errors.append(f'fingerprint owner validation failed: {exc}')
 
+stable_release = ''
 try:
     cp = json.loads(checkpoint_path.read_text())
     schema = cp.get('schemaVersion')
     need(isinstance(schema, int) and schema >= 2, 'build checkpoint schemaVersion must be v2 or later')
-    release = str(cp.get('release', '')).lstrip('v')
-    need(release == str(ident.get('version', '')).lstrip('v'), 'checkpoint release must match canonical release identity')
+    stable_release = str(cp.get('release', '')).lstrip('v')
+    need(bool(stable_release), 'build checkpoint Stable release missing')
+    need(cp.get('channel') == 'STABLE', 'build checkpoint must describe certified Stable evidence')
     need(cp.get('branch'), 'checkpoint branch missing')
 
     certified = cp.get('certifiedStable', {}) if isinstance(cp.get('certifiedStable'), dict) else {}
+    certified_release = str(certified.get('version', '')).lstrip('v')
+    need(certified_release == stable_release, 'checkpoint release must match certifiedStable version')
+    need(identity_previous_stable == stable_release, 'canonical release identity previous_stable must match immutable Stable checkpoint')
+    need(identity_stable_baseline == stable_release, 'canonical release identity stable_baseline must match immutable Stable checkpoint')
+
     candidate = cp.get('candidateSourceCommit') or certified.get('candidateSourceCommit') or certified.get('certifiedSourceCheckout')
     need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidate source commit must be a Git SHA')
 
@@ -127,8 +149,32 @@ try:
     need(portability.get('status') == 'ENFORCED', 'checkpoint assistantPortability must be ENFORCED')
     need(portability.get('authoritativeHandoff') == 'handoff/CURRENT.md', 'checkpoint authoritative handoff drift')
     need(portability.get('entrypoints') == ['AGENTS.md', 'CLAUDE.md'], 'checkpoint assistant entrypoints drift')
-    need(f'**Release:** `v{release}`' in handoff, 'current handoff release must match checkpoint/release identity')
-    need(f"**Active branch:** `{cp.get('branch')}`" in handoff, 'current handoff branch must match checkpoint')
+
+    stable_handoff_ok = (
+        f'**Certified Stable:** `v{stable_release}-stable`' in handoff or
+        f'**Release:** `v{stable_release}`' in handoff
+    )
+    need(stable_handoff_ok, 'current handoff must identify the immutable Stable checkpoint release')
+
+    if identity_release != stable_release:
+        expected_engineering_branch = f'v{identity_release}-development'
+        need(
+            f'**Engineering branch:** `{expected_engineering_branch}`' in handoff,
+            'current handoff engineering branch must match in-flight canonical release identity',
+        )
+        need(
+            f'**Candidate package identity:** `{identity_release}` / `{identity_build}`' in handoff,
+            'current handoff candidate identity/build must match canonical release identity',
+        )
+        need(
+            'checkpoints intentionally remain anchored' in handoff or 'checkpoints intentionally remain anchored'.lower() in handoff.lower(),
+            'current handoff must explain why Stable checkpoints remain immutable during candidate development',
+        )
+    else:
+        # Post-promotion/steady-state handoffs may use the historical Active branch
+        # wording or the newer Certified Stable format.
+        old_branch_ok = f"**Active branch:** `{cp.get('branch')}`" in handoff
+        need(old_branch_ok or stable_handoff_ok, 'current handoff must reconcile active Stable branch/release')
 except Exception as exc:
     errors.append(f'build checkpoint invalid/unreadable: {exc}')
 
@@ -136,7 +182,11 @@ try:
     ev = json.loads(evidence_path.read_text())
     schema = ev.get('schemaVersion')
     need(isinstance(schema, int) and schema >= 2, 'release evidence checkpoint schemaVersion must be v2 or later')
-    need(str(ev.get('release', '')).lstrip('v') == str(ident.get('version', '')).lstrip('v'), 'release evidence checkpoint release mismatch')
+    evidence_release = str(ev.get('release', '')).lstrip('v')
+    need(evidence_release == stable_release, 'release evidence checkpoint must match immutable Stable build checkpoint')
+    need(ev.get('channel') == 'STABLE', 'release evidence checkpoint must describe certified Stable evidence')
+    stable = ev.get('stable', {}) if isinstance(ev.get('stable'), dict) else {}
+    need(stable.get('tag') == f'v{stable_release}-stable', 'release evidence Stable tag mismatch')
     need(isinstance(ev.get('evidence'), dict), 'release evidence checkpoint evidence map missing')
     evidence_metadata_rule = ev.get('metadataHeadRule')
     if not evidence_metadata_rule:
@@ -153,4 +203,10 @@ if errors:
         print(' -', e)
     sys.exit(1)
 
-print('Adaptive Build Resume Contract: PASS · GitHub-only ChatGPT/Codex/Claude portability enforced · current handoff + checkpoint reconciled · four adaptive layers integrated · metadata fingerprint-excluded')
+mode = 'IN_FLIGHT_CANDIDATE' if identity_release != stable_release else 'STABLE_ALIGNED'
+print(
+    'Adaptive Build Resume Contract: PASS · '
+    f'mode={mode} · immutable Stable=v{stable_release} · canonical candidate=v{identity_release} · '
+    'GitHub-only ChatGPT/Codex/Claude portability enforced · current handoff + Stable checkpoints reconciled · '
+    'four adaptive layers integrated · metadata fingerprint-excluded'
+)
