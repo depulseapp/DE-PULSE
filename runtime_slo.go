@@ -36,16 +36,16 @@ type RuntimeStartupDiagnostics struct {
 }
 
 type RuntimeRecoveryDiagnostics struct {
-	CurrentlyStaleDatasets          int   `json:"currentlyStaleDatasets"`
-	StaleToCurrentEvents            int64 `json:"staleToCurrentEvents"`
-	LastStaleToCurrentMs            int64 `json:"lastStaleToCurrentMs,omitempty"`
-	DegradationRecoveryEvents       int64 `json:"degradationRecoveryEvents"`
-	LastDegradationRecoveryMs       int64 `json:"lastDegradationRecoveryMs,omitempty"`
-	DegradedSince                   int64 `json:"degradedSince,omitempty"`
-	DegradationRecoveryPending      bool  `json:"degradationRecoveryPending,omitempty"`
-	DegradationHealthyObservations  int   `json:"degradationHealthyObservations,omitempty"`
-	DegradationHealthyRequired      int   `json:"degradationHealthyRequired,omitempty"`
-	DegradationHealthySince         int64 `json:"degradationHealthySince,omitempty"`
+	CurrentlyStaleDatasets         int   `json:"currentlyStaleDatasets"`
+	StaleToCurrentEvents           int64 `json:"staleToCurrentEvents"`
+	LastStaleToCurrentMs           int64 `json:"lastStaleToCurrentMs,omitempty"`
+	DegradationRecoveryEvents      int64 `json:"degradationRecoveryEvents"`
+	LastDegradationRecoveryMs      int64 `json:"lastDegradationRecoveryMs,omitempty"`
+	DegradedSince                  int64 `json:"degradedSince,omitempty"`
+	DegradationRecoveryPending     bool  `json:"degradationRecoveryPending,omitempty"`
+	DegradationHealthyObservations int   `json:"degradationHealthyObservations,omitempty"`
+	DegradationHealthyRequired     int   `json:"degradationHealthyRequired,omitempty"`
+	DegradationHealthySince        int64 `json:"degradationHealthySince,omitempty"`
 }
 
 type RuntimeSLOTracker struct {
