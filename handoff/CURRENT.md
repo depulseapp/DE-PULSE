@@ -14,9 +14,11 @@
 **Repository:** `depulseapp/DE-PULSE`  
 **Last updated:** 2026-08-19 America/Vancouver
 
+`Active branch` above intentionally preserves the certified v18.6 checkpoint identity required by the permanent resume contract; v18.6 product work is closed and the next product branch is `v18.6.1-development`.
+
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone. Resume from the last trustworthy PASS recorded in GitHub evidence.
 
 ## Current Stable truth
 
@@ -26,15 +28,15 @@ The product invariants remain unchanged: U.S. Equities Processing Boundary, perm
 
 ## CI/process correction after v18.6
 
-The v18.6 release exposed CI event amplification: temporary certification/promotion/retry/dispatch branches and PRs were used to manufacture GitHub events; CI Fast listened to both PR lifecycle and version-branch pushes; PR close could rerun the same source; Fast also dispatched Release; and macOS/Windows portability ran more often than necessary.
+The v18.6 release exposed CI event amplification: temporary certification/promotion/retry/dispatch branches and PRs were used to manufacture GitHub events; CI Fast listened to overlapping PR and version-branch events; PR close could rerun validated source; Fast also dispatched Release; and macOS/Windows portability ran more often than necessary.
 
-That process is superseded by `governance/CI-EFFICIENCY-CONTRACT.md` and the canonical three-workflow model:
+The permanent replacement is `governance/CI-EFFICIENCY-CONTRACT.md` with exactly three canonical workflows:
 
-- **CI Fast:** PR opened/synchronize/reopened only for the Fast validation job. The workflow also listens to `main` pushes solely so branch hygiene can execute; the Fast validation job is skipped on those merge pushes. There is no PR-close trigger, development-branch push trigger, Release dispatcher, or per-success impact-plan artifact.
-- **CI Qualified / G10:** normal automatic trigger is `Ready for review`; product candidates use Linux backend/renderer/browser qualification; macOS/Windows portability is reserved for CI/harness changes.
-- **Release G11–G16:** one merged `v*-development → main` release PR that changes `release_identity.json` starts one workflow. G11 first proves that the exact PR head passed both CI Fast and CI Qualified and that its canonical source fingerprint equals the merged candidate. The same workflow then performs full certification, native macOS/Windows package/runtime audit, G15 assurance, publishes the exact same-run certified artifacts without rebuild, and emits G16 evidence.
-- **Retries:** rerun failed jobs on the same SHA for infrastructure failures or fix the same development branch/PR for code/test failures. Never create retry/trigger/fallback branches or PRs.
-- **Branch hygiene:** on `main` pushes, remove fully merged branches and closed/orphaned legacy release-temp branches while preserving branches with open PRs; this does not require rerunning Fast tests.
+- **CI Fast:** PR opened/synchronize/reopened only for validation. It explicitly validates the PR source head and records `DE.PULSE/fast-head` on that exact SHA. The workflow also listens to `main` pushes solely for branch hygiene; Fast validation is skipped on those pushes. No Release dispatcher or per-success impact artifact exists.
+- **CI Qualified / G10:** normal automatic trigger is `Ready for review`. It validates the exact candidate source head and records `DE.PULSE/qualified-head`. Product candidates use Linux backend/renderer/browser qualification; macOS/Windows portability is reserved for CI/harness changes.
+- **Release G11–G16:** one merged `v*-development → main` PR that changes `release_identity.json` starts one Release workflow. G11 fails closed unless both exact-head G10 statuses are successful, the pull-request source ref still identifies that exact head, and its canonical fingerprint equals the merged candidate. The same run then performs G12, native macOS/Windows G13/G14, G15 assurance, exact same-run no-rebuild publication and G16.
+- **Retries:** same SHA infrastructure failures rerun only failed jobs; source/test fixes stay on the same development branch and PR. Never create retry/trigger/fallback branches or PRs.
+- **Branch hygiene:** main pushes perform cleanup without rerunning Fast tests. Open-PR branches are preserved; merged PR heads (including squash merges), fully merged branches, already-Stable release-line branches and closed/orphaned release-temp branches are removed conservatively.
 
 Exactly three active workflow files remain permitted: `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0–G16 remains the only top-level gate model.
 
