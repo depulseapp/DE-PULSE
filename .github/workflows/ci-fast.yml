@@ -2,20 +2,17 @@ name: DE.PULSE | CI Fast
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
-      - 'v*-development'
-      - 'v*-release-certification'
-      - 'v*-stable-promotion'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-fast-${{ github.ref }}
+  group: depulse-ci-fast-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -103,239 +100,22 @@ jobs:
             echo "- Go lane required: ${{ steps.impact.outputs.go_required }}"
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- workflow policy: PASS'
-            echo '- watchlist membership contract: PASS'
-            echo '- v18.6 surface consolidation contract: PASS when renderer lane is selected'
-            echo '- v18.6 role-aware documentation contract: PASS when renderer lane is selected'
             echo '- adaptive resume portability: PASS'
             echo '- Git-object provenance: PASS'
+            echo '- release dispatch: NOT PERMITTED from CI Fast'
           } >> "$GITHUB_STEP_SUMMARY"
-      - name: Retain impact plan
-        uses: actions/upload-artifact@v7
-        with:
-          name: DE-PULSE-ci-impact-${{ github.sha }}
-          path: ci-impact-plan.json
-          if-no-files-found: error
-          retention-days: 7
-
-  release-dispatch:
-    name: Dispatch canonical G11-G16 release workflow
-    needs: fast
-    if: ${{ (github.event_name == 'push' && (endsWith(github.ref, '-release-certification') || (endsWith(github.ref, '-stable-promotion') && (github.actor == github.repository_owner || github.event.sender.login == github.repository_owner)))) || (github.event_name == 'pull_request' && github.event.action != 'closed' && endsWith(github.event.pull_request.base.ref, '-release-certification') && github.actor == github.repository_owner) || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && endsWith(github.event.pull_request.base.ref, '-stable-promotion') && (github.actor == github.repository_owner || github.event.pull_request.merged_by.login == github.repository_owner)) }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      actions: write
-      issues: write
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - id: release
-        name: Resolve immutable release inputs
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_ACTION: ${{ github.event.action }}
-          PR_MERGED: ${{ github.event.pull_request.merged }}
-          PR_MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 release_identity.py --verify
-          version="$(python3 -c 'import json; print(json.load(open("release_identity.json"))["version"])')"
-          build_id="$(python3 -c 'import json; print(json.load(open("release_identity.json"))["build_id"])')"
-          release_line="${version%.*}"
-          script="release/v${version}/run_full_certification.sh"
-          test -f "$script"
-          promotion_sha=""
-          certification_run_id=""
-          case "$GITHUB_EVENT_NAME" in
-            push)
-              release_ref="$GITHUB_REF_NAME"
-              event_sha="$GITHUB_SHA"
-              ;;
-            pull_request)
-              release_ref="${PR_BASE_REF:-}"
-              if [[ "$release_ref" == *-stable-promotion ]]; then
-                test "${PR_ACTION:-}" = "closed"
-                test "${PR_MERGED:-}" = "true"
-                event_sha="${PR_MERGE_SHA:-}"
-              else
-                test "${PR_ACTION:-}" != "closed"
-                event_sha="${PR_BASE_SHA:-}"
-              fi
-              ;;
-            *)
-              echo "ERROR: unsupported release dispatcher event $GITHUB_EVENT_NAME" >&2
-              exit 2
-              ;;
-          esac
-          test -n "$release_ref"
-          test -n "$event_sha"
-          case "$release_ref" in
-            "v${release_line}-release-certification")
-              publish=false
-              candidate_sha="$event_sha"
-              fingerprint="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
-              ;;
-            "v${release_line}-stable-promotion")
-              publish=true
-              promotion_sha="$event_sha"
-              checkpoint=".depulse-certification/resume/release-evidence-checkpoint.json"
-              test -f "$checkpoint"
-              readarray -t promotion_values < <(VERSION="$version" BUILD_ID="$build_id" python3 - <<'PY'
-          import json, os
-          cp=json.load(open('.depulse-certification/resume/release-evidence-checkpoint.json'))
-          cur=cp['currentCandidate']; ev=cp['evidence']
-          assert cur['version']==f"v{os.environ['VERSION']}", cur
-          assert cur['buildId']==os.environ['BUILD_ID'], cur
-          assert cur['promotionState']=='READY_NOT_PROMOTED', cur
-          assert cur['publish'] is False, cur
-          assert ev['G10']['status']=='PASS', ev['G10']
-          assert ev['G11']['status']=='PASS', ev['G11']
-          assert ev['G12']['status']=='PASS', ev['G12']
-          assert ev['G13-G14-macOS-Apple-Silicon']['status']=='PASS', ev['G13-G14-macOS-Apple-Silicon']
-          assert ev['G13-G14-Windows-x64']['status']=='PASS', ev['G13-G14-Windows-x64']
-          assert ev['G15']['status']=='PASS_RELEASE_ASSURANCE', ev['G15']
-          assert ev['G16']['status']=='PASS_CLOSED', ev['G16']
-          print(cur['releaseCandidateCommit'])
-          print(cur['sourceFingerprint'])
-          print(cur['canonicalReleaseRun'])
-          PY
-              )
-              candidate_sha="${promotion_values[0]}"
-              fingerprint="${promotion_values[1]}"
-              certification_run_id="${promotion_values[2]}"
-              test -n "$candidate_sha"
-              test -n "$fingerprint"
-              test -n "$certification_run_id"
-              test "$(python3 source_fingerprint.py --mode git --commit "$promotion_sha")" = "$fingerprint"
-              ;;
-            *)
-              echo "ERROR: release branch $release_ref does not match release identity $version" >&2
-              exit 2
-              ;;
-          esac
-          tracking_pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "v${release_line}-development" --base main --state open --json number --jq '.[0].number // empty')"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
-          echo "script=$script" >> "$GITHUB_OUTPUT"
-          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
-          echo "publish=$publish" >> "$GITHUB_OUTPUT"
-          echo "tracking_pr=$tracking_pr" >> "$GITHUB_OUTPUT"
-          echo "release_ref=$release_ref" >> "$GITHUB_OUTPUT"
-          echo "candidate_sha=$candidate_sha" >> "$GITHUB_OUTPUT"
-          echo "promotion_sha=$promotion_sha" >> "$GITHUB_OUTPUT"
-          echo "certification_run_id=$certification_run_id" >> "$GITHUB_OUTPUT"
-      - name: Announce dispatcher execution on release PR
-        if: ${{ steps.release.outputs.tracking_pr != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TRACKING_PR: ${{ steps.release.outputs.tracking_pr }}
-          VERSION: ${{ steps.release.outputs.version }}
-          EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
-          PUBLISH: ${{ steps.release.outputs.publish }}
-          RELEASE_REF: ${{ steps.release.outputs.release_ref }}
-          CANDIDATE_SHA: ${{ steps.release.outputs.candidate_sha }}
-          PROMOTION_SHA: ${{ steps.release.outputs.promotion_sha }}
-          CERTIFICATION_RUN_ID: ${{ steps.release.outputs.certification_run_id }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          body="🚦 DE.PULSE v${VERSION} release dispatcher active · Fast/dispatcher run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · ref \`${RELEASE_REF}\` · candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH} · promotion=\`${PROMOTION_SHA:-n/a}\` · certified-run=${CERTIFICATION_RUN_ID:-n/a}."
-          if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
-            echo "::warning::PR tracking comment unavailable to workflow token; continuing and retaining release identity in Actions evidence."
-          fi
-      - id: dispatch
-        name: Reuse or dispatch exact candidate release run
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.release.outputs.version }}
-          BUILD_ID: ${{ steps.release.outputs.build_id }}
-          CERTIFICATION_SCRIPT: ${{ steps.release.outputs.script }}
-          EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
-          PUBLISH: ${{ steps.release.outputs.publish }}
-          TRACKING_PR: ${{ steps.release.outputs.tracking_pr }}
-          RELEASE_REF: ${{ steps.release.outputs.release_ref }}
-          CANDIDATE_SHA: ${{ steps.release.outputs.candidate_sha }}
-          PROMOTION_SHA: ${{ steps.release.outputs.promotion_sha }}
-          CERTIFICATION_RUN_ID: ${{ steps.release.outputs.certification_run_id }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          dispatch_sha="$CANDIDATE_SHA"
-          if [ "$PUBLISH" = "true" ]; then dispatch_sha="$PROMOTION_SHA"; fi
-          export DISPATCH_SHA="$dispatch_sha"
-          existing="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml --branch "$RELEASE_REF" --event workflow_dispatch --limit 20 --json databaseId,status,conclusion,headBranch,headSha,url --jq '.[] | select(.headBranch==env.RELEASE_REF and .headSha==env.DISPATCH_SHA) | select(.status!="completed" or .conclusion=="success") | @base64' | head -n1)"
-          if [ -n "$existing" ]; then
-            run_json="$(printf '%s' "$existing" | base64 --decode)"
-            run_id="$(printf '%s' "$run_json" | jq -r '.databaseId')"
-            run_url="$(printf '%s' "$run_json" | jq -r '.url')"
-            state="$(printf '%s' "$run_json" | jq -r 'if .status=="completed" then .conclusion else .status end')"
-            echo "PASS: reusing release.yml run $run_id for dispatcher head $dispatch_sha ($state)"
-          else
-            before_ids="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml --branch "$RELEASE_REF" --event workflow_dispatch --limit 20 --json databaseId --jq '.[].databaseId')"
-            gh workflow run release.yml \
-              --repo "$GITHUB_REPOSITORY" \
-              --ref "$RELEASE_REF" \
-              -f candidate_sha="$CANDIDATE_SHA" \
-              -f version="$VERSION" \
-              -f build_id="$BUILD_ID" \
-              -f certification_script="$CERTIFICATION_SCRIPT" \
-              -f expected_source_fingerprint="$EXPECTED_FINGERPRINT" \
-              -f publish="$PUBLISH" \
-              -f promotion_sha="$PROMOTION_SHA" \
-              -f certification_run_id="$CERTIFICATION_RUN_ID"
-            run_id=""
-            run_url=""
-            for _ in $(seq 1 30); do
-              latest="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml --branch "$RELEASE_REF" --event workflow_dispatch --limit 1 --json databaseId,headSha,url --jq '.[0] // {}')"
-              candidate_id="$(printf '%s' "$latest" | jq -r '.databaseId // empty')"
-              latest_sha="$(printf '%s' "$latest" | jq -r '.headSha // empty')"
-              if [ -n "$candidate_id" ] && [ "$latest_sha" = "$dispatch_sha" ] && ! grep -qx "$candidate_id" <<< "$before_ids"; then
-                run_id="$candidate_id"
-                run_url="$(printf '%s' "$latest" | jq -r '.url')"
-                break
-              fi
-              sleep 2
-            done
-            test -n "$run_id"
-            echo "PASS: dispatched release.yml run $run_id · candidate=$CANDIDATE_SHA · promotion=${PROMOTION_SHA:-n/a} · certified-run=${CERTIFICATION_RUN_ID:-n/a} · v$VERSION · publish=$PUBLISH"
-          fi
-          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
-          echo "run_url=$run_url" >> "$GITHUB_OUTPUT"
-          {
-            echo '## DE.PULSE release dispatch'
-            echo "- release ref: \`$RELEASE_REF\`"
-            echo "- certified candidate: \`$CANDIDATE_SHA\`"
-            echo "- fingerprint: \`$EXPECTED_FINGERPRINT\`"
-            echo "- promotion target: \`${PROMOTION_SHA:-n/a}\`"
-            echo "- certification run reused by promotion: \`${CERTIFICATION_RUN_ID:-n/a}\`"
-            echo "- publish: \`$PUBLISH\`"
-            echo "- canonical release run ID: \`$run_id\`"
-            echo "- canonical release run: $run_url"
-          } >> "$GITHUB_STEP_SUMMARY"
-          if [ -n "$TRACKING_PR" ]; then
-            body="🔗 DE.PULSE v${VERSION} canonical release run: ${run_url} · run ${run_id} · certified candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH} · promotion=\`${PROMOTION_SHA:-n/a}\` · certified-run=${CERTIFICATION_RUN_ID:-n/a}."
-            if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
-              echo "::warning::Canonical run comment unavailable to workflow token; run identity remains retained in this Actions job and may be bound to PR #16 by the connected GitHub app."
-            fi
-          fi
 
   branch-hygiene:
-    name: Remove only branches fully merged into main
+    name: Remove merged and deprecated release-temp branches
     needs: fast
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: write
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -348,4 +128,4 @@ jobs:
           name: DE-PULSE-branch-hygiene-${{ github.sha }}
           path: branch-hygiene.json
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
