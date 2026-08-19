@@ -2,91 +2,48 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
-**Release:** `v18.6.0`  
-**Active branch:** `v18.6-development`  
-**Stable predecessor:** `v18.5.2-stable` / G0–G16 CLOSED  
-**Operational state:** read fingerprint-excluded checkpoints + PR #16 for the live gate/promotion state; this handoff defines the durable v18.6 release contract  
+**Certified Stable:** `v18.6.0-stable`  
+**Stable promotion commit:** `2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c`  
+**Certified source:** `d375852d846f8c9f0045ac929da1830b85ad629e`  
+**Certified source fingerprint:** `e8c009c16eedb448ed5b9731d8dd24026a7ea0b5a2b5c82e26490a2941b7b4c8`  
+**Canonical certification run:** `32225064225`  
+**Historical v18.6 promotion run:** `32225910416`  
+**Next product branch:** `v18.6.1-development`  
 **Repository:** `depulseapp/DE-PULSE`  
-**Main release PR:** `#16`  
-**v18.6 runtime build ID:** `v18.6.0-stable-20260818`  
-**Last updated:** 2026-08-18 America/Vancouver
+**Last updated:** 2026-08-19 America/Vancouver
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, PR #16, current checks, the release-certification branch, and the immutable Stable predecessor. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone.
 
-`source_fingerprint.py` excludes `.depulse-certification` only. Workflow definitions, certification harnesses, browser proofs/contracts, and this handoff are source-fingerprinted. Any change to them requires fresh G10 before G11.
+## Current Stable truth
 
-## Product state
+v18.6.0 is fully implemented, certified and published. G0–G16 are closed for that immutable Stable. The certified native macOS Apple Silicon and Windows x64 artifacts and G15/G16 evidence remain authoritative through the Stable release/checkpoints. No v18.6.0 release blocker remains.
 
-All eight v18.6 product slices remain code-complete. This change is release-process-only: it does not change the renderer, backend product behavior, deterministic Day/Swing/Long formulas, Smart Provider Router ownership, provider-count/Market-Mode rule, GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, U.S. Equities Processing Boundary, or permanent No Execution Boundary.
+The product invariants remain unchanged: U.S. Equities Processing Boundary, permanent No Execution Boundary, deterministic Day/Swing/Long formulas, Smart Provider Router ownership, provider-count/Market-Mode rule, GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, and governed SHADOW → VALIDATED → APPROVED → PRODUCTION influence.
 
-The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0–G16 remains the only top-level gate model.
+## CI/process correction after v18.6
 
-## Last trustworthy PASS before promotion-path source change
+The v18.6 release exposed CI event amplification: temporary certification/promotion/retry/dispatch branches and PRs were used to manufacture GitHub events; CI Fast listened to both PR lifecycle and version-branch pushes; PR close could rerun the same source; Fast also dispatched Release; and macOS/Windows portability ran more often than necessary.
 
-Canonical `release.yml` run `32199369265` completed SUCCESS on release-certification candidate `10a89f2b94629aa83d588f5a893c0dd7e83334d6`, source fingerprint `e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27`:
-- G11 immutable candidate/provenance: PASS;
-- G12 authoritative full certification: PASS;
-- G13/G14 macOS Apple Silicon package + actual packaged runtime audit: PASS;
-- G13/G14 Windows x64 package + actual packaged runtime audit: PASS;
-- G15 Release Assurance: PASS;
-- G16 adaptive handoff: PASS;
-- publication: deliberately SKIPPED because `publish=false`.
+That process is superseded by `governance/CI-EFFICIENCY-CONTRACT.md` and the canonical three-workflow model:
 
-That run remains valid historical proof for the pre-hardening source. It cannot certify the workflow/handoff changes below because those files are source-fingerprinted.
+- **CI Fast:** PR opened/synchronize/reopened plus `main` push only; no PR-close trigger, no development-branch push trigger, no Release dispatcher, no per-success impact-plan artifact.
+- **CI Qualified / G10:** normal automatic trigger is `Ready for review`; product candidates use Linux backend/renderer/browser qualification; macOS/Windows portability is reserved for CI/harness changes.
+- **Release G11–G16:** one merged release PR that changes `release_identity.json` starts one workflow on the immutable merge commit; that same workflow performs full certification, native macOS/Windows package/runtime audit, G15 assurance, publishes the exact same-run certified artifacts without rebuild, then emits G16 evidence.
+- **Retries:** rerun failed jobs on the same SHA for infrastructure failures or fix the same development branch/PR for code/test failures. Never create retry/trigger/fallback branches or PRs.
+- **Branch hygiene:** remove fully merged branches and closed/orphaned legacy release-temp branches while preserving branches with open PRs.
 
-## Promotion-path defect found before Stable publication
+Exactly three active workflow files remain permitted: `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0–G16 remains the only top-level gate model.
 
-The pre-hardening `release.yml` labelled publication “no-rebuild” but `publish=true` still depended on the same-run G12/G13/G14/G15 jobs, so a promotion run would recertify and rebuild native artifacts before publishing. That violated the stronger DE.PULSE contract that Stable promotion must publish the exact already-certified artifacts.
+## Cost/quality rule
 
-A second portability problem existed for connected assistants: connector-originated branch writes do not reliably emit usable push-triggered Actions runs. Certification already has an owner-gated PR-event fallback. Stable promotion previously had no connector-safe equivalent.
-
-A third issue was caught during promotion review: the release-certification reconciliation commit is not guaranteed to be an ancestor of the eventual `main` merge commit even when both have the identical canonical source fingerprint. Stable identity therefore must be enforced by exact source fingerprint + release identity + certified evidence graph, not by a false release-branch ancestry requirement.
-
-## Hardened no-rebuild promotion contract
-
-The canonical workflows now define two distinct modes inside the same `release.yml`:
-
-1. **Certification mode (`publish=false`)**
-   - G11 → G12 → native macOS/Windows G13/G14 → G15 → G16 execute normally.
-   - Native artifacts and G15 assurance are retained by the successful certification run.
-
-2. **Promotion-reuse mode (`publish=true`)**
-   - G11 verifies the immutable certified candidate/fingerprint.
-   - G12, macOS G13/G14, Windows G13/G14, and G15 assurance jobs are explicitly skipped; they are never rebuilt or rerun.
-   - promotion requires `certification_run_id` and `promotion_sha` from the durable release-evidence checkpoint;
-   - `actions/download-artifact` downloads the exact macOS, Windows, and G15 artifacts from that successful certification run using `run-id` + `github-token`;
-   - promotion verifies the certification workflow run completed successfully and binds the same candidate SHA, source fingerprint, release version and build ID;
-   - native evidence JSON and G15 assurance JSON are revalidated;
-   - actual macOS/Windows ZIP SHA-256 values are recomputed and must equal their certified evidence and G15 graph;
-   - the promotion target must have the same canonical source fingerprint as the certified candidate;
-   - only then may `v18.6.0-stable` and its release assets be published.
-
-## Connector-safe Stable promotion event
-
-Stable promotion stays owner-controlled and exact-branch-gated. Normal push to exact `v<release-line>-stable-promotion` remains supported. In addition, a PR event may trigger Stable promotion **only after the PR is actually merged** into exact `v<release-line>-stable-promotion`, only when `pull_request.merged == true`, only for the repository owner, and only using the resulting merge commit as `promotion_sha`. There is no unmerged/open-PR Stable publication fallback.
-
-Release-certification keeps its existing owner-gated unmerged PR fallback with `publish=false` only.
-
-`tools/ci/workflow_policy.py` owns regression prevention for this separation, cross-run artifact reuse, publish-mode job suppression, evidence validation, and the merged-PR-only Stable promotion rule.
-
-## Durable qualification and promotion rule
-
-This handoff is intentionally state-neutral after the promotion-path hardening source is frozen. Live progress belongs in the fingerprint-excluded `.depulse-certification/resume/` checkpoints and PR #16 metadata. Do not edit this handoff merely to record gate progression.
-
-For any source-fingerprinted change, fresh Fast + Qualified G10 is mandatory before G11. Once exact-source G10 passes, run one `publish=false` G11–G16 certification. If that certification passes, merge/promote only through the evidence-bound promotion-reuse path, which must publish the exact certified artifacts without rerunning G12/G13/G14/G15. After a verified `v18.6.0-stable` publication, the checkpoints may record Stable completion without changing this source-fingerprinted handoff.
-
-## Known residuals / User Action Required
-
-- TradeInsight remains governed future/shadow work until separately validated and approved; it gains no production influence automatically.
-- Deployment-specific provider keys, entitlements and commercial/redistribution/AI-use rights remain User Action Required where absent or unapproved and fail closed.
-- Current certified Stable remains `v18.5.2-stable` until v18.6 promotion-reuse mode succeeds and the tag/release/artifacts are verified.
-
-## Exactly one next action
-
-**Read `.depulse-certification/resume/build-checkpoint.json` and `release-evidence-checkpoint.json`, reconcile PR #16 and current GitHub Actions, and resume from the earliest incomplete G0–G16/promotion step. If the current source has not yet passed G10, run exactly one Fast + Qualified pair. If G10 is PASS but G11–G16 is incomplete, run one `publish=false` certification. If G11–G16 is PASS and Stable is not published, perform evidence-bound promotion-reuse. If `v18.6.0-stable` is already verified, no release action remains.**
+Optimize event count, paid runner use and artifact retention before removing quality checks. Linux handles routine Fast/Qualified work; macOS/Windows remain mandatory where they establish real cross-platform CI-harness portability or final native G13/G14 runtime truth. Stable publication is impossible unless G11–G15 pass on the immutable merged candidate.
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, then inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16, current checks, and release branches. Treat `v18.5.2-stable` as immutable Stable until v18.6 promotion-reuse completes. Resume from the last trustworthy PASS and current source fingerprint, not chat memory. Preserve GitHub source-of-truth portability across ChatGPT/Codex/Claude, G0–G16, deterministic desk formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, `governance/CI-EFFICIENCY-CONTRACT.md`, `handoff/CURRENT.md`, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current PR/check state and latest Stable release. Treat `v18.6.0-stable` as immutable. Use one development branch + one PR for the next release, never create CI-trigger/retry/certification/promotion branches, and preserve all permanent product boundaries.
+
+## Exactly one next action
+
+After the CI-efficiency hardening PR is qualified and merged, start normal v18.6.1 intake on `v18.6.1-development` using one draft PR to `main`; no additional v18.6.0 release work is required.

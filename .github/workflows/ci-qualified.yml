@@ -2,13 +2,7 @@ name: DE.PULSE | CI Qualified
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/**'
-      - 'tools/ci/**'
-      - 'tools/release/**'
-      - 'source_fingerprint.py'
-      - 'release_identity.py'
-      - 'release_identity.json'
+    types: [ready_for_review]
   workflow_dispatch:
     inputs:
       candidate_sha:
@@ -40,7 +34,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-qualified-${{ github.ref }}-${{ inputs.lane || 'adaptive' }}
+  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}
   cancel-in-progress: true
 
 env:
@@ -71,10 +65,11 @@ jobs:
         env:
           INPUT_SHA: ${{ inputs.candidate_sha }}
           INPUT_LANE: ${{ inputs.lane }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -euo pipefail
-          sha="${INPUT_SHA:-$GITHUB_SHA}"
+          sha="${INPUT_SHA:-${PR_HEAD_SHA:-$GITHUB_SHA}}"
           git cat-file -e "$sha^{commit}"
           python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
           planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
@@ -85,13 +80,6 @@ jobs:
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
           echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned"
-      - name: Retain qualification impact plan
-        uses: actions/upload-artifact@v7
-        with:
-          name: DE-PULSE-qualified-impact-${{ github.sha }}
-          path: ci-qualified-impact-plan.json
-          if-no-files-found: error
-          retention-days: 7
 
   ci-harness:
     name: CI/harness contract
@@ -106,7 +94,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - name: Workflow allowlist
+      - name: Workflow allowlist and efficiency contract
         run: python3 tools/ci/workflow_policy.py
       - name: Git-object provenance regression
         shell: bash
@@ -121,6 +109,7 @@ jobs:
   portability:
     name: CI portability (${{ matrix.os }})
     needs: context
+    if: ${{ needs.context.outputs.lane == 'ci-harness' }}
     strategy:
       fail-fast: false
       matrix:
@@ -142,14 +131,12 @@ jobs:
           set -euo pipefail
           actual="$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')"
           test "$actual" = "${{ needs.context.outputs.fingerprint }}"
-          echo "$RUNNER_OS canonical fingerprint: $actual"
       - name: Same canonical Git-object fingerprint on Windows
         shell: pwsh
         if: ${{ runner.os == 'Windows' }}
         run: |
           $actual=(python source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
           if($actual -ne '${{ needs.context.outputs.fingerprint }}'){ throw "cross-platform fingerprint mismatch: $actual" }
-          Write-Host "$env:RUNNER_OS canonical fingerprint: $actual"
       - name: Parse reusable macOS harness
         if: ${{ runner.os == 'macOS' }}
         shell: bash
@@ -269,13 +256,12 @@ jobs:
         run: |
           set -euo pipefail
           test "$HARNESS" = success
-          test "$PORTABILITY" = success
           require(){ v="$1"; test "$v" = success || { echo "required lane result=$v"; exit 1; }; }
           case "$LANE" in
             full) require "$BACKEND"; require "$RENDERER"; require "$BROWSER" ;;
             backend) require "$BACKEND" ;;
             renderer) require "$RENDERER" ;;
             browser) require "$BROWSER" ;;
-            ci-harness) ;;
+            ci-harness) require "$PORTABILITY" ;;
           esac
-          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }} with cross-platform portability"
+          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}"
