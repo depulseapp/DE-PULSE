@@ -2,7 +2,7 @@
 
 **Operational overlay date:** 2026-08-19  
 **Immutable Stable baseline:** `v18.6.1-stable`  
-**Current engineering slice:** Phase 0 Packet D — durable CI evidence and telemetry  
+**Current engineering slice:** Phase 0 Packet E — renderer modularization foundation / Documentation owner  
 **Authority:** current execution overlay. Permanent contracts and historical release evidence remain intact.
 
 ## 1. Normal target lifecycle
@@ -109,27 +109,50 @@ Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
 - Primary WebKit runs on `macos-15` without Linux apt amplification.
 - Core watchlist/global-remove, membership semantics, short-height Settings save bar and centered header compatibility are covered.
 - Final Fast #393 PASS.
-- Final Qualified #138 PASS with real WebKit + Ubuntu/macOS/Windows portability; unrelated backend/renderer/Chrome product lanes were correctly skipped for the process-only packet.
+- Final Qualified #138 PASS with real WebKit + Ubuntu/macOS/Windows portability.
 
-### Packet D — ACTIVE
+### Packet D — COMPLETE
 
-Deliver:
+Merged PR #49 at `2885de409c86f771d582f09f54e0f6c564f6c59d`.
 
-1. `release/v18.6.1/stable-evidence-manifest.json` bound to the authoritative checkpoint and explicitly non-redefining.
-2. `stable_evidence_gate.py` to fail on Stable run/artifact/fingerprint drift.
-3. `ci_telemetry.py` + self-test for per-job queue/runtime/platform consumption and workflow amplification.
-4. Qualified telemetry artifact retained 30 days plus human-readable job summary.
-5. Linux/macOS/Windows runner-minute visibility; no fabricated currency estimates.
-6. Chrome/WebKit dependency setup duration and setup-python pip cache-hit signals when those lanes run.
-7. warning thresholds for abnormal per-PR Fast/Qualified/Release run counts; warnings inform investigation rather than blocking legitimate defect correction.
-8. zero-network workflow structural lint complementing DE.PULSE semantic policy checks.
-9. workflow policy integration so telemetry/evidence/lint cannot silently disappear.
+Delivered durable Stable evidence indexing, release-evidence drift validation, Qualified queue/runtime/platform telemetry, workflow-amplification warnings, browser setup/cache observability, 30-day compact telemetry retention, and zero-network workflow structural lint. Final Fast #396 and Qualified #139 passed through the intended process-only path.
 
-Packet D itself remains `ci-harness` + portability. It must not run WebKit merely because telemetry observes browser jobs, and it must not create a Stable release.
+### Packet E — ACTIVE: Documentation capability owner
 
-### Packet E — Renderer modularization foundation
+Fresh renderer inventory shows `renderer.js` at about 425 KB and `styles.css` about 316 KB. Runtime composition still begins with the classic monolith and then applies specialized layers. The correct first move is ownership extraction, not a big-bang rewrite.
 
-Incrementally extract capability owners from the large renderer/compatibility stack. Each migration requires deterministic equivalence plus required Chrome/WebKit/native evidence before removing former owners. Never delete based on file age alone.
+Bound Packet E scope:
+
+1. **Active owner:** `renderer/documentation-ui.js` owns Documentation Markdown, hydration and view rendering.
+2. **Load order:** `renderer.js` → `documentation-ui.js` → later compatibility layers → `documentation-access-v18.6.js`.
+3. **Access decorator:** existing v18.6 role policy wraps the active owner and registers itself as a decorator; it does not create another authorization API.
+4. **Owner registry:** `__DE_PULSE_RENDERER_OWNERS__.documentation` records owner, responsibilities, dependencies, decorator and deletion gate.
+5. **Truthful strangler state:** `ACTIVE_OWNER_WITH_LEGACY_FALLBACK`. Old monolith Documentation functions remain present but are inactive after the capability owner loads.
+6. **Explicit remaining coupling:** Documentation Markdown still delegates architecture diagrams to legacy `architectureDiagram`; this is recorded, not hidden.
+7. **New naming rule:** long-lived owner is capability-oriented; do not introduce `documentation-ui-v18.x.js`.
+8. **Static owner gate:** load order, duplicate loads, naming, fallback truth, access wrapping and primary-engine test wiring fail closed.
+9. **Fast proof:** existing v18.6 Documentation role/access regression is owner-aware.
+10. **Qualified renderer proof:** `documentation_ui_owner_test.js` verifies owner replacement, Markdown, hydration and role decorator integration.
+11. **Primary engines:** the same focused owner behavior is executed in Chrome and WebKit through `documentation_owner_browser_test.py`.
+12. **Deterministic safety:** market math/scoring is untouched; existing deterministic equivalence remains mandatory.
+
+### Packet E qualification requirement
+
+Because Packet E changes renderer/product source, Impact Planner must choose `full`. Required evidence:
+
+- Fast exact-head PASS, including owner/static/access checks;
+- backend full/race/randomized PASS even though no backend semantics should change, because mixed product + CI wiring fails closed;
+- renderer syntax + deterministic equivalence + renderer logic + owner regression PASS;
+- Chrome broad suite + direct Documentation owner Chrome PASS;
+- WebKit core compatibility + direct Documentation owner WebKit PASS;
+- Qualified exact-head PASS;
+- telemetry retained.
+
+No Stable Release is expected unless release identity or the canonical Release workflow is deliberately changed; Packet E does neither.
+
+### Packet E physical-deletion gate
+
+This packet establishes active ownership but does **not** physically delete the old monolith Documentation definitions. Physical deletion is a later controlled step only after no consumer needs the fallback, equivalence evidence is direct, both primary engines pass, and the owner state can truthfully move to a no-fallback designation. This avoids a risky monolith rewrite while still removing runtime ownership ambiguity now.
 
 ## 6. CI telemetry contract
 
@@ -166,4 +189,4 @@ Efficiency may reduce duplicate work, runner choice or irrelevant lanes; it may 
 
 ## 9. Product intake after Phase 0
 
-Run fresh G0–G3 against current reconciliation and select the highest-value coherent v18.x slice. Provisional priority order remains: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability → controlled TradeInsight SHADOW integration.
+After Packet E reaches its governed exit, run fresh G0–G3 against current reconciliation and select the highest-value coherent v18.x product slice. Provisional priority order remains: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability → controlled TradeInsight SHADOW integration.
