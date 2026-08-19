@@ -8,6 +8,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+SELF = Path(__file__).resolve()
 
 ACTIVE_CONTROL_FILES = (
     ROOT / ".github" / "workflows" / "ci-fast.yml",
@@ -26,7 +27,22 @@ FIRST_WAVE_RENAMES = {
     "v18_6_documentation_access_test.js": "tests/renderer/documentation_access_test.js",
 }
 
+# These files intentionally carry old-path strings as negative-policy/migration
+# markers. They are not executable consumers of the legacy paths.
+LEGACY_REFERENCE_ALLOWLIST = {
+    "tools/ci/legacy_test_gate_inventory.py": set(FIRST_WAVE_RENAMES),
+    "tools/ci/workflow_policy.py": {
+        "v18_6_surface_consolidation_test.js",
+        "v18_6_documentation_access_test.js",
+    },
+}
+
 VERSIONED_PREFIX = re.compile(r"^v\d+(?:[_\.]\d+)*[_-]", re.IGNORECASE)
+EXECUTABLE_REFERENCE_RE = re.compile(r"(?P<path>[A-Za-z0-9_.\-/]+\.(?:py|js))")
+
+
+def relative(path: Path) -> str:
+    return path.resolve().relative_to(ROOT.resolve()).as_posix()
 
 
 def is_target(path: Path) -> bool:
@@ -45,8 +61,54 @@ def active_control_text() -> dict[str, str]:
     out: dict[str, str] = {}
     for path in ACTIVE_CONTROL_FILES:
         if path.is_file():
-            out[path.relative_to(ROOT).as_posix()] = path.read_text(encoding="utf-8", errors="replace")
+            out[relative(path)] = path.read_text(encoding="utf-8", errors="replace")
     return out
+
+
+def executable_candidate(path: Path) -> bool:
+    if not path.is_file() or path.resolve() == SELF:
+        return False
+    try:
+        rel = relative(path)
+    except ValueError:
+        return False
+    name = path.name.lower()
+    if rel.startswith("tools/ci/") or rel.startswith("tools/release/"):
+        return path.suffix.lower() in {".py", ".js"}
+    if path.parent == ROOT:
+        return name.endswith("_gate.py") or name.endswith("_test.py") or name.endswith("_test.js")
+    if rel.startswith("release/"):
+        return name.endswith("_test.py") or name.endswith("_test.js") or name.endswith("_gate.py")
+    return False
+
+
+def active_executable_text() -> dict[str, str]:
+    """Resolve the current executable test/gate closure from canonical controls.
+
+    This catches indirect consumers such as workflow_policy.py ->
+    ai_continuous_eval_gate.py -> a renamed Go test file without declaring every
+    historical root script active merely because it still exists.
+    """
+    texts = active_control_text()
+    pending = list(texts.values())
+    visited_paths = {ROOT / rel for rel in texts}
+
+    while pending:
+        text = pending.pop()
+        for match in EXECUTABLE_REFERENCE_RE.finditer(text):
+            token = match.group("path").lstrip("./")
+            path = (ROOT / token).resolve()
+            if path in visited_paths or not executable_candidate(path):
+                continue
+            try:
+                path.relative_to(ROOT.resolve())
+            except ValueError:
+                continue
+            body = path.read_text(encoding="utf-8", errors="replace")
+            texts[relative(path)] = body
+            visited_paths.add(path)
+            pending.append(body)
+    return texts
 
 
 def classify(path: Path, controls: dict[str, str]) -> tuple[str, list[str], str]:
@@ -63,17 +125,32 @@ def classify(path: Path, controls: dict[str, str]) -> tuple[str, list[str], str]
         return (
             "ACTIVE_REQUIRED",
             consumers,
-            "Explicit current CI/certification consumer exists; migrate consumer and assertions atomically before old path removal.",
+            "Current executable control closure references this path; migrate consumer and assertions atomically before old path removal.",
         )
     return (
         "UNREFERENCED_USEFUL",
         [],
-        "No direct current Fast/Qualified/Release/certification-plan consumer; assertion/evidence mapping is still required before deletion.",
+        "No current executable control-plane consumer; assertion/evidence mapping is still required before deletion.",
     )
 
 
+def legacy_path_consumers(texts: dict[str, str]) -> dict[str, list[str]]:
+    consumers: dict[str, list[str]] = {}
+    for old in FIRST_WAVE_RENAMES:
+        hits: list[str] = []
+        for rel, text in texts.items():
+            if old not in text:
+                continue
+            allowed = LEGACY_REFERENCE_ALLOWLIST.get(rel, set())
+            if old in allowed:
+                continue
+            hits.append(rel)
+        consumers[old] = sorted(hits)
+    return consumers
+
+
 def inventory() -> dict[str, object]:
-    controls = active_control_text()
+    controls = active_executable_text()
     rows = []
     for path in sorted((p for p in ROOT.iterdir() if p.is_file() and is_target(p)), key=lambda p: p.name):
         classification, consumers, condition = classify(path, controls)
@@ -117,10 +194,12 @@ def inventory() -> dict[str, object]:
         ],
         "classificationPolicy": {
             "goTestDiscovery": "ACTIVE_REQUIRED",
-            "directCurrentControlReference": "ACTIVE_REQUIRED",
+            "currentExecutableControlClosureReference": "ACTIVE_REQUIRED",
             "unreferencedExecutableDefault": "UNREFERENCED_USEFUL",
             "safeRemoval": "never inferred automatically; requires explicit assertion/evidence review",
         },
+        "activeExecutableConsumerCount": len(controls),
+        "legacyPathConsumers": legacy_path_consumers(controls),
         "counts": counts,
         "rows": rows,
         "firstWave": first_wave,
@@ -150,6 +229,15 @@ def validate(report: dict[str, object]) -> list[str]:
             errors.append(f"first-wave old path still present: {item.get('oldPath')}")
         if not item.get("newPathPresent"):
             errors.append(f"first-wave new path missing: {item.get('newPath')}")
+
+    legacy_consumers = report.get("legacyPathConsumers", {})
+    if isinstance(legacy_consumers, dict):
+        for old, consumers in legacy_consumers.items():
+            if consumers:
+                errors.append(
+                    "first-wave old path still referenced by current executable consumer: "
+                    + f"{old} -> {', '.join(consumers)}"
+                )
 
     fast = (ROOT / ".github" / "workflows" / "ci-fast.yml").read_text(encoding="utf-8")
     for required in (
@@ -192,7 +280,9 @@ def main() -> int:
     print("DE.PULSE legacy test/gate inventory: PASS")
     print("root version-stacked executables classified: " + str(sum(counts.values())))
     print("classifications: " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+    print("active executable consumer closure: " + str(report["activeExecutableConsumerCount"]))
     print("first-wave capability-oriented renames/moves: PASS")
+    print("first-wave legacy executable references: NONE")
     print("conserved v17/v18 reconciliation inventory remains Fast-bound: PASS")
     print("automatic deletion inference: PROHIBITED")
     return 0
