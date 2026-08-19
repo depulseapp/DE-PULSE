@@ -28,17 +28,21 @@ A CI retry never creates a new branch or PR.
 
 The CI Fast workflow listens to PR `opened`, `synchronize` and `reopened`, plus `main` pushes so branch hygiene can run. The **Fast validation job is skipped on `main` pushes**; a merge therefore does not repeat the Fast tests already proven on the PR head. It does not run on PR close and does not run independently on development-branch pushes.
 
+For PR events, Fast explicitly checks out and validates `pull_request.head.sha`, not GitHub's synthetic PR merge SHA. A successful run records the durable commit status `DE.PULSE/fast-head` on that exact source commit.
+
 Fast owns cheap, impact-aware validation: workflow policy, portability/resume contracts, source provenance, release identity, formatting/vet/unit tests when Go changes, renderer syntax and focused regressions when renderer code changes.
 
 CI Fast must never dispatch Release and must not upload an impact-plan artifact on every successful run. Its concurrency group cancels obsolete runs for the same PR/ref.
 
-On a `main` push only the branch-hygiene job is intended to execute; that job is independent of Fast-test success and removes merged/deprecated release-temp branches conservatively.
+On a `main` push only the branch-hygiene job is intended to execute; that job is independent of Fast-test success and removes obsolete branches conservatively.
 
 ## CI Qualified / G10
 
 A release PR remains Draft during active development. Marking the candidate `Ready for review` is the normal automatic G10 trigger.
 
-Qualified runs once for the candidate SHA. Product candidates run full backend, renderer and browser qualification on Linux. macOS/Windows portability runners are reserved for `ci-harness` changes because final native macOS/Windows runtime truth is already mandatory in G13/G14.
+Qualified explicitly checks out the exact PR head. Product candidates run full backend, renderer and browser qualification on Linux. macOS/Windows portability runners are reserved for `ci-harness` changes because final native macOS/Windows runtime truth is already mandatory in G13/G14.
+
+A successful Qualified evidence job records the durable commit status `DE.PULSE/qualified-head` on the exact candidate SHA. These exact-SHA Fast and Qualified statuses are the release handoff evidence; they avoid relying on Actions run metadata that may refer to GitHub's synthetic PR merge commit.
 
 If the candidate changes after a product/test failure, return the PR to Draft, apply fixes on the same branch, then mark it Ready again. If the SHA is unchanged and the failure is infrastructure-only, rerun only the failed job(s). Do not create a retry branch.
 
@@ -47,8 +51,8 @@ If the candidate changes after a product/test failure, return the PR to Draft, a
 Release has one routine trigger: a release PR is merged, that PR changes `release_identity.json`, the base branch is `main`, and the source branch follows `v*-development`.
 
 Before G12 can begin, G11 must fail closed unless:
-- the exact release PR head has a successful CI Fast pull-request run;
-- the exact release PR head has a successful CI Qualified pull-request run;
+- the exact release PR head carries successful `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` commit statuses;
+- the PR head SHA still matches GitHub's durable pull-request source ref;
 - the canonical source fingerprint of that qualified PR head equals the merged candidate fingerprint;
 - release identity and the version-specific certification script resolve correctly.
 
@@ -74,7 +78,13 @@ Keep diagnostic artifacts only where they materially help investigation. Final r
 
 ## Branch hygiene
 
-On a `main` push, run branch hygiene without rerunning Fast tests. Delete branches fully contained in `main`. Also remove deprecated versioned trigger/retry/dispatch/release-certification/stable-promotion branches when they have no open PR. Never delete a branch that still has an open PR.
+On a `main` push, run branch hygiene without rerunning Fast tests. Never delete a branch with an open PR. Delete:
+- merged PR head branches, including squash-merged heads that are not Git ancestors of `main`;
+- branches fully contained in `main`;
+- versioned branches whose corresponding Stable line is already published;
+- closed/orphaned trigger, retry, dispatch, certification, promotion and similar release-temp branches.
+
+If GitHub PR state cannot be resolved, fail conservative and retain uncertain unique branches.
 
 ## Non-negotiable quality boundaries
 
