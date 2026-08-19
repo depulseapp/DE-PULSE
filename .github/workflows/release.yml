@@ -5,6 +5,7 @@ on:
     types: [closed]
     paths:
       - 'release_identity.json'
+      - '.github/workflows/release.yml'
 
 permissions:
   contents: read
@@ -310,7 +311,7 @@ jobs:
         run: |
           set -euo pipefail
           tag="v${VERSION}-stable"
-          existing_ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '.object.sha' 2>/dev/null || true)"
+          existing_ref="$(git ls-remote --refs origin "refs/tags/$tag" | awk 'NR==1{print $1}')"
           if [ -n "$existing_ref" ] && [ "$existing_ref" != "$CANDIDATE_SHA" ]; then
             echo "ERROR: $tag already points to $existing_ref, expected $CANDIDATE_SHA" >&2
             exit 2
