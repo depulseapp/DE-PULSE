@@ -131,26 +131,27 @@ def main() -> int:
         if requirements != expected:
             errors.append(f"browser requirements must be exactly {expected}; got {requirements}")
 
-    qualified = (ROOT / ".github" / "workflows" / "ci-qualified.yml").read_text(encoding="utf-8")
     required_browser_contract = (
         "cache: 'pip'",
         "cache-dependency-path: tools/ci/browser-requirements.txt",
         "python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt",
     )
-    for token in required_browser_contract:
-        if token not in qualified:
-            errors.append(f"Qualified browser reproducibility/cache contract missing: {token}")
-    if re.search(r"pip\s+install[^\n]*\bplaywright(?:\s|$)", qualified):
-        errors.append("Qualified workflow must install Playwright only through the pinned requirements file")
+    for workflow_name in ("ci-qualified.yml", "release.yml"):
+        workflow = (ROOT / ".github" / "workflows" / workflow_name).read_text(encoding="utf-8")
+        for token in required_browser_contract:
+            if token not in workflow:
+                errors.append(f"{workflow_name} browser reproducibility/cache contract missing: {token}")
+        if re.search(r"pip\s+install[^\n]*\bplaywright(?:\s|$)", workflow):
+            errors.append(f"{workflow_name} must install Playwright only through the pinned requirements file")
 
     if errors:
         return fail(errors)
 
     print("DE.PULSE CI reproducibility gate: PASS")
     print("Fast/Qualified/Release third-party Actions immutable-SHA pinned: PASS")
-    print("Playwright exact-version requirements + safe pip cache: PASS")
+    print("Qualified/Release Playwright exact-version requirements + safe pip cache: PASS")
     print("scoped least-privilege permission contract: PASS")
-    print("Release workflow Action pin deferral closed in v18.7.0: PASS")
+    print("Release workflow Action/browser reproducibility deferral closed in v18.7.0: PASS")
     return 0
 
 
