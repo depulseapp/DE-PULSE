@@ -20,34 +20,40 @@
 
 Purpose: eliminate remaining process debt exposed by the v18.6.1 trial before starting a broad feature slice.
 
-### Packet A — CI decision intelligence and release rehearsal — CURRENT
+### Packet A — CI decision intelligence and release rehearsal — COMPLETE
 
-- Impact Planner v2 with explicit change classes.
-- Fail-closed lane selection: uncertain/product changes use full qualification.
-- Side-effect-free pre-merge Release Rehearsal.
-- Formal failure taxonomy: `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP`, `SUPERSEDED`.
-- Current roadmap/build-plan/reconciliation overlays.
-- Validate this packet itself with one development branch, one PR, Fast, then process-only Qualified CI-harness/portability.
+Merged PR #46. Delivered Impact Planner v2, fail-closed lane selection, side-effect-free Release Rehearsal, formal failure taxonomy, current governance overlays and the honest v18.6.1 reconciliation baseline.
 
-### Packet B — Reproducible CI dependencies — PLANNED
+### Packet B — Reproducible CI dependencies — COMPLETE
 
-- Pin GitHub Actions to immutable commit SHAs after exact upstream verification.
-- Pin Playwright and browser revision used by browser gates.
-- Add safe dependency/browser caching where it materially reduces runner time.
-- Add generic workflow linting (`actionlint` or equivalent) in addition to DE.PULSE-specific policy checks.
-- Review and tighten per-job permissions without weakening required exact-status/publication behavior.
+Merged PR #47. Fast/Qualified third-party Actions are immutable-SHA pinned, Playwright is pinned, browser pip caching is deterministic, permissions are gated, and dependency drift fails closed. Release-workflow Action pinning remains intentionally deferred to the next genuine release-capable product slice.
 
-### Packet C — Risk-directed browser coverage — PLANNED
+### Packet C — Chrome + WebKit primary browser coverage — COMPLETE
 
-- Use Impact Planner v2 `RENDERER_UI` classification to activate a focused WebKit lane for Safari-sensitive renderer/UI changes.
-- Keep Chromium as the broad browser gate.
-- Do not double the entire browser matrix for backend-only work.
+Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
 
-### Packet D — Durable evidence and CI observability — PLANNED
+- Chrome and WebKit are the two primary engines.
+- Chrome remains the broad behavior suite.
+- WebKit is the co-primary compatibility proof and is mandatory for `full`, `browser`, renderer/UI and WebKit-harness risk.
+- WebKit runs on `macos-15` without Linux apt dependency amplification.
+- Backend/provider/process work avoids browser runtime when unaffected.
+- Other engines remain secondary/risk-directed.
+- Final exact-head Fast #393 and Qualified #138 passed, including real WebKit compatibility and Ubuntu/macOS/Windows portability.
 
-- Emit a compact immutable Stable evidence manifest: source SHA/fingerprint, Fast/Qualified/Release run IDs, native artifact hashes, G12/G15/G16 state and tool versions.
-- Track lane runtime, queue time, cache hit/miss and failure classification per build.
-- Retain large transient logs only as long as useful; retain compact release truth durably.
+### Packet D — Durable evidence and CI observability — ACTIVE
+
+Goals:
+
+- durable v18.6.1 Stable evidence manifest bound to the authoritative release checkpoint;
+- Qualified per-job queue/runtime/platform telemetry;
+- Linux/macOS/Windows runner-consumption visibility without inventing currency billing rates;
+- Chrome/WebKit dependency setup duration and pip-cache hit signals;
+- PR-level Fast/Qualified/Release amplification warnings;
+- compact 30-day operational telemetry artifact plus job summary;
+- zero-network generic workflow structural lint in addition to DE.PULSE semantic workflow policy;
+- self-tests/gates that keep telemetry, Stable evidence and impact routing truthful.
+
+Packet D is process/evidence only. The Stable evidence manifest is explicitly retrospective and does not redefine the immutable `v18.6.1-stable` artifact. Its exact path is treated as process-only by Impact Planner while executable/versioned release scripts remain full-qualification scope.
 
 ### Packet E — Renderer maintainability — PLANNED, INCREMENTAL
 
@@ -61,7 +67,7 @@ Do not rewrite the monolithic renderer. Use a strangler approach by canonical ca
 6. Opportunity/Discovery.
 7. Shared UI state.
 
-For each extraction: extract → deterministic/equivalence proof → browser proof → native proof where relevant → remove the old duplicate owner. Historical/versioned assets remain until proven unreferenced and safely removable.
+For each extraction: extract → deterministic/equivalence proof → Chrome + WebKit proof → native proof where relevant → remove the old duplicate owner. Historical/versioned assets remain until proven unreferenced and safely removable.
 
 ## Adaptive v18.x product work after Phase 0
 
@@ -94,7 +100,7 @@ TradeInsight remains `SHADOW` / `SECONDARY` through Smart Provider Router v2 onl
 
 ## v18 Major Closure
 
-Do not close v18 until the conserved requirement ledger has zero unexplained applicable rows, no reopened release blocker remains, key workflows have fresh evidence, Day/Swing/Long deterministic equivalence passes, browser/UI/security/provider failure/rate-limit/degradation/restart/load behavior is qualified, macOS + Windows native artifacts pass, and G16 records the final retrospective/handoff.
+Do not close v18 until the conserved requirement ledger has zero unexplained applicable rows, no reopened release blocker remains, key workflows have fresh evidence, Day/Swing/Long deterministic equivalence passes, Chrome + WebKit UI behavior, security/provider failure/rate-limit/degradation/restart/load behavior are qualified, macOS + Windows native artifacts pass, and G16 records the final retrospective/handoff.
 
 ## v19 — Professional Data Infrastructure
 
