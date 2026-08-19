@@ -13,7 +13,7 @@ POLICY = ROOT / "ai_eval_policy.json"
 RIGHTS = ROOT / "provider_dataset_ai_rights_registry.json"
 HARDENING = ROOT / "ai_hardening_v18_6.go"
 CLIENTS = ROOT / "ai_clients.go"
-TESTS = ROOT / "v18_6_ai_hardening_test.go"
+TESTS = ROOT / "ai_hardening_test.go"
 DOC_IMPACT = ROOT / "release" / "v18.6.0" / "DOCUMENTATION-IMPACT.md"
 
 REQUIRED_LANES = {

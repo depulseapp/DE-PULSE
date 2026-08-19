@@ -11,9 +11,10 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Engineering branch:** `v18.6.6-development`  
-**Current PR:** Packet E Draft PR has not been opened yet; resolve live GitHub state rather than model memory  
-**Current slice:** Phase 0 Packet E — Renderer Modularization Foundation / Documentation capability owner  
+**Latest merged engineering main before this branch:** `b3ca18c14b1e53069a6736e29ad9e3b09f87bda5` (PR #50 / Packet E)  
+**Engineering branch:** `v18.6.7-development`  
+**Current slice:** Fresh Reconciliation, Scope Bind & Legacy Test/Gate Hygiene  
+**Current PR:** resolve live GitHub PR state for `v18.6.7-development`; do not rely on a hard-coded PR number in this handoff  
 **Last updated:** 2026-08-19 America/Vancouver
 
 `Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
@@ -22,13 +23,16 @@
 
 Read `AGENTS.md` or `CLAUDE.md`, `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/issue state and immutable `v18.6.1-stable`. Never resume from model memory alone.
 
-For current operating state also read:
+Also read:
 
 - `adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md`
 - `adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md`
 - `adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md`
 - `adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md`
-- `adaptive-governance/V18_6_1_CURRENT_RECONCILIATION.md`
+- `adaptive-governance/V18_6_7_CURRENT_RECONCILIATION.md`
+- `adaptive-governance/LEGACY_TEST_GATE_CLEANUP_PLAN.md`
+- `adaptive-governance/LEGACY_TEST_GATE_INVENTORY.md`
+- `release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json`
 - `release/v18.6.1/stable-evidence-manifest.json`
 
 ## Immutable v18.6.1 Stable evidence
@@ -38,92 +42,94 @@ For current operating state also read:
 - Product candidate full Qualified: run `32276304863` · backend/race/randomized, renderer, deterministic 2403/2403 and browser/global-remove coverage PASS.
 - Canonical Release #24: run `32279232665` · G11–G16 PASS including macOS Apple Silicon and Windows x64 native evidence and same-run publication.
 - Stable tag: `v18.6.1-stable` → `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`.
-- Measured v18.6.1 clock: first Draft PR to final Stable = **1h 56m 20s**; final canonical G11–G16 run = **6m 43s**.
-- `release/v18.6.1/stable-evidence-manifest.json` is a retrospective compact index bound to the authoritative checkpoint; it does not redefine the immutable Stable tag/binaries.
 
 Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, deterministic Day/Swing/Long truth, Smart Provider Router ownership, provider/Market-Mode rules, GLD/SLV/USO tradable exceptions and Adaptive Intelligence governance.
 
-## Phase 0 hardening status
+## Phase 0 hardening — COMPLETE
 
-### Packet A — COMPLETE
+- Packet A / PR #46 — Impact Planner v2, Release Rehearsal and current adaptive overlays.
+- Packet B / PR #47 — reproducible Fast/Qualified dependencies, Action pins, Playwright pin, permissions/reproducibility gate.
+- Packet C / PR #48 — Chrome + WebKit co-primary browser coverage and risk-directed routing.
+- Packet D / PR #49 — durable Stable evidence, CI observability/telemetry and structural workflow lint.
+- Packet E / PR #50 — Documentation capability-oriented renderer owner foundation with explicit legacy fallback, owner/decorator metadata and direct Chrome + WebKit proof.
 
-Merged PR #46 at `a3beb28322c2c53227bac037e546d6863c8d279e`.
+Packet E merged to `main` at `b3ca18c14b1e53069a6736e29ad9e3b09f87bda5`.
 
-Delivered Impact Planner v2, planner self-test, side-effect-free Release Rehearsal, workflow-policy integration, current adaptive operating overlays and an honest v18.6.1 reconciliation baseline. Final Fast #381 and Qualified #133 passed.
+## v18.6.7 reconciliation state
 
-### Packet B — COMPLETE
+The historical conserved requirement ledger is conclusively located at:
 
-Merged PR #47 at `31b697d175317f0132c0a3fff7283beb1b79662d`.
+`release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json`
 
-Delivered immutable Action pins for Fast/Qualified, canonical CI dependency lock, Playwright `1.62.0` pin, safe pip caching and reproducibility/permission gate. Final Fast #384 and Qualified #134 passed. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice.
+Intake blob: `2a32b3f93203d61b1aca55172530652d736bbf55`. The ledger declares **296 tracked authority rows**. This means 296 conserved records, not 296 current defects/open items.
 
-### Packet C — COMPLETE
+The old v18.6.1 reconciliation file remains historical evidence of the earlier uncertainty and is not rewritten. `adaptive-governance/V18_6_7_CURRENT_RECONCILIATION.md` is the current overlay.
 
-Merged PR #48 at `23ecb71f60e1658d68bcef6248044ce53b6dd851`.
+Fast now executes `v18_5_1_v17_v18_reconciliation_gate.py` in inventory mode so schema, canonical scope alignment, 296-row conservation, immutable IDs and status vocabulary cannot silently drift. Historical v18.5.1 statuses are not treated as current evidence.
 
-- Chrome + WebKit are the two primary engines.
-- Final Fast #393 / run `32296746701`: PASS.
-- Final Qualified #138 / run `32296793338`: PASS.
-- CI-harness + Ubuntu/macOS/Windows portability + real macOS WebKit all passed for the Packet C proof.
+## Legacy Test & Gate Hygiene
 
-### Packet D — COMPLETE
+Governed by:
 
-Merged PR #49 at `2885de409c86f771d582f09f54e0f6c564f6c59d`.
+- `adaptive-governance/LEGACY_TEST_GATE_CLEANUP_PLAN.md`
+- `adaptive-governance/LEGACY_TEST_GATE_INVENTORY.md`
+- `tools/ci/legacy_test_gate_inventory.py`
 
-Delivered:
+Classification model:
 
-1. repo-durable v18.6.1 Stable evidence manifest + drift gate;
-2. Qualified queue/runtime/platform telemetry;
-3. Linux/macOS/Windows runner-minute visibility;
-4. browser setup-duration/pip-cache signals;
-5. PR Fast/Qualified/Release amplification warnings;
-6. compact 30-day telemetry evidence;
-7. zero-network workflow structural lint.
+- `ACTIVE_REQUIRED`
+- `ACTIVE_DUPLICATE`
+- `UNREFERENCED_USEFUL`
+- `HISTORICAL_EVIDENCE`
+- `SAFE_TO_REMOVE`
 
-Final Packet D:
+`SAFE_TO_REMOVE` is never automatically inferred. Go `*_test.go` remains active through `go test ./...`; versioned Python/JS executables with direct current CI/certification consumers remain active; unreferenced executable evidence defaults conservatively to `UNREFERENCED_USEFUL` until its assertions are mapped.
 
-- Fast #396: PASS.
-- Qualified #139: PASS through process-only CI-harness + Ubuntu/macOS/Windows portability.
-- Telemetry artifact `9382124423`, digest `sha256:e3208d7f634b2548195982062053193c56981f8d0a6370e378d5e4844765e615`.
-- Telemetry reported Fast 2 / Qualified 1 / Release 0 = `OK`; Linux 0.48 runner-min, macOS 0.17, Windows 0.33 for measured completed jobs; Chrome/WebKit setup values correctly null because browser lanes were skipped.
+### First safe capability-oriented wave — STAGED
 
-### Packet E — ACTIVE
+Exact test-body preservation:
 
-Fresh G0–G3 renderer inventory:
+- `v18_6_ai_hardening_test.go` → `ai_hardening_test.go`
+- `v18_6_broad_snapshot_broker_test.go` → `broad_snapshot_broker_test.go`
+- `v18_6_documentation_access_test.go` → `documentation_access_test.go`
+- `v18_6_session_intelligence_coordinator_test.go` → `session_intelligence_coordinator_test.go`
+- `v18_6_surface_consolidation_test.js` → `tests/renderer/surface_consolidation_test.js`
+- `v18_6_documentation_access_test.js` → `tests/renderer/documentation_access_test.js`
 
-- current `renderer/renderer.js`: about 425 KB;
-- current `renderer/styles.css`: about 316 KB;
-- `renderer/index.html` loads the classic monolith before specialized compatibility/feature scripts;
-- older file dates do not imply junk or safe deletion.
+The Go tests remain beside package `main`; the renderer tests were verified to read production resources from repository working-directory paths, so moving the scripts does not change their file resolution.
 
-Bound first strangler capability: **Documentation**.
+Fast consumes the new renderer paths. Impact Planner now treats `tests/renderer/` and `tests/browser/` as `RENDERER_UI`, preserving full Qualified + primary WebKit signaling.
 
-Current branch implementation:
+The current certification plan still explicitly consumes inherited/versioned v16/v17/v18 gates and focused test prefixes. Do not move/delete those merely to clean the root; migrate assertion ownership and certification consumers first.
 
-1. `renderer/documentation-ui.js` is a new capability-oriented active runtime owner for Documentation Markdown, hydration and view rendering.
-2. `renderer/index.html` loads it immediately after `renderer.js` and before `documentation-access-v18.6.js`.
-3. `documentation-access-v18.6.js` remains the role-access decorator and registers itself in Documentation ownership metadata.
-4. Owner registry state is deliberately truthful: `ACTIVE_OWNER_WITH_LEGACY_FALLBACK`.
-5. Old Documentation functions remain physically in `renderer.js` as inactive fallback for this first strangler step; no claim of full source deletion is made.
-6. Remaining dependency on legacy `architectureDiagram` is explicit in owner metadata and is a later extraction target.
-7. `tools/ci/renderer_owner_contract.py` enforces load order, single owner load, capability-oriented naming, fallback truth, access wrapping and Chrome/WebKit evidence wiring.
-8. Existing `v18_6_documentation_access_test.js` is owner-aware for Fast.
-9. `documentation_ui_owner_test.js` provides direct renderer-owner/Markdown/hydration/access integration proof.
-10. `tools/ci/documentation_owner_browser_test.py` runs the same focused owner behavior on Chrome and WebKit.
-11. Qualified renderer, Chrome and WebKit lanes explicitly execute the new owner proofs.
-12. `tools/ci/workflow_policy.py` permanently requires renderer-owner evidence so this foundation cannot silently disappear.
+## v18.6.7 expected qualification
 
-Packet E changes renderer/product source plus CI wiring. Impact Planner must therefore fail closed to **full Qualified**, with WebKit required. Deterministic market math remains unchanged and must still pass.
+Because the branch changes Go test paths, renderer test paths and CI policy, the intended qualification is fail-closed **full**:
 
-No Stable Release is expected from Packet E because neither `release_identity.json` nor `.github/workflows/release.yml` is changed.
+- Fast exact head, including workflow policy, legacy test/gate inventory and conserved ledger integrity;
+- Go formatting/vet/full suite;
+- Qualified backend full/race/randomized;
+- renderer/deterministic/owner regressions;
+- Chrome broad behavior;
+- WebKit primary compatibility;
+- telemetry retained.
 
-## Packet E physical-deletion rule
+No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` is being changed.
 
-Do not delete the monolith fallback simply because the new owner is active. Physical deletion is allowed only after no consumer depends on it, direct equivalence evidence exists, Chrome + WebKit pass, deterministic/renderer logic remains green, and the owner state can truthfully move to a no-fallback designation.
+## Version-visible sequence after v18.6.7
 
-## After Phase 0
+Subject to G1 scope freeze:
 
-Run fresh G0–G3 and select the next coherent v18.x product slice from current reconciliation/evidence. Provisional priority remains: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability → controlled TradeInsight SHADOW integration. Then v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
+1. **v18.7.0 — Runtime Reliability & Data Truth** — provisional next unless a higher-severity fresh user-trust blocker leads/is bundled.
+2. **v18.7.1 — User-Trust Reliability Closure** — only if needed.
+3. **v18.8.0 — Shared Intelligence Consolidation**.
+4. **v18.8.1 — Renderer Modularization II**.
+5. **v18.9.0 — TradeInsight SHADOW Integration**.
+6. **v18.9.1 — Provider Intelligence & Market-Mode Hardening**.
+7. **v18.10.0 — v18 Major Closure Candidate**.
+8. **v18.10.1 — closure patch only if needed**.
+9. **v19.x — Professional Data Infrastructure**.
+10. **v20.x — Adaptive Intelligence**.
 
 ## Repository/source-age rule
 
@@ -135,4 +141,4 @@ Repository `main` branch protection/ruleset remains disabled as of the latest ch
 
 ## Exactly one next action
 
-Finish Packet E containment/self-consistency checks on the fully assembled `v18.6.6-development` branch before opening a Draft PR. Then open exactly one Draft PR to `main`, require one exact-head Fast candidate, mark the same PR Ready only after Fast passes, and require full Qualified including renderer + Chrome + WebKit direct Documentation-owner proofs. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Resolve the live PR state for `v18.6.7-development`. If no PR exists, open exactly one Draft PR to `main`. If the PR exists, continue the same PR only: require exact-head Fast; mark Ready only after Fast passes; require full Qualified including backend/race/randomized, renderer/deterministic, Chrome and WebKit; then merge only on exact-head green evidence. Fix legitimate defects on the same branch/PR and do not create retry/certification/promotion branches.

@@ -19,6 +19,17 @@ def main() -> int:
     require(renderer["webkitRequired"] is True, "renderer change must require primary WebKit evidence")
     require("RENDERER_UI" in renderer["changeClasses"], "renderer class missing")
 
+    organized_renderer_test = analyze_changed_paths(["tests/renderer/documentation_access_test.js"])
+    require(organized_renderer_test["qualifiedLane"] == "full", "organized renderer test must use full qualification")
+    require(organized_renderer_test["webkitRequired"] is True, "organized renderer test must retain primary WebKit evidence")
+    require("RENDERER_UI" in organized_renderer_test["changeClasses"], "organized renderer test class missing")
+    require(organized_renderer_test["nodeRequired"] is True, "organized renderer test must request Node")
+
+    organized_browser_test = analyze_changed_paths(["tests/browser/watchlist_membership_test.py"])
+    require(organized_browser_test["qualifiedLane"] == "full", "organized browser test must use full qualification")
+    require(organized_browser_test["webkitRequired"] is True, "organized browser test must retain primary WebKit evidence")
+    require("RENDERER_UI" in organized_browser_test["changeClasses"], "organized browser test class missing")
+
     process = analyze_changed_paths([
         ".github/workflows/ci-qualified.yml",
         "tools/ci/workflow_policy.py",
@@ -69,6 +80,7 @@ def main() -> int:
     print("release executable/script full-qualification protection: PASS")
     print("mixed/product fail-closed routing: PASS")
     print("Chrome + WebKit primary renderer-risk signal: PASS")
+    print("organized renderer/browser test routing: PASS")
     print("WebKit harness self-validation routing: PASS")
     print("backend/provider WebKit suppression: PASS")
     print("failure taxonomy contract: PASS")
