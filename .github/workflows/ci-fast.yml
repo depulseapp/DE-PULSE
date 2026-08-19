@@ -24,11 +24,16 @@ env:
 jobs:
   fast:
     name: Fast impact-safe preflight
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    permissions:
+      contents: read
+      statuses: write
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
@@ -37,7 +42,8 @@ jobs:
         name: Deterministic impact plan
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$GITHUB_SHA" --github-output "$GITHUB_OUTPUT" --json-out ci-impact-plan.json
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$HEAD_SHA" --github-output "$GITHUB_OUTPUT" --json-out ci-impact-plan.json
       - uses: actions/setup-go@v7
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:
@@ -90,24 +96,39 @@ jobs:
       - name: v18.6 role-aware documentation regression
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         run: node v18_6_documentation_access_test.js
+      - name: Record exact-head Fast status
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$HEAD_SHA" \
+            -f state=success \
+            -f context='DE.PULSE/fast-head' \
+            -f description='CI Fast passed exact source head' \
+            -f target_url="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >/dev/null
       - name: CI summary
         shell: bash
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           {
             echo '## DE.PULSE CI Fast'
-            echo "- SHA: $GITHUB_SHA"
+            echo "- exact source SHA: $HEAD_SHA"
             echo "- process-only: ${{ steps.impact.outputs.process_only }}"
             echo "- Go lane required: ${{ steps.impact.outputs.go_required }}"
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- workflow policy: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- Git-object provenance: PASS'
+            echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
           } >> "$GITHUB_STEP_SUMMARY"
 
   branch-hygiene:
-    name: Remove merged and deprecated release-temp branches
-    needs: fast
+    name: Remove merged and obsolete branches
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10

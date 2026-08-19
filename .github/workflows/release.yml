@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   actions: read
+  statuses: read
 
 concurrency:
   group: depulse-release-${{ github.event.pull_request.number }}
@@ -23,11 +24,13 @@ env:
 jobs:
   g11:
     name: G11 Immutable merged candidate/provenance
-    if: ${{ github.event.pull_request.merged == true }}
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && startsWith(github.event.pull_request.head.ref, 'v') && endsWith(github.event.pull_request.head.ref, '-development') }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 12
     outputs:
       candidate_sha: ${{ steps.identity.outputs.candidate_sha }}
+      source_head_sha: ${{ steps.identity.outputs.source_head_sha }}
+      source_pr: ${{ steps.identity.outputs.source_pr }}
       fingerprint: ${{ steps.identity.outputs.fingerprint }}
       version: ${{ steps.identity.outputs.version }}
       build_id: ${{ steps.identity.outputs.build_id }}
@@ -41,11 +44,20 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           candidate_sha='${{ github.event.pull_request.merge_commit_sha }}'
+          source_head_sha='${{ github.event.pull_request.head.sha }}'
+          source_pr='${{ github.event.pull_request.number }}'
+          source_head_ref='${{ github.event.pull_request.head.ref }}'
           test "$(git rev-parse HEAD)" = "$candidate_sha"
+          case "$source_head_ref" in v*-development) ;; *) echo "ERROR: release PR head must be v*-development" >&2; exit 2;; esac
+          git fetch origin "pull/${source_pr}/head:refs/remotes/origin/pr-source"
+          test "$(git rev-parse refs/remotes/origin/pr-source)" = "$source_head_sha"
+
           python3 release_identity.py --verify
           python3 tools/ci/workflow_policy.py
           readarray -t identity < <(python3 - <<'PY'
@@ -61,13 +73,44 @@ jobs:
           build_id="${identity[1]}"
           script="${identity[2]}"
           test -f "$script"
-          fp="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
+
+          source_fp="$(python3 source_fingerprint.py --mode git --commit "$source_head_sha")"
+          candidate_fp="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
+          test "$source_fp" = "$candidate_fp"
+
+          statuses="$(gh api "repos/$GITHUB_REPOSITORY/commits/$source_head_sha/statuses?per_page=100")"
+          require_status() {
+            context="$1"
+            STATUSES="$statuses" CONTEXT="$context" python3 - <<'PY'
+          import json, os
+          statuses=json.loads(os.environ['STATUSES'])
+          context=os.environ['CONTEXT']
+          matches=[s for s in statuses if s.get('context')==context]
+          matches.sort(key=lambda s: s.get('created_at',''), reverse=True)
+          assert matches, f"missing exact-head commit status {context}"
+          assert matches[0].get('state')=='success', (context, matches[0].get('state'))
+          PY
+          }
+          require_status 'DE.PULSE/fast-head'
+          require_status 'DE.PULSE/qualified-head'
+
           echo "candidate_sha=$candidate_sha" >> "$GITHUB_OUTPUT"
-          echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
+          echo "source_head_sha=$source_head_sha" >> "$GITHUB_OUTPUT"
+          echo "source_pr=$source_pr" >> "$GITHUB_OUTPUT"
+          echo "fingerprint=$candidate_fp" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
           echo "certification_script=$script" >> "$GITHUB_OUTPUT"
-          echo "G11 candidate=$candidate_sha fingerprint=$fp version=$version"
+          {
+            echo '## G11 immutable merged candidate'
+            echo "- source PR: #$source_pr"
+            echo "- qualified source head: \`$source_head_sha\`"
+            echo "- merged candidate: \`$candidate_sha\`"
+            echo "- fingerprint: \`$candidate_fp\`"
+            echo '- exact-head DE.PULSE/fast-head status: PASS'
+            echo '- exact-head DE.PULSE/qualified-head status: PASS'
+            echo '- source-head → merged-candidate fingerprint equivalence: PASS'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   g12:
     name: G12 Full certification
@@ -315,11 +358,15 @@ jobs:
           {
             "schema": "DE.PULSE-G16-CI-DELIVERY-3",
             "version": "v${{ needs.g11.outputs.version }}",
+            "sourcePr": "${{ needs.g11.outputs.source_pr }}",
+            "qualifiedSourceHead": "${{ needs.g11.outputs.source_head_sha }}",
             "candidateSha": "${{ needs.g11.outputs.candidate_sha }}",
             "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
             "buildId": "${{ needs.g11.outputs.build_id }}",
             "releaseRunId": "${{ github.run_id }}",
             "mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH",
+            "g10FastExactHead": "PASS",
+            "g10QualifiedExactHead": "PASS",
             "g12": "PASS",
             "g13g14MacOS": "PASS",
             "g13g14Windows": "PASS",

@@ -56,6 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event.pull_request.head.sha || inputs.candidate_sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
@@ -70,7 +71,7 @@ jobs:
         run: |
           set -euo pipefail
           sha="${INPUT_SHA:-${PR_HEAD_SHA:-$GITHUB_SHA}}"
-          git cat-file -e "$sha^{commit}"
+          test "$(git rev-parse HEAD)" = "$sha"
           python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
           planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
           lane="${INPUT_LANE:-$planned}"
@@ -243,6 +244,9 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
+      statuses: write
     steps:
       - name: Require selected lanes to pass
         shell: bash
@@ -265,3 +269,16 @@ jobs:
             ci-harness) require "$PORTABILITY" ;;
           esac
           echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}"
+      - name: Record exact-head Qualified status
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QUALIFIED_SHA: ${{ needs.context.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$QUALIFIED_SHA" \
+            -f state=success \
+            -f context='DE.PULSE/qualified-head' \
+            -f description='CI Qualified passed exact source head' \
+            -f target_url="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >/dev/null

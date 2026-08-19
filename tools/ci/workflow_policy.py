@@ -58,12 +58,18 @@ def canonical_workflow_contract(workflows: Path) -> int:
     ci_fast = (workflows / "ci-fast.yml").read_text(encoding="utf-8")
     qualified = (workflows / "ci-qualified.yml").read_text(encoding="utf-8")
     release = (workflows / "release.yml").read_text(encoding="utf-8")
+    root = workflows.parents[1]
+    branch_hygiene = (root / "tools" / "ci" / "branch_hygiene.py").read_text(encoding="utf-8")
 
     fast_required = (
         "types: [opened, synchronize, reopened]",
         "- main",
         "workflow_dispatch:",
         "cancel-in-progress: true",
+        "if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}",
+        "ref: ${{ github.event.pull_request.head.sha || github.sha }}",
+        "statuses: write",
+        "DE.PULSE/fast-head",
         "branch-hygiene:",
         "tools/ci/branch_hygiene.py --apply",
         "release dispatch: NOT PERMITTED from CI Fast",
@@ -77,11 +83,12 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "gh workflow run release.yml",
         "actions: write",
         "DE-PULSE-ci-impact-${{ github.sha }}",
+        "needs: fast",
     )
     missing = [x for x in fast_required if x not in ci_fast]
     forbidden = [x for x in fast_forbidden if x in ci_fast]
     if missing:
-        return fail("CI Fast efficiency contract missing", missing)
+        return fail("CI Fast efficiency/exact-head contract missing", missing)
     if forbidden:
         return fail("CI Fast duplicate-trigger/dispatcher contract violated", forbidden)
 
@@ -90,9 +97,12 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "workflow_dispatch:",
         "workflow_call:",
         "PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}",
+        "ref: ${{ github.event.pull_request.head.sha || inputs.candidate_sha || github.sha }}",
         "needs.context.outputs.lane == 'ci-harness'",
         "ci-harness) require \"$PORTABILITY\"",
         "full) require \"$BACKEND\"; require \"$RENDERER\"; require \"$BROWSER\"",
+        "statuses: write",
+        "DE.PULSE/qualified-head",
     )
     qualified_forbidden = (
         "paths:",
@@ -103,15 +113,24 @@ def canonical_workflow_contract(workflows: Path) -> int:
     missing = [x for x in qualified_required if x not in qualified]
     forbidden = [x for x in qualified_forbidden if x in qualified]
     if missing:
-        return fail("CI Qualified candidate-only contract missing", missing)
+        return fail("CI Qualified candidate/exact-head contract missing", missing)
     if forbidden:
         return fail("CI Qualified must not run on routine development updates", forbidden)
 
     release_required = (
         "types: [closed]",
         "- 'release_identity.json'",
+        "statuses: read",
         "github.event.pull_request.merged == true",
+        "github.event.pull_request.base.ref == 'main'",
+        "startsWith(github.event.pull_request.head.ref, 'v')",
+        "endsWith(github.event.pull_request.head.ref, '-development')",
         "github.event.pull_request.merge_commit_sha",
+        "github.event.pull_request.head.sha",
+        "DE.PULSE/fast-head",
+        "DE.PULSE/qualified-head",
+        "require_status",
+        'test "$source_fp" = "$candidate_fp"',
         "G12 Full certification",
         "G13/G14 macOS Apple Silicon",
         "G13/G14 Windows x64",
@@ -125,23 +144,40 @@ def canonical_workflow_contract(workflows: Path) -> int:
     )
     release_forbidden = (
         "workflow_dispatch:",
-        "certification_run_id",
-        "promotion_sha",
+        "certification_run_id:",
+        "promotion_sha:",
         "stable-promotion",
         "release-certification",
         "gh workflow run",
+        "gh run list",
         "run-id:",
+        "READY_NOT_PROMOTED",
     )
     missing = [x for x in release_required if x not in release]
     forbidden = [x for x in release_forbidden if x in release]
     if missing:
         return fail("single-run Release G11-G16 contract missing", missing)
     if forbidden:
-        return fail("legacy release dispatch/promotion contract still present", forbidden)
+        return fail("legacy/ambiguous release evidence contract still present", forbidden)
 
-    print("CI Fast single-event development contract: PASS")
-    print("CI Qualified ready-candidate contract: PASS")
+    hygiene_required = (
+        'pr_heads("open")',
+        'pr_heads("merged")',
+        "MERGED_PR_HEAD",
+        "STABLE_LINE_ALREADY_PUBLISHED",
+        "stable_line_closed",
+        "DE.PULSE-BRANCH-HYGIENE-3",
+    )
+    missing = [x for x in hygiene_required if x not in branch_hygiene]
+    if missing:
+        return fail("branch hygiene squash/stable-line contract missing", missing)
+
+    print("CI Fast single-event exact-head development contract: PASS")
+    print("CI Fast main-push test suppression + hygiene-only contract: PASS")
+    print("CI Qualified ready-candidate exact-head contract: PASS")
+    print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
+    print("squash-merged/stable-line branch hygiene: PASS")
     print("premium runner separation: PASS")
     return 0
 

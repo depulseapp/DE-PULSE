@@ -5,20 +5,27 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
 DEPRECATED_TEMP_MARKERS = (
     "-release-certification",
+    "-stable-certification",
     "-stable-promotion",
+    "-stable-tag-tooling",
+    "-native-certification",
     "-certification-trigger",
     "-cert-trigger",
     "-promotion-trigger",
+    "-promotion-hardening",
+    "-g10-recovery",
     "-dispatch",
     "-retry",
     "-fallback",
     "-trigger",
 )
+VERSION_PREFIX = re.compile(r"^(v\d+\.\d+(?:\.\d+)?)")
 
 
 def run(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -29,13 +36,13 @@ def is_deprecated_release_temp(name: str) -> bool:
     return name.startswith("v") and any(marker in name for marker in DEPRECATED_TEMP_MARKERS)
 
 
-def open_pr_heads() -> set[str] | None:
+def pr_heads(state: str) -> set[str] | None:
     repo = os.environ.get("GITHUB_REPOSITORY", "").strip()
     if not repo or not shutil.which("gh"):
         return None
     result = run(
-        "gh", "pr", "list", "--repo", repo, "--state", "open", "--limit", "200",
-        "--json", "headRefName", "--jq", ".[ ].headRefName".replace("[ ]", "[]"),
+        "gh", "pr", "list", "--repo", repo, "--state", state, "--limit", "200",
+        "--json", "headRefName", "--jq", ".[].headRefName",
         check=False,
     )
     if result.returncode != 0:
@@ -43,15 +50,27 @@ def open_pr_heads() -> set[str] | None:
     return {line.strip() for line in result.stdout.splitlines() if line.strip()}
 
 
+def stable_line_closed(name: str) -> bool:
+    match = VERSION_PREFIX.match(name)
+    if not match:
+        return False
+    prefix = match.group(1)
+    if prefix.count(".") >= 2:
+        pattern = f"{prefix}-stable"
+    else:
+        pattern = f"{prefix}.*-stable"
+    return bool(run("git", "tag", "--list", pattern).stdout.strip())
+
+
 def main() -> int:
-    p = argparse.ArgumentParser(description="Audit/delete merged and deprecated DE.PULSE release-temp branches")
+    p = argparse.ArgumentParser(description="Audit/delete merged and obsolete DE.PULSE branches")
     p.add_argument("--apply", action="store_true")
     p.add_argument("--json-out")
     p.add_argument("--remote", default="origin")
     p.add_argument("--base", default="main")
     args = p.parse_args()
 
-    run("git", "fetch", "--prune", args.remote, f"+refs/heads/*:refs/remotes/{args.remote}/*")
+    run("git", "fetch", "--prune", "--tags", args.remote, f"+refs/heads/*:refs/remotes/{args.remote}/*")
     base_ref = f"refs/remotes/{args.remote}/{args.base}"
     base_sha = run("git", "rev-parse", base_ref).stdout.strip()
     raw = run(
@@ -60,8 +79,11 @@ def main() -> int:
     ).stdout
 
     protected = {args.base, "HEAD"}
-    open_heads = open_pr_heads()
-    merged: list[dict[str, str]] = []
+    open_heads = pr_heads("open")
+    merged_heads = pr_heads("merged")
+    merged_ancestor: list[dict[str, str]] = []
+    merged_pr: list[dict[str, str]] = []
+    closed_stable_line: list[dict[str, str]] = []
     deprecated_temp: list[dict[str, str]] = []
     retained: list[dict[str, str]] = []
 
@@ -80,10 +102,18 @@ def main() -> int:
             retained.append(item)
             continue
 
+        if merged_heads is not None and name in merged_heads:
+            item["reason"] = "MERGED_PR_HEAD"
+            merged_pr.append(item)
+            continue
+
         ancestor = run("git", "merge-base", "--is-ancestor", sha, base_sha, check=False)
         if ancestor.returncode == 0:
             item["reason"] = "FULLY_MERGED"
-            merged.append(item)
+            merged_ancestor.append(item)
+        elif open_heads is not None and stable_line_closed(name):
+            item["reason"] = "STABLE_LINE_ALREADY_PUBLISHED"
+            closed_stable_line.append(item)
         elif is_deprecated_release_temp(name) and open_heads is not None:
             item["reason"] = "DEPRECATED_RELEASE_TEMP_NO_OPEN_PR"
             deprecated_temp.append(item)
@@ -91,31 +121,37 @@ def main() -> int:
             item["reason"] = "UNIQUE_OR_ACTIVE"
             retained.append(item)
 
-    deleted_merged: list[dict[str, str]] = []
-    deleted_temp: list[dict[str, str]] = []
+    deleted: list[dict[str, str]] = []
+    candidates = merged_pr + merged_ancestor + closed_stable_line + deprecated_temp
     if args.apply:
-        for bucket, deleted in ((merged, deleted_merged), (deprecated_temp, deleted_temp)):
-            for item in bucket:
-                name = item["branch"]
-                result = run("git", "push", args.remote, "--delete", name, check=False)
-                if result.returncode != 0:
-                    raise SystemExit(f"failed deleting branch {name}: {result.stderr.strip()}")
-                deleted.append(item)
+        seen: set[str] = set()
+        for item in candidates:
+            name = item["branch"]
+            if name in seen:
+                continue
+            seen.add(name)
+            result = run("git", "push", args.remote, "--delete", name, check=False)
+            if result.returncode != 0:
+                raise SystemExit(f"failed deleting branch {name}: {result.stderr.strip()}")
+            deleted.append(item)
 
     report = {
-        "schema": "DE.PULSE-BRANCH-HYGIENE-2",
+        "schema": "DE.PULSE-BRANCH-HYGIENE-3",
         "base": args.base,
         "baseSha": base_sha,
         "mode": "APPLY" if args.apply else "DRY_RUN",
         "openPrHeadsResolved": open_heads is not None,
-        "mergedCandidates": merged,
+        "mergedPrHeadsResolved": merged_heads is not None,
+        "mergedPrHeadCandidates": merged_pr,
+        "mergedAncestorCandidates": merged_ancestor,
+        "closedStableLineCandidates": closed_stable_line,
         "deprecatedReleaseTempCandidates": deprecated_temp,
-        "deletedMerged": deleted_merged,
-        "deletedDeprecatedReleaseTemp": deleted_temp,
+        "deleted": deleted,
         "retained": retained,
         "policy": (
-            "Never delete a branch with an open PR. Delete branches already contained in main. "
-            "After open-PR resolution succeeds, also delete closed/orphaned versioned trigger/retry/dispatch/release-certification/stable-promotion branches."
+            "Never delete a branch with an open PR. Delete merged PR heads (including squash-merged heads), "
+            "branches already contained in main, versioned branches whose Stable line is already published, "
+            "and closed/orphaned release-temp branches. Fail conservative when PR state cannot be resolved."
         ),
     }
     text = json.dumps(report, indent=2, sort_keys=True) + "\n"
