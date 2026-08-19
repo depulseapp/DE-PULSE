@@ -16,7 +16,7 @@ def main() -> int:
 
     renderer = analyze_changed_paths(["renderer/watchlist-v18.5.1.js"])
     require(renderer["qualifiedLane"] == "full", "renderer change must use full qualification")
-    require(renderer["webkitRequired"] is True, "renderer change must request targeted WebKit")
+    require(renderer["webkitRequired"] is True, "renderer change must require primary WebKit evidence")
     require("RENDERER_UI" in renderer["changeClasses"], "renderer class missing")
 
     process = analyze_changed_paths([
@@ -27,9 +27,14 @@ def main() -> int:
     require(process["qualifiedLane"] == "ci-harness", "process-only change must use ci-harness")
     require(process["releaseRehearsalRequired"] is True, "CI hardening must require release rehearsal")
 
+    webkit_harness = analyze_changed_paths(["tools/ci/webkit_targeted_test.py"])
+    require(webkit_harness["qualifiedLane"] == "ci-harness", "WebKit harness-only change must stay process-only")
+    require(webkit_harness["webkitRequired"] is True, "WebKit harness changes must execute WebKit proof")
+
     provider = analyze_changed_paths(["provider_router.go"])
     require("BACKEND" in provider["changeClasses"], "provider Go change must be backend")
     require("PROVIDER_ROUTER" in provider["changeClasses"], "provider router class missing")
+    require(provider["webkitRequired"] is False, "backend/provider-only work must not require WebKit")
 
     rights = analyze_changed_paths(["governance/provider-data-rights-registry.md"])
     require("DATA_RIGHTS" in rights["changeClasses"], "data-rights class missing")
@@ -37,7 +42,7 @@ def main() -> int:
 
     mixed = analyze_changed_paths(["tools/ci/workflow_policy.py", "renderer/index.html"])
     require(mixed["qualifiedLane"] == "full", "mixed process/product change must fail closed to full")
-    require(mixed["webkitRequired"] is True, "mixed renderer change must retain WebKit signal")
+    require(mixed["webkitRequired"] is True, "mixed renderer change must retain WebKit requirement")
 
     expected_taxonomy = (
         "PRODUCT_FAIL",
@@ -52,7 +57,9 @@ def main() -> int:
     print("DE.PULSE CI impact planner v2 self-test: PASS")
     print("process-only routing: PASS")
     print("mixed/product fail-closed routing: PASS")
-    print("renderer targeted-WebKit planning signal: PASS")
+    print("Chrome + WebKit primary renderer-risk signal: PASS")
+    print("WebKit harness self-validation routing: PASS")
+    print("backend/provider WebKit suppression: PASS")
     print("failure taxonomy contract: PASS")
     return 0
 
