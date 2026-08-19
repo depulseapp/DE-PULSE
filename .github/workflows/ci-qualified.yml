@@ -75,13 +75,14 @@ jobs:
           test "$(git rev-parse HEAD)" = "$sha"
           python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
           planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
+          webkit="$(python3 -c "import json; print(str(json.load(open('ci-qualified-impact-plan.json'))['webkitRequired']).lower())")"
           lane="${INPUT_LANE:-$planned}"
           case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned webkit=${{ steps.resolve.outputs.webkit_required }}"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned primary-webkit-signal=$webkit"
 
   ci-harness:
     name: CI/harness contract
@@ -211,7 +212,7 @@ jobs:
         run: node v18_0_5_renderer_test.js
 
   browser:
-    name: Qualified Chrome behavior
+    name: Primary Chrome behavior
     needs: [context, ci-harness]
     if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
     runs-on: ubuntu-24.04
@@ -244,9 +245,9 @@ jobs:
         run: python3 release/v18.5.2/browser_settings_save_bar_test.py
 
   webkit:
-    name: Targeted WebKit compatibility
+    name: Primary WebKit compatibility
     needs: [context, ci-harness]
-    if: ${{ needs.context.outputs.webkit_required == 'true' }}
+    if: ${{ needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -265,7 +266,7 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
           python -m playwright install --with-deps webkit
-      - name: Safari-sensitive targeted compatibility
+      - name: Primary WebKit core compatibility
         run: python3 tools/ci/webkit_targeted_test.py
 
   evidence:
@@ -300,12 +301,12 @@ jobs:
             browser) require "$BROWSER" ;;
             ci-harness) require "$PORTABILITY" ;;
           esac
-          if [ "$WEBKIT_REQUIRED" = true ]; then
+          if [ "$WEBKIT_REQUIRED" = true ] || [ "$LANE" = full ] || [ "$LANE" = browser ]; then
             require "$WEBKIT"
           else
             test "$WEBKIT" = skipped
           fi
-          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}; targeted WebKit required=$WEBKIT_REQUIRED"
+          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}; Chrome+WebKit primary browser policy; webkit signal=$WEBKIT_REQUIRED"
       - name: Record exact-head Qualified status
         if: ${{ github.event_name == 'pull_request' }}
         env:
