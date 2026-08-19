@@ -28,6 +28,7 @@ window.__members={day:[],swing:[],long:[]};window.__calls=[];window.__toasts=[];
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const num=v=>Number(v)||0; const esc=v=>String(v??'');
 function deskWL(k){return {id:'wl-'+k,symbols:[...(window.__members[k]||[])]}}
+function deskMembershipStrip(){return ''}
 function captureSaveContext(){return {y:window.scrollY}} function restoreSaveContext(){} function updateChrome(){}
 function toast(title,msg='',tone=''){window.__toasts.push({title,msg,tone});const h=$('#header-notification');if(h)h.innerHTML='<span class="toast-title">'+title+'</span>'}
 function render(){const row=$('[data-desk-remove]');if(row){const s=row.dataset.deskRemove.split(':')[2];if(!Object.values(window.__members).some(xs=>xs.includes(s)))row.remove()}}
