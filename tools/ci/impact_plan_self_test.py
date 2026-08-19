@@ -27,6 +27,15 @@ def main() -> int:
     require(process["qualifiedLane"] == "ci-harness", "process-only change must use ci-harness")
     require(process["releaseRehearsalRequired"] is True, "CI hardening must require release rehearsal")
 
+    stable_manifest = analyze_changed_paths(["release/v18.6.1/stable-evidence-manifest.json"])
+    require(stable_manifest["qualifiedLane"] == "ci-harness", "durable Stable evidence index must stay process-only")
+    require("RELEASE_TOOLING" in stable_manifest["changeClasses"], "Stable evidence index must remain release-governed")
+    require(stable_manifest["releaseRehearsalRequired"] is True, "Stable evidence changes require release rehearsal")
+    require(stable_manifest["webkitRequired"] is False, "Stable evidence-only work must not consume WebKit")
+
+    non_manifest_release = analyze_changed_paths(["release/v18.6.1/run_full_certification.sh"])
+    require(non_manifest_release["qualifiedLane"] == "full", "release executable/script changes must remain full qualification")
+
     webkit_harness = analyze_changed_paths(["tools/ci/webkit_targeted_test.py"])
     require(webkit_harness["qualifiedLane"] == "ci-harness", "WebKit harness-only change must stay process-only")
     require(webkit_harness["webkitRequired"] is True, "WebKit harness changes must execute WebKit proof")
@@ -56,6 +65,8 @@ def main() -> int:
 
     print("DE.PULSE CI impact planner v2 self-test: PASS")
     print("process-only routing: PASS")
+    print("durable Stable evidence process-only routing: PASS")
+    print("release executable/script full-qualification protection: PASS")
     print("mixed/product fail-closed routing: PASS")
     print("Chrome + WebKit primary renderer-risk signal: PASS")
     print("WebKit harness self-validation routing: PASS")
