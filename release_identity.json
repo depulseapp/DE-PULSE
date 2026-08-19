@@ -6,7 +6,7 @@
   "channel": "STABLE",
   "stable_baseline": "v17.5.1",
   "previous_stable": "v18.6.0",
-  "scope": "Focused v18.6.1 patch: repository hygiene; canonical Day/Swing/Long watchlist toggle state with no CURRENT marker; reliable global tracked-symbol removal from every desk and Master Market Store; centered header alert lane; extensive watchlist removal edge/browser regression; preserve all v18.6.0 adaptive intelligence, deterministic formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary",
+  "scope": "Focused v18.6.1 patch: repository hygiene; canonical Day/Swing/Long watchlist toggle state with no CURRENT marker; reliable global tracked-symbol removal from every desk and Master Market Store; centered header alert lane; extensive watchlist removal edge/browser regression; patch-compatible inherited v18.6 UI hierarchy certification; preserve all v18.6.0 adaptive intelligence, deterministic formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary",
   "bundle_version": "18601",
   "runtime_config": "PersonalMarketTerminal",
   "patch_predecessor": "v18.6.0",
