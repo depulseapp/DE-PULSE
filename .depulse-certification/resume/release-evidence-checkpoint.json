@@ -43,6 +43,12 @@
     "requiredTag": "v18.6.0-stable",
     "verifier": "tools/release/verify_promotion_evidence.py"
   },
+  "promotionTrigger": {
+    "state": "ARMED_MERGED_PR_REQUIRED",
+    "mergeRequired": true,
+    "sourceChange": false,
+    "certificationRunId": 32220888186
+  },
   "historicalCertifiedRun": {
     "runId": 32199369265,
     "sourceFingerprint": "e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
@@ -53,6 +59,6 @@
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved."
   ],
   "releaseBlockingResiduals": [],
-  "nextRequiredEvidence": "Execute owner-controlled merged-PR Stable promotion on v18.6-stable-promotion. Promotion must reuse run 32220888186 artifacts, skip G12/G13/G14/G15 rebuild jobs, publish v18.6.0-stable, then verify tag/release/assets before closing Stable.",
-  "updatedAt": "2026-08-19T06:01:00Z"
+  "nextRequiredEvidence": "Merge this owner-controlled checkpoint-only PR into v18.6-stable-promotion. The merged-PR event must dispatch publish=true, reuse run 32220888186 artifacts, skip G12/G13/G14/G15 rebuild jobs, publish v18.6.0-stable, then verify tag/release/assets.",
+  "updatedAt": "2026-08-19T06:05:00Z"
 }
