@@ -8,10 +8,14 @@ errs=[]
 def need(ok,msg):
     if not ok: errs.append(msg)
 boot=(ROOT/'app_bootstrap.go').read_text(); renderer=(ROOT/'renderer/renderer.js').read_text(); readme=(ROOT/'README.md').read_text(); version=(ROOT/'VERSION.txt').read_text()
+patch_path=ROOT/'renderer'/f'watchlist-desk-contract-v{VERSION}.js'
+patch=patch_path.read_text() if patch_path.exists() else ''
+index=(ROOT/'renderer/index.html').read_text()
 need(f'const appVersion = "{VERSION}"' in boot,'appVersion mismatch')
 need(f'const buildID = "{BUILD}"' in boot,'buildID mismatch')
-need(f"const EXPECTED_RELEASE_VERSION='{VERSION}';" in renderer,'renderer version mismatch')
-need(f"const EXPECTED_BUILD_ID='{BUILD}';" in renderer,'renderer build mismatch')
+renderer_identity=(f"const EXPECTED_RELEASE_VERSION='{VERSION}';" in renderer and f"const EXPECTED_BUILD_ID='{BUILD}';" in renderer)
+patch_identity=(f"DEPULSE_PATCH_VERSION = '{VERSION}'" in patch and f"DEPULSE_PATCH_BUILD_ID = '{BUILD}'" in patch and f'watchlist-desk-contract-v{VERSION}.js?v={VERSION}' in index)
+need(renderer_identity or patch_identity,'renderer/patch version mismatch')
 need(readme.startswith(f'# DE.PULSE v{VERSION}'),'README title mismatch')
 need(BUILD in readme and f'Current Stable baseline:** {PREV}' in readme,'README immediate Stable predecessor mismatch')
 need(f'**Channel:** {CHANNEL}' in '\n'.join(readme.splitlines()[:8]),'README current channel mismatch')
@@ -29,4 +33,4 @@ if errs:
     print('Version consistency: FAIL')
     for e in errs: print(' -',e)
     raise SystemExit(2)
-print(f'Version consistency: PASS · v{VERSION} canonical release identity aligned across runtime, renderer, docs and CI metadata')
+print(f'Version consistency: PASS · v{VERSION} canonical release identity aligned across runtime, renderer patch, docs and CI metadata')
