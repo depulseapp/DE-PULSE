@@ -120,6 +120,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     release_required = (
         "types: [closed]",
         "- 'release_identity.json'",
+        "- '.github/workflows/release.yml'",
         "statuses: read",
         "github.event.pull_request.merged == true",
         "github.event.pull_request.base.ref == 'main'",
@@ -137,6 +138,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "G15 Release Assurance",
         "Publish exact same-run certified artifacts",
         "tools/release/verify_promotion_evidence.py",
+        "git ls-remote --refs origin",
         "gh release create",
         "gh release upload",
         '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH"',
@@ -152,6 +154,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "gh run list",
         "run-id:",
         "READY_NOT_PROMOTED",
+        "git/ref/tags/$tag",
     )
     missing = [x for x in release_required if x not in release]
     forbidden = [x for x in release_forbidden if x in release]
@@ -177,6 +180,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("CI Qualified ready-candidate exact-head contract: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
+    print("Release-tooling recovery trigger + missing-tag lookup hardening: PASS")
     print("squash-merged/stable-line branch hygiene: PASS")
     print("premium runner separation: PASS")
     return 0
