@@ -47,8 +47,9 @@
     "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required and fail closed when absent or unapproved."
   ],
   "assistantPortability": {"status": "ENFORCED", "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md", "entrypoints": ["AGENTS.md", "CLAUDE.md"], "authoritativeHandoff": "handoff/CURRENT.md", "releaseRunTracking": "GitHub Actions run identity + PR #16 binding", "chatMemoryRequired": false, "temporaryWorkspaceAuthoritative": false},
+  "certificationTrigger": {"state": "REQUESTED", "releaseBase": "d5e6721818686f30d737db20c91967215c4cd470", "publish": false},
   "userDelivery": "V18_6_0_FINAL_G10_PASS_NOT_YET_CERTIFIED",
   "nextBranch": "v18.6-release-certification",
   "nextStep": "Run one fresh publish=false G11-G16 certification on final source, then evidence-bound no-rebuild Stable promotion only if every gate passes.",
-  "updatedAt": "2026-08-19T05:50:00Z"
+  "updatedAt": "2026-08-19T05:52:00Z"
 }
