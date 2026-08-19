@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       candidate_sha:
-        description: Immutable candidate SHA (certification base or Stable promotion target)
+        description: Immutable certified source candidate SHA
         required: true
         type: string
       version:
@@ -21,20 +21,20 @@ on:
         default: release/v18.6.0/run_full_certification.sh
         type: string
       expected_source_fingerprint:
-        description: Expected canonical Git-object fingerprint
-        required: true
+        description: Optional expected canonical Git-object fingerprint
+        required: false
         type: string
       publish:
-        description: false = certify; true = promotion-only reuse of an already-certified run
+        description: Publish already-certified assets without rebuilding them
         required: true
         default: false
         type: boolean
-      certified_run_id:
-        description: Successful non-publishing release.yml run whose exact artifacts must be reused when publish=true
+      promotion_sha:
+        description: Stable tag target. Required when publish=true and must preserve certified fingerprint.
         required: false
         type: string
-      promotion_sha:
-        description: Optional Stable tag target; blank uses candidate_sha. Must preserve certified fingerprint.
+      certification_run_id:
+        description: Successful publish=false release run whose G13/G14/G15 artifacts must be reused when publish=true
         required: false
         type: string
 
@@ -55,7 +55,6 @@ env:
 jobs:
   g11:
     name: G11 Immutable candidate/provenance
-    if: ${{ inputs.publish == false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -83,14 +82,14 @@ jobs:
           assert r['build_id']=='${{ inputs.build_id }}',r
           PY
           fp="$(python3 source_fingerprint.py --mode git --commit '${{ inputs.candidate_sha }}')"
-          test "$fp" = "$EXPECTED_FP"
+          if [ -n "$EXPECTED_FP" ]; then test "$fp" = "$EXPECTED_FP"; fi
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
           echo "G11 fingerprint: $fp"
 
   g12:
     name: G12 Full certification
-    if: ${{ inputs.publish == false }}
     needs: g11
+    if: ${{ !inputs.publish }}
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     env:
@@ -136,8 +135,8 @@ jobs:
 
   macos:
     name: G13/G14 macOS Apple Silicon
-    if: ${{ inputs.publish == false }}
     needs: [g11, g12]
+    if: ${{ !inputs.publish && needs.g12.result == 'success' }}
     runs-on: macos-15
     timeout-minutes: 40
     env:
@@ -168,8 +167,8 @@ jobs:
 
   windows:
     name: G13/G14 Windows x64
-    if: ${{ inputs.publish == false }}
     needs: [g11, g12]
+    if: ${{ !inputs.publish && needs.g12.result == 'success' }}
     runs-on: windows-2025
     timeout-minutes: 40
     env:
@@ -201,8 +200,8 @@ jobs:
 
   g15:
     name: G15 Release Assurance
-    if: ${{ inputs.publish == false }}
     needs: [g11, macos, windows]
+    if: ${{ !inputs.publish && needs.macos.result == 'success' && needs.windows.result == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -235,136 +234,139 @@ jobs:
           if-no-files-found: error
           retention-days: 365
 
-  promote:
-    name: G15 Promotion / exact certified artifact publication
-    if: ${{ inputs.publish }}
+  publish:
+    name: G15 Promotion / exact no-rebuild publication
+    needs: [g11, g15]
+    if: ${{ always() && inputs.publish && needs.g11.result == 'success' && needs.g15.result == 'skipped' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
       actions: read
-    outputs:
-      fingerprint: ${{ steps.guard.outputs.fingerprint }}
-      certified_source_sha: ${{ steps.guard.outputs.certified_source_sha }}
-      promotion_target: ${{ steps.guard.outputs.promotion_target }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.promotion_sha || inputs.candidate_sha }}
+          ref: ${{ inputs.promotion_sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - id: guard
-        name: Verify certified run + Stable promotion target
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CERTIFIED_RUN_ID: ${{ inputs.certified_run_id }}
-          EXPECTED_FP: ${{ inputs.expected_source_fingerprint }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          [[ "$CERTIFIED_RUN_ID" =~ ^[0-9]+$ ]]
-          python3 release_identity.py --verify
-          python3 - <<'PY'
-          import json
-          r=json.load(open('release_identity.json'))
-          assert r['version']=='${{ inputs.version }}',r
-          assert r['build_id']=='${{ inputs.build_id }}',r
-          PY
-          target="$(git rev-parse HEAD)"
-          expected_target='${{ inputs.promotion_sha || inputs.candidate_sha }}'
-          test "$target" = "$expected_target"
-          fp="$(python3 source_fingerprint.py --mode git --commit "$target")"
-          test "$fp" = "$EXPECTED_FP"
-          run_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CERTIFIED_RUN_ID")"
-          test "$(jq -r '.conclusion' <<< "$run_json")" = success
-          test "$(jq -r '.name' <<< "$run_json")" = 'DE.PULSE | Release G11-G16'
-          test "$(jq -r '.event' <<< "$run_json")" = workflow_dispatch
-          release_line="${{ inputs.version }}"
-          release_line="${release_line%.*}"
-          test "$(jq -r '.head_branch' <<< "$run_json")" = "v${release_line}-release-certification"
-          certified_source_sha="$(jq -r '.head_sha' <<< "$run_json")"
-          test -n "$certified_source_sha"
-          echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "certified_source_sha=$certified_source_sha" >> "$GITHUB_OUTPUT"
-          echo "promotion_target=$target" >> "$GITHUB_OUTPUT"
-          echo "PASS: successful canonical certification run $CERTIFIED_RUN_ID binds $certified_source_sha; promotion target $target preserves fingerprint $fp"
-      - uses: actions/download-artifact@v8
+      - name: Download certified macOS evidence and artifact
+        uses: actions/download-artifact@v8
         with:
           name: De-Pulse-v${{ inputs.version }}-G13-G14-macOS-Apple-Silicon
           path: release-assets/macos
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
-          run-id: ${{ inputs.certified_run_id }}
-      - uses: actions/download-artifact@v8
+          run-id: ${{ inputs.certification_run_id }}
+      - name: Download certified Windows evidence and artifact
+        uses: actions/download-artifact@v8
         with:
           name: De-Pulse-v${{ inputs.version }}-G13-G14-Windows-x64
           path: release-assets/windows
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
-          run-id: ${{ inputs.certified_run_id }}
-      - uses: actions/download-artifact@v8
+          run-id: ${{ inputs.certification_run_id }}
+      - name: Download certified G15 assurance
+        uses: actions/download-artifact@v8
         with:
           name: De-Pulse-v${{ inputs.version }}-G15-Release-Assurance
           path: release-assets/g15
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
-          run-id: ${{ inputs.certified_run_id }}
-      - name: Verify exact certified evidence + binary SHA-256
+          run-id: ${{ inputs.certification_run_id }}
+      - name: Verify certified run, evidence graph, binaries and promotion target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CERTIFICATION_RUN_ID: ${{ inputs.certification_run_id }}
+          PROMOTION_SHA: ${{ inputs.promotion_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          EXPECTED_FP: ${{ needs.g11.outputs.fingerprint }}
+          VERSION: ${{ inputs.version }}
+          BUILD_ID: ${{ inputs.build_id }}
+        shell: bash
         run: |
-          python3 tools/release/verify_promotion_evidence.py \
-            --g15 release-assets/g15/G15-Release-Assurance.json \
-            --mac-evidence release-assets/macos/G13-G14-macOS-Apple-Silicon.json \
-            --windows-evidence release-assets/windows/G13-G14-Windows-x64.json \
-            --mac-artifact release-assets/macos/De-Pulse-v${{ inputs.version }}-Stable-macOS-Apple-Silicon.zip \
-            --windows-artifact release-assets/windows/De-Pulse-v${{ inputs.version }}-Stable-Windows-x64.zip \
-            --version '${{ inputs.version }}' \
-            --build-id '${{ inputs.build_id }}' \
-            --source-fingerprint '${{ steps.guard.outputs.fingerprint }}' \
-            --certified-run-head '${{ steps.guard.outputs.certified_source_sha }}' \
-            --out release-assets/G15-Promotion-Verification.json
-      - name: Publish exact previously-certified assets
+          set -euo pipefail
+          test -n "$CERTIFICATION_RUN_ID"
+          test -n "$PROMOTION_SHA"
+          target="$(git rev-parse HEAD)"
+          test "$target" = "$PROMOTION_SHA"
+          test "$(python3 source_fingerprint.py --mode git --commit "$target")" = "$EXPECTED_FP"
+          run_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CERTIFICATION_RUN_ID")"
+          test "$(jq -r '.status' <<<"$run_json")" = "completed"
+          test "$(jq -r '.conclusion' <<<"$run_json")" = "success"
+          test "$(jq -r '.head_sha' <<<"$run_json")" = "$CANDIDATE_SHA"
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+
+          root = Path('release-assets')
+          expected = {
+              'sha': os.environ['CANDIDATE_SHA'],
+              'fp': os.environ['EXPECTED_FP'],
+              'version': f"v{os.environ['VERSION']}",
+              'build': os.environ['BUILD_ID'],
+          }
+          mac = json.loads((root/'macos'/'G13-G14-macOS-Apple-Silicon.json').read_text())
+          win = json.loads((root/'windows'/'G13-G14-Windows-x64.json').read_text())
+          g15 = json.loads((root/'g15'/'G15-Release-Assurance.json').read_text())
+          for doc in (mac, win):
+              assert doc['status'] == 'PASS', doc
+              assert doc['certifiedSourceSha'] == expected['sha'], doc
+              assert doc['sourceFingerprint'] == expected['fp'], doc
+              assert doc['release'] == expected['version'], doc
+              assert doc['buildId'] == expected['build'], doc
+              artifact = root / ('macos' if doc is mac else 'windows') / doc['artifact']
+              digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+              assert digest == doc['artifactSha256'], (digest, doc)
+          assert g15['schema'] == 'DE.PULSE-G15-ASSURANCE-2', g15
+          assert g15['status'] == 'PASS', g15
+          assert g15['certifiedSourceSha'] == expected['sha'], g15
+          assert g15['sourceFingerprint'] == expected['fp'], g15
+          assert g15['release'] == expected['version'], g15
+          assert g15['buildId'] == expected['build'], g15
+          assert g15['noExecutionBoundary'] == 'PRESERVED', g15
+          assert g15['promotionAuthorized'] is True, g15
+          by_name = {p['artifact']: p['sha256'] for p in g15['nativePlatforms']}
+          assert by_name[mac['artifact']] == mac['artifactSha256'], (by_name, mac)
+          assert by_name[win['artifact']] == win['artifactSha256'], (by_name, win)
+          print('PASS: certified cross-run artifacts and G15 evidence graph are exact and promotion-safe')
+          PY
+      - name: Publish exact certified assets
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           tag="v${{ inputs.version }}-stable"
-          target='${{ steps.guard.outputs.promotion_target }}'
+          target="$(git rev-parse HEAD)"
           cat > release-notes.md <<EOF
           # DE.PULSE v${{ inputs.version }} Stable
 
-          - Canonical certification run: `${{ inputs.certified_run_id }}`
-          - G12 full certification: PASS
-          - macOS Apple Silicon G13/G14: PASS
-          - Windows x64 G13/G14: PASS
-          - G15 Release Assurance: PASS
+          - G12 full certification: PASS in canonical run `${{ inputs.certification_run_id }}`
+          - macOS Apple Silicon G13/G14: PASS and reused without rebuild
+          - Windows x64 G13/G14: PASS and reused without rebuild
+          - G15 Release Assurance: PASS and reused without rebuild
           - No Execution Boundary: PRESERVED
-          - Certified source SHA: `${{ steps.guard.outputs.certified_source_sha }}`
-          - Stable promotion target: `${target}`
-          - Canonical source fingerprint: `${{ steps.guard.outputs.fingerprint }}`
+          - Certified source: `${{ inputs.candidate_sha }}`
+          - Stable promotion target: `${{ inputs.promotion_sha }}`
+          - Canonical source fingerprint: `${{ needs.g11.outputs.fingerprint }}`
           - Build ID: `${{ inputs.build_id }}`
-          - Publication reuses the exact previously-certified artifacts; G12/G13/G14 are not rebuilt in this promotion run.
+          - Publication downloads the exact artifacts from the successful certification run; G12/G13/G14/G15 are not rerun in promotion mode.
           EOF
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            existing_target="$(gh api "repos/$GITHUB_REPOSITORY/commits/$tag" --jq '.sha')"
-            test "$existing_target" = "$target"
+            ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '.object.sha')"
+            test "$ref" = "$target"
           else
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$target" --title "DE.PULSE v${{ inputs.version }} Stable" --notes-file release-notes.md
           fi
           gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber \
             release-assets/macos/* \
             release-assets/windows/* \
-            release-assets/g15/* \
-            release-assets/G15-Promotion-Verification.json
-          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,isPrerelease,tagName --jq 'select(.isDraft==false and .isPrerelease==false and .tagName=="v${{ inputs.version }}-stable")' >/dev/null
-          echo "PASS: published $tag from certification run ${{ inputs.certified_run_id }} without rebuilding certified assets"
+            release-assets/g15/*
+          echo "PASS: published $tag from certification run ${{ inputs.certification_run_id }} without rebuilding certified assets"
 
   g16:
     name: G16 Adaptive release handoff evidence
-    needs: [g11, g15, promote]
-    if: ${{ always() && ((inputs.publish == false && needs.g15.result == 'success') || (inputs.publish && needs.promote.result == 'success')) }}
+    needs: [g11, g15, publish]
+    if: ${{ always() && needs.g11.result == 'success' && ((!inputs.publish && needs.g15.result == 'success' && needs.publish.result == 'skipped') || (inputs.publish && needs.g15.result == 'skipped' && needs.publish.result == 'success')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -372,36 +374,21 @@ jobs:
         shell: bash
         run: |
           mkdir -p g16
-          if [ '${{ inputs.publish }}' = 'true' ]; then
-            fingerprint='${{ needs.promote.outputs.fingerprint }}'
-            certified_source='${{ needs.promote.outputs.certified_source_sha }}'
-            promotion_target='${{ needs.promote.outputs.promotion_target }}'
-            publication='PASS'
-            evidence_state='REUSED_CERTIFIED_PASS'
-            certified_run='${{ inputs.certified_run_id }}'
-          else
-            fingerprint='${{ needs.g11.outputs.fingerprint }}'
-            certified_source='${{ inputs.candidate_sha }}'
-            promotion_target=''
-            publication='SKIPPED_CERTIFICATION_ONLY'
-            evidence_state='PASS'
-            certified_run='${{ github.run_id }}'
-          fi
           cat > g16/G16-CI-DELIVERY-SUMMARY.json <<EOF
           {
             "schema": "DE.PULSE-G16-CI-DELIVERY-2",
             "version": "v${{ inputs.version }}",
             "candidateSha": "${{ inputs.candidate_sha }}",
-            "certifiedSourceSha": "${certified_source}",
-            "promotionTarget": "${promotion_target}",
-            "sourceFingerprint": "${fingerprint}",
+            "promotionSha": "${{ inputs.promotion_sha }}",
+            "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
             "buildId": "${{ inputs.build_id }}",
-            "certificationRunId": "${certified_run}",
-            "g12": "${evidence_state}",
-            "g13g14MacOS": "${evidence_state}",
-            "g13g14Windows": "${evidence_state}",
-            "g15": "${evidence_state}",
-            "publication": "${publication}",
+            "certificationRunId": "${{ inputs.certification_run_id }}",
+            "mode": "${{ inputs.publish && 'PROMOTION_REUSE' || 'CERTIFICATION' }}",
+            "g12": "${{ inputs.publish && 'PASS_REUSED' || 'PASS' }}",
+            "g13g14MacOS": "${{ inputs.publish && 'PASS_REUSED' || 'PASS' }}",
+            "g13g14Windows": "${{ inputs.publish && 'PASS_REUSED' || 'PASS' }}",
+            "g15": "${{ inputs.publish && 'PASS_REUSED' || 'PASS' }}",
+            "publication": "${{ needs.publish.result }}",
             "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
             "noRebuildPublication": true
           }

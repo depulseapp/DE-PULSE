@@ -32,87 +32,96 @@ def run_gate(root: Path, filename: str, label: str) -> int:
 
 def release_dispatch_contract(workflows: Path) -> int:
     ci_fast = (workflows / "ci-fast.yml").read_text(encoding="utf-8")
-    required = (
+    release = (workflows / "release.yml").read_text(encoding="utf-8")
+
+    ci_required = (
+        "types: [opened, synchronize, reopened, closed]",
         "endsWith(github.ref, '-release-certification')",
         "endsWith(github.ref, '-stable-promotion')",
         "github.event.sender.login == github.repository_owner",
         "github.event_name == 'pull_request'",
+        "github.event.action != 'closed'",
         "endsWith(github.event.pull_request.base.ref, '-release-certification')",
+        "github.event.action == 'closed'",
+        "github.event.pull_request.merged == true",
         "endsWith(github.event.pull_request.base.ref, '-stable-promotion')",
+        "github.event.pull_request.merged_by.login == github.repository_owner",
         "github.actor == github.repository_owner",
-        "needs.fast.outputs.process_only == 'true'",
-        "^\\.depulse-certification/resume/",
         'release_ref="${PR_BASE_REF:-}"',
-        'candidate_sha="${PR_BASE_SHA:-}"',
-        '"v${release_line}-release-certification") publish=false',
-        '"v${release_line}-stable-promotion") publish=true',
-        "certificationRunId",
-        "certified_run_id",
-        "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments",
+        'event_sha="${PR_MERGE_SHA:-}"',
+        '"v${release_line}-release-certification")',
+        '"v${release_line}-stable-promotion")',
+        '.depulse-certification/resume/release-evidence-checkpoint.json',
+        "cur['releaseCandidateCommit']",
+        "cur['sourceFingerprint']",
+        "cur['canonicalReleaseRun']",
+        "cur['promotionState']=='READY_NOT_PROMOTED'",
+        "ev['G16']['status']=='PASS_CLOSED'",
+        "certification_run_id",
+        "promotion_sha",
+        'repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments',
     )
-    missing = [fragment for fragment in required if fragment not in ci_fast]
-    forbidden = (
+    ci_missing = [fragment for fragment in ci_required if fragment not in ci_fast]
+    ci_forbidden = (
         "github.event.head_commit.author.username",
         "gh pr comment",
-        'pull-request fallback may certify only; publication is prohibited',
+        "endsWith(github.event.pull_request.base.ref, '-stable-promotion') && github.event.action != 'closed'",
     )
-    present_forbidden = [fragment for fragment in forbidden if fragment in ci_fast]
-    if missing or present_forbidden:
-        print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
-        if missing:
-            print("release dispatcher contract missing: " + ", ".join(missing), file=sys.stderr)
-        if present_forbidden:
-            print("release dispatcher forbidden fragments: " + ", ".join(present_forbidden), file=sys.stderr)
-        return 1
-    print("release dispatcher owner-gated metadata-only certification/promotion fallback: PASS")
-    return 0
+    ci_present_forbidden = [fragment for fragment in ci_forbidden if fragment in ci_fast]
 
-
-def no_rebuild_promotion_contract(root: Path, workflows: Path) -> int:
-    release = (workflows / "release.yml").read_text(encoding="utf-8")
-    verifier = root / "tools" / "release" / "verify_promotion_evidence.py"
-    required = (
-        "certified_run_id:",
-        "if: ${{ inputs.publish == false }}",
-        "name: G15 Promotion / exact certified artifact publication",
-        "if: ${{ inputs.publish }}",
+    release_required = (
+        "certification_run_id:",
+        "Publish already-certified assets without rebuilding them",
+        "if: ${{ !inputs.publish }}",
+        "G15 Promotion / exact no-rebuild publication",
+        "needs.g15.result == 'skipped'",
         "github-token: ${{ github.token }}",
-        "run-id: ${{ inputs.certified_run_id }}",
-        "tools/release/verify_promotion_evidence.py",
-        "G15-Release-Assurance.json",
+        "repository: ${{ github.repository }}",
+        "run-id: ${{ inputs.certification_run_id }}",
         "G13-G14-macOS-Apple-Silicon.json",
         "G13-G14-Windows-x64.json",
+        "G15-Release-Assurance.json",
+        "certifiedSourceSha",
+        "sourceFingerprint",
+        "artifactSha256",
+        "noExecutionBoundary",
+        "promotionAuthorized",
         "gh release create",
         "gh release upload",
-        "Publication reuses the exact previously-certified artifacts; G12/G13/G14 are not rebuilt in this promotion run.",
+        "G12/G13/G14/G15 are not rerun in promotion mode",
+        '"noRebuildPublication": true',
     )
-    missing = [fragment for fragment in required if fragment not in release]
-    if not verifier.is_file():
-        missing.append("tools/release/verify_promotion_evidence.py file")
-    else:
-        verifier_text = verifier.read_text(encoding="utf-8")
-        for fragment in (
-            "DE.PULSE-STABLE-PROMOTION-VERIFY-1",
-            "promotionAuthorized",
-            "noExecutionBoundary",
-            "artifactSha256",
-            "certifiedSourceSha",
-            "sourceFingerprint",
-        ):
-            if fragment not in verifier_text:
-                missing.append(f"verifier:{fragment}")
-    forbidden = (
-        "name: G15 Promotion / no-rebuild publication\n    needs: [g11, g15]",
+    release_missing = [fragment for fragment in release_required if fragment not in release]
+    release_forbidden = (
+        "git merge-base --is-ancestor '${{ inputs.candidate_sha }}'",
+        'git merge-base --is-ancestor "$CANDIDATE_SHA"',
     )
-    stale = [fragment for fragment in forbidden if fragment in release]
-    if missing or stale:
+    release_present_forbidden = [fragment for fragment in release_forbidden if fragment in release]
+
+    # Native/package and full-cert jobs must be explicitly suppressed in publish mode.
+    for job_marker in ("g12:\n", "macos:\n", "windows:\n", "g15:\n"):
+        pos = release.find(job_marker)
+        if pos < 0:
+            release_missing.append(f"job marker {job_marker.strip()}")
+            continue
+        window = release[pos:pos + 500]
+        if "!inputs.publish" not in window:
+            release_missing.append(f"{job_marker.strip()} publish=false guard")
+
+    if ci_missing or ci_present_forbidden or release_missing or release_present_forbidden:
         print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
-        if missing:
-            print("no-rebuild Stable promotion contract missing: " + ", ".join(missing), file=sys.stderr)
-        if stale:
-            print("stale same-run promotion contract remains: " + ", ".join(stale), file=sys.stderr)
+        if ci_missing:
+            print("release dispatcher contract missing: " + ", ".join(ci_missing), file=sys.stderr)
+        if ci_present_forbidden:
+            print("release dispatcher forbidden contract fragments: " + ", ".join(ci_present_forbidden), file=sys.stderr)
+        if release_missing:
+            print("no-rebuild release contract missing: " + ", ".join(release_missing), file=sys.stderr)
+        if release_present_forbidden:
+            print("no-rebuild release contract forbidden fragments: " + ", ".join(release_present_forbidden), file=sys.stderr)
         return 1
-    print("cross-run exact-artifact Stable promotion contract: PASS")
+
+    print("release dispatcher certification + merged-PR Stable promotion authorization: PASS")
+    print("cross-run exact-artifact no-rebuild Stable promotion contract: PASS")
     return 0
 
 
@@ -183,8 +192,6 @@ def main() -> int:
 
     if release_dispatch_contract(workflows) != 0:
         return 1
-    if no_rebuild_promotion_contract(root, workflows) != 0:
-        return 1
     if g12_browser_contract(root) != 0:
         return 1
     if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
@@ -194,7 +201,6 @@ def main() -> int:
 
     print("DE.PULSE workflow policy: PASS")
     print("active workflows: " + ", ".join(present))
-    print("exact-artifact Stable promotion: PASS")
     print("G12 browser proof selection: PASS")
     print("dependency/provider readiness: PASS")
     print("AI continuous eval/rights: PASS")
