@@ -293,42 +293,17 @@ jobs:
           test "$(jq -r '.status' <<<"$run_json")" = "completed"
           test "$(jq -r '.conclusion' <<<"$run_json")" = "success"
           test "$(jq -r '.head_sha' <<<"$run_json")" = "$CANDIDATE_SHA"
-          python3 - <<'PY'
-          import hashlib, json, os
-          from pathlib import Path
-
-          root = Path('release-assets')
-          expected = {
-              'sha': os.environ['CANDIDATE_SHA'],
-              'fp': os.environ['EXPECTED_FP'],
-              'version': f"v{os.environ['VERSION']}",
-              'build': os.environ['BUILD_ID'],
-          }
-          mac = json.loads((root/'macos'/'G13-G14-macOS-Apple-Silicon.json').read_text())
-          win = json.loads((root/'windows'/'G13-G14-Windows-x64.json').read_text())
-          g15 = json.loads((root/'g15'/'G15-Release-Assurance.json').read_text())
-          for doc in (mac, win):
-              assert doc['status'] == 'PASS', doc
-              assert doc['certifiedSourceSha'] == expected['sha'], doc
-              assert doc['sourceFingerprint'] == expected['fp'], doc
-              assert doc['release'] == expected['version'], doc
-              assert doc['buildId'] == expected['build'], doc
-              artifact = root / ('macos' if doc is mac else 'windows') / doc['artifact']
-              digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
-              assert digest == doc['artifactSha256'], (digest, doc)
-          assert g15['schema'] == 'DE.PULSE-G15-ASSURANCE-2', g15
-          assert g15['status'] == 'PASS', g15
-          assert g15['certifiedSourceSha'] == expected['sha'], g15
-          assert g15['sourceFingerprint'] == expected['fp'], g15
-          assert g15['release'] == expected['version'], g15
-          assert g15['buildId'] == expected['build'], g15
-          assert g15['noExecutionBoundary'] == 'PRESERVED', g15
-          assert g15['promotionAuthorized'] is True, g15
-          by_name = {p['artifact']: p['sha256'] for p in g15['nativePlatforms']}
-          assert by_name[mac['artifact']] == mac['artifactSha256'], (by_name, mac)
-          assert by_name[win['artifact']] == win['artifactSha256'], (by_name, win)
-          print('PASS: certified cross-run artifacts and G15 evidence graph are exact and promotion-safe')
-          PY
+          python3 tools/release/verify_promotion_evidence.py \
+            --g15 release-assets/g15/G15-Release-Assurance.json \
+            --mac-evidence release-assets/macos/G13-G14-macOS-Apple-Silicon.json \
+            --windows-evidence release-assets/windows/G13-G14-Windows-x64.json \
+            --mac-artifact release-assets/macos/De-Pulse-v${VERSION}-Stable-macOS-Apple-Silicon.zip \
+            --windows-artifact release-assets/windows/De-Pulse-v${VERSION}-Stable-Windows-x64.zip \
+            --version "$VERSION" \
+            --build-id "$BUILD_ID" \
+            --source-fingerprint "$EXPECTED_FP" \
+            --certified-run-head "$CANDIDATE_SHA" \
+            --out promotion-verification.json
       - name: Publish exact certified assets
         env:
           GH_TOKEN: ${{ github.token }}
