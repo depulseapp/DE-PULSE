@@ -248,8 +248,8 @@ jobs:
     name: Primary WebKit compatibility
     needs: [context, ci-harness]
     if: ${{ needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    runs-on: macos-15
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -265,7 +265,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
-          python -m playwright install --with-deps webkit
+          python -m playwright install webkit
       - name: Primary WebKit core compatibility
         run: python3 tools/ci/webkit_targeted_test.py
 
