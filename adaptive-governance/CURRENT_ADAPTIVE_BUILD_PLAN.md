@@ -2,7 +2,7 @@
 
 **Operational overlay date:** 2026-08-19  
 **Immutable Stable baseline:** `v18.6.1-stable`  
-**Current engineering slice:** Phase 0 Packet C — Chrome-primary targeted-WebKit browser-risk routing  
+**Current engineering slice:** Phase 0 Packet C — Chrome + WebKit primary browser-risk routing  
 **Authority:** current execution overlay. Permanent contracts and historical release evidence remain intact.
 
 ## 1. Normal target lifecycle
@@ -30,7 +30,7 @@ Rules:
 - **G7 Data / Security / Adaptive Intelligence:** provider/data-rights/security/adaptive evidence when applicable.
 - **G8 Performance / Capacity / Stability:** load/runtime/backpressure/stability evidence when applicable.
 - **G9 Cross-Module / UI / UX:** affected renderer/browser/interaction evidence.
-- **G10 Pre-Freeze Qualified Candidate:** exact-head Qualified success; Release Rehearsal for CI/release changes; Chrome broad behavior and targeted WebKit when renderer risk warrants it.
+- **G10 Pre-Freeze Qualified Candidate:** exact-head Qualified success; Release Rehearsal for CI/release changes; Chrome + WebKit primary browser evidence whenever the selected risk/lane requires browser qualification.
 - **G11 Immutable Release Candidate:** merged candidate bound to exact Fast + Qualified source head and equal source fingerprint.
 - **G12 Full Certification:** authoritative full certification from immutable candidate.
 - **G13 Native Packaging / Provenance:** required native packages from candidate.
@@ -62,16 +62,21 @@ Unknown non-process content fails closed to full qualification.
 
 - Process/governance/CI-only: `ci-harness` + portability.
 - Product/mixed/uncertain: `full` Qualified.
-- `RENDERER_UI`: full Chrome behavioral qualification plus conditional targeted WebKit compatibility.
-- Backend/provider/process-only without renderer impact: no WebKit spend.
+- Normal `full` and explicit `browser` qualification: both primary browser engines must pass.
+- `RENDERER_UI`: WebKit evidence is mandatory even if the lane is narrowed.
+- WebKit harness/routing changes: real WebKit evidence is mandatory while remaining process-only.
+- Backend/provider-only narrowed work: no unnecessary browser-engine runtime.
 - `CI_HARNESS` or `RELEASE_TOOLING`: Release Rehearsal required through workflow policy.
 
 ### Browser policy
 
-- **Chrome is primary/default** because it is the main usage path and remains the broad behavioral suite.
-- **WebKit is secondary and selective**, used only for Safari/WebKit-sensitive renderer/UI risk.
-- WebKit is not a duplicate full browser matrix.
-- When `webkit_required=true`, exact-head Qualified evidence must include successful targeted WebKit results.
+- **Chrome and WebKit are co-primary browser engines.**
+- Chrome carries the broad behavioral regression suite.
+- WebKit carries the primary cross-engine compatibility suite for core UI/interaction contracts.
+- `full` and `browser` candidates require both.
+- Renderer/UI changes require WebKit through `webkit_required`.
+- Other engines, including Firefox if introduced later, remain secondary/risk-directed unless evidence justifies promotion.
+- The design intentionally avoids a blind N-browser matrix: primary engines get mandatory evidence; secondary engines are added only where risk/value warrants it.
 
 ## 4. Failure taxonomy
 
@@ -112,13 +117,15 @@ Generic workflow linting remains useful and is carried into Packet D unless a sa
 ### Packet C — ACTIVE
 
 - Propagate `webkit_required` into Qualified.
-- Keep broad browser behavior explicitly Chrome-primary.
-- Add focused WebKit job only for `RENDERER_UI` impact.
-- Target WebKit at watchlist/global-remove/DESKS/no-CURRENT semantics, failure handling, short-height Settings save-bar behavior and centered alert layout.
-- Bind WebKit success into exact-head Qualified evidence when required; require skip when not required.
-- Add browser-risk routing policy gate so Fast/backend-only work cannot silently acquire WebKit cost.
+- Make Chrome and WebKit the two primary browser engines.
+- Keep Chrome as the broad behavioral regression suite.
+- Add primary WebKit compatibility proof for watchlist/global-remove/DESKS/no-CURRENT semantics, failure handling, short-height Settings save-bar behavior and centered alert layout.
+- Require WebKit for `full`, `browser`, `RENDERER_UI`, and WebKit-harness changes.
+- Keep backend/provider-only narrowed work free of unnecessary browser cost.
+- Bind WebKit success into exact-head Qualified evidence whenever required.
+- Keep other browser engines secondary by default.
 
-Expected Packet C self-validation: process-only → Fast → Qualified CI-harness/portability, with WebKit skipped because Packet C itself changes CI/governance rather than renderer product files.
+Expected Packet C self-validation: process-only → Fast → Qualified CI-harness/portability **plus one real WebKit job** because Packet C changes its own WebKit compatibility harness. Backend/renderer/Chrome product suites remain skipped. This validates the new WebKit execution path without manufacturing a product build.
 
 ### Packet D — Durable evidence / telemetry
 
@@ -130,7 +137,7 @@ Expected Packet C self-validation: process-only → Fast → Qualified CI-harnes
 
 ### Packet E — Renderer modularization foundation
 
-Incrementally extract capability owners from the large renderer/compatibility stack. Each migration requires deterministic equivalence plus relevant Chrome/WebKit/native evidence before removing former owners. Never delete based on file age alone.
+Incrementally extract capability owners from the large renderer/compatibility stack. Each migration requires deterministic equivalence plus required Chrome/WebKit/native evidence before removing former owners. Never delete based on file age alone.
 
 ## 6. Source and repository hygiene
 
@@ -144,8 +151,7 @@ Efficiency may reduce duplicate work, runner choice or irrelevant lanes; it may 
 
 - exact-source provenance;
 - deterministic tests;
-- Chrome behavioral coverage required by affected risk;
-- targeted WebKit coverage when renderer risk requires it;
+- Chrome + WebKit primary evidence when browser qualification is required;
 - data/security/rights controls;
 - macOS Apple Silicon + Windows x64 Stable certification;
 - same-artifact publication;
