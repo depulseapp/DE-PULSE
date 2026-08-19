@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func containsString(values []string, want string) bool {
 	for _, value := range values {
@@ -66,5 +69,56 @@ func TestV1870HealthyStateHasNoFalseAbstain(t *testing.T) {
 	got := deriveRuntimeDegradation("running", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "streaming"}, fresh, ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
 	if got.Code != "" || got.ReasonCode != "" || got.PressureState != "HEALTHY" || got.Abstain {
 		t.Fatalf("healthy runtime should remain clean and non-blocking: %+v", got)
+	}
+}
+
+func TestV1870RecoveryHysteresisRejectsTransientHealthySample(t *testing.T) {
+	tracker := NewRuntimeSLOTracker()
+	t0 := time.Unix(1_800_000_000, 0)
+	degraded := RuntimeDegradationState{Code: "NETWORK", ReasonCode: "NETWORK_FAILURE", PressureState: "DEGRADED", CriticalUsable: false, Abstain: true, Detail: "feeds reconnecting"}
+	healthy := RuntimeDegradationState{PressureState: "HEALTHY", CriticalUsable: true}
+
+	if got := tracker.StabilizeDegradation(degraded, t0); got.Code != "NETWORK" {
+		t.Fatalf("active degradation must surface immediately: %+v", got)
+	}
+	tracker.Observe(nil, degraded, t0)
+
+	first := tracker.StabilizeDegradation(healthy, t0.Add(time.Second))
+	if first.Code != "NETWORK" || first.PressureState != "RECOVERING" || !first.Abstain {
+		t.Fatalf("one healthy observation must not clear a critical degradation: %+v", first)
+	}
+	d1 := tracker.Observe(nil, first, t0.Add(time.Second))
+	if !d1.DegradationRecoveryPending || d1.DegradationHealthyObservations != 1 || d1.DegradationHealthyRequired != 3 {
+		t.Fatalf("recovery confirmation diagnostics are incomplete: %+v", d1)
+	}
+
+	second := tracker.StabilizeDegradation(healthy, t0.Add(3*time.Second))
+	if second.Code == "" {
+		t.Fatalf("recovery cleared before the required confirmation count/stability window")
+	}
+	tracker.Observe(nil, second, t0.Add(3*time.Second))
+
+	third := tracker.StabilizeDegradation(healthy, t0.Add(6*time.Second))
+	if third.Code != "" || third.PressureState != "HEALTHY" {
+		t.Fatalf("confirmed stable recovery should clear the held degradation: %+v", third)
+	}
+	d3 := tracker.Observe(nil, third, t0.Add(6*time.Second))
+	if d3.DegradationRecoveryPending || d3.DegradationRecoveryEvents != 1 || d3.LastDegradationRecoveryMs < 6000 {
+		t.Fatalf("confirmed recovery should be recorded exactly once: %+v", d3)
+	}
+}
+
+func TestV1870RecoveryHysteresisResetsAfterRelapse(t *testing.T) {
+	tracker := NewRuntimeSLOTracker()
+	t0 := time.Unix(1_800_000_000, 0)
+	degraded := RuntimeDegradationState{Code: "PROVIDER DEGRADED", ReasonCode: "PROVIDER_DOWN", PressureState: "DEGRADED", CriticalUsable: false, Abstain: true}
+	healthy := RuntimeDegradationState{PressureState: "HEALTHY", CriticalUsable: true}
+
+	tracker.StabilizeDegradation(degraded, t0)
+	tracker.StabilizeDegradation(healthy, t0.Add(time.Second))
+	tracker.StabilizeDegradation(degraded, t0.Add(2*time.Second))
+	afterRelapse := tracker.StabilizeDegradation(healthy, t0.Add(8*time.Second))
+	if afterRelapse.Code == "" || afterRelapse.PressureState != "RECOVERING" {
+		t.Fatalf("a relapse must reset the healthy streak even when wall-clock time has elapsed: %+v", afterRelapse)
 	}
 }
