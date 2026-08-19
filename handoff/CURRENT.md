@@ -12,7 +12,7 @@
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
 **Engineering branch:** `v18.6.4-development`  
-**Current slice:** Phase 0 Packet C — Chrome-primary targeted-WebKit browser-risk routing; process-only, not a product Stable build  
+**Current slice:** Phase 0 Packet C — Chrome + WebKit primary browser-risk routing; process-only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
 
 `Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
@@ -52,42 +52,37 @@ Delivered Impact Planner v2, planner self-test, side-effect-free Release Rehears
 
 Merged PR #47 at `31b697d175317f0132c0a3fff7283beb1b79662d`.
 
-Delivered:
-
-1. Immutable 40-hex SHA pins for third-party Actions in Fast/Qualified with readable version comments.
-2. `tools/ci/ci_dependency_lock.json` as canonical CI dependency record.
-3. Playwright `1.62.0` pin through `tools/ci/browser-requirements.txt`.
-4. Safe setup-python pip cache keyed by the browser requirements lock.
-5. `tools/ci/reproducibility_gate.py` for movable Action refs, lock drift, unpinned Playwright and scoped permission expansion.
-6. Workflow-policy integration of the reproducibility gate.
-7. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice so native G11–G16 spend is useful.
-
-Packet B had one legitimate gate-parser defect on its first Fast attempt; it was fixed on the same branch/PR. Final Fast #384 and Qualified #134 passed; Qualified used CI-harness + Ubuntu/macOS/Windows portability and skipped product suites. No Stable release was triggered.
+Delivered immutable Action pins for Fast/Qualified, the canonical CI dependency lock, Playwright `1.62.0` pin, safe pip caching, the reproducibility/permission gate and workflow-policy integration. `release.yml` Action pinning remains intentionally deferred to the next genuine release-capable product slice. Final Fast #384 and Qualified #134 passed; no Stable release was triggered.
 
 ### Packet C — ACTIVE
 
-Browser strategy is explicitly usage/risk aligned:
+Browser policy is now explicit:
 
-- **Chrome is the primary/default browser behavioral qualification target** and keeps the broad browser regression suite.
-- **WebKit is a selective secondary compatibility guardrail**, not a duplicate full matrix.
-- Impact Planner `webkit_required=true` only when `RENDERER_UI` changes are present.
-- Backend/provider/process-only changes must not incur WebKit runtime.
-- Targeted WebKit scope focuses on browser-engine-sensitive contracts: watchlist/global-remove and DESKS/no-CURRENT semantics, failure handling, short-height Settings save-bar behavior and centered header alert layout.
-- Exact-head Qualified evidence requires WebKit success whenever the impact signal says it is required; otherwise the WebKit job must be skipped.
+- **Chrome and WebKit are the two primary browser engines for DE.PULSE.**
+- Chrome keeps the broad behavioral regression suite.
+- WebKit is the co-primary cross-engine compatibility gate for core UI/interaction behavior.
+- A normal `full` candidate and an explicit `browser` candidate require both Chrome and WebKit.
+- Renderer/UI changes require WebKit even when qualification is otherwise narrowed.
+- Changes to the WebKit compatibility harness itself also require a real WebKit run so the harness cannot merge unexecuted.
+- Backend-only or provider-only narrowed work does not incur WebKit runtime when browser behavior is not affected.
+- Other browser engines remain secondary/risk-directed unless future evidence justifies promotion.
+
+Primary WebKit scope currently covers the highest-value engine-sensitive contracts: watchlist/global-remove, canonical `DESKS`, no deprecated `CURRENT` semantics, failure preservation, short-height Settings save-bar behavior and centered header alert layout.
 
 Current Packet C files:
 
-1. `.github/workflows/ci-qualified.yml` — propagates `webkit_required`, keeps Chrome as the full browser lane, adds a conditional targeted WebKit job and binds its result into Qualified evidence.
-2. `tools/ci/webkit_targeted_test.py` — focused Safari/WebKit compatibility proof.
-3. `tools/ci/browser_risk_routing_gate.py` — static routing contract ensuring no full Chrome+WebKit matrix and no Fast/backend-only WebKit coupling.
-4. `tools/ci/workflow_policy.py` — permanently enforces browser-risk routing.
+1. `.github/workflows/ci-qualified.yml` — propagates `webkit_required`, names Chrome/WebKit as primary gates, runs WebKit for full/browser/UI-risk candidates and binds its result into exact-head Qualified evidence.
+2. `tools/ci/webkit_targeted_test.py` — primary WebKit core compatibility proof.
+3. `tools/ci/browser_risk_routing_gate.py` — static primary-browser routing contract and secondary-engine suppression.
+4. `tools/ci/impact_plan.py` / `impact_plan_self_test.py` — renderer/UI and WebKit-harness changes request WebKit evidence while backend/provider-only work does not.
+5. `tools/ci/workflow_policy.py` — permanently enforces the Chrome + WebKit co-primary contract.
 
-Expected Packet C path: Draft PR → Fast exact-head → same PR Ready → Qualified `ci-harness` + portability → merge → main-push hygiene. Because Packet C changes CI tooling only, `webkit_required` should be false for Packet C itself; the routing gate proves the conditional wiring and the first future renderer/UI candidate will execute the WebKit lane. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
+Expected Packet C self-validation: process-only → Fast → Qualified CI-harness + Ubuntu/macOS/Windows portability **plus one real WebKit compatibility job**, because Packet C changes the WebKit compatibility harness itself. Backend/renderer/Chrome product suites remain skipped for this process-only packet. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` changes.
 
 ## Remaining Phase 0 packets
 
-1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, and carry forward generic workflow linting if not already incorporated by the end of Packet C.
-2. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving equivalence and browser/native evidence before deleting former owners.
+1. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest, lane runtime/queue/cache/failure taxonomy, CI cost trend evidence, and generic workflow linting if still outstanding.
+2. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving deterministic equivalence and required Chrome/WebKit/native evidence before deleting former owners.
 
 ## After Phase 0
 
@@ -103,4 +98,4 @@ Repository `main` branch protection/ruleset remains an external governance item.
 
 ## Exactly one next action
 
-Open one Draft PR from `v18.6.4-development` to `main` for Packet C, require exact-head Fast, then mark the same PR Ready only after Fast passes and require Qualified `ci-harness` + portability. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Open one Draft PR from `v18.6.4-development` to `main` for Packet C, require exact-head Fast, then mark the same PR Ready only after Fast passes. Qualified must pass CI-harness + portability + the self-validating primary WebKit job. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
