@@ -85,6 +85,11 @@ def release_dispatch_contract(workflows: Path) -> int:
         '--certified-run-head "$CANDIDATE_SHA"',
         '--source-fingerprint "$EXPECTED_FP"',
         "--out promotion-verification.json",
+        "cat > release-notes.md <<'EOF'",
+        "cur['promotionState']=='READY_NOT_PROMOTED'",
+        "releases/tags/$tag",
+        "git/refs/tags/$tag",
+        "gh api --method DELETE",
         "gh release create",
         "gh release upload",
         "G12/G13/G14/G15 are not rerun in promotion mode",
@@ -94,6 +99,7 @@ def release_dispatch_contract(workflows: Path) -> int:
     release_forbidden = (
         "git merge-base --is-ancestor '${{ inputs.candidate_sha }}'",
         'git merge-base --is-ancestor "$CANDIDATE_SHA"',
+        "cat > release-notes.md <<EOF\n          # DE.PULSE",
     )
     release_present_forbidden = [fragment for fragment in release_forbidden if fragment in release]
 
@@ -113,7 +119,6 @@ def release_dispatch_contract(workflows: Path) -> int:
     if not verifier_path.is_file():
         verifier_missing.insert(0, "tools/release/verify_promotion_evidence.py")
 
-    # Native/package and full-cert jobs must be explicitly suppressed in publish mode.
     for job_marker in ("g12:\n", "macos:\n", "windows:\n", "g15:\n"):
         pos = release.find(job_marker)
         if pos < 0:
@@ -139,6 +144,7 @@ def release_dispatch_contract(workflows: Path) -> int:
 
     print("release dispatcher certification + merged-PR Stable promotion authorization: PASS")
     print("cross-run exact-artifact no-rebuild Stable promotion contract: PASS")
+    print("quoted release notes + fail-closed stale partial tag recovery: PASS")
     return 0
 
 
