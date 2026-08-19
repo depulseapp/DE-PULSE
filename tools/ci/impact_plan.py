@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 
 PROCESS_ONLY_PREFIXES = (
@@ -21,6 +22,7 @@ PROCESS_ONLY_EXACT = {
     "AGENTS.md",
     "CLAUDE.md",
 }
+STABLE_EVIDENCE_RE = re.compile(r"^release/v[^/]+/stable-evidence-manifest\.json$")
 
 FAILURE_TAXONOMY = (
     "PRODUCT_FAIL",
@@ -65,6 +67,8 @@ def resolve_base(base: str, head: str) -> str:
 
 
 def is_process_only(path: str) -> bool:
+    if STABLE_EVIDENCE_RE.fullmatch(path):
+        return True
     return path in PROCESS_ONLY_EXACT or path.startswith(PROCESS_ONLY_PREFIXES)
 
 

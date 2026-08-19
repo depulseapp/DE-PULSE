@@ -108,6 +108,11 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
         "WEBKIT: ${{ needs.webkit.result }}",
         "Chrome+WebKit primary browser policy",
+        "actions: read",
+        "Collect CI telemetry",
+        "tools/ci/ci_telemetry.py",
+        "DE-PULSE-ci-telemetry-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
+        "retention-days: 30",
         "statuses: write",
         "DE.PULSE/qualified-head",
     )
@@ -123,7 +128,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     missing = [x for x in qualified_required if x not in qualified]
     forbidden = [x for x in qualified_forbidden if x in qualified]
     if missing:
-        return fail("CI Qualified candidate/exact-head/primary-browser contract missing", missing)
+        return fail("CI Qualified candidate/exact-head/primary-browser/telemetry contract missing", missing)
     if forbidden:
         return fail("CI Qualified must not run routine updates or promote secondary engines by default", forbidden)
 
@@ -189,6 +194,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("CI Fast main-push test suppression + hygiene-only contract: PASS")
     print("CI Qualified ready-candidate exact-head contract: PASS")
     print("Chrome + WebKit co-primary browser contract: PASS")
+    print("Qualified telemetry/evidence retention contract: PASS")
     print("secondary browser engines remain risk-directed: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
@@ -220,11 +226,17 @@ def main() -> int:
         return 1
     if canonical_workflow_contract(workflows) != 0:
         return 1
+    if run_gate(root, "tools/ci/workflow_structural_lint.py", "zero-network workflow structural lint") != 0:
+        return 1
     if run_gate(root, "tools/ci/impact_plan_self_test.py", "CI impact planner v2 contract") != 0:
         return 1
     if run_gate(root, "tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract") != 0:
         return 1
     if run_gate(root, "tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract") != 0:
+        return 1
+    if run_gate(root, "tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract") != 0:
+        return 1
+    if run_gate(root, "tools/ci/stable_evidence_gate.py", "durable Stable evidence contract") != 0:
         return 1
     if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
         return 1
@@ -236,9 +248,12 @@ def main() -> int:
     print("DE.PULSE workflow policy: PASS")
     print("active workflows: " + ", ".join(present))
     print("branch/retry event-amplification prevention: PASS")
+    print("zero-network workflow structural lint: PASS")
     print("CI impact planner v2 self-test: PASS")
     print("CI reproducibility/dependency/permission contract: PASS")
     print("Chrome/WebKit primary browser routing contract: PASS")
+    print("CI telemetry/amplification contract: PASS")
+    print("durable Stable evidence contract: PASS")
     print("pre-merge release rehearsal: PASS")
     print("dependency/provider readiness: PASS")
     print("AI continuous eval/rights: PASS")
