@@ -1,14 +1,13 @@
 {
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
-  "version": "18.6.1",
-  "display_version": "DE.PULSE v18.6.1",
-  "build_id": "v18.6.1-stable-20260819",
+  "version": "18.7.0",
+  "display_version": "DE.PULSE v18.7.0",
+  "build_id": "v18.7.0-stable-20260819",
   "channel": "STABLE",
-  "stable_baseline": "v17.5.1",
-  "previous_stable": "v18.6.0",
-  "scope": "Focused v18.6.1 patch: repository hygiene; canonical Day/Swing/Long watchlist toggle state with no CURRENT marker; reliable global tracked-symbol removal from every desk and Master Market Store; centered header alert lane; extensive watchlist removal edge/browser regression; patch-compatible inherited v18.6 UI hierarchy certification; preserve all v18.6.0 adaptive intelligence, deterministic formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary",
-  "bundle_version": "18601",
+  "stable_baseline": "v18.6.1",
+  "previous_stable": "v18.6.1",
+  "scope": "Runtime Reliability & Data Truth: canonical degradation reason taxonomy and consumer blast radius; fail-closed UNKNOWN/ABSTAIN for insufficient critical evidence; deterministic recovery hysteresis; immediate queue-saturation truth; preserved Smart Provider Router v2, freshness, reconciliation, coalescing, bounded retry/circuit and backpressure owners; synthetic active-market reliability proof; immutable Release Action pins and locked browser dependencies; preserve U.S. Equities Processing, deterministic Day/Swing/Long truth, GLD/SLV/USO tradable exceptions and permanent No Execution Boundary",
+  "bundle_version": "18700",
   "runtime_config": "PersonalMarketTerminal",
-  "patch_predecessor": "v18.6.0",
   "application_bundle": "De-Pulse.app"
 }
