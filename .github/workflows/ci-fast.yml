@@ -31,11 +31,11 @@ jobs:
       contents: read
       statuses: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - id: impact
@@ -44,12 +44,12 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$HEAD_SHA" --github-output "$GITHUB_OUTPUT" --json-out ci-impact-plan.json
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -138,13 +138,13 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
       - name: Apply conservative branch hygiene
         run: python3 tools/ci/branch_hygiene.py --apply --json-out branch-hygiene.json
       - name: Retain cleanup report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: DE-PULSE-branch-hygiene-${{ github.sha }}
           path: branch-hygiene.json
