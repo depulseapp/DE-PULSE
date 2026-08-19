@@ -24,6 +24,7 @@ env:
 jobs:
   fast:
     name: Fast impact-safe preflight
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -107,7 +108,6 @@ jobs:
 
   branch-hygiene:
     name: Remove merged and deprecated release-temp branches
-    needs: fast
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10

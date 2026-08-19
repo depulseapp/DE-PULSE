@@ -26,11 +26,13 @@ A CI retry never creates a new branch or PR.
 
 ## CI Fast
 
-CI Fast runs on PR `opened`, `synchronize` and `reopened`, plus `main` pushes for post-merge sanity and branch hygiene. It does not run on PR close and does not run independently on development-branch pushes, preventing the same commit from receiving both push and PR runs.
+The CI Fast workflow listens to PR `opened`, `synchronize` and `reopened`, plus `main` pushes so branch hygiene can run. The **Fast validation job is skipped on `main` pushes**; a merge therefore does not repeat the Fast tests already proven on the PR head. It does not run on PR close and does not run independently on development-branch pushes.
 
 Fast owns cheap, impact-aware validation: workflow policy, portability/resume contracts, source provenance, release identity, formatting/vet/unit tests when Go changes, renderer syntax and focused regressions when renderer code changes.
 
 CI Fast must never dispatch Release and must not upload an impact-plan artifact on every successful run. Its concurrency group cancels obsolete runs for the same PR/ref.
+
+On a `main` push only the branch-hygiene job is intended to execute; that job is independent of Fast-test success and removes merged/deprecated release-temp branches conservatively.
 
 ## CI Qualified / G10
 
@@ -42,9 +44,15 @@ If the candidate changes after a product/test failure, return the PR to Draft, a
 
 ## Release / G11–G16
 
-Release has one routine trigger: a release PR is merged and that PR changes `release_identity.json`.
+Release has one routine trigger: a release PR is merged, that PR changes `release_identity.json`, the base branch is `main`, and the source branch follows `v*-development`.
 
-The merged commit is the immutable candidate. One Release workflow performs G11 provenance, G12 full certification, G13/G14 macOS Apple Silicon package/runtime audit, G13/G14 Windows x64 package/runtime audit, G15 release assurance, publication of those exact same-run certified artifacts without rebuild, and G16 closure evidence.
+Before G12 can begin, G11 must fail closed unless:
+- the exact release PR head has a successful CI Fast pull-request run;
+- the exact release PR head has a successful CI Qualified pull-request run;
+- the canonical source fingerprint of that qualified PR head equals the merged candidate fingerprint;
+- release identity and the version-specific certification script resolve correctly.
+
+The merged commit is then the immutable candidate. One Release workflow performs G11 provenance, G12 full certification, G13/G14 macOS Apple Silicon package/runtime audit, G13/G14 Windows x64 package/runtime audit, G15 release assurance, publication of those exact same-run certified artifacts without rebuild, and G16 closure evidence.
 
 There is no release-certification branch, no Stable-promotion branch, no trigger PR and no second promotion workflow run.
 
@@ -66,7 +74,7 @@ Keep diagnostic artifacts only where they materially help investigation. Final r
 
 ## Branch hygiene
 
-After a successful `main` Fast run, delete branches fully contained in `main`. Also remove deprecated versioned trigger/retry/dispatch/release-certification/stable-promotion branches when they have no open PR. Never delete a branch that still has an open PR.
+On a `main` push, run branch hygiene without rerunning Fast tests. Delete branches fully contained in `main`. Also remove deprecated versioned trigger/retry/dispatch/release-certification/stable-promotion branches when they have no open PR. Never delete a branch that still has an open PR.
 
 ## Non-negotiable quality boundaries
 

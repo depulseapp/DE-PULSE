@@ -2,8 +2,6 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
-**Release:** `v18.6.0`  
-**Active branch:** `v18.6-development`  
 **Certified Stable:** `v18.6.0-stable`  
 **Stable promotion commit:** `2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c`  
 **Certified source:** `d375852d846f8c9f0045ac929da1830b85ad629e`  
@@ -14,11 +12,9 @@
 **Repository:** `depulseapp/DE-PULSE`  
 **Last updated:** 2026-08-19 America/Vancouver
 
-`Active branch` above intentionally preserves the certified v18.6 checkpoint identity required by the permanent resume contract; v18.6 product work is closed and the next product branch is `v18.6.1-development`.
-
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone. Resume from the last trustworthy PASS recorded in GitHub evidence.
+Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/check state and the immutable Stable tag. Never resume from model memory alone.
 
 ## Current Stable truth
 
@@ -32,17 +28,17 @@ The v18.6 release exposed CI event amplification: temporary certification/promot
 
 That process is superseded by `governance/CI-EFFICIENCY-CONTRACT.md` and the canonical three-workflow model:
 
-- **CI Fast:** PR opened/synchronize/reopened plus `main` push only; no PR-close trigger, no development-branch push trigger, no Release dispatcher, no per-success impact-plan artifact.
+- **CI Fast:** PR opened/synchronize/reopened only for the Fast validation job. The workflow also listens to `main` pushes solely so branch hygiene can execute; the Fast validation job is skipped on those merge pushes. There is no PR-close trigger, development-branch push trigger, Release dispatcher, or per-success impact-plan artifact.
 - **CI Qualified / G10:** normal automatic trigger is `Ready for review`; product candidates use Linux backend/renderer/browser qualification; macOS/Windows portability is reserved for CI/harness changes.
-- **Release G11–G16:** one merged release PR that changes `release_identity.json` starts one workflow on the immutable merge commit; that same workflow performs full certification, native macOS/Windows package/runtime audit, G15 assurance, publishes the exact same-run certified artifacts without rebuild, then emits G16 evidence.
+- **Release G11–G16:** one merged `v*-development → main` release PR that changes `release_identity.json` starts one workflow. G11 first proves that the exact PR head passed both CI Fast and CI Qualified and that its canonical source fingerprint equals the merged candidate. The same workflow then performs full certification, native macOS/Windows package/runtime audit, G15 assurance, publishes the exact same-run certified artifacts without rebuild, and emits G16 evidence.
 - **Retries:** rerun failed jobs on the same SHA for infrastructure failures or fix the same development branch/PR for code/test failures. Never create retry/trigger/fallback branches or PRs.
-- **Branch hygiene:** remove fully merged branches and closed/orphaned legacy release-temp branches while preserving branches with open PRs.
+- **Branch hygiene:** on `main` pushes, remove fully merged branches and closed/orphaned legacy release-temp branches while preserving branches with open PRs; this does not require rerunning Fast tests.
 
 Exactly three active workflow files remain permitted: `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0–G16 remains the only top-level gate model.
 
 ## Cost/quality rule
 
-Optimize event count, paid runner use and artifact retention before removing quality checks. Linux handles routine Fast/Qualified work; macOS/Windows remain mandatory where they establish real cross-platform CI-harness portability or final native G13/G14 runtime truth. Stable publication is impossible unless G11–G15 pass on the immutable merged candidate.
+Optimize event count, paid runner use and artifact retention before removing quality checks. Linux handles routine Fast/Qualified work; macOS/Windows remain mandatory where they establish real cross-platform CI-harness portability or final native G13/G14 runtime truth. Stable publication is impossible unless exact-head G10 evidence and G11–G15 all pass for the immutable merged candidate.
 
 ## Provider-neutral continuation instruction
 

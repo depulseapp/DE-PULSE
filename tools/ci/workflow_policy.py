@@ -64,6 +64,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "- main",
         "workflow_dispatch:",
         "cancel-in-progress: true",
+        "if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}",
         "branch-hygiene:",
         "tools/ci/branch_hygiene.py --apply",
         "release dispatch: NOT PERMITTED from CI Fast",
@@ -77,6 +78,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "gh workflow run release.yml",
         "actions: write",
         "DE-PULSE-ci-impact-${{ github.sha }}",
+        "needs: fast",
     )
     missing = [x for x in fast_required if x not in ci_fast]
     forbidden = [x for x in fast_forbidden if x in ci_fast]
@@ -111,7 +113,14 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "types: [closed]",
         "- 'release_identity.json'",
         "github.event.pull_request.merged == true",
+        "github.event.pull_request.base.ref == 'main'",
+        "startsWith(github.event.pull_request.head.ref, 'v')",
+        "endsWith(github.event.pull_request.head.ref, '-development')",
         "github.event.pull_request.merge_commit_sha",
+        "github.event.pull_request.head.sha",
+        "require_success ci-fast.yml",
+        "require_success ci-qualified.yml",
+        'test "$source_fp" = "$candidate_fp"',
         "G12 Full certification",
         "G13/G14 macOS Apple Silicon",
         "G13/G14 Windows x64",
@@ -125,12 +134,13 @@ def canonical_workflow_contract(workflows: Path) -> int:
     )
     release_forbidden = (
         "workflow_dispatch:",
-        "certification_run_id",
-        "promotion_sha",
+        "certification_run_id:",
+        "promotion_sha:",
         "stable-promotion",
         "release-certification",
         "gh workflow run",
         "run-id:",
+        "READY_NOT_PROMOTED",
     )
     missing = [x for x in release_required if x not in release]
     forbidden = [x for x in release_forbidden if x in release]
@@ -140,7 +150,9 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return fail("legacy release dispatch/promotion contract still present", forbidden)
 
     print("CI Fast single-event development contract: PASS")
+    print("CI Fast main-push test suppression + hygiene-only contract: PASS")
     print("CI Qualified ready-candidate contract: PASS")
+    print("Release exact G10-head / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
     print("premium runner separation: PASS")
     return 0
