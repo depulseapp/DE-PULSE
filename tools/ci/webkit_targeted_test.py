@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Focused WebKit compatibility proof for renderer/UI-sensitive DE.PULSE changes.
 
-Chrome remains the primary browser qualification target. This WebKit lane is
-intentionally narrow and runs only when Impact Planner marks RENDERER_UI risk.
+Chrome and WebKit are the primary browser qualification engines. Chrome keeps
+the broad regression suite; this WebKit proof is the primary compatibility
+counterpart for core cross-engine UI behavior. Other engines remain secondary.
 """
 from __future__ import annotations
 
@@ -177,7 +178,7 @@ def main() -> None:
         settings_layout_contract(page)
         browser.close()
 
-    print("PASS: targeted WebKit compatibility for watchlist/global-remove, no-CURRENT membership semantics, Settings short-height save bar, and centered header alert.")
+    print("PASS: primary WebKit compatibility for watchlist/global-remove, no-CURRENT membership semantics, Settings short-height save bar, and centered header alert.")
 
 
 if __name__ == "__main__":
