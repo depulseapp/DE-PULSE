@@ -3,52 +3,47 @@
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS.** GitHub is authoritative; chat history and temporary workspaces are advisory only.
 
 **Release:** `v18.6.1`  
-**Active branch:** `v18.6.1-development`  
-**Last Certified Stable:** `v18.6.0-stable`  
-**Stable promotion commit:** `2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c`  
-**Last certified source:** `d375852d846f8c9f0045ac929da1830b85ad629e`  
-**Last certified source fingerprint:** `e8c009c16eedb448ed5b9731d8dd24026a7ea0b5a2b5c82e26490a2941b7b4c8`  
-**Last canonical certification run:** `32225064225`  
+**Active branch:** `main`  
+**Certified Stable:** `v18.6.1-stable`  
+**Stable target / certified merged candidate:** `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`  
+**Qualified source head:** `5c3fae486f3e4b4a39a0b1d549916aea9e1295fd`  
+**Certified source fingerprint:** `b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75`  
+**Build ID:** `v18.6.1-stable-20260819`  
+**Canonical certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Status:** v18.6.1 implementation complete on the single development branch; exact-head CI qualification and Release are pending.  
+**Status:** STABLE PUBLISHED · G0–G16 PASS · no open release blockers  
 **Last updated:** 2026-08-19 America/Vancouver
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, then `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, the current GitHub PR/check state, and the immutable Stable tag. Never resume from model memory alone. Resume from the last trustworthy PASS recorded in GitHub evidence.
+Read `AGENTS.md` or `CLAUDE.md`, `governance/CI-EFFICIENCY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current GitHub PR/issue state and the immutable Stable tag. Never resume from model memory alone.
 
-## v18.6.1 committed scope
+## v18.6.1 delivered scope
 
-This is the focused CI-efficiency trial requested after v18.6.0 Stable. Use only `v18.6.1-development` and one PR to `main`.
+1. **Repository hygiene:** stale release/retry/trigger branches removed; after closure only `main` remains. All PRs and issues were reviewed; issue #12 was closed after Stable proof. Disposable-file patterns such as `.DS_Store`, `.bak`, `.tmp`, `.swp`, `Thumbs.db`, `_invalid`, `__pycache__`, `.pyc` and `.orig` are absent. Historical release evidence, governance and still-loaded compatibility assets remain intentionally preserved.
+2. **Watchlist membership UI:** Day/Swing/Long membership uses pressed-state toggles (`aria-pressed`) only; deprecated `CURRENT` / current-desk wording is absent.
+3. **Global symbol removal:** fixed `Global Remove Failed · Can't find variable: DESKS` by loading `renderer/watchlist-desk-contract-v18.6.1.js` before the watchlist extension. Desk-row and Master Market Store removal share the canonical global-remove path with exact-membership Undo.
+4. **Extensive watchlist regression:** `release/v18.6.1/browser_watchlist_global_remove_test.py` covers all seven legal non-empty membership combinations, Undo, Master Market Store removal, rapid/double activation, backend-failure preservation, toggle semantics and absence of `CURRENT`.
+5. **Header alert:** centered in the available middle header lane between the DE.PULSE identity and runtime/account controls.
+6. **Release-harness hardening learned during the trial:** inherited v18.6 UI hierarchy proof is patch-line compatible; publication uses a robust missing-tag lookup; changes to canonical `release.yml` can enter the governed release path without fake product-identity edits.
 
-1. **Repository hygiene:** audit branches, PRs, issues and repository files. At pre-PR intake only `main` and `v18.6.1-development` are needed; no stale trigger/retry/certification branches remain. Historical release evidence, governance and still-loaded compatibility assets are not junk and must not be deleted merely because they are old.
-2. **Watchlist membership UI:** Day/Swing/Long membership is represented only by the pressed-state toggle (`aria-pressed`). The deprecated `CURRENT` / current-desk marker remains absent.
-3. **Global symbol removal:** repair the production WebKit/Safari failure `Global Remove Failed · Can't find variable: DESKS`. `renderer/watchlist-desk-contract-v18.6.1.js` explicitly owns the canonical `day/swing/long` desk-key binding and loads before the active watchlist extension. Desk-row removal and Master Market Store removal continue through the one canonical global-remove path with exact-membership Undo.
-4. **Extensive watchlist regression:** `release/v18.6.1/browser_watchlist_global_remove_test.py` covers all seven legal desk-membership combinations, Undo, Master Market Store removal, rapid double activation, backend-failure behavior, toggle semantics and absence of `CURRENT`. Fast static policy now fails if the production DESKS contract/order or G12 proof disappears.
-5. **Header alert acceptance:** the notification bar fills and centers within the middle topbar lane between product identity and runtime/account controls.
+Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, deterministic Day/Swing/Long formulas, Smart Provider Router ownership, provider/Market-Mode rules, GLD/SLV/USO tradable exceptions and Adaptive Intelligence governance.
 
-No deterministic Day/Swing/Long formula, Smart Provider Router ownership, provider rule, Adaptive Intelligence contract, U.S. Equities Processing Boundary or No Execution Boundary is changed.
+## Final evidence
 
-## Patch certification model
+- Final exact-head Fast: run `32279055139` · PASS.
+- Final exact-head Qualified: run `32279113032` · PASS using the intended process-only CI-harness portability lane.
+- Product candidate full Qualified: run `32276304863` · backend/race/randomized, renderer, deterministic 2403/2403 and browser/global-remove edge coverage PASS.
+- Canonical Release #24: run `32279232665` · G11, G12, macOS Apple Silicon G13/G14, Windows x64 G13/G14, G15, same-run no-rebuild publication and G16 all PASS.
+- Stable tag: `v18.6.1-stable` → certified candidate `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`.
+- Earlier Release #22 exposed and stopped on an inherited hard-coded patch-version test; Release #23 passed G11–G15 and artifact verification but stopped on a missing-tag publication lookup. Both defects were repaired through governed source changes before Release #24 passed. Neither failed attempt published Stable.
 
-`release/v18.6.1/patch_contract.json` explicitly inherits the complete v18.6.0 certification/CI matrix. `release/v18.6.1/run_full_certification.sh` executes the full inherited v18.6.0 G12 matrix against the exact v18.6.1 source, then executes the new v18.6.1 browser edge proof. This is an efficiency optimization in metadata/orchestration only; no G0–G16 quality gate is removed.
+## CI-efficiency trial result
 
-## CI/process contract
+The event-amplification problem is fixed: no trigger/retry/certification/promotion branches were manufactured, exact-head evidence was enforced, main pushes perform hygiene rather than product Fast testing, and the final process-only publication correction skipped unnecessary product suites. The trial still needed two small recovery PRs because it surfaced previously latent release-harness defects. Those were real defects, not duplicate CI events.
 
-The permanent streamlined lifecycle is:
-
-`v18.6.1-development` → one Draft PR → exact-head **CI Fast** → mark the same PR Ready → exact-head **CI Qualified / G10** → merge the same PR → main-push branch hygiene only → one **Release G11–G16** because `release_identity.json` changed → exact same-run certified macOS Apple Silicon + Windows x64 artifacts → `v18.6.1-stable`.
-
-Never manufacture CI events with trigger/retry/fallback/certification/promotion branches or PRs. Same-source infrastructure failures rerun only failed work; source fixes remain on this branch and PR.
-
-## Last trustworthy PASS
-
-The last fully certified product PASS is immutable `v18.6.0-stable`. v18.6.1 has implementation evidence committed but has not yet earned exact-head Fast/Qualified or G11-G16 PASS. The checkpoints therefore correctly mark source fingerprint and downstream gates pending rather than claiming Stable early.
-
-## Provider-neutral continuation instruction
-
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, `governance/CI-EFFICIENCY-CONTRACT.md`, `handoff/CURRENT.md`, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, current PR/check state and latest Stable release. Preserve G0–G16, U.S. Equities Processing, No Execution, deterministic formulas and Smart Provider Router ownership. Continue v18.6.1 only on `v18.6.1-development` and its single PR; never create CI trigger/retry/certification/promotion branches.
+Measured GitHub build clock: first v18.6.1 Draft PR created `2026-08-19T15:11:42Z`; final Stable Release #24 completed `2026-08-19T17:08:02Z` = **1h 56m 20s end-to-end**. Final canonical G11–G16 run itself took **6m 43s** (`17:01:19Z` → `17:08:02Z`).
 
 ## Exactly one next action
 
-Open the single Draft PR `v18.6.1-development → main` and let CI Fast validate the exact source head. If Fast passes, mark that same PR Ready exactly once to start CI Qualified.
+When the next product slice is requested, start intake from immutable `v18.6.1-stable` / current `main` using one version-development branch and one Draft PR under `governance/CI-EFFICIENCY-CONTRACT.md`. Do not create trigger/retry/certification/promotion branches.

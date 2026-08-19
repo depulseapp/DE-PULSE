@@ -3,47 +3,56 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.1",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_1_DEVELOPMENT_IN_PROGRESS",
-  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint. v18.6.1 exact-head G10 and G11-G16 evidence is pending; immutable v18.6.0 Stable evidence remains the certified baseline until this patch completes.",
+  "candidateDisposition": "V18_6_1_STABLE_PUBLISHED",
+  "metadataHeadRule": "Immutable v18.6.1-stable points to certified candidate 42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc. Post-release operational metadata on main does not redefine that artifact.",
   "stable": {
-    "tag": "v18.6.0-stable",
-    "promotionCommit": "2abc4a4a3fbbe623aff57948ec875f45e7ef0a1c",
-    "sourceFingerprint": "e8c009c16eedb448ed5b9731d8dd24026a7ea0b5a2b5c82e26490a2941b7b4c8",
-    "buildId": "v18.6.0-stable-20260818",
+    "tag": "v18.6.1-stable",
+    "promotionCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+    "sourceFingerprint": "b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75",
+    "buildId": "v18.6.1-stable-20260819",
     "releaseState": "PUBLISHED_NON_DRAFT_NON_PRERELEASE",
-    "promotionRun": 32225910416,
-    "certificationRun": 32225064225
+    "promotionRun": 32279232665,
+    "certificationRun": 32279232665
   },
   "currentCandidate": {
     "version": "v18.6.1",
     "buildId": "v18.6.1-stable-20260819",
-    "branch": "v18.6.1-development",
-    "pullRequest": null,
-    "candidateSourceCommit": "d60ad3f9c59a1b319855f4d7d456d64a059ec37b",
-    "qualificationHead": null,
-    "mainMergeCommit": null,
-    "releaseCandidateCommit": null,
-    "sourceFingerprint": null,
-    "promotionState": "NOT_STARTED",
-    "canonicalReleaseRun": null,
-    "promotionRun": null,
-    "promotionCommit": null,
-    "tag": null,
-    "publish": false
+    "branch": "main",
+    "pullRequest": 45,
+    "candidateSourceCommit": "5c3fae486f3e4b4a39a0b1d549916aea9e1295fd",
+    "qualificationHead": "5c3fae486f3e4b4a39a0b1d549916aea9e1295fd",
+    "mainMergeCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+    "releaseCandidateCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+    "sourceFingerprint": "b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75",
+    "promotionState": "PROMOTED",
+    "canonicalReleaseRun": 32279232665,
+    "promotionRun": 32279232665,
+    "promotionCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+    "tag": "v18.6.1-stable",
+    "publish": true
   },
   "evidence": {
-    "Inherited-v18.6.0-Stable": {"status": "PASS", "certificationRun": 32225064225, "tag": "v18.6.0-stable"},
-    "G0-G4-v18.6.1": {"status": "IMPLEMENTED_PENDING_CI"},
-    "G5-G10": {"status": "PENDING_EXACT_HEAD_CI"},
-    "G11-G16": {"status": "PENDING_RELEASE"},
-    "v18.6.1-watchlist-edge-proof": {"status": "IMPLEMENTED_PENDING_G12_EXECUTION", "path": "release/v18.6.1/browser_watchlist_global_remove_test.py"}
+    "G0-G9": {"status": "PASS"},
+    "G10": {"status": "PASS", "fastRun": 32279055139, "qualifiedRun": 32279113032, "productFullQualifiedRun": 32276304863},
+    "G11": {"status": "PASS", "runId": 32279232665},
+    "G12": {"status": "PASS", "runId": 32279232665},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32279232665, "artifactId": 9375328774, "artifactDigest": "sha256:ab36d804637dc0264c2f09511c1a592ec44ca3d553e760795b00ca0782dadb50"},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32279232665, "artifactId": 9375346052, "artifactDigest": "sha256:c4f6fc934cd9ab896ced08486aa6c7a1cfcbae647ad7c54435495768641fe0d9"},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32279232665, "artifactId": 9375357805, "artifactDigest": "sha256:261338f7a62e59fa98f11acc81b58deac0814f592f44aaeb252aafcf3831295b"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32279232665, "artifactId": 9375375860, "artifactDigest": "sha256:cbb59e11311264d02c5e0c221788aeb2642e612dd8c760b14deb4502c54d7b22"},
+    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32279232665, "tag": "v18.6.1-stable", "certifiedCandidate": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc"},
+    "WatchlistGlobalRemove": {"status": "PASS", "coverage": "all seven non-empty Day/Swing/Long membership combinations; desk row; Master Market Store; Undo; double activation; backend failure; no CURRENT"},
+    "HeaderAlertCentering": {"status": "PASS"}
   },
-  "previousPromotionAttempts": [],
+  "previousReleaseAttempts": [
+    {"runId": 32276774793, "releaseRunNumber": 22, "failure": "inherited v18.6 UI hierarchy proof hard-coded exact 18.6.0 patch version", "authoritativeStableClaim": false},
+    {"runId": 32278034594, "releaseRunNumber": 23, "failure": "missing-tag GitHub API 404 JSON misclassified as existing tag SHA during publication", "g11ThroughG15": "PASS", "artifactVerification": "PASS", "authoritativeStableClaim": false}
+  ],
   "releaseBlockingResiduals": [],
   "knownResiduals": [
     "TradeInsight remains governed shadow/future work until separately validated and approved.",
     "Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved."
   ],
-  "nextRequiredEvidence": "Exact-head CI Fast on the single Draft PR, then one Ready-for-review Qualified run; after merge, one canonical G11-G16 Release run.",
-  "updatedAt": "2026-08-19T15:10:00Z"
+  "nextRequiredEvidence": "None for v18.6.1 Stable. Begin the next product slice only when requested, from immutable v18.6.1-stable/current main.",
+  "updatedAt": "2026-08-19T17:08:02Z"
 }
