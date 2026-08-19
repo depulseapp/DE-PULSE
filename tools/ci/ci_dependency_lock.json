@@ -1,0 +1,59 @@
+{
+  "schema": "DE.PULSE-CI-DEPENDENCY-LOCK-1",
+  "updated_at": "2026-08-19",
+  "scope": {
+    "immutable_action_pin_workflows": [
+      ".github/workflows/ci-fast.yml",
+      ".github/workflows/ci-qualified.yml"
+    ],
+    "deferred_release_workflow": {
+      "path": ".github/workflows/release.yml",
+      "reason": "Pin together with the next release-capable product slice so G11-G16/native certification is useful rather than a process-only paid rerun."
+    }
+  },
+  "actions": {
+    "actions/checkout": {
+      "label": "v7",
+      "sha": "3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    "actions/setup-python": {
+      "label": "v6",
+      "sha": "ece7cb06caefa5fff74198d8649806c4678c61a1"
+    },
+    "actions/setup-go": {
+      "label": "v7",
+      "sha": "b7ad1dad31e06c5925ef5d2fc7ad053ef454303e"
+    },
+    "actions/setup-node": {
+      "label": "v6",
+      "sha": "249970729cb0ef3589644e2896645e5dc5ba9c38"
+    },
+    "actions/upload-artifact": {
+      "label": "v7.0.1",
+      "sha": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    }
+  },
+  "browser": {
+    "requirements_file": "tools/ci/browser-requirements.txt",
+    "playwright": "1.62.0",
+    "cache": "setup-python pip cache keyed by browser-requirements.txt",
+    "system_browser": "Google Chrome supplied by ubuntu-24.04 runner through CHROME_BIN"
+  },
+  "permission_policy": {
+    "default": "contents: read",
+    "allowed_write_permissions": {
+      "ci-fast.yml:fast": ["statuses: write"],
+      "ci-fast.yml:branch-hygiene": ["contents: write"],
+      "ci-qualified.yml:evidence": ["statuses: write"]
+    },
+    "forbidden_in_scoped_workflows": [
+      "actions: write",
+      "checks: write",
+      "deployments: write",
+      "id-token: write",
+      "packages: write",
+      "security-events: write",
+      "write-all"
+    ]
+  }
+}
