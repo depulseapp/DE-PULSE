@@ -92,6 +92,12 @@ def release_dispatch_contract(workflows: Path) -> int:
         "gh api --method DELETE",
         "gh release create",
         "gh release upload",
+        'release-assets/macos/De-Pulse-v${{ inputs.version }}-Stable-macOS-Apple-Silicon.zip',
+        'release-assets/windows/De-Pulse-v${{ inputs.version }}-Stable-Windows-x64.zip',
+        "release-assets/macos/G13-G14-macOS-Apple-Silicon.json",
+        "release-assets/windows/G13-G14-Windows-x64.json",
+        "release-assets/g15/G15-Release-Assurance.json",
+        "promotion-verification.json",
         "G12/G13/G14/G15 are not rerun in promotion mode",
         '"noRebuildPublication": true',
     )
@@ -100,6 +106,9 @@ def release_dispatch_contract(workflows: Path) -> int:
         "git merge-base --is-ancestor '${{ inputs.candidate_sha }}'",
         'git merge-base --is-ancestor "$CANDIDATE_SHA"',
         "cat > release-notes.md <<EOF\n          # DE.PULSE",
+        "release-assets/macos/*",
+        "release-assets/windows/*",
+        "release-assets/g15/*",
     )
     release_present_forbidden = [fragment for fragment in release_forbidden if fragment in release]
 
@@ -145,6 +154,7 @@ def release_dispatch_contract(workflows: Path) -> int:
     print("release dispatcher certification + merged-PR Stable promotion authorization: PASS")
     print("cross-run exact-artifact no-rebuild Stable promotion contract: PASS")
     print("quoted release notes + fail-closed stale partial tag recovery: PASS")
+    print("explicit unique Stable release asset allowlist: PASS")
     return 0
 
 
