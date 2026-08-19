@@ -153,7 +153,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/workflow_structural_lint.py
 
   backend:
     name: Qualified backend
@@ -217,6 +217,9 @@ jobs:
     if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
+    outputs:
+      cache_hit: ${{ steps.browser_python.outputs.cache-hit }}
+      setup_seconds: ${{ steps.browser_prerequisites.outputs.seconds }}
     env:
       CHROME_BIN: /usr/bin/google-chrome
     steps:
@@ -224,13 +227,21 @@ jobs:
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - id: browser_python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
           cache-dependency-path: tools/ci/browser-requirements.txt
-      - name: Browser prerequisites
-        run: python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
+      - id: browser_prerequisites
+        name: Browser prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
+          end="$(date +%s)"
+          echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
       - name: Live DOM reconciliation
         run: python3 release/v18.5.1/browser_live_render_test.py
       - name: Watchlist membership semantics
@@ -250,22 +261,30 @@ jobs:
     if: ${{ needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
     runs-on: macos-15
     timeout-minutes: 15
+    outputs:
+      cache_hit: ${{ steps.webkit_python.outputs.cache-hit }}
+      setup_seconds: ${{ steps.webkit_prerequisites.outputs.seconds }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - id: webkit_python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
           cache-dependency-path: tools/ci/browser-requirements.txt
-      - name: WebKit prerequisites
+      - id: webkit_prerequisites
+        name: WebKit prerequisites
         shell: bash
         run: |
           set -euo pipefail
+          start="$(date +%s)"
           python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
           python -m playwright install webkit
+          end="$(date +%s)"
+          echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
       - name: Primary WebKit core compatibility
         run: python3 tools/ci/webkit_targeted_test.py
 
@@ -274,11 +293,19 @@ jobs:
     needs: [context, ci-harness, portability, backend, renderer, browser, webkit]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 8
     permissions:
+      actions: read
       contents: read
       statuses: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Require selected lanes to pass
         shell: bash
         env:
@@ -307,8 +334,54 @@ jobs:
             test "$WEBKIT" = skipped
           fi
           echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}; Chrome+WebKit primary browser policy; webkit signal=$WEBKIT_REQUIRED"
+      - name: Collect CI telemetry
+        if: ${{ always() }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ needs.context.outputs.sha }}
+          LANE: ${{ needs.context.outputs.lane }}
+          WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}
+          HEAD_REF: ${{ github.head_ref }}
+          PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
+          CHROME_CACHE_HIT: ${{ needs.browser.outputs.cache_hit }}
+          CHROME_SETUP_SECONDS: ${{ needs.browser.outputs.setup_seconds }}
+          WEBKIT_CACHE_HIT: ${{ needs.webkit.outputs.cache_hit }}
+          WEBKIT_SETUP_SECONDS: ${{ needs.webkit.outputs.setup_seconds }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?filter=latest&per_page=100" > ci-qualified-jobs.json
+          if [ -n "${HEAD_REF:-}" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs?event=pull_request&branch=$HEAD_REF&per_page=100" > ci-pr-runs.json
+          else
+            printf '%s\n' '{"workflow_runs":[]}' > ci-pr-runs.json
+          fi
+          python3 tools/ci/ci_telemetry.py \
+            --jobs-json ci-qualified-jobs.json \
+            --runs-json ci-pr-runs.json \
+            --workflow 'DE.PULSE | CI Qualified' \
+            --run-id "$GITHUB_RUN_ID" \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --lane "$LANE" \
+            --webkit-required "$WEBKIT_REQUIRED" \
+            --pr-created-at "${PR_CREATED_AT:-}" \
+            --chrome-cache-hit "${CHROME_CACHE_HIT:-}" \
+            --chrome-setup-seconds "${CHROME_SETUP_SECONDS:-}" \
+            --webkit-cache-hit "${WEBKIT_CACHE_HIT:-}" \
+            --webkit-setup-seconds "${WEBKIT_SETUP_SECONDS:-}" \
+            --output ci-qualified-telemetry.json \
+            --summary-output ci-qualified-telemetry.md
+          cat ci-qualified-telemetry.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain compact telemetry
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-ci-telemetry-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: ci-qualified-telemetry.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Record exact-head Qualified status
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ success() && github.event_name == 'pull_request' }}
         env:
           GH_TOKEN: ${{ github.token }}
           QUALIFIED_SHA: ${{ needs.context.outputs.sha }}
