@@ -11,11 +11,11 @@
 **Build ID:** `v18.6.1-stable-20260819`  
 **Canonical v18.6.1 certification/publication run:** `32279232665` (Release #24)  
 **Repository:** `depulseapp/DE-PULSE`  
-**Engineering branch:** `v18.6.2-development`  
-**Current slice:** post-v18.6.1 engineering hardening; process/governance only, not a product Stable build  
+**Engineering branch:** `v18.6.3-development`  
+**Current slice:** Phase 0 Packet B — CI reproducibility hardening; process-only, not a product Stable build  
 **Last updated:** 2026-08-19 America/Vancouver
 
-`Release` and `Active branch` above intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records the current in-flight branch without mutating Stable checkpoint identity.
+`Release` and `Active branch` intentionally mirror the immutable build-resume checkpoint (`v18.6.1` / `main`). `Engineering branch` records in-flight engineering without mutating Stable checkpoint identity.
 
 ## Resume rule
 
@@ -29,49 +29,68 @@ For current operating state also read:
 - `adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md`
 - `adaptive-governance/V18_6_1_CURRENT_RECONCILIATION.md`
 
-Older adaptive files remain permanent/historical evidence, but older statements that v18.2 or v18.5.1 is the active release are historical and must not override these current overlays.
-
 ## Immutable v18.6.1 Stable evidence
 
 - Final exact-head Fast: run `32279055139` · PASS.
-- Final exact-head Qualified: run `32279113032` · PASS using the intended process-only CI-harness portability lane.
-- Product candidate full Qualified: run `32276304863` · backend/race/randomized, renderer, deterministic 2403/2403 and browser/global-remove edge coverage PASS.
-- Canonical Release #24: run `32279232665` · G11, G12, macOS Apple Silicon G13/G14, Windows x64 G13/G14, G15, same-run no-rebuild publication and G16 PASS.
+- Final exact-head Qualified: run `32279113032` · PASS.
+- Product candidate full Qualified: run `32276304863` · backend/race/randomized, renderer, deterministic 2403/2403 and browser/global-remove coverage PASS.
+- Canonical Release #24: run `32279232665` · G11–G16 PASS including macOS Apple Silicon and Windows x64 native evidence and same-run publication.
 - Stable tag: `v18.6.1-stable` → `42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc`.
 - Measured v18.6.1 clock: first Draft PR to final Stable = **1h 56m 20s**; final canonical G11–G16 run = **6m 43s**.
 
 Permanent boundaries remain unchanged: U.S. Equities Processing, No Execution, deterministic Day/Swing/Long truth, Smart Provider Router ownership, provider/Market-Mode rules, GLD/SLV/USO tradable exceptions and Adaptive Intelligence governance.
 
-## Current post-Stable hardening slice
+## Phase 0 hardening status
 
-Purpose: turn the v18.6.1 lessons into permanent process safeguards before broad feature work.
+### Packet A — COMPLETE
 
-Implemented on `v18.6.2-development`:
+Merged PR #46 to `main` at `a3beb28322c2c53227bac037e546d6863c8d279e`.
 
-1. `tools/ci/impact_plan.py` schema 2 adds explicit change classes, conservative full-lane fallback, Release Rehearsal signal, targeted-WebKit planning signal and canonical failure taxonomy while retaining existing workflow outputs.
-2. `tools/ci/impact_plan_self_test.py` proves process-only, renderer, provider/data-rights and mixed fail-closed classifications.
-3. `tools/ci/release_rehearsal.py` performs side-effect-free pre-merge checks of G11–G16 topology, exact-head/fingerprint requirements, Stable-tag absent/same/mismatch behavior and no-rebuild publication.
-4. `tools/ci/workflow_policy.py` invokes both new gates, so Fast and the process-only Qualified harness automatically exercise them without adding another workflow.
-5. Current adaptive roadmap/build-plan/build-process/delivery-process overlays replace stale current-state claims without rewriting historical/permanent contracts.
-6. `V18_6_1_CURRENT_RECONCILIATION.md` records an honest baseline. It explicitly does not invent the historical 296 ledger rows; the original conserved IDs/history must be preserved when the source ledger is located.
+Delivered:
 
-This slice intentionally does **not** change `release_identity.json` or `.github/workflows/release.yml`. Therefore merging it should not trigger a new Stable Release. The expected validation path is Fast → same PR Ready → Qualified `ci-harness` + portability → merge → main-push hygiene.
+1. Impact Planner v2 change classes, conservative fail-closed routing, WebKit planning signal and failure taxonomy.
+2. Planner self-test.
+3. Side-effect-free Release Rehearsal for G11–G16 topology, exact-head/fingerprint contracts, Stable-tag behavior and no-rebuild publication.
+4. Workflow policy integration of the planner/rehearsal safeguards.
+5. Current Adaptive Roadmap / Build Plan / Build Process / Delivery Process overlays.
+6. Honest v18.6.1 reconciliation baseline without inventing missing historical ledger rows.
 
-## Next hardening packets after this slice
+Packet A final exact-head Fast #381 and Qualified #133 passed; Qualified correctly used CI-harness + Ubuntu/macOS/Windows portability and skipped irrelevant product suites. No new Stable release was triggered.
 
-1. Verify and pin third-party GitHub Actions to immutable SHAs; pin Playwright/browser; add safe caches and generic workflow linting; tighten least-privilege permissions.
-2. Connect `webkit_required` to a focused WebKit Qualified lane for renderer/UI-sensitive changes.
-3. Add durable compact Stable evidence manifest and CI runtime/queue/cache/failure telemetry.
-4. Start incremental renderer strangler modularization only after the process hardening is green.
+### Packet B — ACTIVE
+
+Goal: make routine CI dependencies reproducible and auditable without spending a release-only native certification run.
+
+Current branch scope:
+
+1. Pin third-party GitHub Actions in `ci-fast.yml` and `ci-qualified.yml` to immutable 40-hex commits, retaining readable upstream version comments.
+2. Add `tools/ci/ci_dependency_lock.json` as the canonical Action/browser dependency record.
+3. Pin Playwright to `1.62.0` through `tools/ci/browser-requirements.txt`.
+4. Use setup-python's pip cache keyed by the pinned browser requirements file; no separate cache Action is added.
+5. Add `tools/ci/reproducibility_gate.py` to reject movable Action refs, dependency-lock drift, unpinned Playwright and scoped permission expansion.
+6. Run the reproducibility gate through canonical `tools/ci/workflow_policy.py`.
+7. Keep `release.yml` Action pinning explicitly deferred to the next release-capable product slice so changing it does not create a process-only G11–G16/macOS/Windows spend.
+
+Expected Packet B path: Draft PR → Fast exact-head → same PR Ready → Qualified `ci-harness` + portability → merge → main-push hygiene. No Stable Release is expected because neither `release_identity.json` nor `.github/workflows/release.yml` is changed.
+
+## Remaining Phase 0 packets
+
+1. **Packet C — Browser Risk Routing:** connect Impact Planner `webkit_required` to a focused Qualified WebKit lane for renderer/UI-sensitive changes without duplicating backend-only work.
+2. **Packet D — Durable CI Evidence & Telemetry:** compact Stable evidence manifest plus lane runtime/queue/cache/failure taxonomy and cost trend evidence.
+3. **Packet E — Renderer Modularization Foundation:** incremental strangler extraction from the large renderer/compatibility stack, preserving equivalence and browser/native evidence before deleting former owners.
+
+## After Phase 0
+
+Adaptive v18.x priority order: user-trust defects → runtime/ADR-GDI reliability → shared intelligence utility consolidation → renderer maintainability/consolidation → controlled TradeInsight SHADOW integration. Then perform v18 Major Closure, followed by v19 Professional Data Infrastructure and v20 Adaptive Intelligence.
 
 ## Repository/source-age rule
 
-Do not modify or delete files because GitHub says they are several days old. Age is not evidence of obsolescence. Historical release evidence, governance and actively loaded compatibility assets stay until runtime references/consumers and tests prove safe removal.
+Do not modify or delete files because GitHub says they are several days old. Historical release evidence, governance and actively loaded compatibility assets stay until references/consumers/evidence requirements prove safe removal.
 
 ## External/open governance item
 
-Repository `main` branch protection/ruleset was previously observed as not protected and has not been claimed fixed by this slice. Do not report it as changed unless GitHub confirms a ruleset/branch-protection update through an authorized mechanism.
+Repository `main` branch protection/ruleset remains an external governance item. Do not report it as fixed unless GitHub confirms an authorized branch-protection/ruleset change.
 
 ## Exactly one next action
 
-Continue the one Draft PR from `v18.6.2-development` to `main`, let Fast validate the new exact head, mark that same PR Ready only after Fast passes, then require Qualified `ci-harness` + portability. Fix any legitimate source/gate defect on the same branch/PR; do not create retry/certification/promotion branches.
+Open one Draft PR from `v18.6.3-development` to `main` for Packet B, require exact-head Fast, then mark the same PR Ready only after Fast passes and require Qualified `ci-harness` + portability. Fix any legitimate defect on the same branch/PR; do not create retry/certification/promotion branches.
