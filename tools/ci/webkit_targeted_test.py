@@ -13,6 +13,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = (ROOT / "renderer" / "watchlist-desk-contract-v18.6.1.js").read_text(encoding="utf-8")
 EXT = (ROOT / "renderer" / "watchlist-v18.5.1.js").read_text(encoding="utf-8")
+INDEX = (ROOT / "renderer" / "index.html").read_text(encoding="utf-8")
 BASE_CSS = (ROOT / "renderer" / "styles.css").read_text(encoding="utf-8")
 SETTINGS_CSS = (ROOT / "renderer" / "ui-v18.5.1.css").read_text(encoding="utf-8")
 PATCH_CSS = (ROOT / "renderer" / "ui-v18.6.1.css").read_text(encoding="utf-8")
@@ -50,7 +51,7 @@ function mount(kind='day'){
 """
 
 SETTINGS_FIXTURE = """
-<header class="topbar"><strong>DE.PULSE</strong><div id="header-notification">Compatibility notice</div></header>
+<header class="topbar"><strong>DE.PULSE</strong><div id="header-notification" class="header-notification">Compatibility notice</div></header>
 <section class="market-status-bar"><div class="market-status-content">Market Pulse</div></section>
 <div class="ticker-tape">Market Instruments</div>
 <div class="workspace">
@@ -168,6 +169,7 @@ def settings_layout_contract(page) -> None:
 def main() -> None:
     assert "CURRENT" not in EXT
     assert "aria-pressed" in EXT
+    assert 'id="header-notification" class="header-notification"' in INDEX
     assert "justify-self:stretch!important" in PATCH_CSS
     assert "text-align:center!important" in PATCH_CSS
 
