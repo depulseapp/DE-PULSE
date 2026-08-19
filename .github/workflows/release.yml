@@ -307,23 +307,43 @@ jobs:
       - name: Publish exact certified assets
         env:
           GH_TOKEN: ${{ github.token }}
+          CERTIFICATION_RUN_ID: ${{ inputs.certification_run_id }}
+          EXPECTED_FP: ${{ needs.g11.outputs.fingerprint }}
         shell: bash
         run: |
           set -euo pipefail
           tag="v${{ inputs.version }}-stable"
           target="$(git rev-parse HEAD)"
-          cat > release-notes.md <<EOF
+          existing_ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --jq '.object.sha' 2>/dev/null || true)"
+          if [ -n "$existing_ref" ] && [ "$existing_ref" != "$target" ]; then
+            CHECKPOINT=.depulse-certification/resume/release-evidence-checkpoint.json \
+            CERTIFICATION_RUN_ID="$CERTIFICATION_RUN_ID" EXPECTED_FP="$EXPECTED_FP" python3 - <<'PY'
+          import json, os
+          cp=json.load(open(os.environ['CHECKPOINT']))
+          cur=cp['currentCandidate']
+          assert cur['promotionState']=='READY_NOT_PROMOTED', cur
+          assert str(cur['canonicalReleaseRun'])==os.environ['CERTIFICATION_RUN_ID'], cur
+          assert cur['sourceFingerprint']==os.environ['EXPECTED_FP'], cur
+          print('PASS: stale same-version tag is non-authoritative and safe to replace')
+          PY
+            release_id="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" --jq '.id' 2>/dev/null || true)"
+            if [ -n "$release_id" ]; then
+              gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/$release_id"
+            fi
+            gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$tag"
+          fi
+          cat > release-notes.md <<'EOF'
           # DE.PULSE v${{ inputs.version }} Stable
 
-          - G12 full certification: PASS in canonical run `${{ inputs.certification_run_id }}`
+          - G12 full certification: PASS in canonical run ${{ inputs.certification_run_id }}
           - macOS Apple Silicon G13/G14: PASS and reused without rebuild
           - Windows x64 G13/G14: PASS and reused without rebuild
           - G15 Release Assurance: PASS and reused without rebuild
           - No Execution Boundary: PRESERVED
-          - Certified source: `${{ inputs.candidate_sha }}`
-          - Stable promotion target: `${{ inputs.promotion_sha }}`
-          - Canonical source fingerprint: `${{ needs.g11.outputs.fingerprint }}`
-          - Build ID: `${{ inputs.build_id }}`
+          - Certified source: ${{ inputs.candidate_sha }}
+          - Stable promotion target: ${{ inputs.promotion_sha }}
+          - Canonical source fingerprint: ${{ needs.g11.outputs.fingerprint }}
+          - Build ID: ${{ inputs.build_id }}
           - Publication downloads the exact artifacts from the successful certification run; G12/G13/G14/G15 are not rerun in promotion mode.
           EOF
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
