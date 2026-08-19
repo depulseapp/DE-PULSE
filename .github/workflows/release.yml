@@ -37,11 +37,11 @@ jobs:
       build_id: ${{ steps.identity.outputs.build_id }}
       certification_script: ${{ steps.identity.outputs.certification_script }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - id: identity
@@ -122,22 +122,24 @@ jobs:
     env:
       CHROME_BIN: /usr/bin/google-chrome
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: tools/ci/browser-requirements.txt
       - name: Browser prerequisites
-        run: python -m pip install --disable-pip-version-check playwright
+        run: python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
       - name: Verify canonical CI and provenance
         run: |
           python3 tools/ci/workflow_policy.py
@@ -151,7 +153,7 @@ jobs:
           bash '${{ needs.g11.outputs.certification_script }}'
       - name: Retain G12 evidence
         if: ${{ always() }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G12
           path: .depulse-certification/**
@@ -170,20 +172,20 @@ jobs:
       DEPULSE_VERSION: ${{ needs.g11.outputs.version }}
       DEPULSE_BUILD_ID: ${{ needs.g11.outputs.build_id }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: false
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Native package + actual packaged runtime audit
         run: bash tools/release/native_macos.sh
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-macOS-Apple-Silicon
           path: out/macos-arm64/**
@@ -202,21 +204,21 @@ jobs:
       DEPULSE_VERSION: ${{ needs.g11.outputs.version }}
       DEPULSE_BUILD_ID: ${{ needs.g11.outputs.build_id }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
-      - uses: actions/setup-go@v7
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: false
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Native package + actual packaged runtime audit
         shell: pwsh
         run: ./tools/release/native_windows.ps1
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-Windows-x64
           path: out/windows-x64/**
@@ -230,15 +232,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-macOS-Apple-Silicon
           path: collected/macos
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-Windows-x64
           path: collected/windows
@@ -252,7 +254,7 @@ jobs:
             --build-id '${{ needs.g11.outputs.build_id }}' \
             --version '${{ needs.g11.outputs.version }}' \
             --out-dir assurance
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G15-Release-Assurance
           path: assurance/**
@@ -269,19 +271,19 @@ jobs:
       contents: write
       actions: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-macOS-Apple-Silicon
           path: release-assets/macos
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-Windows-x64
           path: release-assets/windows
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G15-Release-Assurance
           path: release-assets/g15
@@ -377,7 +379,7 @@ jobs:
             "noRebuildPublication": true
           }
           EOF
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G16-Handoff
           path: g16/**

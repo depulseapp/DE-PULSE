@@ -1,0 +1,59 @@
+{
+  "schema": "DE.PULSE-V18.7.0-G0-G3-1",
+  "version": "18.7.0",
+  "channel": "DEVELOPMENT",
+  "g0": {
+    "certifiedStable": "v18.6.1-stable",
+    "stableCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
+    "engineeringBaseline": "f1a9e0d0d76d4be565ac9355a09f77a33a3338a7",
+    "baselineState": "v18.6.7 PR #51 merged with exact-head Fast and Qualified success; no new Stable manufactured by process/test-organization work"
+  },
+  "g1": {
+    "scope": "v18_7_0_scope.json",
+    "status": "FROZEN"
+  },
+  "g2": {
+    "canonicalOwners": {
+      "runtime_snapshot": "Engine.Snapshot in engine_core.go",
+      "degradation_semantics": "runtime_degradation.go",
+      "freshness": "data_freshness.go",
+      "runtime_slo_and_recovery": "runtime_slo.go",
+      "workload_backpressure": "workload_controller.go",
+      "provider_request_budget": "runtime_observability.go",
+      "provider_routing_and_capability_circuits": "provider_router.go + smart_router_v2.go",
+      "duplicate_snapshot_suppression": "broad_snapshot_broker.go",
+      "source_disagreement": "provider_reconciliation.go",
+      "runtime_load_profile": "runtime_load_profile.go"
+    },
+    "reuseClassification": {
+      "bounded_workload_tiers_and_reserved_capacity": "ALREADY_IMPLEMENTED_INHERITED",
+      "provider_rate_limit_budget_and_cooldown": "ALREADY_IMPLEMENTED_INHERITED",
+      "provider_capability_circuits": "ALREADY_IMPLEMENTED_INHERITED_HARDEN_ONLY",
+      "broad_snapshot_single_flight_and_coalescing": "ALREADY_IMPLEMENTED_INHERITED_GENERALIZE_ONLY_IF_GAP_PROVEN",
+      "dataset_session_freshness": "ALREADY_IMPLEMENTED_INHERITED_HARDEN_ONLY",
+      "provider_reconciliation": "ALREADY_IMPLEMENTED_INHERITED_HARDEN_ONLY",
+      "canonical_reason_taxonomy": "VERIFIED_GAP_IMPLEMENT",
+      "consumer_blast_radius": "VERIFIED_GAP_IMPLEMENT",
+      "recovery_hysteresis": "VERIFIED_GAP_IMPLEMENT",
+      "truthful_abstain_semantics": "PARTIALLY_COVERED_HARDEN"
+    }
+  },
+  "g3": {
+    "newProviderDependencies": false,
+    "newExternalServices": false,
+    "newDatabase": false,
+    "newTopLevelGate": false,
+    "newParallelReliabilityEngine": false,
+    "qualification": [
+      "go formatting/vet/full affected Go suite",
+      "existing v17 degradation/backpressure regressions",
+      "v18.7 canonical reason/blast-radius/abstain regressions",
+      "recovery-hysteresis regressions",
+      "provider circuit/rate-limit and coalescing regressions",
+      "freshness/SLO integration",
+      "synthetic active-market pressure/load proof",
+      "renderer/browser sentinels only where public degradation payload behavior is affected",
+      "full G10 reconciliation before RC"
+    ]
+  }
+}

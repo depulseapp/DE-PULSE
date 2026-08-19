@@ -2,198 +2,194 @@
 
 **Operational overlay date:** 2026-08-19  
 **Immutable Stable baseline:** `v18.6.1-stable`  
-**Current engineering slice:** `v18.6.7-development` — Fresh Reconciliation, Scope Bind & Legacy Test/Gate Hygiene  
+**Current engineering slice:** `v18.7.0-development` — Runtime Reliability & Data Truth  
+**Scope status:** G1 FROZEN  
 **Authority:** current execution overlay. Permanent contracts and historical release evidence remain intact.
 
 ## 1. Normal target lifecycle
 
-`1 development branch → batch coherent branch work → 1 Draft PR → Fast → same PR Ready → Qualified → merge → Release only when release identity/release workflow requires it → Stable`
+`1 development branch → batch coherent work → 1 Draft PR → Fast → same PR Ready → full Qualified → merge → one Release G11–G16 run when release-capable → Stable`
 
 Rules:
 
-- Build a coherent branch before opening the PR whenever practical so preparatory writes do not manufacture synchronize events.
+- Batch coherent source/governance/release preparation before PR whenever practical.
 - Never create trigger/retry/certification/promotion branches.
-- Never create a second PR just to retrigger CI.
-- Fix source/test/gate defects on the same branch and same PR.
-- Same-SHA infrastructure failure reruns only affected work when possible.
+- Never create a second PR merely to retrigger CI.
+- Fix legitimate source/test/gate defects on the same branch/PR.
+- Same-SHA infrastructure failure reruns only affected work when justified.
 - Main push performs hygiene only.
 - Publication uses exact same-run certified native artifacts; no post-certification rebuild.
+- GitHub is the continuation authority across ChatGPT/Claude/accounts.
 
 ## 2. G0–G16 execution map
 
-- **G0 Exact Stable Intake:** immutable Stable identity, source SHA/fingerprint, current requirement ledger, open defects/issues, CI state and dependencies.
-- **G1 Immutable Scope:** every committed scope item has stable traceability; no silent additions/removals.
-- **G2 Architecture / Data Utility:** owner, consumer, provider, entitlement/rights, source of truth, reuse, freshness, retention and duplication.
-- **G3 Design / Dependency / Impact Readiness:** Impact Planner classifies affected surfaces, tests, portability, browser risk and expected CI cost.
-- **G4 Development Exit:** one version-development branch, one Draft PR, clean source and scope traceability.
-- **G5 Fast Qualification:** cheap exact-head syntax/format/unit/contract checks for affected risk, including conserved-ledger and legacy-test inventory integrity when applicable.
-- **G6 Integration / Medium Qualification:** affected integration and cross-module evidence.
-- **G7 Data / Security / Adaptive Intelligence:** provider/data-rights/security/adaptive evidence when applicable.
-- **G8 Performance / Capacity / Stability:** load/runtime/backpressure/stability evidence when applicable.
-- **G9 Cross-Module / UI / UX:** affected renderer/browser/interaction evidence.
-- **G10 Pre-Freeze Qualified Candidate:** exact-head Qualified success; Release Rehearsal for CI/release changes; Chrome + WebKit primary evidence whenever selected risk requires browser qualification; compact CI telemetry retained.
-- **G11 Immutable Release Candidate:** merged candidate bound to exact Fast + Qualified source head and equal source fingerprint.
-- **G12 Full Certification:** authoritative full certification from immutable candidate.
-- **G13 Native Packaging / Provenance:** required native packages from candidate.
-- **G14 Actual Artifact Runtime Audit:** packaged macOS Apple Silicon and Windows x64 behavior/provenance.
-- **G15 Release Assurance / Promotion:** native evidence graphs and exact artifact hashes verified.
+- **G0 Exact Stable Intake:** immutable Stable identity, current main, source/fingerprint, conserved ledger, CI state, open defects and dependencies.
+- **G1 Immutable Scope:** exact committed scope and boundaries; no silent additions/removals.
+- **G2 Architecture / Data Utility:** canonical owner, consumers, provider/rights, reuse, freshness, retention and duplication review.
+- **G3 Design / Dependency / Impact Readiness:** Impact Planner risk classes, expected Fast/Qualified/browser/release lanes and CI cost shape.
+- **G4 Development Exit:** one development branch, coherent source, frozen scope, release preparation consistent.
+- **G5 Fast Qualification:** exact-head syntax/format/unit/contract/governance checks.
+- **G6 Integration / Medium Qualification:** affected cross-module evidence.
+- **G7 Data / Security / Adaptive Intelligence:** provider/data-rights/security/adaptive contracts.
+- **G8 Performance / Capacity / Stability:** load, queues, coalescing, recovery, stability and latency evidence.
+- **G9 Cross-Module / UI / UX:** renderer and browser behavior where affected.
+- **G10 Pre-Freeze Qualified Candidate:** exact-head full Qualified; Chrome + WebKit primary proof; conserved-ledger/release-tooling evidence.
+- **G11 Immutable Release Candidate:** merge bound to exact Fast + Qualified source head and equal source fingerprint.
+- **G12 Full Certification:** current-source v18.7 certification from immutable candidate.
+- **G13 Native Packaging / Provenance:** candidate-native artifacts.
+- **G14 Actual Artifact Runtime Audit:** macOS Apple Silicon + Windows x64 packaged behavior/provenance.
+- **G15 Release Assurance / Promotion:** evidence graph and exact artifact hashes verified.
 - **Publish:** exact certified artifacts only; no rebuild.
-- **G16 Adaptive Retrospective / Handoff:** current source of truth, durable release evidence, defects, CI performance and next intake.
+- **G16 Adaptive Retrospective / Handoff:** durable release evidence, current source of truth and next intake.
 
-No new top-level gates beyond G0–G16.
+No top-level gates beyond G0–G16.
 
-## 3. Phase 0 status — COMPLETE
+## 3. Completed engineering baseline
 
-- Packet A / PR #46 — Impact Planner v2, Release Rehearsal, governance overlays, reconciliation baseline.
-- Packet B / PR #47 — immutable Fast/Qualified Action pins, dependency lock, Playwright pin, reproducibility/permission gate.
-- Packet C / PR #48 — Chrome + WebKit co-primary browser policy and risk-directed execution.
-- Packet D / PR #49 — durable Stable evidence, CI telemetry, amplification warnings and workflow structural lint.
-- Packet E / PR #50 — Documentation capability-oriented renderer ownership with explicit legacy fallback and direct Chrome + WebKit proof.
+- PRs #46–#50: CI/release process hardening, reproducibility, Chrome + WebKit, telemetry and Documentation ownership.
+- **v18.6.7 / PR #51:** merged to `main` at `f1a9e0d0d76d4be565ac9355a09f77a33a3338a7` after exact-head Fast + Qualified success; conserved 296-row authority ledger, legacy test/gate inventory and first safe capability-oriented test organization wave complete.
+- No Stable was manufactured for v18.6.7; certified Stable remains `v18.6.1-stable`.
 
-Packet E merged to `main` at `b3ca18c14b1e53069a6736e29ad9e3b09f87bda5`.
+## 4. v18.7.0 frozen scope and owners
 
-## 4. v18.6.7 bound scope
+Primary contracts:
 
-### 4.1 Conserved requirement reconciliation
+- `v18_7_0_scope.json`
+- `v18_7_0_g0_g3_contract.json`
+- `adaptive-governance/V18_7_0_RUNTIME_RELIABILITY_AUDIT.md`
+- `release/v18.7.0/release_contract.json`
 
-The original authority ledger is located at:
+### Preserve existing owners
 
-`release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json`
+- Smart Provider Router v2 — executable provider/capability routing and health.
+- `data_freshness.go` — session/provider/dataset freshness truth.
+- `RuntimeSLOTracker` — runtime SLO/recovery owner.
+- `WorkloadController` — bounded queues, tiers, reserved critical capacity and shedding.
+- `ProviderTelemetry` / runtime observability — request budget/load metrics.
+- `BroadSnapshotBroker` — reuse/coalescing/single-flight for broad snapshots.
+- Provider Reconciliation — independent-source agreement/conflict owner.
+- `Engine.Snapshot()` — canonical runtime aggregation boundary.
 
-Intake blob: `2a32b3f93203d61b1aca55172530652d736bbf55`. Declared tracked rows: **296**.
+No parallel retry, health, freshness, reconciliation, degradation or routing engine may be introduced.
 
-Governed by `adaptive-governance/V18_6_7_CURRENT_RECONCILIATION.md`.
+## 5. v18.7 implementation packets
 
-Execution:
+### Packet A — Degradation truth — IMPLEMENTED ON BRANCH
 
-1. Preserve all original IDs/history and leave the v18.5.1 artifact immutable as historical evidence.
-2. Fast executes `v18_5_1_v17_v18_reconciliation_gate.py` in inventory mode to prove row conservation, canonical scope alignment, ID uniqueness and status-vocabulary integrity.
-3. Do not equate the 296 tracked records with 296 current defects/open items.
-4. Do not inherit old statuses as current truth.
-5. Freshly map exact IDs for still-relevant user-trust/runtime/provider/shared-intelligence/renderer risks to current source owners and evidence.
-6. Use current dispositions `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE`, `ROADMAP_FUTURE_SCOPE` only with supporting evidence.
-7. Bind the next product slice from the verified remaining gap set; G1 freezes its exact scope.
+- canonical `ReasonCode` taxonomy while keeping compatible display `Code`;
+- `HEALTHY` / `PROTECTED` / `DEGRADED` / `RECOVERING` pressure states;
+- explicit affected datasets and downstream consumers;
+- `DecisionImpact` semantics;
+- fail-closed `UNKNOWN` + `ABSTAIN` when required decision evidence is insufficient;
+- immediate `QUEUE_SATURATED` when provider queue reaches its hard bound.
 
-### 4.2 Legacy test/gate inventory
+### Packet B — Recovery hysteresis — IMPLEMENTED ON BRANCH
 
-Governed by:
+- active degradation surfaces immediately;
+- clear only after 3 consecutive healthy observations **and** >=5 seconds stability;
+- relapse resets the recovery streak;
+- runtime SLO exposes pending confirmations rather than falsely reporting recovery.
 
-- `adaptive-governance/LEGACY_TEST_GATE_CLEANUP_PLAN.md`
-- `adaptive-governance/LEGACY_TEST_GATE_INVENTORY.md`
-- `tools/ci/legacy_test_gate_inventory.py`
+### Packet C — Existing reliability controls — AUDITED / REUSE
 
-The live inventory scans root version-stacked executable tests/gates and records current execution/reference consumers. Classification vocabulary:
+Requalify rather than rebuild:
 
-- `ACTIVE_REQUIRED`
-- `ACTIVE_DUPLICATE`
-- `UNREFERENCED_USEFUL`
-- `HISTORICAL_EVIDENCE`
-- `SAFE_TO_REMOVE`
+- provider/capability state, entitlement, circuits and fallback;
+- bounded provider route/retry behavior;
+- session-aware freshness;
+- request budgets and low-tier shedding;
+- cross-provider disagreement;
+- snapshot reuse/coalescing.
 
-Safety rules:
+### Packet D — Active-market reliability proof — STAGED, NOT YET PASS
 
-- Go root `*_test.go` defaults `ACTIVE_REQUIRED` because `go test ./...` discovers it.
-- Explicit current Fast/Qualified/Release/certification-plan consumers make Python/JS gates/tests `ACTIVE_REQUIRED`.
-- An unreferenced executable defaults conservatively to `UNREFERENCED_USEFUL`, never automatically `SAFE_TO_REMOVE`.
-- Historical JSON/scope/audit evidence is not cosmetically moved merely to shrink the root.
-- No arbitrary deletion target.
+`v18_7_0_active_market_reliability_test.go` uses production owners to prove:
 
-### 4.3 First safe organization wave — STAGED
+- 16 equivalent concurrent broad-snapshot requests collapse to one provider fetch;
+- coalescing is observable;
+- provider concurrency + queue remain hard bounded;
+- queue saturation becomes explicit degradation immediately;
+- critical current evidence can remain `PROTECTED` while capacity SLO blocks;
+- work beyond the hard capacity/queue boundary is not admitted.
 
-Byte-for-byte test-body preservation:
+Do not call this PASS until CI executes it.
 
-| Old path | New path |
-|---|---|
-| `v18_6_ai_hardening_test.go` | `ai_hardening_test.go` |
-| `v18_6_broad_snapshot_broker_test.go` | `broad_snapshot_broker_test.go` |
-| `v18_6_documentation_access_test.go` | `documentation_access_test.go` |
-| `v18_6_session_intelligence_coordinator_test.go` | `session_intelligence_coordinator_test.go` |
-| `v18_6_surface_consolidation_test.js` | `tests/renderer/surface_consolidation_test.js` |
-| `v18_6_documentation_access_test.js` | `tests/renderer/documentation_access_test.js` |
+### Packet E — Release reproducibility — IMPLEMENTED ON BRANCH
 
-The Go files remain in the package root so package-private access and Go discovery remain unchanged. The renderer test bodies use repository-working-directory file reads, so moving them under `tests/renderer/` does not alter resource resolution.
+- Fast, Qualified and Release external Actions immutable-SHA pinned and dependency-lock governed;
+- Release G12 Playwright uses the same pinned requirements + safe pip-cache contract as Qualified;
+- reproducibility gate enforces all three workflows;
+- no new workflow or trigger architecture introduced.
 
-Fast now executes the organized renderer tests. Impact Planner classifies `tests/renderer/` and `tests/browser/` as `RENDERER_UI`, preserving full qualification and WebKit signaling for future test organization work.
+### Packet F — Release identity/certification — IMPLEMENTED ON BRANCH, NOT STABLE
 
-### 4.4 Retained legacy files
+- candidate identity `18.7.0` / `v18.7.0-stable-20260819`;
+- small `renderer/release-identity-v18.7.0.js` last-loaded overlay avoids rewriting the legacy renderer monolith solely for identity;
+- v18.6.1 watchlist extension remains behavior owner underneath;
+- `release/v18.7.0/run_full_certification.sh` is current-source aware;
+- exact-head Qualified remains mandatory WebKit proof before merge; G12 does not manufacture a redundant second qualification workflow.
 
-The current certification plan still deliberately invokes inherited/versioned evidence including v16.10/v16.11 performance gates, v17 persistence/readiness checks, v17.4 renderer acceptance, v18 scope/principal-engineer/typography gates, and focused `TestV17*`/`TestV18*` Go subsets.
+## 6. Pre-PR completion checklist
 
-These remain until:
+Before opening the single Draft PR:
 
-1. their unique assertions are mapped;
-2. a capability-oriented active owner exists;
-3. every CI/certification consumer is updated atomically;
-4. affected Fast/Qualified/Chrome/WebKit/native evidence is green as required.
+1. source-owner audit durable and aligned with frozen G1 scope;
+2. release identity internally consistent;
+3. release script references current test paths;
+4. Release workflow/dependency lock/reproducibility gate agree;
+5. four Adaptive overlays + authoritative handoff point to v18.7;
+6. exact branch diff contains no unrelated product scope;
+7. no existing v18.7 PR exists;
+8. current head recorded for candidate intake.
 
-### 4.5 v18.6.7 qualification
+Static/pre-PR inspection is not a substitute for CI. Fast begins when the Draft PR opens.
 
-Because this slice changes Go test paths, renderer test paths and CI policy, Impact Planner should fail closed to **full qualification** with WebKit required.
+## 7. PR / qualification sequence
 
-Required evidence:
+1. Open **exactly one Draft PR** from `v18.7.0-development` to `main`.
+2. Require exact-head `DE.PULSE/fast-head = success`.
+3. Fix any legitimate failure on the same branch/PR; do not create retry branches.
+4. Mark the same PR Ready only after Fast is green.
+5. Require **full Qualified** because v18.7 changes backend reliability, tests, release identity and Release workflow.
+6. Full Qualified must include backend/full Go, race, randomized, renderer/deterministic, Chrome and WebKit.
+7. Run/retain G10 conserved-ledger and release/reproducibility evidence.
+8. Merge only when the exact current head is green.
 
-- exact-head Fast PASS;
-- workflow policy + legacy inventory PASS;
-- conserved 296-row ledger inventory PASS;
-- Go formatting/vet/full suite PASS with renamed tests still discovered;
-- Qualified backend full/race/randomized PASS;
-- Qualified renderer/deterministic/owner regressions PASS;
-- Chrome broad suite PASS;
-- WebKit primary compatibility PASS;
-- no release identity or `release.yml` change;
-- CI telemetry retained and amplification remains normal.
+## 8. G11–G16 Stable sequence
 
-### 4.6 v18.6.7 exit criteria
+After merge of the exact qualified source head:
 
-All must be true:
+- G11 verifies exact source-head Fast + Qualified statuses and source-head → merged-candidate fingerprint equivalence.
+- G12 runs `release/v18.7.0/run_full_certification.sh` from the immutable merged candidate.
+- G13/G14 package/audit macOS Apple Silicon + Windows x64 in parallel.
+- G15 binds both native evidence graphs and exact artifact hashes.
+- Publish uploads the exact certified artifacts from that run; no rebuild.
+- G16 records final v18.7 handoff/evidence.
 
-1. current reconciliation truth is documented using the located conserved ledger without rewriting historical statuses;
-2. targeted root executable tests/gates have a live classification/consumer model;
-3. first safe capability-oriented organization wave is complete;
-4. all unique assertions in removed/moved files remain preserved or explicitly governed;
-5. retained legacy files have a clear migration/deletion condition;
-6. exact-head Fast and full Qualified evidence pass;
-7. next coherent product slice is selected and its G0–G3/G1 scope is bound.
+Only then may `v18.7.0-stable` be called the current Stable.
 
-No Stable release is expected from this test/governance organization slice because release identity and canonical Release workflow remain untouched.
+## 9. Failure handling
 
-## 5. Version-visible build sequence after v18.6.7
+- `PRODUCT_FAIL`: source fix, same branch/PR.
+- `GATE_TEST_FAIL`: fix defective source/test/gate without weakening a valid contract.
+- `CI_HARNESS_FAIL`: same branch/PR.
+- `INFRA_FAIL`: bounded unchanged-SHA retry only when recovery signal exists.
+- `EXPECTED_NOOP`: record intentional skip/idempotency.
+- `SUPERSEDED`: cancel/ignore obsolete exact-head work.
 
-Roadmap allocation; each exact scope freezes at G1.
+A source-changing fix creates a new exact head and requires new exact-head evidence.
 
-1. **v18.7.0 — Runtime Reliability & Data Truth** — provisional next: `DATA DEGRADED` truth, provider/capability health, freshness SLO, coalescing/single-flight, bounded retries/circuits, backpressure/load shedding, disagreement/hysteresis, `UNKNOWN`/`ABSTAIN`, active-market load evidence. A higher-severity fresh user-trust blocker may be bundled or may lead this slice.
-2. **v18.7.1 — User-Trust Reliability Closure, if needed** — focused stale/readiness/focus/state/UI reliability patch; skip if no justified patch scope.
-3. **v18.8.0 — Shared Intelligence Consolidation** — canonical Scanner/Opportunity Radar acquisition/cache, Session Intelligence Coordinator, Event Intelligence lifecycle, Research evidence reuse.
-4. **v18.8.1 — Renderer Modularization II** — next capability owners after Documentation, strangler/equivalence/Chrome+WebKit proof.
-5. **v18.9.0 — TradeInsight SHADOW Integration** — controlled Router-only secondary/shadow capability integration with rights and utility governance.
-6. **v18.9.1 — Provider Intelligence & Market-Mode Hardening** — provider usefulness/freshness/disagreement/headroom and explicit Market Mode disposition.
-7. **v18.10.0 — v18 Major Closure Candidate** — zero unexplained applicable rows and full closure evidence.
-8. **v18.10.1 — closure patch only if needed** — no feature expansion.
-9. **v19.0.0 / v19.1.0 / v19.2.0 — Professional Data Infrastructure**.
-10. **v20.0.0 / v20.1.0 / v20.2.0 — Adaptive Intelligence maturation**.
+## 10. Next version-visible sequence
 
-## 6. Impact Planner / browser policy
+- `v18.7.1` — only if qualification finds a focused user-trust reliability patch.
+- `v18.8.0` — Shared Intelligence Consolidation.
+- `v18.8.1` — Renderer Modularization II.
+- `v18.9.0` — TradeInsight SHADOW Integration.
+- `v18.9.1` — Provider Intelligence & Market-Mode Hardening.
+- `v18.10.0` — v18 Major Closure Candidate.
+- `v18.10.1` — closure patch only if justified.
+- v19 Professional Data Infrastructure; v20 Adaptive Intelligence maturation.
 
-Change classes remain: `CI_HARNESS`, `RELEASE_TOOLING`, `BACKEND`, `RENDERER_UI`, `AUTH_SECURITY`, `PROVIDER_ROUTER`, `DATA_RIGHTS`, `PERSISTENCE`, `RELIABILITY_PERFORMANCE`, `CERTIFICATION_GOVERNANCE`.
+## 11. Quality floor
 
-Unknown non-process content fails closed to full qualification. Chrome and WebKit are co-primary. `RENDERER_UI`, full and browser candidates require WebKit. Backend/provider-only narrowed work avoids unnecessary browser runtime.
-
-## 7. Source and repository hygiene
-
-A file being several days old is not a defect. Delete/move only after consumer/reference/evidence and unique-assertion proof.
-
-The desired end state is a repository whose active tests/gates are capability-oriented and understandable, while historical evidence remains traceable and the regression safety net is at least as strong as before cleanup.
-
-## 8. Quality floor
-
-Efficiency/cleanup may reduce duplicate files, duplicate work and root clutter; it may not reduce:
-
-- exact-source provenance;
-- deterministic tests;
-- active unique regression coverage;
-- Chrome + WebKit primary evidence when browser qualification is required;
-- data/security/rights controls;
-- macOS Apple Silicon + Windows x64 Stable certification;
-- same-artifact publication;
-- conserved requirement traceability;
-- No Execution and other permanent product boundaries.
+Efficiency may reduce duplicate work/files/runs; it may never reduce exact-source provenance, deterministic market truth, unique regression coverage, Chrome + WebKit evidence when required, provider/data/security/rights controls, conserved requirement traceability, required native Stable proof, same-artifact publication, No Execution or any permanent product boundary.

@@ -2,6 +2,7 @@
 """Regression contract for canonical Day/Swing/Long membership behavior."""
 from pathlib import Path
 import json
+import re
 
 ROOT = Path(__file__).resolve().parents[2]
 JS = (ROOT / "renderer" / "watchlist-v18.5.1.js").read_text(encoding="utf-8")
@@ -9,9 +10,7 @@ CSS = (ROOT / "renderer" / "watchlist-v18.5.1.css").read_text(encoding="utf-8")
 INDEX = (ROOT / "renderer" / "index.html").read_text(encoding="utf-8")
 IDENTITY = json.loads((ROOT / "release_identity.json").read_text(encoding="utf-8"))
 VERSION = IDENTITY["version"]
-CONTRACT_PATH = ROOT / "renderer" / f"watchlist-desk-contract-v{VERSION}.js"
-PATCH_PROOF = ROOT / "release" / f"v{VERSION}" / "browser_watchlist_global_remove_test.py"
-PATCH_CERT = ROOT / "release" / f"v{VERSION}" / "run_full_certification.sh"
+CURRENT_CERT = ROOT / "release" / f"v{VERSION}" / "run_full_certification.sh"
 BASE_PROOF = ROOT / "release" / "v18.6.0" / "browser_watchlist_membership_test.py"
 
 required_js = (
@@ -38,22 +37,43 @@ if ".current-desk" in CSS:
 if not BASE_PROOF.is_file():
     raise SystemExit("watchlist contract FAIL: inherited v18.6 browser membership proof is missing")
 
-# v18.6.1 defect root-cause guard: the compatibility extension references DESKS
-# as a classic-script global. Production must define it explicitly before the
-# extension, otherwise Safari/WebKit reports `Can't find variable: DESKS`.
-if not CONTRACT_PATH.is_file():
-    raise SystemExit(f"watchlist contract FAIL: missing runtime desk contract {CONTRACT_PATH}")
-contract = CONTRACT_PATH.read_text(encoding="utf-8")
+# Runtime behavior ownership is determined by the asset actually loaded in
+# production, not by assuming every later app release must duplicate the same
+# compatibility contract under a new versioned filename. This lets a release
+# identity overlay advance independently while preserving the proven DESKS
+# behavior owner until that behavior is deliberately migrated.
+contract_matches = re.findall(r'(watchlist-desk-contract-v([0-9.]+)\.js\?v=([0-9.]+))', INDEX)
+if len(contract_matches) != 1:
+    raise SystemExit(f"watchlist contract FAIL: expected exactly one runtime desk contract asset, found {len(contract_matches)}")
+contract_asset, contract_version, contract_cache_version = contract_matches[0]
+if contract_version != contract_cache_version:
+    raise SystemExit("watchlist contract FAIL: runtime desk contract filename/cache version mismatch")
+contract_filename = contract_asset.split('?', 1)[0]
+contract_path = ROOT / "renderer" / contract_filename
+if not contract_path.is_file():
+    raise SystemExit(f"watchlist contract FAIL: missing runtime desk contract {contract_path}")
+contract = contract_path.read_text(encoding="utf-8")
 required_contract = "var DESKS = Object.freeze(['day', 'swing', 'long'])"
 if required_contract not in contract:
     raise SystemExit("watchlist contract FAIL: canonical DESKS runtime binding missing")
-contract_asset = f"watchlist-desk-contract-v{VERSION}.js?v={VERSION}"
 extension_asset = f"watchlist-v18.5.1.js?v={VERSION}"
 if contract_asset not in INDEX or extension_asset not in INDEX or INDEX.index(contract_asset) > INDEX.index(extension_asset):
     raise SystemExit("watchlist contract FAIL: DESKS runtime contract must load before watchlist extension")
-if not PATCH_PROOF.is_file():
-    raise SystemExit("watchlist contract FAIL: patch-specific global-remove browser proof missing")
-if not PATCH_CERT.is_file() or str(PATCH_PROOF.relative_to(ROOT)) not in PATCH_CERT.read_text(encoding="utf-8"):
-    raise SystemExit("watchlist contract FAIL: G12 patch certification is not bound to global-remove browser proof")
 
-print(f"watchlist membership contract PASS · v{VERSION} DESKS binding, toggle semantics and G12 edge proof wired")
+# The current release certification must consume a real global-remove browser
+# proof, but that proof may be inherited from the release where the behavior was
+# introduced. Do not force cosmetic copies into every later release directory.
+if not CURRENT_CERT.is_file():
+    raise SystemExit("watchlist contract FAIL: current G12 certification script is missing")
+cert_text = CURRENT_CERT.read_text(encoding="utf-8")
+proof_matches = sorted(set(re.findall(r'release/v[0-9.]+/browser_watchlist_global_remove_test\.py', cert_text)))
+if len(proof_matches) != 1:
+    raise SystemExit(f"watchlist contract FAIL: expected exactly one G12 global-remove proof binding, found {proof_matches}")
+proof_path = ROOT / proof_matches[0]
+if not proof_path.is_file():
+    raise SystemExit(f"watchlist contract FAIL: G12 global-remove browser proof is missing: {proof_matches[0]}")
+
+print(
+    f"watchlist membership contract PASS · app v{VERSION} uses {contract_filename} "
+    f"with toggle semantics and G12 edge proof {proof_matches[0]}"
+)

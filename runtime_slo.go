@@ -8,6 +8,11 @@ import (
 	"time"
 )
 
+const (
+	runtimeRecoveryHealthyObservationsRequired = 3
+	runtimeRecoveryMinHealthyDuration          = 5 * time.Second
+)
+
 type RuntimeSLOCheck struct {
 	Name     string `json:"name"`
 	Status   string `json:"status"`
@@ -31,22 +36,29 @@ type RuntimeStartupDiagnostics struct {
 }
 
 type RuntimeRecoveryDiagnostics struct {
-	CurrentlyStaleDatasets    int   `json:"currentlyStaleDatasets"`
-	StaleToCurrentEvents      int64 `json:"staleToCurrentEvents"`
-	LastStaleToCurrentMs      int64 `json:"lastStaleToCurrentMs,omitempty"`
-	DegradationRecoveryEvents int64 `json:"degradationRecoveryEvents"`
-	LastDegradationRecoveryMs int64 `json:"lastDegradationRecoveryMs,omitempty"`
-	DegradedSince             int64 `json:"degradedSince,omitempty"`
+	CurrentlyStaleDatasets         int   `json:"currentlyStaleDatasets"`
+	StaleToCurrentEvents           int64 `json:"staleToCurrentEvents"`
+	LastStaleToCurrentMs           int64 `json:"lastStaleToCurrentMs,omitempty"`
+	DegradationRecoveryEvents      int64 `json:"degradationRecoveryEvents"`
+	LastDegradationRecoveryMs      int64 `json:"lastDegradationRecoveryMs,omitempty"`
+	DegradedSince                  int64 `json:"degradedSince,omitempty"`
+	DegradationRecoveryPending     bool  `json:"degradationRecoveryPending,omitempty"`
+	DegradationHealthyObservations int   `json:"degradationHealthyObservations,omitempty"`
+	DegradationHealthyRequired     int   `json:"degradationHealthyRequired,omitempty"`
+	DegradationHealthySince        int64 `json:"degradationHealthySince,omitempty"`
 }
 
 type RuntimeSLOTracker struct {
-	mu                        sync.Mutex
-	staleSince                map[string]time.Time
-	staleToCurrentEvents      int64
-	lastStaleToCurrentMs      int64
-	degradedSince             time.Time
-	degradationRecoveryEvents int64
-	lastDegradationRecoveryMs int64
+	mu                          sync.Mutex
+	staleSince                  map[string]time.Time
+	staleToCurrentEvents        int64
+	lastStaleToCurrentMs        int64
+	degradedSince               time.Time
+	degradationRecoveryEvents   int64
+	lastDegradationRecoveryMs   int64
+	lastDegradation             RuntimeDegradationState
+	recoveryHealthySince        time.Time
+	recoveryHealthyObservations int
 }
 
 func NewRuntimeSLOTracker() *RuntimeSLOTracker {
@@ -60,6 +72,51 @@ func freshnessNeedsRecovery(state string) bool {
 	default:
 		return false
 	}
+}
+
+// StabilizeDegradation owns recovery hysteresis for the canonical runtime
+// degradation payload. A real degraded condition becomes visible immediately,
+// but recovery requires multiple consecutive healthy observations and a small
+// stability window so one transient success cannot falsely declare recovery.
+func (t *RuntimeSLOTracker) StabilizeDegradation(current RuntimeDegradationState, now time.Time) RuntimeDegradationState {
+	if t == nil {
+		return current
+	}
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	if strings.TrimSpace(current.Code) != "" {
+		t.lastDegradation = current
+		t.recoveryHealthySince = time.Time{}
+		t.recoveryHealthyObservations = 0
+		return current
+	}
+	if strings.TrimSpace(t.lastDegradation.Code) == "" {
+		return current
+	}
+	if t.recoveryHealthySince.IsZero() {
+		t.recoveryHealthySince = now
+	}
+	t.recoveryHealthyObservations++
+	stableFor := now.Sub(t.recoveryHealthySince)
+	if stableFor < 0 {
+		stableFor = 0
+	}
+	if t.recoveryHealthyObservations >= runtimeRecoveryHealthyObservationsRequired && stableFor >= runtimeRecoveryMinHealthyDuration {
+		t.lastDegradation = RuntimeDegradationState{}
+		t.recoveryHealthySince = time.Time{}
+		t.recoveryHealthyObservations = 0
+		return current
+	}
+
+	held := t.lastDegradation
+	held.PressureState = "RECOVERING"
+	held.Detail = strings.TrimSpace(held.Detail)
+	if held.Detail != "" {
+		held.Detail += " · "
+	}
+	held.Detail += fmt.Sprintf("Recovery validation in progress (%d/%d consecutive healthy observations; minimum %s stability).", t.recoveryHealthyObservations, runtimeRecoveryHealthyObservationsRequired, runtimeRecoveryMinHealthyDuration)
+	return held
 }
 
 func (t *RuntimeSLOTracker) Observe(freshness []FreshnessDiagnostic, degradation RuntimeDegradationState, now time.Time) RuntimeRecoveryDiagnostics {
@@ -113,9 +170,21 @@ func (t *RuntimeSLOTracker) Observe(freshness []FreshnessDiagnostic, degradation
 }
 
 func (t *RuntimeSLOTracker) diagnosticsLocked() RuntimeRecoveryDiagnostics {
-	d := RuntimeRecoveryDiagnostics{CurrentlyStaleDatasets: len(t.staleSince), StaleToCurrentEvents: t.staleToCurrentEvents, LastStaleToCurrentMs: t.lastStaleToCurrentMs, DegradationRecoveryEvents: t.degradationRecoveryEvents, LastDegradationRecoveryMs: t.lastDegradationRecoveryMs}
+	d := RuntimeRecoveryDiagnostics{
+		CurrentlyStaleDatasets:         len(t.staleSince),
+		StaleToCurrentEvents:           t.staleToCurrentEvents,
+		LastStaleToCurrentMs:           t.lastStaleToCurrentMs,
+		DegradationRecoveryEvents:      t.degradationRecoveryEvents,
+		LastDegradationRecoveryMs:      t.lastDegradationRecoveryMs,
+		DegradationRecoveryPending:     strings.TrimSpace(t.lastDegradation.Code) != "" && t.recoveryHealthyObservations > 0,
+		DegradationHealthyObservations: t.recoveryHealthyObservations,
+		DegradationHealthyRequired:     runtimeRecoveryHealthyObservationsRequired,
+	}
 	if !t.degradedSince.IsZero() {
 		d.DegradedSince = t.degradedSince.UnixMilli()
+	}
+	if !t.recoveryHealthySince.IsZero() {
+		d.DegradationHealthySince = t.recoveryHealthySince.UnixMilli()
 	}
 	return d
 }
@@ -322,7 +391,10 @@ func buildRuntimeSLOAssessmentWithContext(status, mode string, feed FeedDiagnost
 	} else if load.Recovery.LastDegradationRecoveryMs > 120000 {
 		degradeState = "WARN"
 	}
-	add("Degradation recovery", degradeState, fmt.Sprintf("events=%d · last=%d ms", load.Recovery.DegradationRecoveryEvents, load.Recovery.LastDegradationRecoveryMs), "≤120s target · >300s block when recovery occurs", true)
+	if load.Recovery.DegradationRecoveryPending && degradeState == "PASS" {
+		degradeState = "WARN"
+	}
+	add("Degradation recovery", degradeState, fmt.Sprintf("events=%d · last=%d ms · healthy confirmations=%d/%d", load.Recovery.DegradationRecoveryEvents, load.Recovery.LastDegradationRecoveryMs, load.Recovery.DegradationHealthyObservations, load.Recovery.DegradationHealthyRequired), "3 consecutive healthy confirmations and ≥5s stability before clear; ≤120s target · >300s block when recovery occurs", true)
 
 	overall := "PASS"
 	for _, c := range checks {

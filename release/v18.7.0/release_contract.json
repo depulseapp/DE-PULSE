@@ -1,0 +1,34 @@
+{
+  "schema": "DE.PULSE-V18.7.0-RELEASE-CONTRACT-1",
+  "release": "18.7.0",
+  "title": "Runtime Reliability & Data Truth",
+  "certifiedStableBaseline": "v18.6.1-stable",
+  "engineeringBaseline": "f1a9e0d0d76d4be565ac9355a09f77a33a3338a7",
+  "scope": "v18_7_0_scope.json",
+  "g0g3": "v18_7_0_g0_g3_contract.json",
+  "audit": "adaptive-governance/V18_7_0_RUNTIME_RELIABILITY_AUDIT.md",
+  "identity_asset": "release-identity-v18.7.0.js",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries. v18.7 current execution authority is the three canonical GitHub workflows plus this release contract and run_full_certification.sh; do not cosmetically rewrite the legacy registries merely to change their version label.",
+  "qualificationRule": "Exact-head Fast and full Qualified, including backend/race/randomized, renderer, Chrome and WebKit, must PASS before merge. G12 then re-certifies the exact merged candidate without replacing pre-merge WebKit evidence.",
+  "releaseRule": "One development branch, one PR, one immutable merged candidate, one G11-G16 Stable release run; no retry/certification/promotion branches.",
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "DETERMINISTIC_DAY_SWING_LONG",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "GLD_SLV_USO_ACTIONABLE_TRADABLE_EXCEPTIONS"
+  ],
+  "requiredV1870Evidence": [
+    "canonical degradation reason taxonomy",
+    "consumer blast-radius truth",
+    "UNKNOWN/ABSTAIN fail-closed behavior",
+    "recovery hysteresis and relapse reset",
+    "immediate hard provider-queue saturation truth",
+    "duplicate snapshot burst coalescing",
+    "bounded provider pressure and load-SLO behavior",
+    "Release Action/browser dependency reproducibility",
+    "conserved v17/v18 ledger integrity"
+  ]
+}
