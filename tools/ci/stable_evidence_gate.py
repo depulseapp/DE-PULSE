@@ -25,8 +25,7 @@ def main() -> int:
         return fail([f"authoritative checkpoint unreadable: {exc}"])
 
     release = str(checkpoint.get("release", ""))
-    version = release.removeprefix("v")
-    manifest_path = ROOT / "release" / version / "stable-evidence-manifest.json"
+    manifest_path = ROOT / "release" / release / "stable-evidence-manifest.json"
     if not manifest_path.is_file():
         return fail([f"durable Stable manifest missing for {release}: {manifest_path.relative_to(ROOT)}"])
 
@@ -97,7 +96,7 @@ def main() -> int:
         return fail(errors)
 
     print("DE.PULSE Stable evidence gate: PASS")
-    print(f"durable Stable manifest: release/{version}/stable-evidence-manifest.json")
+    print(f"durable Stable manifest: release/{release}/stable-evidence-manifest.json")
     print(f"immutable Stable authority preserved: {manifest['stableTag']} -> {manifest['certifiedCandidate']}")
     print("Fast/Qualified/Release run binding: PASS")
     print("native/G15/G16 artifact digest binding: PASS")
