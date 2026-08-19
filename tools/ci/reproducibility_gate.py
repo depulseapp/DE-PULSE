@@ -8,7 +8,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "tools" / "ci" / "ci_dependency_lock.json"
-USE_RE = re.compile(r"^\s*-\s+uses:\s+([^@\s]+)@([0-9a-f]{40})(?:\s+#\s*(\S+))?\s*$")
+USE_RE = re.compile(r"^\s*(?:-\s+)?uses:\s+([^@\s]+)@([0-9a-f]{40})(?:\s+#\s*(\S+))?\s*$")
+USE_DIRECTIVE_RE = re.compile(r"^\s*(?:-\s+)?uses:\s+")
 WRITE_RE = re.compile(r"^\s+([a-zA-Z0-9_-]+):\s*write\s*$")
 
 
@@ -74,7 +75,7 @@ def main() -> int:
 
         seen_actions: set[str] = set()
         for line_no, line in enumerate(lines, 1):
-            if "uses:" not in line:
+            if not USE_DIRECTIVE_RE.match(line):
                 continue
             target = line.split("uses:", 1)[1].strip()
             if target.startswith("./"):
