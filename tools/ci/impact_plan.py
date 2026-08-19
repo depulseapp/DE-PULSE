@@ -22,6 +22,28 @@ PROCESS_ONLY_EXACT = {
     "CLAUDE.md",
 }
 
+FAILURE_TAXONOMY = (
+    "PRODUCT_FAIL",
+    "GATE_TEST_FAIL",
+    "CI_HARNESS_FAIL",
+    "INFRA_FAIL",
+    "EXPECTED_NOOP",
+    "SUPERSEDED",
+)
+
+CHANGE_CLASSES = (
+    "CI_HARNESS",
+    "RELEASE_TOOLING",
+    "BACKEND",
+    "RENDERER_UI",
+    "AUTH_SECURITY",
+    "PROVIDER_ROUTER",
+    "DATA_RIGHTS",
+    "PERSISTENCE",
+    "RELIABILITY_PERFORMANCE",
+    "CERTIFICATION_GOVERNANCE",
+)
+
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(("git", *args), check=check, text=True, capture_output=True)
@@ -41,6 +63,69 @@ def is_process_only(path: str) -> bool:
     return path in PROCESS_ONLY_EXACT or path.startswith(PROCESS_ONLY_PREFIXES)
 
 
+def classify_path(path: str) -> set[str]:
+    p = path.lower()
+    classes: set[str] = set()
+
+    if path.startswith(".github/workflows/") or path.startswith("tools/ci/"):
+        classes.add("CI_HARNESS")
+    if (
+        path.startswith("tools/release/")
+        or path == ".github/workflows/release.yml"
+        or path.startswith("release/")
+        or path == "release_identity.py"
+        or path == "release_identity.json"
+        or path == "version_consistency_test.py"
+    ):
+        classes.add("RELEASE_TOOLING")
+    if path.startswith(("adaptive-governance/", "governance/", "handoff/", ".depulse-certification/")):
+        classes.add("CERTIFICATION_GOVERNANCE")
+
+    if path.startswith("renderer/") or path.endswith((".html", ".css")):
+        classes.add("RENDERER_UI")
+    if path.endswith(".go") or path in {"go.mod", "go.sum"}:
+        classes.add("BACKEND")
+
+    if any(token in p for token in ("auth", "login", "rbac", "security", "secret", "credential", "permission")):
+        classes.add("AUTH_SECURITY")
+    if any(token in p for token in ("provider", "router", "finnhub", "alpaca", "tradeinsight", "twelve", "fred", "bls", "eia")):
+        classes.add("PROVIDER_ROUTER")
+    if any(token in p for token in ("license", "licence", "entitlement", "data_right", "data-right", "redistribution", "ai_use", "ai-use")):
+        classes.add("DATA_RIGHTS")
+    if any(token in p for token in ("sqlite", "migration", "persist", "storage", "cache", "canonical_state")):
+        classes.add("PERSISTENCE")
+    if any(token in p for token in ("performance", "load", "runtime", "backpressure", "circuit", "retry", "latency", "stability", "reliability")):
+        classes.add("RELIABILITY_PERFORMANCE")
+
+    # Unknown non-process files are product-affecting by default. This fail-closed
+    # behavior keeps the full Qualified lane whenever classification is uncertain.
+    if not classes and not is_process_only(path):
+        classes.add("BACKEND")
+    return classes
+
+
+def analyze_changed_paths(changed: list[str]) -> dict[str, object]:
+    process_only = bool(changed) and all(is_process_only(path) for path in changed)
+    go_required = any(path.endswith(".go") or path in {"go.mod", "go.sum"} for path in changed)
+    node_required = any(path.endswith((".js", ".mjs", ".cjs")) for path in changed)
+    classes = sorted({c for path in changed for c in classify_path(path)})
+    qualified_lane = "ci-harness" if process_only else "full"
+    release_rehearsal_required = bool({"CI_HARNESS", "RELEASE_TOOLING"} & set(classes))
+    webkit_required = "RENDERER_UI" in classes
+
+    return {
+        "processOnly": process_only,
+        "goRequired": go_required,
+        "nodeRequired": node_required,
+        "qualifiedLane": qualified_lane,
+        "changeClasses": classes,
+        "releaseRehearsalRequired": release_rehearsal_required,
+        "webkitRequired": webkit_required,
+        "failureTaxonomyVersion": 1,
+        "failureTaxonomy": list(FAILURE_TAXONOMY),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Plan DE.PULSE CI lanes from a deterministic Git diff")
     parser.add_argument("--base", default="")
@@ -54,23 +139,16 @@ def main() -> int:
     raw = git("diff", "--name-only", base, head).stdout
     changed = sorted({line.strip() for line in raw.splitlines() if line.strip()})
 
-    process_only = bool(changed) and all(is_process_only(path) for path in changed)
-    go_required = any(path.endswith(".go") or path in {"go.mod", "go.sum"} for path in changed)
-    node_required = any(path.endswith((".js", ".mjs", ".cjs")) for path in changed)
-    qualified_lane = "ci-harness" if process_only else "full"
-
+    analysis = analyze_changed_paths(changed)
     plan = {
-        "schema": "DE.PULSE-CI-IMPACT-PLAN-1",
+        "schema": "DE.PULSE-CI-IMPACT-PLAN-2",
         "baseSha": base,
         "headSha": head,
         "changedPaths": changed,
-        "processOnly": process_only,
-        "goRequired": go_required,
-        "nodeRequired": node_required,
-        "qualifiedLane": qualified_lane,
+        **analysis,
         "reason": (
             "Only canonical CI/release/governance/handoff tooling changed; run harness + portability only."
-            if process_only
+            if analysis["processOnly"]
             else "Product, test, dependency, release identity, or other non-process content changed; run full qualified coverage."
         ),
     }
@@ -80,14 +158,18 @@ def main() -> int:
     if args.json_out:
         out = Path(args.json_out)
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(text)
+        out.write_text(text, encoding="utf-8")
     if args.github_output:
         out = Path(args.github_output)
         with out.open("a", encoding="utf-8") as f:
-            f.write(f"qualified_lane={qualified_lane}\n")
-            f.write(f"go_required={str(go_required).lower()}\n")
-            f.write(f"node_required={str(node_required).lower()}\n")
-            f.write(f"process_only={str(process_only).lower()}\n")
+            f.write(f"qualified_lane={analysis['qualifiedLane']}\n")
+            f.write(f"go_required={str(analysis['goRequired']).lower()}\n")
+            f.write(f"node_required={str(analysis['nodeRequired']).lower()}\n")
+            f.write(f"process_only={str(analysis['processOnly']).lower()}\n")
+            f.write(f"change_classes={','.join(analysis['changeClasses'])}\n")
+            f.write(f"release_rehearsal_required={str(analysis['releaseRehearsalRequired']).lower()}\n")
+            f.write(f"webkit_required={str(analysis['webkitRequired']).lower()}\n")
+            f.write("impact_plan_schema=DE.PULSE-CI-IMPACT-PLAN-2\n")
     return 0
 
 
