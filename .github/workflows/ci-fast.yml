@@ -28,6 +28,8 @@ jobs:
     name: Fast impact-safe preflight
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    outputs:
+      process_only: ${{ steps.impact.outputs.process_only }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -117,9 +119,9 @@ jobs:
           retention-days: 7
 
   release-dispatch:
-    name: Dispatch canonical G11-G16 release workflow
+    name: Dispatch canonical release / promotion workflow
     needs: fast
-    if: ${{ (github.event_name == 'push' && (endsWith(github.ref, '-release-certification') || (endsWith(github.ref, '-stable-promotion') && (github.actor == github.repository_owner || github.event.sender.login == github.repository_owner)))) || (github.event_name == 'pull_request' && endsWith(github.event.pull_request.base.ref, '-release-certification') && github.actor == github.repository_owner) }}
+    if: ${{ (github.event_name == 'push' && (endsWith(github.ref, '-release-certification') || (endsWith(github.ref, '-stable-promotion') && (github.actor == github.repository_owner || github.event.sender.login == github.repository_owner)))) || (github.event_name == 'pull_request' && (endsWith(github.event.pull_request.base.ref, '-release-certification') || endsWith(github.event.pull_request.base.ref, '-stable-promotion')) && github.actor == github.repository_owner && needs.fast.outputs.process_only == 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -140,6 +142,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_ACTOR: ${{ github.actor }}
+          REPO_OWNER: ${{ github.repository_owner }}
         shell: bash
         run: |
           set -euo pipefail
@@ -155,8 +160,17 @@ jobs:
               candidate_sha="$GITHUB_SHA"
               ;;
             pull_request)
+              test "$PR_ACTOR" = "$REPO_OWNER"
               release_ref="${PR_BASE_REF:-}"
               candidate_sha="${PR_BASE_SHA:-}"
+              test -n "$PR_NUMBER"
+              changed_paths="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --jq '.[].filename')"
+              test -n "$changed_paths"
+              if grep -Ev '^\.depulse-certification/resume/' <<< "$changed_paths" >/dev/null; then
+                echo "ERROR: release/promotion PR fallback may change only fingerprint-excluded .depulse-certification/resume metadata" >&2
+                printf '%s\n' "$changed_paths" >&2
+                exit 2
+              fi
               ;;
             *)
               echo "ERROR: unsupported release dispatcher event $GITHUB_EVENT_NAME" >&2
@@ -170,17 +184,28 @@ jobs:
             "v${release_line}-stable-promotion") publish=true ;;
             *) echo "ERROR: release branch $release_ref does not match release identity $version" >&2; exit 2 ;;
           esac
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && [ "$publish" != "false" ]; then
-            echo "ERROR: pull-request fallback may certify only; publication is prohibited" >&2
-            exit 2
-          fi
           fingerprint="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
+          certified_run_id=""
+          if [ "$publish" = true ]; then
+            certified_run_id="$(python3 - <<'PY'
+          import json
+          p='.depulse-certification/resume/release-evidence-checkpoint.json'
+          d=json.load(open(p))
+          value=(d.get('currentCandidate') or {}).get('certificationRunId')
+          if value is None:
+              value=(d.get('evidence') or {}).get('G11-G16',{}).get('runId')
+          print('' if value is None else value)
+          PY
+            )"
+            [[ "$certified_run_id" =~ ^[0-9]+$ ]]
+          fi
           tracking_pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "v${release_line}-development" --base main --state open --json number --jq '.[0].number // empty')"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
           echo "script=$script" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
           echo "publish=$publish" >> "$GITHUB_OUTPUT"
+          echo "certified_run_id=$certified_run_id" >> "$GITHUB_OUTPUT"
           echo "tracking_pr=$tracking_pr" >> "$GITHUB_OUTPUT"
           echo "release_ref=$release_ref" >> "$GITHUB_OUTPUT"
           echo "candidate_sha=$candidate_sha" >> "$GITHUB_OUTPUT"
@@ -192,14 +217,15 @@ jobs:
           VERSION: ${{ steps.release.outputs.version }}
           EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
           PUBLISH: ${{ steps.release.outputs.publish }}
+          CERTIFIED_RUN_ID: ${{ steps.release.outputs.certified_run_id }}
           RELEASE_REF: ${{ steps.release.outputs.release_ref }}
           CANDIDATE_SHA: ${{ steps.release.outputs.candidate_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          body="🚦 DE.PULSE v${VERSION} release dispatcher active · Fast/dispatcher run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · ref \`${RELEASE_REF}\` · candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. The next comment binds the canonical G11–G16 release run ID."
+          body="🚦 DE.PULSE v${VERSION} dispatcher active · Fast/dispatcher run https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · ref \`${RELEASE_REF}\` · target \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH} · certifiedRun=${CERTIFIED_RUN_ID:-n/a}. The next comment binds the canonical release/promotion run ID."
           if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
-            echo "::warning::PR tracking comment unavailable to workflow token; continuing certification and retaining release identity in Actions evidence."
+            echo "::warning::PR tracking comment unavailable to workflow token; continuing and retaining release identity in Actions evidence."
           fi
       - id: dispatch
         name: Reuse or dispatch exact candidate release run
@@ -210,6 +236,7 @@ jobs:
           CERTIFICATION_SCRIPT: ${{ steps.release.outputs.script }}
           EXPECTED_FINGERPRINT: ${{ steps.release.outputs.fingerprint }}
           PUBLISH: ${{ steps.release.outputs.publish }}
+          CERTIFIED_RUN_ID: ${{ steps.release.outputs.certified_run_id }}
           TRACKING_PR: ${{ steps.release.outputs.tracking_pr }}
           RELEASE_REF: ${{ steps.release.outputs.release_ref }}
           CANDIDATE_SHA: ${{ steps.release.outputs.candidate_sha }}
@@ -225,15 +252,21 @@ jobs:
             echo "PASS: reusing release.yml run $run_id for $CANDIDATE_SHA ($state)"
           else
             before_ids="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml --branch "$RELEASE_REF" --event workflow_dispatch --limit 20 --json databaseId --jq '.[].databaseId')"
-            gh workflow run release.yml \
-              --repo "$GITHUB_REPOSITORY" \
-              --ref "$RELEASE_REF" \
-              -f candidate_sha="$CANDIDATE_SHA" \
-              -f version="$VERSION" \
-              -f build_id="$BUILD_ID" \
-              -f certification_script="$CERTIFICATION_SCRIPT" \
-              -f expected_source_fingerprint="$EXPECTED_FINGERPRINT" \
+            args=(
+              --repo "$GITHUB_REPOSITORY"
+              --ref "$RELEASE_REF"
+              -f candidate_sha="$CANDIDATE_SHA"
+              -f version="$VERSION"
+              -f build_id="$BUILD_ID"
+              -f certification_script="$CERTIFICATION_SCRIPT"
+              -f expected_source_fingerprint="$EXPECTED_FINGERPRINT"
               -f publish="$PUBLISH"
+            )
+            if [ "$PUBLISH" = true ]; then
+              [[ "$CERTIFIED_RUN_ID" =~ ^[0-9]+$ ]]
+              args+=(-f certified_run_id="$CERTIFIED_RUN_ID")
+            fi
+            gh workflow run release.yml "${args[@]}"
             run_id=""
             run_url=""
             for _ in $(seq 1 30); do
@@ -248,21 +281,22 @@ jobs:
               sleep 2
             done
             test -n "$run_id"
-            echo "PASS: dispatched release.yml run $run_id for $CANDIDATE_SHA · v$VERSION · publish=$PUBLISH"
+            echo "PASS: dispatched release.yml run $run_id for $CANDIDATE_SHA · v$VERSION · publish=$PUBLISH · certifiedRun=${CERTIFIED_RUN_ID:-n/a}"
           fi
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           echo "run_url=$run_url" >> "$GITHUB_OUTPUT"
           {
-            echo '## DE.PULSE release dispatch'
+            echo '## DE.PULSE release / promotion dispatch'
             echo "- release ref: \`$RELEASE_REF\`"
-            echo "- candidate: \`$CANDIDATE_SHA\`"
+            echo "- target: \`$CANDIDATE_SHA\`"
             echo "- fingerprint: \`$EXPECTED_FINGERPRINT\`"
             echo "- publish: \`$PUBLISH\`"
-            echo "- canonical release run ID: \`$run_id\`"
-            echo "- canonical release run: $run_url"
+            echo "- certified run reused: \`${CERTIFIED_RUN_ID:-n/a}\`"
+            echo "- canonical run ID: \`$run_id\`"
+            echo "- canonical run: $run_url"
           } >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$TRACKING_PR" ]; then
-            body="🔗 DE.PULSE v${VERSION} canonical G11–G16 release run: ${run_url} · run ${run_id} · candidate \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH}. This run ID is the durable release-certification lookup key for any assistant/account."
+            body="🔗 DE.PULSE v${VERSION} canonical release/promotion run: ${run_url} · run ${run_id} · target \`${CANDIDATE_SHA}\` · fingerprint \`${EXPECTED_FINGERPRINT}\` · publish=${PUBLISH} · certifiedRun=${CERTIFIED_RUN_ID:-n/a}. This run ID is a durable release lookup key for any assistant/account."
             if ! gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments" -f body="$body" >/dev/null; then
               echo "::warning::Canonical run comment unavailable to workflow token; run identity remains retained in this Actions job and may be bound to PR #16 by the connected GitHub app."
             fi
