@@ -24,6 +24,16 @@ The following versioned branch purposes are prohibited going forward: `*-release
 
 A CI retry never creates a new branch or PR.
 
+### Coherent-change batching / event minimization
+
+For automation/connector-driven maintenance and for one coherent correction packet, prepare all related file mutations first and advance the development branch **once** with one Git tree/commit whenever practical. Do not use per-file GitHub writes that each move the PR head and therefore generate a separate `pull_request.synchronize` Fast run.
+
+A fresh Fast run is expected for every genuinely new candidate SHA; this is a quality requirement and must not be disabled. The efficiency rule is therefore to minimize unnecessary candidate SHAs, not to suppress validation of a changed candidate.
+
+Multiple commits while a PR is open are acceptable only when they represent genuinely independent review units or when a real defect discovered by CI requires a corrected candidate. Metadata-only or handoff-only commits must not be created merely to manufacture a CI event.
+
+Normal target for a coherent packet: `one development branch → one Draft PR → one batched candidate update → one Fast → Ready → one Qualified → merge`; additional Fast/Qualified runs are justified only by an actual candidate change or an explicitly classified same-SHA infrastructure retry.
+
 ## CI Fast
 
 The CI Fast workflow listens to PR `opened`, `synchronize` and `reopened`, plus `main` pushes so branch hygiene can run. The **Fast validation job is skipped on `main` pushes**; a merge therefore does not repeat the Fast tests already proven on the PR head. It does not run on PR close and does not run independently on development-branch pushes.

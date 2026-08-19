@@ -98,9 +98,16 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "workflow_call:",
         "PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}",
         "ref: ${{ github.event.pull_request.head.sha || inputs.candidate_sha || github.sha }}",
+        "webkit_required: ${{ steps.resolve.outputs.webkit_required }}",
         "needs.context.outputs.lane == 'ci-harness'",
         "ci-harness) require \"$PORTABILITY\"",
         "full) require \"$BACKEND\"; require \"$RENDERER\"; require \"$BROWSER\"",
+        "name: Primary Chrome behavior",
+        "name: Primary WebKit compatibility",
+        "needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser'",
+        "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
+        "WEBKIT: ${{ needs.webkit.result }}",
+        "Chrome+WebKit primary browser policy",
         "statuses: write",
         "DE.PULSE/qualified-head",
     )
@@ -109,13 +116,16 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "types: [opened",
         "types: [synchronize",
         "types: [closed",
+        "browser: [chromium, webkit]",
+        "browser: [chrome, webkit]",
+        "playwright install --with-deps firefox",
     )
     missing = [x for x in qualified_required if x not in qualified]
     forbidden = [x for x in qualified_forbidden if x in qualified]
     if missing:
-        return fail("CI Qualified candidate/exact-head contract missing", missing)
+        return fail("CI Qualified candidate/exact-head/primary-browser contract missing", missing)
     if forbidden:
-        return fail("CI Qualified must not run on routine development updates", forbidden)
+        return fail("CI Qualified must not run routine updates or promote secondary engines by default", forbidden)
 
     release_required = (
         "types: [closed]",
@@ -178,6 +188,8 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("CI Fast single-event exact-head development contract: PASS")
     print("CI Fast main-push test suppression + hygiene-only contract: PASS")
     print("CI Qualified ready-candidate exact-head contract: PASS")
+    print("Chrome + WebKit co-primary browser contract: PASS")
+    print("secondary browser engines remain risk-directed: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
     print("Release-tooling recovery trigger + missing-tag lookup hardening: PASS")
@@ -212,6 +224,8 @@ def main() -> int:
         return 1
     if run_gate(root, "tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract") != 0:
         return 1
+    if run_gate(root, "tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract") != 0:
+        return 1
     if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
         return 1
     if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
@@ -224,6 +238,7 @@ def main() -> int:
     print("branch/retry event-amplification prevention: PASS")
     print("CI impact planner v2 self-test: PASS")
     print("CI reproducibility/dependency/permission contract: PASS")
+    print("Chrome/WebKit primary browser routing contract: PASS")
     print("pre-merge release rehearsal: PASS")
     print("dependency/provider readiness: PASS")
     print("AI continuous eval/rights: PASS")

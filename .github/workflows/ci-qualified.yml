@@ -53,6 +53,7 @@ jobs:
       lane: ${{ steps.resolve.outputs.lane }}
       fingerprint: ${{ steps.resolve.outputs.fingerprint }}
       process_only: ${{ steps.resolve.outputs.process_only }}
+      webkit_required: ${{ steps.resolve.outputs.webkit_required }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -74,13 +75,14 @@ jobs:
           test "$(git rev-parse HEAD)" = "$sha"
           python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
           planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
+          webkit="$(python3 -c "import json; print(str(json.load(open('ci-qualified-impact-plan.json'))['webkitRequired']).lower())")"
           lane="${INPUT_LANE:-$planned}"
           case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned primary-webkit-signal=$webkit"
 
   ci-harness:
     name: CI/harness contract
@@ -151,7 +153,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py
 
   backend:
     name: Qualified backend
@@ -210,7 +212,7 @@ jobs:
         run: node v18_0_5_renderer_test.js
 
   browser:
-    name: Qualified browser behavior
+    name: Primary Chrome behavior
     needs: [context, ci-harness]
     if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
     runs-on: ubuntu-24.04
@@ -242,9 +244,34 @@ jobs:
       - name: Settings save-bar viewport
         run: python3 release/v18.5.2/browser_settings_save_bar_test.py
 
+  webkit:
+    name: Primary WebKit compatibility
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: tools/ci/browser-requirements.txt
+      - name: WebKit prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r tools/ci/browser-requirements.txt
+          python -m playwright install webkit
+      - name: Primary WebKit core compatibility
+        run: python3 tools/ci/webkit_targeted_test.py
+
   evidence:
     name: Qualified evidence summary
-    needs: [context, ci-harness, portability, backend, renderer, browser]
+    needs: [context, ci-harness, portability, backend, renderer, browser, webkit]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -256,11 +283,13 @@ jobs:
         shell: bash
         env:
           LANE: ${{ needs.context.outputs.lane }}
+          WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}
           HARNESS: ${{ needs.ci-harness.result }}
           PORTABILITY: ${{ needs.portability.result }}
           BACKEND: ${{ needs.backend.result }}
           RENDERER: ${{ needs.renderer.result }}
           BROWSER: ${{ needs.browser.result }}
+          WEBKIT: ${{ needs.webkit.result }}
         run: |
           set -euo pipefail
           test "$HARNESS" = success
@@ -272,7 +301,12 @@ jobs:
             browser) require "$BROWSER" ;;
             ci-harness) require "$PORTABILITY" ;;
           esac
-          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}"
+          if [ "$WEBKIT_REQUIRED" = true ] || [ "$LANE" = full ] || [ "$LANE" = browser ]; then
+            require "$WEBKIT"
+          else
+            test "$WEBKIT" = skipped
+          fi
+          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}; Chrome+WebKit primary browser policy; webkit signal=$WEBKIT_REQUIRED"
       - name: Record exact-head Qualified status
         if: ${{ github.event_name == 'pull_request' }}
         env:

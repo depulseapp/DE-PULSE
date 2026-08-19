@@ -44,6 +44,11 @@ CHANGE_CLASSES = (
     "CERTIFICATION_GOVERNANCE",
 )
 
+WEBKIT_EVIDENCE_FILES = {
+    "tools/ci/webkit_targeted_test.py",
+    "tools/ci/browser_risk_routing_gate.py",
+}
+
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(("git", *args), check=check, text=True, capture_output=True)
@@ -111,7 +116,7 @@ def analyze_changed_paths(changed: list[str]) -> dict[str, object]:
     classes = sorted({c for path in changed for c in classify_path(path)})
     qualified_lane = "ci-harness" if process_only else "full"
     release_rehearsal_required = bool({"CI_HARNESS", "RELEASE_TOOLING"} & set(classes))
-    webkit_required = "RENDERER_UI" in classes
+    webkit_required = "RENDERER_UI" in classes or any(path in WEBKIT_EVIDENCE_FILES for path in changed)
 
     return {
         "processOnly": process_only,
