@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func containsString(values []string, want string) bool {
+func containsStringV1870(values []string, want string) bool {
 	for _, value := range values {
 		if value == want {
 			return true
@@ -27,7 +27,7 @@ func TestV1870CanonicalReasonTaxonomyKeepsCompatibilityLabel(t *testing.T) {
 	if got.PressureState != "PROTECTED" || got.Abstain || !got.CriticalUsable {
 		t.Fatalf("local queue pressure must isolate optional work while critical truth remains usable: %+v", got)
 	}
-	if !containsString(got.AffectedConsumers, "Opportunity Radar") {
+	if !containsStringV1870(got.AffectedConsumers, "Opportunity Radar") {
 		t.Fatalf("expected broad-refresh blast radius to name Opportunity Radar: %+v", got)
 	}
 }
@@ -38,7 +38,7 @@ func TestV1870CriticalNetworkFailureRequiresAbstain(t *testing.T) {
 	if got.ReasonCode != "NETWORK_FAILURE" || got.PressureState != "DEGRADED" || !got.Abstain || got.CriticalUsable {
 		t.Fatalf("critical live-feed failure must be explicit and fail closed: %+v", got)
 	}
-	if !containsString(got.AffectedConsumers, "Day") || !containsString(got.AffectedConsumers, "Decision Queue") {
+	if !containsStringV1870(got.AffectedConsumers, "Day") || !containsStringV1870(got.AffectedConsumers, "Decision Queue") {
 		t.Fatalf("critical quote blast radius is incomplete: %+v", got)
 	}
 }
@@ -56,10 +56,10 @@ func TestV1870OptionalStalenessIsolatedFromCriticalDecisionTruth(t *testing.T) {
 	if !got.CriticalUsable || got.Abstain || got.PressureState != "PROTECTED" {
 		t.Fatalf("optional fundamentals staleness must not collapse critical live truth: %+v", got)
 	}
-	if !containsString(got.AffectedConsumers, "Long") || !containsString(got.AffectedConsumers, "Research") {
+	if !containsStringV1870(got.AffectedConsumers, "Long") || !containsStringV1870(got.AffectedConsumers, "Research") {
 		t.Fatalf("fundamentals blast radius must remain scoped to its consumers: %+v", got)
 	}
-	if containsString(got.AffectedConsumers, "Day") {
+	if containsStringV1870(got.AffectedConsumers, "Day") {
 		t.Fatalf("fundamentals-only degradation must not contaminate Day: %+v", got)
 	}
 }
@@ -73,7 +73,7 @@ func TestV1870UnknownCriticalEvidenceFailsClosed(t *testing.T) {
 	if got.CriticalUsable || !got.Abstain || got.PressureState != "DEGRADED" {
 		t.Fatalf("insufficient required evidence must fail closed: %+v", got)
 	}
-	if !containsString(got.AffectedConsumers, "Day") || !containsString(got.AffectedConsumers, "Market Regime") {
+	if !containsStringV1870(got.AffectedConsumers, "Day") || !containsStringV1870(got.AffectedConsumers, "Market Regime") {
 		t.Fatalf("critical UNKNOWN blast radius must include quote/VIX decision consumers: %+v", got)
 	}
 }
