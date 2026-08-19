@@ -3,8 +3,8 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G16_CERTIFIED_AWAITING_STABLE_PROMOTION",
-  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; certified source remains frozen.",
+  "candidateDisposition": "V18_6_0_FINAL_PROMOTION_HARDENING_G10_PASS_G11_PENDING",
+  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint; final source 5deb694a is frozen after G10 PASS.",
   "stable": {
     "tag":"v18.5.2-stable",
     "promotionCommit":"d30e54db4908ca57c52ae298cc4ada3416fab46b",
@@ -16,34 +16,36 @@
     "buildId":"v18.6.0-stable-20260818",
     "branch":"v18.6-development",
     "pullRequest":16,
-    "candidateSourceCommit":"f706b205fcb36bc74ca31e113be6a6add3c2afdb",
-    "qualificationHead":"9ae02646c6244f0a77e2114c734d05dc81479dc2",
-    "releaseCandidateCommit":"10a89f2b94629aa83d588f5a893c0dd7e83334d6",
-    "sourceFingerprint":"e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
-    "promotionState":"READY_NOT_PROMOTED",
-    "canonicalReleaseRun":32199369265,
+    "candidateSourceCommit":"5deb694a96ffcd629612fa8a57431d2da86dec28",
+    "qualificationHead":"5df2b3638c176482a33741b2e05c97f52f35b6e1",
+    "releaseCandidateCommit":null,
+    "sourceFingerprint":"c9a1fb57c6ce083fa6a85b9947b9f0704c16dee788a4e7dd71a442ca2ddce87d",
+    "promotionState":"NOT_READY_FRESH_G11_G16_REQUIRED",
+    "canonicalReleaseRun":null,
     "publish":false
   },
   "evidence": {
     "G0-G9":{"status":"PASS"},
-    "G10":{"status":"PASS","fastRun":32198719049,"fastRunNumber":250,"qualifiedRun":32198719053,"qualifiedRunNumber":105},
-    "G11":{"status":"PASS","releaseRun":32199369265,"candidate":"10a89f2b94629aa83d588f5a893c0dd7e83334d6","sourceFingerprint":"e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27"},
-    "G12":{"status":"PASS","releaseRun":32199369265},
-    "G13-G14-macOS-Apple-Silicon":{"status":"PASS","artifactId":9347023024,"artifactSha256":"77af17df0f4811ca05d7aed58cb384188b4f5cdb74a62da3302f4ddd816ddf55"},
-    "G13-G14-Windows-x64":{"status":"PASS","artifactId":9347035757,"artifactSha256":"0375439e2054a387390cc0c3c377967192622984742fa5a71eecb550fa34839a"},
-    "G15":{"status":"PASS_RELEASE_ASSURANCE","artifactId":9347040692,"artifactSha256":"4ba96996eaad81482f30a49fec9514a19030d98bd55867ed017941e0137eee8e","publication":"SKIPPED_PUBLISH_FALSE"},
-    "G16":{"status":"PASS_CLOSED","artifactId":9347043385,"artifactSha256":"bee9105a0b9f7ffdde0c3bf97da06d61b73ce526074af4e64a75aa42c0c9677e"}
+    "G10":{"status":"PASS","candidateSourceCommit":"5deb694a96ffcd629612fa8a57431d2da86dec28","qualificationHead":"5df2b3638c176482a33741b2e05c97f52f35b6e1","sourceFingerprint":"c9a1fb57c6ce083fa6a85b9947b9f0704c16dee788a4e7dd71a442ca2ddce87d","fastRun":32220134071,"fastRunNumber":281,"qualifiedRun":32220134070,"qualifiedRunNumber":118},
+    "G11":{"status":"PENDING"},
+    "G12":{"status":"PENDING","runner":"release/v18.6.0/run_full_certification.sh"},
+    "G13-G14-macOS-Apple-Silicon":{"status":"PENDING"},
+    "G13-G14-Windows-x64":{"status":"PENDING"},
+    "G15":{"status":"PENDING"},
+    "G16":{"status":"PENDING"}
   },
-  "runtimeEvidence": {
-    "macOSAppleSilicon":"PASS packaged runtime health/readiness/root; SQLite migrations [1,2,3,4]",
-    "windowsX64":"PASS packaged runtime health/readiness/root; SQLite migrations [1,2,3,4]"
+  "historicalCertification": {
+    "runId":32199369265,
+    "candidate":"10a89f2b94629aa83d588f5a893c0dd7e83334d6",
+    "sourceFingerprint":"e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
+    "status":"PASS_HISTORICAL_NOT_REUSABLE_AFTER_SOURCE_FINGERPRINTED_PROMOTION_HARDENING",
+    "macArtifactId":9347023024,
+    "windowsArtifactId":9347035757,
+    "g15ArtifactId":9347040692,
+    "g16ArtifactId":9347043385
   },
-  "supersededReleaseRuns":[
-    {"runId":32196711609,"G11":"PASS","G12":"FAIL_STALE_LEGACY_WATCHLIST_HARNESS"},
-    {"runId":32198058592,"G11":"PASS","G12":"FAIL_STALE_LEGACY_UI_HIERARCHY_CACHE_BUSTER"}
-  ],
   "residuals":["TradeInsight remains governed future/shadow work until separately validated and approved.","Deployment-specific provider keys, entitlements and commercial/AI-use rights remain User Action Required where absent or unapproved.","Stable publication has not yet been executed."],
-  "releaseBlockingResiduals":["Evidence-bound no-rebuild Stable promotion remains required before v18.6 can be called Stable."],
-  "nextRequiredEvidence":"Owner-authorized no-rebuild Stable promotion from this exact certified evidence graph; no source rebuild or recertification unless source changes.",
-  "updatedAt":"2026-08-19T00:04:00Z"
+  "releaseBlockingResiduals":["Fresh final-source G11-G16 certification and exact-artifact Stable promotion are required before v18.6 can be called Stable."],
+  "nextRequiredEvidence":"One canonical publish=false release.yml run on the final G10-qualified source, followed by evidence-bound no-rebuild Stable promotion.",
+  "updatedAt":"2026-08-19T05:42:00Z"
 }

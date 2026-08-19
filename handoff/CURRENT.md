@@ -5,7 +5,7 @@
 **Release:** `v18.6.0`  
 **Active branch:** `v18.6-development`  
 **Stable predecessor:** `v18.5.2-stable` / G0–G16 CLOSED  
-**Current candidate state:** v18.6.0 G12 BROWSER-HARNESS REMEDIATION / FRESH G10 REQUIRED / NOT PROMOTED  
+**Current candidate state:** v18.6.0 PROMOTION-PATH HARDENING / FRESH G10 REQUIRED / NOT PROMOTED  
 **Repository:** `depulseapp/DE-PULSE`  
 **Main release PR:** `#16`  
 **v18.6 runtime build ID:** `v18.6.0-stable-20260818`  
@@ -17,70 +17,74 @@ Read `AGENTS.md` or `CLAUDE.md`, then reconcile this handoff, `release_identity.
 
 `source_fingerprint.py` excludes `.depulse-certification` only. Workflow definitions, certification harnesses, browser proofs/contracts, and this handoff are source-fingerprinted. Any change to them requires fresh G10 before G11.
 
-## Product / architecture state
+## Product state
 
-All eight assigned v18.6 implementation/audit slices remain code-complete: watchlist remediation; shared Scanner/Radar broad-snapshot acquisition; serialized Session Intelligence Coordinator; Market Activity/legacy-route consolidation; role-aware documentation; external dependency/provider readiness; bounded AI context/cache/schema/evaluation hardening; and provider×dataset rights-aware fail-closed AI egress.
+All eight v18.6 product slices remain code-complete. This change is release-process-only: it does not change the renderer, backend product behavior, deterministic Day/Swing/Long formulas, Smart Provider Router ownership, provider-count/Market-Mode rule, GLD/SLV/USO tradable exceptions, desktop SQLite / hosted PostgreSQL architecture, U.S. Equities Processing Boundary, or permanent No Execution Boundary.
 
-Protected invariants remain unchanged: deterministic Day/Swing/Long formulas; Smart Provider Router sole routing ownership; provider count never changes Market Mode; GLD/SLV/USO tradable live exceptions; desktop SQLite / hosted PostgreSQL; U.S. Equities Processing Boundary; permanent No Execution Boundary; exactly three canonical workflows; G0–G16 only.
+The canonical workflow set remains exactly `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0–G16 remains the only top-level gate model.
 
-## Trustworthy qualification before this remediation
+## Last trustworthy PASS before promotion-path source change
 
-Source `a84b7028f8723f47f11a59e2225c10ddf1a38e3b`, exercised at metadata head `66fd480c3fcf91f1ce56a6077dff323625aaf0b3`, passed fresh G10 after the first G12 watchlist-harness correction:
-- CI Fast #242 / run `32197304582` — PASS;
-- CI Qualified #102 / run `32197304782` — PASS;
-- harness contract, Ubuntu/macOS/Windows portability, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and final evidence summary all passed.
+Canonical `release.yml` run `32199369265` completed SUCCESS on release-certification candidate `10a89f2b94629aa83d588f5a893c0dd7e83334d6`, source fingerprint `e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27`:
+- G11 immutable candidate/provenance: PASS;
+- G12 authoritative full certification: PASS;
+- G13/G14 macOS Apple Silicon package + actual packaged runtime audit: PASS;
+- G13/G14 Windows x64 package + actual packaged runtime audit: PASS;
+- G15 Release Assurance: PASS;
+- G16 adaptive handoff: PASS;
+- publication: deliberately SKIPPED because `publish=false`.
 
-Release-certification base `a6b58016f4921e5927579fc4eae4ea5e81f026ad` was dispatched through unmerged trigger PR #25. Dispatcher CI Fast #246 / run `32198077508` passed and resolved:
-- release ref `v18.6-release-certification`;
-- candidate `a6b58016f4921e5927579fc4eae4ea5e81f026ad`;
-- canonical source fingerprint `f38e3815307382ec111c54558b36b503a06ab143fb1a5b84a279e0f48f1092ba`;
-- canonical release run `32198058592`;
-- `publish=false`.
+That run remains valid historical proof for the pre-hardening source. It cannot certify the workflow/handoff changes below because those files are source-fingerprinted.
 
-The connected GitHub app bound that exact run identity to PR #16 because the workflow token still cannot post PR comments. Trigger PR #25 was then closed unmerged after G12 failed. No Stable publication occurred.
+## Promotion-path defect found before Stable publication
 
-## G12 progress and second failure classification
+The pre-hardening `release.yml` labelled publication “no-rebuild” but `publish=true` still depended on the same-run G12/G13/G14/G15 jobs, so a promotion run would recertify and rebuild native artifacts before publishing. That violated the stronger DE.PULSE contract that Stable promotion must publish the exact already-certified artifacts.
 
-Canonical release run `32198058592` proved the first harness remediation worked: G12 passed the hardened watchlist contract and did **not** execute the obsolete v18.5.1 CURRENT/aria-current membership proof. It then passed Go full suite, race detector, randomized order, deterministic equivalence 2403/2403, renderer logic, v18.0.5 role/responsive acceptance, v18.6 surface consolidation, documentation access, live DOM reconciliation, and first-run auth-copy browser proof.
+A second portability problem existed for connected assistants: connector-originated branch writes do not reliably emit usable push-triggered Actions runs. Certification already has an owner-gated PR-event fallback. Stable promotion previously had no connector-safe equivalent.
 
-The next failure was in historical `release/v18.5.1/browser_ui_hierarchy_test.py`, before its behavioral browser assertions:
+A third issue was caught during promotion review: the release-certification reconciliation commit is not guaranteed to be an ancestor of the eventual `main` merge commit even when both have the identical canonical source fingerprint. Stable identity therefore must be enforced by exact source fingerprint + release identity + certified evidence graph, not by a false release-branch ancestry requirement.
 
-`assert "ui-v18.5.1.css?v=18.5.2" in INDEX`
+## Hardened no-rebuild promotion contract
 
-Current `renderer/index.html` still deliberately loads the retained implementation layers `ui-v18.5.1.css` and `header-v18.5.1.js`, but their canonical cache-busters are now `?v=18.6.0`. Therefore this is another **release-harness/version-binding defect, not a demonstrated product hierarchy regression**.
+The canonical workflows now define two distinct modes inside the same `release.yml`:
 
-The remaining v18.5.2 browser tests for master-symbol input, profile/display-name, and Settings save-bar are behavior-first and were reviewed for this issue; they do not contain the obsolete `?v=18.5.2` index-asset assertion and remain in G12. The already-passing v18.5.1 live-render and auth-copy proofs also remain.
+1. **Certification mode (`publish=false`)**
+   - G11 → G12 → native macOS/Windows G13/G14 → G15 → G16 execute normally.
+   - Native artifacts and G15 assurance are retained by the successful certification run.
 
-## Consolidated second remediation
+2. **Promotion-reuse mode (`publish=true`)**
+   - G11 verifies the immutable certified candidate/fingerprint.
+   - G12, macOS G13/G14, Windows G13/G14, and G15 assurance jobs are explicitly skipped; they are never rebuilt or rerun.
+   - promotion requires `certification_run_id` and `promotion_sha` from the durable release-evidence checkpoint;
+   - `actions/download-artifact` downloads the exact macOS, Windows, and G15 artifacts from that successful certification run using `run-id` + `github-token`;
+   - promotion verifies the certification workflow run completed successfully and binds the same candidate SHA, source fingerprint, release version and build ID;
+   - native evidence JSON and G15 assurance JSON are revalidated;
+   - actual macOS/Windows ZIP SHA-256 values are recomputed and must equal their certified evidence and G15 graph;
+   - the promotion target must have the same canonical source fingerprint as the certified candidate;
+   - only then may `v18.6.0-stable` and its release assets be published.
 
-Historical `release/v18.5.1/browser_ui_hierarchy_test.py` remains untouched for audit/history.
+## Connector-safe Stable promotion event
 
-A dedicated `release/v18.6.0/browser_ui_hierarchy_test.py` now carries the same substantive responsive/header/Research behavior proof while deriving the expected cache-buster from canonical `release_identity.json`. It requires the actual current assets:
-- `ui-v18.5.1.css?v=<canonical v18.6 release version>`;
-- `header-v18.5.1.js?v=<canonical v18.6 release version>`.
+Stable promotion stays owner-controlled and exact-branch-gated. Normal push to exact `v<release-line>-stable-promotion` remains supported. In addition, a PR event may trigger Stable promotion **only after the PR is actually merged** into exact `v<release-line>-stable-promotion`, only when `pull_request.merged == true`, only for the repository owner, and only using the resulting merge commit as `promotion_sha`. There is no unmerged/open-PR Stable publication fallback.
 
-`release/v18.6.0/run_full_certification.sh` now executes the v18.6 hierarchy proof instead of the historical v18.5.1 hierarchy proof, alongside the existing v18.6 watchlist proof and retained compatible legacy behavior tests.
+Release-certification keeps its existing owner-gated unmerged PR fallback with `publish=false` only.
 
-`tools/ci/workflow_policy.py` now prevents regression by requiring both v18.6 browser proofs in G12, forbidding both superseded v18.5.1 hierarchy/watchlist proofs from the v18.6 G12 list, and requiring the v18.6 hierarchy proof to derive its asset cache-buster from canonical release identity rather than hard-code `?v=18.5.2`.
+`tools/ci/workflow_policy.py` owns regression prevention for this separation, cross-run artifact reuse, publish-mode job suppression, evidence validation, and the merged-PR-only Stable promotion rule.
 
-Because these files are source-fingerprinted, the prior G10/G11 evidence cannot certify this second harness remediation. Fresh G10 is mandatory before another canonical release run.
+## Why fresh qualification is mandatory
 
-## Release orchestration contract
-
-Certification remains non-publishing. Exact release-certification push or the owner-gated PR fallback may certify only with `publish=false`; the PR fallback uses immutable base ref/SHA. Stable promotion remains exact `*-stable-promotion`, push-only, owner-gated, evidence-bound and no-rebuild. There is no PR fallback for Stable publication.
-
-Workflow-token PR comments are best-effort observability. Exact dispatcher/release run identity remains in Actions evidence and is bound to PR #16 through the connected GitHub app when needed.
-
-## Exactly one next action
-
-**Qualify this consolidated v18.6 hierarchy-harness remediation as one fresh Fast + Qualified G10 candidate. If both pass, bind only fingerprint-excluded checkpoints, reconcile `v18.6-release-certification`, create one unmerged fingerprint-excluded trigger PR, dispatch one canonical `release.yml` run with `publish=false`, bind its exact identity to PR #16, then continue G11 → G12 → G13/G14 macOS + Windows → G15 → G16. Do not promote Stable unless every gate passes.**
+`.github/workflows/ci-fast.yml`, `.github/workflows/release.yml`, `tools/ci/workflow_policy.py`, and this handoff are source-fingerprinted. Therefore run `32199369265` cannot be reused as certification for this hardened source. Fresh Fast + Qualified G10 must pass on the exact new source, followed by one fresh `publish=false` G11–G16 certification run. After that, Stable promotion must reuse that new run's exact artifacts without recertification or rebuild.
 
 ## Known residuals / User Action Required
 
-- TradeInsight remains governed future/shadow implementation work until separately validated and approved; it gains no production influence automatically.
+- TradeInsight remains governed future/shadow work until separately validated and approved; it gains no production influence automatically.
 - Deployment-specific provider keys, entitlements and commercial/redistribution/AI-use rights remain User Action Required where absent or unapproved and fail closed.
-- v18.6 native macOS Apple Silicon and Windows x64 evidence remains pending until G12 and native G13/G14 pass.
+- Current certified Stable remains `v18.5.2-stable` until v18.6 promotion-reuse mode succeeds and the tag/release/artifacts are verified.
+
+## Exactly one next action
+
+**Run one fresh canonical Fast + Qualified G10 qualification on the exact promotion-hardened v18.6 source. If both pass, bind fingerprint-excluded checkpoints, execute exactly one fresh `publish=false` G11–G16 certification run, then merge PR #16 and execute evidence-bound promotion-reuse from that successful certification run without rerunning G12/G13/G14/G15.**
 
 ## Provider-neutral continuation instruction
 
-> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, then inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16, active checks, and the release-certification branch. Treat `v18.5.2-stable` as immutable Stable until v18.6 G11–G16 and no-rebuild promotion complete. Resume from the exact trustworthy evidence above, not chat memory. Preserve G0–G16, assistant/account independence, Smart Provider Router ownership, deterministic desk formulas, U.S. Equities Processing Boundary and permanent No Execution Boundary.
+> Connect to `depulseapp/DE-PULSE`, read `AGENTS.md` or `CLAUDE.md`, then inspect `release_identity.json`, `handoff/CURRENT.md`, both `.depulse-certification/resume/` checkpoints, PR #16, current checks, and release branches. Treat `v18.5.2-stable` as immutable Stable until v18.6 promotion-reuse completes. Resume from the last trustworthy PASS and current source fingerprint, not chat memory. Preserve GitHub source-of-truth portability across ChatGPT/Codex/Claude, G0–G16, deterministic desk formulas, Smart Provider Router ownership, U.S. Equities Processing Boundary and permanent No Execution Boundary.

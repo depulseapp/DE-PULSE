@@ -3,13 +3,14 @@
   "protocolVersion": "2.1-ai-portable",
   "release": "v18.6.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_0_G16_CERTIFIED_AWAITING_STABLE_PROMOTION",
+  "candidateDisposition": "V18_6_0_FINAL_PROMOTION_HARDENING_G10_PASS_G11_PENDING",
   "branch": "v18.6-development",
   "pullRequest": 16,
-  "candidateSourceCommit": "f706b205fcb36bc74ca31e113be6a6add3c2afdb",
-  "releaseCandidateCommit": "10a89f2b94629aa83d588f5a893c0dd7e83334d6",
-  "sourceFingerprint": "e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
-  "sourceFingerprintState": "G11_BOUND",
+  "candidateSourceCommit": "5deb694a96ffcd629612fa8a57431d2da86dec28",
+  "qualificationHead": "5df2b3638c176482a33741b2e05c97f52f35b6e1",
+  "releaseCandidateCommit": null,
+  "sourceFingerprint": "c9a1fb57c6ce083fa6a85b9947b9f0704c16dee788a4e7dd71a442ca2ddce87d",
+  "sourceFingerprintState": "G10_QUALIFIED_AWAITING_G11_BIND",
   "buildId": "v18.6.0-stable-20260818",
   "certifiedStable": {
     "version": "v18.5.2",
@@ -18,9 +19,10 @@
     "buildId": "v18.5.2-stable-hotfix-20260817",
     "sourceFingerprint": "807de082d43e83d1d3548bca9350d13b72ef4dc71a848940b73b63e4b4d215b0"
   },
-  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint. Source f706b205 and release candidate 10a89f2b are frozen; operational checkpoint updates do not invalidate certification.",
-  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_G11_G16_CERTIFIED",
-  "lastTrustworthyPass": "Canonical release.yml run 32199369265 completed SUCCESS on release candidate 10a89f2b94629aa83d588f5a893c0dd7e83334d6 with source fingerprint e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27. G11, G12, macOS Apple Silicon G13/G14, Windows x64 G13/G14, G15 Release Assurance and G16 all PASS. Stable publication was intentionally skipped because publish=false.",
+  "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint. Source 5deb694a is frozen after final G10 PASS; checkpoint-only commits do not invalidate source qualification.",
+  "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_EXACT_ARTIFACT_PROMOTION_HARDENED_G10_PASS",
+  "lastTrustworthyPass": "Final source 5deb694a96ffcd629612fa8a57431d2da86dec28 at PR qualification head 5df2b3638c176482a33741b2e05c97f52f35b6e1 passed CI Fast #281 run 32220134071 and CI Qualified #118 run 32220134070. Coverage includes exact-artifact no-rebuild promotion policy, Ubuntu/macOS/Windows portability, browser behavior, renderer contracts, full Go suite, race detector, randomized package order and evidence summary.",
+  "earliestRequiredResumeGate": "G11_CANONICAL_RELEASE_RUN",
   "gates": {
     "G0":{"status":"PASS","reusable":true},
     "G1":{"status":"PASS","reusable":true},
@@ -32,26 +34,26 @@
     "G7":{"status":"PASS","reusable":true},
     "G8":{"status":"PASS","reusable":true},
     "G9":{"status":"PASS","reusable":true},
-    "G10":{"status":"PASS","candidateSourceCommit":"f706b205fcb36bc74ca31e113be6a6add3c2afdb","qualificationHead":"9ae02646c6244f0a77e2114c734d05dc81479dc2","fastRun":32198719049,"fastRunNumber":250,"qualifiedRun":32198719053,"qualifiedRunNumber":105},
-    "G11":{"status":"PASS","releaseRun":32199369265,"candidate":"10a89f2b94629aa83d588f5a893c0dd7e83334d6","sourceFingerprint":"e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27"},
-    "G12":{"status":"PASS","releaseRun":32199369265,"runner":"release/v18.6.0/run_full_certification.sh"},
-    "G13":{"status":"PASS","platforms":["macOS Apple Silicon","Windows x64"]},
-    "G14":{"status":"PASS","platforms":["macOS Apple Silicon","Windows x64"]},
-    "G15":{"status":"PASS_RELEASE_ASSURANCE","releaseRun":32199369265,"publication":"SKIPPED_PUBLISH_FALSE"},
-    "G16":{"status":"PASS_CLOSED","releaseRun":32199369265}
+    "G10":{"status":"PASS","reusable":true,"candidateSourceCommit":"5deb694a96ffcd629612fa8a57431d2da86dec28","qualificationHead":"5df2b3638c176482a33741b2e05c97f52f35b6e1","sourceFingerprint":"c9a1fb57c6ce083fa6a85b9947b9f0704c16dee788a4e7dd71a442ca2ddce87d","fastRun":32220134071,"fastRunNumber":281,"qualifiedRun":32220134070,"qualifiedRunNumber":118,"coverage":["exact-artifact no-rebuild promotion policy","Ubuntu portability","macOS portability","Windows portability","workflow/provenance contracts","browser behavior","renderer contracts","full Go suite","race detector","randomized package order","qualified evidence summary"]},
+    "G11":{"status":"PENDING","reusable":false},
+    "G12":{"status":"PENDING","reusable":false},
+    "G13":{"status":"PENDING","reusable":false},
+    "G14":{"status":"PENDING","reusable":false},
+    "G15":{"status":"PENDING","reusable":false},
+    "G16":{"status":"PENDING","reusable":false}
   },
-  "nativeEvidence": {
-    "macOSAppleSilicon":{"status":"PASS","artifactId":9347023024,"artifact":"De-Pulse-v18.6.0-G13-G14-macOS-Apple-Silicon","artifactSha256":"77af17df0f4811ca05d7aed58cb384188b4f5cdb74a62da3302f4ddd816ddf55","runtimeAudit":"PASS","sqliteMigrations":[1,2,3,4]},
-    "windowsX64":{"status":"PASS","artifactId":9347035757,"artifact":"De-Pulse-v18.6.0-G13-G14-Windows-x64","artifactSha256":"0375439e2054a387390cc0c3c377967192622984742fa5a71eecb550fa34839a","runtimeAudit":"PASS","sqliteMigrations":[1,2,3,4]},
-    "releaseAssurance":{"status":"PASS","artifactId":9347040692,"artifact":"De-Pulse-v18.6.0-G15-Release-Assurance","artifactSha256":"4ba96996eaad81482f30a49fec9514a19030d98bd55867ed017941e0137eee8e"},
-    "g16Handoff":{"status":"PASS","artifactId":9347043385,"artifact":"De-Pulse-v18.6.0-G16-Handoff","artifactSha256":"bee9105a0b9f7ffdde0c3bf97da06d61b73ce526074af4e64a75aa42c0c9677e"}
+  "historicalCertification": {
+    "runId": 32199369265,
+    "candidate": "10a89f2b94629aa83d588f5a893c0dd7e83334d6",
+    "sourceFingerprint": "e1460c36e60ade65a91fccb5ff0c24c769f5b7b95d3ab8829c4402f74eaf6b27",
+    "status": "PASS_HISTORICAL_NOT_REUSABLE_AFTER_SOURCE_FINGERPRINTED_PROMOTION_HARDENING"
   },
-  "promotionState": "READY_FOR_NO_REBUILD_STABLE_PROMOTION_NOT_YET_EXECUTED",
-  "releaseBlockingResiduals": ["No v18.6 Stable claim is valid until the evidence-bound no-rebuild Stable promotion path is explicitly executed."],
+  "promotionState": "NOT_READY_FRESH_G11_G16_REQUIRED",
+  "releaseBlockingResiduals": ["Fresh final-source G11-G16 certification is required before Stable promotion."],
   "knownResiduals": ["TradeInsight remains governed shadow/future work until separately validated and approved.","External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required and fail closed when absent or unapproved."],
   "assistantPortability":{"status":"ENFORCED","contract":"governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md","entrypoints":["AGENTS.md","CLAUDE.md"],"authoritativeHandoff":"handoff/CURRENT.md","releaseRunTracking":"GitHub Actions run identity + PR #16 binding","chatMemoryRequired":false,"temporaryWorkspaceAuthoritative":false},
-  "userDelivery":"V18_6_0_CERTIFIED_NOT_PROMOTED",
-  "nextBranch":"v18.6-stable-promotion",
-  "nextStep":"Use the evidence-bound no-rebuild Stable promotion path only after promotion authorization; do not rebuild or change certified source.",
-  "updatedAt":"2026-08-19T00:04:00Z"
+  "userDelivery": "V18_6_0_IN_PROGRESS_NOT_PROMOTED",
+  "nextBranch": "v18.6-release-certification",
+  "nextStep": "Run exactly one canonical publish=false G11-G16 certification on the reconciled final G10 source; bind exact run and native artifacts before any main merge or Stable promotion.",
+  "updatedAt": "2026-08-19T05:42:00Z"
 }

@@ -32,34 +32,96 @@ def run_gate(root: Path, filename: str, label: str) -> int:
 
 def release_dispatch_contract(workflows: Path) -> int:
     ci_fast = (workflows / "ci-fast.yml").read_text(encoding="utf-8")
-    required = (
+    release = (workflows / "release.yml").read_text(encoding="utf-8")
+
+    ci_required = (
+        "types: [opened, synchronize, reopened, closed]",
         "endsWith(github.ref, '-release-certification')",
         "endsWith(github.ref, '-stable-promotion')",
         "github.event.sender.login == github.repository_owner",
         "github.event_name == 'pull_request'",
+        "github.event.action != 'closed'",
         "endsWith(github.event.pull_request.base.ref, '-release-certification')",
+        "github.event.action == 'closed'",
+        "github.event.pull_request.merged == true",
+        "endsWith(github.event.pull_request.base.ref, '-stable-promotion')",
+        "github.event.pull_request.merged_by.login == github.repository_owner",
         "github.actor == github.repository_owner",
         'release_ref="${PR_BASE_REF:-}"',
-        'candidate_sha="${PR_BASE_SHA:-}"',
-        '"v${release_line}-release-certification") publish=false',
-        '"v${release_line}-stable-promotion") publish=true',
+        'event_sha="${PR_MERGE_SHA:-}"',
+        '"v${release_line}-release-certification")',
+        '"v${release_line}-stable-promotion")',
+        '.depulse-certification/resume/release-evidence-checkpoint.json',
+        "cur['releaseCandidateCommit']",
+        "cur['sourceFingerprint']",
+        "cur['canonicalReleaseRun']",
+        "cur['promotionState']=='READY_NOT_PROMOTED'",
+        "ev['G16']['status']=='PASS_CLOSED'",
+        "certification_run_id",
+        "promotion_sha",
         'repos/${GITHUB_REPOSITORY}/issues/${TRACKING_PR}/comments',
     )
-    missing = [fragment for fragment in required if fragment not in ci_fast]
-    forbidden = (
+    ci_missing = [fragment for fragment in ci_required if fragment not in ci_fast]
+    ci_forbidden = (
         "github.event.head_commit.author.username",
-        "endsWith(github.event.pull_request.base.ref, '-stable-promotion')",
         "gh pr comment",
+        "endsWith(github.event.pull_request.base.ref, '-stable-promotion') && github.event.action != 'closed'",
     )
-    present_forbidden = [fragment for fragment in forbidden if fragment in ci_fast]
-    if missing or present_forbidden:
+    ci_present_forbidden = [fragment for fragment in ci_forbidden if fragment in ci_fast]
+
+    release_required = (
+        "certification_run_id:",
+        "Publish already-certified assets without rebuilding them",
+        "if: ${{ !inputs.publish }}",
+        "G15 Promotion / exact no-rebuild publication",
+        "needs.g15.result == 'skipped'",
+        "github-token: ${{ github.token }}",
+        "repository: ${{ github.repository }}",
+        "run-id: ${{ inputs.certification_run_id }}",
+        "G13-G14-macOS-Apple-Silicon.json",
+        "G13-G14-Windows-x64.json",
+        "G15-Release-Assurance.json",
+        "certifiedSourceSha",
+        "sourceFingerprint",
+        "artifactSha256",
+        "noExecutionBoundary",
+        "promotionAuthorized",
+        "gh release create",
+        "gh release upload",
+        "G12/G13/G14/G15 are not rerun in promotion mode",
+        '"noRebuildPublication": true',
+    )
+    release_missing = [fragment for fragment in release_required if fragment not in release]
+    release_forbidden = (
+        "git merge-base --is-ancestor '${{ inputs.candidate_sha }}'",
+        'git merge-base --is-ancestor "$CANDIDATE_SHA"',
+    )
+    release_present_forbidden = [fragment for fragment in release_forbidden if fragment in release]
+
+    # Native/package and full-cert jobs must be explicitly suppressed in publish mode.
+    for job_marker in ("g12:\n", "macos:\n", "windows:\n", "g15:\n"):
+        pos = release.find(job_marker)
+        if pos < 0:
+            release_missing.append(f"job marker {job_marker.strip()}")
+            continue
+        window = release[pos:pos + 500]
+        if "!inputs.publish" not in window:
+            release_missing.append(f"{job_marker.strip()} publish=false guard")
+
+    if ci_missing or ci_present_forbidden or release_missing or release_present_forbidden:
         print("DE.PULSE workflow policy: FAIL", file=sys.stderr)
-        if missing:
-            print("release dispatcher contract missing: " + ", ".join(missing), file=sys.stderr)
-        if present_forbidden:
-            print("release dispatcher forbidden contract fragments: " + ", ".join(present_forbidden), file=sys.stderr)
+        if ci_missing:
+            print("release dispatcher contract missing: " + ", ".join(ci_missing), file=sys.stderr)
+        if ci_present_forbidden:
+            print("release dispatcher forbidden contract fragments: " + ", ".join(ci_present_forbidden), file=sys.stderr)
+        if release_missing:
+            print("no-rebuild release contract missing: " + ", ".join(release_missing), file=sys.stderr)
+        if release_present_forbidden:
+            print("no-rebuild release contract forbidden fragments: " + ", ".join(release_present_forbidden), file=sys.stderr)
         return 1
-    print("release dispatcher push/PR-fallback authorization, REST comment transport and publish boundary: PASS")
+
+    print("release dispatcher certification + merged-PR Stable promotion authorization: PASS")
+    print("cross-run exact-artifact no-rebuild Stable promotion contract: PASS")
     return 0
 
 
