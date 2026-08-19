@@ -31,7 +31,12 @@ def main() -> int:
         errors.append("unexpected dependency lock schema")
 
     scoped = lock.get("scope", {}).get("immutable_action_pin_workflows", [])
-    if scoped != [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]:
+    expected_scoped = [
+        ".github/workflows/ci-fast.yml",
+        ".github/workflows/ci-qualified.yml",
+        ".github/workflows/release.yml",
+    ]
+    if scoped != expected_scoped:
         errors.append("immutable Action pin scope drift")
 
     actions = lock.get("actions", {})
@@ -41,6 +46,7 @@ def main() -> int:
         "actions/setup-go",
         "actions/setup-node",
         "actions/upload-artifact",
+        "actions/download-artifact",
     }
     if set(actions) != expected_actions:
         errors.append(f"dependency lock Action set drift: {sorted(actions)}")
@@ -56,6 +62,7 @@ def main() -> int:
     allowed_write = {
         ".github/workflows/ci-fast.yml": {"statuses": 1, "contents": 1},
         ".github/workflows/ci-qualified.yml": {"statuses": 1},
+        ".github/workflows/release.yml": {"contents": 1},
     }
     forbidden_permissions = set(lock.get("permission_policy", {}).get("forbidden_in_scoped_workflows", []))
 
@@ -136,18 +143,14 @@ def main() -> int:
     if re.search(r"pip\s+install[^\n]*\bplaywright(?:\s|$)", qualified):
         errors.append("Qualified workflow must install Playwright only through the pinned requirements file")
 
-    deferred = lock.get("scope", {}).get("deferred_release_workflow", {})
-    if deferred.get("path") != ".github/workflows/release.yml" or not deferred.get("reason"):
-        errors.append("release-workflow pin deferral must remain explicit and reasoned")
-
     if errors:
         return fail(errors)
 
     print("DE.PULSE CI reproducibility gate: PASS")
-    print("Fast/Qualified third-party Actions immutable-SHA pinned: PASS")
+    print("Fast/Qualified/Release third-party Actions immutable-SHA pinned: PASS")
     print("Playwright exact-version requirements + safe pip cache: PASS")
     print("scoped least-privilege permission contract: PASS")
-    print("release.yml pinning explicitly deferred to next release-capable product slice: PASS")
+    print("Release workflow Action pin deferral closed in v18.7.0: PASS")
     return 0
 
 
