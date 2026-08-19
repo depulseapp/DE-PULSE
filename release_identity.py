@@ -22,6 +22,13 @@ def load():
         if not str(x.get(k,'')).strip(): raise SystemExit(f'release identity missing {k}')
     return x
 
+def patch_contract(x):
+    p=ROOT/'release'/f"v{x['version']}"/'patch_contract.json'
+    if not p.exists(): return None
+    d=json.loads(p.read_text())
+    if str(d.get('release'))!=str(x['version']): raise SystemExit('patch contract release mismatch')
+    return d
+
 def sync(x):
     (ROOT/'VERSION.txt').write_text(
         f"{x['display_version']}\n"
@@ -41,43 +48,62 @@ def sync(x):
     s=re.sub(r'const buildID = "[^"]+"', f'const buildID = "{x["build_id"]}"', s)
     s=re.sub(r'const releaseChannel = "[^"]+"', f'const releaseChannel = "{x["channel"]}"', s)
     p.write_text(s)
-    p=ROOT/'renderer/renderer.js'; s=p.read_text()
-    s=re.sub(r"const EXPECTED_RELEASE_VERSION='[^']+';", f"const EXPECTED_RELEASE_VERSION='{x['version']}';", s)
-    s=re.sub(r"const EXPECTED_BUILD_ID='[^']+';", f"const EXPECTED_BUILD_ID='{x['build_id']}';", s)
-    p.write_text(s)
+    patch=patch_contract(x)
+    if patch:
+        p=ROOT/'renderer'/f"watchlist-desk-contract-v{x['version']}.js"
+        if not p.exists(): raise SystemExit(f'patch identity asset missing: {p}')
+        s=p.read_text()
+        s=re.sub(r"DEPULSE_PATCH_VERSION = '[^']+'", f"DEPULSE_PATCH_VERSION = '{x['version']}'", s)
+        s=re.sub(r"DEPULSE_PATCH_BUILD_ID = '[^']+'", f"DEPULSE_PATCH_BUILD_ID = '{x['build_id']}'", s)
+        p.write_text(s)
+    else:
+        p=ROOT/'renderer/renderer.js'; s=p.read_text()
+        s=re.sub(r"const EXPECTED_RELEASE_VERSION='[^']+';", f"const EXPECTED_RELEASE_VERSION='{x['version']}';", s)
+        s=re.sub(r"const EXPECTED_BUILD_ID='[^']+';", f"const EXPECTED_BUILD_ID='{x['build_id']}';", s)
+        p.write_text(s)
     p=ROOT/'renderer/index.html'; s=p.read_text()
     s=re.sub(r'<title>DE\.PULSE v[^<]+</title>', f"<title>DE.PULSE v{x['version']}</title>", s)
     for asset in RELEASE_COUPLED_ASSETS:
         s=re.sub(rf'{re.escape(asset)}\?v=[0-9.]+', f"{asset}?v={x['version']}", s)
     p.write_text(s)
-    for name in ('certification_plan.json','ci_pipeline_plan.json'):
-        p=ROOT/name; d=json.loads(p.read_text()); d['version']=x['version']
-        if name=='ci_pipeline_plan.json':
-            d.setdefault('policy',{})['baseline']=x['previous_stable']+' Stable'
-            d['policy']['release_channel']=x['channel']
-            d['policy']['canonical_release_identity']='release_identity.json'
-            d['policy']['pre_freeze_qualification']=True
-            d['policy']['unique_test_evidence']=True
-        p.write_text(json.dumps(d,indent=2)+"\n")
+    if not patch:
+        for name in ('certification_plan.json','ci_pipeline_plan.json'):
+            p=ROOT/name; d=json.loads(p.read_text()); d['version']=x['version']
+            if name=='ci_pipeline_plan.json':
+                d.setdefault('policy',{})['baseline']=x['previous_stable']+' Stable'
+                d['policy']['release_channel']=x['channel']
+                d['policy']['canonical_release_identity']='release_identity.json'
+                d['policy']['pre_freeze_qualification']=True
+                d['policy']['unique_test_evidence']=True
+            p.write_text(json.dumps(d,indent=2)+"\n")
 
 def verify(x):
     errs=[]
     version=(ROOT/'VERSION.txt').read_text()
     boot=(ROOT/'app_bootstrap.go').read_text()
+    renderer=(ROOT/'renderer/renderer.js').read_text()
     index=(ROOT/'renderer/index.html').read_text()
     cert=json.loads((ROOT/'certification_plan.json').read_text())
     ci=json.loads((ROOT/'ci_pipeline_plan.json').read_text())
+    patch=patch_contract(x)
+    renderer_ok=(f"const EXPECTED_RELEASE_VERSION='{x['version']}';" in renderer and f"const EXPECTED_BUILD_ID='{x['build_id']}';" in renderer)
+    if patch:
+        patch_asset=(ROOT/'renderer'/f"watchlist-desk-contract-v{x['version']}.js").read_text()
+        renderer_ok=(f"DEPULSE_PATCH_VERSION = '{x['version']}'" in patch_asset and f"DEPULSE_PATCH_BUILD_ID = '{x['build_id']}'" in patch_asset and f"watchlist-desk-contract-v{x['version']}.js?v={x['version']}" in index)
+        cert_ok=str(cert.get('version'))==str(patch.get('inherited_certification_plan'))
+        ci_ok=str(ci.get('version'))==str(patch.get('inherited_ci_plan'))
+    else:
+        cert_ok=cert.get('version')==x['version']; ci_ok=ci.get('version')==x['version']
     checks=[
       (x['display_version'] in version,'VERSION display'),(x['build_id'] in version,'VERSION build'),
       (f'Previous Stable: {x["previous_stable"]}' in version,'VERSION predecessor'),
       (f'const appVersion = "{x["version"]}"' in boot,'appVersion'),(f'const buildID = "{x["build_id"]}"' in boot,'buildID'),
       (f'const releaseChannel = "{x["channel"]}"' in boot,'release channel'),
-      (f"const EXPECTED_RELEASE_VERSION='{x['version']}';" in (ROOT/'renderer/renderer.js').read_text(),'renderer version'),
-      (f"const EXPECTED_BUILD_ID='{x['build_id']}';" in (ROOT/'renderer/renderer.js').read_text(),'renderer build'),
+      (renderer_ok,'renderer/patch identity'),
       (f"<title>DE.PULSE v{x['version']}</title>" in index,'HTML title'),
-      (cert.get('version')==x['version'],'certification plan version'),(ci.get('version')==x['version'],'CI plan version'),
-      (ci.get('policy',{}).get('baseline')==x['previous_stable']+' Stable','CI baseline'),
+      (cert_ok,'certification plan inheritance/version'),(ci_ok,'CI plan inheritance/version'),
     ]
+    if not patch: checks.append((ci.get('policy',{}).get('baseline')==x['previous_stable']+' Stable','CI baseline'))
     checks.extend((f"{asset}?v={x['version']}" in index,f'{asset} cache-bust version') for asset in RELEASE_COUPLED_ASSETS)
     errs.extend(label for ok,label in checks if not ok)
     if errs: raise SystemExit('Release identity: FAIL · '+', '.join(errs))

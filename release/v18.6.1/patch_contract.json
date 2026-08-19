@@ -1,0 +1,15 @@
+{
+  "schema": "DE.PULSE-PATCH-CONTRACT-1",
+  "release": "18.6.1",
+  "base_stable": "v18.6.0",
+  "inherited_certification_plan": "18.6.0",
+  "inherited_ci_plan": "18.6.0",
+  "scope": [
+    "repository branch/file/PR/issue hygiene",
+    "watchlist membership toggle UI without CURRENT marker",
+    "global tracked-symbol removal from desk rows and Master Market Store",
+    "header alert centered between brand and owner/runtime controls"
+  ],
+  "quality_rule": "Inherit the complete v18.6.0 G0-G16 certification matrix and add v18.6.1 browser edge coverage; no gate or protected product boundary is reduced.",
+  "ci_efficiency_trial": true
+}
