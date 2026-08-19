@@ -75,6 +75,7 @@ Unknown non-process content fails closed to full qualification.
 - WebKit carries the primary cross-engine compatibility suite for core UI/interaction contracts.
 - `full` and `browser` candidates require both.
 - Renderer/UI changes require WebKit through `webkit_required`.
+- Primary WebKit executes on `macos-15` with the exact pinned Playwright package and `playwright install webkit`; Linux `--with-deps webkit` is prohibited because it creates large apt dependency amplification without adding product-quality value.
 - Other engines, including Firefox if introduced later, remain secondary/risk-directed unless evidence justifies promotion.
 - The design intentionally avoids a blind N-browser matrix: primary engines get mandatory evidence; secondary engines are added only where risk/value warrants it.
 
@@ -125,13 +126,16 @@ Generic workflow linting remains useful and is carried into Packet D unless a sa
 - Bind WebKit success into exact-head Qualified evidence whenever required.
 - Keep other browser engines secondary by default.
 
-Expected Packet C self-validation: process-only → Fast → Qualified CI-harness/portability **plus one real WebKit job** because Packet C changes its own WebKit compatibility harness. Backend/renderer/Chrome product suites remain skipped. This validates the new WebKit execution path without manufacturing a product build.
+Packet C first Qualified #135 correctly selected only CI-harness + portability + WebKit for the process-only slice. Harness and Ubuntu/macOS/Windows portability passed and unrelated backend/renderer/Chrome product lanes were skipped. The first WebKit setup was cancelled at the lane timeout before tests because Ubuntu `playwright install --with-deps webkit` attempted 181 additional packages and approximately 114 MB through slow apt mirrors. This is classified `CI_HARNESS_FAIL`; it does not weaken the WebKit requirement.
+
+Corrective execution: same PR #48 returned to Draft; primary WebKit moved to `macos-15` with `playwright install webkit`, and policy now prohibits the Linux `--with-deps webkit` amplification. The corrected same PR must pass new exact-head Fast and actual WebKit Qualified evidence before merge.
 
 ### Packet D — Durable evidence / telemetry
 
 - Compact durable Stable evidence manifest.
 - Lane runtime/queue/cache/failure-class telemetry.
 - CI cost/runtime trend detection.
+- Browser setup/download timing and cache-effectiveness measurement, especially WebKit.
 - Generic workflow linting if still outstanding.
 - Preserve evidence sufficient to detect workflow amplification/regression early.
 
