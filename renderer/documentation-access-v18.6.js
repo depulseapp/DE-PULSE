@@ -21,6 +21,14 @@ renderDocumentation=function(){
   return html.replace(/<button\b[^>]*data-doc-tab="developer"[^>]*>[\s\S]*?<\/button>/i,'');
 };
 
+const v186DocumentationOwner=globalThis.__DE_PULSE_RENDERER_OWNERS__?.documentation;
+if(v186DocumentationOwner){
+  const decorators=Array.isArray(v186DocumentationOwner.decorators)?v186DocumentationOwner.decorators:[];
+  if(!decorators.includes('renderer/documentation-access-v18.6.js'))decorators.push('renderer/documentation-access-v18.6.js');
+  v186DocumentationOwner.decorators=decorators;
+  v186DocumentationOwner.accessPolicy='developer documentation requires SUPER_OWNER, OWNER, or ADMIN';
+}
+
 globalThis.__v186DocumentationAccess={
   role:v186DocumentationRole,
   canViewDeveloper:v186CanViewDeveloperDocumentation,
