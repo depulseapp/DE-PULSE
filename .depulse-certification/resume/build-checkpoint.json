@@ -21,7 +21,7 @@
   },
   "metadataHeadRule": "Only .depulse-certification is excluded by canonical source fingerprint. Source f005942a is frozen and certified; checkpoint-only promotion progress does not invalidate it.",
   "codeStatus": "V18_6_0_IMPLEMENTATION_COMPLETE_PROMOTION_PATH_HARDENED_G11_G16_PASS",
-  "lastTrustworthyPass": "Final source f005942af74d0d72686068696bf44b43a68e4052 passed G10 Fast #283 / 32220442055 and Qualified #119 / 32220442032. Release candidate d5e6721818686f30d737db20c91967215c4cd470 then passed canonical release run 32220888186 through G11, G12, native macOS and Windows G13/G14, G15 Release Assurance and G16; publication was correctly skipped because publish=false.",
+  "lastTrustworthyPass": "Final source f005942af74d0d72686068696bf44b43a68e4052 passed G10 Fast #283 / 32220442055 and Qualified #119 / 32220442032. Release candidate d5e6721818686f30d737db20c91967215c4cd470 passed canonical release run 32220888186 through G11-G16 with publication skipped because publish=false.",
   "gates": {
     "G0": {"status": "PASS", "reusable": true},
     "G1": {"status": "PASS", "reusable": true},
@@ -48,6 +48,7 @@
   },
   "promotionState": "READY_NOT_PROMOTED",
   "canonicalReleaseRun": 32220888186,
+  "promotionTrigger": {"state": "REQUESTED", "certificationRunId": 32220888186, "publish": true, "requiredBranch": "v18.6-stable-promotion", "noRebuild": true},
   "releaseBlockingResiduals": [],
   "knownResiduals": [
     "TradeInsight remains governed shadow/future work until separately validated and approved.",
@@ -56,6 +57,6 @@
   "assistantPortability": {"status": "ENFORCED", "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md", "entrypoints": ["AGENTS.md", "CLAUDE.md"], "authoritativeHandoff": "handoff/CURRENT.md", "releaseRunTracking": "GitHub Actions run identity + PR #16 binding", "chatMemoryRequired": false, "temporaryWorkspaceAuthoritative": false},
   "userDelivery": "V18_6_0_CERTIFIED_READY_FOR_STABLE_PROMOTION",
   "nextBranch": "v18.6-stable-promotion",
-  "nextStep": "Perform owner-controlled merged-PR promotion-reuse. Require publish=true to skip G12/G13/G14/G15, reuse certification run 32220888186 artifacts, verify exact evidence, publish v18.6.0-stable, then close checkpoints on main.",
-  "updatedAt": "2026-08-19T06:01:00Z"
+  "nextStep": "Merge this metadata-only promotion trigger into v18.6-stable-promotion and require promotion-reuse to publish exact run 32220888186 artifacts without rerunning G12/G13/G14/G15.",
+  "updatedAt": "2026-08-19T06:03:00Z"
 }
