@@ -7,6 +7,10 @@
   "scope": "v18_7_0_scope.json",
   "g0g3": "v18_7_0_g0_g3_contract.json",
   "audit": "adaptive-governance/V18_7_0_RUNTIME_RELIABILITY_AUDIT.md",
+  "identity_asset": "release-identity-v18.7.0.js",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries. v18.7 current execution authority is the three canonical GitHub workflows plus this release contract and run_full_certification.sh; do not cosmetically rewrite the legacy registries merely to change their version label.",
   "qualificationRule": "Exact-head Fast and full Qualified, including backend/race/randomized, renderer, Chrome and WebKit, must PASS before merge. G12 then re-certifies the exact merged candidate without replacing pre-merge WebKit evidence.",
   "releaseRule": "One development branch, one PR, one immutable merged candidate, one G11-G16 Stable release run; no retry/certification/promotion branches.",
   "protectedBoundaries": [
