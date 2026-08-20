@@ -332,3 +332,55 @@ This is the permanent feedback loop:
 **failure → classification → root cause → canonical fix → regression test → same-lane rerun → preserved independent evidence → G15 → no-rebuild publication → G16 cleanup/learning → improved next release.**
 
 This section strengthens the existing Adaptive CI delivery control and repository-structure contracts without changing G0–G16.
+
+---
+
+## 16. v18.8 audit-derived 10/10 delivery hardening
+
+### 16.1 Stable publication is not continuity closure
+
+After the immutable Stable tag and GitHub Release publish successfully, delivery must atomically converge the durable continuity layer before G16 closes:
+
+- build checkpoint;
+- release-evidence checkpoint;
+- release-scoped Stable evidence manifest;
+- `handoff/CURRENT.md`;
+- CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process;
+- exactly one next release/action.
+
+The actual GitHub Release/tag remains higher authority than stale metadata. Stale continuity metadata must be corrected without rebuilding already-certified binaries when source/package/test identity is unchanged.
+
+### 16.2 G11 publication-feasibility assurance
+
+Before G12/native spend, G11 must prove:
+
+- canonical release version/build ID is internally coherent;
+- required release certification scaffold exists for that version;
+- predecessor/baseline semantics are valid;
+- target Stable tag is absent or idempotently points to the same already-published immutable candidate;
+- a conflicting existing Stable tag fails immediately.
+
+The publication job repeats the immutable-tag collision check. The early check saves compute; the late check protects against race/state changes.
+
+### 16.3 Delivery truth for market evidence time
+
+Actual packages must preserve the distinction between provider evidence time and local retrieval/observation time. Missing provider evidence time cannot display or feed decision logic as freshly observed “now.” Where freshness is required and evidence time is unavailable, package behavior must be truthful UNKNOWN/degraded/ABSTAIN according to the consumer contract.
+
+### 16.4 v18.8.1 renderer/test delivery migration
+
+Renderer/test modularization is acceptable only when actual browser/native evidence proves behavior equivalence for migrated capabilities. Do not deliver a mass filename cleanup without capability ownership, regression lineage and preservation of unique historical contracts.
+
+### 16.5 10/10 delivery score additions
+
+G15/G16 must additionally report:
+
+- Release State Coherence: PASS;
+- target Stable tag preflight: PASS before G12;
+- publication-time immutable collision guard: PASS;
+- continuity artifacts agree with the actual published Stable;
+- no false-freshness fallback in affected market-data paths;
+- discovery-universe contract explicit for affected Scanner/Radar paths;
+- CI work avoided by cheap-first failure detection/evidence reuse;
+- no required evidence removed to achieve the savings.
+
+These are strengthened responsibilities inside existing G11/G15/G16, not new top-level gates.

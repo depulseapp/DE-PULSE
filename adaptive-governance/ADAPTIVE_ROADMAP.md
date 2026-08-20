@@ -335,3 +335,49 @@ Permanent roadmap direction:
 12. **Every future G16 measures convergence.** Required outputs include active workflow count, stale workflow count, active branch count, obsolete branch count, rerun/retry reasons, preserved evidence, duplicated compute avoided, and concrete canonical CI improvements implemented from the release.
 
 This strengthens `CI-ADAPTIVE-18.5.1-001`, `AUDIT-18-CI-001`, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md`; it adds no G17+ and does not alter product sequencing authority.
+
+---
+
+## 12. v18.8 post-Stable audit → 10/10 hardening contract
+
+**Status:** PERMANENT PROCESS / DATA-TRUTH / ARCHITECTURE HARDENING.  
+**Mandatory entry:** v18.8.1.  
+**Gate model:** strengthens existing G0–G16 responsibilities only; **no G17+**.
+
+The v18.8.0 source/CI audit and the observed Fast #413–#415 plus Release #27 recovery sequence proved that the canonical CI architecture is fundamentally strong, but release truth can still drift across multiple metadata owners and be discovered sequentially or too late. v18.8.1 therefore carries the following permanent requirements.
+
+| ID | Permanent requirement | Primary placement |
+|---|---|---|
+| `ADAPT-REL-001` | **Atomic Stable source-of-truth closure.** After successful no-rebuild Stable publication, tag/release identity, build checkpoint, release-evidence checkpoint, Stable evidence manifest, `handoff/CURRENT.md`, and CURRENT Adaptive overlays must converge before G16 is considered complete. | G16 / every Stable |
+| `ADAPT-CI-001` | Add one cheap **Release State Coherence** preflight that evaluates release identity, VERSION/app/renderer identity, cache-bust identity, checkpoints, evidence manifest, handoff, predecessor/baseline and target tag state together and reports all mismatches in one run. | v18.8.1 G3–G5 |
+| `ADAPT-CI-002` | G11 must validate the target Stable tag/version/build/predecessor and detect an existing conflicting tag **before G12/native work**. The publication-time immutable-tag guard remains as defense in depth. | v18.8.1 G11 |
+| `ADAPT-CI-003` | Keep Fast **cheap-first**: checkout/Python/impact/coherence/governance/identity/provenance before Go/Node/browser setup. Expensive language/runtime setup starts only after cheap release-state checks are green. | v18.8.1 G5 |
+| `ADAPT-CI-004` | Manual workflow dispatch is safe-by-default. Full qualification/native work requires explicit intent; manual defaults must not accidentally launch the most expensive lane. Normal PR automation remains the preferred path. | v18.8.1 CI hardening |
+| `ADAPT-DATA-001` | The canonical broad U.S.-equity discovery universe must have an explicit eligibility contract. Provider query filters such as `has_options` cannot silently redefine “broad U.S. equities”; either remove the filter or govern/name the optionable subset intentionally. | v18.8.1 G2–G7 |
+| `ADAPT-DATA-002` | **Unknown freshness never becomes “now”.** Separate provider evidence time from retrieval/observation time; freshness and decision truth use provider-backed evidence time or explicit UNKNOWN/ABSTAIN semantics. | v18.8.1 G2/G7 |
+| `ADAPT-ARCH-001` | Shared-universe ownership must remain neutral across Scanner/Radar, use neutral diagnostics, guarantee in-flight refresh cleanup, and cover cancellation/concurrency/eligibility semantics without creating another provider router or snapshot broker. | v18.8.1 G2–G6 |
+| `ADAPT-UI-001` | Renderer Modularization II must migrate version-stacked renderer assets toward stable capability/module owners. Release version is metadata/cache identity, not permanent component identity. No broad rewrite or visual redesign is implied. | v18.8.1 |
+| `ADAPT-QA-001` | Gradually consolidate version-stacked executable tests/gates into capability-oriented suites while preserving unique historical evidence. “Unreferenced” never means safe to delete without ownership/evidence analysis. | v18.8.1 onward |
+| `ADAPT-GOV-001` | Historical release-ledger/gate names must be clearly labeled as historical baselines and must not masquerade as the current release state. Current status lives in current overlays/checkpoints and actual GitHub objects. | v18.8.1 |
+| `ADAPT-COST-001` | CI optimization target remains **cost per trustworthy, non-duplicative evidence**. Cost telemetry can reorder, cache, reuse and suppress proven-unaffected work, but can never waive required correctness/security/native/release evidence. | Permanent |
+
+### Mandatory release placement
+
+1. **Immediate v18.8.0 post-Stable closure:** complete `ADAPT-REL-001` before normal v18.8.1 product implementation so another assistant/account cannot mistake v18.7 for the current Stable.
+2. **v18.8.1 — Renderer Modularization II + 10/10 hardening:** implement `ADAPT-CI-001..004`, `ADAPT-DATA-001..002`, `ADAPT-ARCH-001`, the first bounded `ADAPT-UI-001` extraction, `ADAPT-GOV-001`, and begin `ADAPT-QA-001` capability migration.
+3. **v18.9.0 TradeInsight SHADOW and v18.9.1 Provider/Market-Mode hardening** consume the improved provider-evidence time, universe semantics, release-state coherence and CI controls; they must not create parallel routers, freshness engines or workflow families.
+4. **v18.10.0 major closure** must verify these controls are enforced, not merely documented. Any residual justified migration continues explicitly; no silent carry-forward.
+
+### 10/10 roadmap exit condition
+
+The hardening is effective only when:
+- one preflight exposes all release-state drift instead of one mismatch per CI run;
+- a conflicting Stable tag/version is rejected before expensive certification/native jobs;
+- post-publication GitHub continuity artifacts agree with the actual Stable release;
+- unknown provider time cannot be presented as fresh market evidence;
+- discovery-universe semantics are explicit and testable;
+- renderer/test ownership trends toward capabilities instead of release-number stacks;
+- CI spend decreases through earlier failure/reuse without reducing required evidence;
+- a new ChatGPT/Codex/Claude/human maintainer reaches the same current Stable and next action from GitHub alone.
+
+Historical release-specific sections above remain preserved as provenance. They do not override this current permanent hardening contract or the CURRENT Adaptive overlays.
