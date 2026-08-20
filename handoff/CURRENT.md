@@ -4,34 +4,57 @@
 
 ## Current identity
 
-**Certified Stable:** `v18.7.0-stable`  
-**Certified candidate / tag target:** `75e494fb92441439c73c8ace41a40118e4518c1c`  
-**Certified source fingerprint:** `350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963`  
-**Certified Build ID:** `v18.7.0-stable-20260819`  
-**Engineering branch:** `v18.8.0-development`  
-**Candidate package identity:** `18.8.0` / `v18.8.0-stable-20260819`  
-**Engineering baseline:** `6ab2094cb7aefdb3e1e21862cbd17b64ed850c28` (PR #54 merged product source)  
-**Release recovery:** Release #27 (`32335527140`) proved G11, G12, macOS/Windows G13-G14, G15 and exact-artifact verification, then correctly blocked publication because the merged candidate still identified itself as v18.7.0.  
-**Stable checkpoints:** checkpoints intentionally remain anchored to immutable v18.7.0 Stable while v18.8.0 is an in-flight candidate.
+**Certified Stable:** `v18.8.0-stable`  
+**Certified candidate / tag target:** `3a32d57dd4c74c6f812cc942a9d8049a7b517718`  
+**Qualified source head:** `a8cf5f4e818609d191f977da846be31203d76f06`  
+**Certified source fingerprint:** `fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46`  
+**Certified Build ID:** `v18.8.0-stable-20260819`  
+**Fast:** #419 / `32336519003`  
+**Qualified:** #145 / `32336619446`  
+**Release:** #28 / `32336898662`  
+**Engineering branch:** `v18.8.1-development`  
+**Current engineering line:** `v18.8.1 — Renderer Modularization II + 10/10 Audit Hardening`.
 
-## v18.8.0 frozen scope — Shared Intelligence Consolidation
+## v18.8.0 Stable closure
 
-G0-G3 source-owner audit proved one meaningful consolidation gap and no justification for a broader rewrite: Discovery Scanner and Opportunity Radar had separate lifecycle/cache ownership around the Alpaca U.S.-equity universe. v18.8.0 consolidates that into `canonicalUSSymbolUniverse` while preserving the existing 12-hour TTL, coalescing concurrent refreshes, preserving provider-backed timestamps after failed refresh, using bounded retry suppression plus identifiable deterministic seed fallback, and preserving Scanner ranking plus Radar sampling/promotion semantics.
+v18.8.0 Shared Intelligence Consolidation is complete and immutable. `v18.8.0-stable` resolves exactly to candidate `3a32d57dd4c74c6f812cc942a9d8049a7b517718`. Release #28 passed G11, authoritative G12, macOS Apple Silicon and Windows x64 G13-G14 actual packaged-runtime audits, G15 Release Assurance, same-artifact no-rebuild publication and G16. The certified source fingerprint is `fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46`.
 
-Smart Provider Router v2 remains the sole provider-routing owner. BroadSnapshotBroker remains the canonical snapshot reuse/coalescing owner. Session Intelligence, Event Intelligence, Research evidence hydration, deterministic Day/Swing/Long market truth, GLD/SLV/USO actionable tradable exceptions, U.S. Equities Processing boundary and No Execution boundary remain unchanged.
+Durable v18.8.0 continuity evidence is bound in:
+- `.depulse-certification/resume/build-checkpoint.json`;
+- `.depulse-certification/resume/release-evidence-checkpoint.json`;
+- `release/v18.8.0/stable-evidence-manifest.json`.
 
-## Release recovery rule
+`ADAPT-REL-001` is CLOSED. This was continuity/source-of-truth repair only; certified v18.8.0 binaries were not rebuilt.
 
-Do not rerun Release #27 unchanged and do not modify, move or overwrite `v18.7.0-stable`. The bounded recovery is one recreated `v18.8.0-development` branch from merged candidate `6ab2094c`, one release-closure commit containing the correct v18.8 identity/scaffolding, one Draft recovery PR to `main`, exact-head Fast, the same PR Ready, full exact-head Qualified, exact-head merge, then one automatic Release G11-G16 run. No retry/certification/promotion branches and no duplicate CI/release workflows.
+## v18.8.1 mandatory scope
 
-## v18.7.0 immutable Stable
+The current release line carries the audit-hardening packets already frozen in the four CURRENT Adaptive overlays:
 
-v18.7.0 Runtime Reliability & Data Truth remains the last certified Stable until v18.8.0 completes G11-G16. Its immutable tag, candidate, fingerprint, artifacts and prior evidence are not rewritten to make the v18.8 candidate look Stable.
+- `ADAPT-CI-001` Release State Coherence validator;
+- `ADAPT-CI-002` early G11 target-tag/version/build/predecessor/release-scaffold preflight;
+- `ADAPT-CI-003` cheap-first Fast ordering;
+- `ADAPT-CI-004` safe-by-default manual dispatch;
+- `ADAPT-DATA-001` explicit discovery-universe eligibility semantics;
+- `ADAPT-DATA-002` provider evidence time separated from retrieval time;
+- `ADAPT-ARCH-001` neutral/cancellation-safe/panic-safe shared-universe ownership;
+- `ADAPT-UI-001` bounded Renderer Modularization II;
+- `ADAPT-QA-001` capability-oriented test/gate consolidation with evidence conservation;
+- `ADAPT-GOV-001` historical reconciliation identity separated from current release identity;
+- `ADAPT-COST-001` cost per trustworthy non-duplicative evidence;
+- `ADAPT-RECON-001`, `ADAPT-UX-RESEARCH-001`, `ADAPT-SYMBOL-001`, `ADAPT-READINESS-001`, `ADAPT-FRESHNESS-001`, and `ADAPT-RESEARCH-002` zero-miss/current-trust reconciliation packets.
+
+A historical carry-forward that is already correct closes by fresh evidence. A reproducible gap keeps its original requirement identity and is fixed in its assigned coherent slice. Do not defer a known reproducible gap to a generic v18.10 catch-all.
+
+## Provider continuity
+
+Smart Provider Router v2 remains the sole provider-routing authority. BroadSnapshotBroker remains the canonical broad snapshot reuse/coalescing owner. Deterministic Day/Swing/Long truth remains protected. GLD/SLV/USO remain actionable tradable exceptions. U.S. Equities Processing and No Execution remain permanent boundaries.
+
+v18.9.0 retains `ADAPT-TRADEINSIGHT-001` Full Capability Discovery, Utility Mapping & SHADOW Integration as the next provider-intelligence release after v18.8.1.
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` Stable checkpoints, `release/v18.7.0/stable-evidence-manifest.json`, `v18_8_0_scope.json`, `v18_8_0_g0_g3_contract.json`, `release/v18.8.0/release_contract.json`, live GitHub state, the four current Adaptive overlays, and the conserved v17/v18 reconciliation ledger. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, `release/v18.8.0/stable-evidence-manifest.json`, the four CURRENT Adaptive overlays, live GitHub branch/PR/workflow state, and the conserved reconciliation authority before changing source. Never resume from model memory alone.
 
 ## Exactly one next action
 
-Complete the single bounded v18.8.0 release-recovery PR lifecycle: exact-head Fast → same PR Ready → full Qualified → exact-head merge → one automatic G11-G16 Release. If any gate fails, diagnose that exact failure and do not rerun unchanged evidence.
+Implement `ADAPT-CI-001` on `v18.8.1-development`: one cheap Release State Coherence validator that reports all current release/checkpoint/manifest/handoff/predecessor/tag mismatches in one result and proves a coherent v18.8.0 Stable state passes. Then continue the remaining v18.8.1 packets on this same branch; do not create retry/certification/promotion branches or duplicate workflows.
