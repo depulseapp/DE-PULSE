@@ -13,15 +13,16 @@
 **Stable Qualified:** #145 / `32336619446`  
 **Stable Release:** #28 / `32336898662`  
 **Engineering branch:** `v18.8.1-development`  
+**Candidate package identity:** `18.8.1` / `v18.8.1-stable-20260820`  
 **Qualification PR:** #56 (`v18.8.1-development` → `main`, Draft)  
 **Latest completed product packet:** `a7ae7dcefa4c431527254697adc12ddd205caf49` (`ADAPT-RESEARCH-002`)  
-**Current engineering line:** `v18.8.1 — Exact-Head Qualification / Fast #421 Coherence Repair`.
+**Current engineering line:** `v18.8.1 — Exact-Head Qualification / Fast #423 Resume-Handoff Repair`.
 
 ## v18.8.0 Stable closure
 
 v18.8.0 Shared Intelligence Consolidation is complete and immutable. `v18.8.0-stable` resolves exactly to candidate `3a32d57dd4c74c6f812cc942a9d8049a7b517718`. Release #28 passed G11, authoritative G12, macOS Apple Silicon and Windows x64 G13-G14 actual packaged-runtime audits, G15 Release Assurance, same-artifact no-rebuild publication and G16. Certified v18.8.0 evidence under `.depulse-certification/resume/` and `release/v18.8.0/stable-evidence-manifest.json` remains immutable.
 
-`ADAPT-REL-001` is CLOSED. No v18.8.1 packet changes or rebuilds certified v18.8.0 binaries.
+During v18.8.1 candidate development, the Stable checkpoints intentionally remain anchored to certified v18.8.0 evidence. Candidate identity is owned separately by `release_identity.json`, the `v18.8.1-development` engineering branch and PR #56 until promotion. `ADAPT-REL-001` remains CLOSED, and no v18.8.1 packet changes or rebuilds certified v18.8.0 binaries.
 
 ## v18.8.1 development closure
 
@@ -37,38 +38,42 @@ Key packet commits:
 
 `ADAPT-RESEARCH-002` preserves Earnings Deep Dive, deterministic Fundamentals Interpretation, SEC BUY/SELL/OTHER semantics, Catalyst/Material Event Context, Technical Context, sourced-evidence readiness, optional evidence-gated AI, worst-dependency package truth, future-clock-skew rejection and the rule that AI never changes deterministic Action/Score or adds execution behavior.
 
-## Fast #421 finding and bounded repair
+## Qualification repair history
 
-PR #56 opened on exact source head `cb469208ba748aed05e06637e6fba818de9733da`. CI Fast #421 / run `32410616929` failed early in `Canonical workflow policy` because `Release State Coherence` still treated inactive `renderer/header-v18.5.1.js` as a release-coupled runtime asset. All earlier workflow structural, impact-planner, legacy inventory, reproducibility, browser-routing, renderer-owner, CI telemetry and CI-hardening checks in that step passed before the coherence failure.
+PR #56 opened on source head `cb469208ba748aed05e06637e6fba818de9733da`.
 
-The same-branch/same-PR repair is intentionally bounded:
+- **Fast #421 / run `32410616929`: FAIL** at `Canonical workflow policy`. Root cause: release-state coherence still treated inactive `renderer/header-v18.5.1.js` as release-coupled and the candidate still carried v18.8.0 package identity.
+- Repair commit `19f56861972afa36124898278b76e05a6747b368` aligned canonical v18.8.1 package/release identity, active Documentation/Market Header owners, renderer cache identity and the v18.8.1 release/G12 scaffold.
+- **Fast #422 / run `32413399649`: FAIL** because `tools/ci/release_state_coherence.py` was corrupted during source transfer. This was a repair-transfer defect, not a product defect.
+- Integrity correction commit `776bb2cf737b10eccf3cf57115252ded77d39b9d` restored the file from clean source. On **Fast #423 / run `32414213356`**, `Canonical workflow policy` PASS, Release State Coherence PASS, Stable evidence PASS, release rehearsal PASS, conserved ledger PASS and watchlist membership PASS. The run then stopped at `Adaptive resume portability` because this handoff had not yet declared the new candidate identity/build and immutable-checkpoint anchoring explicitly.
+
+The same-branch/same-PR repair remains intentionally bounded:
 
 - release-coupled owner validation follows active `renderer/documentation-ui.js` and `renderer/market-header-ui.js`;
 - inactive `renderer/header-v18.5.1.js` remains legacy compatibility/regression evidence only and is no longer release-coupled;
-- canonical package identity advances from v18.8.0 to **v18.8.1**, with `v18.8.0` as both `stable_baseline` and `previous_stable`;
+- canonical package identity is **v18.8.1**, with `v18.8.0` as both `stable_baseline` and `previous_stable`;
 - `VERSION.txt`, `app_bootstrap.go`, renderer title/cache identities and `renderer/release-identity-v18.8.1.js` are aligned;
 - `release/v18.8.1/release_contract.json` and `run_full_certification.sh` provide an exact-source v18.8.1 G11/G12 target;
 - no new branch, PR, workflow, retry/certification/promotion branch or duplicate release path is introduced.
 
-The repair is a **qualification defect correction**, not a new product-scope packet. All 17 Adaptive packet identities remain CLOSED.
+These qualification fixes do not create new Adaptive packet identities. All 17 Adaptive packets remain CLOSED.
 
 ## Qualification status
 
 **v18.8.1 development scope is complete; v18.8.1 is not yet Fast PASS, Qualified or Stable.**
 
-Fast #421 is a recorded failed candidate and must never be reported as PASS. The authorized repair stays on PR #56; the source-changing push will create one new `synchronize` Fast candidate. Only the new exact head may earn `DE.PULSE/fast-head`.
+Fast #421, #422 and #423 are recorded failed candidates and must never be reported as PASS. The next source-changing push is this bounded handoff reconciliation and will create one new `synchronize` Fast candidate on PR #56. Only that new exact head may earn `DE.PULSE/fast-head`.
 
 Required low-cost flow:
 
-1. push this bounded coherence/release-identity correction to the same `v18.8.1-development` branch / PR #56;
-2. inspect the single new exact-head Fast result;
-3. only if Fast passes, obtain/consume explicit authorization to mark the **same PR #56** Ready for Review;
-4. Qualified must run full impact-selected coverage (backend/race/randomized, renderer, Chrome and WebKit are expected because this release candidate changes backend/renderer/release tooling/CI-harness surfaces);
-5. only if exact-head Fast + Qualified PASS, merge PR #56 with separate explicit merge authorization;
-6. the merged PR then enters the single canonical G11-G16 Release path because `release_identity.json` changes to v18.8.1;
-7. call v18.8.1 Stable only after G12, macOS Apple Silicon + Windows x64 G13/G14 actual packaged-runtime audits, G15 and same-run no-rebuild publication complete.
+1. inspect the new exact-head Fast result on this same PR #56;
+2. only if Fast passes, obtain/consume explicit authorization to mark the **same PR #56** Ready for Review;
+3. Qualified must run full impact-selected coverage, including backend/race/randomized, renderer, Chrome and WebKit where routed;
+4. only if exact-head Fast + Qualified PASS, merge PR #56 with separate explicit merge authorization;
+5. the merged PR then enters the single canonical G11-G16 Release path because `release_identity.json` is v18.8.1;
+6. call v18.8.1 Stable only after G12, macOS Apple Silicon + Windows x64 G13/G14 actual packaged-runtime audits, G15 and same-run no-rebuild publication complete.
 
-Do not rerun failed Fast #421 unchanged. Do not create retry, certification, promotion, dispatch or fallback branches/workflows.
+Do not rerun failed Fast #421/#422/#423 unchanged. Do not create retry, certification, promotion, dispatch or fallback branches/workflows.
 
 ## Provider continuity
 
@@ -82,4 +87,4 @@ Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.m
 
 ## Exactly one next action
 
-Inspect the new exact-head CI Fast run created by this coherence-repair push on PR #56. If and only if it passes, obtain/consume explicit authorization to mark the same Draft PR Ready for Review and trigger Qualified. Do not merge or release without the corresponding explicit authorization/evidence.
+Inspect the new exact-head CI Fast run created by this handoff-reconciliation push on PR #56. If and only if it passes, obtain/consume explicit authorization to mark the same Draft PR Ready for Review and trigger Qualified. Do not merge or release without the corresponding explicit authorization/evidence.
