@@ -335,3 +335,88 @@ Permanent roadmap direction:
 12. **Every future G16 measures convergence.** Required outputs include active workflow count, stale workflow count, active branch count, obsolete branch count, rerun/retry reasons, preserved evidence, duplicated compute avoided, and concrete canonical CI improvements implemented from the release.
 
 This strengthens `CI-ADAPTIVE-18.5.1-001`, `AUDIT-18-CI-001`, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md`; it adds no G17+ and does not alter product sequencing authority.
+
+---
+
+## 12. v18.8 post-Stable audit → 10/10 hardening contract
+
+**Status:** PERMANENT PROCESS / DATA-TRUTH / ARCHITECTURE HARDENING.  
+**Mandatory entry:** v18.8.1.  
+**Gate model:** strengthens existing G0–G16 responsibilities only; **no G17+**.
+
+The v18.8.0 source/CI audit and the observed Fast #413–#415 plus Release #27 recovery sequence proved that the canonical CI architecture is fundamentally strong, but release truth can still drift across multiple metadata owners and be discovered sequentially or too late. v18.8.1 therefore carries the following permanent requirements.
+
+| ID | Permanent requirement | Primary placement |
+|---|---|---|
+| `ADAPT-REL-001` | **Atomic Stable source-of-truth closure.** After successful no-rebuild Stable publication, tag/release identity, build checkpoint, release-evidence checkpoint, Stable evidence manifest, `handoff/CURRENT.md`, and CURRENT Adaptive overlays must converge before G16 is considered complete. | G16 / every Stable |
+| `ADAPT-CI-001` | Add one cheap **Release State Coherence** preflight that evaluates release identity, VERSION/app/renderer identity, cache-bust identity, checkpoints, evidence manifest, handoff, predecessor/baseline and target tag state together and reports all mismatches in one run. | v18.8.1 G3–G5 |
+| `ADAPT-CI-002` | G11 must validate the target Stable tag/version/build/predecessor and detect an existing conflicting tag **before G12/native work**. The publication-time immutable-tag guard remains as defense in depth. | v18.8.1 G11 |
+| `ADAPT-CI-003` | Keep Fast **cheap-first**: checkout/Python/impact/coherence/governance/identity/provenance before Go/Node/browser setup. Expensive language/runtime setup starts only after cheap release-state checks are green. | v18.8.1 G5 |
+| `ADAPT-CI-004` | Manual workflow dispatch is safe-by-default. Full qualification/native work requires explicit intent; manual defaults must not accidentally launch the most expensive lane. Normal PR automation remains the preferred path. | v18.8.1 CI hardening |
+| `ADAPT-DATA-001` | The canonical broad U.S.-equity discovery universe must have an explicit eligibility contract. Provider query filters such as `has_options` cannot silently narrow the advertised broad universe; acquisition filters must be intentional, named and tested. | v18.8.1 |
+| `ADAPT-DATA-002` | Provider evidence time and local retrieval/observation time are distinct. Missing/unparseable provider time is UNKNOWN/degraded/ABSTAIN where required; it is never replaced with wall-clock `now` to manufacture freshness. | v18.8.1 |
+| `ADAPT-ARCH-001` | Keep one neutral shared-universe owner for Scanner/Radar with panic/cancellation-safe single-flight cleanup, explicit retry/TTL behavior and neutral health naming. Do not create duplicate router/broker/freshness owners. | v18.8.1 |
+| `ADAPT-UI-001` | Continue Renderer Modularization II through bounded capability-owner extraction. Release version is metadata/cache identity, not permanent component identity; no broad rewrite or visual redesign. | v18.8.1+ |
+| `ADAPT-QA-001` | Gradually consolidate version-stacked executable tests/gates into capability-oriented suites while preserving unique historical evidence. Unreferenced does not mean safe to delete. | v18.8.1+ |
+| `ADAPT-GOV-001` | Historical release-ledger/gate names must be clearly labeled as historical baselines and must not masquerade as the current release state. Current status lives in current overlays/checkpoints and actual GitHub objects. | v18.8.1 |
+| `ADAPT-COST-001` | CI optimization target remains **cost per trustworthy, non-duplicative evidence**. Cost telemetry can reorder, cache, reuse and suppress proven-unaffected work, but can never waive required correctness/security/native/release evidence. | Permanent |
+
+### Mandatory release placement
+
+1. **Immediate v18.8.0 post-Stable closure:** complete `ADAPT-REL-001` before normal v18.8.1 product implementation so another assistant/account cannot mistake v18.7 for the current Stable.
+2. **v18.8.1 — Renderer Modularization II + 10/10 hardening:** implement `ADAPT-CI-001..004`, `ADAPT-DATA-001..002`, `ADAPT-ARCH-001`, the first bounded `ADAPT-UI-001` extraction, `ADAPT-GOV-001`, and begin `ADAPT-QA-001` capability migration.
+3. **v18.9.0 TradeInsight SHADOW and v18.9.1 Provider/Market-Mode hardening** consume the improved provider-evidence time, universe semantics, release-state coherence and CI controls; they must not create parallel routers, freshness engines or workflow families.
+4. **v18.10.0 major closure** must verify these controls are enforced, not merely documented. Any residual justified migration continues explicitly; no silent carry-forward.
+
+### 10/10 roadmap exit condition
+
+The hardening is effective only when:
+- one preflight exposes all release-state drift instead of one mismatch per CI run;
+- a conflicting Stable tag/version is rejected before expensive certification/native jobs;
+- post-publication GitHub continuity artifacts agree with the actual Stable release;
+- unknown provider time cannot be presented as fresh market evidence;
+- discovery-universe semantics are explicit and testable;
+- renderer/test ownership trends toward capabilities instead of release-number stacks;
+- CI spend decreases through earlier failure/reuse without reducing required evidence;
+- a new ChatGPT/Codex/Claude/human maintainer reaches the same current Stable and next action from GitHub alone.
+
+Historical release-specific sections above remain preserved as provenance. They do not override this current permanent hardening contract or the CURRENT Adaptive overlays.
+
+---
+
+## 13. v17→v18.8 zero-miss carry-forward + TradeInsight full-capability contract
+
+**Status:** PERMANENT REQUIREMENT CONTINUITY / PROVIDER INTELLIGENCE.  
+**First execution:** v18.8.1 zero-miss binding, v18.9.0 TradeInsight full-capability SHADOW.  
+**Completion horizon:** v18.10 closes the v18 foundation; v19/v20 mature provider/data/adaptive intelligence.
+
+The historical 296-row v17/v18 ledger is conservation evidence, not permission to leave old user-trust requirements implicit. Known high-risk carry-forwards are promoted to explicit Adaptive requirement IDs so v18.10 verifies them rather than discovering them for the first time.
+
+| ID | Permanent requirement | Placement |
+|---|---|---|
+| `ADAPT-RECON-001` | Freshly reconcile every applicable conserved v17→v18.8 requirement and post-ledger approved Adaptive commitment to current owner, implementation/behavior, regression/evidence and explicit disposition. No missing, duplicate, unowned or generic catch-all remainder. | v18.8.1 → v18.10 |
+| `ADAPT-UX-RESEARCH-001` | Revalidate/fix Research ticker/input consistency, freshness-badge placement, responsive top-area hierarchy, truthful disabled/recovery states and containment. | v18.8.1 |
+| `ADAPT-SYMBOL-001` | Revalidate/fix DESKS truth, desk transitions, final-desk semantics, add/remove idempotency, Master Market Symbols, persistence/reload and Undo across Day/Swing/Long. | v18.8.1 |
+| `ADAPT-READINESS-001` | Revalidate/fix Pre-Market/Market Open preparation, missed-window catch-up, persisted preparation/catalyst state, readiness freshness/traceability, SEC/event risk, EXTENDED handling and Catalyst Reaction lifecycle/measurements without redundant broad refetches. | v18.8.1 |
+| `ADAPT-FRESHNESS-001` | Revalidate/fix targeted Refresh/Age, dataset/session cadence, automatic stale recovery, priority refresh, source/reason/fallback truth and stable freshness UI using canonical freshness/degradation owners. | v18.8.1 |
+| `ADAPT-RESEARCH-002` | Preserve all approved Research capabilities during Renderer Modularization II: Decision Brief, What Changed, Earnings, Fundamentals, SEC & Ownership, Catalyst Timeline, Technical Context, Risk Register, desk controls, AI sourced-first/context and navigation. | v18.8.1+ |
+| `ADAPT-TRADEINSIGHT-001` | Treat the configured TradeInsight beta offering as a full capability pool for deliberate utility discovery and SHADOW use through Smart Provider Router v2. Congressional Trading, Form 4 enrichment secondary to direct SEC and historical OHLCV fallback/backfill are mandatory minimum roles, not a maximum. | v18.9.0 → v20 |
+
+### TradeInsight full-capability rule
+
+At each relevant G0/G2/G3, enumerate the TradeInsight capabilities actually available to the configured beta account/API. Every discovered capability receives `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`, plus canonical owner/consumer, authority, entitlement/rights, evidence-time/freshness, rate/cost budget, cache/retention, disagreement/degradation behavior, provider → Market Mode disposition and SHADOW/promotion state.
+
+**Full capability means full deliberate evaluation and availability, not indiscriminate consumption.** Smart Provider Router v2 requests only purpose-driven evidence, canonical shared state is reused, duplicate calls are suppressed, rate limits/backpressure are respected and TradeInsight beta failure cannot broadly degrade unrelated DE.PULSE capabilities. No direct provider-to-UI silo or duplicate router/freshness/reconciliation engine is permitted.
+
+All provider production influence remains `SHADOW → VALIDATED → APPROVED → PRODUCTION`. Adaptive intelligence may improve provider/evidence selection, weighting, prioritization, contradiction detection and explanation from accumulated reliability/usefulness/outcome evidence; deterministic price truth, Market Mode calculation ownership and protected Day/Swing/Long formulas cannot be silently rewritten.
+
+### Release progression
+
+1. **v18.8.1:** explicitly bind/freshly disposition zero-miss carry-forward groups; implement current reproducible gaps and preserve already-correct behavior by fresh evidence.
+2. **v18.9.0:** TradeInsight Full Capability Discovery, Utility Mapping & SHADOW Integration through Smart Provider Router v2.
+3. **v18.9.1:** Provider Intelligence & Market-Mode Hardening across TradeInsight and the full useful provider pool using measured capability health, freshness, latency, disagreement, rate headroom, rights, cost and usefulness.
+4. **v18.10.0:** zero-gap v18 closure: no unexplained applicable carry-forward, no orphan materially useful provider capability, no duplicate routing owner.
+5. **v19:** mature professional provider/data quality, lineage, rights, historical completeness and cost infrastructure.
+6. **v20:** mature adaptive provider/evidence intelligence and outcome learning while preserving deterministic market truth.
+
+A requirement already correct in current source is not rebuilt merely because its origin is old; fresh evidence can close it. A documented provider capability with no consumer/disposition/evidence plan is not implementation closure.

@@ -10,11 +10,12 @@ on:
         required: false
         type: string
       lane:
-        description: Qualification lane; full is explicit override
+        description: Qualification lane; adaptive uses impact-planned minimum safe lane; full is explicit override
         required: true
-        default: full
+        default: adaptive
         type: choice
         options:
+          - adaptive
           - full
           - backend
           - renderer
@@ -27,7 +28,7 @@ on:
         type: string
       lane:
         required: false
-        default: full
+        default: adaptive
         type: string
 
 permissions:
@@ -76,13 +77,14 @@ jobs:
           python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
           planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
           webkit="$(python3 -c "import json; print(str(json.load(open('ci-qualified-impact-plan.json'))['webkitRequired']).lower())")"
-          lane="${INPUT_LANE:-$planned}"
+          requested="${INPUT_LANE:-adaptive}"
+          if [ "$requested" = adaptive ]; then lane="$planned"; else lane="$requested"; fi
           case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned primary-webkit-signal=$webkit"
+          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned requested=$requested primary-webkit-signal=$webkit"
 
   ci-harness:
     name: CI/harness contract
@@ -153,7 +155,7 @@ jobs:
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
       - name: Parse reusable release assurance tooling
         if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/documentation_owner_browser_test.py tools/ci/renderer_owner_contract.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/workflow_structural_lint.py
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/documentation_owner_browser_test.py tools/ci/renderer_owner_contract.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/release_state_coherence.py tools/ci/release_state_coherence_self_test.py tools/ci/workflow_structural_lint.py
 
   backend:
     name: Qualified backend

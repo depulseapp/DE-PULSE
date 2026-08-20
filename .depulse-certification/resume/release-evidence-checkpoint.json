@@ -1,34 +1,34 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.7.0",
+  "release": "v18.8.0",
   "channel": "STABLE",
-  "metadataHeadRule": "This checkpoint describes immutable v18.7.0 Stable evidence; later metadata-only main commits do not redefine the certified artifact.",
+  "metadataHeadRule": "This checkpoint describes immutable v18.8.0 Stable evidence; later metadata-only continuity commits do not redefine the certified artifact.",
   "stable": {
-    "tag": "v18.7.0-stable",
-    "promotionCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
-    "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
-    "buildId": "v18.7.0-stable-20260819",
-    "promotionRun": 32314823409,
-    "certificationRun": 32314823409
+    "tag": "v18.8.0-stable",
+    "promotionCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
+    "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46",
+    "buildId": "v18.8.0-stable-20260819",
+    "promotionRun": 32336898662,
+    "certificationRun": 32336898662
   },
   "currentCandidate": {
-    "qualificationHead": "22b62b000d4f693c951d71cf71fd833e605e9f4e"
+    "qualificationHead": "a8cf5f4e818609d191f977da846be31203d76f06"
   },
   "evidence": {
-    "G0-G10": {"status": "PASS", "fastRun": 32314503785, "qualifiedRun": 32314537398},
-    "G10": {"status": "PASS", "fastRun": 32314503785, "qualifiedRun": 32314537398},
-    "G11": {"status": "PASS", "runId": 32314823409},
-    "G12": {"status": "PASS", "runId": 32314823409},
-    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32314823409, "artifactId": 9387791012, "artifactDigest": "sha256:52ed0d9db195a71220e52c818c9881bfed9475b6fc5c43a3ae987ec7f36f5af0"},
-    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32314823409, "artifactId": 9387797344, "artifactDigest": "sha256:fb0f9fa4a7fd22e29e418261dd20b3d64b1faf7409d549a05357ee6442d4e208"},
-    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32314823409, "artifactId": 9387802685, "artifactDigest": "sha256:f4f58cd68f5a7d9daae05b3e4aa4d336ff306f09ee8644d0afbbcaba80f88c0c"},
-    "G16": {"status": "PASS_CLOSED", "runId": 32314823409, "artifactId": 9387814290, "artifactDigest": "sha256:a7fd23f438c2bdffd580b487f0028ad7caf3f05e1acfc41d013296e5bd98fbf8"},
-    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32314823409, "tag": "v18.7.0-stable", "certifiedCandidate": "75e494fb92441439c73c8ace41a40118e4518c1c"}
+    "G0-G10": {"status": "PASS", "fastRun": 32336519003, "qualifiedRun": 32336619446},
+    "G10": {"status": "PASS", "fastRun": 32336519003, "qualifiedRun": 32336619446},
+    "G11": {"status": "PASS", "runId": 32336898662},
+    "G12": {"status": "PASS", "runId": 32336898662, "artifactId": 9395038557, "artifactDigest": "sha256:985f4e61638104930fde148fda752636f8ca4968133a14ec98110ed65a00fb4a"},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32336898662, "artifactId": 9395053970, "artifactDigest": "sha256:a7cc52bfa836ec5a8d49cab9c5b56db6d841a8027ea8eda788e78ae59ca8062c"},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32336898662, "artifactId": 9395064911, "artifactDigest": "sha256:aa73dd72977e63a5dc4beb9dcff4232027ba0f0b8c128c9a887afe9e23db57ae"},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32336898662, "artifactId": 9395071790, "artifactDigest": "sha256:2f9023f52034ce9af370dca247eabb761782382dc8a530aa86a3bb35164159bc"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32336898662, "artifactId": 9395083845, "artifactDigest": "sha256:92751bcc01d3e5db9276b9990d2e8f3ecd1800aaa0a7f8cf797b6e590bf4d598"},
+    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32336898662, "tag": "v18.8.0-stable", "certifiedCandidate": "3a32d57dd4c74c6f812cc942a9d8049a7b517718"}
   },
   "previousReleaseAttempts": [
-    {"runId": 32314094623, "releaseRunNumber": 25, "failure": "stale release-harness/version-consistency assumption before substantive G12", "authoritativeStableClaim": false}
+    {"runId": 32335527140, "releaseRunNumber": 27, "failure": "v18.8.0 merged candidate still carried v18.7.0 release identity; publication correctly blocked", "authoritativeStableClaim": false}
   ],
-  "nextRequiredEvidence": "None for v18.7.0 Stable. v18.8.0 remains G0-G3 intake only until a verified consolidation gap is frozen.",
-  "updatedAt": "2026-08-19T19:29:00-07:00"
+  "nextRequiredEvidence": "ADAPT-REL-001 continuity closure is complete for v18.8.0 Stable. Continue v18.8.1 with ADAPT-CI-001 Release State Coherence.",
+  "updatedAt": "2026-08-20T00:09:47-07:00"
 }

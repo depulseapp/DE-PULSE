@@ -575,3 +575,101 @@ A CI/process finding is not complete merely because G16 documents it. The build 
 Repeated harness/process defects without a canonical prevention change are release-process blockers.
 
 This section is permanent and strengthens `CI-ADAPTIVE-18.5.1-001`, `AUDIT-18-CI-001`, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md` without adding G17+.
+
+---
+
+## 17. v18.8 audit-derived 10/10 hardening build plan
+
+**Classification:** `NEXT_RELEASE_MANDATORY_ENTRY` for v18.8.1 plus permanent recurrence prevention. The packet strengthens G0–G16; it does not create a new gate.
+
+### 17.1 Mandatory work packets
+
+| ID | Build owner / work | Minimum evidence |
+|---|---|---|
+| `ADAPT-REL-001` | Post-Stable metadata/handoff convergence owner. Reconcile actual `v18.8.0-stable` release truth into checkpoints, Stable evidence manifest, handoff and CURRENT overlays before normal v18.8.1 product implementation. | Actual tag/release/run lookup + coherence check + cross-assistant resume proof. |
+| `ADAPT-CI-001` | Implement one `release_state_coherence`-style canonical validator covering release identity, VERSION/app/renderer/cache-bust identity, checkpoints, Stable manifest, handoff, predecessor/baseline and target tag state. | Fixture matrix proving multiple simultaneous mismatches are reported in one run and a coherent state passes. |
+| `ADAPT-CI-002` | Add G11 target-release preflight: target tag, semantic version/build ID, predecessor, release scaffold and existing-tag collision before G12 starts. Retain publication collision guard. | Existing-conflicting-tag negative test + valid-new-tag positive test. |
+| `ADAPT-CI-003` | Reorder Fast to cheap-first governance/coherence/identity/provenance before Go/Node setup; preserve all existing required tests. | Workflow policy/impact fixtures + run summary showing expensive setup skipped after cheap failure. |
+| `ADAPT-CI-004` | Make manual dispatch safe-by-default. `full` qualification is explicit; normal Draft Fast → Ready Qualified remains automatic canonical path. | Workflow input regression proving no accidental full/native run from defaults. |
+| `ADAPT-DATA-001` | Extract an explicit discovery-universe eligibility policy. Decide and encode whether provider `has_options` filtering is intentional; do not silently call an optionable subset “broad U.S. equities.” | Provider-query and eligibility fixtures including ETFs/class shares/special symbols and documented exclusions. |
+| `ADAPT-DATA-002` | Separate `providerEvidenceAt` from `retrievedAt`; remove any freshness fallback that converts missing provider time to wall-clock “now.” | Missing/invalid timestamp tests proving UNKNOWN/ABSTAIN rather than fabricated freshness; normal timestamp tests preserved. |
+| `ADAPT-ARCH-001` | Harden canonical shared-universe owner: neutral health naming, panic-safe/single-flight cleanup, waiter cancellation and exact retry/TTL semantics; preserve Smart Provider Router v2 and BroadSnapshotBroker as sole owners of their responsibilities. | Concurrency, cancellation, failure, panic/cleanup and no-duplicate-owner tests. |
+| `ADAPT-UI-001` | Renderer Modularization II: migrate bounded capability owners away from release-number filenames; release identity moves to metadata/cache keys. Preserve layout/behavior unless separately scoped. | Equivalence/browser tests; no duplicate owner; cache/identity regression. |
+| `ADAPT-QA-001` | Inventory root version-stacked executable gates/tests; classify ACTIVE_REQUIRED / UNIQUE_HISTORICAL / CONSOLIDATE / RETIRE_CANDIDATE; migrate capability-by-capability only with evidence conservation. | Before/after inventory, behavior equivalence and workflow-policy proof. |
+| `ADAPT-GOV-001` | Rename/reframe historical reconciliation output so v18.5.1 remains provenance rather than current-state identity. | Gate output fixture showing historical baseline + actual current release separately. |
+| `ADAPT-COST-001` | Measure avoided setup/runs/minutes and cost per trustworthy evidence; optimization cannot weaken mandatory lanes. | G16 telemetry comparing baseline and hardened CI. |
+
+### 17.2 Required execution order
+
+1. **G0 continuity closure:** reconcile v18.8.0 actual Stable truth (`ADAPT-REL-001`).
+2. **G2/G3 design:** freeze release-state owner map, discovery-universe semantics, evidence-time semantics and renderer/test migration boundaries.
+3. **Cheap CI hardening first:** `ADAPT-CI-001..004` before using v18.8.1 for broad implementation so later failures are cheaper and diagnostic-complete.
+4. **Data-truth hardening:** `ADAPT-DATA-001..002` + `ADAPT-ARCH-001` with deterministic fixtures and no hidden behavior expansion.
+5. **Renderer/test modularization:** bounded `ADAPT-UI-001` + first `ADAPT-QA-001` capability migration; do not rewrite the whole UI/test corpus.
+6. **G10:** reconcile every packet with current evidence and explicit remainder placement.
+7. **G11–G16:** normal exact-head one-PR release path; early tag collision guard must be green before full G12/native work.
+
+### 17.3 Cheap-first Fast target order
+
+Preferred preflight order:
+
+`checkout → Python → deterministic impact plan → Release State Coherence → workflow/ledger/portability/provenance/release identity → Python syntax → setup Go/Node only when still required and green → gofmt/vet/tests → renderer tests → exact-head status`.
+
+This ordering is an efficiency improvement only. It removes no required evidence.
+
+### 17.4 10/10 build-plan acceptance additions
+
+The plan is not 10/10 unless it can additionally prove:
+- all release-state mismatches are surfaced in one cheap diagnostic pass;
+- impossible/conflicting Stable publication is rejected before G12/native spend;
+- current Stable metadata is atomically converged after publication;
+- market evidence time is never synthesized from retrieval time;
+- discovery-universe inclusion/exclusion is explicit and tested;
+- renderer/test version stacking has a measured bounded migration path;
+- historical ledgers cannot misidentify the current release;
+- CI savings come from avoided duplicate/late work, not reduced quality.
+
+---
+
+## 18. v17→v18.8 zero-miss + TradeInsight full-capability build plan
+
+### 18.1 Explicit carry-forward packets
+
+| ID | Work | Closure evidence |
+|---|---|---|
+| `ADAPT-RECON-001` | Freshly reconcile every applicable conserved v17→v18.8 requirement plus post-ledger approved Adaptive commitments to current owner, source/behavior, regression and disposition. | Zero missing/duplicate/unowned/unexplained applicable items at G10; v18.10 verifies rather than first discovers gaps. |
+| `ADAPT-UX-RESEARCH-001` | Research ticker/input consistency, freshness badge, responsive top-area hierarchy, truthful disabled/recovery states and containment. | Desktop/tablet/narrow browser + actual-package evidence. |
+| `ADAPT-SYMBOL-001` | DESKS truth, desk transitions, final-desk semantics, idempotent add/remove, Master Market Symbols, persistence/reload and Undo. | Day/Swing/Long state/API/browser/package matrix. |
+| `ADAPT-READINESS-001` | Pre-Market/Market Open prep, missed-window catch-up, persisted prep/catalyst state, readiness freshness/traceability, SEC/event risk, EXTENDED and Catalyst Reaction lifecycle/measurements without redundant broad refetches. | State/restart/event/browser/package evidence. |
+| `ADAPT-FRESHNESS-001` | Targeted Refresh/Age, dataset/session cadence, automatic stale recovery, priority refresh, source/reason/fallback truth and stable freshness UI using existing canonical freshness/degradation owners. | Fresh/stale/unknown/fallback/recovery fixtures + browser/package proof. |
+| `ADAPT-RESEARCH-002` | Preserve all approved Research capabilities during Renderer Modularization II. | Capability inventory + equivalence tests + browser/native proof; zero capability loss. |
+
+A carry-forward already correct in current source closes with fresh evidence; it is not rebuilt merely because it originated in v17/v18. A reproducible gap keeps its original identity and is implemented in its assigned coherent slice.
+
+### 18.2 `ADAPT-TRADEINSIGHT-001` — TradeInsight Full Capability Discovery, Utility Mapping & SHADOW Integration
+
+v18.9.0 must enumerate the complete capability surface actually available to the configured TradeInsight beta account/API. The known Congressional Trading, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill roles are mandatory minimum capabilities, not a maximum.
+
+Every discovered capability receives exactly one utility disposition: `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`. Every useful capability binds:
+
+- Smart Provider Router v2 capability and canonical owner;
+- intended consumer/purpose and source authority;
+- entitlement, data rights and AI-egress status;
+- provider evidence time/freshness and missing-time behavior;
+- rate-limit/cost budget, cache/reuse and retention;
+- disagreement/reconciliation and graceful degradation behavior;
+- provider → Market Mode disposition;
+- bounded SHADOW fixtures/live smoke;
+- availability, latency, freshness, completeness, unique evidence, disagreement, useful/missed/false evidence, calls avoided, errors/rate pressure and cost telemetry;
+- promotion/rollback via `SHADOW → VALIDATED → APPROVED → PRODUCTION`.
+
+Full capability means full deliberate evaluation and availability, **not** calling every endpoint for every symbol. Canonical evidence is reused; duplicate acquisition is suppressed; TradeInsight beta failures are isolated; no direct TradeInsight-to-UI silo or duplicate router/freshness/reconciliation owner is permitted.
+
+### 18.3 Forward completion
+
+1. v18.8.1 — zero-miss binding/fresh proof + current reproducible user-trust fixes.
+2. v18.9.0 — TradeInsight full-capability SHADOW integration.
+3. v18.9.1 — multi-provider capability intelligence and Market-Mode hardening using measured health/freshness/latency/disagreement/headroom/rights/cost/usefulness.
+4. v18.10.0 — zero-gap v18 closure with no unexplained carry-forward, orphan materially useful provider capability or duplicate routing owner.
+5. v19 — professional provider/data quality, lineage, rights, cost and historical infrastructure.
+6. v20 — mature adaptive provider/evidence selection, weighting, ranking and explanation from reliability/usefulness/outcome history while deterministic market truth remains protected.

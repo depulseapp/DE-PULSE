@@ -3,6 +3,8 @@
 const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
+require('./tests/renderer/market_header_owner_test.js');
+require('./tests/renderer/v18_8_1_trust_closure_test.js');
 
 const ownerSource=fs.readFileSync('renderer/documentation-ui.js','utf8');
 const accessSource=fs.readFileSync('renderer/documentation-access-v18.6.js','utf8');

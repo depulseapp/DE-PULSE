@@ -7,10 +7,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-SCHEMA = "DE.PULSE-CI-TELEMETRY-1"
+SCHEMA = "DE.PULSE-CI-TELEMETRY-2"
 FAST_NAME = "DE.PULSE | CI Fast"
 QUALIFIED_NAME = "DE.PULSE | CI Qualified"
 RELEASE_NAME = "DE.PULSE | Release G11-G16"
+EVIDENCE_JOB = "Qualified evidence summary"
 
 
 def parse_time(value: Any) -> datetime | None:
@@ -71,7 +72,7 @@ def job_rows(payload: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, i
         name = str(job.get("name", ""))
         # The evidence job is still running while telemetry is collected, so exclude
         # it from runtime totals rather than recording a misleading partial duration.
-        if name == "Qualified evidence summary":
+        if name == EVIDENCE_JOB:
             continue
         platform = platform_for(job)
         queue_seconds = seconds_between(job.get("created_at"), job.get("started_at"))
@@ -116,6 +117,62 @@ def amplification(runs_payload: dict[str, Any] | None, pr_created_at: str | None
     return {"counts": counts, "thresholds": thresholds, "warnings": warnings, "status": "WARN" if warnings else "OK"}
 
 
+def trustworthy_evidence_accounting(
+    jobs: list[dict[str, Any]],
+    runner_minutes: dict[str, float],
+    browser_setup: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    successful = [row["name"] for row in jobs if row.get("status") == "completed" and row.get("conclusion") == "success"]
+    skipped = [row["name"] for row in jobs if row.get("conclusion") == "skipped"]
+    failed = [
+        row["name"]
+        for row in jobs
+        if row.get("status") == "completed" and row.get("conclusion") not in {None, "success", "skipped"}
+    ]
+    total_minutes = round(sum(float(value or 0) for value in runner_minutes.values()), 2)
+    evidence_units = len(successful)
+    per_unit = round(total_minutes / evidence_units, 3) if evidence_units else None
+
+    skipped_browser_setups = 0
+    for name in skipped:
+        low = name.lower()
+        if "chrome" in low or "webkit" in low or "browser" in low:
+            skipped_browser_setups += 1
+
+    observed_setup_seconds = sum(
+        int(entry["setupSeconds"])
+        for entry in browser_setup.values()
+        if entry.get("setupSeconds") is not None
+    )
+    cache_hits = sum(1 for entry in browser_setup.values() if entry.get("pipCacheHit") is True)
+
+    return {
+        "definition": "One trustworthy evidence unit is one completed-success non-summary qualification job recorded by GitHub Actions.",
+        "successfulEvidenceUnits": evidence_units,
+        "successfulJobs": successful,
+        "failedJobs": failed,
+        "runnerMinutesConsumed": total_minutes,
+        "runnerMinutesPerTrustworthyEvidence": per_unit,
+        "avoidedWork": {
+            "impactRoutedJobRunsSkipped": len(skipped),
+            "skippedJobs": skipped,
+            "browserSetupOperationsSkipped": skipped_browser_setups,
+            "observedBrowserSetupSeconds": observed_setup_seconds,
+            "browserSetupCacheHits": cache_hits,
+            "runnerMinutesAvoided": None,
+            "runnerMinutesAvoidedReason": (
+                "Skipped jobs have no observed counterfactual runtime. DE.PULSE records the avoided job/setup count "
+                "and refuses to fabricate avoided minutes without a comparable baseline."
+            ),
+            "setupSecondsAvoided": None,
+            "setupSecondsAvoidedReason": (
+                "A cache hit proves reuse but not the cold-install duration that would have occurred. "
+                "Observed setup seconds and cache-hit counts are retained; avoided seconds require an external baseline."
+            ),
+        },
+    }
+
+
 def build(args: argparse.Namespace) -> dict[str, Any]:
     jobs_payload = json.loads(Path(args.jobs_json).read_text(encoding="utf-8"))
     runs_payload = None
@@ -123,6 +180,17 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         runs_payload = json.loads(Path(args.runs_json).read_text(encoding="utf-8"))
     jobs, totals = job_rows(jobs_payload)
     runner_minutes = {key: round(value / 60.0, 2) for key, value in totals.items()}
+    browser_setup = {
+        "chrome": {
+            "pipCacheHit": normalize_bool(args.chrome_cache_hit),
+            "setupSeconds": normalize_int(args.chrome_setup_seconds),
+        },
+        "webkit": {
+            "pipCacheHit": normalize_bool(args.webkit_cache_hit),
+            "setupSeconds": normalize_int(args.webkit_setup_seconds),
+        },
+    }
+    evidence = trustworthy_evidence_accounting(jobs, runner_minutes, browser_setup)
     return {
         "schema": SCHEMA,
         "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -134,20 +202,17 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "jobs": jobs,
         "runnerSecondsByPlatform": totals,
         "runnerMinutesByPlatform": runner_minutes,
-        "browserDependencySetup": {
-            "chrome": {
-                "pipCacheHit": normalize_bool(args.chrome_cache_hit),
-                "setupSeconds": normalize_int(args.chrome_setup_seconds),
-            },
-            "webkit": {
-                "pipCacheHit": normalize_bool(args.webkit_cache_hit),
-                "setupSeconds": normalize_int(args.webkit_setup_seconds),
-            },
-        },
+        "browserDependencySetup": browser_setup,
         "workflowAmplification": amplification(runs_payload, args.pr_created_at),
+        "trustworthyEvidenceAccounting": evidence,
         "costAccounting": {
             "actualCurrencyCost": None,
-            "reason": "GitHub billing remains authoritative for currency cost; CI telemetry records platform runner consumption and setup/cache signals without inventing billing rates."
+            "currencyCostPerTrustworthyEvidence": None,
+            "runnerMinutesPerTrustworthyEvidence": evidence["runnerMinutesPerTrustworthyEvidence"],
+            "reason": (
+                "GitHub billing remains authoritative for currency cost. DE.PULSE reports measured runner consumption "
+                "per trustworthy evidence unit and never invents billing rates or counterfactual savings."
+            ),
         },
     }
 
@@ -156,14 +221,22 @@ def render_summary(data: dict[str, Any]) -> str:
     minutes = data["runnerMinutesByPlatform"]
     amp = data["workflowAmplification"]
     cache = data["browserDependencySetup"]
+    evidence = data["trustworthyEvidenceAccounting"]
+    avoided = evidence["avoidedWork"]
     lines = [
         "## DE.PULSE CI Telemetry",
         f"- lane: `{data['lane']}`",
         f"- exact candidate: `{data['candidateSha']}`",
         f"- runner minutes: Linux {minutes['linux']}, macOS {minutes['macos']}, Windows {minutes['windows']}, unknown {minutes['unknown']}",
+        f"- trustworthy evidence units: {evidence['successfulEvidenceUnits']}",
+        f"- runner minutes / trustworthy evidence: {evidence['runnerMinutesPerTrustworthyEvidence']}",
+        f"- impact-routed job runs skipped: {avoided['impactRoutedJobRunsSkipped']}",
+        f"- browser setup operations skipped: {avoided['browserSetupOperationsSkipped']}",
+        f"- observed browser setup seconds: {avoided['observedBrowserSetupSeconds']}; cache hits: {avoided['browserSetupCacheHits']}",
         f"- PR workflow counts: Fast {amp['counts']['fast']}, Qualified {amp['counts']['qualified']}, Release {amp['counts']['release']} — {amp['status']}",
         f"- Chrome dependency setup: cache={cache['chrome']['pipCacheHit']} seconds={cache['chrome']['setupSeconds']}",
         f"- WebKit dependency setup: cache={cache['webkit']['pipCacheHit']} seconds={cache['webkit']['setupSeconds']}",
+        "- avoided runner/setup minutes: intentionally not fabricated without a counterfactual baseline",
         "- currency cost: intentionally not estimated; use GitHub billing for actual currency",
     ]
     for warning in amp["warnings"]:

@@ -9,8 +9,14 @@ import re
 import sys
 from pathlib import Path
 
+from tools.ci.historical_reconciliation_identity import (
+    historical_identity_errors,
+    historical_identity_self_test_errors,
+)
+
 ROOT = Path(__file__).resolve().parent
 LEDGER = ROOT / "release" / "v18.5.1" / "V17-V18-IMPLEMENTATION-RECONCILIATION.json"
+HISTORICAL_IDENTITY = ROOT / "release" / "v18.5.1" / "HISTORICAL-RECONCILIATION-IDENTITY.json"
 
 BLOCKING = {
     "REVALIDATION_REQUIRED",
@@ -152,6 +158,9 @@ def main() -> int:
 
     errors: list[str] = []
     ledger = load(LEDGER)
+    historical_identity = load(HISTORICAL_IDENTITY)
+    errors.extend(historical_identity_errors(ledger, historical_identity))
+    errors.extend(historical_identity_self_test_errors(historical_identity))
 
     if ledger.get("schema") != "DE.PULSE-V18.5.1-V17-V18-IMPLEMENTATION-RECONCILIATION-1":
         errors.append("ledger schema drift")
@@ -168,7 +177,6 @@ def main() -> int:
         errors.append("v18.5.1 must not be predeclared final major closure")
     if train.get("finalClosureDesignation") != "EVIDENCE_SELECTED_ONLY_AFTER_ZERO_GAP_READINESS":
         errors.append("final closure designation policy drift")
-
 
     inherited = load(ROOT / "renderer" / "qa" / "v15.1.2-approved-scope.json")
     inherited_rows = ledger.get("inheritedApprovedScope", {}).get("items", [])
@@ -247,7 +255,6 @@ def main() -> int:
     ]
     if silently_sliced:
         errors.append("audit assumption drift: v18.3 scope now contains remediation names; reclassify ledger")
-
 
     release_entries = [
         row
@@ -380,6 +387,7 @@ def main() -> int:
         f" · current-slice={current_slice.get('release', 'unknown')}"
         f" · slice-planning={current_slice.get('planningState', 'unknown')}"
         f" · open-blocking/revalidation/next={len(blockers)}"
+        " · historical-identity=IMMUTABLE"
     )
     return 0
 

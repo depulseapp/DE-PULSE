@@ -6,10 +6,11 @@ ROOT=Path(__file__).resolve().parent
 IDENTITY=ROOT/'release_identity.json'
 RELEASE_COUPLED_ASSETS=(
     'renderer.js',
+    'documentation-ui.js',
     'live-dom-reconcile.js',
     'watchlist-v18.5.1.js',
     'watchlist-v18.5.1.css',
-    'header-v18.5.1.js',
+    'market-header-ui.js',
     'ui-v18.5.1.css',
     'surface-consolidation-v18.6.js',
     'surface-consolidation-v18.6.css',

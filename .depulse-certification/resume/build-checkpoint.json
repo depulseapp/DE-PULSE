@@ -1,31 +1,31 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.7.0",
+  "release": "v18.8.0",
   "channel": "STABLE",
   "branch": "main",
-  "pullRequest": 53,
-  "candidateSourceCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
-  "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
+  "pullRequest": 55,
+  "candidateSourceCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
+  "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.7.0-stable-20260819",
+  "buildId": "v18.8.0-stable-20260819",
   "certifiedStable": {
-    "version": "v18.7.0",
-    "tag": "v18.7.0-stable",
-    "promotionCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
-    "candidateSourceCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
-    "certifiedSourceCheckout": "75e494fb92441439c73c8ace41a40118e4518c1c",
-    "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963"
+    "version": "v18.8.0",
+    "tag": "v18.8.0-stable",
+    "promotionCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
+    "candidateSourceCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
+    "certifiedSourceCheckout": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
+    "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46"
   },
-  "metadataHeadRule": "The immutable v18.7.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded handoff/checkpoint metadata advances main.",
+  "metadataHeadRule": "The immutable v18.8.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded handoff/checkpoint metadata advances the v18.8.1 development branch or main.",
   "gates": {
     "G0":"PASS","G1":"PASS","G2":"PASS","G3":"PASS","G4":"PASS","G5":"PASS","G6":"PASS","G7":"PASS","G8":"PASS","G9":"PASS","G10":"PASS","G11":"PASS","G12":"PASS","G13":"PASS","G14":"PASS","G15":"PASS","G16":"PASS"
   },
   "releaseSummary": {
-    "qualifiedSourceHead": "22b62b000d4f693c951d71cf71fd833e605e9f4e",
-    "fastRun": 32314503785,
-    "qualifiedRun": 32314537398,
-    "releaseRun": 32314823409,
+    "qualifiedSourceHead": "a8cf5f4e818609d191f977da846be31203d76f06",
+    "fastRun": 32336519003,
+    "qualifiedRun": 32336619446,
+    "releaseRun": 32336898662,
     "publication": "PASS_NO_REBUILD"
   },
   "assistantPortability": {
@@ -33,6 +33,6 @@
     "authoritativeHandoff":"handoff/CURRENT.md",
     "entrypoints":["AGENTS.md","CLAUDE.md"]
   },
-  "nextStep":"Finish v18.8.0 Shared Intelligence Consolidation G0-G3 source-owner/duplicate-work audit; create no branch until a real G1 gap is proven.",
-  "updatedAt":"2026-08-19T19:29:00-07:00"
+  "nextStep":"Execute v18.8.1 ADAPT-CI-001 Release State Coherence as the first normal build packet after ADAPT-REL-001 continuity closure.",
+  "updatedAt":"2026-08-20T00:09:47-07:00"
 }

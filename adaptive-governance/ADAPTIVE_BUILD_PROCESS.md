@@ -370,3 +370,123 @@ Before G16 closes:
 A release cannot claim 10/10 adaptive process maturity while known orphaned workflows or obsolete operational branches are intentionally left without disposition.
 
 This section permanently operationalizes the CI convergence rules from the Adaptive Roadmap/Build Plan and `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md` without adding a new top-level gate.
+
+---
+
+## 16. v18.8 audit-derived 10/10 execution process
+
+The v18.8.0 audit findings are now a permanent process contract. They apply first to v18.8.1 and recur wherever the same responsibility is affected.
+
+### 16.1 Resume must converge actual Stable truth
+
+At G0 and after any Stable publication:
+
+1. read the actual GitHub Stable tag/Release and completed Release workflow;
+2. compare release identity, build/checkpoint/evidence files, Stable manifest, handoff and CURRENT Adaptive overlays;
+3. classify every mismatch in one Release State Coherence result;
+4. correct stale continuity metadata before normal next-release product implementation;
+5. prove a fresh assistant/account resolves the same current Stable and next action.
+
+A successful publication with stale handoff/checkpoints is **publication PASS but continuity/G16 incomplete**. Do not infer the old checkpoint is authoritative merely because it is durable.
+
+### 16.2 Cheap-first Release State Coherence
+
+Fast execution order must prefer:
+
+`checkout → Python/impact → release-state coherence → workflow/ledger/portability/provenance/release identity → Python syntax → Go/Node setup when still required → code/renderer tests → exact-head status`.
+
+The coherence validator must aggregate errors. If VERSION, checkpoint, manifest and handoff are all stale, the same run reports all four; it must not intentionally force four sequential red/green cycles.
+
+Cheap governance failure stops expensive setup where possible. This is optimization, not evidence reduction.
+
+### 16.3 G11 early publication-feasibility check
+
+Before G12:
+
+- derive the target tag from canonical release identity;
+- verify branch/release version compatibility;
+- verify build ID and predecessor/baseline semantics;
+- verify required release scaffold/certification script exists;
+- inspect the target Stable tag;
+- if it already exists at a different immutable candidate, fail G11 before G12/native work;
+- if it is the exact already-published candidate, classify idempotently rather than rebuilding;
+- retain the publication-time collision guard as a second independent safety barrier.
+
+Release #27 is the recurrence reference: the late guard protected v18.7 correctly, but the same impossible publication should now be rejected before expensive certification.
+
+### 16.4 Data-time truth process
+
+For every market datum used in freshness/decision truth:
+
+- preserve `providerEvidenceAt` separately from `retrievedAt`/observation time;
+- never substitute current wall-clock time merely because provider evidence time is missing or unparsable;
+- missing evidence time becomes explicit UNKNOWN/degraded/ABSTAIN according to consumer requirements;
+- tests must distinguish fresh provider evidence, stale evidence, missing timestamp, retrieval time and cached observation time.
+
+### 16.5 Discovery-universe semantic process
+
+Universe acquisition and universe eligibility are separate responsibilities:
+
+1. acquisition obtains provider rows through Smart Provider Router v2-compatible provider policy;
+2. an explicit eligibility function/policy owns exchange, tradability, symbol form, asset-type and any liquidity/optionability restriction;
+3. any `has_options` or similar provider filter is intentional, named and tested; it cannot silently redefine the advertised broad universe;
+4. Scanner/Radar continue to share one canonical neutral universe owner;
+5. BroadSnapshotBroker remains the snapshot reuse/coalescing owner; no parallel broker/router/freshness engine is introduced.
+
+### 16.6 Shared-universe robustness process
+
+The canonical shared universe must guarantee:
+
+- neutral health/diagnostic naming for all consumers;
+- refresh ownership released on success, provider failure, context cancellation and unexpected loader failure;
+- waiters cannot remain permanently blocked by a failed refresh owner;
+- original provider evidence time is preserved through failed refresh;
+- bounded retry suppression remains distinct from freshness TTL;
+- deterministic fallback is visibly fallback, never silently provider-fresh.
+
+### 16.7 Renderer and test ownership migration
+
+v18.8.1 follows a strangler process:
+
+- choose one bounded capability owner at a time;
+- establish stable module/test names independent of release number;
+- prove equivalence/behavior;
+- move callers/tests;
+- retire the superseded owner only when unique evidence is preserved;
+- do not mass-rename or mass-delete the renderer/test corpus;
+- historical release-number tests may remain as provenance until their unique contract is represented in capability-oriented evidence.
+
+### 16.8 Safe manual CI
+
+Automatic PR lifecycle remains canonical. Manual dispatch exists for controlled diagnostics/recovery only. Default inputs must choose the smallest safe/adaptive lane; selecting `full` or release-capable work requires explicit operator intent.
+
+### 16.9 Failure and learning rule
+
+The #413–#415 and #418 sequences are recurrence evidence. A release-metadata or cache-identity failure is not considered adaptively learned until the canonical coherence/identity tooling can detect the same class in one preflight. G16 records the reduction in duplicate runs/setup and verifies quality gates remain unchanged.
+
+No new top-level gate is introduced; these checks live inside G0/G3/G5/G10/G11/G16 as appropriate.
+
+---
+
+## 17. Zero-miss carry-forward and TradeInsight full-capability execution
+
+### 17.1 `ADAPT-RECON-001` zero-miss execution
+
+At v18.8.1 G0–G3, load the conserved v17/v18 ledger plus post-ledger approved Adaptive requirements. Every applicable item must map to current owner, current behavior, regression/evidence and an explicit current disposition. The named high-risk groups `ADAPT-UX-RESEARCH-001`, `ADAPT-SYMBOL-001`, `ADAPT-READINESS-001`, `ADAPT-FRESHNESS-001` and `ADAPT-RESEARCH-002` receive fresh current-source proof before v18 closure.
+
+An item already correct closes by fresh evidence rather than unnecessary rewrite. A reproducible gap keeps its original requirement identity, invalidates affected evidence and is implemented in its assigned coherent slice. G10 cannot hide an unexplained item behind generic reconciliation wording; v18.10 is final verification, not first discovery.
+
+### 17.2 `ADAPT-TRADEINSIGHT-001` full-capability execution
+
+At v18.9.0:
+
+1. enumerate every capability actually exposed to the configured TradeInsight beta account/API;
+2. classify each capability as `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`;
+3. for every useful capability bind Smart Provider Router v2 ownership, consumer/purpose, source authority, entitlement/rights/AI-egress, evidence time/freshness, rate/cost budget, cache/reuse, retention, disagreement and graceful degradation;
+4. assign provider → Market Mode disposition without changing deterministic Market Mode ownership;
+5. run bounded SHADOW fixtures/live smoke and measure availability, latency, freshness, completeness, unique evidence, disagreement, useful/missed/false evidence, calls avoided, errors/rate pressure and cost;
+6. promote only through `SHADOW → VALIDATED → APPROVED → PRODUCTION`, with explicit rollback and no silent adaptive production change;
+7. never treat full capability as permission to call every endpoint—request only purpose-driven evidence, reuse canonical state and isolate TradeInsight beta failures from unrelated consumers;
+8. prohibit direct TradeInsight-to-UI paths and duplicate router/freshness/reconciliation owners.
+
+v18.9.1 consumes capability observations for smarter multi-provider routing. v18.10 proves no materially useful TradeInsight/provider capability is orphaned or unexplained. v19/v20 mature provider/data quality and adaptive usefulness/outcome learning while deterministic market truth remains protected.
