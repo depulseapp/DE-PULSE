@@ -109,6 +109,7 @@ func (e *Engine) Snapshot() RuntimeSnapshot {
 	providerRouter := e.buildProviderRouterSnapshot(settings, secrets, quotes, clone(e.lastUpdated))
 
 	quoteFreshnessSymbols := activeDeskSymbolsFromState(appState)
+	quoteFreshnessSymbols = uniqueSymbols(append(quoteFreshnessSymbols, broadBreadthUniverse...))
 	if sym, ok := parseUserTicker(appState.UI.SelectedTicker); ok {
 		quoteFreshnessSymbols = uniqueSymbols(append(quoteFreshnessSymbols, sym))
 	}
