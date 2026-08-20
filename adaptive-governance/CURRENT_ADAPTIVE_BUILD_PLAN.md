@@ -3,7 +3,7 @@
 **Immutable Stable:** `v18.8.0-stable`  
 **Stable candidate:** `3a32d57dd4c74c6f812cc942a9d8049a7b517718`  
 **Engineering branch:** `v18.8.1-development`  
-**Next:** `v18.8.1 — Test/Gate Consolidation + 10/10 Audit Hardening`.
+**Next:** `v18.8.1 — Historical Reconciliation Identity + 10/10 Audit Hardening`.
 
 ## Entry condition
 
@@ -21,8 +21,8 @@
 | 6 | `ADAPT-DATA-002` Evidence-Time Truth | **IMPLEMENTED** | `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`; provider observation/evidence time drives Scanner/Radar freshness, retrieval time is bookkeeping, and unknown evidence remains unknown. |
 | 7 | `ADAPT-ARCH-001` Shared-Universe Robustness | **CLOSED BY FRESH EVIDENCE** | Shared neutral universe owner is explicit in `symbol_universe.go`; deferred cleanup is cancellation/panic-safe; focused eligibility/retrieval-time/concurrency recovery tests live in `v18_8_1_universe_hardening_test.go`. Smart Provider Router v2 and BroadSnapshotBroker ownership are unchanged. |
 | 8 | `ADAPT-UI-001` Renderer Modularization II | **IMPLEMENTED** | `f2f30d0c160f7bbf8e01f31271faf86d819808e8`; active Market Pulse/header ownership moved to release-neutral `renderer/market-header-ui.js`, behavior and `__v1851HeaderContracts` compatibility are preserved, and the renderer owner contract forbids the version-stacked header from remaining an active runtime owner. |
-| 9 | `ADAPT-QA-001` Test/Gate Consolidation | **NEXT** | Inventory and gradually consolidate version-stacked tests/gates by capability while preserving unique historical evidence. |
-| 10 | `ADAPT-GOV-001` Historical Reconciliation Identity | **PENDING** | Separate historical reconciliation baseline identity from current release identity. |
+| 9 | `ADAPT-QA-001` Test/Gate Consolidation | **IMPLEMENTED** | `136af46f4f208edfd97fd728b3e3f1af61f2af31`; canonical `tests/renderer/market_header_owner_test.js` now proves Market Header owner/registry, ribbon order, idempotent ensure behavior, data-health updates, one base chrome update per wrapper call and legacy compatibility. It is transitively bound to the existing Qualified renderer owner regression, and `renderer_owner_contract.py` makes that binding mandatory without adding a workflow/job. Unique v18.5.1 browser hierarchy evidence remains conserved. |
+| 10 | `ADAPT-GOV-001` Historical Reconciliation Identity | **NEXT** | Separate historical reconciliation baseline identity from current release identity. |
 | 11 | `ADAPT-COST-001` Cost per Trustworthy Evidence | **PENDING** | Measure avoided runs/setup/minutes and cost per trustworthy evidence without weakening required gates. |
 | 12 | `ADAPT-RECON-001` Zero-Miss Reconciliation | **PENDING** | Fresh zero-miss reconciliation for every applicable v17→v18.8 conserved requirement plus post-ledger approved Adaptive commitments; bind current owner, source/behavior, regression/evidence and explicit disposition before v18 closure. |
 | 13 | `ADAPT-UX-RESEARCH-001` Research Information Architecture | **PENDING** | Revalidate/fix Research ticker/input consistency, freshness badge, responsive top-area hierarchy, disabled/recovery states and containment. |
