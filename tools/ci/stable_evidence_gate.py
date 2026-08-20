@@ -30,6 +30,7 @@ def run_local_gate(filename: str, label: str) -> list[str]:
 
 def main() -> int:
     errors: list[str] = []
+    errors.extend(run_local_gate("ci_hardening_gate.py", "CI hardening contract"))
     errors.extend(run_local_gate("release_state_coherence_self_test.py", "Release State Coherence self-test"))
     errors.extend(run_local_gate("release_state_coherence.py", "Release State Coherence"))
     if errors:
@@ -112,6 +113,7 @@ def main() -> int:
         return fail(errors)
 
     print("DE.PULSE Stable evidence gate: PASS")
+    print("CI hardening contract: PASS")
     print("Release State Coherence aggregate preflight: PASS")
     print(f"durable Stable manifest: release/{release}/stable-evidence-manifest.json")
     print(f"immutable Stable authority preserved: {manifest['stableTag']} -> {manifest['certifiedCandidate']}")
