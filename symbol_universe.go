@@ -29,8 +29,8 @@ var canonicalUSSymbolUniverseExchanges = map[string]struct{}{
 }
 
 type canonicalUSUniverseTiming struct {
-	RetrievedAtMS    int64
-	EvidenceAtMS     int64
+	RetrievedAtMS     int64
+	EvidenceAtMS      int64
 	EvidenceTimeState string
 }
 
@@ -42,8 +42,8 @@ func (e *Engine) canonicalUSUniverseTimingSnapshot() canonicalUSUniverseTiming {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
 	return canonicalUSUniverseTiming{
-		RetrievedAtMS:    e.canonicalUSUniverseAt,
-		EvidenceAtMS:     0,
+		RetrievedAtMS:     e.canonicalUSUniverseAt,
+		EvidenceAtMS:      0,
 		EvidenceTimeState: canonicalUSSymbolUniverseEvidenceTimeUnknown,
 	}
 }
