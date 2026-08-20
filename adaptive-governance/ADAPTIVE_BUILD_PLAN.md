@@ -628,3 +628,48 @@ The plan is not 10/10 unless it can additionally prove:
 - renderer/test version stacking has a measured bounded migration path;
 - historical ledgers cannot misidentify the current release;
 - CI savings come from avoided duplicate/late work, not reduced quality.
+
+---
+
+## 18. v17→v18.8 zero-miss + TradeInsight full-capability build plan
+
+### 18.1 Explicit carry-forward packets
+
+| ID | Work | Closure evidence |
+|---|---|---|
+| `ADAPT-RECON-001` | Freshly reconcile every applicable conserved v17→v18.8 requirement plus post-ledger approved Adaptive commitments to current owner, source/behavior, regression and disposition. | Zero missing/duplicate/unowned/unexplained applicable items at G10; v18.10 verifies rather than first discovers gaps. |
+| `ADAPT-UX-RESEARCH-001` | Research ticker/input consistency, freshness badge, responsive top-area hierarchy, truthful disabled/recovery states and containment. | Desktop/tablet/narrow browser + actual-package evidence. |
+| `ADAPT-SYMBOL-001` | DESKS truth, desk transitions, final-desk semantics, idempotent add/remove, Master Market Symbols, persistence/reload and Undo. | Day/Swing/Long state/API/browser/package matrix. |
+| `ADAPT-READINESS-001` | Pre-Market/Market Open prep, missed-window catch-up, persisted prep/catalyst state, readiness freshness/traceability, SEC/event risk, EXTENDED and Catalyst Reaction lifecycle/measurements without redundant broad refetches. | State/restart/event/browser/package evidence. |
+| `ADAPT-FRESHNESS-001` | Targeted Refresh/Age, dataset/session cadence, automatic stale recovery, priority refresh, source/reason/fallback truth and stable freshness UI using existing canonical freshness/degradation owners. | Fresh/stale/unknown/fallback/recovery fixtures + browser/package proof. |
+| `ADAPT-RESEARCH-002` | Preserve all approved Research capabilities during Renderer Modularization II. | Capability inventory + equivalence tests + browser/native proof; zero capability loss. |
+
+A carry-forward already correct in current source closes with fresh evidence; it is not rebuilt merely because it originated in v17/v18. A reproducible gap keeps its original identity and is implemented in its assigned coherent slice.
+
+### 18.2 `ADAPT-TRADEINSIGHT-001` — TradeInsight Full Capability Discovery, Utility Mapping & SHADOW Integration
+
+v18.9.0 must enumerate the complete capability surface actually available to the configured TradeInsight beta account/API. The known Congressional Trading, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill roles are mandatory minimum capabilities, not a maximum.
+
+Every discovered capability receives exactly one utility disposition: `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`. Every useful capability binds:
+
+- Smart Provider Router v2 capability and canonical owner;
+- intended consumer/purpose and source authority;
+- entitlement, data rights and AI-egress status;
+- provider evidence time/freshness and missing-time behavior;
+- rate-limit/cost budget, cache/reuse and retention;
+- disagreement/reconciliation and graceful degradation behavior;
+- provider → Market Mode disposition;
+- bounded SHADOW fixtures/live smoke;
+- availability, latency, freshness, completeness, unique evidence, disagreement, useful/missed/false evidence, calls avoided, errors/rate pressure and cost telemetry;
+- promotion/rollback via `SHADOW → VALIDATED → APPROVED → PRODUCTION`.
+
+Full capability means full deliberate evaluation and availability, **not** calling every endpoint for every symbol. Canonical evidence is reused; duplicate acquisition is suppressed; TradeInsight beta failures are isolated; no direct TradeInsight-to-UI silo or duplicate router/freshness/reconciliation owner is permitted.
+
+### 18.3 Forward completion
+
+1. v18.8.1 — zero-miss binding/fresh proof + current reproducible user-trust fixes.
+2. v18.9.0 — TradeInsight full-capability SHADOW integration.
+3. v18.9.1 — multi-provider capability intelligence and Market-Mode hardening using measured health/freshness/latency/disagreement/headroom/rights/cost/usefulness.
+4. v18.10.0 — zero-gap v18 closure with no unexplained carry-forward, orphan materially useful provider capability or duplicate routing owner.
+5. v19 — professional provider/data quality, lineage, rights, cost and historical infrastructure.
+6. v20 — mature adaptive provider/evidence selection, weighting, ranking and explanation from reliability/usefulness/outcome history while deterministic market truth remains protected.

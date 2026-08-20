@@ -465,3 +465,28 @@ Automatic PR lifecycle remains canonical. Manual dispatch exists for controlled 
 The #413–#415 and #418 sequences are recurrence evidence. A release-metadata or cache-identity failure is not considered adaptively learned until the canonical coherence/identity tooling can detect the same class in one preflight. G16 records the reduction in duplicate runs/setup and verifies quality gates remain unchanged.
 
 No new top-level gate is introduced; these checks live inside G0/G3/G5/G10/G11/G16 as appropriate.
+
+---
+
+## 17. Zero-miss carry-forward and TradeInsight full-capability execution
+
+### 17.1 `ADAPT-RECON-001` zero-miss execution
+
+At v18.8.1 G0–G3, load the conserved v17/v18 ledger plus post-ledger approved Adaptive requirements. Every applicable item must map to current owner, current behavior, regression/evidence and an explicit current disposition. The named high-risk groups `ADAPT-UX-RESEARCH-001`, `ADAPT-SYMBOL-001`, `ADAPT-READINESS-001`, `ADAPT-FRESHNESS-001` and `ADAPT-RESEARCH-002` receive fresh current-source proof before v18 closure.
+
+An item already correct closes by fresh evidence rather than unnecessary rewrite. A reproducible gap keeps its original requirement identity, invalidates affected evidence and is implemented in its assigned coherent slice. G10 cannot hide an unexplained item behind generic reconciliation wording; v18.10 is final verification, not first discovery.
+
+### 17.2 `ADAPT-TRADEINSIGHT-001` full-capability execution
+
+At v18.9.0:
+
+1. enumerate every capability actually exposed to the configured TradeInsight beta account/API;
+2. classify each capability as `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`;
+3. for every useful capability bind Smart Provider Router v2 ownership, consumer/purpose, source authority, entitlement/rights/AI-egress, evidence time/freshness, rate/cost budget, cache/reuse, retention, disagreement and graceful degradation;
+4. assign provider → Market Mode disposition without changing deterministic Market Mode ownership;
+5. run bounded SHADOW fixtures/live smoke and measure availability, latency, freshness, completeness, unique evidence, disagreement, useful/missed/false evidence, calls avoided, errors/rate pressure and cost;
+6. promote only through `SHADOW → VALIDATED → APPROVED → PRODUCTION`, with explicit rollback and no silent adaptive production change;
+7. never treat full capability as permission to call every endpoint—request only purpose-driven evidence, reuse canonical state and isolate TradeInsight beta failures from unrelated consumers;
+8. prohibit direct TradeInsight-to-UI paths and duplicate router/freshness/reconciliation owners.
+
+v18.9.1 consumes capability observations for smarter multi-provider routing. v18.10 proves no materially useful TradeInsight/provider capability is orphaned or unexplained. v19/v20 mature provider/data quality and adaptive usefulness/outcome learning while deterministic market truth remains protected.

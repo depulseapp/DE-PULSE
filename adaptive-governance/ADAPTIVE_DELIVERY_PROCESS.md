@@ -384,3 +384,23 @@ G15/G16 must additionally report:
 - no required evidence removed to achieve the savings.
 
 These are strengthened responsibilities inside existing G11/G15/G16, not new top-level gates.
+
+---
+
+## 17. Zero-miss and TradeInsight full-capability delivery
+
+### 17.1 Zero-miss delivery proof
+
+For `ADAPT-RECON-001`, `ADAPT-UX-RESEARCH-001`, `ADAPT-SYMBOL-001`, `ADAPT-READINESS-001`, `ADAPT-FRESHNESS-001` and `ADAPT-RESEARCH-002`, delivery evidence must distinguish freshly proven unchanged behavior, newly fixed behavior, and explicit approved future placement. Historical PASS/source markers alone are insufficient. Affected user-facing behavior requires appropriate browser/runtime evidence and actual macOS Apple Silicon + Windows x64 package proof before the responsible release claims closure.
+
+v18.10 is the final zero-gap verification point, not a holding area for known gaps. No applicable conserved requirement or post-ledger Adaptive requirement may reach v18 closure as missing, unowned, unexplained or supported only by generic reconciliation wording.
+
+### 17.2 TradeInsight full-capability delivery proof
+
+For v18.9.0 `ADAPT-TRADEINSIGHT-001`, delivery must include a capability inventory for the actual configured TradeInsight beta surface and a disposition for every discovered capability: `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`.
+
+Every capability used by DE.PULSE must ship with explicit Smart Provider Router v2 ownership, consumer/purpose, authority, rights/entitlement, evidence-time/freshness, budget/rate-limit, cache/retention, disagreement/degradation behavior, Market Mode disposition and SHADOW status. Congressional Trading Intelligence, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill are guaranteed minimum roles; additional useful beta capabilities are included when discovery proves purpose and lawful access.
+
+Package/runtime proof must show full capability does not create indiscriminate API traffic: canonical evidence is reused, calls are purpose-driven and bounded, TradeInsight outage/rate-limit failure does not broadly degrade unrelated consumers, and no provider-to-UI silo exists. Any production influence requires `SHADOW → VALIDATED → APPROVED → PRODUCTION` evidence and rollback.
+
+v18.9.1 delivery proves the wider provider pool can consume measured capability health/freshness/latency/disagreement/headroom/rights/cost/usefulness without changing deterministic market truth. v18.10 proves zero orphan materially useful provider capability or duplicate routing owner. v19/v20 carry mature provider/data infrastructure and adaptive usefulness/outcome learning.
