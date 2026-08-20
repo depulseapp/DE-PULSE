@@ -20,50 +20,7 @@ type alpacaAsset struct {
 }
 
 func (e *Engine) scannerUniverse(ctx context.Context, key, secret string) []string {
-	out := append([]string{}, discoverySeedUniverse...)
-	client := &http.Client{Timeout: 15 * time.Second}
-	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
-	var assets []alpacaAsset
-	assetURLs := []string{
-		"https://paper-api.alpaca.markets/v2/assets?status=active&asset_class=us_equity&attributes=has_options",
-		"https://api.alpaca.markets/v2/assets?status=active&asset_class=us_equity&attributes=has_options",
-	}
-	loaded := false
-	for _, raw := range assetURLs {
-		assets = nil
-		if err := e.providerGetJSONTier(ctx, "Alpaca", WorkTierBroadDiscovery, client, raw, headers, &assets); err == nil && len(assets) > 0 {
-			loaded = true
-			break
-		}
-	}
-	if !loaded {
-		return uniqueSymbols(out)
-	}
-	eligible := make([]string, 0, len(assets))
-	for _, a := range assets {
-		sym := normalizeSymbol(a.Symbol)
-		if !a.Tradable || sym == "" || strings.ContainsAny(sym, "/ .") || len(sym) > 5 {
-			continue
-		}
-		switch strings.ToUpper(a.Exchange) {
-		case "NASDAQ", "NYSE", "ARCA", "AMEX", "BATS", "NYSEARCA":
-			eligible = append(eligible, sym)
-		}
-	}
-	sort.Strings(eligible)
-	// Take a deterministic cross-section rather than the first alphabetical block.
-	// Seed symbols are always retained, then up to 500 optionable active equities are
-	// sampled evenly across Alpaca's master list to bound snapshot API work.
-	const capN = 500
-	if len(eligible) <= capN {
-		out = append(out, eligible...)
-	} else {
-		step := float64(len(eligible)-1) / float64(capN-1)
-		for i := 0; i < capN; i++ {
-			out = append(out, eligible[int(math.Round(float64(i)*step))])
-		}
-	}
-	return uniqueSymbols(out)
+	return e.canonicalUSSymbolUniverse(ctx, key, secret, time.Now())
 }
 
 var discoverySeedUniverse = []string{"AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "TSLA", "AMD", "AVGO", "NFLX", "ORCL", "PLTR", "CRM", "ADBE", "INTC", "MU", "QCOM", "SMCI", "ARM", "SOFI", "JPM", "BAC", "GS", "V", "MA", "XOM", "CVX", "LLY", "UNH", "COST", "WMT", "HD", "NKE", "DIS", "UBER", "ABNB", "SHOP", "PYPL", "COIN", "MSTR", "RBLX", "SNOW", "CRWD", "PANW", "DDOG", "NET", "MDB", "NOW", "IBM", "DELL", "MRVL", "AMAT", "LRCX", "KLAC", "TSM", "ASML", "GE", "CAT", "BA", "GM", "F", "RIVN", "LCID", "HOOD", "ROKU", "SQ", "AFRM", "DKNG", "CELH", "CAVA", "RDDT", "APP", "HIMS", "DUOL", "TTD", "CVNA", "ARM", "SMR", "OKLO", "NNE", "IONQ", "RGTI", "QBTS", "RKLB", "LUNR", "ASTS", "ACHR", "JOBY", "CRWV", "NBIS", "TEM", "SOUN", "PATH", "AI", "BBAI", "MARA", "RIOT", "CLSK", "IREN", "WULF", "GLD", "SLV", "TLT", "IWM", "QQQ", "SPY"}

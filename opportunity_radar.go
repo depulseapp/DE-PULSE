@@ -214,22 +214,7 @@ func radarSessionActive(session string) bool {
 }
 
 func (e *Engine) opportunityUniverse(ctx context.Context, key, secret string, now time.Time) []string {
-	e.mu.RLock()
-	cached := append([]string{}, e.radarUniverse...)
-	cachedAt := e.radarUniverseAt
-	e.mu.RUnlock()
-	if len(cached) > 0 && now.UnixMilli()-cachedAt < int64(opportunityUniverseTTL/time.Millisecond) {
-		return cached
-	}
-	rows := e.scannerUniverse(ctx, key, secret)
-	if len(rows) == 0 {
-		rows = append([]string{}, discoverySeedUniverse...)
-	}
-	e.mu.Lock()
-	e.radarUniverse = append([]string{}, rows...)
-	e.radarUniverseAt = now.UnixMilli()
-	e.mu.Unlock()
-	return rows
+	return e.canonicalUSSymbolUniverse(ctx, key, secret, now)
 }
 
 func radarSampleUniverse(universe []string, cursor int) ([]string, int) {
