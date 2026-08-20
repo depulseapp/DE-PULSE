@@ -164,8 +164,12 @@ type Engine struct {
 	providerQuotes             map[string]map[string]Quote
 	rawHistoryCoverage         map[string]RawHistoryCoverage
 	liquidityBaselines         map[string]LiquidityBaseline
-	radarUniverse              []string
-	radarUniverseAt            int64
+	canonicalUSUniverse        []string
+	canonicalUSUniverseAt      int64
+	canonicalUSUniverseSource  string
+	canonicalUSUniverseRetryAt int64
+	canonicalUSUniverseRefresh chan struct{}
+	canonicalUSUniverseLoader  func(context.Context, string, string) ([]string, bool)
 	radarCursor                int
 	runtimeLoad                RuntimeLoadDiagnostics
 	runtimeSLOTracker          *RuntimeSLOTracker
