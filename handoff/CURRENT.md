@@ -13,8 +13,8 @@
 **Qualified:** #145 / `32336619446`  
 **Release:** #28 / `32336898662`  
 **Engineering branch:** `v18.8.1-development`  
-**Latest completed implementation commit:** `136af46f4f208edfd97fd728b3e3f1af61f2af31` (`ADAPT-QA-001`)  
-**Current engineering line:** `v18.8.1 — Historical Reconciliation Identity + 10/10 Audit Hardening`.
+**Latest completed implementation commit:** `bec6b8f0b4721e5eda891c22f72d51964ccd6590` (`ADAPT-GOV-001`)  
+**Current engineering line:** `v18.8.1 — Cost per Trustworthy Evidence + 10/10 Audit Hardening`.
 
 ## v18.8.0 Stable closure
 
@@ -41,6 +41,7 @@ The following packets are implemented on `v18.8.1-development` and are now refle
 - `ADAPT-ARCH-001` Shared-Universe Robustness — CLOSED BY FRESH EVIDENCE. `symbol_universe.go` has a neutral shared U.S.-equity universe owner, cancellation/panic-safe deferred single-flight cleanup and retrieval/evidence-time separation; `v18_8_1_universe_hardening_test.go` carries focused eligibility and recovery evidence. Smart Provider Router v2 and BroadSnapshotBroker remain canonical owners for routing and broad snapshot reuse respectively.
 - `ADAPT-UI-001` Renderer Modularization II — implemented (`f2f30d0c160f7bbf8e01f31271faf86d819808e8`). The active Market Pulse/header capability now loads from release-neutral `renderer/market-header-ui.js`; existing Market Pulse Ribbon/session/data-health/ET-PT clock/runtime-control behavior is preserved; `__v1851HeaderContracts` remains as a compatibility alias; the historical `header-v18.5.1.js` file is retained only as legacy regression evidence and is no longer loaded by runtime; `tools/ci/renderer_owner_contract.py` now rejects version-stacked active header ownership and binds the stable owner contract.
 - `ADAPT-QA-001` Test/Gate Consolidation — implemented (`136af46f4f208edfd97fd728b3e3f1af61f2af31`). A canonical capability-oriented Market Header Node regression now lives at `tests/renderer/market_header_owner_test.js`, proving stable owner/registry identity, deterministic ribbon ownership/order, idempotent ensure behavior, data-health refresh, one base chrome update per wrapper call, canonical loader identity and the legacy compatibility alias. It is transitively executed by the existing Qualified renderer owner regression and enforced by `tools/ci/renderer_owner_contract.py`, so no fourth workflow, new job or duplicate CI step was added. The historical v18.5.1 browser hierarchy test remains conserved as unique responsive evidence; no automatic historical-test deletion was introduced.
+- `ADAPT-GOV-001` Historical Reconciliation Identity — implemented (`bec6b8f0b4721e5eda891c22f72d51964ccd6590`). `release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json` now owns the immutable historical v18.5.1 reconciliation identity, while `release_identity.json` remains the independent current-release authority. `tools/ci/historical_reconciliation_identity.py` binds the historical ledger schema/release, incoming `v18.5.0-stable` tag/commit and `v18.5.1-development` branch, and includes mutation self-tests that reject release/tag/commit/branch drift. The existing `v18_5_1_v17_v18_reconciliation_gate.py` consumes that contract, so the already-existing Fast governance path will enforce it without adding a workflow or job. The 296-row historical reconciliation ledger and current v18.8.0 release identity were not rewritten.
 
 No v18.8.1 GitHub Actions qualification has been triggered for this engineering line yet. Do not claim v18.8.1 Fast/Qualified PASS until those exact-head workflows actually run later in qualification.
 
@@ -48,14 +49,13 @@ No v18.8.1 GitHub Actions qualification has been triggered for this engineering 
 
 Continue on the **same** `v18.8.1-development` branch, without retry/certification/promotion branches or duplicate workflows, in this exact order:
 
-1. `ADAPT-GOV-001` Historical Reconciliation Identity
-2. `ADAPT-COST-001` Cost per Trustworthy Evidence
-3. `ADAPT-RECON-001` Zero-Miss Reconciliation
-4. `ADAPT-UX-RESEARCH-001` Research Information Architecture
-5. `ADAPT-SYMBOL-001` Symbol/Desk Correctness
-6. `ADAPT-READINESS-001` Prep/Readiness Semantics
-7. `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness
-8. `ADAPT-RESEARCH-002` Research Correctness Closure
+1. `ADAPT-COST-001` Cost per Trustworthy Evidence
+2. `ADAPT-RECON-001` Zero-Miss Reconciliation
+3. `ADAPT-UX-RESEARCH-001` Research Information Architecture
+4. `ADAPT-SYMBOL-001` Symbol/Desk Correctness
+5. `ADAPT-READINESS-001` Prep/Readiness Semantics
+6. `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness
+7. `ADAPT-RESEARCH-002` Research Correctness Closure
 
 A historical carry-forward that is already correct closes by fresh evidence. A reproducible gap keeps its original requirement identity and is fixed in its assigned coherent slice. Do not defer a known reproducible gap to a generic v18.10 catch-all.
 
@@ -71,4 +71,4 @@ Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.m
 
 ## Exactly one next action
 
-Implement `ADAPT-GOV-001` on `v18.8.1-development`: separate historical reconciliation baseline identity from current release identity so conserved v17→v18 evidence cannot silently inherit the active release version; preserve historical evidence semantics and current-release truth, add focused regression/policy evidence, update the handoff/build-plan after completion, and do not create a new branch or trigger qualification CI merely for packet development.
+Implement `ADAPT-COST-001` on `v18.8.1-development`: measure cost per trustworthy evidence and avoided runs/setup/minutes using the existing CI telemetry and qualification architecture, preserve cheap-first/impact-routed gating and all required quality evidence, add only bounded telemetry/policy coverage where a real gap exists, update the handoff/build-plan after completion, and do not create a new branch or trigger qualification CI merely for packet development.
