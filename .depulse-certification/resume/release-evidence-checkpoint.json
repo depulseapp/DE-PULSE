@@ -5,24 +5,30 @@
   "channel": "STABLE",
   "metadataHeadRule": "This checkpoint describes immutable v18.7.0 Stable evidence; later metadata-only main commits do not redefine the certified artifact.",
   "stable": {
-    "tag":"v18.7.0-stable",
-    "promotionCommit":"75e494fb92441439c73c8ace41a40118e4518c1c",
-    "sourceFingerprint":"350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
-    "buildId":"v18.7.0-stable-20260819",
-    "promotionRun":32314823409,
-    "certificationRun":32314823409
+    "tag": "v18.7.0-stable",
+    "promotionCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
+    "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
+    "buildId": "v18.7.0-stable-20260819",
+    "promotionRun": 32314823409,
+    "certificationRun": 32314823409
+  },
+  "currentCandidate": {
+    "qualificationHead": "22b62b000d4f693c951d71cf71fd833e605e9f4e"
   },
   "evidence": {
-    "G0-G10":{"status":"PASS","fastRun":32314503785,"qualifiedRun":32314537398},
-    "G11":{"status":"PASS","runId":32314823409},
-    "G12":{"status":"PASS","runId":32314823409},
-    "G13-G14-macOS-Apple-Silicon":{"status":"PASS","runId":32314823409,"artifactId":9387791012,"artifactDigest":"sha256:52ed0d9db195a71220e52c818c9881bfed9475b6fc5c43a3ae987ec7f36f5af0"},
-    "G13-G14-Windows-x64":{"status":"PASS","runId":32314823409,"artifactId":9387797344,"artifactDigest":"sha256:fb0f9fa4a7fd22e29e418261dd20b3d64b1faf7409d549a05357ee6442d4e208"},
-    "G15":{"status":"PASS_RELEASE_ASSURANCE","runId":32314823409,"artifactId":9387802685,"artifactDigest":"sha256:f4f58cd68f5a7d9daae05b3e4aa4d336ff306f09ee8644d0afbbcaba80f88c0c"},
-    "G16":{"status":"PASS_CLOSED","runId":32314823409,"artifactId":9387814290,"artifactDigest":"sha256:a7fd23f438c2bdffd580b487f0028ad7caf3f05e1acfc41d013296e5bd98fbf8"},
-    "StablePublication":{"status":"PASS_NO_REBUILD","runId":32314823409,"tag":"v18.7.0-stable","certifiedCandidate":"75e494fb92441439c73c8ace41a40118e4518c1c"}
+    "G0-G10": {"status": "PASS", "fastRun": 32314503785, "qualifiedRun": 32314537398},
+    "G10": {"status": "PASS", "fastRun": 32314503785, "qualifiedRun": 32314537398},
+    "G11": {"status": "PASS", "runId": 32314823409},
+    "G12": {"status": "PASS", "runId": 32314823409},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32314823409, "artifactId": 9387791012, "artifactDigest": "sha256:52ed0d9db195a71220e52c818c9881bfed9475b6fc5c43a3ae987ec7f36f5af0"},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32314823409, "artifactId": 9387797344, "artifactDigest": "sha256:fb0f9fa4a7fd22e29e418261dd20b3d64b1faf7409d549a05357ee6442d4e208"},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32314823409, "artifactId": 9387802685, "artifactDigest": "sha256:f4f58cd68f5a7d9daae05b3e4aa4d336ff306f09ee8644d0afbbcaba80f88c0c"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32314823409, "artifactId": 9387814290, "artifactDigest": "sha256:a7fd23f438c2bdffd580b487f0028ad7caf3f05e1acfc41d013296e5bd98fbf8"},
+    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32314823409, "tag": "v18.7.0-stable", "certifiedCandidate": "75e494fb92441439c73c8ace41a40118e4518c1c"}
   },
-  "previousReleaseAttempts":[{"runId":32314094623,"releaseRunNumber":25,"failure":"stale release-harness/version-consistency assumption before substantive G12","authoritativeStableClaim":false}],
-  "nextRequiredEvidence":"None for v18.7.0 Stable. v18.8.0 remains G0-G3 intake only until a verified consolidation gap is frozen.",
-  "updatedAt":"2026-08-19T19:29:00-07:00"
+  "previousReleaseAttempts": [
+    {"runId": 32314094623, "releaseRunNumber": 25, "failure": "stale release-harness/version-consistency assumption before substantive G12", "authoritativeStableClaim": false}
+  ],
+  "nextRequiredEvidence": "None for v18.7.0 Stable. v18.8.0 remains G0-G3 intake only until a verified consolidation gap is frozen.",
+  "updatedAt": "2026-08-19T19:29:00-07:00"
 }
