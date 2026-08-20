@@ -14,6 +14,7 @@ HEADER=ROOT/'renderer'/'market-header-ui.js'
 LEGACY_HEADER=ROOT/'renderer'/'header-v18.5.1.js'
 QUALIFIED=ROOT/'.github'/'workflows'/'ci-qualified.yml'
 NODE_TEST=ROOT/'documentation_ui_owner_test.js'
+HEADER_NODE_TEST=ROOT/'tests'/'renderer'/'market_header_owner_test.js'
 BROWSER_TEST=ROOT/'tools'/'ci'/'documentation_owner_browser_test.py'
 HIERARCHY_TEST=ROOT/'release'/'v18.5.1'/'browser_ui_hierarchy_test.py'
 
@@ -33,6 +34,7 @@ def main()->int:
     header=HEADER.read_text(encoding='utf-8') if HEADER.is_file() else ''
     qualified=QUALIFIED.read_text(encoding='utf-8')
     node_test=NODE_TEST.read_text(encoding='utf-8') if NODE_TEST.is_file() else ''
+    header_node_test=HEADER_NODE_TEST.read_text(encoding='utf-8') if HEADER_NODE_TEST.is_file() else ''
     browser_test=BROWSER_TEST.read_text(encoding='utf-8') if BROWSER_TEST.is_file() else ''
     hierarchy_test=HIERARCHY_TEST.read_text(encoding='utf-8') if HIERARCHY_TEST.is_file() else ''
 
@@ -111,7 +113,22 @@ def main()->int:
     for token in evidence_tokens:
         if token not in qualified: errors.append(f'primary owner evidence missing from Qualified: {token}')
     if 'Documentation capability owner regression PASS' not in node_test:
-        errors.append('Node owner regression proof missing')
+        errors.append('Node Documentation owner regression proof missing')
+    if "require('./tests/renderer/market_header_owner_test.js')" not in node_test:
+        errors.append('Qualified renderer owner regression must transitively execute canonical Market Header owner test')
+    if not HEADER_NODE_TEST.is_file():
+        errors.append('canonical Market Header behavior test is missing: tests/renderer/market_header_owner_test.js')
+    header_test_tokens=(
+        'Market Header capability owner regression PASS',
+        "owner.owner,'renderer/market-header-ui.js'",
+        "__v1851HeaderContracts===__DE_PULSE_MARKET_HEADER_UI__",
+        "updateChrome('SPY')",
+        'wrapper must not multiply base update calls',
+        'ensure must be idempotent',
+        'header-v18.5.1.js',
+    )
+    for token in header_test_tokens:
+        if token not in header_node_test: errors.append(f'Market Header behavior regression proof missing: {token}')
     for token in ("choices=('chrome','webkit')", "data-render-owner=\"documentation-ui\"", "__DE_PULSE_DOCUMENTATION_UI__"):
         if token not in browser_test: errors.append(f'primary-engine browser owner proof missing: {token}')
 
@@ -119,10 +136,12 @@ def main()->int:
     print('DE.PULSE renderer owner contract: PASS')
     print('Documentation capability-oriented runtime owner: renderer/documentation-ui.js')
     print('Market Header capability-oriented runtime owner: renderer/market-header-ui.js')
+    print('Market Header canonical behavior regression is transitively bound to Qualified renderer owner evidence: PASS')
     print('Market Header legacy v18.5.1 file retained only as historical compatibility evidence, not loaded by runtime: PASS')
     print('Market Header compatibility alias __v1851HeaderContracts preserved: PASS')
     print('load order owner before role-access decorator: PASS')
-    print('Node + Chrome + WebKit Documentation owner evidence binding: PASS')
+    print('Node Documentation + Market Header owner evidence binding: PASS')
+    print('Chrome + WebKit Documentation owner evidence binding: PASS')
     print('legacy monolith Documentation fallback retained and explicitly gated for later physical deletion: PASS')
     print('version-stacked new-owner naming prevention: PASS')
     return 0
