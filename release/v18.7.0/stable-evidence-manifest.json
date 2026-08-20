@@ -1,0 +1,15 @@
+{
+  "schema":"DE.PULSE-STABLE-EVIDENCE-1",
+  "release":"v18.7.0",
+  "status":"STABLE_PUBLISHED",
+  "buildId":"v18.7.0-stable-20260819",
+  "stableTag":"v18.7.0-stable",
+  "certifiedCandidate":"75e494fb92441439c73c8ace41a40118e4518c1c",
+  "qualifiedSourceHead":"22b62b000d4f693c951d71cf71fd833e605e9f4e",
+  "sourceFingerprint":"350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
+  "runs":{"fast":32314503785,"qualified":32314537398,"canonicalReleaseG11G16":32314823409},
+  "gates":{"G0-G10":"PASS","G11":"PASS","G12":"PASS","G13-G14-macOS-Apple-Silicon":"PASS","G13-G14-Windows-x64":"PASS","G15":"PASS_RELEASE_ASSURANCE","G16":"PASS_CLOSED","StablePublication":"PASS_NO_REBUILD"},
+  "artifacts":{"macOSAppleSilicon":{"artifactId":9387791012,"digest":"sha256:52ed0d9db195a71220e52c818c9881bfed9475b6fc5c43a3ae987ec7f36f5af0"},"windowsX64":{"artifactId":9387797344,"digest":"sha256:fb0f9fa4a7fd22e29e418261dd20b3d64b1faf7409d549a05357ee6442d4e208"},"g15ReleaseAssurance":{"artifactId":9387802685,"digest":"sha256:f4f58cd68f5a7d9daae05b3e4aa4d336ff306f09ee8644d0afbbcaba80f88c0c"},"g16Closure":{"artifactId":9387814290,"digest":"sha256:a7fd23f438c2bdffd580b487f0028ad7caf3f05e1acfc41d013296e5bd98fbf8"}},
+  "historicalRecovery":{"failedReleaseRun":32314094623,"classification":"RELEASE_HARNESS_GATE_FAIL","unchangedShaRerun":false},
+  "provenance":{"immutableStableTagRemainsAuthority":true,"manifestCommittedAfterStable":true,"manifestDoesNotRedefineStableArtifact":true}
+}

@@ -1,76 +1,38 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.6.1",
+  "release": "v18.7.0",
   "channel": "STABLE",
-  "candidateDisposition": "V18_6_1_STABLE_PUBLISHED",
   "branch": "main",
-  "pullRequest": 45,
-  "candidateSourceCommit": "5c3fae486f3e4b4a39a0b1d549916aea9e1295fd",
-  "qualificationHead": "5c3fae486f3e4b4a39a0b1d549916aea9e1295fd",
-  "mainMergeCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
-  "releaseCandidateCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
-  "sourceFingerprint": "b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75",
+  "pullRequest": 53,
+  "candidateSourceCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
+  "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.6.1-stable-20260819",
+  "buildId": "v18.7.0-stable-20260819",
   "certifiedStable": {
-    "version": "v18.6.1",
-    "tag": "v18.6.1-stable",
-    "promotionCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
-    "buildId": "v18.6.1-stable-20260819",
-    "sourceFingerprint": "b01c14e1d54b736785eab6c03407801c527edd7769ff6f3d41fd4b20dabebd75",
-    "certificationRun": 32279232665,
-    "promotionRun": 32279232665
+    "version": "v18.7.0",
+    "tag": "v18.7.0-stable",
+    "promotionCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
+    "candidateSourceCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
+    "certifiedSourceCheckout": "75e494fb92441439c73c8ace41a40118e4518c1c",
+    "sourceFingerprint": "350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963"
   },
-  "metadataHeadRule": "The immutable v18.6.1-stable tag remains at certified candidate 42e8432f. Post-release operational checkpoint/handoff updates on main do not redefine the Stable artifact; .depulse-certification remains fingerprint-excluded.",
-  "codeStatus": "V18_6_1_IMPLEMENTATION_COMPLETE_STABLE_PUBLISHED",
-  "lastTrustworthyPass": "Release #24 / run 32279232665 passed G11-G16 from exact qualified source 5c3fae486f3e4b4a39a0b1d549916aea9e1295fd and merged candidate 42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc. Full G12, macOS Apple Silicon and Windows x64 actual packaged-runtime audits, G15 exact evidence/binary verification, same-run no-rebuild Stable publication and G16 all passed.",
+  "metadataHeadRule": "The immutable v18.7.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded handoff/checkpoint metadata advances main.",
   "gates": {
-    "G0": {"status": "PASS", "reusable": true},
-    "G1": {"status": "PASS", "reusable": true},
-    "G2": {"status": "PASS", "reusable": true},
-    "G3": {"status": "PASS", "reusable": true},
-    "G4": {"status": "PASS", "reusable": true},
-    "G5": {"status": "PASS", "fastRun": 32279055139},
-    "G6": {"status": "PASS", "qualifiedRun": 32279113032},
-    "G7": {"status": "PASS", "qualifiedRun": 32279113032},
-    "G8": {"status": "PASS", "qualifiedRun": 32279113032},
-    "G9": {"status": "PASS", "qualifiedRun": 32279113032},
-    "G10": {"status": "PASS", "fastRun": 32279055139, "qualifiedRun": 32279113032, "productFullQualifiedRun": 32276304863},
-    "G11": {"status": "PASS", "runId": 32279232665},
-    "G12": {"status": "PASS", "runId": 32279232665},
-    "G13": {"status": "PASS", "runId": 32279232665},
-    "G14": {"status": "PASS", "runId": 32279232665},
-    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32279232665},
-    "G16": {"status": "PASS_CLOSED", "runId": 32279232665}
+    "G0":"PASS","G1":"PASS","G2":"PASS","G3":"PASS","G4":"PASS","G5":"PASS","G6":"PASS","G7":"PASS","G8":"PASS","G9":"PASS","G10":"PASS","G11":"PASS","G12":"PASS","G13":"PASS","G14":"PASS","G15":"PASS","G16":"PASS"
   },
-  "nativeEvidence": {
-    "macosAppleSilicon": {"status": "PASS", "runId": 32279232665, "artifactId": 9375328774, "artifactDigest": "sha256:ab36d804637dc0264c2f09511c1a592ec44ca3d553e760795b00ca0782dadb50"},
-    "windowsX64": {"status": "PASS", "runId": 32279232665, "artifactId": 9375346052, "artifactDigest": "sha256:c4f6fc934cd9ab896ced08486aa6c7a1cfcbae647ad7c54435495768641fe0d9"},
-    "g15": {"status": "PASS_RELEASE_ASSURANCE", "artifactId": 9375357805, "artifactDigest": "sha256:261338f7a62e59fa98f11acc81b58deac0814f592f44aaeb252aafcf3831295b"},
-    "g16": {"status": "PASS_CLOSED", "artifactId": 9375375860, "artifactDigest": "sha256:cbb59e11311264d02c5e0c221788aeb2642e612dd8c760b14deb4502c54d7b22"}
+  "releaseSummary": {
+    "qualifiedSourceHead": "22b62b000d4f693c951d71cf71fd833e605e9f4e",
+    "fastRun": 32314503785,
+    "qualifiedRun": 32314537398,
+    "releaseRun": 32314823409,
+    "publication": "PASS_NO_REBUILD"
   },
-  "promotionState": "PROMOTED",
-  "canonicalReleaseRun": 32279232665,
-  "promotionRun": 32279232665,
-  "promotionCommit": "42e8432f7530ae39cbfd6ceb0b0bd5f6311dc5cc",
-  "stableTag": "v18.6.1-stable",
-  "releaseBlockingResiduals": [],
-  "knownResiduals": [
-    "TradeInsight remains governed shadow/future work until separately validated and approved.",
-    "External provider keys, entitlements and commercial/AI-use rights remain deployment-specific User Action Required and fail closed when absent or unapproved."
-  ],
   "assistantPortability": {
-    "status": "ENFORCED",
-    "contract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
-    "entrypoints": ["AGENTS.md", "CLAUDE.md"],
-    "authoritativeHandoff": "handoff/CURRENT.md",
-    "releaseRunTracking": "GitHub Actions run identity + machine checkpoints",
-    "chatMemoryRequired": false,
-    "temporaryWorkspaceAuthoritative": false
+    "status":"ENFORCED",
+    "authoritativeHandoff":"handoff/CURRENT.md",
+    "entrypoints":["AGENTS.md","CLAUDE.md"]
   },
-  "userDelivery": "V18_6_1_STABLE_PUBLISHED",
-  "nextBranch": null,
-  "nextStep": "Wait for next product-slice intake; start it from v18.6.1-stable/current main using one version-development branch and one Draft PR.",
-  "updatedAt": "2026-08-19T17:08:02Z"
+  "nextStep":"Finish v18.8.0 Shared Intelligence Consolidation G0-G3 source-owner/duplicate-work audit; create no branch until a real G1 gap is proven.",
+  "updatedAt":"2026-08-19T19:29:00-07:00"
 }
