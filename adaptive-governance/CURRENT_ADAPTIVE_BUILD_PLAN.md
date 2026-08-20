@@ -2,31 +2,34 @@
 
 **Immutable Stable:** `v18.8.0-stable`  
 **Stable candidate:** `3a32d57dd4c74c6f812cc942a9d8049a7b517718`  
+**Engineering branch:** `v18.8.1-development`  
 **Next:** `v18.8.1 — Renderer Modularization II + 10/10 Audit Hardening`.
 
 ## Entry condition
 
-First close `ADAPT-REL-001`: reconcile the actual v18.8.0 Stable tag/Release into build checkpoint, release-evidence checkpoint, Stable evidence manifest and `handoff/CURRENT.md`. This is continuity/source-of-truth closure only; unchanged certified v18.8.0 binaries do not rebuild.
+`ADAPT-REL-001` is CLOSED. The actual v18.8.0 Stable tag/Release is reconciled into the build checkpoint, release-evidence checkpoint, Stable evidence manifest and `handoff/CURRENT.md`. This was continuity/source-of-truth closure only; unchanged certified v18.8.0 binaries were not rebuilt.
 
 ## v18.8.1 mandatory work packets
 
-1. `ADAPT-CI-001` Release State Coherence validator covering release identity, VERSION/app/renderer/cache-bust identity, checkpoints, Stable manifest, handoff, predecessor/baseline and target tag state in one result.
-2. `ADAPT-CI-002` G11 target-tag/version/build/predecessor/release-scaffold preflight before G12/native work, retaining the final publication collision guard.
-3. `ADAPT-CI-003` cheap-first Fast ordering; expensive Go/Node/browser setup starts only after cheap governance/coherence/identity/provenance checks are green.
-4. `ADAPT-CI-004` safe manual dispatch defaults; full qualification must be explicit.
-5. `ADAPT-DATA-001` explicit discovery-universe eligibility and intentional treatment of provider filters such as `has_options`.
-6. `ADAPT-DATA-002` provider evidence time separated from retrieval time; missing evidence time is UNKNOWN/degraded/ABSTAIN rather than wall-clock `now`.
-7. `ADAPT-ARCH-001` neutral shared-universe diagnostics, panic/cancellation-safe single-flight cleanup and explicit eligibility/concurrency tests.
-8. `ADAPT-UI-001` Renderer Modularization II via bounded capability-owner extraction, not a broad redesign.
-9. `ADAPT-QA-001` inventory and gradual capability-based consolidation of version-stacked tests/gates; preserve unique historical evidence.
-10. `ADAPT-GOV-001` separate historical reconciliation baseline identity from current release identity.
-11. `ADAPT-COST-001` measure avoided runs/setup/minutes and cost per trustworthy evidence without weakening required gates.
-12. `ADAPT-RECON-001` fresh zero-miss reconciliation for every applicable v17→v18.8 conserved requirement plus post-ledger approved Adaptive commitments; bind current owner, source/behavior, regression/evidence and explicit disposition before v18 closure.
-13. `ADAPT-UX-RESEARCH-001` revalidate/fix Research ticker/input consistency, freshness badge, responsive top-area hierarchy, disabled/recovery states and containment.
-14. `ADAPT-SYMBOL-001` revalidate/fix DESKS truth, desk transitions, final-desk semantics, add/remove idempotency, Master Market Symbols, persistence/reload and Undo across Day/Swing/Long.
-15. `ADAPT-READINESS-001` revalidate/fix Pre-Market/Market Open preparation, missed-window catch-up, persisted job state, readiness evidence, SEC/event risk, EXTENDED and Catalyst Reaction lifecycle/measurements without redundant broad refetches.
-16. `ADAPT-FRESHNESS-001` revalidate/fix targeted Refresh/Age, dataset/session cadence, automatic stale recovery, priority refresh, source/reason/fallback truth and stable freshness UI using existing canonical freshness/degradation owners.
-17. `ADAPT-RESEARCH-002` preserve all approved Research capabilities during Renderer Modularization II with behavior/browser/native equivalence; no capability loss through module extraction.
+| Order | Packet | State | Durable implementation/evidence |
+| ---: | --- | --- | --- |
+| 1 | `ADAPT-CI-001` Release State Coherence | **IMPLEMENTED** | `35531cd98465565c60cb2a26a3e066692d0f2168` plus CI-hardening invariant lock `fd58ce8949013f5e6ffd70b69a3a991f8d4453f1`. |
+| 2 | `ADAPT-CI-002` Early G11 Target Preflight | **IMPLEMENTED** | Release-state coherence/G11 target preflight plus invariant coverage in the CI-hardening commits. |
+| 3 | `ADAPT-CI-003` Cheap-First Fast Ordering | **IMPLEMENTED** | `89e78f0da57c4819c2ad818c73541fcc7713f269`; cheap governance/coherence/provenance checks precede expensive Go/Node/browser setup. |
+| 4 | `ADAPT-CI-004` Safe Manual Dispatch Defaults | **IMPLEMENTED** | `02da4e1a560e16671188abdc69037116de4994c2`; manual Qualified defaults to adaptive/impact-safe qualification and full remains explicit. |
+| 5 | `ADAPT-DATA-001` Universe Eligibility Contract | **IMPLEMENTED** | `3337386c5492a7af49e6e4dc49ef25dd23f94a44` + follow-up `d63d0753d4d321362934e0ad7dabc52b7dca9b32`; broad U.S.-equity eligibility is explicit and no longer silently constrained by `has_options`. |
+| 6 | `ADAPT-DATA-002` Evidence-Time Truth | **IMPLEMENTED** | `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`; provider observation/evidence time drives Scanner/Radar freshness, retrieval time is bookkeeping, and unknown evidence remains unknown. |
+| 7 | `ADAPT-ARCH-001` Shared-Universe Robustness | **CLOSED BY FRESH EVIDENCE** | Shared neutral universe owner is explicit in `symbol_universe.go`; deferred cleanup is cancellation/panic-safe; focused eligibility/retrieval-time/concurrency recovery tests live in `v18_8_1_universe_hardening_test.go`. Smart Provider Router v2 and BroadSnapshotBroker ownership are unchanged. |
+| 8 | `ADAPT-UI-001` Renderer Modularization II | **NEXT** | Bounded capability-owner extraction only; preserve visual/behavioral contracts. |
+| 9 | `ADAPT-QA-001` Test/Gate Consolidation | **PENDING** | Inventory and gradually consolidate version-stacked tests/gates by capability while preserving unique historical evidence. |
+| 10 | `ADAPT-GOV-001` Historical Reconciliation Identity | **PENDING** | Separate historical reconciliation baseline identity from current release identity. |
+| 11 | `ADAPT-COST-001` Cost per Trustworthy Evidence | **PENDING** | Measure avoided runs/setup/minutes and cost per trustworthy evidence without weakening required gates. |
+| 12 | `ADAPT-RECON-001` Zero-Miss Reconciliation | **PENDING** | Fresh zero-miss reconciliation for every applicable v17→v18.8 conserved requirement plus post-ledger approved Adaptive commitments; bind current owner, source/behavior, regression/evidence and explicit disposition before v18 closure. |
+| 13 | `ADAPT-UX-RESEARCH-001` Research Information Architecture | **PENDING** | Revalidate/fix Research ticker/input consistency, freshness badge, responsive top-area hierarchy, disabled/recovery states and containment. |
+| 14 | `ADAPT-SYMBOL-001` Symbol/Desk Correctness | **PENDING** | Revalidate/fix DESKS truth, desk transitions, final-desk semantics, add/remove idempotency, Master Market Symbols, persistence/reload and Undo across Day/Swing/Long. |
+| 15 | `ADAPT-READINESS-001` Prep/Readiness Semantics | **PENDING** | Revalidate/fix Pre-Market/Market Open preparation, missed-window catch-up, persisted job state, readiness evidence, SEC/event risk, EXTENDED and Catalyst Reaction lifecycle/measurements without redundant broad refetches. |
+| 16 | `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness | **PENDING** | Revalidate/fix targeted Refresh/Age, dataset/session cadence, automatic stale recovery, priority refresh, source/reason/fallback truth and stable freshness UI using existing canonical freshness/degradation owners. |
+| 17 | `ADAPT-RESEARCH-002` Research Correctness Closure | **PENDING** | Preserve all approved Research capabilities during Renderer Modularization II with behavior/browser/native equivalence; no capability loss through module extraction. |
 
 A historical carry-forward that is already correct may close by fresh evidence. Do not rebuild working functionality solely because the requirement is old; do not leave a reproducible gap for a generic v18.10 catch-all.
 
