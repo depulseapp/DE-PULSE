@@ -1,9 +1,9 @@
-DE.PULSE v18.8.0
-Build: v18.8.0-stable-20260819
+DE.PULSE v18.8.1
+Build: v18.8.1-stable-20260820
 Channel: STABLE
-Stable baseline: v18.7.0
-Previous Stable: v18.7.0
-Scope: Shared Intelligence Consolidation: one canonical Alpaca U.S.-equity universe owner shared by Discovery Scanner and Opportunity Radar; preserved 12-hour TTL; concurrent refresh coalescing; truthful stale-provider timestamps on failed refresh; bounded retry suppression with identifiable deterministic seed fallback; Scanner ranking and Radar sampling/promotion behavior preserved; Smart Provider Router v2, BroadSnapshotBroker, Session/Event/Research intelligence, deterministic Day/Swing/Long truth, GLD/SLV/USO tradable exceptions and permanent No Execution Boundary preserved
+Stable baseline: v18.8.0
+Previous Stable: v18.8.0
+Scope: Adaptive Trust & Data Truth Closure: release-state coherence and cheap-first CI hardening; U.S.-equity universe eligibility and evidence-time truth; cost per trustworthy evidence; zero-miss reconciliation; release-neutral Market Header ownership; Research information architecture and correctness; Symbol/Desk correctness; Prep/Readiness semantics; Freshness/Data Engine correctness; deterministic Day/Swing/Long truth, Smart Provider Router v2, BroadSnapshotBroker, GLD/SLV/USO actionable exceptions and permanent No Execution Boundary preserved
 Application bundle: De-Pulse.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
 Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)

@@ -14,10 +14,11 @@ from typing import Callable
 ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parts[-3:-1] == ('tools','ci') else Path.cwd()
 RELEASE_COUPLED_ASSETS = (
     'renderer.js',
+    'documentation-ui.js',
     'live-dom-reconcile.js',
     'watchlist-v18.5.1.js',
     'watchlist-v18.5.1.css',
-    'header-v18.5.1.js',
+    'market-header-ui.js',
     'ui-v18.5.1.css',
     'surface-consolidation-v18.6.js',
     'surface-consolidation-v18.6.css',
@@ -166,7 +167,7 @@ def collect_errors(
             ('VERSION_PREDECESSOR_MISMATCH', f'Previous Stable: {previous_stable}'),
         ):
             if token and token not in version_text:
-                errors.append(f'{code}: {token!r} not present')
+                errors.append(f'{code}: {toke!r} not present')
 
     boot = read_text(root / 'app_bootstrap.go', errors, 'APP_BOOTSTRAP_UNREADABLE')
     if boot:
@@ -252,60 +253,33 @@ def collect_errors(
             target_action = 'CONFLICT'
             errors.append(f'TARGET_TAG_ALREADY_EXISTS: next-release target {target_tag} -> {existing_target}')
         elif current_semver and stable_semver and current_semver == stable_semver:
-            target_action = 'REUSE' if existing_target == stable_candidate else ('CONFLICT' if existing_target else 'MISSING')
-        else:
-            target_action = 'ABSENT' if not existing_target else 'EXISTS'
+            target_action = 'REUSE' if existing_target == stable_candidate else ('CONFLICT' if existing_target else 'MISSINGˆ[ÙN‚ˆ\™Ù]ØXİ[ÛˆH	ĞP”ÑS•	ÈYˆ›İ^\İ[™×İ\™Ù][ÙH	ÑVTÕÉÂ‚ˆ™]\›ˆ™\İ[
+ˆ\œ›ÜœÏY\œ›ÜœËˆİX›WÜ™[X\ÙO\İX›WÜ™[X\ÙKˆİX›WİYÏ\İX›WİYËˆİX›WØØ[™Y]O\İX›WØØ[™Y]Kˆİ\œ™[İ™\œÚ[ÛXİ\œ™[İ™\œÚ[Û‹ˆ\™Ù]İYÏ]\™Ù]İYËˆ\™Ù]İY×ØXİ[Û]\™Ù]ØXİ[Û‹ˆ
+B‚‚™YˆXZ[Š
+HOˆ[‚ˆ\œÙ\ˆH\™Ü\œÙK\™İ[Y[\œÙ\Š
+Bˆ\œÙ\‹˜YØ\™İ[Y[
+	ËK\›Ûİ	Ë\OT]Y˜][T“ÓÕ
+Bˆ\œÙ\‹˜YØ\™İ[Y[
+	ËKYÌLKXØ[™Y]K\ÚIËY˜][IÉÊBˆ\œÙ\‹˜YØ\™İ[Y[
+	ËKZœÛÛ‹[İ]	Ë\OT]
+Bˆ\™ÜÈH\œÙ\‹œ\œÙWØ\™ÜÊ
+B‚ˆÌLWØØ[™Y]WÜÚHH\™ÜË™ÌLWØØ[™Y]WÜÚKœİš\
 
-    return Result(
-        errors=errors,
-        stable_release=stable_release,
-        stable_tag=stable_tag,
-        stable_candidate=stable_candidate,
-        current_version=current_version,
-        target_tag=target_tag,
-        target_tag_action=target_action,
-    )
+BˆYˆ›İÌLWØØ[™Y]WÜÚH[™ÜË™[š\›Û‹™Ù]
+	ÑÒUP—ÕÓÔ’Ñ“ÕÉÊHOH	ÑK”SÑH™[X\ÙHÌLKQÌM‰Î‚ˆ›ØÈHİXœ›ØÙ\ÜËœ[ŠÉÙÚ]	Ë	Ü™]‹\\œÙIË	ÒPQ	×KİÙX\™ÜËœ›Ûİœ™\ÛÛ™J
+K^UYKØ\\™WÛİ]]UYKÚXÚÏQ˜[ÙJBˆYˆ›ØËœ™]\›˜ÛÙHOH‚ˆÌLWØØ[™Y]WÜÚHH›ØËœİİ]œİš\
 
-
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--root', type=Path, default=ROOT)
-    parser.add_argument('--g11-candidate-sha', default='')
-    parser.add_argument('--json-out', type=Path)
-    args = parser.parse_args()
-
-    g11_candidate_sha = args.g11_candidate_sha.strip()
-    if not g11_candidate_sha and os.environ.get('GITHUB_WORKFLOW') == 'DE.PULSE | Release G11-G16':
-        proc = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=args.root.resolve(), text=True, capture_output=True, check=False)
-        if proc.returncode == 0:
-            g11_candidate_sha = proc.stdout.strip()
-    result = collect_errors(args.root.resolve(), g11_candidate_sha=g11_candidate_sha)
-    payload = {
-        'schema': 'DE.PULSE-RELEASE-STATE-COHERENCE-1',
-        'status': 'PASS' if not result.errors else 'FAIL',
-        'stableRelease': result.stable_release,
-        'stableTag': result.stable_tag,
-        'stableCandidate': result.stable_candidate,
-        'currentVersion': result.current_version,
-        'targetTag': result.target_tag,
-        'targetTagAction': result.target_tag_action,
-        'errors': result.errors,
-    }
-    if args.json_out:
-        args.json_out.write_text(json.dumps(payload, indent=2) + '\n', encoding='utf-8')
-
-    if result.errors:
-        print(f"DE.PULSE Release State Coherence: FAIL ({len(result.errors)} issue(s))", file=sys.stderr)
-        for error in result.errors:
-            print(f' - {error}', file=sys.stderr)
-        return 1
-
-    print('DE.PULSE Release State Coherence: PASS')
-    print(f'certified Stable: {result.stable_tag} -> {result.stable_candidate}')
-    print(f'current release identity: {result.current_version}')
-    print(f'target tag state: {result.target_tag_action} ({result.target_tag})')
-    return 0
-
-
-if __name__ == '__main__':
-    raise SystemExit(main())
+Bˆ™\İ[HÛÛXİÙ\œ›ÜœÊ\™ÜËœ›Ûİœ™\ÛÛ™J
+KÌLWØØ[™Y]WÜÚOYÌLWØØ[™Y]WÜÚJBˆ^[ØYHÂˆ	ÜØÚ[XIÎˆ	ÑK”SÑKT‘SPTÑKTÕUKPÓÒT‘SÑKLIËˆ	Üİ]\ÉÎˆ	ÔTÔÉÈYˆ›İ™\İ[™\œ›ÜœÈ[ÙH	ÑRS	Ëˆ	ÜİX›T™[X\ÙIÎˆ™\İ[œİX›WÜ™[X\ÙKˆ	ÜİX›UYÉÎˆ™\İ[œİX›WİYËˆ	ÜİX›PØ[™Y]IÎˆ™\İ[œİX›WØØ[™Y]Kˆ	Øİ\œ™[™\œÚ[Û‰Îˆ™\İ[˜İ\œ™[İ™\œÚ[Û‹ˆ	İ\™Ù]YÉÎˆ™\İ[\™Ù]İYËˆ	İ\™Ù]YĞXİ[Û‰Îˆ™\İ[\™Ù]İY×ØXİ[Û‹ˆ	Ù\œ›ÜœÉÎˆ™\İ[™\œ›ÜœËˆBˆYˆ\™ÜËšœÛÛ—Ûİ]‚ˆ\™ÜËšœÛÛ—Ûİ]Üš]Wİ^
+œÛÛ‹™[\Ê^[ØY[™[LŠH
+È	×‰Ë[˜ÛÙ[™ÏIİ]‹N	ÊB‚ˆYˆ™\İ[™\œ›ÜœÎ‚ˆš[
+ˆ‘K”SÑH™[X\ÙHİ]HÛÚ\™[˜ÙNˆRS
+Û[Š™\İ[™\œ›ÜœÊ_H\ÜİYJÊJH‹š[O\Ş\Ëœİ\œŠBˆ›Üˆ\œ›Üˆ[ˆ™\İ[™\œ›ÜœÎ‚ˆš[
+‰ÈHÙ\œ›ÜŸIËš[O\Ş\Ëœİ\œŠBˆ™]\›ˆB‚ˆš[
+	ÑK”SÑH™[X\ÙHİ]HÛÚ\™[˜ÙNˆTÔÉÊBˆš[
+‰ØÙ\YšYYİX›NˆÜ™\İ[œİX›WİYßHOˆÜ™\İ[œİX›WØØ[™Y]_IÊBˆš[
+‰Øİ\œ™[™[X\ÙHY[]NˆÜ™\İ[˜İ\œ™[İ™\œÚ[ÛŸIÊBˆš[
+‰İ\™Ù]YÈİ]NˆÜ™\İ[\™Ù]İY×ØXİ[ÛŸH
+Ü™\İ[\™Ù]İYßJIÊBˆ™]\›ˆ‚‚šYˆ×Û˜[YW×ÈOH	××ÛXZ[—×ÉÎ‚ˆ˜Z\ÙHŞ\İ[Q^]
+XZ[Š
+JB

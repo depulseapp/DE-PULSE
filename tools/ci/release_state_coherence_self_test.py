@@ -14,6 +14,9 @@ sys.modules['coherence'] = mod
 spec.loader.exec_module(mod)
 
 COUPLED = mod.RELEASE_COUPLED_ASSETS
+assert 'market-header-ui.js' in COUPLED, 'active Market Header owner must be release-coupled'
+assert 'documentation-ui.js' in COUPLED, 'active Documentation owner must be release-coupled'
+assert 'header-v18.5.1.js' not in COUPLED, 'inactive legacy header must not be release-coupled'
 
 
 def write(root: Path, rel: str, text: str) -> None:
@@ -115,6 +118,8 @@ def main() -> int:
         assert any('TARGET_TAG_CONFLICT' in error for error in conflict.errors), conflict.errors
 
     print('DE.PULSE Release State Coherence self-test: PASS')
+    print('active release-coupled owner set: PASS')
+    print('inactive legacy header exclusion: PASS')
     print('coherent Stable fixture: PASS')
     print('multi-mismatch aggregation: PASS')
     print('immutable Stable tag conflict detection: PASS')

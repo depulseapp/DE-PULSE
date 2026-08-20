@@ -9,66 +9,66 @@
 **Qualified source head:** `a8cf5f4e818609d191f977da846be31203d76f06`  
 **Certified source fingerprint:** `fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46`  
 **Certified Build ID:** `v18.8.0-stable-20260819`  
-**Fast:** #419 / `32336519003`  
-**Qualified:** #145 / `32336619446`  
-**Release:** #28 / `32336898662`  
+**Stable Fast:** #419 / `32336519003`  
+**Stable Qualified:** #145 / `32336619446`  
+**Stable Release:** #28 / `32336898662`  
 **Engineering branch:** `v18.8.1-development`  
-**Latest completed implementation commit:** `a7ae7dcefa4c431527254697adc12ddd205caf49` (`ADAPT-RESEARCH-002`)  
-**Adaptive build-plan closure commit:** `5185c494a70bfc6836d390b19c7f1e20cf774f86`  
-**Current engineering line:** `v18.8.1 — Exact-Head Qualification`.
+**Qualification PR:** #56 (`v18.8.1-development` → `main`, Draft)  
+**Latest completed product packet:** `a7ae7dcefa4c431527254697adc12ddd205caf49` (`ADAPT-RESEARCH-002`)  
+**Current engineering line:** `v18.8.1 — Exact-Head Qualification / Fast #421 Coherence Repair`.
 
 ## v18.8.0 Stable closure
 
 v18.8.0 Shared Intelligence Consolidation is complete and immutable. `v18.8.0-stable` resolves exactly to candidate `3a32d57dd4c74c6f812cc942a9d8049a7b517718`. Release #28 passed G11, authoritative G12, macOS Apple Silicon and Windows x64 G13-G14 actual packaged-runtime audits, G15 Release Assurance, same-artifact no-rebuild publication and G16. Certified v18.8.0 evidence under `.depulse-certification/resume/` and `release/v18.8.0/stable-evidence-manifest.json` remains immutable.
 
-`ADAPT-REL-001` is CLOSED. No v18.8.1 packet changed or rebuilt certified v18.8.0 binaries.
+`ADAPT-REL-001` is CLOSED. No v18.8.1 packet changes or rebuilds certified v18.8.0 binaries.
 
 ## v18.8.1 development closure
 
-All mandatory v18.8.1 Adaptive packets are now implemented or closed by fresh executable current-source evidence on the **same** `v18.8.1-development` branch:
+All 17 mandatory v18.8.1 Adaptive packets are implemented or closed by fresh executable current-source evidence on the **same** `v18.8.1-development` branch. The machine-readable authority is `adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json`, which has `requireAllClosed=true` and every current packet `CLOSED`.
 
-- `ADAPT-CI-001` Release State Coherence — `35531cd98465565c60cb2a26a3e066692d0f2168`.
-- `ADAPT-CI-002` Early G11 Target Preflight — implemented with release-state coherence/invariant coverage.
-- `ADAPT-CI-003` Cheap-First Fast Ordering — `89e78f0da57c4819c2ad818c73541fcc7713f269`.
-- `ADAPT-CI-004` Safe Manual Dispatch Defaults — `02da4e1a560e16671188abdc69037116de4994c2`.
-- CI invariant lock — `fd58ce8949013f5e6ffd70b69a3a991f8d4453f1`.
-- `ADAPT-DATA-001` Universe Eligibility — `3337386c5492a7af49e6e4dc49ef25dd23f94a44` + `d63d0753d4d321362934e0ad7dabc52b7dca9b32`.
-- `ADAPT-DATA-002` Evidence-Time Truth — `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`.
-- `ADAPT-ARCH-001` Shared-Universe Robustness — CLOSED BY FRESH EVIDENCE through `symbol_universe.go`, `v18_8_1_universe_hardening_test.go` and existing broker evidence.
-- `ADAPT-UI-001` Renderer Modularization II — `f2f30d0c160f7bbf8e01f31271faf86d819808e8`.
-- `ADAPT-QA-001` Test/Gate Consolidation — `136af46f4f208edfd97fd728b3e3f1af61f2af31`.
-- `ADAPT-GOV-001` Historical Reconciliation Identity — `bec6b8f0b4721e5eda891c22f72d51964ccd6590`.
-- `ADAPT-COST-001` Cost per Trustworthy Evidence — `4eda6fb4eb2d1bf443d93403026bca766b03fb53`.
-- `ADAPT-RECON-001` Zero-Miss Reconciliation — `684d9daffee26dcfcad3b4187bc0f9618a16adff`; final all-closed enforcement occurs in `a7ae7dcefa4c431527254697adc12ddd205caf49`.
-- `ADAPT-UX-RESEARCH-001` Research Information Architecture — `a6da395dcc434afd53f726aba0d48f0a2354a313`, CLOSED BY FRESH EXECUTABLE EVIDENCE.
-- `ADAPT-SYMBOL-001` Symbol/Desk Correctness — `c63589c075438c44419cdc92c0bc736b8037ff67`, CLOSED BY FRESH EXECUTABLE EVIDENCE.
-- `ADAPT-READINESS-001` Prep/Readiness Semantics — `623acf31094c85926404e34853ec2e8b826c63c7`, CLOSED BY FRESH EXECUTABLE EVIDENCE.
-- `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness — `97938bd085d6b2bcb984a31ee7c567fa55433851`, CLOSED BY FRESH EXECUTABLE EVIDENCE.
-- `ADAPT-RESEARCH-002` Research Correctness Closure — `a7ae7dcefa4c431527254697adc12ddd205caf49`, CLOSED BY FRESH EXECUTABLE EVIDENCE.
+Key packet commits:
 
-### ADAPT-RESEARCH-002 durable result
+- CI/release hardening: `35531cd98465565c60cb2a26a3e066692d0f2168`, `89e78f0da57c4819c2ad818c73541fcc7713f269`, `02da4e1a560e16671188abdc69037116de4994c2`, invariant lock `fd58ce8949013f5e6ffd70b69a3a991f8d4453f1`.
+- Universe/data truth: `3337386c5492a7af49e6e4dc49ef25dd23f94a44`, `d63d0753d4d321362934e0ad7dabc52b7dca9b32`, `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`.
+- Renderer/Test/Governance: `f2f30d0c160f7bbf8e01f31271faf86d819808e8`, `136af46f4f208edfd97fd728b3e3f1af61f2af31`, `bec6b8f0b4721e5eda891c22f72d51964ccd6590`.
+- Cost/zero-miss: `4eda6fb4eb2d1bf443d93403026bca766b03fb53`, `684d9daffee26dcfcad3b4187bc0f9618a16adff`.
+- User-trust closure: `a6da395dcc434afd53f726aba0d48f0a2354a313`, `c63589c075438c44419cdc92c0bc736b8037ff67`, `623acf31094c85926404e34853ec2e8b826c63c7`, `97938bd085d6b2bcb984a31ee7c567fa55433851`, `a7ae7dcefa4c431527254697adc12ddd205caf49`.
 
-`a7ae7dcefa4c431527254697adc12ddd205caf49` adds `tests/renderer/research_correctness_closure_test.js` and `tests/renderer/v18_8_1_trust_closure_test.js`, binds the consolidated v18.8.1 trust closure into the existing `documentation_ui_owner_test.js` Qualified renderer path, and changes `adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json` to `requireAllClosed=true` with every current packet `CLOSED`.
+`ADAPT-RESEARCH-002` preserves Earnings Deep Dive, deterministic Fundamentals Interpretation, SEC BUY/SELL/OTHER semantics, Catalyst/Material Event Context, Technical Context, sourced-evidence readiness, optional evidence-gated AI, worst-dependency package truth, future-clock-skew rejection and the rule that AI never changes deterministic Action/Score or adds execution behavior.
 
-The Research closure preserves and regression-locks Earnings Deep Dive, deterministic Fundamentals Interpretation, SEC BUY/SELL/OTHER semantics, Catalyst/Material Event Context, Technical Context, sourced-evidence readiness, optional evidence-gated AI, worst-dependency package truth, future-clock-skew rejection and the rule that AI never changes deterministic Action/Score or adds execution behavior.
+## Fast #421 finding and bounded repair
+
+PR #56 opened on exact source head `cb469208ba748aed05e06637e6fba818de9733da`. CI Fast #421 / run `32410616929` failed early in `Canonical workflow policy` because `Release State Coherence` still treated inactive `renderer/header-v18.5.1.js` as a release-coupled runtime asset. All earlier workflow structural, impact-planner, legacy inventory, reproducibility, browser-routing, renderer-owner, CI telemetry and CI-hardening checks in that step passed before the coherence failure.
+
+The same-branch/same-PR repair is intentionally bounded:
+
+- release-coupled owner validation follows active `renderer/documentation-ui.js` and `renderer/market-header-ui.js`;
+- inactive `renderer/header-v18.5.1.js` remains legacy compatibility/regression evidence only and is no longer release-coupled;
+- canonical package identity advances from v18.8.0 to **v18.8.1**, with `v18.8.0` as both `stable_baseline` and `previous_stable`;
+- `VERSION.txt`, `app_bootstrap.go`, renderer title/cache identities and `renderer/release-identity-v18.8.1.js` are aligned;
+- `release/v18.8.1/release_contract.json` and `run_full_certification.sh` provide an exact-source v18.8.1 G11/G12 target;
+- no new branch, PR, workflow, retry/certification/promotion branch or duplicate release path is introduced.
+
+The repair is a **qualification defect correction**, not a new product-scope packet. All 17 Adaptive packet identities remain CLOSED.
 
 ## Qualification status
 
-**Development scope is complete; v18.8.1 is not yet Qualified or Stable.**
+**v18.8.1 development scope is complete; v18.8.1 is not yet Fast PASS, Qualified or Stable.**
 
-No v18.8.1 Fast or Qualified PASS has been earned yet for the final exact head. No PR has been created, no merge has occurred, and no G11-G16 Release has been triggered. Never claim v18.8.1 Stable until exact-head Fast + Qualified PASS, exact-head merge and the single Release G11-G16 path complete successfully.
+Fast #421 is a recorded failed candidate and must never be reported as PASS. The authorized repair stays on PR #56; the source-changing push will create one new `synchronize` Fast candidate. Only the new exact head may earn `DE.PULSE/fast-head`.
 
-The intended low-cost flow remains:
+Required low-cost flow:
 
-1. reconcile the final exact development head and cheap policy/prequalification evidence;
-2. create **one Draft PR** from `v18.8.1-development` to `main` only after separate explicit PR-creation authorization;
-3. let CI Fast qualify that same exact candidate;
-4. make the **same PR** Ready for Review to run Qualified;
-5. if exact-head Fast + Qualified PASS, merge the same PR only with separate merge authorization;
-6. let the single merged-PR G11-G16 Release certify/package/publish that exact candidate;
-7. verify macOS Apple Silicon and Windows x64 packaged-runtime/provenance evidence before calling Stable.
+1. push this bounded coherence/release-identity correction to the same `v18.8.1-development` branch / PR #56;
+2. inspect the single new exact-head Fast result;
+3. only if Fast passes, obtain/consume explicit authorization to mark the **same PR #56** Ready for Review;
+4. Qualified must run full impact-selected coverage (backend/race/randomized, renderer, Chrome and WebKit are expected because this release candidate changes backend/renderer/release tooling/CI-harness surfaces);
+5. only if exact-head Fast + Qualified PASS, merge PR #56 with separate explicit merge authorization;
+6. the merged PR then enters the single canonical G11-G16 Release path because `release_identity.json` changes to v18.8.1;
+7. call v18.8.1 Stable only after G12, macOS Apple Silicon + Windows x64 G13/G14 actual packaged-runtime audits, G15 and same-run no-rebuild publication complete.
 
-Do not create retry, certification, promotion, dispatch or fallback branches/workflows.
+Do not rerun failed Fast #421 unchanged. Do not create retry, certification, promotion, dispatch or fallback branches/workflows.
 
 ## Provider continuity
 
@@ -78,8 +78,8 @@ After v18.8.1 Stable, `ADAPT-TRADEINSIGHT-001` remains the v18.9.0 next provider
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md`, `adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json`, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, `release/v18.8.0/stable-evidence-manifest.json`, live GitHub branch/PR/workflow state and the conserved historical reconciliation authority before changing source. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md`, `adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json`, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, `release/v18.8.0/stable-evidence-manifest.json`, `release/v18.8.1/release_contract.json`, live GitHub branch/PR/workflow state and the conserved historical reconciliation authority before changing source. Never resume from model memory alone.
 
 ## Exactly one next action
 
-Perform read-only/exact-head v18.8.1 prequalification reconciliation. If the final head and policy evidence are coherent, obtain separate explicit authorization to create the single Draft PR from `v18.8.1-development` to `main`. Do not create a PR, merge, release or new branch without the corresponding explicit authorization.
+Inspect the new exact-head CI Fast run created by this coherence-repair push on PR #56. If and only if it passes, obtain/consume explicit authorization to mark the same Draft PR Ready for Review and trigger Qualified. Do not merge or release without the corresponding explicit authorization/evidence.

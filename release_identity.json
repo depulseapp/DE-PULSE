@@ -1,13 +1,13 @@
 {
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
-  "version": "18.8.0",
-  "display_version": "DE.PULSE v18.8.0",
-  "build_id": "v18.8.0-stable-20260819",
+  "version": "18.8.1",
+  "display_version": "DE.PULSE v18.8.1",
+  "build_id": "v18.8.1-stable-20260820",
   "channel": "STABLE",
-  "stable_baseline": "v18.7.0",
-  "previous_stable": "v18.7.0",
-  "scope": "Shared Intelligence Consolidation: one canonical Alpaca U.S.-equity universe owner shared by Discovery Scanner and Opportunity Radar; preserved 12-hour TTL; concurrent refresh coalescing; truthful stale-provider timestamps on failed refresh; bounded retry suppression with identifiable deterministic seed fallback; Scanner ranking and Radar sampling/promotion behavior preserved; Smart Provider Router v2, BroadSnapshotBroker, Session/Event/Research intelligence, deterministic Day/Swing/Long truth, GLD/SLV/USO tradable exceptions and permanent No Execution Boundary preserved",
-  "bundle_version": "18800",
+  "stable_baseline": "v18.8.0",
+  "previous_stable": "v18.8.0",
+  "scope": "Adaptive Trust & Data Truth Closure: release-state coherence and cheap-first CI hardening; U.S.-equity universe eligibility and evidence-time truth; cost per trustworthy evidence; zero-miss reconciliation; release-neutral Market Header ownership; Research information architecture and correctness; Symbol/Desk correctness; Prep/Readiness semantics; Freshness/Data Engine correctness; deterministic Day/Swing/Long truth, Smart Provider Router v2, BroadSnapshotBroker, GLD/SLV/USO actionable exceptions and permanent No Execution Boundary preserved",
+  "bundle_version": "18801",
   "runtime_config": "PersonalMarketTerminal",
   "application_bundle": "De-Pulse.app"
 }
