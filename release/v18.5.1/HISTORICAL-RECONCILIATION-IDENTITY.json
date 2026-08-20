@@ -1,0 +1,28 @@
+{
+  "schema": "DE.PULSE-HISTORICAL-RECONCILIATION-IDENTITY-1",
+  "identityRole": "IMMUTABLE_HISTORICAL_RECONCILIATION_BASELINE",
+  "createdAt": "2026-08-17",
+  "packet": "ADAPT-GOV-001",
+  "historicalReconciliation": {
+    "ledgerPath": "release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json",
+    "ledgerSchema": "DE.PULSE-V18.5.1-V17-V18-IMPLEMENTATION-RECONCILIATION-1",
+    "reconciliationRelease": "v18.5.1",
+    "incomingStableTag": "v18.5.0-stable",
+    "incomingStableCommit": "0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680",
+    "reconciliationBranch": "v18.5.1-development"
+  },
+  "separationContract": {
+    "historicalBaselineSource": "HISTORICAL_IDENTITY_MANIFEST_ONLY",
+    "currentReleaseIdentityPath": "release_identity.json",
+    "currentReleaseIdentityRole": "CURRENT_RELEASE_ONLY",
+    "deriveHistoricalBaselineFromCurrentReleaseIdentity": false,
+    "rule": "The v18.5.1 reconciliation identity is historical evidence and must never be rewritten from the active/current release identity. Current release identity may advance independently."
+  },
+  "invariants": [
+    "The reconciliation ledger keeps its original v18.5.1 release identity.",
+    "The incoming Stable baseline remains v18.5.0-stable at commit 0d37ca35f5fc3ad89cebed506cc5a4c2d6a7a680.",
+    "The historical reconciliation branch remains v18.5.1-development.",
+    "release_identity.json describes only the current release and is never an authority for these historical fields.",
+    "Historical requirement/evidence semantics remain conserved even as the active engineering and Stable versions advance."
+  ]
+}
