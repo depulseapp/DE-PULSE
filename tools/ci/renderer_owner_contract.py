@@ -10,9 +10,12 @@ INDEX=ROOT/'renderer'/'index.html'
 MONOLITH=ROOT/'renderer'/'renderer.js'
 OWNER=ROOT/'renderer'/'documentation-ui.js'
 ACCESS=ROOT/'renderer'/'documentation-access-v18.6.js'
+HEADER=ROOT/'renderer'/'market-header-ui.js'
+LEGACY_HEADER=ROOT/'renderer'/'header-v18.5.1.js'
 QUALIFIED=ROOT/'.github'/'workflows'/'ci-qualified.yml'
 NODE_TEST=ROOT/'documentation_ui_owner_test.js'
 BROWSER_TEST=ROOT/'tools'/'ci'/'documentation_owner_browser_test.py'
+HIERARCHY_TEST=ROOT/'release'/'v18.5.1'/'browser_ui_hierarchy_test.py'
 
 
 def fail(errors:list[str])->int:
@@ -27,21 +30,28 @@ def main()->int:
     monolith=MONOLITH.read_text(encoding='utf-8')
     owner=OWNER.read_text(encoding='utf-8') if OWNER.is_file() else ''
     access=ACCESS.read_text(encoding='utf-8')
+    header=HEADER.read_text(encoding='utf-8') if HEADER.is_file() else ''
     qualified=QUALIFIED.read_text(encoding='utf-8')
     node_test=NODE_TEST.read_text(encoding='utf-8') if NODE_TEST.is_file() else ''
     browser_test=BROWSER_TEST.read_text(encoding='utf-8') if BROWSER_TEST.is_file() else ''
+    hierarchy_test=HIERARCHY_TEST.read_text(encoding='utf-8') if HIERARCHY_TEST.is_file() else ''
 
     scripts=re.findall(r'<script\s+src="([^"]+)"',index)
     names=[x.split('?',1)[0] for x in scripts]
-    required=['renderer.js','documentation-ui.js','documentation-access-v18.6.js']
+    required=['renderer.js','documentation-ui.js','market-header-ui.js','documentation-access-v18.6.js']
     for name in required:
         if names.count(name)!=1: errors.append(f'{name} must load exactly once; got {names.count(name)}')
-    if all(name in names for name in required):
+    if 'header-v18.5.1.js' in names:
+        errors.append('version-stacked header-v18.5.1.js must not remain an active runtime owner')
+    if all(name in names for name in ('renderer.js','documentation-ui.js','documentation-access-v18.6.js')):
         if not (names.index('renderer.js')<names.index('documentation-ui.js')<names.index('documentation-access-v18.6.js')):
             errors.append('load order must be renderer.js -> documentation-ui.js -> documentation-access-v18.6.js')
+    if all(name in names for name in ('renderer.js','market-header-ui.js')):
+        if not names.index('renderer.js')<names.index('market-header-ui.js'):
+            errors.append('market-header-ui.js must load after renderer.js so it decorates the canonical chrome owner')
 
     if 'documentation-ui-v' in index or 'documentation-ui-v' in owner:
-        errors.append('new long-lived capability owner must not use version-stacked naming')
+        errors.append('new long-lived Documentation capability owner must not use version-stacked naming')
     required_owner=(
         "const OWNER='renderer/documentation-ui.js'",
         "state:'ACTIVE_OWNER_WITH_LEGACY_FALLBACK'",
@@ -54,6 +64,31 @@ def main()->int:
     )
     for token in required_owner:
         if token not in owner: errors.append(f'Documentation owner contract missing: {token}')
+
+    if not HEADER.is_file():
+        errors.append('stable Market Header capability owner is missing: renderer/market-header-ui.js')
+    if 'market-header-ui-v' in index or 'market-header-ui-v' in header:
+        errors.append('Market Header capability owner must remain release-neutral, not version-stacked')
+    required_header=(
+        "const OWNER='renderer/market-header-ui.js'",
+        "state:'ACTIVE_OWNER_WITH_COMPAT_ALIAS'",
+        'ensureSecondaryMarketStatus',
+        'updateChrome = function updateChromeMarketHeader',
+        'globalThis.__DE_PULSE_MARKET_HEADER_UI__',
+        'globalThis.__DE_PULSE_RENDERER_OWNERS__',
+        'registry.marketHeader',
+        "compatibilityAliases:['__v1851HeaderContracts']",
+        'globalThis.__v1851HeaderContracts=api',
+        "'market-pulse-ribbon'",
+        "'market-clocks'",
+        "'data-runtime-control'",
+    )
+    for token in required_header:
+        if token not in header: errors.append(f'Market Header owner contract missing: {token}')
+    if LEGACY_HEADER.is_file() and 'legacyCompatibilityFile' not in header:
+        errors.append('legacy header compatibility file must be explicitly classified by the active owner')
+    if 'header-v18.5.1.js' not in hierarchy_test or 'ensureSecondaryMarketStatus' not in hierarchy_test:
+        errors.append('historical header hierarchy regression fixture unexpectedly lost')
 
     legacy=('function renderMarkdown(', 'async function hydrateDocumentation(', 'function renderDocumentation(')
     for token in legacy:
@@ -83,9 +118,12 @@ def main()->int:
     if errors: return fail(errors)
     print('DE.PULSE renderer owner contract: PASS')
     print('Documentation capability-oriented runtime owner: renderer/documentation-ui.js')
+    print('Market Header capability-oriented runtime owner: renderer/market-header-ui.js')
+    print('Market Header legacy v18.5.1 file retained only as historical compatibility evidence, not loaded by runtime: PASS')
+    print('Market Header compatibility alias __v1851HeaderContracts preserved: PASS')
     print('load order owner before role-access decorator: PASS')
-    print('Node + Chrome + WebKit owner evidence binding: PASS')
-    print('legacy monolith fallback retained and explicitly gated for later physical deletion: PASS')
+    print('Node + Chrome + WebKit Documentation owner evidence binding: PASS')
+    print('legacy monolith Documentation fallback retained and explicitly gated for later physical deletion: PASS')
     print('version-stacked new-owner naming prevention: PASS')
     return 0
 
