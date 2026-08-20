@@ -11,9 +11,9 @@ import (
 
 func TestV1881DiscoveryUniverseEligibilityIsExplicit(t *testing.T) {
 	tests := []struct {
-		name string
+		name  string
 		asset alpacaAsset
-		want bool
+		want  bool
 	}{
 		{"active tradable Nasdaq equity", alpacaAsset{Symbol: "AAPL", Status: "active", Tradable: true, Exchange: "NASDAQ"}, true},
 		{"active tradable NYSE equity", alpacaAsset{Symbol: "IBM", Status: "ACTIVE", Tradable: true, Exchange: "nyse"}, true},
