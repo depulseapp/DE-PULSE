@@ -1,0 +1,53 @@
+{
+  "schema": "DE.PULSE-V18.8.0-G0-G3-1",
+  "version": "18.8.0",
+  "channel": "DEVELOPMENT",
+  "g0": {
+    "certifiedStable": "v18.7.0-stable",
+    "stableCommit": "75e494fb92441439c73c8ace41a40118e4518c1c",
+    "engineeringBaseline": "6ab2094cb7aefdb3e1e21862cbd17b64ed850c28",
+    "baselineState": "v18.7.0 remains immutable Stable; PR #54 product source merged as v18.8 shared-universe consolidation, but Release #27 correctly blocked publication because release identity still named v18.7.0."
+  },
+  "g1": {
+    "scope": "v18_8_0_scope.json",
+    "status": "FROZEN"
+  },
+  "g2": {
+    "canonicalOwners": {
+      "provider_routing": "Smart Provider Router v2",
+      "snapshot_reuse": "BroadSnapshotBroker",
+      "scanner_ranking": "scanner.go",
+      "radar_sampling_promotion": "opportunity_radar.go",
+      "shared_us_equity_universe": "canonicalUSSymbolUniverse in symbol_universe.go"
+    },
+    "reuseClassification": {
+      "scanner_radar_universe_acquisition_cache": "CONSOLIDATE_VERIFIED_GAP_IMPLEMENTED",
+      "shared_refresh_single_flight": "CONSOLIDATE_VERIFIED_GAP_IMPLEMENTED",
+      "provider_timestamp_truth_on_failure": "HARDEN_ONLY_IMPLEMENTED",
+      "retry_suppression_seed_fallback": "HARDEN_ONLY_IMPLEMENTED",
+      "scanner_ranking": "KEEP_AS_IS",
+      "radar_sampling_promotion": "KEEP_AS_IS",
+      "broad_snapshot_broker": "KEEP_AS_IS",
+      "provider_router": "KEEP_AS_IS",
+      "session_event_research_intelligence": "KEEP_AS_IS"
+    }
+  },
+  "g3": {
+    "newProviderDependencies": false,
+    "newExternalServices": false,
+    "newDatabase": false,
+    "newTopLevelGate": false,
+    "newParallelRouterOrBroker": false,
+    "qualification": [
+      "v18.8 shared-universe reuse in both Scanner/Radar directions",
+      "12-hour TTL and exact-expiry refresh",
+      "concurrent Scanner/Radar miss coalescing",
+      "truthful stale timestamp after failed refresh",
+      "identifiable deterministic seed fallback and bounded retry suppression",
+      "Scanner ranking and Radar sampling/promotion invariants",
+      "full Go/race/randomized regression",
+      "renderer, Chrome and WebKit qualification",
+      "exact-head Fast + Qualified before release re-entry"
+    ]
+  }
+}

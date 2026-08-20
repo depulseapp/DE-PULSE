@@ -1,9 +1,9 @@
-DE.PULSE v18.7.0
-Build: v18.7.0-stable-20260819
+DE.PULSE v18.8.0
+Build: v18.8.0-stable-20260819
 Channel: STABLE
 Stable baseline: v18.7.0
 Previous Stable: v18.7.0
-Scope: Runtime Reliability & Data Truth: canonical degradation reason taxonomy and consumer blast radius; fail-closed UNKNOWN/ABSTAIN for insufficient critical evidence; deterministic recovery hysteresis; immediate queue-saturation truth; preserved Smart Provider Router v2, freshness, reconciliation, coalescing, bounded retry/circuit and backpressure owners; synthetic active-market reliability proof; immutable Release Action pins and locked browser dependencies; preserve U.S. Equities Processing, deterministic Day/Swing/Long truth, GLD/SLV/USO tradable exceptions and permanent No Execution Boundary
+Scope: Shared Intelligence Consolidation: one canonical Alpaca U.S.-equity universe owner shared by Discovery Scanner and Opportunity Radar; preserved 12-hour TTL; concurrent refresh coalescing; truthful stale-provider timestamps on failed refresh; bounded retry suppression with identifiable deterministic seed fallback; Scanner ranking and Radar sampling/promotion behavior preserved; Smart Provider Router v2, BroadSnapshotBroker, Session/Event/Research intelligence, deterministic Day/Swing/Long truth, GLD/SLV/USO tradable exceptions and permanent No Execution Boundary preserved
 Application bundle: De-Pulse.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
 Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)

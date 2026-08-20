@@ -6,32 +6,32 @@
 
 **Certified Stable:** `v18.7.0-stable`  
 **Certified candidate / tag target:** `75e494fb92441439c73c8ace41a40118e4518c1c`  
-**Qualified source PR:** `#53`  
-**Qualified source head:** `22b62b000d4f693c951d71cf71fd833e605e9f4e`  
 **Certified source fingerprint:** `350e1f87f2046410ae52623de9dacba8fca2a16fda9b116232107fa8f8cac963`  
-**Build ID:** `v18.7.0-stable-20260819`  
-**Fast:** `32314503785` · PASS  
-**Full Qualified:** `32314537398` · PASS  
-**Canonical Release:** `32314823409` · G11–G16 PASS  
-**Active branch:** `main`  
-**Next intake:** `v18.8.0 — Shared Intelligence Consolidation` · G0–G3 source-owner audit only; no branch/G1 freeze yet.
+**Certified Build ID:** `v18.7.0-stable-20260819`  
+**Engineering branch:** `v18.8.0-development`  
+**Candidate package identity:** `18.8.0` / `v18.8.0-stable-20260819`  
+**Engineering baseline:** `6ab2094cb7aefdb3e1e21862cbd17b64ed850c28` (PR #54 merged product source)  
+**Release recovery:** Release #27 (`32335527140`) proved G11, G12, macOS/Windows G13-G14, G15 and exact-artifact verification, then correctly blocked publication because the merged candidate still identified itself as v18.7.0.  
+**Stable checkpoints:** checkpoints intentionally remain anchored to immutable v18.7.0 Stable while v18.8.0 is an in-flight candidate.
 
-## v18.7.0 closure
+## v18.8.0 frozen scope — Shared Intelligence Consolidation
 
-Runtime Reliability & Data Truth is complete and Stable. Delivered/proven: canonical degradation reason taxonomy and consumer blast radius; fail-closed `UNKNOWN/ABSTAIN`; recovery hysteresis (3 healthy observations + >=5 seconds, relapse resets); immediate hard provider-queue saturation truth; active-market coalescing/bounded-capacity proof; preserved Smart Provider Router v2/freshness/circuit/backpressure/reconciliation owners; immutable Action pins across Fast/Qualified/Release; pinned Qualified/Release browser dependencies; full Go/race/randomized, renderer/deterministic, Chrome and WebKit evidence; macOS Apple Silicon + Windows x64 packaged-runtime audits; G15 exact artifact assurance; no-rebuild publication; G16 closure.
+G0-G3 source-owner audit proved one meaningful consolidation gap and no justification for a broader rewrite: Discovery Scanner and Opportunity Radar had separate lifecycle/cache ownership around the Alpaca U.S.-equity universe. v18.8.0 consolidates that into `canonicalUSSymbolUniverse` while preserving the existing 12-hour TTL, coalescing concurrent refreshes, preserving provider-backed timestamps after failed refresh, using bounded retry suppression plus identifiable deterministic seed fallback, and preserving Scanner ranking plus Radar sampling/promotion semantics.
 
-Release `32314094623` remains retained failed harness evidence: G11 PASS then G12 stopped before substantive certification on a stale release-version contract. It was not rerun unchanged. Recovery PR #53 changed only the proven release harness/evidence retention, re-earned Fast + full Qualified, and Release `32314823409` completed G11–G16.
+Smart Provider Router v2 remains the sole provider-routing owner. BroadSnapshotBroker remains the canonical snapshot reuse/coalescing owner. Session Intelligence, Event Intelligence, Research evidence hydration, deterministic Day/Swing/Long market truth, GLD/SLV/USO actionable tradable exceptions, U.S. Equities Processing boundary and No Execution boundary remain unchanged.
 
-Permanent boundaries remain U.S. Equities Processing, No Execution, deterministic Day/Swing/Long truth, Smart Provider Router v2 sole routing ownership, and GLD/SLV/USO actionable tradable exceptions.
+## Release recovery rule
 
-## v18.8.0 intake rule
+Do not rerun Release #27 unchanged and do not modify, move or overwrite `v18.7.0-stable`. The bounded recovery is one recreated `v18.8.0-development` branch from merged candidate `6ab2094c`, one release-closure commit containing the correct v18.8 identity/scaffolding, one Draft recovery PR to `main`, exact-head Fast, the same PR Ready, full exact-head Qualified, exact-head merge, then one automatic Release G11-G16 run. No retry/certification/promotion branches and no duplicate CI/release workflows.
 
-Do not create `v18.8.0-development` until current-source G0–G3 proves a meaningful consolidation gap. Audit Scanner/Opportunity Radar acquisition/cache reuse, Pre-Market/Market Open session orchestration, Earnings/Catalyst/Event Intelligence lifecycle, and Research evidence hydration. Classify each `KEEP_AS_IS`, `CONSOLIDATE`, `HARDEN_ONLY`, `DEFER` or `OUT_OF_SCOPE`. If no meaningful consolidation remains, record v18.8.0 as no-build/skip rather than manufacture work and move to v18.8.1.
+## v18.7.0 immutable Stable
+
+v18.7.0 Runtime Reliability & Data Truth remains the last certified Stable until v18.8.0 completes G11-G16. Its immutable tag, candidate, fingerprint, artifacts and prior evidence are not rewritten to make the v18.8 candidate look Stable.
 
 ## Resume rule
 
-Read `AGENTS.md` or `CLAUDE.md`, the portability/CI contracts, this handoff, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, `release/v18.7.0/stable-evidence-manifest.json`, live GitHub state, the four current Adaptive overlays, and the conserved v17/v18 reconciliation ledger. Never resume from model memory alone.
+Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `release_identity.json`, both `.depulse-certification/resume/` Stable checkpoints, `release/v18.7.0/stable-evidence-manifest.json`, `v18_8_0_scope.json`, `v18_8_0_g0_g3_contract.json`, `release/v18.8.0/release_contract.json`, live GitHub state, the four current Adaptive overlays, and the conserved v17/v18 reconciliation ledger. Never resume from model memory alone.
 
 ## Exactly one next action
 
-Finish the **v18.8.0 G0–G3 duplicate-work/state audit** from immutable `v18.7.0-stable` and current `main`; freeze G1 and create the single v18.8 development branch only if a concrete consolidation gap is proven.
+Complete the single bounded v18.8.0 release-recovery PR lifecycle: exact-head Fast → same PR Ready → full Qualified → exact-head merge → one automatic G11-G16 Release. If any gate fails, diagnose that exact failure and do not rerun unchanged evidence.

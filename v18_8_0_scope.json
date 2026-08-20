@@ -1,0 +1,35 @@
+{
+  "schema": "DE.PULSE-V18.8.0-SCOPE-1",
+  "version": "18.8.0",
+  "title": "Shared Intelligence Consolidation",
+  "status": "G1_FROZEN",
+  "stableBaseline": "v18.7.0-stable",
+  "engineeringBaselineCommit": "6ab2094cb7aefdb3e1e21862cbd17b64ed850c28",
+  "scope": [
+    "Consolidate Discovery Scanner and Opportunity Radar onto one neutral canonical Alpaca U.S.-equity universe owner only where the G0-G3 source audit proved duplicate acquisition/cache ownership.",
+    "Preserve the existing 12-hour universe TTL and provider-backed timestamp truth.",
+    "Coalesce concurrent Scanner/Radar universe misses so one refresh satisfies both consumers.",
+    "On failed refresh, preserve the last provider-backed timestamp instead of making stale evidence appear fresh.",
+    "Use bounded five-minute retry suppression and an explicitly identifiable deterministic seed fallback when no provider-backed cache exists.",
+    "Preserve Scanner ranking and Opportunity Radar sampling/promotion semantics.",
+    "Preserve Smart Provider Router v2, BroadSnapshotBroker, Session Intelligence, Event Intelligence, Research evidence hydration, deterministic Day/Swing/Long market truth, GLD/SLV/USO tradable exceptions and the permanent No Execution Boundary.",
+    "Repair release identity/scaffolding so the already-qualified v18.8 product source publishes as v18.8.0 without touching immutable v18.7.0 Stable."
+  ],
+  "outOfScope": [
+    "No new provider or external service.",
+    "No parallel provider router, snapshot broker, universe owner, freshness engine, reliability engine or decision engine.",
+    "No broad Scanner ranking or Radar promotion redesign.",
+    "No execution, paper trading, order routing, P&L, portfolio or journal features.",
+    "No TradeInsight production promotion.",
+    "No broad renderer redesign or unrelated UI modularization.",
+    "No modification, movement or overwrite of the existing v18.7.0-stable tag."
+  ],
+  "permanentBoundaries": [
+    "U.S. Equities Processing only",
+    "No Execution",
+    "Smart Provider Router v2 is sole provider-routing authority",
+    "BroadSnapshotBroker remains canonical snapshot reuse/coalescing owner",
+    "Deterministic Day/Swing/Long market truth remains protected",
+    "GLD/SLV/USO remain actionable tradable exceptions"
+  ]
+}
