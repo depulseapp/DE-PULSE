@@ -1,6 +1,6 @@
 # DE.PULSE
 
-DE.PULSE is a U.S.-equity research and decision-support application with a permanent **No Execution** boundary. Deterministic Day/Swing/Long market truth remains protected while adaptive intelligence, provider selection, reliability and synthesis evolve under governed evidence.
+DE.PULSE is a U.S.-equity research and decision-support application with a permanent **No Execution** boundary. Deterministic Day/Swing/Long market truth remains protected while adaptive intelligence, provider selection, reliability and synthesis evolve under governed evidence. Contextual, AI, options, global and adaptive inputs **cannot silently mutate deterministic Day/Swing/Long** score/action truth.
 
 ## Current project truth
 
