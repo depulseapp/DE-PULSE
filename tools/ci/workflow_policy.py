@@ -70,6 +70,10 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "ref: ${{ github.event.pull_request.head.sha || github.sha }}",
         "statuses: write",
         "DE.PULSE/fast-head",
+        "main-continuity:",
+        "name: Post-Stable continuity sentinel",
+        "python3 tools/ci/post_stable_continuity_gate.py",
+        "python3 tools/ci/stable_evidence_gate.py",
         "branch-hygiene:",
         "tools/ci/branch_hygiene.py --apply",
         "node tests/renderer/surface_consolidation_test.js",
@@ -92,7 +96,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     missing = [x for x in fast_required if x not in ci_fast]
     forbidden = [x for x in fast_forbidden if x in ci_fast]
     if missing:
-        return fail("CI Fast efficiency/exact-head/capability-test contract missing", missing)
+        return fail("CI Fast efficiency/exact-head/capability-test/post-Stable-continuity contract missing", missing)
     if forbidden:
         return fail("CI Fast duplicate-trigger/dispatcher/legacy-test contract violated", forbidden)
 
@@ -198,7 +202,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return fail("branch hygiene squash/stable-line contract missing", missing)
 
     print("CI Fast single-event exact-head development contract: PASS")
-    print("CI Fast main-push test suppression + hygiene-only contract: PASS")
+    print("CI Fast main-push product-test suppression + hygiene/continuity-only contract: PASS")
     print("CI Fast capability-oriented renderer test paths: PASS")
     print("CI Qualified ready-candidate exact-head contract: PASS")
     print("Chrome + WebKit co-primary browser contract: PASS")
@@ -249,6 +253,8 @@ def main() -> int:
         return 1
     if run_gate(root, "tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract") != 0:
         return 1
+    if run_gate(root, "tools/ci/post_stable_continuity_gate.py", "post-Stable repository continuity contract") != 0:
+        return 1
     if run_gate(root, "tools/ci/stable_evidence_gate.py", "durable Stable evidence contract") != 0:
         return 1
     if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
@@ -268,6 +274,7 @@ def main() -> int:
     print("Chrome/WebKit primary browser routing contract: PASS")
     print("capability-oriented renderer ownership contract: PASS")
     print("CI telemetry/amplification contract: PASS")
+    print("post-Stable repository continuity contract: PASS")
     print("durable Stable evidence contract: PASS")
     print("pre-merge release rehearsal: PASS")
     print("dependency/provider readiness: PASS")

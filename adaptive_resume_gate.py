@@ -13,7 +13,7 @@ Preparing a new candidate must never rewrite prior Stable PASS evidence merely
 so version strings match.
 """
 from pathlib import Path
-import json, re, sys
+import json, re, subprocess, sys
 
 ROOT = Path(__file__).resolve().parent
 errors = []
@@ -125,8 +125,14 @@ try:
     certified = cp.get('certifiedStable', {}) if isinstance(cp.get('certifiedStable'), dict) else {}
     certified_release = str(certified.get('version', '')).lstrip('v')
     need(certified_release == stable_release, 'checkpoint release must match certifiedStable version')
-    need(identity_previous_stable == stable_release, 'canonical release identity previous_stable must match immutable Stable checkpoint')
-    need(identity_stable_baseline == stable_release, 'canonical release identity stable_baseline must match immutable Stable checkpoint')
+
+    if identity_release != stable_release:
+        need(identity_previous_stable == stable_release, 'in-flight candidate previous_stable must match immutable Stable checkpoint')
+        need(identity_stable_baseline == stable_release, 'in-flight candidate stable_baseline must match immutable Stable checkpoint')
+    else:
+        need(bool(identity_previous_stable), 'promoted Stable previous_stable must identify its predecessor')
+        need(bool(identity_stable_baseline), 'promoted Stable stable_baseline must identify its certified predecessor baseline')
+        need(identity_previous_stable == identity_stable_baseline, 'promoted Stable previous_stable/stable_baseline mismatch')
 
     candidate = cp.get('candidateSourceCommit') or certified.get('candidateSourceCommit') or certified.get('certifiedSourceCheckout')
     need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidate source commit must be a Git SHA')
@@ -171,8 +177,6 @@ try:
             'current handoff must explain why Stable checkpoints remain immutable during candidate development',
         )
     else:
-        # Post-promotion/steady-state handoffs may use the historical Active branch
-        # wording or the newer Certified Stable format.
         old_branch_ok = f"**Active branch:** `{cp.get('branch')}`" in handoff
         need(old_branch_ok or stable_handoff_ok, 'current handoff must reconcile active Stable branch/release')
 except Exception as exc:
@@ -197,6 +201,21 @@ try:
 except Exception as exc:
     errors.append(f'release evidence checkpoint invalid/unreadable: {exc}')
 
+try:
+    continuity = subprocess.run(
+        [sys.executable, str(ROOT / 'tools' / 'ci' / 'post_stable_continuity_gate.py')],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    need(
+        continuity.returncode == 0,
+        'post-Stable continuity contract failed: ' + (continuity.stdout + continuity.stderr).strip(),
+    )
+except Exception as exc:
+    errors.append(f'post-Stable continuity contract unreadable: {exc}')
+
 if errors:
     print('Adaptive Build Resume Contract: FAIL')
     for e in errors:
@@ -208,5 +227,5 @@ print(
     'Adaptive Build Resume Contract: PASS · '
     f'mode={mode} · immutable Stable=v{stable_release} · canonical candidate=v{identity_release} · '
     'GitHub-only ChatGPT/Codex/Claude portability enforced · current handoff + Stable checkpoints reconciled · '
-    'four adaptive layers integrated · metadata fingerprint-excluded'
+    'post-Stable repository continuity enforced · four adaptive layers integrated · metadata fingerprint-excluded'
 )

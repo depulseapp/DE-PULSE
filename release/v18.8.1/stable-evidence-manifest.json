@@ -1,0 +1,47 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.8.1",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.8.1-stable-20260820",
+  "stableTag": "v18.8.1-stable",
+  "certifiedCandidate": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+  "qualifiedSourceHead": "07624965519cdd406c6db1e19771cf75dec825b4",
+  "sourceFingerprint": "bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92",
+  "runs": {
+    "fast": 32414640774,
+    "qualified": 32415313893,
+    "canonicalReleaseG11G16": 32415750821
+  },
+  "gates": {
+    "G0-G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "macOSAppleSilicon": {"artifactId": 9423965874, "digest": "sha256:2ac18de08af453662f9559dff428c72942de298bb9d25b48aca6eed4925a024f"},
+    "windowsX64": {"artifactId": 9423966658, "digest": "sha256:2ebacf469d998ff2021cb0d9dade576945e506726f56b43977d78a7d86d12ccf"},
+    "g15ReleaseAssurance": {"artifactId": 9423976764, "digest": "sha256:0e31f5e64a88d547cbe3c4c285894238cad2d8c8172096afc023c888b5d3cf19"},
+    "g16Closure": {"artifactId": 9423989892, "digest": "sha256:ce4f73101cd7a4cedd7e9cd1a34563e6882979403e9b0ae86b12ae68f9aebe6e"}
+  },
+  "historicalScopeAuthority": {
+    "releaseContract": "release/v18.8.1/release_contract.json",
+    "zeroMissReconciliation": "adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json",
+    "note": "v18.8.1 did not create a conventional G1-IMMUTABLE-SCOPE.md; this manifest records actual historical authority and does not fabricate a retroactive G1 artifact. Future release lines must freeze explicit G1 scope before qualification."
+  },
+  "postStableLearning": {
+    "issue": 57,
+    "disposition": "v18.8.2 NEXT_RELEASE_MANDATORY_ENTRY",
+    "requirement": "ADAPT-FRESHNESS-001 REOPENED"
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true
+  }
+}

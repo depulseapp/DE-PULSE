@@ -3,84 +3,51 @@
 **Status:** PERMANENT / ACTIVE CI AUTHORITY  
 **Scope:** operational workflow surface only; G0–G16 remains the permanent release model.
 
-This manifest defines the only normal active GitHub Actions entry points for DE.PULSE. Historical/version-specific workflow files are retained by Git history and immutable Stable tags/releases, not by leaving obsolete orchestration active.
+This manifest defines the only normal active GitHub Actions entry points. Historical/version-specific workflow files belong in Git history and immutable Stable evidence, not as active orchestration.
 
 ## Canonical active workflows
 
 | Workflow | Responsibility | Normal trigger / invocation |
 |---|---|---|
-| `.github/workflows/ci-fast.yml` | Cheap development preflight, workflow/provenance policy, formatting/static/unit checks, renderer syntax, and conservative merged-branch hygiene after successful `main` pushes. | PRs; pushes to `main` and active `v*-development`; manual dispatch. |
-| `.github/workflows/ci-qualified.yml` | Parameterized affected-area qualification, full backend/race/shuffle, renderer/browser contracts, and Linux/macOS/Windows CI-harness portability. | CI/release-tooling PR changes; manual/reusable invocation with exact SHA + lane. |
-| `.github/workflows/release.yml` | Parameterized G11–G16: exact candidate, G12 full certification, independent macOS/Windows G13/G14, G15 assurance, optional no-rebuild Stable publication, G16 evidence. | Deliberate `workflow_dispatch` only. |
+| `.github/workflows/ci-fast.yml` | Cheap development preflight, governance/provenance/release-state policy, affected Go/renderer checks, exact-head Fast status; on `main`, conservative branch hygiene plus a cheap post-Stable continuity sentinel only. | PR opened/synchronize/reopened; `main` push for hygiene + continuity sentinel; manual dispatch. |
+| `.github/workflows/ci-qualified.yml` | Parameterized affected-area qualification, backend/race/shuffle, renderer/browser contracts and CI-harness portability. | PR `ready_for_review`; manual/reusable invocation with exact SHA + lane. |
+| `.github/workflows/release.yml` | Single merged-release-PR G11–G16 path: immutable candidate, full certification, independent macOS/Windows package/runtime audit, G15 assurance, no-rebuild Stable publication and G16 workflow evidence. | A merged PR to `main` whose head is `v*-development` and whose changed paths include `release_identity.json` or `release.yml`. |
 
-No other `.github/workflows/*.yml` or `.yaml` file is allowed by normal policy. `tools/ci/workflow_policy.py` enforces the allowlist.
+No other active `.github/workflows/*.yml` or `.yaml` file is allowed. `tools/ci/workflow_policy.py` enforces the allowlist.
 
 ## Version-neutral execution
 
-Release version, candidate SHA, source fingerprint, build ID, certification script, gate/lane, target platform and publication intent are inputs/configuration. They must not create workflow families such as:
+Version, candidate SHA, source fingerprint, build ID, qualification lane and package target are configuration/evidence—not reasons to create workflow families such as `vX.Y-*.yml`, retry, monitor, recovery, certification or publish workflows.
 
-- `vX.Y-*.yml`;
-- `*-retry.yml`;
-- `*-monitor.yml`;
-- `*-probe.yml`;
-- `*-recovery.yml`;
-- `*-certification.yml`;
-- `*-publish.yml`.
+## Exact-head development invariant
 
-A deliberate migration of the permanent CI architecture may temporarily require migration tooling, but its approval, scope, rollback and retirement criteria must be explicit before merge.
+Fast is one PR event stream. Qualified starts only when the same PR is deliberately marked Ready. Release starts only after exact-head Fast + Qualified evidence exists and the release PR is merged. Failed evidence is classified before rerun; create no new branch/PR just to manufacture another event.
 
-## Failure and retry invariant
+## Post-Stable continuity invariant
 
-Every failure is classified before rerun:
+Release G16 produces workflow/release evidence but cannot silently update GitHub repository metadata after publication. Before the next product line begins, the actual Stable tag/Release must be reconciled into:
+- both `.depulse-certification/resume/` checkpoints;
+- `release/<version>/stable-evidence-manifest.json`;
+- `handoff/CURRENT.md`;
+- all four CURRENT Adaptive overlays.
 
-- `INFRA_FAIL` → rerun failed job(s) in the same workflow/SHA where possible;
-- `CI_HARNESS_FAIL` → fix the canonical shared harness/tool, add prevention coverage, rerun the same affected workflow/lane;
-- `GATE_TEST_FAIL` → fix the canonical test contract, rerun that gate and invalidated dependents;
-- `PRODUCT_FAIL` → correct source, run the same workflow on the new SHA from the earliest invalidated gate;
-- `EXPECTED_NOOP` → record and continue;
-- `SUPERSEDED` → preserve history without recreating obsolete evidence.
-
-Independent PASS evidence is retained when exact source/package/test/dependency fingerprints remain equivalent. A Windows failure does not automatically rerun macOS, and vice versa.
+`tools/ci/post_stable_continuity_gate.py` is the canonical cheap repository-level sentinel. A `main` checkout carrying a later STABLE identity than the durable Stable checkpoint is a continuity failure, not an in-flight candidate. The main-push sentinel detects this without rerunning expensive product qualification.
 
 ## Provenance invariant
 
-Cross-platform source identity is computed from canonical raw Git object bytes using `source_fingerprint.py --mode git`. Filesystem-materialized fingerprints may be retained as diagnostics but are not authoritative release provenance because checkout behavior can differ by OS.
-
-`ci-qualified.yml` proves the same Git-object fingerprint on Ubuntu, macOS Apple Silicon and Windows x64 and parses the reusable native harness on the corresponding native shell.
-
-## Release invariant
-
-`release.yml` follows:
-
-**G11 immutable candidate → G12 full certification → G13/G14 macOS + Windows in parallel → G15 assurance → optional no-rebuild publication → G16 evidence.**
-
-Publication downloads and uploads the exact already-certified artifacts. It does not rebuild native packages.
+Cross-platform source identity uses canonical Git object bytes via `source_fingerprint.py --mode git`. Publication reuses exact certified native artifacts and never rebuilds them.
 
 ## Branch/repository hygiene
 
-After successful `main` Fast CI, `tools/ci/branch_hygiene.py` may delete only remote branch tips already proven ancestors of `main`. Unique/diverged branches are never deleted automatically; they remain for explicit reconciliation.
-
 Permanent branch model:
-
 - `main`;
-- one active release development branch when product work is active;
-- genuinely short-lived feature/fix branches.
+- one active `v<version>-development` branch during product work;
+- genuinely short-lived bounded fix/continuity branches when needed.
 
-RC is an immutable SHA/checkpoint. Stable is an immutable tag + GitHub Release. Historical RC/retry/certification/promotion branches are not the archival model.
+RC is an immutable SHA/checkpoint. Stable is an immutable tag + GitHub Release. Historical retry/certification/promotion branches are not archival evidence.
 
 ## Continuous-improvement invariant
 
-G16 learning is incomplete when a recurring CI/process problem is merely documented. A material lesson must either:
+G16 learning is incomplete when a recurring release/process issue is only described. Material lessons must harden canonical workflow/tool/test behavior or receive an evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` disposition.
 
-1. harden the canonical workflow/tool/test with regression evidence; or
-2. receive an explicit evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` disposition.
-
-The objective is a smaller, more reliable and more reusable CI system after each release—not an accumulating collection of special-case workflows.
-
-Governed by:
-- `adaptive-governance/ADAPTIVE_ROADMAP.md`;
-- `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`;
-- `adaptive-governance/ADAPTIVE_BUILD_PROCESS.md`;
-- `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`;
-- `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`;
-- `governance/REPOSITORY_STRUCTURE_CONTRACT.md`.
+Governed by the Adaptive Roadmap/Build Plan/Build Process/Delivery Process, `governance/GITHUB_ACTIONS_EFFICIENCY_CONTRACT.md`, `governance/CI-EFFICIENCY-CONTRACT.md` and `governance/REPOSITORY_STRUCTURE_CONTRACT.md`.
