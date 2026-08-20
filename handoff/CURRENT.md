@@ -13,8 +13,8 @@
 **Qualified:** #145 / `32336619446`  
 **Release:** #28 / `32336898662`  
 **Engineering branch:** `v18.8.1-development`  
-**Latest completed implementation commit:** `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8` (`ADAPT-DATA-002`)  
-**Current engineering line:** `v18.8.1 — Renderer Modularization II + 10/10 Audit Hardening`.
+**Latest completed implementation commit:** `f2f30d0c160f7bbf8e01f31271faf86d819808e8` (`ADAPT-UI-001`)  
+**Current engineering line:** `v18.8.1 — Test/Gate Consolidation + 10/10 Audit Hardening`.
 
 ## v18.8.0 Stable closure
 
@@ -39,6 +39,7 @@ The following packets are implemented on `v18.8.1-development` and are now refle
 - `ADAPT-DATA-001` Universe Eligibility Contract — implemented by `3337386c5492a7af49e6e4dc49ef25dd23f94a44` plus follow-up `d63d0753d4d321362934e0ad7dabc52b7dca9b32`.
 - `ADAPT-DATA-002` Evidence-Time Truth — implemented by `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`. Provider observation/evidence time drives Scanner/Opportunity Radar freshness; retrieval time is bookkeeping; old evidence fetched now remains old; unknown provider evidence remains unknown.
 - `ADAPT-ARCH-001` Shared-Universe Robustness — CLOSED BY FRESH EVIDENCE. `symbol_universe.go` has a neutral shared U.S.-equity universe owner, cancellation/panic-safe deferred single-flight cleanup and retrieval/evidence-time separation; `v18_8_1_universe_hardening_test.go` carries focused eligibility and recovery evidence. Smart Provider Router v2 and BroadSnapshotBroker remain canonical owners for routing and broad snapshot reuse respectively.
+- `ADAPT-UI-001` Renderer Modularization II — implemented (`f2f30d0c160f7bbf8e01f31271faf86d819808e8`). The active Market Pulse/header capability now loads from release-neutral `renderer/market-header-ui.js`; existing Market Pulse Ribbon/session/data-health/ET-PT clock/runtime-control behavior is preserved; `__v1851HeaderContracts` remains as a compatibility alias; the historical `header-v18.5.1.js` file is retained only as legacy regression evidence and is no longer loaded by runtime; `tools/ci/renderer_owner_contract.py` now rejects version-stacked active header ownership and binds the stable owner contract.
 
 No v18.8.1 GitHub Actions qualification has been triggered for this engineering line yet. Do not claim v18.8.1 Fast/Qualified PASS until those exact-head workflows actually run later in qualification.
 
@@ -46,16 +47,15 @@ No v18.8.1 GitHub Actions qualification has been triggered for this engineering 
 
 Continue on the **same** `v18.8.1-development` branch, without retry/certification/promotion branches or duplicate workflows, in this exact order:
 
-1. `ADAPT-UI-001` Renderer Modularization II
-2. `ADAPT-QA-001` Test/Gate Consolidation
-3. `ADAPT-GOV-001` Historical Reconciliation Identity
-4. `ADAPT-COST-001` Cost per Trustworthy Evidence
-5. `ADAPT-RECON-001` Zero-Miss Reconciliation
-6. `ADAPT-UX-RESEARCH-001` Research Information Architecture
-7. `ADAPT-SYMBOL-001` Symbol/Desk Correctness
-8. `ADAPT-READINESS-001` Prep/Readiness Semantics
-9. `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness
-10. `ADAPT-RESEARCH-002` Research Correctness Closure
+1. `ADAPT-QA-001` Test/Gate Consolidation
+2. `ADAPT-GOV-001` Historical Reconciliation Identity
+3. `ADAPT-COST-001` Cost per Trustworthy Evidence
+4. `ADAPT-RECON-001` Zero-Miss Reconciliation
+5. `ADAPT-UX-RESEARCH-001` Research Information Architecture
+6. `ADAPT-SYMBOL-001` Symbol/Desk Correctness
+7. `ADAPT-READINESS-001` Prep/Readiness Semantics
+8. `ADAPT-FRESHNESS-001` Freshness/Data Engine Correctness
+9. `ADAPT-RESEARCH-002` Research Correctness Closure
 
 A historical carry-forward that is already correct closes by fresh evidence. A reproducible gap keeps its original requirement identity and is fixed in its assigned coherent slice. Do not defer a known reproducible gap to a generic v18.10 catch-all.
 
@@ -71,4 +71,4 @@ Read `AGENTS.md` or `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.m
 
 ## Exactly one next action
 
-Implement `ADAPT-UI-001` on `v18.8.1-development`: perform bounded capability-owner extraction for Renderer Modularization II, preserving existing visual design, deterministic Day/Swing/Long behavior, Research capability contracts, scroll/focus behavior, provider/snapshot ownership and U.S.-equities/no-execution boundaries. Add focused regression evidence and update this handoff/build-plan state after completion. Do not create a new branch or trigger qualification CI merely for packet development.
+Implement `ADAPT-QA-001` on `v18.8.1-development`: inventory version-stacked renderer/tests/gates by capability, consolidate only redundant ownership while preserving unique historical regression evidence and current behavior, keep the three-workflow CI surface unchanged unless an owning contract requires a bounded edit, update the handoff/build-plan after completion, and do not create a new branch or trigger qualification CI merely for packet development.

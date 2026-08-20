@@ -3,7 +3,7 @@
 **Immutable Stable:** `v18.8.0-stable`  
 **Stable candidate:** `3a32d57dd4c74c6f812cc942a9d8049a7b517718`  
 **Engineering branch:** `v18.8.1-development`  
-**Next:** `v18.8.1 — Renderer Modularization II + 10/10 Audit Hardening`.
+**Next:** `v18.8.1 — Test/Gate Consolidation + 10/10 Audit Hardening`.
 
 ## Entry condition
 
@@ -20,8 +20,8 @@
 | 5 | `ADAPT-DATA-001` Universe Eligibility Contract | **IMPLEMENTED** | `3337386c5492a7af49e6e4dc49ef25dd23f94a44` + follow-up `d63d0753d4d321362934e0ad7dabc52b7dca9b32`; broad U.S.-equity eligibility is explicit and no longer silently constrained by `has_options`. |
 | 6 | `ADAPT-DATA-002` Evidence-Time Truth | **IMPLEMENTED** | `c01bd4d683be6236ec884aaea0cc14f7adf4d0b8`; provider observation/evidence time drives Scanner/Radar freshness, retrieval time is bookkeeping, and unknown evidence remains unknown. |
 | 7 | `ADAPT-ARCH-001` Shared-Universe Robustness | **CLOSED BY FRESH EVIDENCE** | Shared neutral universe owner is explicit in `symbol_universe.go`; deferred cleanup is cancellation/panic-safe; focused eligibility/retrieval-time/concurrency recovery tests live in `v18_8_1_universe_hardening_test.go`. Smart Provider Router v2 and BroadSnapshotBroker ownership are unchanged. |
-| 8 | `ADAPT-UI-001` Renderer Modularization II | **NEXT** | Bounded capability-owner extraction only; preserve visual/behavioral contracts. |
-| 9 | `ADAPT-QA-001` Test/Gate Consolidation | **PENDING** | Inventory and gradually consolidate version-stacked tests/gates by capability while preserving unique historical evidence. |
+| 8 | `ADAPT-UI-001` Renderer Modularization II | **IMPLEMENTED** | `f2f30d0c160f7bbf8e01f31271faf86d819808e8`; active Market Pulse/header ownership moved to release-neutral `renderer/market-header-ui.js`, behavior and `__v1851HeaderContracts` compatibility are preserved, and the renderer owner contract forbids the version-stacked header from remaining an active runtime owner. |
+| 9 | `ADAPT-QA-001` Test/Gate Consolidation | **NEXT** | Inventory and gradually consolidate version-stacked tests/gates by capability while preserving unique historical evidence. |
 | 10 | `ADAPT-GOV-001` Historical Reconciliation Identity | **PENDING** | Separate historical reconciliation baseline identity from current release identity. |
 | 11 | `ADAPT-COST-001` Cost per Trustworthy Evidence | **PENDING** | Measure avoided runs/setup/minutes and cost per trustworthy evidence without weakening required gates. |
 | 12 | `ADAPT-RECON-001` Zero-Miss Reconciliation | **PENDING** | Fresh zero-miss reconciliation for every applicable v17→v18.8 conserved requirement plus post-ledger approved Adaptive commitments; bind current owner, source/behavior, regression/evidence and explicit disposition before v18 closure. |
@@ -39,7 +39,7 @@ A historical carry-forward that is already correct may close by fresh evidence. 
 
 ## Required execution order
 
-`G0 continuity closure → G2/G3 owner/semantic design → CI hardening → data-truth/shared-universe hardening → zero-miss user-trust reconciliation → bounded renderer/test modularization → G10 reconciliation → exact-head Fast/Qualified → one G11–G16 Release when release-capable → v18.9.0 TradeInsight full-capability SHADOW → v18.9.1 provider intelligence → v18.10 zero-gap closure`.
+`G0 continuity closure → G2/G3 owner/semantic design → CI hardening → data-truth/shared-universe hardening → bounded renderer modularization → test/gate consolidation → historical/cost hardening → zero-miss user-trust reconciliation → G10 reconciliation → exact-head Fast/Qualified → one G11–G16 Release when release-capable → v18.9.0 TradeInsight full-capability SHADOW → v18.9.1 provider intelligence → v18.10 zero-gap closure`.
 
 Use one version-development branch per release, coherent batches, one Draft PR, automatic Fast, same PR Ready, Qualified, exact-head merge and one Release. Never create retry/certification/promotion branches or duplicate workflows.
 
