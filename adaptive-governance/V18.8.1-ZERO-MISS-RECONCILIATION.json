@@ -2,7 +2,7 @@
   "schema": "DE.PULSE-V18.8.1-ZERO-MISS-RECONCILIATION-1",
   "releaseLine": "v18.8.1-development",
   "packet": "ADAPT-RECON-001",
-  "requireAllClosed": false,
+  "requireAllClosed": true,
   "historicalAuthority": {
     "ledger": "release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json",
     "identity": "release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json",
@@ -30,11 +30,11 @@
     {"id":"ADAPT-GOV-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json","evidence":["tools/ci/historical_reconciliation_identity.py","v18_5_1_v17_v18_reconciliation_gate.py"]},
     {"id":"ADAPT-COST-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tools/ci/ci_telemetry.py","evidence":["tools/ci/ci_telemetry_self_test.py"]},
     {"id":"ADAPT-RECON-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json","evidence":["tools/ci/v18_8_1_zero_miss_reconciliation_gate.py"]},
-    {"id":"ADAPT-UX-RESEARCH-001","state":"PENDING","disposition":"FRESH_EVIDENCE_REQUIRED","owner":"renderer/renderer.js","evidence":["tests/renderer/research_information_architecture_test.js"]},
-    {"id":"ADAPT-SYMBOL-001","state":"PENDING","disposition":"FRESH_EVIDENCE_REQUIRED","owner":"desk_membership.go","evidence":["tests/renderer/symbol_desk_correctness_test.js"]},
-    {"id":"ADAPT-READINESS-001","state":"PENDING","disposition":"FRESH_EVIDENCE_REQUIRED","owner":"preparation_catalyst.go","evidence":["tools/ci/v18_8_1_readiness_contract.py"]},
-    {"id":"ADAPT-FRESHNESS-001","state":"PENDING","disposition":"FRESH_EVIDENCE_REQUIRED","owner":"data_freshness.go","evidence":["tools/ci/v18_8_1_freshness_contract.py"]},
-    {"id":"ADAPT-RESEARCH-002","state":"PENDING","disposition":"FRESH_EVIDENCE_REQUIRED","owner":"research_truth.go","evidence":["tests/renderer/research_correctness_closure_test.js"]}
+    {"id":"ADAPT-UX-RESEARCH-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"renderer/renderer.js","evidence":["tests/renderer/research_information_architecture_test.js"]},
+    {"id":"ADAPT-SYMBOL-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"desk_membership.go","evidence":["tests/renderer/symbol_desk_correctness_test.js"]},
+    {"id":"ADAPT-READINESS-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"preparation_catalyst.go","evidence":["tools/ci/v18_8_1_readiness_contract.py"]},
+    {"id":"ADAPT-FRESHNESS-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"data_freshness.go","evidence":["tools/ci/v18_8_1_freshness_contract.py"]},
+    {"id":"ADAPT-RESEARCH-002","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"research_truth.go","evidence":["tests/renderer/research_correctness_closure_test.js","tests/renderer/v18_8_1_trust_closure_test.js"]}
   ],
   "rules": [
     "Historical v17-v18.5.1 rows are not copied or reinterpreted; the immutable historical gate remains authoritative.",
