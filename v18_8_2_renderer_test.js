@@ -16,4 +16,8 @@ assert(source.includes("label.textContent.trim() !== 'Market Tradeability'"), 'M
 assert(source.includes('DATA DEGRADED'), 'truth layer must explicitly recognize DATA DEGRADED');
 assert(source.includes('UNAVAILABLE'), 'truth layer must explicitly render unavailable score truth');
 
+const index = fs.readFileSync(path.join(__dirname, 'renderer', 'index.html'), 'utf8');
+assert(index.includes('<script src="market-intelligence-truth.js?v=18.8.2"></script>'), 'renderer index must load the v18.8.2 Market Intelligence truth layer');
+assert(index.indexOf('market-intelligence-truth.js?v=18.8.2') > index.indexOf('renderer.js?v=18.8.1'), 'truth layer must load after the primary renderer');
+
 console.log('v18.8.2 Market Intelligence renderer truth contract: PASS');
