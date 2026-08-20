@@ -125,8 +125,14 @@ try:
     certified = cp.get('certifiedStable', {}) if isinstance(cp.get('certifiedStable'), dict) else {}
     certified_release = str(certified.get('version', '')).lstrip('v')
     need(certified_release == stable_release, 'checkpoint release must match certifiedStable version')
-    need(identity_previous_stable == stable_release, 'canonical release identity previous_stable must match immutable Stable checkpoint')
-    need(identity_stable_baseline == stable_release, 'canonical release identity stable_baseline must match immutable Stable checkpoint')
+
+    if identity_release != stable_release:
+        need(identity_previous_stable == stable_release, 'in-flight candidate previous_stable must match immutable Stable checkpoint')
+        need(identity_stable_baseline == stable_release, 'in-flight candidate stable_baseline must match immutable Stable checkpoint')
+    else:
+        need(bool(identity_previous_stable), 'promoted Stable previous_stable must identify its predecessor')
+        need(bool(identity_stable_baseline), 'promoted Stable stable_baseline must identify its certified predecessor baseline')
+        need(identity_previous_stable == identity_stable_baseline, 'promoted Stable previous_stable/stable_baseline mismatch')
 
     candidate = cp.get('candidateSourceCommit') or certified.get('candidateSourceCommit') or certified.get('certifiedSourceCheckout')
     need(isinstance(candidate, str) and re.fullmatch(r'[0-9a-f]{40}', candidate), 'checkpoint candidate source commit must be a Git SHA')
