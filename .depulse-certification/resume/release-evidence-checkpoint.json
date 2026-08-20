@@ -1,34 +1,38 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.8.0",
+  "release": "v18.8.1",
   "channel": "STABLE",
-  "metadataHeadRule": "This checkpoint describes immutable v18.8.0 Stable evidence; later metadata-only continuity commits do not redefine the certified artifact.",
+  "metadataHeadRule": "This checkpoint describes immutable v18.8.1 Stable evidence; this retrospective continuity commit does not redefine or rebuild the certified artifact.",
   "stable": {
-    "tag": "v18.8.0-stable",
-    "promotionCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
-    "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46",
-    "buildId": "v18.8.0-stable-20260819",
-    "promotionRun": 32336898662,
-    "certificationRun": 32336898662
+    "tag": "v18.8.1-stable",
+    "promotionCommit": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+    "sourceFingerprint": "bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92",
+    "buildId": "v18.8.1-stable-20260820",
+    "promotionRun": 32415750821,
+    "certificationRun": 32415750821
   },
   "currentCandidate": {
-    "qualificationHead": "a8cf5f4e818609d191f977da846be31203d76f06"
+    "qualificationHead": "07624965519cdd406c6db1e19771cf75dec825b4"
   },
   "evidence": {
-    "G0-G10": {"status": "PASS", "fastRun": 32336519003, "qualifiedRun": 32336619446},
-    "G10": {"status": "PASS", "fastRun": 32336519003, "qualifiedRun": 32336619446},
-    "G11": {"status": "PASS", "runId": 32336898662},
-    "G12": {"status": "PASS", "runId": 32336898662, "artifactId": 9395038557, "artifactDigest": "sha256:985f4e61638104930fde148fda752636f8ca4968133a14ec98110ed65a00fb4a"},
-    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32336898662, "artifactId": 9395053970, "artifactDigest": "sha256:a7cc52bfa836ec5a8d49cab9c5b56db6d841a8027ea8eda788e78ae59ca8062c"},
-    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32336898662, "artifactId": 9395064911, "artifactDigest": "sha256:aa73dd72977e63a5dc4beb9dcff4232027ba0f0b8c128c9a887afe9e23db57ae"},
-    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32336898662, "artifactId": 9395071790, "artifactDigest": "sha256:2f9023f52034ce9af370dca247eabb761782382dc8a530aa86a3bb35164159bc"},
-    "G16": {"status": "PASS_CLOSED", "runId": 32336898662, "artifactId": 9395083845, "artifactDigest": "sha256:92751bcc01d3e5db9276b9990d2e8f3ecd1800aaa0a7f8cf797b6e590bf4d598"},
-    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32336898662, "tag": "v18.8.0-stable", "certifiedCandidate": "3a32d57dd4c74c6f812cc942a9d8049a7b517718"}
+    "G0-G10": {"status": "PASS", "fastRun": 32414640774, "qualifiedRun": 32415313893},
+    "G10": {"status": "PASS", "fastRun": 32414640774, "qualifiedRun": 32415313893},
+    "G11": {"status": "PASS", "runId": 32415750821},
+    "G12": {"status": "PASS", "runId": 32415750821, "artifactId": 9423933805, "artifactDigest": "sha256:0a8c2562c2973f3f999457aef4b4cc83d3781250368f7294131501f2198af2fb"},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32415750821, "artifactId": 9423965874, "artifactDigest": "sha256:2ac18de08af453662f9559dff428c72942de298bb9d25b48aca6eed4925a024f"},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32415750821, "artifactId": 9423966658, "artifactDigest": "sha256:2ebacf469d998ff2021cb0d9dade576945e506726f56b43977d78a7d86d12ccf"},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32415750821, "artifactId": 9423976764, "artifactDigest": "sha256:0e31f5e64a88d547cbe3c4c285894238cad2d8c8172096afc023c888b5d3cf19"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32415750821, "artifactId": 9423989892, "artifactDigest": "sha256:ce4f73101cd7a4cedd7e9cd1a34563e6882979403e9b0ae86b12ae68f9aebe6e"},
+    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32415750821, "tag": "v18.8.1-stable", "certifiedCandidate": "410679ba0d6459f66a44db15a0a55f30741a7c53"}
   },
-  "previousReleaseAttempts": [
-    {"runId": 32335527140, "releaseRunNumber": 27, "failure": "v18.8.0 merged candidate still carried v18.7.0 release identity; publication correctly blocked", "authoritativeStableClaim": false}
-  ],
-  "nextRequiredEvidence": "ADAPT-REL-001 continuity closure is complete for v18.8.0 Stable. Continue v18.8.1 with ADAPT-CI-001 Release State Coherence.",
-  "updatedAt": "2026-08-20T00:09:47-07:00"
+  "postStableLearning": {
+    "issue": 57,
+    "classification": "OPEN_DEFECT / NEXT_RELEASE_MANDATORY_ENTRY",
+    "release": "v18.8.2",
+    "requirement": "ADAPT-FRESHNESS-001 REOPENED",
+    "architecture": "ADR-GDI + Smart Provider Router v2 + canonical freshness/recovery; no duplicate router/freshness/subscription owner"
+  },
+  "nextRequiredEvidence": "v18.8.2 must execute G0 exact-baseline diagnosis for issue #57, then freeze a bounded Market Intelligence reliability slice before v18.9.0 TradeInsight SHADOW work.",
+  "updatedAt": "2026-08-20T14:57:00-07:00"
 }

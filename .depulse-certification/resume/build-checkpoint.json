@@ -1,31 +1,35 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.8.0",
+  "release": "v18.8.1",
   "channel": "STABLE",
   "branch": "main",
-  "pullRequest": 55,
-  "candidateSourceCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
-  "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46",
+  "pullRequest": 56,
+  "candidateSourceCommit": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+  "sourceFingerprint": "bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.8.0-stable-20260819",
+  "buildId": "v18.8.1-stable-20260820",
   "certifiedStable": {
-    "version": "v18.8.0",
-    "tag": "v18.8.0-stable",
-    "promotionCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
-    "candidateSourceCommit": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
-    "certifiedSourceCheckout": "3a32d57dd4c74c6f812cc942a9d8049a7b517718",
-    "sourceFingerprint": "fa7b49ec9001d5ef95b829834f6268100e2eaf7c3da6bcc1f1a0b9bcba208d46"
+    "version": "v18.8.1",
+    "tag": "v18.8.1-stable",
+    "promotionCommit": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+    "candidateSourceCommit": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+    "certifiedSourceCheckout": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+    "qualifiedSourceHead": "07624965519cdd406c6db1e19771cf75dec825b4",
+    "sourceFingerprint": "bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92"
   },
-  "metadataHeadRule": "The immutable v18.8.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded handoff/checkpoint metadata advances the v18.8.1 development branch or main.",
+  "metadataHeadRule": "The immutable v18.8.1 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future development branch.",
   "gates": {
     "G0":"PASS","G1":"PASS","G2":"PASS","G3":"PASS","G4":"PASS","G5":"PASS","G6":"PASS","G7":"PASS","G8":"PASS","G9":"PASS","G10":"PASS","G11":"PASS","G12":"PASS","G13":"PASS","G14":"PASS","G15":"PASS","G16":"PASS"
   },
   "releaseSummary": {
-    "qualifiedSourceHead": "a8cf5f4e818609d191f977da846be31203d76f06",
-    "fastRun": 32336519003,
-    "qualifiedRun": 32336619446,
-    "releaseRun": 32336898662,
+    "qualifiedSourceHead": "07624965519cdd406c6db1e19771cf75dec825b4",
+    "fastRun": 32414640774,
+    "fastRunNumber": 425,
+    "qualifiedRun": 32415313893,
+    "qualifiedRunNumber": 146,
+    "releaseRun": 32415750821,
+    "releaseRunNumber": 29,
     "publication": "PASS_NO_REBUILD"
   },
   "assistantPortability": {
@@ -33,6 +37,14 @@
     "authoritativeHandoff":"handoff/CURRENT.md",
     "entrypoints":["AGENTS.md","CLAUDE.md"]
   },
-  "nextStep":"Execute v18.8.1 ADAPT-CI-001 Release State Coherence as the first normal build packet after ADAPT-REL-001 continuity closure.",
-  "updatedAt":"2026-08-20T00:09:47-07:00"
+  "escapedRuntimeDefects": [
+    {
+      "issue": 57,
+      "releaseFound": "v18.8.1",
+      "disposition": "v18.8.2 NEXT_RELEASE_MANDATORY_ENTRY",
+      "requirement": "ADAPT-FRESHNESS-001 REOPENED / ADR-GDI Market Intelligence consumer-demand reliability"
+    }
+  ],
+  "nextStep":"Create v18.8.2-development from reconciled main and execute G0 exact-baseline diagnosis for GitHub issue #57 before any v18.9.0 TradeInsight work.",
+  "updatedAt":"2026-08-20T14:57:00-07:00"
 }

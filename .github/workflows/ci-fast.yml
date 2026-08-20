@@ -52,6 +52,8 @@ jobs:
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
         run: python3 adaptive_resume_gate.py
+      - name: Post-Stable continuity contract
+        run: python3 tools/ci/post_stable_continuity_gate.py
       - name: Platform-neutral source provenance regression
         run: python3 tools/ci/source_provenance_test.py
       - name: Release identity
@@ -124,13 +126,30 @@ jobs:
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- release-state/coherence + governance checks complete before Go/Node setup'
             echo '- workflow policy: PASS'
-            echo '- legacy test/gate inventory: PASS (via workflow policy)'
             echo '- conserved v17/v18 ledger integrity: PASS'
             echo '- adaptive resume portability: PASS'
+            echo '- post-Stable continuity: PASS'
             echo '- Git-object provenance: PASS'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  main-continuity:
+    name: Post-Stable continuity sentinel
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Detect unreconciled post-Stable repository state
+        run: python3 tools/ci/post_stable_continuity_gate.py
+      - name: Validate aligned Stable evidence when present
+        run: python3 tools/ci/stable_evidence_gate.py
 
   branch-hygiene:
     name: Remove merged and obsolete branches
