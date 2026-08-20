@@ -115,13 +115,7 @@ func scannerScoreFromSnapshot(symbol, mode string, snap alpacaLiveSnapshot) Scan
 	if score > 100 {
 		score = 100
 	}
-	stamp := providerTimeMillis(snap.LatestTrade.Time)
-	if stamp == 0 {
-		stamp = providerTimeMillis(snap.LatestQuote.Time)
-	}
-	if stamp == 0 {
-		stamp = time.Now().UnixMilli()
-	}
+	stamp := latestProviderEvidenceMillis(snap.LatestTrade.Time, snap.LatestQuote.Time)
 	return ScannerResult{Symbol: normalizeSymbol(symbol), Mode: mode, Price: price, ChangePercent: changePct, GapPercent: gapPct, RelativeVolume: relVol, DollarVolume: dollarVol, SpreadPercent: spreadPct, TrendScore: trendScore, MomentumScore: momentumScore, Score: score, Reasons: reasons, Provider: "alpaca", UpdatedAt: stamp}
 }
 
