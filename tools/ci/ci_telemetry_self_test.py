@@ -30,6 +30,15 @@ JOBS = {
             "labels": ["macos-15"]
         },
         {
+            "name": "Qualified renderer contracts",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-08-19T20:00:00Z",
+            "started_at": "2026-08-19T20:00:00Z",
+            "completed_at": "2026-08-19T20:00:00Z",
+            "labels": ["ubuntu-24.04"]
+        },
+        {
             "name": "Qualified evidence summary",
             "status": "in_progress",
             "conclusion": None,
@@ -86,14 +95,28 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         ok = run_case(tmp, RUNS_OK, "ok")
-        assert ok["schema"] == "DE.PULSE-CI-TELEMETRY-1"
+        assert ok["schema"] == "DE.PULSE-CI-TELEMETRY-2"
         assert ok["runnerSecondsByPlatform"] == {"linux": 60, "macos": 120, "windows": 0, "unknown": 0}, ok
         assert ok["runnerMinutesByPlatform"]["macos"] == 2.0
         assert ok["browserDependencySetup"]["webkit"] == {"pipCacheHit": True, "setupSeconds": 12}
         assert ok["browserDependencySetup"]["chrome"] == {"pipCacheHit": None, "setupSeconds": None}
         assert ok["workflowAmplification"]["counts"] == {"fast": 1, "qualified": 1, "release": 0}
         assert ok["workflowAmplification"]["status"] == "OK"
+
+        evidence = ok["trustworthyEvidenceAccounting"]
+        assert evidence["successfulEvidenceUnits"] == 2, evidence
+        assert evidence["runnerMinutesConsumed"] == 3.0, evidence
+        assert evidence["runnerMinutesPerTrustworthyEvidence"] == 1.5, evidence
+        assert evidence["avoidedWork"]["impactRoutedJobRunsSkipped"] == 1, evidence
+        assert evidence["avoidedWork"]["browserSetupOperationsSkipped"] == 0, evidence
+        assert evidence["avoidedWork"]["observedBrowserSetupSeconds"] == 12, evidence
+        assert evidence["avoidedWork"]["browserSetupCacheHits"] == 1, evidence
+        assert evidence["avoidedWork"]["runnerMinutesAvoided"] is None
+        assert evidence["avoidedWork"]["setupSecondsAvoided"] is None
+
         assert ok["costAccounting"]["actualCurrencyCost"] is None
+        assert ok["costAccounting"]["currencyCostPerTrustworthyEvidence"] is None
+        assert ok["costAccounting"]["runnerMinutesPerTrustworthyEvidence"] == 1.5
 
         warn = run_case(tmp, RUNS_WARN, "warn")
         assert warn["workflowAmplification"]["status"] == "WARN"
@@ -103,7 +126,9 @@ def main() -> int:
     print("queue/runtime/platform accounting: PASS")
     print("browser setup/cache signals: PASS")
     print("workflow amplification warning thresholds: PASS")
-    print("no fabricated currency-cost contract: PASS")
+    print("trustworthy evidence normalization: PASS")
+    print("impact-routed avoided-job accounting: PASS")
+    print("no fabricated avoided-minute/currency-cost contract: PASS")
     return 0
 
 
