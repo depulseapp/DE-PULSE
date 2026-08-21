@@ -141,8 +141,8 @@ func tradeInsightCapabilityAdmissionRegistry() []tradeInsightCapabilityAdmission
 		{
 			ID: "congressional-trades", Capability: "Congressional trades/disclosures", Disposition: "USE",
 			Consumer: "Congressional Trading Intelligence; Research; catalyst/context correlation", Authority: "Alternative evidence only; disclosure lag remains explicit and it never becomes deterministic trade truth.",
-			EndpointEvidence: "/trading-data/v1/congress/v1/trades", SchemaVerified: false, RuntimeEnabled: false, Lifecycle: "NOT_IMPLEMENTED",
-			GateReason: "Public endpoint is evidenced, but the configured-key response schema has not been verified.",
+			EndpointEvidence: "Official TradeInsight data-api/docs/insight-data.mdx: GET /trading-data/v1/congress/v1/trades with ticker/limit/offset, data/total/limit/offset envelope, and typed disclosure fields.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			GateReason: "Official upstream REST schema verified; admitted SHADOW-only pending validation evidence and explicit promotion approval.",
 		},
 		{
 			ID: "sec-form4", Capability: "SEC Form 4 normalized insider trades", Disposition: "CORROBORATE + ENRICH",
