@@ -10,13 +10,13 @@
 
 ## Build philosophy — completeness through small patches
 
-The v18.9.x line MUST NOT use heavy multi-domain builds. Each patch owns one primary responsibility and its directly necessary supporting work only. The purpose is to reduce blast radius, make review/test scope exact, catch implementation misses early and keep CI/release evidence interpretable.
+DE.PULSE MUST NOT use heavy multi-domain builds in v18.9.x, v19 or v20. Each patch owns one primary responsibility and its directly necessary supporting work only. The purpose is to reduce blast radius, make review/test scope exact, catch implementation misses early and keep CI/release evidence interpretable.
 
 Before any patch implementation:
 - G0 re-fetches live GitHub and exact predecessor Stable/patch truth;
 - G1 freezes one bounded scope plus explicit non-goals;
 - G2 maps canonical owners and proves no parallel subsystem is needed;
-- G3 freezes dependency/provider contracts and deterministic acceptance tests.
+- G3 freezes dependency/provider/data/model contracts and deterministic acceptance tests.
 
 Before the next patch may begin:
 - G4–G10 evidence for the current patch must be coherent;
@@ -24,6 +24,8 @@ Before the next patch may begin:
 - all discovered out-of-scope findings must have a durable target patch/issue;
 - open issues must be reconciled;
 - handoff/checkpoints must identify exactly one next action.
+
+Exact future patch numbers are provisional until each G1. If a packet is too large, split it rather than expanding G1.
 
 ## Ordered v18.9.x build packets
 
@@ -59,6 +61,47 @@ Measure and harden only: coverage completion, residual gaps, calls avoided, cach
 
 ### v18.9.11 — Professional Closure Audit
 No new feature scope. Audit whole v18.9.x for misses/duplication/bypasses/orphan useful capabilities; retest #57 and #64 regressions; deterministic Day/Swing/Long equivalence; all-desk identity; partial coverage/provider failure/recovery; actual macOS Apple Silicon + Windows x64 packages; Adaptive Intelligence Scorecard. Closure requires zero unexplained carry-forward and zero unowned useful capability.
+
+## v19 build packets — Professional Data Infrastructure
+
+**Entry:** v18 final closure PASS. v19 consumes the coverage-aware routing, canonical identity, adaptive Market Modes and provider telemetry created in v18.9.x; it does not recreate them.
+
+Provisional small packets, each independently frozen at G1:
+1. provider capability/entitlement/data-rights registry;
+2. provider quality/reliability/latency/rate/cost/coverage/SLO scorecards;
+3. data reconciliation/source-disagreement/historical-adjustment quality;
+4. institutional/13F evidence and identity/mapping hardening;
+5. two-sided Long/Short point-in-time evidence substrate;
+6. AODR candidate/ranking/outcome lineage infrastructure;
+7. ADR-GDI professional reliability/capacity/load-shedding hardening;
+8. measured specialized/paid-provider gap evaluation and migration readiness;
+9. v20 point-in-time evidence/feature/outcome/provenance/research-readiness audit;
+10. mandatory v19 Major Closure with no unexplained provider role/dataset/right/reliability gap.
+
+## v20 build packets — Adaptive Intelligence & Decision Research
+
+**Entry:** mandatory v19 Major Closure PASS. v20 learns only from point-in-time, rights-valid, provenance-bound evidence and outcomes.
+
+Provisional small packets, split further where G0/G1 shows coupling/risk:
+1. adaptive research control plane + immutable experiment/evidence ledger;
+2. historical analogue + regime-conditioned outcome intelligence;
+3. calibration / FP-FN / miss / contradiction / drift intelligence;
+4. ASBI Behavioral Fingerprints + state-transition foundation;
+5. ASBI scenarios / multi-horizon outlooks / probability momentum / calibration;
+6. adaptive Institutional Holdings / 13F Intelligence;
+7. TDTI competing Long / Short / No Reliable Edge thesis intelligence;
+8. TDTI two-sided trade-plan/readiness/outcome validation, still No Execution;
+9. AODR adaptive shared opportunity ranking;
+10. AODR diversity/opportunity-cost/personalized relevance after shared truth;
+11. ADR-GDI adaptive provider/recovery/workload/capacity optimization in SHADOW/Champion-Challenger;
+12. model/prompt governance + Champion/Challenger + explainable promotion/rollback;
+13. v20 Professional Closure proving calibrated utility, abstention, deterministic boundaries, no silent self-modification and No Execution.
+
+## Version dependency contract
+
+`v18.9.x trustworthy acquisition/truth -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+
+v19 must not undo v18 Smart Provider Router ownership. v20 must not bypass v19 provenance/rights/point-in-time lineage. No adaptive model may repair missing data by inventing confidence; missing/weak evidence remains UNKNOWN/ABSTAIN.
 
 ## CI/release efficiency rule
 
