@@ -14,11 +14,12 @@ import (
 )
 
 const (
-	canonicalHistoricalBarsDataset = "Historical Bars"
-	tradeInsightProviderName       = "TradeInsight"
-	tradeInsightRESTBaseURL        = "https://api.tradeinsight.info/trading-data/v1"
-	tradeInsightPageSize           = 1000
-	tradeInsightMaxPages           = 10
+	canonicalHistoricalBarsDataset       = "Historical Bars"
+	tradeInsightProviderName             = "TradeInsight"
+	tradeInsightRESTBaseURL              = "https://api.tradeinsight.info/trading-data/v1"
+	tradeInsightPageSize                 = 1000
+	tradeInsightMaxPages                 = 10
+	tradeInsightHistoryFanoutMaxSymbols = 50
 )
 
 type tradeInsightHistoryRow struct {
@@ -301,6 +302,24 @@ func aggregateDailyBarsToWeekly(rows []Bar) []Bar {
 	return out
 }
 
+func tradeInsightHistorySymbolsForRefresh(e *Engine, only []string, bulkAdmitted bool) []string {
+	routed := historyRouteSymbols(e, only)
+	symbols := make([]string, 0, len(routed))
+	for _, sym := range routed {
+		if sym == "" || sym == "VIX" {
+			continue
+		}
+		symbols = append(symbols, sym)
+	}
+	if len(symbols) > 1 && !bulkAdmitted {
+		symbols = symbols[:1]
+	}
+	if len(symbols) > tradeInsightHistoryFanoutMaxSymbols {
+		symbols = symbols[:tradeInsightHistoryFanoutMaxSymbols]
+	}
+	return symbols
+}
+
 func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []string, mode string) int {
 	mode = strings.ToLower(strings.TrimSpace(mode))
 	// The official tidata SDK documents only daily (1d) history. TradeInsight
@@ -319,10 +338,9 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 	}
 	corporateActionAdmission, corporateActionRegistered := tradeInsightCapabilityAdmissionLookup("corporate-actions")
 	corporateActionsAdmitted := corporateActionRegistered && corporateActionAdmission.runtimeAdmitted()
-	symbols := historyRouteSymbols(e, only)
-	if len(symbols) > 50 {
-		symbols = symbols[:50]
-	}
+	bulkAdmission, bulkRegistered := tradeInsightCapabilityAdmissionLookup("bulk-history")
+	bulkAdmitted := bulkRegistered && bulkAdmission.runtimeAdmitted()
+	symbols := tradeInsightHistorySymbolsForRefresh(e, only, bulkAdmitted)
 	loaded := 0
 	for _, sym := range symbols {
 		if sym == "" || sym == "VIX" {
