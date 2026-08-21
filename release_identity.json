@@ -1,14 +1,13 @@
 {
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
-  "version": "18.8.2",
-  "display_version": "DE.PULSE v18.8.2",
-  "build_id": "v18.8.2-stable-20260820",
+  "version": "18.9.0",
+  "display_version": "DE.PULSE v18.9.0",
+  "build_id": "v18.9.0-stable-20260821",
   "channel": "STABLE",
-  "stable_baseline": "v18.8.1",
-  "previous_stable": "v18.8.1",
-  "scope": "Market Intelligence Reliability: canonical breadth quote freshness/recovery accountability; truthful SPY/QQQ/VIX and breadth evidence state; unavailable/unknown distinct from observed zero; Smart Provider Router v2, existing multi-feed allocation, canonical freshness/recovery, deterministic Day/Swing/Long truth, GLD/SLV/USO actionable exceptions and permanent No Execution Boundary preserved",
-  "release_recovery": "Release #30 passed G11 and stopped at G12 on a stale literal README-heading assertion in version_consistency_test.py. Recovery is release-harness-only; no product/runtime behavior or package identity changes.",
-  "bundle_version": "18802",
+  "stable_baseline": "v18.8.2",
+  "previous_stable": "v18.8.2",
+  "scope": "TradeInsight adaptive provider integration: Smart Provider Router v2 reuse; SHADOW Congressional Trading Intelligence; adjusted daily OHLCV fallback/backfill; bounded admission-controlled multi-symbol history; shared telemetry/freshness/cache/canonical owners preserved; direct SEC/EDGAR authoritative; Form 4, movers and ticker search contract-gated; deterministic Day/Swing/Long truth and permanent No Execution boundary preserved",
+  "bundle_version": "18900",
   "runtime_config": "PersonalMarketTerminal",
   "application_bundle": "De-Pulse.app"
 }

@@ -1,9 +1,9 @@
-DE.PULSE v18.8.2
-Build: v18.8.2-stable-20260820
+DE.PULSE v18.9.0
+Build: v18.9.0-stable-20260821
 Channel: STABLE
-Stable baseline: v18.8.1
-Previous Stable: v18.8.1
-Scope: Market Intelligence Reliability: canonical breadth quote freshness/recovery accountability; truthful SPY/QQQ/VIX and breadth evidence state; unavailable/unknown distinct from observed zero; Smart Provider Router v2, existing multi-feed allocation, canonical freshness/recovery, deterministic Day/Swing/Long truth, GLD/SLV/USO actionable exceptions and permanent No Execution Boundary preserved
+Stable baseline: v18.8.2
+Previous Stable: v18.8.2
+Scope: TradeInsight adaptive provider integration: Smart Provider Router v2 reuse; SHADOW Congressional Trading Intelligence; adjusted daily OHLCV fallback/backfill; bounded admission-controlled multi-symbol history; shared telemetry/freshness/cache/canonical owners preserved; direct SEC/EDGAR authoritative; Form 4, movers and ticker search contract-gated; deterministic Day/Swing/Long truth and permanent No Execution boundary preserved
 Application bundle: De-Pulse.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
 Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)

@@ -1,0 +1,43 @@
+{
+  "schema": "DE.PULSE-V18.9.0-RELEASE-CONTRACT-1",
+  "release": "18.9.0",
+  "title": "TradeInsight Adaptive Provider Integration",
+  "certifiedStableBaseline": "v18.8.2-stable",
+  "engineeringBaseline": "78378889e52c2ed3e0c3458aea6fbf36efe97ab3",
+  "scope": "GitHub issue #61 / ADAPT-TRADEINSIGHT-001",
+  "identity_asset": "release-identity-v18.9.0.js",
+  "documentationIdentityRule": "The current package/build/QA identity is owned by release_identity.json, this release contract, VERSION.txt/app bootstrap and the last-loaded v18.9.0 release identity overlay. Long-form historical documentation is not rewritten solely to duplicate release metadata. The version-neutral root README is validated by durable portability/source-of-truth semantics rather than one presentation heading.",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries. Current execution authority is the three canonical GitHub workflows plus this release contract and run_full_certification.sh.",
+  "g0Diagnosis": "DE.PULSE already had canonical provider routing, freshness, cache, telemetry, history, Research, SEC, Opportunity Radar and symbol-validation owners. v18.9 therefore integrates TradeInsight only through those owners: adjusted daily OHLCV as fallback/backfill, bounded multi-symbol history as admission-controlled client-side fan-out over /ohlc, and Congressional Trading Intelligence as SHADOW Research alternative evidence after direct SEC refresh.",
+  "schemaGateRule": "TradeInsight SEC Form 4 enrichment, top movers and ticker/company search remain non-executable until exact production REST endpoint/output contracts are independently verified. Direct SEC/EDGAR remains authoritative for Form 4; MCP tool names must never be converted into guessed REST paths.",
+  "qualificationRule": "The release-candidate identity promotion is source-changing and must earn fresh exact-head Fast and full Qualified evidence, including backend/race/randomized, renderer, Chrome and WebKit, before merge. No source change is permitted after Qualified unless a classified real defect requires fresh qualification.",
+  "releaseRule": "One v18.9.0-development branch, one PR #62, exact-head Fast + Qualified, exact-head merge, then the single canonical G11-G16 release workflow. No retry/certification/promotion branch and no duplicate release workflow.",
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "DETERMINISTIC_DAY_SWING_LONG",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_OWNERS",
+    "EXISTING_MULTI_FEED_ALLOCATION_SOLE_SUBSCRIPTION_OWNER",
+    "DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4",
+    "OPPORTUNITY_RADAR_SOLE_MOVER_RANKING_OWNER",
+    "CANONICAL_SYMBOL_VALIDATION_FINAL_AUTHORITY",
+    "GLD_SLV_USO_ACTIONABLE_TRADABLE_EXCEPTIONS"
+  ],
+  "requiredV1890Evidence": [
+    "TradeInsight configuration is runtime-secret-only and optional-provider failure degrades gracefully",
+    "Smart Provider Router v2 remains the sole executable provider-routing authority",
+    "daily adjusted OHLCV fallback/backfill uses the canonical Historical Bars route and never claims intraday support",
+    "bounded multi-symbol history is sequential, canonical-symbol deduplicated, VIX-filtered, capped at 50 symbols and controlled by bulk-history admission",
+    "Congressional trade schema is validated and normalized into SHADOW Research alternative evidence only",
+    "Congressional evidence cannot alter deterministic Day/Swing/Long outputs or downgrade readiness on optional failure",
+    "shared ProviderTelemetry and canonical freshness/cache/persistence owners are reused",
+    "direct SEC/EDGAR remains authoritative and TradeInsight Form 4 remains gated without exact REST contract",
+    "top movers and ticker/company search remain gated without exact REST contracts",
+    "full backend/race/randomized, renderer, Chrome and WebKit qualification",
+    "macOS Apple Silicon and Windows x64 packaged-runtime audits",
+    "G15 exact-artifact assurance and no-rebuild Stable publication"
+  ]
+}
