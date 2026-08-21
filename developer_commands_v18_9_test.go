@@ -66,7 +66,7 @@ func TestV189DeveloperCommandRejectsAdditionalArgumentsWithoutProbing(t *testing
 	}
 }
 
-func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysGated(t *testing.T) {
+func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysShadow(t *testing.T) {
 	fingerprint, err := tradeInsightSchemaFingerprintFromPayload([]byte(`[
 		{"field_alpha":"secret-person-value","field_beta":123},
 		{"field_alpha":"secret-symbol-value","field_beta":null}
@@ -75,8 +75,8 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysGated(t *testi
 		t.Fatal(err)
 	}
 	before := tradeInsightCapabilityLifecycleTruth("congressional-trades")
-	if before != "GATED" {
-		t.Fatalf("precondition lifecycle=%q, want GATED", before)
+	if before != "SHADOW" {
+		t.Fatalf("precondition lifecycle=%q, want SHADOW", before)
 	}
 
 	called := 0
@@ -110,7 +110,7 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysGated(t *testi
 			t.Fatalf("developer command leaked provider value %q in %s", forbidden, output)
 		}
 	}
-	for _, required := range []string{"field_alpha", "field_beta", "congressional-trades", "GATED"} {
+	for _, required := range []string{"field_alpha", "field_beta", "congressional-trades", "SHADOW"} {
 		if !strings.Contains(output, required) {
 			t.Fatalf("developer command output missing %q: %s", required, output)
 		}
@@ -123,8 +123,8 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysGated(t *testi
 	if report.Capability != "congressional-trades" {
 		t.Fatalf("capability=%q", report.Capability)
 	}
-	if report.Lifecycle != "GATED" {
-		t.Fatalf("lifecycle=%q, want GATED", report.Lifecycle)
+	if report.Lifecycle != "SHADOW" {
+		t.Fatalf("lifecycle=%q, want SHADOW", report.Lifecycle)
 	}
 	if report.Fingerprint.RowsObserved != 2 {
 		t.Fatalf("rows observed=%d, want 2", report.Fingerprint.RowsObserved)
@@ -154,8 +154,8 @@ func TestV189DeveloperCommandFailsClosedOnProbeError(t *testing.T) {
 	if !strings.Contains(stderr.String(), "synthetic admission failure") {
 		t.Fatalf("unexpected stderr: %q", stderr.String())
 	}
-	if lifecycle := tradeInsightCapabilityLifecycleTruth("congressional-trades"); lifecycle != "GATED" {
-		t.Fatalf("failed probe changed lifecycle to %q", lifecycle)
+	if lifecycle := tradeInsightCapabilityLifecycleTruth("congressional-trades"); lifecycle != "SHADOW" {
+		t.Fatalf("failed diagnostic changed lifecycle to %q", lifecycle)
 	}
 }
 
