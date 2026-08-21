@@ -11,7 +11,6 @@ func v1882CurrentQuote(symbol string, price float64, now time.Time) Quote {
 	return Quote{
 		Symbol:            symbol,
 		Price:             price,
-		PrevClose:         price - 1,
 		UpdatedAt:         now.UnixMilli(),
 		ProviderTimestamp: now.UnixMilli(),
 		DataState:         "real-time",
