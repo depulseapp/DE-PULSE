@@ -55,6 +55,74 @@ func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *test
 	}
 }
 
+func TestV189TradeInsightLifecycleTruthNeverAdvertisesGatedCapability(t *testing.T) {
+	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions"} {
+		if got := tradeInsightCapabilityLifecycleTruth(id); got != "SHADOW" {
+			t.Fatalf("lifecycle truth for %s = %q, want SHADOW", id, got)
+		}
+	}
+	for _, id := range []string{"bulk-history", "congressional-trades", "sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
+		if got := tradeInsightCapabilityLifecycleTruth(id); got != "GATED" {
+			t.Fatalf("lifecycle truth for %s = %q, want GATED", id, got)
+		}
+	}
+}
+
+func TestV189TradeInsightCanonicalOwnerMapCoversRemainingG3Concerns(t *testing.T) {
+	expected := []string{
+		"congressional-trading",
+		"sec-form4-enrichment",
+		"opportunity-radar-movers",
+		"symbol-validation-fallback",
+		"provider-telemetry-usefulness",
+		"freshness-cache-persistence",
+		"quota-rate-limit-backpressure",
+		"shadow-lifecycle-promotion",
+	}
+	rows := tradeInsightCanonicalOwnerDependencies()
+	if len(rows) != len(expected) {
+		t.Fatalf("canonical-owner rows = %d, want %d", len(rows), len(expected))
+	}
+	seen := map[string]tradeInsightCanonicalOwnerDependency{}
+	for _, row := range rows {
+		if strings.TrimSpace(row.Concern) == "" || strings.TrimSpace(row.CanonicalOwner) == "" || len(row.Dependencies) == 0 || strings.TrimSpace(row.Contract) == "" {
+			t.Fatalf("incomplete canonical-owner row: %+v", row)
+		}
+		if _, exists := seen[row.Concern]; exists {
+			t.Fatalf("duplicate canonical-owner concern %q", row.Concern)
+		}
+		seen[row.Concern] = row
+	}
+	for _, concern := range expected {
+		if _, ok := seen[concern]; !ok {
+			t.Fatalf("missing canonical-owner concern %q", concern)
+		}
+	}
+
+	sec := strings.ToLower(seen["sec-form4-enrichment"].Contract)
+	if !strings.Contains(sec, "direct sec/edgar remains authoritative") {
+		t.Fatalf("SEC owner contract must preserve direct SEC/EDGAR authority: %q", seen["sec-form4-enrichment"].Contract)
+	}
+	congress := strings.ToLower(seen["congressional-trading"].Contract)
+	if !strings.Contains(congress, "disclosure lag") || !strings.Contains(congress, "fetch-free") || !strings.Contains(congress, "never deterministic") {
+		t.Fatalf("Congress owner contract must retain disclosure lag, fetch-free Event Intelligence and non-deterministic truth: %q", seen["congressional-trading"].Contract)
+	}
+	symbols := seen["symbol-validation-fallback"].Contract
+	for _, symbol := range []string{"GLD", "SLV", "USO"} {
+		if !strings.Contains(symbols, symbol) {
+			t.Fatalf("symbol validation contract must preserve %s tradable exception: %q", symbol, symbols)
+		}
+	}
+	quota := strings.ToLower(seen["quota-rate-limit-backpressure"].Contract)
+	if !strings.Contains(quota, "429") || !strings.Contains(quota, "must never reorder the fixed historical provider route") {
+		t.Fatalf("quota/backpressure contract must protect fixed history order: %q", seen["quota-rate-limit-backpressure"].Contract)
+	}
+	promotion := strings.ToLower(seen["shadow-lifecycle-promotion"].Contract)
+	if !strings.Contains(promotion, "shadow_registered") || !strings.Contains(promotion, "approved_live") || !strings.Contains(promotion, "never automatic promotion") {
+		t.Fatalf("SHADOW lifecycle contract must preserve explicit promotion gates: %q", seen["shadow-lifecycle-promotion"].Contract)
+	}
+}
+
 func TestV189TradeInsightCongressEndpointKnownButSchemaGated(t *testing.T) {
 	row := v189TradeInsightAdmissionByID(t, "congressional-trades")
 	if row.EndpointEvidence != "/trading-data/v1/congress/v1/trades" {
