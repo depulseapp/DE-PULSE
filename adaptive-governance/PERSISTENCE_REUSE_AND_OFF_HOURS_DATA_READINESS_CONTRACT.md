@@ -2,249 +2,197 @@
 
 **Status:** APPROVED / PERMANENT ADAPTIVE DATA CONTRACT  
 **Applies to:** v18.9.x, v19, v20 and later releases  
-**Primary owners:** existing canonical persistence/cache owners + Smart Provider Router v2 + existing U.S. market calendar/session/workload-priority owners  
-**No new parallel cache, database, router, scheduler or provider-specific data silo is permitted.**
+**Primary owners:** canonical persistence/cache owners + Smart Provider Router v2 + canonical U.S. market calendar/session/workload-priority owners  
+**No parallel cache, database, router, scheduler or provider-specific data silo is permitted.**
 
 ## 1. Purpose
 
-DE.PULSE must avoid paying provider/API/runtime cost for data it already owns in trustworthy canonical state. This applies to **all useful data**, not only historical OHLCV.
+DE.PULSE must avoid paying provider/API/runtime cost for trustworthy evidence it already owns. Persistence and reuse apply to **all useful data**, not only OHLCV.
 
-The system should accumulate a durable, point-in-time evidence base over time so current consumers can reuse valid data immediately and future adaptive intelligence can learn from provenance-bound history.
+The system should accumulate a durable point-in-time evidence base so current consumers can reuse valid state immediately and future adaptive intelligence can learn from provenance-bound history.
 
-DE.PULSE must also prepare useful non-live data proactively without compromising the three protected decision-support sessions: **pre-market, regular market and after-hours**. These sessions always receive first claim on provider quota/headroom, network concurrency, CPU, memory, database capacity and background-worker capacity.
+Background preparation must never compromise the protected decision-support sessions: **pre-market, regular market and after-hours**. Those sessions retain first claim on provider quota/headroom, network, CPU, memory, DB/pool and workers.
 
 ## 2. Canonical request order
 
-Every data consumer should follow this decision sequence where applicable:
+Where applicable:
 
-`consumer requirement -> in-memory canonical cache -> persisted canonical DB/state -> validate coverage/freshness/schema/provenance/rights -> compute residual gap -> Smart Provider Router v2 ranks eligible providers for only the gap -> acquire -> normalize/reconcile -> persist -> serve`
+`consumer requirement -> memory canonical cache -> persisted canonical DB/state -> validate coverage/freshness/schema/provenance/rights -> exact residual gap -> Smart Provider Router v2 ranks eligible providers for the gap -> targeted acquire -> normalize/reconcile -> persist -> serve`
 
-A provider must not be called merely because it exists or because a fixed fallback order names it. Existing trustworthy data is a first-class source of fulfillment.
+Provider availability is not a reason to refetch. A successful provider response is not proof that the consumer requirement is complete.
 
 ## 3. Persistence-first / reuse-first rules
 
 1. Reuse valid stored evidence before external fetch or recomputation.
-2. Fetch only the missing, expired, revised or materially insufficient portion where provider contracts permit targeted acquisition.
-3. A successful provider response does not imply complete consumer coverage.
-4. Immutable or effectively immutable historical records should be retained and reused where provider/data rights allow.
-5. Revision-prone records must preserve point-in-time/as-observed truth and later revisions rather than silently overwriting history.
-6. Current/live-sensitive values require freshness TTLs; an old quote, spread, VIX value or market state may be useful as history but cannot be presented as current truth.
-7. Expensive/material derived intelligence may be persisted when useful, together with input fingerprint, algorithm/model/version, generated-at time, provenance, freshness and invalidation rules.
-8. Canonical de-duplication prevents the same underlying evidence from becoming multiple provider-specific truths.
-9. Every retained dataset requires a named consumer, recovery/audit/learning value, or material provider-call-saving value.
-10. Provider persistence, redistribution, commercial-use and AI-use rights override retention preferences.
-11. Secrets remain in the canonical secret owner and never enter ordinary market/evidence persistence.
+2. Fetch only missing, expired, revised or materially insufficient evidence where provider semantics/rights allow targeted acquisition.
+3. Immutable/effectively immutable history should be retained/reused where lawful.
+4. Revision-prone records preserve original as-observed truth and later revisions; never silently rewrite point-in-time history.
+5. Live/current-sensitive values require freshness semantics; stale quote/spread/VIX/market state can remain history but cannot be current truth.
+6. Expensive/material derived intelligence may persist with input fingerprint, algorithm/model/prompt version, generated-at, provenance, freshness and invalidation rules.
+7. Canonical de-duplication prevents provider-specific copies from becoming multiple truths.
+8. Every retained dataset requires a named consumer, recovery/audit/learning value or material calls-avoided value.
+9. Provider persistence/redistribution/commercial/AI-use rights override retention preferences.
+10. Secrets remain in canonical secret owners and never enter ordinary market/evidence persistence.
+11. Shared multi-user reuse occurs only inside compatible entitlement, rights and tenant/security domains.
 
 ## 4. Examples
 
 ### Historical price data
+If a consumer needs 500 bars and 495 trustworthy bars already exist:
 
-If APP requires 500 daily bars and canonical persistence already contains 495 valid bars:
+`DB 495 valid -> residual gap 5 -> acquire only missing 5 where supported -> reconcile -> persist -> serve 500`
 
-`DB: 495 valid -> gap: 5 -> Smart Router acquires only missing 5 where supported -> merge -> persist -> consumer gets 500`
-
-The system must not download all 500 again solely because an API call is available.
-
-### SEC / disclosure evidence
-
-A previously acquired filing/disclosure is reused from canonical persistence. Subsequent work checks only for newer filings, amendments, corrections or newly required normalized fields. Direct SEC/EDGAR remains authoritative for filing truth.
+### SEC / disclosures
+Reuse already-acquired filings; check only for new/amended/corrected evidence or newly required fields. Direct SEC/EDGAR remains authoritative for filing truth.
 
 ### Fundamentals / earnings / macro
-
-Historical snapshots are retained point-in-time. Refresh cadence follows the capability's real change/revision behavior. Old observations remain available for research even when current truth has advanced.
+Retain point-in-time snapshots and later revisions. Refresh cadence follows real change/revision behavior.
 
 ### Company identity
-
-Known symbol/company/exchange/asset identity is reused until a material change or authoritative correction occurs; provider search is a gap/corroboration path, not a mandatory repeated call.
+Reuse canonical symbol/company/exchange/asset identity until material change or authoritative correction. Provider search is gap/corroboration, not mandatory repeated work.
 
 ## 5. Session-Aware Data Readiness Maintenance
 
-DE.PULSE should have one canonical **Data Readiness Maintenance** activity for low-priority, non-time-critical data preparation. It has two operating tiers:
+DE.PULSE has one canonical **Data Readiness Maintenance** responsibility for low-priority, non-time-critical preparation.
 
-- **LIGHT OVERNIGHT MAINTENANCE** on normal trading-day cycles, after protected after-hours work has ended and before the next protected pre-market session begins.
-- **HEAVY WEEKEND / MARKET-CLOSED MAINTENANCE** during larger non-trading windows, with deeper but still bounded backfill/reconciliation work.
+### Tier 0 — Protected sessions
+**Pre-market / Regular Market / After-Hours**
 
-The maintenance coordinator must use the existing canonical U.S. market calendar/session engine. It must not hard-code a second definition of pre-market, regular market, after-hours, holidays, half-days or exceptional closures.
-
-This is not a broad refetch job. It is **gap-driven, value-driven and resource-budgeted maintenance**.
-
-### Maintenance sequence
-
-`inventory canonical data -> identify missing/expired/revision-due evidence -> prioritize by consumer value and future-use probability -> reserve protected live-session capacity -> apply rights/rate/cost budgets -> Smart Router acquire residual gaps -> reconcile/persist -> validate DB integrity/readiness -> record telemetry -> checkpoint/resume`
-
-## 6. Protected-session priority contract
-
-### Tier 0 — Pre-Market / Regular Market / After-Hours
-
-These are protected high-priority operating sessions. During them:
-
-- live/current quote, spread, liquidity, VIX/market context, catalyst/news/SEC/event, Opportunity Radar, Research/readiness and other decision-critical workloads outrank maintenance;
-- provider quota/headroom needed for current-session capability must be reserved and unavailable to low-priority maintenance;
-- background maintenance external-provider calls are suspended unless the same acquisition is directly required by a live/current consumer, in which case it is live fulfillment rather than maintenance;
-- maintenance worker concurrency, CPU, memory, DB writes and network usage must be bounded so they cannot materially increase current-session latency or produce self-inflicted `DATA DEGRADED`;
-- queued maintenance must be preemptible/checkpointed and yield promptly when a protected session or market-shock/high-priority workload begins;
-- no heavy compaction, deep reconciliation or large historical fan-out runs are allowed.
+During protected sessions:
+- current quote/liquidity/VIX/market context/catalyst/news/SEC/Opportunity Radar/Research/readiness work outranks background work;
+- provider quota/headroom needed by current-session capabilities is reserved;
+- low-priority provider acquisition suspends unless directly required by a live consumer;
+- maintenance worker/CPU/memory/DB/network use is bounded;
+- queued work is preemptible/checkpointed and yields promptly to current or market-shock work;
+- no heavy compaction, deep reconciliation or broad historical fan-out.
 
 ### Tier 1 — Light Overnight Maintenance
+Small, high-value work after protected after-hours and before the next protected pre-market window:
+- latest completed-session persistence and bounded history gaps;
+- incremental SEC/filing/amendment/disclosure checks;
+- revision-due fundamentals/earnings/macro updates;
+- small corporate-action/adjustment/identity corrections;
+- bounded outcome resolution;
+- lightweight integrity/readiness checks;
+- bounded high-value derived precomputation with known provenance/version;
+- next-session readiness-gap preparation.
 
-Purpose: keep the app ready for the next pre-market session with small, high-value work only.
-
-Preferred work includes:
-
-- finalize/fill the latest completed daily/intraday historical gaps needed by actionable/My Market symbols;
-- persist completed session summaries/outcomes and resolve bounded pending historical outcomes;
-- check incremental SEC/filing/amendment/disclosure changes;
-- update revision-due fundamentals/earnings/macro data when their real cadence warrants it;
-- reconcile small corporate-action/adjustment deltas;
-- fill high-value company/symbol identity gaps;
-- compact/checkpoint small canonical persistence queues;
-- perform lightweight integrity/readiness checks;
-- precompute only bounded material derived features with known input/version provenance;
-- calculate next-session readiness gaps so pre-market starts from warm canonical state.
-
-Overnight work must have conservative provider-call, concurrency, CPU, memory and DB-write budgets. It must stop early if provider headroom, runtime health or the approaching pre-market protection buffer says to stop.
+Overnight work has conservative provider-call, concurrency, CPU, memory and DB budgets and drains before the pre-market protection buffer.
 
 ### Tier 2 — Heavy Weekend / Extended Market-Closed Maintenance
-
-Purpose: use the larger non-trading window for deeper work that is useful but inappropriate during daily live operations.
-
-Eligible work includes:
-
-- deeper historical OHLCV backfill/gap repair and adjustment reconciliation;
+Deeper but bounded work:
+- historical OHLCV gap/adjustment repair;
 - corporate-action/split/dividend audits;
-- deeper SEC/Form 4/13F history, amendments and identity reconciliation;
-- congressional/insider disclosure historical gap repair;
-- earnings/fundamental history backfill and revision reconciliation;
-- macro historical revision reconciliation;
-- historical Market Mode/regime evidence preparation;
-- point-in-time Opportunity Radar / Research / thesis / readiness lineage and subsequent outcome resolution;
+- SEC/Form 4/13F/congress history/amendment/identity reconciliation;
+- earnings/fundamental/macro history and revisions;
+- point-in-time Market Mode/Opportunity/Research/thesis/outcome lineage;
 - provider usefulness/coverage/reliability history consolidation;
-- material feature generation whose inputs/version/rights are known;
-- bounded DB integrity checks, index/statistics maintenance, compaction/cleanup and retention enforcement;
-- pre-building high-value research/evidence coverage for current actionable/My Market symbols and other bounded high-probability consumers.
+- material feature generation with known inputs/version/rights;
+- DB integrity/index/statistics/compaction/retention work;
+- high-value readiness coverage for actionable/My Market symbols.
 
-Heavy maintenance is still not permission for blind full-universe acquisition. Expected reuse, materiality, provider budgets, storage rights and runtime cost remain mandatory.
+Weekend does **not** mean full-universe blind acquisition.
 
-## 7. Provider Capacity Reservation
+## 6. Maintenance sequence
 
-Maintenance must never consume provider capability needed to keep DE.PULSE first-class during protected sessions.
+`inventory canonical state -> identify missing/expired/revision-due evidence -> prioritize by consumer/material value -> reserve protected-session capacity -> apply rights/rate/cost budgets -> acquire residual gaps through Smart Router -> reconcile/persist -> validate integrity/readiness -> record telemetry -> checkpoint/resume`
 
-For every capability/provider, Smart Provider Router/workload policy should account for:
+The existing canonical U.S. session/calendar owner defines all session/holiday/half-day boundaries. Maintenance cannot create another calendar truth.
 
-- entitlement and per-minute/day/month quotas;
-- current rate-limit headroom;
-- reset timing;
-- expected next protected-session demand;
+## 7. Provider capacity reservation
+
+For every provider/capability, workload policy should account for:
+- entitlement and per-minute/day/month limits;
+- current headroom/reset timing;
+- expected protected-session demand;
 - provider latency/error/circuit state;
-- capability criticality;
-- alternative-provider availability;
-- maintenance value per provider call;
+- capability criticality and alternatives;
+- maintenance value per call;
 - historical calls-avoided benefit.
 
-The maintenance budget is **surplus/bounded capacity after protected-session reserve**, not the other way around. If there is uncertainty, preserve capacity for live/current work.
+Maintenance budget is **bounded surplus after live reserve**. If uncertain, preserve capacity for current decision support.
 
-A provider with scarce quota may receive zero overnight/weekend maintenance traffic even if technically available. A provider with abundant cheap historical entitlement may receive more gap-backfill work when useful and lawful.
+## 8. Preemption, catch-up and restart
 
-## 8. Explicit exclusions
+- light/heavy maintenance runs only in eligible windows and when provider/runtime health permits;
+- use a configurable pre-market protection buffer from canonical session truth;
+- missed work resumes only in a later eligible low-priority period;
+- no backlog dump into pre-market/regular/after-hours;
+- work is pauseable/preemptible/checkpointed;
+- restart/resume must avoid duplicate acquisition/work;
+- manual `Run Data Readiness Maintenance Now`, if exposed, obeys the same rights/budget/session protections;
+- hosted deployments may run the same contract continuously but still obey protected-session priority and provider reserves.
 
-Maintenance must not:
+## 9. Explicit exclusions
 
-- refetch everything merely because the market is closed;
-- consume provider quota/headroom reserved for pre-market, regular market or after-hours;
-- treat stale quotes/spreads/live VIX as current next-session truth;
+Maintenance/persistence must not:
+- blind-refetch because market is closed;
+- consume reserved live-session provider/runtime capacity;
+- present stale live-sensitive data as current;
 - overwrite original point-in-time evidence with later revisions;
-- exceed provider entitlement/rate/cost budgets;
-- fetch or persist data without a useful consumer/retention reason;
-- create a TradeInsight-specific or provider-specific scheduler/data store;
-- compete with higher-priority current-session or market-shock work;
-- create large background DB/CPU/network pressure near a protected-session boundary;
-- change deterministic Day/Swing/Long formulas;
+- exceed provider entitlement/rate/cost/retention rights;
+- persist/fetch data without a useful consumer/retention reason;
+- create provider-specific scheduler/store/router/cache owners;
+- create large background DB/CPU/network pressure near protected sessions;
+- change protected deterministic Day/Swing/Long formulas;
 - create execution capability.
 
-## 9. Scheduling, preemption and catch-up behavior
+## 10. Adaptive priority model
 
-- Session windows come from the existing canonical U.S. market calendar/session owner.
-- Light overnight maintenance runs only when the app is in an eligible low-priority period and runtime/provider health permits it.
-- Heavy weekend maintenance runs only in sufficiently large eligible market-closed windows.
-- Use a configurable **pre-market protection buffer** so maintenance drains/checkpoints before pre-market work must become fully responsive; do not hard-code a competing calendar definition.
-- If the local app was not running, missed work remains resumable. Perform bounded catch-up only in the next eligible overnight/weekend window; do not dump missed maintenance into a protected live session.
-- A future hosted deployment may execute the same canonical maintenance contract continuously while still obeying session priority and provider reserves.
-- Maintenance must be pauseable/preemptible and checkpoint progress so partial work is not repeated unnecessarily.
-- Manual `Run Data Readiness Maintenance Now` may be exposed through Maintenance, but it must still obey rights, provider reserves, runtime protection and session-priority rules; manual action cannot override live-safety limits.
-
-## 10. Priority model
-
-Maintenance priority should be adaptive and bounded. Prefer evidence that:
-
-1. is required by current My Market / actionable symbols;
-2. closes a known current consumer gap;
-3. improves readiness for the next pre-market/regular/after-hours cycle;
-4. is expensive or rate-limited to obtain during protected live sessions;
+Prefer work that:
+1. serves current actionable/My Market symbols;
+2. closes a known consumer gap;
+3. improves next-session readiness;
+4. is expensive/rate-limited during protected sessions;
 5. is likely to be reused by Research/Opportunity Radar/Market Modes;
-6. improves point-in-time history needed by v20 learning;
+6. improves point-in-time evidence needed by future learning;
 7. resolves revisions/amendments/corporate-action correctness;
-8. improves provider-quality/rights/reliability measurement;
-9. has high expected calls-avoided benefit per maintenance call.
-
-Do not perform low-value full-universe work when expected reuse/value does not justify provider/runtime cost.
+8. improves provider quality/rights/reliability measurement;
+9. has high expected calls-avoided value per maintenance call.
 
 ## 11. Telemetry / acceptance
 
 Record at minimum:
-
-- database/cache hits;
+- DB/cache hits and records reused vs fetched;
 - provider calls avoided;
-- residual gaps detected;
-- gaps filled;
-- records reused vs fetched;
-- new records vs revisions/amendments;
+- residual gaps detected/filled;
+- new records vs revisions;
 - provider selected and why;
-- provider quota/headroom reserved for protected sessions;
-- maintenance provider/rate/cost budget used;
+- provider quota/headroom reserved;
+- rate/cost/maintenance budget used;
 - rights-blocked/skipped work;
-- stale/invalid records detected;
-- overnight vs weekend work performed;
-- maintenance duration, concurrency, CPU/memory/DB/network resource use;
-- preemption count/reason and checkpoint/resume success;
+- stale/invalid evidence detected;
+- overnight/weekend work volume;
+- duration/concurrency/CPU/memory/DB/network usage;
+- preemption/reason/checkpoint/resume success;
 - failures/deferred work and next eligible retry;
-- resulting readiness by capability/symbol cohort;
-- effect on protected-session latency/freshness/degradation metrics.
+- readiness by capability/symbol cohort;
+- effect on protected-session freshness/latency/degradation metrics.
 
-Acceptance requires proof that maintenance produces **no material degradation** to pre-market, regular-market or after-hours freshness/latency/readiness under realistic provider/rate-limit/runtime pressure.
+Acceptance requires proof of **no material degradation** to protected decision-support sessions under realistic provider/rate/runtime pressure.
 
-## 12. Patch placement
+## 12. Version placement — aligned from v18.9 onward
 
 ### v18.9.3 — Coverage-Aware Smart Provider Router
-Must make persisted canonical evidence part of fulfillment before external provider acquisition. The router computes the **residual gap**, not the full theoretical request.
+Persisted canonical evidence becomes part of fulfillment before provider acquisition. The router computes residual gap, not the full theoretical request.
 
-### v18.9.10 — Provider Efficiency / Adaptive Telemetry
-Must measure DB/cache reuse, provider calls avoided, residual-gap acquisition efficiency, persistence usefulness and the provider/runtime headroom required to protect live sessions.
+### v18.9.6 — Provider Observability / Adaptive Telemetry Foundation
+**Architecture-audit alignment:** telemetry is intentionally earlier than provider capability expansion. It measures DB/cache reuse, calls avoided, residual-gap efficiency, provider usefulness, rate/freshness/runtime pressure and protected-session headroom so v18.9.7–v18.9.10 SHADOW provider admission is evidence-based.
 
 ### v18.9.11 — Session-Aware Data Readiness Maintenance
-Single-responsibility patch. Implement the canonical **light overnight + heavy weekend** gap audit/backfill/reconciliation/catch-up coordinator using existing persistence, Smart Provider Router, freshness, provider budgets, U.S. market-session calendar, telemetry and workload-priority owners.
+Implement the canonical light-overnight + heavy-weekend gap audit/backfill/reconciliation/catch-up coordinator using existing persistence, Smart Provider Router, freshness, provider budgets, telemetry and session/workload owners.
 
-Acceptance includes:
+Acceptance includes overnight/weekend proof, provider/runtime reservation, preemption/drain/checkpoint/resume, missed-window catch-up, restart de-duplication, no broad blind refetch and no measurable decision-critical degradation.
 
-- overnight light-maintenance proof;
-- weekend heavy-maintenance proof;
-- pre-market/regular/after-hours provider-capacity reservation;
-- preemption/drain/checkpoint/resume proof;
-- missed-window bounded catch-up proof;
-- no duplicate work after restart;
-- no measurable decision-critical live-session degradation;
-- no broad blind refetch.
-
-### v18.9.12 — Whole v18.9.x Professional Closure Audit
-Closure must test DB-first reuse, partial-gap acquisition, overnight/weekend behavior, provider-call avoidance, revision preservation, protected-session capacity reservation, live-priority preemption and recovery.
-
-Exact patch numbers remain subject to G1, but the **separation of responsibilities is mandatory**.
+### v18.9.12 — Professional Closure
+Audit DB-first reuse, residual-gap acquisition, calls avoided, revision preservation, provider telemetry/admission, overnight/weekend behavior, protected-session reserves/preemption/recovery and actual supported packages.
 
 ### v19
-Professionalize retention/rights/revision policies, database/index/capacity behavior, point-in-time lineage, provider-quality scorecards and evidence-store readiness. Measure maintenance value, quota economics, capacity reservations and whether paid/specialized providers are justified by observed gaps. New providers still plug into the same router/persistence/session-priority contract.
+Professionalize retention/rights/revisions, provider scorecards, PostgreSQL/index/pool/capacity behavior, hosted/shared persistence, sync eligibility, point-in-time lineage, maintenance economics and protected-session reserve sizing. New providers still use the same router/persistence/session-priority contract.
 
 ### v20
-Adaptive intelligence consumes the accumulated point-in-time evidence/outcome store and may learn better maintenance/provider usefulness policies through governed SHADOW/Champion-Challenger evaluation. It must not bypass provenance/freshness/rights, self-promote, or sacrifice live-session truth for background learning.
+Adaptive intelligence consumes accumulated point-in-time evidence/outcomes and may learn provider/maintenance usefulness only through governed SHADOW/Champion-Challenger evaluation and explicit promotion. It cannot bypass provenance/freshness/rights or reduce live-session safety.
 
 ## 13. Permanent principle
 
-**Live/current decision support first. Fetch once when useful -> normalize once -> persist truthfully -> reuse many times -> fill small gaps overnight -> perform deeper bounded repair on weekends -> always reserve provider/runtime capacity for pre-market, regular market and after-hours -> learn from accumulated point-in-time evidence.**
+**Live/current decision support first. Fetch once when useful -> normalize once -> persist truthfully -> reuse many times -> acquire only residual gaps -> prepare small gaps overnight -> perform deeper bounded repair on weekends -> reserve provider/runtime capacity for protected sessions -> learn only from provenance-bound point-in-time evidence.**
