@@ -102,14 +102,14 @@ type providerCircuit struct {
 
 func routeChains() map[string][]string {
 	return map[string][]string{
-		"US Live Equities": {"Alpaca", "Finnhub", "Twelve Data"},
-		"VIX / Indices":    {"Twelve Data", "yfinance", "CBOE"},
-		"Historical Bars":  {"Alpaca", "Twelve Data", "yfinance"},
-		"News":             {"Finnhub", "Marketaux"},
-		"Earnings":         {"Finnhub", "yfinance"},
-		"Fundamentals":     {"Finnhub", "SEC", "yfinance"},
-		"SEC":              {"SEC EDGAR"},
-		"Macro":            {"FRED"},
+		"US Live Equities":            {"Alpaca", "Finnhub", "Twelve Data"},
+		"VIX / Indices":               {"Twelve Data", "yfinance", "CBOE"},
+		canonicalHistoricalBarsDataset: {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
+		"News":                        {"Finnhub", "Marketaux"},
+		"Earnings":                    {"Finnhub", "yfinance"},
+		"Fundamentals":                {"Finnhub", "SEC", "yfinance"},
+		"SEC":                         {"SEC EDGAR"},
+		"Macro":                       {"FRED"},
 	}
 }
 
@@ -125,6 +125,8 @@ func (e *Engine) providerConfigured(provider string, secrets Secrets, settings S
 		return strings.TrimSpace(secrets.AlpacaKey) != "" && strings.TrimSpace(secrets.AlpacaSecret) != ""
 	case "finnhub":
 		return strings.TrimSpace(secrets.Finnhub) != ""
+	case "tradeinsight":
+		return tradeInsightConfigured()
 	case "twelve data":
 		return strings.TrimSpace(secrets.TwelveData) != ""
 	case "marketaux":
@@ -145,6 +147,8 @@ func providerQuotaLabel(provider string) string {
 		return "Entitlement / feed dependent"
 	case "Finnhub":
 		return "API plan / endpoint dependent"
+	case tradeInsightProviderName:
+		return "Runtime tier / response headers"
 	case "Twelve Data":
 		return "Credit based"
 	case "Marketaux":
@@ -165,6 +169,8 @@ func providerCostClass(provider string) string {
 	switch provider {
 	case "yfinance", "CBOE", "SEC", "SEC EDGAR":
 		return "Public / no API fee"
+	case tradeInsightProviderName:
+		return "Beta / free tier"
 	case "FRED", "Marketaux", "Twelve Data", "Finnhub":
 		return "Free tier / optional paid upgrade"
 	case "Alpaca":
@@ -180,7 +186,7 @@ func expectedProviderDelay(dataset, provider string) string {
 	if provider == "yfinance" {
 		return "Recovery-only; may be delayed"
 	}
-	if dataset == "Historical Bars" {
+	if dataset == canonicalHistoricalBarsDataset {
 		return "Completed-bar cadence"
 	}
 	if dataset == "SEC" || provider == "SEC EDGAR" {
@@ -263,6 +269,8 @@ func sourceProvider(source string) string {
 	switch {
 	case strings.Contains(s, "twelvedata"):
 		return "Twelve Data"
+	case strings.Contains(s, "tradeinsight"):
+		return tradeInsightProviderName
 	case strings.Contains(s, "yfinance"), strings.Contains(s, "yahoo"):
 		return "yfinance"
 	case strings.Contains(s, "cboe"):
@@ -355,7 +363,7 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 			active = sourceProvider(quotes["VIX"].Source)
 			lastSuccess = quotes["VIX"].UpdatedAt
 			detail = quotes["VIX"].Source
-		case "Historical Bars":
+		case canonicalHistoricalBarsDataset:
 			lastSuccess = last["history"]
 			active = sourceProvider(e.health["history"])
 		case "News":
@@ -478,7 +486,6 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 					active = h.Provider
 					break
 				}
-			}
 		}
 
 		state := "READY"
