@@ -14,11 +14,11 @@ import (
 )
 
 const (
-	canonicalHistoricalBarsDataset       = "Historical Bars"
-	tradeInsightProviderName             = "TradeInsight"
-	tradeInsightRESTBaseURL              = "https://api.tradeinsight.info/trading-data/v1"
-	tradeInsightPageSize                 = 1000
-	tradeInsightMaxPages                 = 10
+	canonicalHistoricalBarsDataset      = "Historical Bars"
+	tradeInsightProviderName            = "TradeInsight"
+	tradeInsightRESTBaseURL             = "https://api.tradeinsight.info/trading-data/v1"
+	tradeInsightPageSize                = 1000
+	tradeInsightMaxPages                = 10
 	tradeInsightHistoryFanoutMaxSymbols = 50
 )
 
