@@ -29,21 +29,67 @@ This discipline is permanent across v18.9.x, v19, v20 and later major versions.
 
 - `v18.9.1`: #64 runtime crash only.
 - `v18.9.2`: TradeInsight Settings/API-key UX only.
-- `v18.9.3`: coverage-aware Smart Provider Router v2 core only.
+- `v18.9.3`: coverage-aware Smart Provider Router v2 core + persistence-first residual-gap fulfillment only.
 - `v18.9.4`: canonical company identity/all-desk presentation only.
 - `v18.9.5`: Market Data Modes/capability diagnostics only.
 - `v18.9.6`: TradeInsight Form 4 enrichment only.
 - `v18.9.7`: TradeInsight ticker/company search only.
 - `v18.9.8`: TradeInsight movers/ranking evidence only.
 - `v18.9.9`: remaining useful TradeInsight capability admission only.
-- `v18.9.10`: provider efficiency/Adaptive Intelligence telemetry only.
-- `v18.9.11`: professional closure audit only; no new feature scope.
+- `v18.9.10`: provider efficiency/Adaptive Intelligence telemetry + protected-session headroom measurement only.
+- `v18.9.11`: session-aware Data Readiness Maintenance only — light overnight + heavy weekend, with strict protection for pre-market/regular-market/after-hours.
+- `v18.9.12`: professional closure audit only; no new feature scope.
+
+## Persistence-first process contract
+
+Provider work must begin from a consumer requirement and existing canonical evidence, not from a provider-first fetch loop.
+
+Canonical decision sequence:
+
+`consumer requirement -> in-memory canonical cache -> persisted canonical DB/state -> freshness/coverage/schema/provenance/rights validation -> residual gap -> Smart Provider Router -> targeted acquisition -> canonical merge/reconciliation -> persist -> serve`
+
+Never refetch/recompute data already valid for the consumer solely because a provider is available. Revision-prone evidence must retain as-observed point-in-time history plus later revisions. Fast-changing evidence may be retained for history but cannot be reused as current truth beyond its freshness contract.
+
+## Session-aware maintenance process contract
+
+The existing canonical U.S. market calendar/session owner defines protected-session truth. Maintenance must not hard-code another market calendar.
+
+### Protected Tier-0 sessions
+
+**Pre-market, regular market and after-hours** are first-class decision-support sessions. During them:
+
+- live/current data and intelligence outrank all maintenance;
+- provider quota/headroom needed for current-session capability is reserved;
+- maintenance external-provider calls are suspended unless directly required by a current/live consumer;
+- CPU/memory/network/DB/background-worker capacity remains bounded and reserved for current-session work;
+- maintenance is preemptible/checkpointed and yields promptly to protected sessions, market shocks or high-priority current consumers;
+- no deep historical fan-out, heavy reconciliation, compaction or broad background work may run.
+
+### Light overnight process
+
+After protected after-hours work ends and before the next protected pre-market window, the coordinator may run **small, high-value, gap-driven** work under conservative provider/runtime budgets: finalize completed-session data, fill small residual historical gaps, check incremental disclosures/revisions, reconcile small corporate-action/fundamental/macro/identity gaps, resolve bounded outcomes, run lightweight integrity/readiness checks and prepare warm canonical state for the next session.
+
+It must stop/drain before the pre-market protection buffer, when provider headroom is inadequate or when runtime health deteriorates.
+
+### Heavy weekend / extended market-closed process
+
+Use larger non-trading windows for deeper but still bounded historical backfill/reconciliation, corporate actions, SEC/Form4/13F/congress/earnings/fundamental/macro history, point-in-time outcome resolution, provider-history consolidation, material feature preparation and DB/index/retention maintenance.
+
+Heavy maintenance still requires named consumer/value, provider/data rights, rate/cost budgets and expected reuse. It is never a blind full-universe refetch.
+
+### Catch-up and restart
+
+If the app was not running during an eligible window, checkpointed/pending maintenance catches up only in a later eligible overnight/weekend period. Never dump maintenance backlog into pre-market/regular-market/after-hours. Restart/resume must avoid duplicate acquisition/work.
+
+Manual maintenance uses the same budgets and cannot override protected-session safety.
+
+Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
 
 ## v19 process objective
 
-v19 is **Professional Data Infrastructure**, not another provider-router rewrite. It consumes v18.9.x coverage-aware acquisition/identity/telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability and measured paid-provider gap analysis. v19 must end with a mandatory Major Closure before v20.
+v19 is **Professional Data Infrastructure**, not another provider-router or maintenance rewrite. It consumes v18.9.x coverage-aware acquisition, persistence-first reuse, session-aware maintenance, identity and telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history/revision quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability, DB/index/pool/capacity hardening, maintenance economics/protected-session reserve sizing and measured paid-provider gap analysis. v19 must end with a mandatory Major Closure before v20.
 
-Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence and outcome lineage are release requirements, not documentation-only concerns.
+Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence, outcome lineage and protected-session reliability are release requirements, not documentation-only concerns.
 
 ## v20 process objective
 
@@ -51,17 +97,19 @@ v20 is **Adaptive Intelligence & Decision Research**. It may begin only after v1
 
 Adaptive work is split by responsibility: experiment/evidence ledger, historical analogues, calibration/drift, ASBI, adaptive 13F, TDTI, AODR, ADR-GDI adaptive optimization, model/prompt governance and final closure. Production influence follows `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; no model or adaptive policy silently self-promotes. Deterministic Day/Swing/Long truth remains protected unless separately governed, and No Execution is permanent.
 
+v20 may learn better provider/maintenance usefulness and reserve policies only through governed SHADOW/Champion-Challenger evidence. It may not reduce protected live-session safety, bypass data rights/provenance or sacrifice current truth for background learning.
+
 ## Cross-version dependency rule
 
-`v18.9.x trustworthy acquisition/truth -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
 
-v19 must not create a second router to measure providers. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
+v19 must not create a second router or maintenance coordinator to measure providers. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
 
 ## Adaptive provider process contract
 
-Provider work must begin from a consumer requirement and existing canonical evidence, not from a provider-first fetch loop. The sole routing owner evaluates missing coverage and eligible providers, acquires only what is needed, merges with provenance, re-evaluates remaining gaps and stops only when the bounded requirement is met or eligible budget is exhausted.
+The sole routing owner evaluates residual missing coverage and eligible providers, acquires only what is needed, merges with provenance, re-evaluates remaining gaps and stops only when the bounded requirement is met or eligible budget is exhausted.
 
-A provider response marked successful does not imply consumer completeness. Static provider ordering is only a prior/tiebreaker. TradeInsight is never allowed to create its own router/cache/scanner/Market Mode/SEC truth/symbol/persistence system.
+A provider response marked successful does not imply consumer completeness. Static provider ordering is only a prior/tiebreaker. TradeInsight is never allowed to create its own router/cache/scanner/Market Mode/SEC truth/symbol/persistence/scheduler system.
 
 Provider validation lifecycle and runtime serving role are distinct concepts. SHADOW/VALIDATED/APPROVED describe evidence maturity; PRIMARY/FALLBACK/BACKFILL/ENRICH/CORROBORATE describe serving purpose. Promotion/demotion requires telemetry/evidence and must not silently alter deterministic Day/Swing/Long truth.
 
@@ -71,7 +119,7 @@ Classify before action: `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `IN
 
 ## Permanent owners/boundaries
 
-Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; direct SEC/EDGAR authoritative; existing canonical cache/persistence/telemetry/symbol/state owners; deterministic Day/Swing/Long truth; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
+Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache owners; canonical U.S. market calendar/session owner; direct SEC/EDGAR authoritative; existing telemetry/symbol/state owners; deterministic Day/Swing/Long truth; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
 
 ## Exactly one next action
 
