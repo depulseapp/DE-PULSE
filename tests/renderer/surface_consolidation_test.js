@@ -25,11 +25,12 @@ assert(!extension.includes('/api/'), 'presentation consolidation must not create
 assert(css.includes('.discovery-supporting-input > summary'), 'Market Activity must be collapsed behind an optional details summary');
 assert(renderer.includes('discovery-market-activity full-width'), 'base historical renderer marker unexpectedly disappeared; extension contract must consciously demote it');
 
-// v18.8.2 issue #57: DATA DEGRADED is an evidence state, not a calculated
-// zero. Keep evaluated scores numeric, but never present unavailable market
-// evidence as a meaningful 0/100 on Dashboard or Market Intelligence.
-assert(index.includes('<script src="market-intelligence-truth.js?v=18.8.2"></script>'), 'v18.8.2 Market Intelligence truth layer is not loaded');
-assert(index.indexOf('market-intelligence-truth.js?v=18.8.2') > index.indexOf('renderer.js?v=18.8.1'), 'Market Intelligence truth layer must load after the primary renderer');
+// v18.8.2 issue #57 established that DATA DEGRADED is an evidence state, not a
+// calculated zero. The behavior remains protected in later releases. Release
+// identity/cache-bust values may advance, but the truth layer must remain loaded
+// after the primary renderer so it can reconcile those inherited surfaces.
+assert(index.includes('<script src="market-intelligence-truth.js?v=18.9.0"></script>'), 'Market Intelligence truth layer is not loaded for the v18.9.0 release identity');
+assert(index.indexOf('market-intelligence-truth.js?v=18.9.0') > index.indexOf('renderer.js?v=18.9.0'), 'Market Intelligence truth layer must load after the primary renderer');
 assert(marketTruthSource.includes("label.textContent.trim() !== 'Tradeability'"), 'Dashboard Tradeability row truth reconciliation missing');
 assert(marketTruthSource.includes("label.textContent.trim() !== 'Market Tradeability'"), 'Market Intelligence Tradeability card truth reconciliation missing');
 assert(marketTruth.tradeabilityScoreLabel('DATA DEGRADED', 0) === 'UNAVAILABLE', 'DATA DEGRADED must not render as 0/100');
@@ -87,4 +88,4 @@ assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('filings') 
 assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('earnings') === 'catalysts', 'Earnings ticker evidence must resolve to Research Catalysts');
 assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('news') === 'catalysts', 'News ticker evidence must resolve to Research Catalysts');
 
-console.log('PASS: v18.6 surface consolidation + v18.8.2 Market Intelligence degraded-score truth contracts.');
+console.log('PASS: v18.6 surface consolidation + inherited v18.8.2 Market Intelligence degraded-score truth contracts under v18.9.0 identity.');
