@@ -3,6 +3,8 @@
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
 **Certified Stable:** `v18.8.1-stable`  
 **Stable candidate:** `410679ba0d6459f66a44db15a0a55f30741a7c53`  
+**Certified fingerprint:** `bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92`  
+**Certified Stable build ID:** `v18.8.1-stable-20260820`  
 **Current branch:** `v18.8.2-development`  
 **Current PR:** #59 — single PR, Draft during RC promotion  
 **Current issue:** #57 / `ADAPT-FRESHNESS-001 REOPENED`
