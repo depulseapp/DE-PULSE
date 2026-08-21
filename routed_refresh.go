@@ -280,6 +280,9 @@ func (a *Application) handleResearchRefresh(w http.ResponseWriter, r *http.Reque
 	a.engine.refreshResearchEarnings(ctx, sec.Finnhub, sym)
 	a.engine.refreshResearchNews(ctx, sec.Finnhub, sym)
 	a.engine.refreshSECResearchSymbol(ctx, sym)
+	// Congressional disclosures are optional SHADOW alternative evidence. SEC
+	// remains authoritative, and this result never participates in readiness.
+	_ = a.engine.refreshTradeInsightCongressResearchSymbol(ctx, sym)
 	ready, issues := a.engine.researchPackageReadiness(sym)
 	now := time.Now().UnixMilli()
 	a.engine.mu.Lock()
