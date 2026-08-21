@@ -309,9 +309,16 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 	if mode != "daily" {
 		return 0
 	}
+	dailyAdmission, dailyRegistered := tradeInsightCapabilityAdmissionLookup("daily-history")
+	adjustedAdmission, adjustedRegistered := tradeInsightCapabilityAdmissionLookup("adjusted-history")
+	if !dailyRegistered || !dailyAdmission.runtimeAdmitted() || !adjustedRegistered || !adjustedAdmission.runtimeAdmitted() {
+		return 0
+	}
 	if !tradeInsightConfigured() || !e.providerAllowed(tradeInsightProviderName) {
 		return 0
 	}
+	corporateActionAdmission, corporateActionRegistered := tradeInsightCapabilityAdmissionLookup("corporate-actions")
+	corporateActionsAdmitted := corporateActionRegistered && corporateActionAdmission.runtimeAdmitted()
 	symbols := historyRouteSymbols(e, only)
 	if len(symbols) > 50 {
 		symbols = symbols[:50]
@@ -342,7 +349,10 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 		}
 		weekly := aggregateDailyBarsToWeekly(daily)
 		nowMs := time.Now().UnixMilli()
-		actions := tradeInsightCorporateActions(sym, rows, nowMs)
+		actions := []CorporateAction(nil)
+		if corporateActionsAdmitted {
+			actions = tradeInsightCorporateActions(sym, rows, nowMs)
+		}
 		e.mu.Lock()
 		if e.bars[sym] == nil {
 			e.bars[sym] = map[string][]Bar{}
