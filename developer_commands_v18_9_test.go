@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"os"
 	"strings"
 	"testing"
 )
@@ -174,5 +175,23 @@ func TestV189DeveloperCommandFailsClosedWhenProbeUnavailable(t *testing.T) {
 	}
 	if !strings.Contains(stderr.String(), "probe unavailable") {
 		t.Fatalf("unexpected stderr: %q", stderr.String())
+	}
+}
+
+func TestV189DeveloperCommandGuardRunsBeforeApplicationInitialization(t *testing.T) {
+	body, err := os.ReadFile("main.go")
+	if err != nil {
+		t.Fatalf("read main.go: %v", err)
+	}
+	probeGuard := bytes.Index(body, []byte("runDeveloperCommand(os.Args[1:]"))
+	applicationInit := bytes.Index(body, []byte("NewApplication()"))
+	if probeGuard < 0 {
+		t.Fatal("main.go no longer contains the developer command guard")
+	}
+	if applicationInit < 0 {
+		t.Fatal("main.go no longer contains NewApplication initialization")
+	}
+	if probeGuard > applicationInit {
+		t.Fatal("developer command guard moved after NewApplication; admission probe could initialize runtime state")
 	}
 }
