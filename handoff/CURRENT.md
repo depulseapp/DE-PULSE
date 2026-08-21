@@ -1,13 +1,18 @@
 # DE.PULSE — Current Handoff
 
+**SUPERSEDES ALL PRIOR CHAT HANDOFFS**
+
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
 **Certified Stable:** `v18.8.1-stable`  
 **Stable candidate:** `410679ba0d6459f66a44db15a0a55f30741a7c53`  
 **Certified fingerprint:** `bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92`  
 **Certified Stable build ID:** `v18.8.1-stable-20260820`  
-**Current branch:** `v18.8.2-development`  
+**Engineering branch:** `v18.8.2-development`  
+**Candidate package identity:** `18.8.2` / `v18.8.2-stable-20260820`  
 **Current PR:** #59 — single PR, Draft during RC promotion  
 **Current issue:** #57 / `ADAPT-FRESHNESS-001 REOPENED`
+
+The v18.8.1 build/release-evidence checkpoints intentionally remain anchored to the immutable certified Stable while v18.8.2 is an in-flight candidate. Candidate identity, branch and qualification progress live in GitHub/current handoff; prior Stable PASS evidence is never rewritten merely to match candidate version strings.
 
 ## v18.8.2 scope
 
@@ -30,9 +35,9 @@ Exact product head `5f2d229a9d63780e539705aa6c94cb62b36bf51d`:
 
 These runs prove the bounded implementation but become superseded for merge/release identity once this RC metadata commit changes the branch head. They must not be reused as exact-head G11 evidence.
 
-## Release-candidate promotion in this commit
+## Release-candidate promotion
 
-The same PR #59 is intentionally Draft while the release-capable head is created. This commit aligns:
+The same PR #59 is intentionally Draft while the release-capable head is created. The RC aligns:
 - `release_identity.json` → v18.8.2 / build `v18.8.2-stable-20260820`, previous Stable `v18.8.1`;
 - `VERSION.txt` and `app_bootstrap.go`;
 - release-coupled renderer cache/title identity and last-loaded `renderer/release-identity-v18.8.2.js`;
@@ -40,11 +45,13 @@ The same PR #59 is intentionally Draft while the release-capable head is created
 - `release/v18.8.2/run_full_certification.sh` for exact-source G12;
 - CURRENT Adaptive Build/Process/Delivery overlays and this handoff.
 
-The canonical Release workflow remains unchanged. Because `release_identity.json` now changes in PR #59, a future exact-head merge can trigger the existing single G11–G16 Release path; merging before fresh RC-head Fast + Qualified is prohibited.
+Fast #433 exposed missing immutable Stable anchors in this handoff; Fast #434 confirmed workflow/release-state coherence after that repair and then exposed only missing exact portability markers in the handoff. Both are classified as candidate-governance/handoff corrections; neither indicates a product/runtime failure.
+
+The canonical Release workflow remains unchanged. Because `release_identity.json` changes in PR #59, a future exact-head merge can trigger the existing single G11–G16 Release path; merging before fresh RC-head Fast + Qualified is prohibited.
 
 ## Exactly one next action
 
-Inspect the single automatic CI Fast run on the new v18.8.2 RC head. If and only if Fast passes, mark the **same PR #59** Ready for Review once to trigger one fresh exact-head Qualified run. Do not manually duplicate Fast/Qualified, do not create another branch/PR, and do not merge until the new RC head has both `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` success.
+Inspect the single automatic CI Fast run on this corrected v18.8.2 RC head. If and only if Fast passes, mark the **same PR #59** Ready for Review once to trigger one fresh exact-head Qualified run. Do not manually duplicate Fast/Qualified, do not create another branch/PR, and do not merge until the RC head has both `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` success.
 
 After fresh Qualified passes, the next action is exact-head merge authorization; the merge then enters the existing one-run G11–G16 path. Stable may be claimed only after G12, macOS Apple Silicon + Windows x64 G13/G14 actual packaged-runtime audits, G15 assurance and same-run no-rebuild publication pass.
 
