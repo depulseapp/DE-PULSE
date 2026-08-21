@@ -57,12 +57,12 @@ The canonical U.S. market calendar/session owner defines all session boundaries,
 
 ### Protected Tier-0 sessions
 
-**Pre-market, regular market and after-hours** must remain top-priority operating sessions. Release evidence for v18.9.11 and later reliability work must demonstrate:
+**Pre-market, regular market and after-hours** must remain top-priority operating sessions. Release evidence for v18.9.11 and later reliability/hosted work must demonstrate:
 
 - explicit provider quota/headroom reservation for current-session capabilities;
-- live/current quote, spread/liquidity, VIX/market context, news/catalyst/SEC, Opportunity Radar, Research/readiness and other decision-critical work outrank maintenance;
+- live/current quote, spread/liquidity, VIX/market context, news/catalyst/SEC, Opportunity Radar, Research/readiness and other decision-critical work outrank maintenance and background synchronization;
 - maintenance external-provider acquisition suspends during protected sessions unless the acquisition is directly required by a live consumer;
-- bounded CPU, memory, network, DB and background-worker usage so maintenance cannot materially increase current-session latency or cause self-inflicted `DATA DEGRADED`;
+- bounded CPU, memory, network, DB and background-worker usage so maintenance/sync cannot materially increase current-session latency or cause self-inflicted `DATA DEGRADED`;
 - prompt preemption/drain/checkpoint/resume when protected sessions, market shocks or higher-priority current work starts;
 - no heavy compaction, deep reconciliation or historical fan-out during protected sessions.
 
@@ -82,13 +82,32 @@ Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READ
 
 ## v19 delivery train — Professional Data Infrastructure
 
-v19 begins only after v18 final closure. Deliver as small packets for: provider capability/entitlement/rights; provider quality/cost/coverage/SLOs; source disagreement/history/revision quality; 13F infrastructure; two-sided evidence substrate; AODR point-in-time outcome lineage; ADR-GDI professional reliability/capacity including protected-session reserve sizing and maintenance/preemption economics; measured specialized/paid-provider gap evaluation; v20 research-readiness evidence audit; then mandatory v19 Major Closure.
+v19 begins only after v18 final closure. Deliver as small packets for: provider capability/entitlement/rights; provider quality/cost/coverage/SLOs; source disagreement/history/revision quality; 13F infrastructure; two-sided evidence substrate; AODR point-in-time outcome lineage; ADR-GDI professional reliability/capacity including protected-session reserve sizing and maintenance/preemption economics; the mandatory #66 / `ADAPT-HOSTED-SYNC-001` hosted account/sync/zero-key Provider Gateway program; measured specialized/paid-provider gap evaluation; v20 research-readiness evidence audit; then mandatory v19 Major Closure.
 
-No v19 packet may recreate Smart Provider Router v2, persistence/cache ownership, session-aware maintenance, canonical identity, freshness or other owners established in v18. v19 measures and hardens them.
+No v19 packet may recreate Smart Provider Router v2, persistence/cache ownership, session-aware maintenance, canonical identity, freshness, the multi-feed subscription owner or other owners established in v18. v19 measures/hardens them and #66 wraps them behind the hosted boundary rather than forking them.
+
+### #66 delivery requirements — hosted account/sync/zero-key Provider Gateway
+
+#66 is not complete because documentation exists. It is complete only when independently released small patches and final executable assurance prove the target architecture across actual supported clients/services.
+
+Required delivery progression:
+1. **Identity/device/session/account lifecycle:** canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO` + capability enforcement, device registration/revocation, privileged re-authentication and account lifecycle are server-side truth across API/SSE/native/web.
+2. **PostgreSQL foundation:** tenancy isolation, schema/migration parity, pool/capacity limits, HA/failover disposition, encrypted backups, PITR, restore/rollback drills and frozen RPO/RTO behavior.
+3. **Managed secrets + zero-key Provider Gateway:** provider credentials exist only in the canonical server-side secret/KMS owner for commercial hosted mode; rotation/rollback/compromise drills pass without client redeploy; normal clients contain no platform provider secret.
+4. **Rights/entitlement enforcement:** provider plan/rights metadata actively gates router/cache/persistence/REST/live-stream reuse; higher entitlement cannot leak to lower-entitled accounts/users.
+5. **Sync transport foundation:** new-device snapshot/high-watermark bootstrap, SQLite atomic outbox, authenticated idempotent push, authoritative server sequence/change log, incremental pull, durable per-device checkpoints, tombstones, safe retention/compaction, stale-device re-bootstrap and mixed-version protocol negotiation.
+6. **macOS pilot:** preferences + ticker/watchlist convergence, offline writes, restart/reconnect, conflict handling, local account isolation, user switching and lost/revoked-device behavior.
+7. **Desks/workspaces:** explicit membership/configuration/delete/conflict/history convergence.
+8. **Windows parity:** same protocol/semantics/security; no Windows-specific account truth.
+9. **Hosted web parity:** same authenticated service/API, roles/capabilities and PostgreSQL-backed account state; browser SQLite is not the authority.
+10. **Rights-aware research/state:** sync only lawful, entitled, provenance-bound durable artifacts; live market truth remains governed by canonical freshness/provider/state owners.
+11. **Multi-user assurance/closure:** usage/cost/abuse telemetry, cache/call avoidance, provider licensing, entitlement isolation, load shedding, protected-session capacity, API/stream edge security, secret rotation, PostgreSQL recovery, sync replay/compaction, mixed-version behavior and full implementation-miss audit.
+
+Every affected #66 delivery must include negative/adversarial evidence, not only happy-path convergence: cross-account access attempts, revoked sessions/devices, stale clients, duplicate replay, network loss during commit/apply, provider entitlement downgrade/expiry, secret rotation failure/rollback, DB failover/restore, checkpoint expiry/re-bootstrap and protected-session load pressure.
 
 ## v20 delivery train — Adaptive Intelligence & Decision Research
 
-v20 begins only after v19 Major Closure. Deliver separately: adaptive research/experiment ledger; historical analogue/regime outcomes; calibration/FP-FN/miss/contradiction/drift; ASBI fingerprints/state transitions; ASBI scenarios/probability momentum; adaptive 13F; TDTI competing Long/Short/No Reliable Edge; TDTI two-sided trade-plan validation; AODR adaptive shared ranking; AODR diversity/personalized relevance after shared truth; ADR-GDI adaptive optimization including governed provider/maintenance usefulness and reserve-policy learning; model/prompt + Champion/Challenger governance; then v20 Professional Closure.
+v20 begins only after v19 Major Closure, including #66 assurance. Deliver separately: adaptive research/experiment ledger; historical analogue/regime outcomes; calibration/FP-FN/miss/contradiction/drift; ASBI fingerprints/state transitions; ASBI scenarios/probability momentum; adaptive 13F; TDTI competing Long/Short/No Reliable Edge; TDTI two-sided trade-plan validation; AODR adaptive shared ranking; AODR diversity/personalized relevance after shared truth; ADR-GDI adaptive optimization including governed provider/maintenance usefulness and reserve-policy learning; model/prompt + Champion/Challenger governance; then v20 Professional Closure.
 
 Adaptive production influence remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`. No silent self-promotion, no silent deterministic formula change and No Execution. Adaptive maintenance/provider optimization may not reduce protected live-session safety without governed evidence and explicit promotion.
 
@@ -104,17 +123,21 @@ A patch is not complete merely because code compiles or CI is green. Delivery ev
 - packaged-runtime proof where the patch affects native/runtime behavior;
 - current issue state and handoff agree with executable evidence.
 
-For persistence/router changes, acceptance also requires DB/cache hit and residual-gap proof. For session-aware maintenance, acceptance additionally requires live-session non-degradation, provider reserve, preemption/checkpoint/resume and missed-window catch-up proof. For v19, acceptance additionally requires point-in-time provenance/data-rights/reliability truth where applicable. For v20, acceptance additionally requires leakage-safe evaluation, calibration/utility evidence, reproducibility, SHADOW/Champion-Challenger evidence and explicit rollback before promotion.
+For persistence/router changes, acceptance also requires DB/cache hit and residual-gap proof. For session-aware maintenance, acceptance additionally requires live-session non-degradation, provider reserve, preemption/checkpoint/resume and missed-window catch-up proof. For #66 hosted/sync changes, acceptance additionally requires tenant/account isolation, canonical role/capability enforcement, zero provider secrets on normal clients, entitlement-safe cache/live fan-out, bootstrap/outbox/idempotency/tombstone/checkpoint correctness, offline/lost-device/mixed-version handling, PostgreSQL backup/PITR/restore and provider-secret rotation/recovery evidence. For v19 generally, acceptance additionally requires point-in-time provenance/data-rights/reliability truth where applicable. For v20, acceptance additionally requires leakage-safe evaluation, calibration/utility evidence, reproducibility, SHADOW/Champion-Challenger evidence and explicit rollback before promotion.
 
 ## Major-version handoff contract
 
-- **v18 -> v19:** acquisition, persistence-first reuse, session-aware overnight/weekend readiness, protected live-session capacity, canonical identity, adaptive Market Modes, useful provider capabilities and provider telemetry are trustworthy and zero-gap enough for professional measurement.
-- **v19 -> v20:** provider/data quality, rights, provenance, point-in-time feature/outcome lineage, reliability history and capacity/maintenance measurements are sufficient for governed adaptive research.
+- **v18 -> v19:** acquisition, persistence-first reuse, session-aware overnight/weekend readiness, protected live-session capacity, canonical identity, adaptive Market Modes, useful provider capabilities and provider telemetry are trustworthy and zero-gap enough for professional measurement and hosted-account evolution.
+- **v19 -> v20:** provider/data quality, rights, provenance, point-in-time feature/outcome lineage, reliability history, capacity/maintenance measurements and #66 synchronized-account/provider-gateway security/correctness are sufficient for governed adaptive research.
 - A major-version closure cannot be bypassed by starting the next major's implementation early.
 
 ## Final v18.9.x closure
 
 v18.9.12 must prove zero unexplained carry-forward, zero orphan useful provider capability, zero duplicate routing/freshness/persistence/session-scheduler/SEC/symbol/Market-Mode owner, deterministic Day/Swing/Long equivalence, #57 and #64 regressions, DB-first reuse, partial-gap acquisition, overnight/weekend maintenance, protected-session capacity reservation/preemption/recovery, Adaptive Intelligence Scorecard results and actual macOS Apple Silicon + Windows x64 packaged-runtime evidence.
+
+## v19 Major Closure addition for #66
+
+v19 cannot close until #66 demonstrates actual Mac/Windows/web account parity; deterministic sync and conflict/delete behavior; new-device/stale-device bootstrap; local account isolation; revocation across API/streams; zero-key commercial clients; machine-enforced provider rights/entitlements; secret rotation/compromise recovery; PostgreSQL HA/PITR/restore/migration safety; mixed-version protocol behavior; per-account usage/cost/abuse telemetry; multi-user capacity/protected-session safety; and zero unexplained hosted-sync/security/rights gap.
 
 ## Permanent boundaries
 
@@ -122,4 +145,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Obtain/reproduce the #64 macOS crash and freeze the narrow v18.9.1 scope. Do not create the v18.9.2 branch until v18.9.1 is truthfully closed or the crash is proven external/non-product.
+Obtain/reproduce the #64 macOS crash and freeze the narrow v18.9.1 scope. Do not create v18.9.2 or v19 implementation branches until v18.9.1 is truthfully closed or the crash is proven external/non-product.
