@@ -30,23 +30,46 @@ The user explicitly prefers **many small complete builds over heavy builds** to 
 
 1. `v18.9.1` — #64 runtime crash corrective ONLY.
 2. `v18.9.2` — TradeInsight Settings/API-key UX ONLY.
-3. `v18.9.3` — coverage-aware Smart Provider Router v2 core ONLY.
+3. `v18.9.3` — coverage-aware Smart Provider Router v2 + persistence-first residual-gap fulfillment ONLY.
 4. `v18.9.4` — canonical company identity + all-desk presentation ONLY.
 5. `v18.9.5` — Market Data Modes + capability diagnostics ONLY.
 6. `v18.9.6` — TradeInsight SEC Form 4 enrichment ONLY.
 7. `v18.9.7` — TradeInsight ticker/company search ONLY.
 8. `v18.9.8` — TradeInsight movers/ranking evidence ONLY.
 9. `v18.9.9` — remaining useful TradeInsight capability sweep ONLY.
-10. `v18.9.10` — provider efficiency + Adaptive Intelligence telemetry ONLY.
-11. `v18.9.11` — whole v18.9.x professional closure audit ONLY; no new feature scope.
+10. `v18.9.10` — provider efficiency + Adaptive Intelligence telemetry + protected-session headroom measurement ONLY.
+11. `v18.9.11` — Session-Aware Data Readiness Maintenance ONLY: light overnight + heavy weekend, using canonical persistence/router/session owners and strict protection for pre-market/regular-market/after-hours.
+12. `v18.9.12` — whole v18.9.x professional closure audit ONLY; no new feature scope.
 
 A later patch may be split further at G0/G1 if it is still too broad. Never merge patches merely to reduce version count.
 
-## Permanent adaptive provider contract
+## Permanent adaptive provider + persistence contract
 
-`consumer requirement -> current cache/state -> exact missing coverage -> eligible-provider ranking -> targeted acquisition -> canonical merge/provenance -> coverage re-evaluation -> next provider only if still needed -> synthesized consumer state`
+`consumer requirement -> in-memory canonical cache -> persisted canonical DB/state -> validate freshness/coverage/schema/provenance/rights -> exact residual gap -> eligible-provider ranking -> targeted acquisition -> canonical merge/provenance -> coverage re-evaluation -> persist -> next provider only if still needed -> synthesized consumer state`
 
 Provider success does not equal consumer completeness. No fixed provider chain is authoritative. Static ordering is at most a prior/tiebreaker. Validation lifecycle (`SHADOW/VALIDATED/...`) is separate from serving role (`PRIMARY/FALLBACK/BACKFILL/ENRICH/CORROBORATE/...`).
+
+Never refetch/recompute trustworthy evidence already valid for the consumer solely because a provider is available. Revision-prone evidence preserves point-in-time/as-observed history plus later revisions. Live-sensitive values obey freshness TTLs and cannot be presented as current merely because they exist in the DB.
+
+## Permanent session-aware maintenance contract
+
+Pre-market, regular market and after-hours are protected Tier-0 decision-support sessions. They always receive first claim on provider quota/headroom, network, CPU, memory, DB and worker capacity.
+
+- **Light overnight maintenance:** small, high-value, gap-driven readiness work only after protected after-hours and before the next protected pre-market window.
+- **Heavy weekend/extended market-closed maintenance:** deeper but bounded backfill/reconciliation/index/retention/outcome work.
+- Maintenance uses only bounded surplus capacity after protected-session reserves.
+- External-provider maintenance acquisition suspends during protected sessions unless directly required by a current/live consumer.
+- Maintenance must drain/preempt/checkpoint/resume around protected sessions or market shocks.
+- Missed work catches up only in a later eligible overnight/weekend window, not during live sessions.
+- No blind full-universe refetch and no parallel maintenance calendar/scheduler/router/cache/database owner.
+
+Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
+
+## v19 / v20 continuity
+
+v19 Professional Data Infrastructure inherits persistence-first reuse and session-aware maintenance, and measures provider/data rights, quality, cost, coverage, reliability, revision correctness, DB/index/pool/capacity behavior, calls avoided, maintenance value and protected-session reserve sizing. It must not recreate the router or maintenance coordinator.
+
+v20 Adaptive Intelligence consumes provenance-bound point-in-time evidence/outcomes and may learn provider/maintenance usefulness only through governed SHADOW/Champion-Challenger promotion. It may not reduce protected live-session safety, bypass rights/provenance or sacrifice current truth for background learning.
 
 ## Other continuity truth
 
@@ -60,4 +83,4 @@ Diagnose #64 using the complete macOS crash evidence or deterministic reproducti
 
 ## Resume rule
 
-Any ChatGPT account, Codex session, Claude or human maintainer must read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, all four `adaptive-governance/CURRENT_ADAPTIVE_*` files, `release_identity.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #65, issue #64 and live GitHub state. GitHub objects and executable evidence outrank chat memory.
+Any ChatGPT account, Codex session, Claude or human maintainer must read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, all four `adaptive-governance/CURRENT_ADAPTIVE_*` files, `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`, `release_identity.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #65, issue #64 and live GitHub state. GitHub objects and executable evidence outrank chat memory.
