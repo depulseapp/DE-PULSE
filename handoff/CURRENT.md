@@ -7,40 +7,73 @@
 **Certified candidate:** `e51831b8269c3ae673edc93eb0ec88a0a954344f`  
 **Certified fingerprint:** `a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247`  
 **Build ID:** `v18.8.2-stable-20260820`  
-**Qualified source head:** `66e59e4e5f803ca53520797e5eb6e9d3fe72e84c`  
-**Final Fast:** #437 / `32435845178` — PASS  
-**Final Qualified:** #151 / `32435920048` — PASS  
-**Final Release:** #31 / `32436189650` — G11–G16 PASS  
-**Next release line:** `v18.9.0 — TradeInsight Full Capability SHADOW Integration`
+**Active release line:** `v18.9.0 — TradeInsight Full Capability SHADOW Integration`  
+**Active branch:** `v18.9.0-development`  
+**Durable scope:** issue #61 / `ADAPT-TRADEINSIGHT-001`  
+**Latest product/test source at this checkpoint:** `0a0a04c861bd9cecd68b8120a3298495e143211b`  
+**Latest Fast proof for that source:** #446 / `32491146838` — PASS
 
 ## v18.8.2 — COMPLETE / STABLE
 
-Issue #57 / `ADAPT-FRESHNESS-001 REOPENED` is resolved by v18.8.2 Stable. The bounded repair makes the existing canonical Market Intelligence breadth universe participate in quote freshness/recovery accountability and prevents degraded/unavailable Market Tradeability evidence from being presented as an observed numeric zero.
+`v18.8.2-stable` remains the immutable certified baseline. Its release evidence and G11–G16 package proof remain authoritative and are not superseded by the v18.9 development line.
 
-Protected architecture remains unchanged: Smart Provider Router v2 is sole routing authority; canonical freshness/recovery + routed refresh are sole recovery owners; existing multi-feed allocation remains sole subscription owner; BroadSnapshotBroker remains the canonical reuse owner; deterministic Day/Swing/Long, U.S. Equities Processing, GLD/SLV/USO actionable exceptions and No Execution are preserved.
+## v18.9.0 — current governed state
 
-## Qualification and release history
+Issue #61 is the durable G0/G1 capability-discovery and bounded-scope contract. Do **not** restart v18.9 from chat memory and do not broaden beyond that issue without updating the durable contract first.
 
-Product PR #59 carried the bounded runtime/test repair. Its release-capable exact head `186dd18bcd33a2d891b3df738478ba88cf7b98b6` passed Fast #435 / `32434635563` and full Qualified #150 / `32434742951`, then squash-merged as `d855607426bc56372656d3b0baad67611aae7a96`.
+The historical-route G2 blocker discovered during v18.9 mapping is resolved in source:
+- scheduled intraday and daily/weekly history refreshes route through the single canonical dataset identifier `Historical Bars`;
+- mode remains request context rather than a second provider-route name;
+- TradeInsight joins the existing canonical history route after Alpaca and before Twelve Data/yfinance;
+- TradeInsight is admitted only to the documented daily/weekly mode and is never presented as an intraday provider.
 
-Automatic Release #30 / `32435511692` passed G11 and stopped at G12 on a stale literal README presentation-heading assertion in `version_consistency_test.py`. This was classified as **CI/release-harness failure**, not product/runtime failure. It did not reach native packaging or publication.
+The stale Extreme-30 compatibility assertion was reconciled in commit `88b2dbc504ece2b9990f1698cabd7c8f234d37ed`. Fast #444 passed that exact repaired head.
 
-Release-harness recovery PR #60 followed the repository's existing post-merge harness-recovery contract: the same canonical `v18.8.2-development` line was recreated from the failed merged candidate, only harness/governance files changed, and recovery head `66e59e4e5f803ca53520797e5eb6e9d3fe72e84c` earned fresh Fast #437 and full Qualified #151 before merge.
+TradeInsight history/corporate-action work now implemented on the same branch:
+- native Go Bearer-token adapter using runtime env configuration (`TIDATA_API_KEY`, legacy alias `TRADEINSIGHT_API_KEY`); no secret is committed;
+- bounded paginated REST fetch with response-size and page safety limits, Retry-After reporting and key redaction;
+- daily adjusted OHLCV fallback/backfill through the canonical history owner, with weekly bars derived from canonical daily bars;
+- no TradeInsight intraday assumption;
+- dividend and split fields from admitted daily-history responses normalize into the existing canonical `CorporateAction` ledger;
+- supplemental semantic duplicates preserve the existing canonical action rather than overwriting it;
+- focused v18.9 regression tests cover auth/pagination/errors, daily-only admission, canonical route membership, adjusted history, weekly derivation and corporate-action normalization/precedence.
 
-Release #31 / `32436189650` then passed G11 exact-source provenance, G12 full certification, macOS Apple Silicon and Windows x64 G13/G14 actual packaged-runtime audits, G15 Release Assurance, same-run exact-artifact publication with **no rebuild**, and G16 durable handoff evidence.
+Product commits after the router repair:
+- `2b4a5381c09a09fa12c0957be88b9ed97476ffa5` — normalize TradeInsight dividend/split evidence into the canonical corporate-action ledger;
+- `0a0a04c861bd9cecd68b8120a3298495e143211b` — focused corporate-action regression coverage.
 
-The immutable tag `v18.8.2-stable` points exactly to certified candidate `e51831b8269c3ae673edc93eb0ec88a0a954344f`. Branch hygiene removed `v18.8.2-development` after merge. Durable evidence is in `release/v18.8.2/stable-evidence-manifest.json` and both `.depulse-certification/resume/` checkpoints.
+Fast #446 passed exact product/test source `0a0a04c861bd9cecd68b8120a3298495e143211b`.
 
-## v18.9.0 mandatory entry
+## Architecture preserved
 
-`ADAPT-TRADEINSIGHT-001` is next. G0 must first enumerate the complete capability surface available to the configured TradeInsight beta account/API and classify every useful capability by purpose. Congressional Trading, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill are mandatory minimum roles, not a cap.
+- Smart Provider Router v2 remains the sole executable routing authority.
+- Canonical freshness/recovery and routed refresh remain the sole freshness/recovery owners.
+- Existing multi-feed allocation remains the sole live-subscription owner.
+- Existing corporate-action ledger/truth builder remains the sole corporate-action owner.
+- Direct SEC/EDGAR remains authoritative for Form 4; TradeInsight may only corroborate/enrich when that capability is implemented.
+- Opportunity Radar remains the sole mover/candidate-ranking owner.
+- Deterministic Day/Swing/Long truth, U.S. Equities Processing, GLD/SLV/USO actionable exceptions and No Execution remain protected.
+- No Python or MCP production dependency was added.
 
-Disposition each capability as `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`. Any executable use must flow through Smart Provider Router v2 with entitlement/rights, freshness, budget, cache/retention, disagreement, Market Mode, SHADOW telemetry, promotion and graceful-degradation rules. Full capability discovery never means blindly calling every endpoint.
+## Still open — do not claim v18.9 complete
+
+G2/G3 remains open for capability-specific entitlement/schema readiness beyond publicly evidenced daily history. Required remaining scope from issue #61 includes:
+- configured-key entitlement/schema probe by capability without leaking secrets;
+- Congressional Trading Intelligence SHADOW ingestion/normalization;
+- SEC Form 4 corroboration/enrichment with direct-SEC precedence and source-family de-duplication;
+- selective bounded bulk-history behavior where the configured entitlement proves it;
+- top-mover SHADOW evidence into existing Opportunity Radar only, but no REST endpoint may be invented from MCP-only evidence;
+- ticker/company lookup fallback only after an admitted runtime endpoint/schema is proven;
+- truthful provider capability/diagnostic visibility and adaptive usefulness/promotion evidence;
+- missing-key/optional-provider behavior must never create a DATA DEGRADED cascade;
+- full G5–G16 qualification and release proof are not yet earned.
+
+Public vendor evidence currently proves the beta REST base, Bearer auth, daily OHLCV and `/congress/v1/trades`. The public beta page does not by itself prove production REST paths for MCP `get_top_movers` or `search_ticker`; do not guess them.
 
 ## Exactly one next action
 
-Perform **v18.9.0 G0 exact-baseline / TradeInsight full-capability discovery** from current GitHub truth and report the findings plus a bounded proposed G1 scope before changing product source. Do not begin v18.9.0 implementation before G0 diagnosis and G1 freeze.
+Complete the remaining **G2/G3 TradeInsight dependency/readiness map**: locate the exact existing Congressional/SEC/Radar/symbol/telemetry owner seams and perform a configured-key, redacted entitlement/schema probe for the next admitted capability. Then implement the smallest SHADOW slice through those existing owners, beginning with congressional trades because `/congress/v1/trades` is publicly evidenced. Do not add unverified endpoint paths or a TradeInsight-specific subsystem.
 
 ## Resume rule
 
-Any ChatGPT account, Claude or other assistant must read `AGENTS.md` / `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, the four CURRENT Adaptive overlays, `release_identity.json`, both `.depulse-certification/resume/` checkpoints, `release/v18.8.2/stable-evidence-manifest.json`, the v18.8.2 release contract, issue #57 history, PRs #59/#60 and live GitHub branch/workflow/tag state before changing source. GitHub is the durable source of truth; never resume from model memory alone.
+Any ChatGPT account, Claude or other assistant must read `AGENTS.md` / `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, issue #61, this file, the four CURRENT Adaptive overlays, `release_identity.json`, both `.depulse-certification/resume/` checkpoints and live GitHub branch/check state before changing source. Reconcile this handoff against the actual branch head first; GitHub source and executable checks outrank prose.
