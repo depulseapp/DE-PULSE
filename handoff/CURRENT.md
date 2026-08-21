@@ -12,8 +12,7 @@
 **Active branch:** `v18.9.0-development`  
 **Draft PR:** #62  
 **Durable scope:** issue #61 / `ADAPT-TRADEINSIGHT-001`  
-**Latest product/admission commit:** `4424bf2af54d4c5b5894773a2e58a4aa1474b37d`  
-**Latest known Fast proof before current handoff-only commits:** Fast #470 at `c9402b431489c6935437fb4f66801372ab213905` — PASS  
+**Latest product/test commit immediately before this handoff update:** `8c0cbc72cf7fad889714c23402ec30a5c348c524`  
 **Latest-head qualification:** read live from GitHub; never infer PASS from an earlier SHA.
 
 ## v18.8.2 — COMPLETE / STABLE
@@ -34,8 +33,9 @@ Implemented on the existing owners only:
 - Pagination is bounded; errors are classifiable/redacted; `Retry-After` is retained; runtime calls feed shared `ProviderTelemetry`.
 - Adjusted daily OHLCV writes into canonical history state; weekly bars are derived from canonical daily bars.
 - Dividend/split evidence merges into the existing canonical `CorporateAction` ledger and semantic duplicates preserve existing canonical truth.
-- Multi-symbol history/backfill is client-side fan-out over the verified per-ticker `/ohlc` endpoint only. `historyRouteSymbols()` supplies the canonical deduplicated symbol set, the TradeInsight loop is sequential, and the provider attempt is capped at 50 symbols. No server-side bulk REST endpoint is assumed or invented.
-- Commit `4424bf2af54d4c5b5894773a2e58a4aa1474b37d` admits `bulk-history` as **SHADOW**, with regression coverage locking in canonical ownership, sequential/deduplicated behavior, the 50-symbol cap, and explicit-promotion requirement.
+- Multi-symbol history/backfill is client-side fan-out over the verified per-ticker `/ohlc` endpoint only. `historyRouteSymbols()` supplies the canonical deduplicated symbol set; TradeInsight filters non-actionable `VIX`, runs sequentially, and is capped at 50 symbols. No server-side bulk REST endpoint is assumed or invented.
+- `bulk-history` is **SHADOW**-admitted. Commit `004c195cbec11af519b92d07fdd7beb30d311c09` makes that capability admission executable: when `bulk-history` is not admitted, TradeInsight collapses to one eligible history symbol rather than silently performing multi-symbol fan-out.
+- Commit `8c0cbc72cf7fad889714c23402ec30a5c348c524` adds regression proof for capability gating, VIX exclusion, canonical deduplication, normalized symbols, and the hard 50-symbol ceiling.
 
 ### Congressional Trading Intelligence
 
@@ -76,13 +76,14 @@ Official SDK recheck on 2026-08-21 confirms `tidata/tifinance/multi.py` implemen
 
 ## Qualification truth
 
-- Fast #470 passed exact prior head `c9402b431489c6935437fb4f66801372ab213905`.
-- Fast #472 on handoff head `6ca0283a3bb419b5815bc45274192ea10d330527` failed only because this handoff did not contain the literal required `Exactly one next action` contract. Product/test steps did not run after that fail-fast governance check. This document corrects the contract without weakening the gate.
-- G5–G16 qualification/release proof must be earned from the current immutable candidate SHA in the normal workflow. Do not merge or release from this handoff alone.
+- Fast #470 passed exact prior head `c9402b431489c6935437fb4f66801372ab213905` before bounded-history admission.
+- Fast #472 on `6ca0283a3bb419b5815bc45274192ea10d330527` failed only because the refreshed handoff temporarily violated the literal `Exactly one next action` portability contract; the handoff was corrected without weakening the gate.
+- Later code/test commits made `bulk-history` admission executable, so older Fast evidence must not be used as proof for the current head.
+- G5–G16 qualification/release proof must be earned from the actual current SHA in the normal workflow. Do not merge or release from this handoff alone.
 
 ## Exactly one next action
 
-Re-fetch the actual `v18.9.0-development` head and latest issue #61/PR #62 checks, obtain a green **CI Fast** result on that exact head using the existing workflow, and only then advance the same immutable candidate into the existing G6+ qualification sequence without merging/releasing or admitting Form 4, movers, or ticker search unless their exact configured-key production REST contracts are first captured/redacted and added to issue #61.
+Re-fetch the actual `v18.9.0-development` head and latest issue #61/PR #62 checks, obtain a green **CI Fast** result on that exact head using the existing workflow, and only then advance that same exact candidate into the existing Qualified/G6+ sequence without merging/releasing or admitting Form 4, movers, or ticker search unless their exact configured-key production REST contracts are first captured/redacted and added to issue #61.
 
 ## Resume rule
 
