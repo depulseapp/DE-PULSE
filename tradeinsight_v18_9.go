@@ -161,6 +161,66 @@ func tradeInsightHistoryRows(rows []map[string]any) []tradeInsightHistoryRow {
 	return out
 }
 
+func tradeInsightCorporateActions(symbol string, rows []map[string]any, now int64) []CorporateAction {
+	symbol = normalizeSymbol(symbol)
+	if symbol == "" || symbol == "VIX" {
+		return nil
+	}
+	if now <= 0 {
+		now = time.Now().UnixMilli()
+	}
+	today := time.UnixMilli(now).UTC().Format("2006-01-02")
+	actions := []CorporateAction{}
+	for _, row := range tradeInsightHistoryRows(rows) {
+		if _, err := time.Parse("2006-01-02", row.Date); err != nil {
+			continue
+		}
+		status := "UPCOMING"
+		if row.Date <= today {
+			status = "EFFECTIVE"
+		}
+		if row.Dividend > 0 {
+			actions = append(actions, CorporateAction{
+				Symbol: symbol, Type: "cash_dividend", ExDate: row.Date, CashAmount: row.Dividend,
+				Status: status, FirstSeenAt: now, UpdatedAt: now,
+				Detail: fmt.Sprintf("cash %.4g · supplemental adjusted-history evidence", row.Dividend), Source: tradeInsightProviderName,
+			})
+		}
+		if row.SplitRatio > 0 && row.SplitRatio != 1 {
+			actions = append(actions, CorporateAction{
+				Symbol: symbol, Type: "split", ExDate: row.Date, Ratio: row.SplitRatio, AdjustmentFactor: row.SplitRatio,
+				Status: status, FirstSeenAt: now, UpdatedAt: now,
+				Detail: fmt.Sprintf("ratio %.4g · supplemental adjusted-history evidence", row.SplitRatio), Source: tradeInsightProviderName,
+			})
+		}
+	}
+	return actions
+}
+
+func corporateActionSemanticKey(a CorporateAction) string {
+	a.ID = ""
+	return corporateActionKey(a)
+}
+
+func mergeSupplementalCorporateActions(existing, supplemental []CorporateAction, now int64) []CorporateAction {
+	seen := map[string]bool{}
+	for _, action := range existing {
+		if key := corporateActionSemanticKey(action); key != "" {
+			seen[key] = true
+		}
+	}
+	fresh := make([]CorporateAction, 0, len(supplemental))
+	for _, action := range supplemental {
+		key := corporateActionSemanticKey(action)
+		if key == "" || seen[key] {
+			continue
+		}
+		seen[key] = true
+		fresh = append(fresh, action)
+	}
+	return mergeCorporateActionLedger(existing, fresh, now)
+}
+
 func tradeInsightBars(rows []map[string]any, adjusted bool) []Bar {
 	parsed := tradeInsightHistoryRows(rows)
 	bars := make([]Bar, 0, len(parsed))
@@ -249,6 +309,8 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 			continue
 		}
 		weekly := aggregateDailyBarsToWeekly(daily)
+		nowMs := time.Now().UnixMilli()
+		actions := tradeInsightCorporateActions(sym, rows, nowMs)
 		e.mu.Lock()
 		if e.bars[sym] == nil {
 			e.bars[sym] = map[string][]Bar{}
@@ -256,6 +318,11 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 		e.bars[sym]["daily"] = daily
 		if len(weekly) > 0 {
 			e.bars[sym]["weekly"] = weekly
+		}
+		if len(actions) > 0 {
+			e.corporateActions = mergeSupplementalCorporateActions(e.corporateActions, actions, nowMs)
+			e.lastUpdated["tradeinsight-corporate-actions"] = nowMs
+			e.health["tradeinsight-corporate-actions"] = fmt.Sprintf("healthy · %d supplemental dividend/split events normalized into canonical ledger", len(actions))
 		}
 		e.mu.Unlock()
 		prior := 0.0
