@@ -64,7 +64,7 @@ For material hosted/security/data decisions, record an ADR or equivalent durable
 - failure/availability assumptions;
 - alternatives rejected and migration implications.
 
-Hosted designs must explicitly distinguish:
+Hosted designs explicitly distinguish:
 1. tenant/account identity;
 2. RBAC/capability authorization;
 3. DE.PULSE product-plan entitlement/quota policy;
