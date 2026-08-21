@@ -14,8 +14,8 @@ import (
 const tradeInsightCongressTradesPath = "/congress/v1/trades"
 
 // tradeInsightSchemaField records only structural schema evidence. It never
-// retains response values, which keeps configured-key admission probes safe to
-// log in CI or issue evidence without leaking provider payload contents.
+// retains response values, which keeps configured-key diagnostics safe to log
+// without leaking provider payload contents.
 type tradeInsightSchemaField struct {
 	Name          string   `json:"name"`
 	Types         []string `json:"types"`
@@ -23,8 +23,8 @@ type tradeInsightSchemaField struct {
 }
 
 // tradeInsightSchemaFingerprint is intentionally value-free. It captures the
-// top-level container and the observed field/type contract needed to admit a
-// previously gated TradeInsight capability without guessing its REST schema.
+// top-level container and observed field/type contract for runtime diagnostics
+// without changing capability admission or lifecycle state.
 type tradeInsightSchemaFingerprint struct {
 	Container     string                    `json:"container"`
 	RowsObserved  int                       `json:"rows_observed"`
@@ -129,10 +129,10 @@ func tradeInsightCongressSchemaProbeAt(ctx context.Context, client *http.Client,
 	return tradeInsightCongressSchemaProbeAtObserved(ctx, client, baseURL, key, nil)
 }
 
-// tradeInsightCongressSchemaProbeAtObserved is an explicit admission probe,
-// not a production data route. It intentionally bypasses the generic paginated
-// row helper because limit/offset semantics have not been documented for the
-// Congress endpoint. The request therefore contains no invented query fields.
+// tradeInsightCongressSchemaProbeAtObserved is an explicit value-free runtime
+// diagnostic, not a production data route. The request intentionally remains
+// query-free so it does not depend on the production Congressional adapter's
+// filtering or pagination behavior.
 func tradeInsightCongressSchemaProbeAtObserved(ctx context.Context, client *http.Client, baseURL, key string, begin func() func(error)) (tradeInsightSchemaFingerprint, error) {
 	key = strings.TrimSpace(key)
 	if key == "" {
@@ -144,7 +144,7 @@ func tradeInsightCongressSchemaProbeAtObserved(ctx context.Context, client *http
 		return tradeInsightSchemaFingerprint{}, fmt.Errorf("TradeInsight Congress admission row missing")
 	}
 	expectedEvidence := "/trading-data/v1" + tradeInsightCongressTradesPath
-	if admission.EndpointEvidence != expectedEvidence {
+	if !strings.Contains(admission.EndpointEvidence, expectedEvidence) {
 		return tradeInsightSchemaFingerprint{}, fmt.Errorf("TradeInsight Congress endpoint evidence mismatch: got %q", admission.EndpointEvidence)
 	}
 
@@ -200,8 +200,8 @@ func tradeInsightCongressSchemaProbeAtObserved(ctx context.Context, client *http
 
 // probeTradeInsightCongressSchema participates in shared provider telemetry but
 // does not write freshness, health, cache, Research, Event Intelligence or
-// canonical persistence state. A failed optional probe therefore cannot create
-// a DATA DEGRADED cascade or activate the gated Congressional capability.
+// canonical persistence state. A failed optional diagnostic therefore cannot
+// create a DATA DEGRADED cascade or change the Congressional SHADOW lifecycle.
 func (e *Engine) probeTradeInsightCongressSchema(ctx context.Context) (tradeInsightSchemaFingerprint, error) {
 	var begin func() func(error)
 	if e != nil && e.providerTelemetry != nil {
