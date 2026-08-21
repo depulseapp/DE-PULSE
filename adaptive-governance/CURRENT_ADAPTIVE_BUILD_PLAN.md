@@ -84,7 +84,31 @@ No new feature scope. Audit whole v18.9.x for misses/duplication/bypasses/orphan
 
 **Entry:** v18 final closure PASS. v19 consumes the coverage-aware routing, persistence-first reuse, session-aware maintenance, canonical identity, adaptive Market Modes and provider telemetry created in v18.9.x; it does not recreate them.
 
-Provisional small packets, each independently frozen at G1:
+### Mandatory v19 hosted account/sync/provider-gateway program — #66 / `ADAPT-HOSTED-SYNC-001`
+
+This is a real v19 build program, not documentation-only scope. It MUST be frozen into dependency-ordered small patches at v19 G0/G1 and completed before v19 Major Closure.
+
+Permanent target architecture:
+`macOS/Windows SQLite edge -> authenticated DE.PULSE hosted service/API -> PostgreSQL shared account/state authority`, with hosted web using the same service/API. Synchronization is typed, incremental, idempotent, checkpointed and domain-aware; never raw SQLite/PostgreSQL replication or dual-master table sync.
+
+Commercial normal users are **zero-key**: they authenticate to DE.PULSE only. Platform/provider API credentials stay server-side in the canonical managed-secret/KMS owner. The hosted Provider Gateway reuses Smart Provider Router v2, canonical freshness/cache/persistence/state, the existing multi-feed subscription owner, rights/entitlement enforcement and protected-session capacity controls. No second provider stack or hosted subscription manager is allowed.
+
+The #66 program must be split into small packets covering, at minimum:
+1. canonical roles/capabilities + hosted account/user/device/session + account lifecycle and privileged re-authentication;
+2. PostgreSQL tenancy/schema/pool + HA/PITR/encrypted backup/restore/migration/recovery objectives;
+3. managed-secret/KMS lifecycle + zero-key Provider Gateway + rotation/compromise recovery;
+4. machine-enforced provider rights/entitlement at router/cache/persistence/REST/live-stream fan-out boundaries;
+5. sync protocol foundation: new-device bootstrap, SQLite atomic outbox, idempotency, authoritative server sequence, change log, checkpoints, tombstones, retention/compaction, stale-device re-bootstrap and mixed-version capability negotiation;
+6. macOS preferences + ticker/watchlist pilot with local account isolation, offline/restart/reconnect and lost/revoked-device behavior;
+7. desks/workspaces sync with explicit conflict/delete/history semantics;
+8. Windows x64 parity;
+9. hosted web parity through the same APIs/session truth;
+10. rights-aware durable research/evidence portability;
+11. multi-user usage/cost/abuse/licensing/security/load/DR assurance + final implementation-miss audit.
+
+Each sub-packet still obeys one-primary-responsibility-per-patch. Exact versions are deferred to G1. Issue #66 and its audit addenda are the detailed durable acceptance authority.
+
+Other provisional v19 packets, each independently frozen at G1:
 1. provider capability/entitlement/data-rights registry;
 2. provider quality/reliability/latency/rate/cost/coverage/SLO scorecards including calls-avoided and maintenance value;
 3. data reconciliation/source-disagreement/historical-adjustment/revision quality;
@@ -92,9 +116,10 @@ Provisional small packets, each independently frozen at G1:
 5. two-sided Long/Short point-in-time evidence substrate;
 6. AODR candidate/ranking/outcome lineage infrastructure;
 7. ADR-GDI professional reliability/capacity/load-shedding hardening including protected-session reserve sizing, maintenance/preemption economics, DB/index/pool/capacity behavior and restart/warm-start;
-8. measured specialized/paid-provider gap evaluation and migration readiness through the same router/persistence/session-priority contracts;
-9. v20 point-in-time evidence/feature/outcome/provenance/research-readiness audit;
-10. mandatory v19 Major Closure with no unexplained provider role/dataset/right/reliability gap.
+8. `ADAPT-HOSTED-SYNC-001` hosted account/sync/zero-key Provider Gateway program defined above;
+9. measured specialized/paid-provider gap evaluation and migration readiness through the same router/persistence/session-priority contracts;
+10. v20 point-in-time evidence/feature/outcome/provenance/research-readiness audit, including synchronized evidence only after #66 assurance passes;
+11. mandatory v19 Major Closure with no unexplained provider role/dataset/right/reliability gap and explicit PASS for #66 account parity, zero-key secret boundaries, entitlement isolation, sync/offline recovery, PostgreSQL DR and multi-user cost/security/load assurance.
 
 ## v20 build packets — Adaptive Intelligence & Decision Research
 
@@ -117,15 +142,15 @@ Provisional small packets, split further where G0/G1 shows coupling/risk:
 
 ## Version dependency contract
 
-`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence + hosted account/sync infrastructure -> v20 governed adaptive learning`.
 
-v19 must not undo v18 Smart Provider Router or session-aware maintenance ownership. v20 must not bypass v19 provenance/rights/point-in-time lineage. No adaptive model may repair missing data by inventing confidence; missing/weak evidence remains UNKNOWN/ABSTAIN.
+v19 must not undo v18 Smart Provider Router or session-aware maintenance ownership. #66 must reuse those owners and must complete before v20 relies on synchronized cross-device evidence/outcomes. v20 must not bypass v19 provenance/rights/point-in-time lineage. No adaptive model may repair missing data by inventing confidence; missing/weak evidence remains UNKNOWN/ABSTAIN.
 
 ## Protected-session resource contract
 
-Pre-market, regular market and after-hours are Tier-0 decision-support sessions. Their live/current workloads always outrank maintenance. Provider quota/headroom, network concurrency, CPU, memory, DB and worker capacity must retain explicit reserve for these sessions. Maintenance gets bounded surplus capacity and must yield/preempt before it can materially degrade live/current evidence.
+Pre-market, regular market and after-hours are Tier-0 decision-support sessions. Their live/current workloads always outrank maintenance and background synchronization. Provider quota/headroom, network concurrency, CPU, memory, DB and worker capacity must retain explicit reserve for these sessions. Maintenance/sync gets bounded surplus capacity and must yield/preempt before it can materially degrade live/current evidence.
 
-Session boundaries come only from the existing canonical U.S. market calendar/session owner, including holidays/half-days/exceptional closures. Maintenance may not implement a second market calendar.
+Session boundaries come only from the existing canonical U.S. market calendar/session owner, including holidays/half-days/exceptional closures. Maintenance or hosted sync may not implement a second market calendar.
 
 ## CI/release efficiency rule
 
@@ -137,4 +162,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Execute G0 for issue #64 / v18.9.1 using concrete macOS crash evidence or deterministic reproduction, then freeze its narrow G1. No v18.9.2 branch until v18.9.1 is truthfully closed.
+Execute G0 for issue #64 / v18.9.1 using concrete macOS crash evidence or deterministic reproduction, then freeze its narrow G1. No v18.9.2 or v19 implementation branch until v18.9.1 is truthfully closed.
