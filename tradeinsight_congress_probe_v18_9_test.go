@@ -101,7 +101,7 @@ func TestV189TradeInsightCongressSchemaProbeUsesExactDocumentedRequestAndSharedO
 			t.Fatalf("path = %q", r.URL.Path)
 		}
 		if r.URL.RawQuery != "" {
-			t.Fatalf("schema probe must not invent query parameters: %q", r.URL.RawQuery)
+			t.Fatalf("schema probe must stay value-minimal: %q", r.URL.RawQuery)
 		}
 		if got := r.Header.Get("Authorization"); got != "Bearer "+key {
 			t.Fatalf("authorization = %q", got)
@@ -177,22 +177,27 @@ func TestV189TradeInsightCongressSchemaProbeRateLimitIsRedactedAndBackpressureVi
 	}
 }
 
-func TestV189TradeInsightCongressProbeDoesNotRuntimeAdmitCongress(t *testing.T) {
-	row, ok := tradeInsightCapabilityAdmissionLookup("congressional-trades")
+func TestV189TradeInsightCongressProbeCannotPromoteBeyondShadow(t *testing.T) {
+	before, ok := tradeInsightCapabilityAdmissionLookup("congressional-trades")
 	if !ok {
 		t.Fatal("Congressional admission row missing")
 	}
-	if row.SchemaVerified || row.RuntimeEnabled || row.runtimeAdmitted() || tradeInsightCapabilityLifecycleTruth(row.ID) != "GATED" {
-		t.Fatalf("schema probe must not promote Congress: %+v lifecycle=%s", row, tradeInsightCapabilityLifecycleTruth(row.ID))
+	if !before.SchemaVerified || !before.RuntimeEnabled || !before.runtimeAdmitted() || tradeInsightCapabilityLifecycleTruth(before.ID) != "SHADOW" {
+		t.Fatalf("Congress must enter probe diagnostics already SHADOW-admitted: %+v lifecycle=%s", before, tradeInsightCapabilityLifecycleTruth(before.ID))
+	}
+	_ = tradeInsightSchemaFingerprint{Container: "data", RowsObserved: 1}
+	after, _ := tradeInsightCapabilityAdmissionLookup("congressional-trades")
+	if after != before || tradeInsightCapabilityLifecycleTruth(after.ID) != "SHADOW" {
+		t.Fatalf("schema probe must not mutate or auto-promote Congress: before=%+v after=%+v lifecycle=%s", before, after, tradeInsightCapabilityLifecycleTruth(after.ID))
 	}
 }
 
 func TestV189TradeInsightCongressSchemaProbeLiveOptIn(t *testing.T) {
 	if os.Getenv("DE_PULSE_TRADEINSIGHT_CONGRESS_SCHEMA_PROBE") != "1" {
-		t.Skip("set DE_PULSE_TRADEINSIGHT_CONGRESS_SCHEMA_PROBE=1 with TIDATA_API_KEY to capture value-free configured-key schema evidence")
+		t.Skip("set DE_PULSE_TRADEINSIGHT_CONGRESS_SCHEMA_PROBE=1 with TIDATA_API_KEY for optional value-free runtime schema diagnostics")
 	}
 	if !tradeInsightConfigured() {
-		t.Fatal("TIDATA_API_KEY or TRADEINSIGHT_API_KEY must be configured for the live schema-admission probe")
+		t.Fatal("TIDATA_API_KEY or TRADEINSIGHT_API_KEY must be configured for the live schema diagnostic")
 	}
 	fingerprint, err := tradeInsightCongressSchemaProbeAt(context.Background(), nil, tradeInsightRESTBaseURL, tradeInsightAPIKey())
 	if err != nil {
