@@ -5,6 +5,8 @@
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
 **Certified Stable:** `v18.8.2-stable`  
 **Certified Stable candidate:** `e51831b8269c3ae673edc93eb0ec88a0a954344f`  
+**Certified Stable fingerprint:** `a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247`  
+**Certified Stable build ID:** `v18.8.2-stable-20260820`  
 **Stable continuity / PR base:** `78378889e52c2ed3e0c3458aea6fbf36efe97ab3`  
 **Engineering branch:** `v18.9.0-development`  
 **PR:** #62 — Draft during release-candidate identity promotion  
@@ -58,7 +60,7 @@ US Equities Processing; GLD/SLV/USO actionable exceptions; deterministic Day/Swi
 
 ## Exactly one next action
 
-Inspect the automatic **CI Fast** result on the atomic v18.9.0 release-candidate head. If and only if that exact head passes Fast, mark the same PR #62 Ready for Review once so the existing full Qualified workflow re-certifies the exact RC head before any merge.
+Inspect the automatic **CI Fast** result on the corrected v18.9.0 release-candidate head. If and only if that exact head passes Fast, mark the same PR #62 Ready for Review once so the existing full Qualified workflow re-certifies the exact RC head before any merge.
 
 ## Resume rule
 
