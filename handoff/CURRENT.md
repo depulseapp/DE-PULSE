@@ -65,9 +65,28 @@ Pre-market, regular market and after-hours are protected Tier-0 decision-support
 
 Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
 
+## Hosted / multi-device / account architecture — APPROVED DIRECTION
+
+DE.PULSE is intentionally being kept compatible with a future single-account experience across macOS, Windows and hosted web without replacing the current native architecture.
+
+- `SQLite` remains the fast local edge/offline store and warm working set for native clients.
+- Future hosted `PostgreSQL` becomes the shared authority for sync-eligible account/device state and lawful hosted evidence.
+- Synchronization is application-level, incremental, typed, idempotent and checkpointed using stable IDs/outbox/change events — never blind raw database replication or dual-master table sync.
+- Native clients continue to work from SQLite during hosted/network outages and reconcile later from durable checkpoints.
+- Watchlists, desk membership, preferences and other account state use explicit versions/optimistic concurrency and deterministic conflict handling.
+- Provider secrets do not sync through ordinary SQLite/PostgreSQL data tables; they remain under the canonical secret/security owner.
+- Current/live market truth still comes from canonical freshness/provider/state owners; neither SQLite nor PostgreSQL becomes a competing market-truth subsystem.
+- v18.9.x must **not** introduce PostgreSQL; it must preserve clean repository/persistence boundaries, stable IDs, provenance and sync compatibility. Hosted sync architecture belongs to v19+ in small governed packets.
+- Cross-platform session validity is server-side canonical truth for macOS, Windows and hosted web; clients consume it rather than inventing their own authentication/session truth.
+
+Governing contracts:
+- `adaptive-governance/SQLITE_POSTGRES_SYNC_CONTRACT.md`
+- `adaptive-governance/ROLE_AWARE_SESSION_SECURITY_CONTRACT.md`
+- `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`
+
 ## v19 / v20 continuity
 
-v19 Professional Data Infrastructure inherits persistence-first reuse and session-aware maintenance, and measures provider/data rights, quality, cost, coverage, reliability, revision correctness, DB/index/pool/capacity behavior, calls avoided, maintenance value and protected-session reserve sizing. It must not recreate the router or maintenance coordinator.
+v19 Professional Data Infrastructure inherits persistence-first reuse, session-aware maintenance, provider/data-rights governance and the approved SQLite/PostgreSQL hosted-sync contract. It measures provider/data rights, quality, cost, coverage, reliability, revision correctness, DB/index/pool/capacity behavior, calls avoided, maintenance value and protected-session reserve sizing. It must not recreate the router, canonical persistence owner or maintenance coordinator.
 
 v20 Adaptive Intelligence consumes provenance-bound point-in-time evidence/outcomes and may learn provider/maintenance usefulness only through governed SHADOW/Champion-Challenger promotion. It may not reduce protected live-session safety, bypass rights/provenance or sacrifice current truth for background learning.
 
@@ -83,4 +102,4 @@ Diagnose #64 using the complete macOS crash evidence or deterministic reproducti
 
 ## Resume rule
 
-Any ChatGPT account, Codex session, Claude or human maintainer must read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, all four `adaptive-governance/CURRENT_ADAPTIVE_*` files, `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`, `release_identity.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #65, issue #64 and live GitHub state. GitHub objects and executable evidence outrank chat memory.
+Any ChatGPT account, Codex session, Claude or human maintainer must first fetch the **current live GitHub head** because another session/process may have advanced it. Then read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, all four `adaptive-governance/CURRENT_ADAPTIVE_*` files, `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`, `adaptive-governance/SQLITE_POSTGRES_SYNC_CONTRACT.md`, `adaptive-governance/ROLE_AWARE_SESSION_SECURITY_CONTRACT.md`, `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`, `release_identity.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #65, issue #64 and their current comments before changing code. Inspect commits since the certified Stable/source baseline so completed work is not duplicated. GitHub objects and executable evidence outrank chat memory.
