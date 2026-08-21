@@ -11,18 +11,19 @@
 
 ## Small-patch discipline
 
-The v18.9.x line deliberately prefers multiple small patches over heavy builds.
+This discipline is permanent across v18.9.x, v19, v20 and later major versions.
 
 1. One primary responsibility per patch.
 2. Explicit non-goals are mandatory at G1.
-3. Do not combine crash correction, router architecture, provider admission, company-identity UX and Market Mode redesign in one patch.
+3. Do not combine stability, routing architecture, provider admission, UX/domain redesign, data-infrastructure hardening and adaptive-model work in one patch.
 4. Reuse existing owners first. Repair order remains `REUSE -> CONSOLIDATE -> REFACTOR -> DELETE/REPLACE -> ADD`.
 5. Every patch must have deterministic acceptance tests tied directly to its G1 scope.
-6. Before closure, re-audit implementation against the frozen scope and search for misses, bypasses, duplicate ownership and misleading UI truth.
+6. Before closure, re-audit implementation against the frozen scope and search for misses, bypasses, duplicate ownership and misleading UI/data truth.
 7. Any newly discovered out-of-scope miss must receive a durable issue/target patch before closure; chat-only carry-forward is prohibited.
 8. The next patch cannot begin until current patch evidence, issue state, handoff and checkpoints agree.
 9. CI is intentionally economical: batch coherent source/test changes before PR, avoid duplicate/manual runs, classify failures before rerun, and never create retry/certification branch families.
-10. G0-G16 remains the only gate model; no G17+.
+10. If G0/G1 shows a planned packet is still too large, split it. A version number never justifies bundling.
+11. G0-G16 remains the only gate model; no G17+.
 
 ## v18.9.x process sequence
 
@@ -37,6 +38,24 @@ The v18.9.x line deliberately prefers multiple small patches over heavy builds.
 - `v18.9.9`: remaining useful TradeInsight capability admission only.
 - `v18.9.10`: provider efficiency/Adaptive Intelligence telemetry only.
 - `v18.9.11`: professional closure audit only; no new feature scope.
+
+## v19 process objective
+
+v19 is **Professional Data Infrastructure**, not another provider-router rewrite. It consumes v18.9.x coverage-aware acquisition/identity/telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability and measured paid-provider gap analysis. v19 must end with a mandatory Major Closure before v20.
+
+Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence and outcome lineage are release requirements, not documentation-only concerns.
+
+## v20 process objective
+
+v20 is **Adaptive Intelligence & Decision Research**. It may begin only after v19 Major Closure proves the evidence substrate is trustworthy enough for learning.
+
+Adaptive work is split by responsibility: experiment/evidence ledger, historical analogues, calibration/drift, ASBI, adaptive 13F, TDTI, AODR, ADR-GDI adaptive optimization, model/prompt governance and final closure. Production influence follows `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; no model or adaptive policy silently self-promotes. Deterministic Day/Swing/Long truth remains protected unless separately governed, and No Execution is permanent.
+
+## Cross-version dependency rule
+
+`v18.9.x trustworthy acquisition/truth -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+
+v19 must not create a second router to measure providers. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
 
 ## Adaptive provider process contract
 
