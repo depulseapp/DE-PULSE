@@ -336,7 +336,7 @@ func TestExtreme30_09HistoricalBarsModeSeparation(t *testing.T) {
 	if st != "STALE" {
 		t.Fatalf("intraday old bars should stale: %s", st)
 	}
-	if got := strings.Join(routeChains()["Historical Bars"], ">"); got != "Alpaca>Twelve Data>yfinance" {
+	if got := strings.Join(routeChains()["Historical Bars"], ">"); got != "Alpaca>TradeInsight>Twelve Data>yfinance" {
 		t.Fatalf("history route %s", got)
 	}
 }

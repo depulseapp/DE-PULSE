@@ -302,18 +302,19 @@ func (e *Engine) refreshHistoryRoutedMode(ctx context.Context, only []string, mo
 	ak := strings.TrimSpace(e.app.secrets.AlpacaKey)
 	as := strings.TrimSpace(e.app.secrets.AlpacaSecret)
 	e.app.mu.RUnlock()
-	label := "Historical Bars"
-	switch strings.ToLower(strings.TrimSpace(mode)) {
-	case "intraday":
-		label = "Intraday Bars"
-	case "daily":
-		label = "Daily / Weekly History"
+	mode = strings.ToLower(strings.TrimSpace(mode))
+	if mode == "" {
+		mode = "all"
 	}
-	_, ok := e.executeProviderRoute(ctx, label, map[string]providerRouteAttempt{
+	attempts := map[string]providerRouteAttempt{
 		"Alpaca":      func(ctx context.Context) bool { return e.refreshAlpacaHistoryScopedMode(ctx, ak, as, only, mode) > 0 },
 		"Twelve Data": func(ctx context.Context) bool { return e.refreshTwelveHistoryMode(ctx, only, mode) > 0 },
 		"yfinance":    func(ctx context.Context) bool { return e.refreshYahooHistoryMode(ctx, only, mode) > 0 },
-	})
+	}
+	if mode == "daily" {
+		attempts[tradeInsightProviderName] = func(ctx context.Context) bool { return e.refreshTradeInsightHistoryMode(ctx, only, mode) > 0 }
+	}
+	_, ok := e.executeProviderRoute(ctx, canonicalHistoricalBarsDataset, attempts)
 	if ok {
 		// Outcome measurement is event-driven from the canonical history commit.
 		// This persists resolved ordering/MFE/MAE so rolling intraday windows cannot

@@ -32,7 +32,7 @@ func TestV15ProviderRouteChains(t *testing.T) {
 	cases := map[string][]string{
 		"US Live Equities": {"Alpaca", "Finnhub", "Twelve Data"},
 		"VIX / Indices":    {"Twelve Data", "yfinance", "CBOE"},
-		"Historical Bars":  {"Alpaca", "Twelve Data", "yfinance"},
+		"Historical Bars":  {"Alpaca", "TradeInsight", "Twelve Data", "yfinance"},
 		"News":             {"Finnhub", "Marketaux"},
 		"Earnings":         {"Finnhub", "yfinance"},
 		"Fundamentals":     {"Finnhub", "SEC", "yfinance"},

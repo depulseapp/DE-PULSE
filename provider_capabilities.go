@@ -67,6 +67,17 @@ func buildProviderCapabilityRegistry(settings Settings, secrets Secrets, health 
 			}
 			return "PLAN LIMITED"
 		}(), Detail: "Discovery seed only when account entitlement permits.", UpdatedAt: now, Uses: []string{"Discovery", "Dashboard"}},
+		{Provider: tradeInsightProviderName, Capability: "Adjusted daily OHLCV / corporate-action corroboration", Status: func() string {
+			if !tradeInsightConfigured() {
+				return "NOT ENTITLED"
+			}
+			history := strings.ToLower(strings.TrimSpace(health["history"]))
+			actions := strings.ToLower(strings.TrimSpace(health["tradeinsight-corporate-actions"]))
+			if strings.Contains(history, "tradeinsight") || strings.Contains(actions, "healthy") {
+				return "AVAILABLE"
+			}
+			return "SHADOW"
+		}(), Detail: "Smart Router v2 member of canonical Historical Bars. Daily adjusted OHLCV only; dividends/splits are supplemental evidence merged into the canonical corporate-action ledger.", UpdatedAt: now, Uses: []string{"Historical Bars", "Research", "Corporate Actions", "Adaptive Intelligence"}},
 		{Provider: "FRED", Capability: "Rates / credit / conditions / USD", Status: capabilityStatusFromHealth(secrets.FRED != "", health["fred-rates"]), Detail: "Slow macro state; cadence-aware cache.", UpdatedAt: now, Uses: []string{"Market Regime", "Swing", "Long", "Research", "Trade Readiness"}},
 		{Provider: "BLS", Capability: "Inflation / labor / wages / PPI", Status: capabilityStatusFromHealth(true, health["bls-actuals"]), Detail: "Official release-triggered actuals; no invented consensus.", UpdatedAt: now, Uses: []string{"Market Regime", "Swing", "Long", "Research"}},
 		{Provider: "EIA", Capability: "Petroleum / natural gas / energy state", Status: capabilityStatusFromHealth(secrets.EIA != "", health["eia-actuals"]), Detail: "Official energy release context.", UpdatedAt: now, Uses: []string{"Market Regime", "Research", "Swing", "Long"}},

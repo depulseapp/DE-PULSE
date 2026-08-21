@@ -18,6 +18,12 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	if handled, code := runDeveloperCommand(os.Args[1:], os.Stdout, os.Stderr); handled {
+		if code != 0 {
+			os.Exit(code)
+		}
+		return
+	}
 	app, err := NewApplication()
 	if err != nil {
 		log.Fatal(err)
