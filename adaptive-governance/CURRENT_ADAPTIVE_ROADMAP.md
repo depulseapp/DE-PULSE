@@ -172,13 +172,13 @@ No new feature scope. Principal Engineer + security/data/operational/commercial-
 
 **Entry:** `v19.5.0` PASS.
 
-Adaptive systems may only learn from the trustworthy point-in-time substrate. Model/prompt governance is established **before** broad adaptive-model rollout so evaluation, rollback and promotion exist before model influence grows.
+Model/prompt governance is established **before** broad adaptive-model rollout so evaluation, rollback and promotion exist before model influence grows.
 
 ### v20.0.x — Adaptive Research Control & Governance
-- **v20.0.0 — Adaptive Research Control Plane + Immutable Experiment Ledger.** Reproducible datasets/features/cohorts/lineage, leakage controls and promotion/rollback evidence.
-- **v20.0.1 — Model/Prompt Governance + Champion/Challenger.** Model/prompt identity, independent evaluation, explainability, drift, approval and rollback.
-- **v20.0.2 — Historical Analogues + Regime-Conditioned Outcomes.** Point-in-time analogue/outcome research.
-- **v20.0.3 — Calibration / FP-FN / Miss / Contradiction / Drift.** Calibration and abstention controls.
+- **v20.0.0 — Adaptive Research Control Plane + Immutable Experiment Ledger.**
+- **v20.0.1 — Model/Prompt Governance + Champion/Challenger.**
+- **v20.0.2 — Historical Analogues + Regime-Conditioned Outcomes.**
+- **v20.0.3 — Calibration / FP-FN / Miss / Contradiction / Drift.**
 
 ### v20.1.x — ASBI
 - **v20.1.0 — Behavioral Fingerprints + State Transitions.**
@@ -203,7 +203,7 @@ No new feature scope. Calibrated utility/drift/abstention, deterministic-boundar
 ## 7. Industry-strength controls inside G0-G16
 
 No G17+ is introduced. Hosted/security/data/adaptive controls are absorbed into existing gates:
-- **G2:** canonical owner map; tenant/data classification; threat model; Architecture Decision Record for material irreversible choices;
+- **G2:** canonical owner map; tenant/data classification; threat model; ADR for material irreversible choices;
 - **G3:** API/schema/protocol compatibility, inventory/deprecation, migration/rollback, SLO/error budget, observability, failure-injection and rollout plan;
 - **G4:** contract tests and bounded feature/kill-switch controls where useful;
 - **G7:** negative authorization/tenant/product-entitlement/provider-right/secret/adaptive tests;
