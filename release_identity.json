@@ -7,6 +7,7 @@
   "stable_baseline": "v18.8.1",
   "previous_stable": "v18.8.1",
   "scope": "Market Intelligence Reliability: canonical breadth quote freshness/recovery accountability; truthful SPY/QQQ/VIX and breadth evidence state; unavailable/unknown distinct from observed zero; Smart Provider Router v2, existing multi-feed allocation, canonical freshness/recovery, deterministic Day/Swing/Long truth, GLD/SLV/USO actionable exceptions and permanent No Execution Boundary preserved",
+  "release_recovery": "Release #30 passed G11 and stopped at G12 on a stale literal README-heading assertion in version_consistency_test.py. Recovery is release-harness-only; no product/runtime behavior or package identity changes.",
   "bundle_version": "18802",
   "runtime_config": "PersonalMarketTerminal",
   "application_bundle": "De-Pulse.app"
