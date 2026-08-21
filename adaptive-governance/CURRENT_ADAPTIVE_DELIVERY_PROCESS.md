@@ -10,9 +10,9 @@
 
 Fast #481, Qualified #153 and Release #32 are the release authority for v18.9.0. G11-G16 passed, including actual macOS Apple Silicon + Windows x64 packaged-runtime audits, G15 assurance, no-rebuild Stable publication and G16 handoff evidence. Later corrective work does not rewrite that evidence.
 
-## Small-patch delivery policy
+## Permanent small-patch delivery policy
 
-The v18.9.x program ships **small, independently auditable patches** rather than heavy releases.
+v18.9.x, v19 and v20 ship **small, independently auditable patches** rather than heavy releases.
 
 For each patch:
 1. establish exact predecessor/baseline at G0;
@@ -26,9 +26,9 @@ For each patch:
 9. publish only certified same-run artifacts without rebuild;
 10. perform a post-release implementation-miss/open-issue audit and reconcile handoff/checkpoints before the next patch begins.
 
-No duplicate release workflows, retry branches, certification branches or avoidable duplicate CI runs. Failure classification is required before rerun.
+No duplicate release workflows, retry branches, certification branches or avoidable duplicate CI runs. Failure classification is required before rerun. If a planned patch is too large, split it before G1 rather than weakening auditability.
 
-## Ordered delivery train
+## v18.9.x ordered delivery train
 
 - **v18.9.1** — runtime crash corrective only (#64).
 - **v18.9.2** — TradeInsight Settings/API-key UX only.
@@ -42,7 +42,19 @@ No duplicate release workflows, retry branches, certification branches or avoida
 - **v18.9.10** — provider efficiency + Adaptive Intelligence telemetry only.
 - **v18.9.11** — professional closure audit only; no new feature scope.
 
-The train is dependency-ordered, but a later patch may be split further if its G0/G1 proves it is still too large. Patch numbers are not a reason to bundle scope. Smaller is preferred when it improves correctness and auditability.
+The train is dependency-ordered, but a later patch may be split further if its G0/G1 proves it is still too large. Patch numbers are not a reason to bundle scope.
+
+## v19 delivery train — Professional Data Infrastructure
+
+v19 begins only after v18 final closure. Deliver as small packets for: provider capability/entitlement/rights; provider quality/cost/coverage/SLOs; source disagreement/history quality; 13F infrastructure; two-sided evidence substrate; AODR point-in-time outcome lineage; ADR-GDI professional reliability/capacity; measured specialized/paid-provider gap evaluation; v20 research-readiness evidence audit; then mandatory v19 Major Closure.
+
+No v19 packet may recreate Smart Provider Router v2, canonical identity, freshness or other owners established in v18. v19 measures and hardens them.
+
+## v20 delivery train — Adaptive Intelligence & Decision Research
+
+v20 begins only after v19 Major Closure. Deliver separately: adaptive research/experiment ledger; historical analogue/regime outcomes; calibration/FP-FN/miss/contradiction/drift; ASBI fingerprints/state transitions; ASBI scenarios/probability momentum; adaptive 13F; TDTI competing Long/Short/No Reliable Edge; TDTI two-sided trade-plan validation; AODR adaptive shared ranking; AODR diversity/personalized relevance after shared truth; ADR-GDI adaptive optimization; model/prompt + Champion/Challenger governance; then v20 Professional Closure.
+
+Adaptive production influence remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`. No silent self-promotion, no silent deterministic formula change and No Execution.
 
 ## Delivery acceptance per patch
 
@@ -50,11 +62,19 @@ A patch is not complete merely because code compiles or CI is green. Delivery ev
 - frozen G1 scope fully implemented;
 - explicit non-goals untouched;
 - deterministic regression tests for the changed responsibility;
-- truthful degraded/partial states;
+- truthful degraded/partial/UNKNOWN/ABSTAIN states;
 - no parallel owner introduced;
 - no newly discovered implementation miss left without a durable target;
 - packaged-runtime proof where the patch affects native/runtime behavior;
 - current issue state and handoff agree with executable evidence.
+
+For v19, acceptance additionally requires point-in-time provenance/data-rights/reliability truth where applicable. For v20, acceptance additionally requires leakage-safe evaluation, calibration/utility evidence, reproducibility, SHADOW/Champion-Challenger evidence and explicit rollback before promotion.
+
+## Major-version handoff contract
+
+- **v18 -> v19:** acquisition, canonical identity, adaptive Market Modes, useful provider capabilities and provider telemetry are trustworthy and zero-gap enough for professional measurement.
+- **v19 -> v20:** provider/data quality, rights, provenance, point-in-time feature/outcome lineage and reliability history are sufficient for governed adaptive research.
+- A major-version closure cannot be bypassed by starting the next major's implementation early.
 
 ## Final v18.9.x closure
 
