@@ -59,6 +59,16 @@ A successful provider response is not enough to stop if required coverage/freshn
 
 Canonical purpose: make provider/data quality, rights, cost, reliability and suitability measurable rather than assumption-driven, and create sufficient point-in-time evidence/provenance/outcome history for v20.
 
+### Mandatory hosted account/sync/provider-gateway program — issue #66 / `ADAPT-HOSTED-SYNC-001`
+
+v19 MUST include the approved single-account macOS/Windows/web architecture as executable roadmap scope, not as a side document. The program preserves native SQLite as the offline edge/warm working set, introduces PostgreSQL only as shared hosted authority for sync-eligible account/device state and lawful hosted evidence, and uses typed authenticated incremental application-level synchronization rather than raw database replication.
+
+Production commercial users follow the **end-user zero-key** model: clients authenticate only to DE.PULSE; platform-owned provider credentials remain server-side in the canonical managed-secret/KMS owner; all REST/snapshot/live-stream provider access crosses the authenticated DE.PULSE hosted boundary and reuses Smart Provider Router v2, canonical freshness/cache/persistence, the existing multi-feed subscription owner, rights/entitlement gates and protected-session resource controls.
+
+The program is not complete unless it covers canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO` capability truth; hosted identity/device/session lifecycle; privileged re-authentication; account/device revocation; PostgreSQL HA/PITR/backup/restore/migration safety; secret rotation/compromise recovery; entitlement-aware cache/live fan-out; bootstrap for new or stale devices; SQLite outbox/idempotency/checkpoints; tombstone/change-log retention and compaction; local account isolation/lost-device behavior; mixed-version sync protocol compatibility; rights-aware research synchronization; per-account usage/cost/abuse telemetry; and multi-user load/security/DR assurance.
+
+Issue #66 and its architecture-audit addenda are the durable detailed scope. At v19 G0/G1 this program is split into small dependency-ordered patches; it must not be bundled into one heavy build. It must be operationally mature before v19 Major Closure and before v20 relies on synchronized evidence/outcomes.
+
 ### Provisional v19 small-patch train
 Exact semantic patch numbers are frozen only at each G1 and any item may split further.
 
@@ -69,9 +79,10 @@ Exact semantic patch numbers are frozen only at each G1 and any item may split f
 5. **Two-sided thesis evidence substrate.** Point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE and reliable short-interest/crowding/borrow/SSR context only where lawful/trustworthy; explicit UNKNOWN otherwise.
 6. **AODR opportunity evidence/outcome infrastructure.** My Market vs Global truth, point-in-time candidate/rank/reason lineage, NOW/WATCH/PASS/ABSTAIN transitions, shared-ranking efficiency, diversity/correlation metadata, recommendation usefulness and missed-opportunity outcomes.
 7. **ADR-GDI professional reliability hardening.** Capability SLOs, degradation history, provider/DB/runtime reliability scorecards, restart/warm-start, query/index/pool/capacity tuning, load shedding, bounded operating limits, protected-session reserves and maintenance/preemption economics.
-8. **Specialized/paid-provider gap evaluation.** Only consider replacement/additional paid data where measured v19 evidence proves a material capability/quality/rights gap; integrate through the same Smart Provider Router/persistence/session-priority contracts, never by special path.
-9. **v20 research-readiness dataset/lineage audit.** Prove sufficient point-in-time evidence, feature history, outcomes, provenance, rights, independence and reliability history for ASBI, 13F Intelligence, TDTI, AODR and adaptive reliability optimization.
-10. **v19 Major Closure — mandatory before v20.** Whole-system data-quality/data-rights/performance/security/utility audit; zero unexplained provider role, zero unowned dataset, truthful commercial/data-rights posture and executable package/runtime evidence.
+8. **`ADAPT-HOSTED-SYNC-001` hosted account/sync/zero-key provider-gateway program.** Deliver issue #66 through small sub-packets covering identity/device/session and account lifecycle; PostgreSQL HA/PITR/schema/pool foundation; managed secrets/KMS and zero-key Provider Gateway; entitlement-aware REST/live-stream serving; sync bootstrap/outbox/idempotency/change-log/checkpoint/compaction protocol; macOS pilot; desks/workspaces; Windows parity; hosted-web parity; rights-aware research/state sync; and final multi-user cost/security/licensing/DR assurance. Reuse all canonical owners; no client provider secrets and no raw SQLite↔PostgreSQL replication.
+9. **Specialized/paid-provider gap evaluation.** Only consider replacement/additional paid data where measured v19 evidence proves a material capability/quality/rights gap; integrate through the same Smart Provider Router/persistence/session-priority contracts, never by special path.
+10. **v20 research-readiness dataset/lineage audit.** Prove sufficient point-in-time evidence, feature history, outcomes, provenance, rights, independence and reliability history for ASBI, 13F Intelligence, TDTI, AODR and adaptive reliability optimization, including synchronized evidence only after #66 rights/security/sync assurance is proven.
+11. **v19 Major Closure — mandatory before v20.** Whole-system data-quality/data-rights/performance/security/utility audit; zero unexplained provider role, zero unowned dataset, truthful commercial/data-rights posture and executable package/runtime evidence. Closure additionally requires #66 Mac/Windows/web account parity, zero-key provider-gateway security, sync correctness/offline recovery, entitlement isolation, secret rotation, PostgreSQL recovery and multi-user load/cost assurance to PASS.
 
 ## v20 — Adaptive Intelligence & Decision Research
 
@@ -99,7 +110,7 @@ Exact patch numbers are frozen only at G1 and complex items are split further in
 ## Why the versions fit together
 
 - **v18.9.x = trustworthy plumbing and truth:** stable runtime, Settings, coverage-aware acquisition, persistence-first reuse, canonical identity, Market Data Modes, useful TradeInsight evidence, provider-efficiency telemetry and session-aware overnight/weekend readiness without compromising live sessions.
-- **v19 = professional measurement and evidence infrastructure:** prove which sources are useful/reliable/lawful, reconcile disagreement, harden storage/revision/capacity/maintenance economics, 13F/TDTI/AODR/ADR-GDI evidence and point-in-time outcome lineage.
+- **v19 = professional measurement, hosted account/sync and evidence infrastructure:** prove which sources are useful/reliable/lawful, reconcile disagreement, harden storage/revision/capacity/maintenance economics, deliver the #66 zero-key Mac/Windows/web account architecture, and preserve 13F/TDTI/AODR/ADR-GDI point-in-time evidence/outcome lineage.
 - **v20 = governed learning from that evidence:** ASBI, adaptive 13F, TDTI, AODR and reliability optimization use the v19 dataset/scorecards instead of learning from noisy or ambiguous inputs.
 
 This ordering prevents v20 from learning provider artifacts, stale/partial data, survivorship leakage or undocumented provenance. It also prevents v19 from creating a second router or duplicating the adaptive acquisition/maintenance work completed in v18.9.x.
@@ -108,4 +119,4 @@ Permanent constraints: U.S. Equities Processing, No Execution, Smart Provider Ro
 
 ## Exactly one next action
 
-Perform issue #64 / v18.9.1 G0 crash diagnosis from concrete macOS evidence or deterministic reproduction. Do not start v18.9.2 until v18.9.1 is closed with truthful evidence or the crash is proven external/non-product.
+Perform issue #64 / v18.9.1 G0 crash diagnosis from concrete macOS evidence or deterministic reproduction. Do not start v18.9.2 or any v19 implementation branch until v18.9.1 is closed with truthful evidence or the crash is proven external/non-product.
