@@ -1,0 +1,52 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.8.2",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.8.2-stable-20260820",
+  "stableTag": "v18.8.2-stable",
+  "certifiedCandidate": "e51831b8269c3ae673edc93eb0ec88a0a954344f",
+  "qualifiedSourceHead": "66e59e4e5f803ca53520797e5eb6e9d3fe72e84c",
+  "sourceFingerprint": "a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247",
+  "runs": {
+    "fast": 32435845178,
+    "qualified": 32435920048,
+    "canonicalReleaseG11G16": 32436189650,
+    "failedReleaseHarnessRun": 32435511692
+  },
+  "gates": {
+    "G0-G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "g12FullCertification": {"artifactId": 9430891311, "digest": "sha256:13ec95d0f68910c5c795c2f57df7c2b2109d658ce129bab568e17b3c247ed6b9"},
+    "macOSAppleSilicon": {"artifactId": 9430903766, "digest": "sha256:ddbe56f7e4fdf09476f0ad6903d4587646fc7f9f260f553f71ec070120a34963"},
+    "windowsX64": {"artifactId": 9430912177, "digest": "sha256:5c86a2c3c972be8a4f87429f8453b8e96b0245cf0459d2966f56402a3ecf4796"},
+    "g15ReleaseAssurance": {"artifactId": 9430917801, "digest": "sha256:8c34d271c48f23f4c1a0f4bfaa3266d2a11c991e36e36d929f6383ab301b7b3d"},
+    "g16Closure": {"artifactId": 9430925214, "digest": "sha256:dab8761f7c2b0da06bddd28398cc13f9e8381e829cef059c6cdd006511853526"}
+  },
+  "scopeAuthority": {
+    "issue": 57,
+    "productPr": 59,
+    "releaseRecoveryPr": 60,
+    "releaseContract": "release/v18.8.2/release_contract.json",
+    "note": "Release #30 passed G11 then stopped at G12 on a stale README presentation-heading assertion. PR #60 was harness/governance-only and earned fresh Fast + full Qualified before Release #31. No product/runtime identity was redefined."
+  },
+  "postStableLearning": {
+    "issue": 57,
+    "disposition": "RESOLVED_IN_V18.8.2_STABLE",
+    "nextRelease": "v18.9.0",
+    "nextRequirement": "ADAPT-TRADEINSIGHT-001"
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true
+  }
+}

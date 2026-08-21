@@ -1,36 +1,33 @@
 # DE.PULSE — Current Adaptive Roadmap
 
-**Certified Stable:** `v18.8.1-stable`  
-**Certified candidate:** `410679ba0d6459f66a44db15a0a55f30741a7c53`  
-**Certified fingerprint:** `bfefa3605ab29b4678275936a3e60e45133d0b592b91298551731f6d629a9d92`  
-**Build ID:** `v18.8.1-stable-20260820`  
-**Next release line:** `v18.8.2 — Market Intelligence Reliability`.
+**Certified Stable:** `v18.8.2-stable`  
+**Certified candidate:** `e51831b8269c3ae673edc93eb0ec88a0a954344f`  
+**Certified fingerprint:** `a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247`  
+**Build ID:** `v18.8.2-stable-20260820`  
+**Next release line:** `v18.9.0 — TradeInsight Full Capability SHADOW Integration`.
 
-## v18.8.1 — COMPLETE / STABLE
+## v18.8.2 — COMPLETE / STABLE
 
-Fast #425 / `32414640774`, Qualified #146 / `32415313893` and Release #29 / `32415750821` passed. macOS Apple Silicon and Windows x64 actual packaged-runtime proof, G15 assurance, same-artifact no-rebuild publication and G16 workflow evidence are durable in `release/v18.8.1/stable-evidence-manifest.json`.
+Issue #57 / `ADAPT-FRESHNESS-001 REOPENED` is resolved. Final exact-head Fast #437 / `32435845178`, Qualified #151 / `32435920048` and Release #31 / `32436189650` passed. G12 full certification, macOS Apple Silicon and Windows x64 actual packaged-runtime proof, G15 assurance, exact same-run no-rebuild publication and G16 workflow evidence are durable in `release/v18.8.2/stable-evidence-manifest.json`.
 
-All 17 v18.8.1 Adaptive packets closed at qualification. Post-Stable runtime use subsequently reopened the affected freshness/reliability requirement as issue #57; this does not rewrite historical v18.8.1 certification evidence.
+The release history also records Release #30 / `32435511692`, which passed G11 but stopped at G12 on a stale README presentation-heading assertion. Recovery PR #60 was release-harness/governance-only, earned fresh full qualification, and re-entered the same canonical G11–G16 workflow. This is release-process learning, not a rewrite of product certification truth.
 
-## v18.8.2 — Market Intelligence Reliability
-
-**Mandatory entry:** GitHub issue #57. Classification: `ADAPT-FRESHNESS-001 REOPENED` under the permanent ADR-GDI contract.
-
-Required outcome:
-- make Market Intelligence benchmark/breadth demand a first-class canonical demand consumer;
-- route through Smart Provider Router v2 and existing live/snapshot allocation only;
-- preserve canonical evidence-time/freshness truth and targeted recovery;
-- protect SPY/QQQ/VIX at market-context priority with bounded breadth demand;
-- distinguish unavailable/unknown from observed numeric zero;
-- keep genuine provider degradation truthful and scoped;
-- prove pre-market, regular, after-hours, partial coverage, provider failure and recovery behavior;
-- no duplicate router, freshness engine or subscription manager.
-
-This is a bounded reliability patch. It must not absorb TradeInsight scope.
+Permanent owners remain unchanged: Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; deterministic Day/Swing/Long and No Execution preserved.
 
 ## v18.9.0 — TradeInsight Full Capability SHADOW Integration
 
-`ADAPT-TRADEINSIGHT-001` remains next after v18.8.2. Enumerate the complete configured beta capability surface and disposition each capability as `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`, all through Smart Provider Router v2 with rights, freshness, budget, cache, disagreement, Market Mode and SHADOW evidence.
+`ADAPT-TRADEINSIGHT-001` is the mandatory next packet. Before product implementation, perform G0 exact-baseline capability discovery against the configured beta account/API and freeze G1 from the evidence.
+
+Required discovery/disposition:
+- enumerate the complete capability surface available to the configured entitlement;
+- classify each useful capability as `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`;
+- Congressional Trading Intelligence is a mandatory minimum role;
+- SEC Form 4 normalized enrichment is a mandatory minimum role and remains secondary to direct SEC truth;
+- historical OHLCV fallback/backfill is a mandatory minimum role;
+- evaluate any additional useful beta capabilities rather than assuming those three are the cap;
+- bind executable uses through Smart Provider Router v2 only, with entitlement/rights, freshness, budget/rate-limit, cache/retention, disagreement, Market Mode, SHADOW telemetry, promotion and graceful-degradation rules;
+- preserve evidence independence and do not double-count TradeInsight data that originates from the same upstream source as another provider;
+- full capability discovery does **not** mean blindly calling every endpoint.
 
 ## Following sequence
 
