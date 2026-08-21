@@ -1,411 +1,323 @@
 # DE.PULSE — Canonical Adaptive Roadmap
 
 **Status:** APPROVED / ADAPTIVE  
-**Rule:** Mission and approved workstreams are durable; exact minor placement may adapt when dependency, safety, performance, evidence, or data-rights constraints justify movement.
+**Authority:** canonical product sequencing and approved strategic workstreams  
+**Rule:** mission/workstreams are durable; future minor/patch placement may adapt when dependency, safety, performance, evidence, commercial rights, or operational reality justify movement. Shipped releases and certified evidence are immutable truth.
 
 ---
 
-## v18 — Secure Multi-User Platform + Smart Provider Intelligence
+## 1. Canonical roadmap truth model
 
-Approved v18 workstreams include:
+This roadmap distinguishes **approved direction** from **certified implementation reality**.
 
-### v18.0 — Identity & Secure Sessions
-Identity/authentication/session foundation, Argon2id credentials, secure server-side sessions, role enforcement, migration compatibility, and Stable-safe native delivery.
+Permanent rules:
+- a historical roadmap label does not prove that capability shipped in that version;
+- actual Stable tags, release evidence, source/artifact provenance and current handoff define what was truly delivered;
+- future placement may be re-ordered only with durable rationale and synchronized Build Plan / Build Process / Delivery Process / handoff updates;
+- no roadmap edit may retroactively claim an unimplemented capability was delivered;
+- corrective/security/reliability work may preempt planned feature ordering;
+- every known miss is implemented in-scope or durably assigned to a named later release;
+- G0–G16 remains the only release model.
+
+### Historical placement reconciliation
+
+Earlier versions of this roadmap provisionally placed **PostgreSQL / Hosted Shared State** in `v18.3` and broader hosted/commercial security in `v18.4`. The certified product evolved through later v18.x work without establishing that hosted PostgreSQL/multi-device architecture as production authority. Those historical labels are therefore **superseded as future placement, not rewritten as delivered history**.
+
+Current certified truth is:
+- `v18.9.0-stable` is the immutable Stable baseline;
+- `v18.9.x` remains native-first and **must not introduce hosted PostgreSQL synchronization**;
+- PostgreSQL shared authority, zero-key hosted Provider Gateway and Mac/Windows/web account parity are explicitly planned for `v19` under issue #66 / `ADAPT-HOSTED-SYNC-001`;
+- all previously approved hosted/security/data-rights objectives remain durable, but now land in the dependency-correct v19 control-plane/data-plane train below.
+
+Historical v18 recovery/reconciliation detail remains preserved in its dedicated governance records, including `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`, release evidence and archived reconciliation files.
+
+---
+
+## 2. Permanent product / architecture boundaries
+
+DE.PULSE is a **U.S. equities research, intelligence and decision-support system**.
+
+Permanent constraints:
+- **No Execution** — no broker routing, order execution, paper/live trading, OMS/blotter or autonomous/semi-autonomous execution;
+- U.S. Equities Processing remains the product market boundary; `GLD`, `SLV`, `USO` remain explicit actionable tradable exceptions;
+- Smart Provider Router v2 is the sole executable provider-routing authority;
+- canonical freshness/recovery is the sole freshness truth owner;
+- the existing multi-feed allocator/subscription owner remains canonical;
+- BroadSnapshotBroker/shared acquisition remains canonical reuse ownership where applicable;
+- canonical persistence/cache/state, symbol identity, session/calendar and telemetry owners are reused;
+- direct SEC/EDGAR remains authoritative for filing truth/Form 4 authority;
+- equivalent lawful symbol/evidence work is processed canonically once and fan-outs to authorized consumers rather than `users × symbols` duplicate pipelines;
+- normal UI shows synthesized intelligence, not provider/runtime plumbing;
+- deterministic Day/Swing/Long truth remains protected unless separately governed;
+- adaptive production influence follows **SHADOW → VALIDATED → APPROVED → PRODUCTION** with evidence, rollback and explicit approval;
+- no silent self-modification and no model confidence used to hide missing/weak evidence.
+
+---
+
+## 3. Durable approved strategic workstreams
+
+The following workstreams remain approved across the current roadmap. Exact implementation version follows the dependency-aligned train in sections 4–6.
 
 ### Smart Intelligent Provider Router v2
-Capability/entitlement-aware provider routing, Preferred vs Serving semantics, deterministic cooldown/circuits, provider budgets, Tier protection, source disagreement handling, calls avoided, and provider usefulness telemetry.
+Capability/entitlement-aware, coverage-aware provider routing with Preferred vs Serving semantics, deterministic cooldown/circuits, provider budgets, protected-session headroom, source disagreement handling, persistence-first reuse, residual-gap acquisition, calls avoided and usefulness telemetry.
 
-### v18.1 — Multi-User / My Market Symbols
-Per-user symbols/watchlists/preferences with shared Global Symbol Registry and Shared Symbol Intelligence. Avoid duplicate canonical provider/calculation work for the same symbol.
+### Shared Symbol Intelligence / Multi-User Demand Union
+Global Symbol Registry and shared canonical intelligence serve overlapping authorized demand. Per-user symbols/watchlists/preferences remain isolated, while equivalent provider acquisition/calculation/synthesis is reused where lawful.
 
-### Adaptive Opportunity Discovery & Recommendations Foundation
-Begin dependency-compatible productization of the market intelligence DE.PULSE already computes so users can see **My Market Opportunities** and **Global Opportunities** without creating another scanner or recommendation data silo.
+### Adaptive Opportunity Discovery & Recommendations (AODR) Foundation
+Reuse Global Symbol Registry, Reliable Actionable Universe, Shared Symbol Intelligence and Opportunity Radar to support:
+- My Market vs Global Opportunities;
+- bounded candidate ranking;
+- NOW / WATCH / PASS / ABSTAIN;
+- point-in-time rank/reason/bucket lineage and outcomes;
+- shared ranking efficiency;
+- diversity/correlation context;
+- concise `why now / confirms / invalidates / what changes the view` synthesis;
+- ADR-GDI suppression/demotion under weak/degraded required evidence.
 
-v18/v19 foundation should reuse Global Symbol Registry, Reliable Actionable Universe, Shared Symbol Intelligence and Opportunity Radar to support:
-- user-specific My Market vs outside-My-Market bucketing;
-- shared canonical opportunity inputs rather than duplicate fetch/calculation work;
-- bounded candidate ranking and NOW/WATCH/PASS/ABSTAIN semantics;
-- Long/Short/horizon-aware opportunity context where current canonical TDTI/ASBI evidence supports it;
-- point-in-time recommendation/ranking lineage and outcome collection;
-- simple user-facing `why now / what confirms / what changes the view` synthesis grounded in canonical evidence;
-- ADR-GDI-aware suppression/demotion when required evidence is degraded.
+AODR is not a second scanner/ranker/provider silo.
 
-Do not disrupt the frozen v18.2 Admin / Presence / Session Operations scope to force mature AODR intelligence into that release. Implement foundational pieces only when dependency-compatible with the active build plan.
-
-### TradeInsight — SHADOW / SECONDARY Intelligence
-Use through the canonical Smart Router only. Approved contextual roles include insider/congressional intelligence, historical OHLCV backfill/reconciliation, corporate actions, symbol metadata enrichment, Opportunity Radar corroboration, and future controlled AI/MCP research where rights permit.
+### TradeInsight — SHADOW / Secondary Intelligence
+TradeInsight operates only through canonical provider/data owners. Approved candidate roles include insider/congressional context, historical OHLCV backfill/reconciliation, corporate actions, symbol metadata/search corroboration, Opportunity Radar candidate evidence and future controlled AI/MCP research where rights permit. No TradeInsight-specific router/cache/scanner/scheduler/Market Mode/SEC truth/symbol registry/persistence system.
 
 ### Provider → Market Mode Adaptive Integration
-Every current or future provider capability must receive an explicit Market Mode disposition: `INTEGRATED`, `CONTEXTUAL_ONLY`, `NOT_RELEVANT` or `INTENTIONALLY_HIDDEN`. Evidence must flow through the canonical Smart Router and canonical state; provider count alone never changes Risk-On / Constructive / Mixed / Cautious / Risk-Off or horizon-specific modes. LLMs may extract, compare, detect contradictions, synthesize and explain, while deterministic/statistical code owns price truth, numeric mode calculation, calibration and promotion evidence. Production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION** with sample sufficiency, rollback and explicit approval. The machine authority is `provider_market_mode_integration_registry.json`, enforced inside the existing Functionality Utility & Integration Checkpoint at G2/G10.
+Every provider capability gets an explicit disposition: `INTEGRATED`, `CONTEXTUAL_ONLY`, `NOT_RELEVANT`, or `INTENTIONALLY_HIDDEN`. Provider count never changes a mode. Deterministic/statistical code owns numeric market truth; LLM/adaptive reasoning may extract/correlate/compare/explain but cannot directly set a Market Mode or silently reweight protected formulas.
 
-### Institutional Holdings / 13F Evidence Foundation
-Begin/continue canonical point-in-time SEC 13F evidence collection where useful and lawful. Preserve filing/report-period identity, manager/security mappings, amendments/restatements, normalized disclosed holdings, quarter-over-quarter deltas, provenance/freshness, limitations, and subsequent outcomes. Direct SEC EDGAR remains canonical filing truth; provider enrichment must flow through the canonical Provider Router.
+Machine authority remains `provider_market_mode_integration_registry.json` inside the Functionality Utility & Integration checkpoint.
 
-Do not treat 13F as live ownership or force mature adaptive manager intelligence into v18.2–v18.5.
+### Institutional Holdings / 13F Evidence
+Build lawful point-in-time SEC 13F evidence with manager/CIK/security mappings, amendments/restatements, report/acceptance time, normalized disclosed holdings, quarter-over-quarter states, corporate-action reconciliation, limitations and subsequent outcomes. Direct SEC EDGAR remains canonical filing truth.
 
-### Two-Sided Thesis Evidence Foundation
-Preserve and improve the point-in-time evidence/outcome lineage required for future Long-vs-Short thesis validation, including existing Entry/Target/Invalidation plan truth, previously approved short-entry context where supportable, first-event ordering, MFE/MAE, ASBI-relevant behavior evidence, catalyst/regime/liquidity context, and reliable short-specific data provenance when available.
+### Two-Sided Thesis Evidence / TDTI Foundation
+Preserve one canonical ticker/horizon evidence snapshot, Entry/Target/Invalidation truth, short-entry context where supportable, first-event ordering, side-aware MFE/MAE, ASBI/regime/catalyst/liquidity/institutional context and lawful short-interest/crowding/borrow/SSR evidence with explicit UNKNOWN/ABSTAIN when unavailable.
 
-Do **not** force the mature adaptive Two-Sided Directional Thesis engine into v18.2–v18.5 as scope creep. v18 should ensure current architecture and evidence are not designed in a way that blocks truthful two-sided learning later.
+TDTI is not a separate short-trading product and remains No Execution.
 
-### Adaptive Data Reliability & Graceful Degradation — v18 Foundation
-Implement the dependency-compatible foundation of the approved 10/10 ADR-GDI contract rather than waiting for v20 or assuming PostgreSQL alone will solve degradation.
-
-v18 priorities include:
-- capability-level health rather than one broad provider/app flag;
-- canonical degradation reason codes;
-- consumer/dependency-aware blast radius;
+### Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI)
+Reliability is foundational, not deferred to v20. Durable objectives include:
+- capability-level health and degradation reasons;
+- consumer/dependency blast radius;
 - dataset/horizon/session freshness SLOs;
-- provider circuit/retry discipline;
-- duplicate-work elimination, single-flight/coalescing and calls avoided;
-- workload priority, bounded queues/backpressure and graceful load shedding;
+- provider retry/circuit discipline;
+- duplicate-work elimination and single-flight/coalescing;
+- bounded queues/backpressure/load shedding;
 - warm canonical persistence/restart recovery;
-- truthful `UNKNOWN`, degraded and ABSTAIN semantics;
-- concise impact-aware user messaging plus deeper Maintenance diagnostics.
-
-The core target is to eliminate **self-inflicted, overly broad or unexplained** `DATA DEGRADED` states while preserving truthful warnings when required evidence is genuinely unavailable/stale/unreliable.
-
-### v18.2 — Admin / Presence / Session Operations
-SUPER OWNER / OWNER / ADMIN operations, user/session visibility and lifecycle, bounded presence, enable/disable and revocation controls, role-aware operations, and approved session-policy controls.
-
-### v18.3 — PostgreSQL / Hosted Shared State
-PostgreSQL repository parity, migrations, transactions/concurrency, shared canonical runtime state, browser/hosted architecture, pooling, backup/restore, migration/export, load/contention testing, and hosted health/readiness.
-
-v18.3 must also use the persistence transition to harden ADR-GDI foundations where dependency-compatible: indexed warm canonical state, restart recovery, shared-symbol reuse, DB/query/pool observability, capability-health persistence where appropriate, bounded persistence pressure, and protection against PostgreSQL becoming a new bottleneck.
-
-AODR shared ranking/recommendation state should reuse the same canonical shared-symbol and per-user isolation architecture where dependency-compatible; PostgreSQL must not cause each user to trigger duplicate market-wide recommendation computation.
-
-### v18.4 — Security + Commercial / Data-Rights Hardening
-Secrets/security hardening, auth/session/CSRF/cookie review, adversarial authorization testing, provider entitlement/data-rights metadata, hosted/commercial-use readiness, quota/abuse safeguards, observability, and licensing/redistribution/AI-use suitability.
-
-### v18.5 — Major Closure & Release Assurance
-**MANDATORY before v19.** Reconstruct full v18 scope and run fresh architecture, source quality, performance/capacity, security, data-utility, UI/UX, adaptive-intelligence, native/runtime, Principal Engineer, Professional Trader/Investor, and release-assurance closure.
-
-ADR-GDI is a mandatory v18.5 closure dimension. Prove under realistic supported load that local/runtime architecture does not materially cause broad `DATA DEGRADED`; test provider failures/rate limits, stale data, source disagreement, DB pressure/unavailability, queue saturation, restart/warm-start, multi-user/symbol fan-out, background-job pressure, load shedding, recovery hysteresis, blast-radius correctness and actual packaged-runtime degradation UX.
-
-If dependency-compatible AODR foundation is present by v18.5, closure must verify it reuses canonical symbol intelligence, preserves My Market vs Global separation, does not manufacture recommendations under weak/degraded evidence, and does not create unbounded full-universe/provider load.
-
-If self-inflicted overload can delay or misstate decision-critical live/current evidence, it is a release blocker until fixed or explicitly constrained with truthful operating limits.
-
-#### v18.5.1 — Audit, Containment & Urgent Recovery
-
-**CURRENT RELEASE ENTRY SLICE.** v18.5.1 reconstructs the full v17/v18 ledger, installs anti-slicing enforcement and executes the safest urgent recovery work. It is not automatically the final v18 closure release. Open applicable work must be explicitly assigned to v18.6 or a later evidence-selected v18.x slice; it may not remain unowned or disappear.
-
-Mandatory v18.x recovery-program set:
-
-- **COPY-18.5.1-001 — version/profile preservation truth:** remove stale `v17` preservation copy and derive migration/preservation messaging from the actual source and target release context.
-- **SYMBOL-18.5.1-001 — removal contract:** the visible row remove control must work consistently in Day, Swing and Long, including the final desk membership; counts, selection, persistence and reload behavior must reconcile.
-- **SYMBOL-18.5.1-002 — active desk state:** a symbol's membership in the current desk must be unmistakably distinguished from its memberships in other desks across Day, Swing and Long.
-- **NAV-18.5.1-001 — interaction continuity:** live/SSE refresh must not unexpectedly move a user from the middle of a section to the top or discard relevant focus/selection state.
-- **RESEARCH-v15.1.0-17-19-REOPENED — Research top area:** reopen the approved Research ticker-input consistency, freshness-badge placement and responsive-placement requirements. Correct layout density/alignment, truthful freshness and action semantics, disabled-state clarity, and evidence-incomplete recovery guidance.
-- **IMPL-18-TRADEINSIGHT-001 — orphaned committed workstream:** implement and certify the approved TradeInsight SHADOW / SECONDARY roles through the canonical Smart Router. Current source contains no adapter, endpoint/configuration, router capability, provider-rights record or integration test; this is a confirmed v18 implementation miss. Closure also requires a provider → Market Mode disposition and evidence chain for every TradeInsight capability.
-- **IMPL-18-UTILITY-001 — shared snapshot acquisition:** replace independent Scanner/Radar Alpaca snapshot fetch paths with one bounded, freshness-aware, in-flight-coalesced canonical broker while preserving distinct ranking.
-- **IMPL-18-UTILITY-002 — Session Intelligence Coordinator:** place Pre-Market and Market Open checkpoints under one canonical temporal coordinator with shared scheduler/router/cache ownership.
-- **IMPL-18-UTILITY-003 — Market Activity surface retirement:** retain seeds as an input or drill-down, not a prominent equal-level Discovery card.
-- **IMPL-18-UTILITY-004 — legacy evidence routes:** redirect standalone News/Earnings/Filings routes to Research or Market/Event Intelligence with regression-safe deep links.
-- **IMPL-18-DOC-001 — role-aware documentation:** enforce the frozen OWNER/ADMIN/USER/DEMO documentation composition and create the required Documentation Impact Manifest.
-- **IMPL-17-DEPS-001 — dependency readiness:** implement the External Dependency & Provider Readiness checkpoint and durable User Action Required register over existing capability/rights foundations.
-- **VERSION-18.5.1-002 — active version drift:** remove or explicitly classify/test obsolete v17, v18.0.4 and v18.4.0 identity strings in current user/runtime/TEST-profile paths.
-- **UTILITY-v18.3-CARRY-FORWARD — 13 orphaned remediations:** disposition and close every item in `functionality_utility_remediation.json`; six have confirmed current-source failures and seven require fresh behavioral/design/package proof.
-
-v18.5.1 must run a **full v17 + v18 approved-implementation reconciliation**. Reconstruct the 48 inherited requirements that v17/v18 had to preserve, all 20 frozen v17 items, every v18 major workstream, every v18.0–v18.5 release clause, all 13 orphaned functionality/utility remediations, accepted conversational commitment, defect history and issue record. Classify current source plus actual packaged behavior as `FRESH_PASS`, `REOPENED`, `NOT_IMPLEMENTED`, `INTENTIONALLY_SUPERSEDED`, `NOT_APPLICABLE` or explicitly roadmap-placed future scope. Nothing is silently assumed complete because an earlier release once recorded PASS.
-
-**Adaptive v18.x Recovery & Closure Program:** the program executes inventory freeze → urgent defects → confirmed implementation misses → all 13 utility remediations → complete v17/v18 evidence reconciliation → cross-cutting hardening → zero-gap major-closure G10 → one immutable RC → actual macOS/Windows audit → G16 prevention/handoff. These phases may span v18.5.1, v18.6, v18.7 or later coherent v18.x slices.
-
-The reconciliation ledger is the parent authority. Release slices must conserve the same immutable IDs; they cannot independently drop or close work. Slice G1/G3/G10/G15 blocks on missing ownership or unexplained placement. The final major-closure G10/G15 additionally blocks on any open/reopened/not-implemented applicable row.
-
-After each slice, use `Observe → Reconcile → Prioritize → Slice → Build → Validate → Measure → Learn → Replan` to select the smallest safe next v18.x scope. Do not predeclare a final version or compress unresolved work to fit one.
-
-v19 planning may continue, but implementation cannot dilute or share the active v18 source/evidence lane before the evidence-selected v18 closure reaches G16.
-
-Detailed authority: `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`.
-
-Permanent anti-miss rules:
-
-1. Before adding a report, search and compare it with prior requirements/defects. A reproducible recurrence reopens and escalates the original item; it is not discarded as a duplicate.
-2. Every defect and implementation promise must preserve one durable chain: **origin → current observation → owner → fix/disposition → regression test → actual package proof → closure evidence**.
-3. A source, dependency, renderer or package change invalidates earlier PASS evidence for the affected surface and its dependents.
-4. Closure requires direct browser evidence plus actual macOS Apple Silicon and Windows x64 packaged-runtime evidence for affected user workflows.
-5. A v18.x slice is blocked by unresolved items assigned to that slice or any unexplained/unowned remainder. The final v18 closure is blocked until all applicable defects, misses and reconciliation rows have current final evidence.
-
-
-#### v18.6+ — Adaptive Recovery, Implementation & Hardening Capacity
-
-No fixed feature allocation is assumed. At each prior-slice G16 / next-slice G0–G3, choose from the still-open ledger using user impact, recurrence, dependency readiness, rights/security, performance/freshness risk, coupling, evidence invalidation and learning value.
-
-Provisional evidence-selected sequence:
-
-- **v18.5.1 candidate:** control plane plus repeated user-trust defects and exact next-slice placement.
-- **v18.6 candidate:** canonical utility/ownership recovery, route/surface cleanup, role-aware documentation and dependency readiness.
-- **v18.7 candidate:** TradeInsight/provider qualification plus remaining intelligence-surface consolidation.
-- **v18.8+ candidate:** full evidence convergence, cross-cutting hardening and major closure only if zero-gap ready.
-
-This sequence is not frozen product scope. Each minor release becomes binding only at its own G1 and may be split or reordered from measured evidence. The final v18 closure release number is assigned only when the remaining applicable scope is ready for one immutable RC and 2/2 native artifact audit.
+- truthful UNKNOWN/degraded/ABSTAIN;
+- scoped user messaging and deeper Maintenance diagnostics;
+- reliability/outcome history for later governed adaptive optimization.
 
 ---
 
-## v19 — Professional Data Infrastructure
+## 4. v18.9.x — Trustworthy Runtime, Acquisition, Observability & Operational Closure
 
-Purpose: make provider/data quality, rights, cost, reliability, and suitability measurable rather than assumption-driven.
+**Certified entry:** `v18.9.0-stable`  
+**Master program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Immediate blocker:** #64 / `ADAPT-RUNTIME-CRASH-001` → `v18.9.1`
 
-Approved direction:
-- provider capability matrix;
-- entitlement and commercial suitability;
-- quality/reliability/latency/rate/cost/coverage;
-- redistribution/persistent-storage/AI-use rights;
-- data reconciliation and source disagreement;
-- historical depth/adjustment quality;
-- specialized/paid providers only when measured capability gaps justify them;
-- formal long-term role classification for SHADOW candidate providers such as TradeInsight;
-- harden institutional/13F ingestion, manager identity, security/CUSIP/FIGI mapping, combination/notice reports, amendments/restatements, corporate-action reconciliation, point-in-time semantics, filing-lag/freshness truth, storage/indexing, outcome lineage, and data-rights/provenance;
-- harden two-sided thesis evidence infrastructure: point-in-time Long/Short plan snapshots, target/invalidation ordering, side-aware MFE/MAE, behavior/regime/catalyst lineage, short-interest/crowding/shortability/borrow/SSR data only where trustworthy and lawful, and explicit UNKNOWN semantics when unavailable;
-- harden AODR opportunity infrastructure: point-in-time ranking/recommendation lineage, My Market vs Global bucket truth, user-preference isolation, shared-ranking efficiency, diversity/correlation metadata, NOW/WATCH/PASS/ABSTAIN transitions, recommendation usefulness outcomes, missed-opportunity analysis, staleness/degradation effects and explainable ranking provenance;
-- harden ADR-GDI with measured capability SLOs, degradation history, fallback quality, provider/DB/runtime reliability scorecards, query/index tuning, capacity limits, restart behavior, load-shedding effectiveness and commercial/hosted operating limits.
+The architecture audit deliberately places **observability before broad provider capability expansion** so SHADOW admission/promotion is evidence-based.
 
-v19 must also ensure sufficient point-in-time historical evidence, feature history, outcome history, provenance, rights and reliability lineage for v20 adaptive research, including ASBI, adaptive Institutional Holdings / 13F Intelligence, 10/10 Two-Sided Directional Thesis & Trade Plan Intelligence, Adaptive Opportunity Discovery & Recommendations, and adaptive reliability optimization.
+1. **v18.9.1 — Runtime crash corrective ONLY.** Evidence-based packaged macOS Apple Silicon SIGABRT diagnosis/fix; preserve SQLite/user state/API keys; lifecycle/relaunch regression and packaged proof.
+2. **v18.9.2 — TradeInsight Settings/API-key UX ONLY.** Canonical Settings/local secret owner; masked Save/Test/Clear; truthful connection/capability status; preserve scroll/focus.
+3. **v18.9.3 — Coverage-aware Smart Provider Router core ONLY.** Memory/persisted evidence first; validate freshness/schema/provenance/rights; exact residual-gap acquisition; deterministic reconciliation/provenance/coverage re-evaluation; lifecycle separate from serving role.
+4. **v18.9.4 — Canonical company/instrument identity ONLY.** One identity owner reused by Desks/Research/Discovery/Add Symbol with symbol-only fallback.
+5. **v18.9.5 — Market Data Modes + capability diagnostics ONLY.** Behavior/quality modes and truthful source/freshness/coverage/fallback diagnostics; no provider-brand mode owner.
+6. **v18.9.6 — Provider Observability / Adaptive Telemetry Foundation ONLY.** Coverage, residual gaps, DB/cache reuse, calls avoided, contribution/usefulness, latency/errors/rate/backpressure, freshness failures, disagreement/corroboration, shared-work/fan-out efficiency, CPU/memory/DB/worker pressure and protected-session headroom.
+7. **v18.9.7 — TradeInsight SEC Form 4 enrichment ONLY.** Contract-validated SHADOW-first enrichment; direct SEC/EDGAR authoritative; source-family de-duplication; promotion/usefulness measured by v18.9.6 telemetry.
+8. **v18.9.8 — TradeInsight ticker/company search ONLY.** Canonical symbol validation/company identity fallback/corroboration.
+9. **v18.9.9 — TradeInsight movers/ranking evidence ONLY.** SHADOW candidate evidence through existing Opportunity Radar/ranker; no parallel scanner/ranking engine.
+10. **v18.9.10 — Remaining useful TradeInsight capability admission ONLY.** Every useful entitlement gets owner/consumer/lifecycle/serving-role/freshness/rights/retention/rate/cost/Market-Mode disposition; no invented endpoint/intraday capability or uncontrolled Python/MCP production dependency.
+11. **v18.9.11 — Session-Aware Data Readiness Maintenance ONLY.** One canonical light-overnight + heavy-weekend/extended-closed coordinator; protected pre-market/regular/after-hours reserves; bounded value-driven work; preemption/checkpoint/resume; no blind refetch.
+12. **v18.9.12 — v18.9.x Professional Closure ONLY.** No feature scope; implementation-miss/duplicate-owner audit, #57/#64 regressions, deterministic equivalence, provider/persistence/maintenance/protected-session proof, Adaptive Intelligence Scorecard, actual macOS Apple Silicon + Windows x64 runtime/package evidence.
+
+### v18.9.x exit contract
+
+v18.9.12 must produce a zero-gap-enough native foundation for v19:
+- runtime stability;
+- canonical secrets/settings/identity;
+- persistence-first coverage-aware acquisition;
+- useful provider telemetry;
+- evidence-based TradeInsight admission;
+- session-aware maintenance with no protected-session degradation;
+- no unexplained useful capability or duplicate owner;
+- exact artifact/runtime provenance.
+
+---
+
+## 5. v19 — Professional Data Infrastructure + Hosted Account Platform
+
+**Entry:** `v18.9.12` closure PASS.  
+**Hosted program:** #66 / `ADAPT-HOSTED-SYNC-001`.
+
+v19 professionalizes data rights/quality/provenance/reliability/economics and delivers one DE.PULSE account across macOS, Windows and hosted web.
+
+### Target hosted architecture
+
+```text
+macOS / Windows
+  SQLite edge/offline working set
+        │
+        │ typed authenticated incremental sync
+        ▼
+DE.PULSE hosted API / services
+        │
+        ├─ canonical identity/session/capability truth
+        ├─ Smart Provider Router v2
+        ├─ canonical freshness/cache/persistence reuse
+        ├─ rights/entitlement gate
+        ├─ existing multi-feed subscription owner
+        ├─ server-side managed provider secrets
+        ▼
+PostgreSQL shared account/state authority
+        ▲
+        │
+ hosted web through same APIs
+```
+
+Commercial normal users are **zero-key**: they authenticate only to DE.PULSE and never receive/configure platform provider credentials.
+
+### v19.0.x — Governance / Control Plane / Data Foundation
+
+- **v19.0.0 — Provider Capability / Entitlement / Rights Registry.** Runtime-enforceable commercial/multi-user, proxying, cache/retention, redistribution/display, derived/AI-use, attribution, limits/environment/expiry policy.
+- **v19.0.1 — Hosted Identity / Device / Session Control Plane.** Canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO` + capabilities, account/device lifecycle, revocation, server-side API/SSE/native/web session truth and privileged re-authentication/strong-auth controls where appropriate.
+- **v19.0.2 — PostgreSQL Tenancy / Schema / Pool / HA-PITR Foundation.** Shared authority, tenancy isolation, migrations, indexing/pool/capacity, encrypted backup, restore/failover, RPO/RTO; no broad sync activation.
+- **v19.0.3 — Managed Secrets / KMS Lifecycle.** Environment isolation, least privilege, rotation/rollback/compromise revoke, redaction/audit; zero platform provider secret in commercial clients.
+- **v19.0.4 — Provider Quality / Cost / Coverage / SLO Scorecards.** Measured freshness/completeness/latency/reliability/rate/cost/usefulness/calls-avoided/fallback/maintenance value and error-budget signals.
+- **v19.0.5 — Data Reconciliation / Revision / Point-in-Time Quality.** Source independence/conflicts, historical corrections/adjustments, observed/effective/revision truth and provenance.
+
+**Phase invariant:** multi-user hosted provider/sync activation waits for applicable rights, identity, DB/recovery and secret foundations.
+
+### v19.1.x — Zero-Key Provider Data Plane + Native Sync Foundation
+
+- **v19.1.0 — Authenticated Hosted Provider Gateway.** Wrap existing Smart Provider Router v2 behind hosted boundary; server-side credentials, cache/persistence reuse, bounded circuits/backpressure/kill controls; no second provider stack.
+- **v19.1.1 — Rights/Entitlement + Live Fan-Out Isolation.** Machine-enforced router/cache/persistence/REST/WebSocket/SSE authorization and provider-right boundaries using the existing multi-feed owner; no premium/realtime/right leakage across accounts/plans.
+- **v19.1.2 — Sync Protocol Foundation.** Snapshot/high-watermark bootstrap, stable IDs, SQLite atomic outbox, authenticated idempotent push, authoritative server sequence/change log, incremental pull, per-device checkpoints, tombstones, retention/compaction, stale-device re-bootstrap and mixed-version negotiation; never raw DB replication.
+- **v19.1.3 — macOS Preferences + Watchlist Pilot.** Offline/restart/reconnect/conflicts, local account isolation/user switching, lost/revoked device and non-destructive state proof.
+- **v19.1.4 — Desks / Workspaces Sync.** Versioned membership/configuration/delete/history semantics through the same transport/state owners.
+
+### v19.2.x — Cross-Platform Account Parity + #66 Assurance
+
+- **v19.2.0 — Windows x64 Sync Parity.** Same account/protocol/security semantics; no Windows-specific truth.
+- **v19.2.1 — Hosted Web Account Parity.** Same authenticated APIs/session/capability/PostgreSQL account truth; browser cache non-authoritative.
+- **v19.2.2 — Rights-Aware Research / Durable State Portability.** Only lawful, entitled, provenance-bound product-owned durable artifacts; live market truth remains provider/freshness/state-owned.
+- **v19.2.3 — Multi-User Security / Cost / Abuse / Capacity Hardening.** Per-account/user/device/capability attribution/quotas/throttling, fairness/starvation prevention, edge limits, streaming/cost/cache-call efficiency, load shedding and protected-session reserve.
+- **v19.2.4 — #66 Hosted Sync / Gateway Assurance Closure.** No feature scope; adversarial/failure/recovery matrix covering isolation/revocation, replay/network interruption, bootstrap/re-bootstrap, rights expiry, secret rotation, DB failover/PITR/restore, mixed clients, backpressure and protected-session pressure.
+
+### v19.3.x — Professional Point-in-Time Evidence Substrate
+
+- **v19.3.0 — Institutional / 13F Evidence Infrastructure.** Direct SEC truth, manager/security mapping, amendments, filing lag, point-in-time holdings, storage/indexing and outcome lineage.
+- **v19.3.1 — Two-Sided Long / Short Thesis Evidence Substrate.** Point-in-time plan/thesis snapshots, first-event ordering, side-aware outcomes and lawful short/crowding evidence with explicit UNKNOWN.
+- **v19.3.2 — AODR Candidate / Ranking / Outcome Lineage.** My Market/Global truth, point-in-time rank/reason/transition history, shared-ranking efficiency, diversity metadata and surfaced-vs-missed outcomes.
+
+### v19.4.x — Reliability / Economics / v20 Readiness
+
+- **v19.4.0 — ADR-GDI Professional Reliability / Capacity.** Capability SLO/degradation history, provider/DB/runtime scorecards, warm start, indexes/pools, bounded operating limits, load shedding, protected-session reserves and maintenance/preemption economics with soak/failure evidence.
+- **v19.4.1 — Specialized / Paid Provider Gap Evaluation.** Add/replace only when measured quality/capability/rights/cost evidence proves a material gap; same canonical router/rights/persistence/session contracts.
+- **v19.4.2 — v20 Research-Readiness Audit.** No model scope; prove point-in-time features/outcomes, provenance, rights, independence, synchronized-evidence safety, leakage controls and reliability history.
+
+### v19.5.0 — v19 Major Closure
+
+No new feature scope. Principal Engineer + security/data/operational/commercial audit. Require:
+- #66 PASS across Mac/Windows/web;
+- zero-key provider-secret boundary;
+- machine-enforced provider rights/entitlements;
+- deterministic sync/offline/conflict/delete/bootstrap behavior;
+- PostgreSQL/secret/provider-right recovery drills;
+- truthful SLO/error-budget/capacity/economics;
+- point-in-time data/provenance readiness;
+- actual supported runtime/package/service provenance;
+- zero unowned dataset/provider role/duplicate owner and zero unresolved P0 architecture gap.
 
 **Mandatory v19 Major Closure before v20.**
 
 ---
 
-## v20 — Adaptive Intelligence & Decision Research
+## 6. v20 — Adaptive Intelligence & Decision Research
 
-Purpose: use structured evidence/outcome history accumulated since v17 to improve decision support without creating a silent self-modifying trading system.
+**Entry:** `v19.5.0` PASS.
 
-Approved capabilities include:
-- historical analogues;
-- pattern/state outcomes;
-- regime-conditioned evidence;
-- calibration;
-- false-positive / false-negative analysis;
-- contradiction and drift analysis;
-- provider/evidence usefulness;
-- model/prompt governance;
-- explainable adaptive ranking;
-- controlled Champion/Challenger evaluation;
-- **Adaptive Stock Behavior Intelligence (ASBI) — 10/10 Contract**;
-- **Adaptive Institutional Holdings / 13F Intelligence**;
-- **Two-Sided Directional Thesis & Trade Plan Intelligence (TDTI) — 10/10 Contract**;
-- **Adaptive Opportunity Discovery & Recommendations (AODR) — 10/10 Contract**;
-- **Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) — governed adaptive optimization using reliability history accumulated earlier**.
+Purpose: use structured point-in-time evidence/outcome history to improve decision support without creating a silent self-modifying trading system.
 
-Production promotion remains:
+The architecture audit moves **model/prompt governance before broad adaptive rollout** so identity/evaluation/rollback/promotion controls exist before adaptive intelligence gains production influence.
 
-**SHADOW → VALIDATED → APPROVED → PRODUCTION**
+### v20.0.x — Adaptive Research Control & Governance
 
-No execution and no silent self-modification.
+- **v20.0.0 — Adaptive Research Control Plane + Immutable Experiment Ledger.** Dataset/feature/provenance/cohort/version lineage, reproducibility, leakage controls and promotion/rollback evidence.
+- **v20.0.1 — Model / Prompt Governance + Champion/Challenger.** Stable model/prompt/policy identity, independent evaluation, explainability, drift, approval/rollback and evidence-bound promotion.
+- **v20.0.2 — Historical Analogues + Regime-Conditioned Outcomes.** Point-in-time analogue retrieval and conditioned outcome distributions without changing deterministic truth.
+- **v20.0.3 — Calibration / FP-FN / Miss / Contradiction / Drift Intelligence.** Calibration, false positives/negatives, missed opportunities, contradictions, drift and abstention thresholds.
 
----
+### v20.1.x — Adaptive Stock Behavior Intelligence (ASBI)
 
-# Adaptive Stock Behavior Intelligence — Roadmap Placement
+- **v20.1.0 — Behavioral Fingerprints + State Transitions.** Canonical behavior features, hierarchical symbol/peer/sector/regime context and immutable behavior ledger.
+- **v20.1.1 — Scenarios / Probability Momentum / Calibration.** Competing paths, multi-horizon outlooks, expected-move distributions, evidence sufficiency/conflict and ABSTAIN/NO RELIABLE EDGE.
 
-ASBI is a core v20 intelligence workstream, but its trustworthy data foundation begins earlier.
+### v20.2.x — Adaptive Institutional + TDTI
 
-### v18 / v19 Preparation
-Collect and preserve, where useful and lawful:
-- point-in-time structured evidence;
-- behavior features and sequence context;
-- subsequent outcomes;
-- symbol eligibility/reliability metadata;
-- provider provenance/freshness;
-- market/sector/regime context;
-- catalyst/news/SEC/earnings context;
-- institutional/13F context where available and point-in-time valid;
-- historical depth/adjustments;
-- decision lineage;
-- data-rights metadata.
+- **v20.2.0 — Adaptive Institutional / 13F Intelligence.** Manager fingerprints, persistence/concentration, consensus/crowding, rotation, stale-data penalties and calibrated outcomes.
+- **v20.2.1 — TDTI Competing Long / Short / No Reliable Edge.** Same canonical snapshot; separate Direction Probability, Thesis Strength, Confidence and Opportunity Quality with cause-aware confirmation/invalidation.
+- **v20.2.2 — TDTI Two-Sided Trade-Plan Validation.** Long/Short entry/target/invalidation/R:R, readiness/time-to-resolution/MFE/MAE/risk and historical calibration; still No Execution.
 
-Do not force the mature ASBI prediction engine into v18.2–v18.5 as scope creep.
+### v20.3.x — Adaptive Opportunity Discovery & Recommendations
 
-### v20 Major Implementation
-Build/validate:
-- Behavioral Fingerprints;
-- state-transition modeling;
-- competing scenario/path generation;
-- multi-horizon Behavior Outlooks;
-- Behavior Probability Momentum;
-- hierarchical symbol/peer/sector/regime learning;
-- catalyst-aware analogue retrieval;
-- expected-move/outcome distributions;
-- Behavior Probability vs Opportunity Quality;
-- confidence/data sufficiency;
-- evidence conflict/independence;
-- ABSTAIN / NO RELIABLE EDGE;
-- Early Warning vs Confirmation;
-- immutable Behavior Intelligence Ledger;
-- calibration/drift/outcome measurement;
-- Champion/Challenger SHADOW evaluation.
+- **v20.3.0 — Adaptive Shared Opportunity Ranking.** Cross-candidate ASBI/TDTI-aware ranking with expected magnitude/time-to-resolution, extension/chase/R:R/degradation penalties and candidate-vs-surfaced-vs-missed outcomes.
+- **v20.3.1 — Diversity / Opportunity Cost / Personalized Relevance.** Correlation/theme/catalyst diversity and user relevance only after shared canonical truth; ABSTAIN/no strong opportunities is valid.
+
+### v20.4.x — Adaptive Operations
+
+- **v20.4.0 — ADR-GDI Adaptive Optimization.** Governed SHADOW/Champion-Challenger learning for provider recovery, cooldown/backoff, workload priority, maintenance value, protected-session reserve sizing, fallback usefulness and capacity policy. No self-promotion or safety reduction without evidence/approval.
+
+### v20.5.0 — v20 Professional Closure
+
+No feature scope. Require calibration/decision utility/drift/abstention, deterministic-boundary protection, privacy/security/data rights, reproducibility, rollback, actual supported artifacts, zero silent self-modification and No Execution.
 
 ---
 
-# Institutional Holdings / 13F Intelligence — Roadmap Placement
+## 7. Detailed adaptive workstream placement
 
-13F is a durable Smart-Money / Institutional Intelligence dataset and adaptive context layer, not a live-trading signal.
+### ASBI
+**v18/v19 preparation:** preserve lawful point-in-time structured evidence, behavior features, sequence/outcome context, provider provenance/freshness, regime/sector/catalyst/SEC/earnings/institutional context, historical adjustments and data-rights metadata.  
+**v20 implementation:** behavior fingerprints, state transitions, competing scenarios, multi-horizon outlooks, probability momentum, hierarchical learning, catalyst-aware analogues, outcome distributions, confidence/data sufficiency, conflict/independence, ABSTAIN and calibration/drift under Champion/Challenger.
 
-### v18 / v19 Preparation
-Collect/reconcile applicable public SEC evidence with point-in-time truth:
-- 13F-HR / 13F-HR/A / 13F-NT / 13F-NT/A;
-- manager CIK / Form 13F identity / accession;
-- report period and filing/acceptance timestamp;
-- disclosed holdings and relevant information-table fields;
-- amendments/restatements and later-added holdings;
-- CUSIP/FIGI/security mapping into the Global Symbol Registry;
-- quarter-over-quarter states such as NEW / INCREASED / REDUCED / REPORTED EXIT / UNCHANGED / NOT COMPARABLE;
-- split/corporate-action/reorganization reconciliation;
-- explicit filing-lag, short-position, small-position, confidential-treatment, and incomplete-portfolio limitations;
-- subsequent outcome history from the time information became public.
+### Adaptive Institutional / 13F
+**v19 substrate:** point-in-time SEC filing/report/acceptance identity, manager/security mappings, amendments/restatements, disclosed holdings, QoQ states, corporate-action reconciliation, filing-lag/confidentiality/incompleteness limitations and outcomes from public availability time.  
+**v20 intelligence:** manager behavioral fingerprints, persistence/concentration, accumulation/reduction breadth, consensus/crowding, thematic/sector rotation, usefulness by regime/stock type, convergence/contradiction, stale-data penalties, calibrated outcomes and ABSTAIN.
 
-### v20 Adaptive Institutional Intelligence
-Build/validate:
-- Manager / Institutional Behavioral Fingerprints;
-- persistence and disclosed-concentration behavior;
-- accumulation/reduction breadth;
-- consensus vs crowding;
-- passive/index/common-factor adjustment where feasible;
-- sector/thematic institutional rotation;
-- manager/cohort usefulness by stock type, sector and regime;
-- correlation with insider, congressional, ASBI, Rapid Move, Opportunity Radar, earnings/SEC/news, market/sector regime, price/volume/relative strength and options context where useful;
-- convergence and contradiction reasoning;
-- adaptive stale-data penalties;
-- historical outcome distributions and calibration;
-- Champion/Challenger evaluation for learned institutional models/rankings;
-- ABSTAIN when filing completeness, mapping, history, independence, or relevance is insufficient.
+### TDTI
+**v19 substrate:** one canonical evidence snapshot; Long/Short plan/outcome lineage; first-event ordering; MFE/MAE; ASBI/regime/catalyst/liquidity/institutional/insider/congressional/options context; lawful short-specific data; explicit UNKNOWN.  
+**v20 intelligence:** competing Long/Short/No Reliable Edge theses, direction probability vs thesis strength/confidence/opportunity quality, structural invalidation, per-side readiness/probability momentum, multiple paths/time-to-resolution, risk intelligence, cross-horizon reconciliation, concise WHY/CONFIRMS/INVALIDATES/WATCH synthesis and side-aware calibration.
 
-13F-derived production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION** and must never silently alter protected deterministic Day/Swing/Long formulas.
+### AODR
+**v19 substrate:** My Market vs Global buckets, Global Symbol Registry/Actionable Universe eligibility, shared ranking inputs, Opportunity Radar promotion/demotion lifecycle, NOW/WATCH/PASS/ABSTAIN, point-in-time rank/reason/outcome history, diversity metadata, user relevance isolated from shared truth and ADR-GDI dependency.  
+**v20 intelligence:** adaptive cross-candidate ranking, opportunity cost, extension/chase/R:R/degradation penalties, diversity-aware sets, personalized relevance after shared truth, candidate-vs-surfaced-vs-missed calibration and Champion/Challenger.
+
+### ADR-GDI
+**v18.9:** observability, freshness/headroom/usefulness telemetry, shared-work efficiency, session-aware maintenance, runtime/protected-session reliability.  
+**v19:** professional SLO/degradation/provider/DB/runtime/capacity/economics hardening.  
+**v20:** governed adaptive reliability optimization only after SHADOW/Champion-Challenger proof.
 
 ---
 
-# Two-Sided Directional Thesis & Trade Plan Intelligence — Roadmap Placement
+## 8. Industry-strength controls inside G0–G16
 
-The earlier product direction already allowed `entry / short-entry zone context when supportable`. The 10/10 TDTI contract turns that into a complete AI/LLM-style competing-thesis system without creating a separate short-trading product or execution engine.
-
-### v18 / v19 Preparation
-Preserve/build the evidence and validation substrate needed to compare Long and Short fairly:
-- one canonical ticker/horizon evidence snapshot;
-- existing Entry/Target/Invalidation truth and short-entry context where supportable;
-- structural trigger/confirmation/invalidation evidence;
-- side-aware outcome ordering;
-- actual eligible-entry anchoring for MFE/MAE where measurable;
-- ASBI state/path context;
-- market/sector regime, catalyst, liquidity and relative-strength lineage;
-- institutional/insider/congressional context with freshness/independence;
-- options context where useful;
-- short-interest/crowding and borrow/shortability/SSR context only when reliable, lawful and clearly sourced;
-- explicit UNKNOWN/ABSTAIN when short-specific evidence is unavailable.
-
-### v20 Major Two-Sided Intelligence
-Build/validate:
-- competing Long / Short / No Reliable Edge thesis reasoning from the same evidence snapshot;
-- separate Direction Probability, Thesis Strength, Confidence, Opportunity Quality and Readiness;
-- Long Entry / Trim-Target / Invalidation / R:R;
-- Short Entry / Cover-Trim / Downside Targets / Short Invalidation / R:R;
-- structural rather than naïvely mirrored invalidation;
-- per-side readiness lifecycle and probability momentum;
-- ASBI-conditioned short-chase, squeeze, rebound, bull-trap and continuation reasoning;
-- multiple expected paths, outcome distributions and time-to-resolution;
-- long-specific and short-specific risk intelligence;
-- cross-horizon contradiction/reconciliation;
-- evidence independence and cause-aware reasoning;
-- AI/LLM-style concise `WHY / CONFIRMS / INVALIDATES / WHAT CHANGES THE VIEW / WHAT TO WATCH NEXT` synthesis;
-- immutable two-sided thesis/trade-plan ledger;
-- side-aware historical calibration, MFE/MAE, false positives/misses and Decision Utility;
-- Champion/Challenger evaluation;
-- Professional Trader/Investor acceptance;
-- ABSTAIN / NO RELIABLE EDGE as a first-class valid outcome.
-
-TDTI must reuse ASBI, Day/Swing/Long, Opportunity Radar, Decision Queue, Research, Historical Validation and canonical evidence ownership. It is **not** a new duplicate intelligence silo.
-
-Production influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent formula/model self-modification and no execution capability.
-
----
-
-# Adaptive Opportunity Discovery & Recommendations — Roadmap Placement
-
-AODR turns existing global/shared market intelligence into useful user-facing prioritization. It is not a replacement for Opportunity Radar, the Global Symbol Registry, ASBI or TDTI.
-
-### v18 / v19 Preparation
-Build/harden dependency-compatible foundations:
-- My Market Opportunities vs Global Opportunities bucketing with no per-user duplicates;
-- Global Symbol Registry / Reliable Actionable Universe eligibility truth;
-- Shared Symbol Intelligence reuse so ranking does not trigger duplicate provider/calculation work;
-- Opportunity Radar broad-observe → PROMOTE → deeper shared analysis → DEMOTE lifecycle;
-- bounded canonical ranking inputs and material-change propagation;
-- Long/Short/horizon labels using current canonical TDTI/ASBI truth where available;
-- NOW / WATCH / PASS / ABSTAIN states;
-- point-in-time candidate/rank/reason/bucket lineage before outcomes are known;
-- recommendation usefulness, miss, redundancy, extension/chase, staleness and degradation outcomes;
-- correlation/sector/theme/common-catalyst metadata for diversity-aware surfacing;
-- user preference/relevance state isolated from shared canonical market truth;
-- grounded concise why-now / confirms / invalidates / what-to-watch-next presentation;
-- ADR-GDI dependency and freshness integration.
-
-Do not force mature adaptive ranking/personalization into frozen v18.2 scope.
-
-### v20 Major Adaptive Opportunity Intelligence
-Build/validate:
-- adaptive cross-candidate ranking using TDTI Opportunity Quality/Readiness and ASBI state/path/probability momentum;
-- expected-magnitude/time-to-resolution and opportunity-cost-aware prioritization;
-- strong penalties for extension/chase, poor R:R, degraded required evidence, stale data, contradictions and low independence;
-- diversity/correlation-aware recommendation sets rather than many copies of the same factor/catalyst;
-- personalized relevance layered **after** shared market truth;
-- historical candidate-vs-surfaced-vs-missed comparison;
-- adaptive recommendation utility/calibration and false-positive/miss analysis;
-- Champion/Challenger ranking/personalization evaluation;
-- concise AI/LLM-style synthesis grounded in canonical evidence;
-- ABSTAIN / no strong opportunities as a valid high-quality outcome.
-
-Production ranking/personalization influence remains **SHADOW → VALIDATED → APPROVED → PRODUCTION**. No silent self-modification and no execution capability.
-
----
-
-# Adaptive Data Reliability & Graceful Degradation Intelligence — Roadmap Placement
-
-ADR-GDI is a cross-cutting reliability architecture and adaptive operating contract. Basic reliability is not deferred to v20.
-
-### v18.3 Foundation
-Implement/harden:
-- capability-level health;
-- consumer/dependency blast radius;
-- dataset/horizon/session freshness SLOs;
-- reason taxonomy and recovery state;
-- warm SQLite/PostgreSQL canonical persistence;
-- shared-symbol reuse and request coalescing;
-- workload priorities, bounded queues/backpressure and load shedding;
-- Provider Router circuits/cooldowns/fallback discipline;
-- DB/query/pool/runtime observability;
-- graceful degraded/UNKNOWN/ABSTAIN semantics;
-- impact-aware UI plus Maintenance diagnostics.
-
-Dependency-compatible fixes for retry storms, duplicate work, broad false degradation or local overload should be implemented earlier rather than waiting for v18.3 if they are safe and clearly evidenced.
-
-### v18.5 Mandatory Reliability Closure
-Prove:
-- supported-load SLO attainment for decision-critical capabilities;
-- self-inflicted degradation is eliminated or bounded by explicit truthful operating limits;
-- optional failures do not contaminate unrelated consumers;
-- required failures produce scoped degradation/ABSTAIN;
-- provider/DB/runtime pressure does not create retry/fetch storms;
-- restart/warm-start avoids unnecessary full rebuilds;
-- load shedding protects high-value live work;
-- recovery uses hysteresis and does not flap;
-- packaged runtime can explain reason, impact, fallback and recovery.
-
-### v19 Professional Reliability Hardening
-Measure and optimize provider/DB/runtime reliability, SLOs, fallback quality, degradation history, query/index/capacity behavior, commercial operating limits and cost/value efficiency.
-
-### v20 Adaptive Reliability Optimization
-Use accumulated reliability history to improve provider recovery prediction, cooldown/backoff selection, workload prioritization, fallback usefulness and capacity policy through governed SHADOW/Champion-Challenger evaluation.
-
-No adaptive reliability policy may silently self-promote to production.
-
-Full permanent contract: `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`.
+For material hosted/security/data/adaptive work, existing gates absorb the following without creating G17+:
+- **G2:** canonical owner map, architecture decision record/equivalent, trust/tenant/data classification and threat-model scope;
+- **G3:** API/schema/protocol compatibility, migration/rollback/roll-forward, SLO/error-budget, observability, negative/failure/load test plans and feature/kill-switch/canary strategy where useful;
+- **G4:** implementation + unit/contract tests + backward-compatible migration behavior;
+- **G7:** negative authorization/tenant isolation, rights/entitlement, secret/redaction and adaptive promotion evidence;
+- **G8:** load/soak/capacity, queues/backpressure, circuits, provider/DB failure, failover/recovery and protected-session proof;
+- **G9:** role-aware Mac/Windows/web UX and direct-route/API authorization consistency;
+- **G10:** production-readiness reconciliation; unresolved P0 security/rights/recovery/compatibility/duplicate-owner issue blocks freeze;
+- **G11/G12:** immutable RC + full certification;
+- **G13/G14:** package/provenance/actual-artifact runtime proof where applicable;
+- **G15:** bounded/canary/progressive promotion and explicit rollback/kill criteria for hosted-risk changes where applicable;
+- **G16:** implementation-miss/incident/metric learning, obsolete machinery cleanup and authoritative next handoff.
 
 ---
 
 # Permanent Adaptive Placement Rule
 
-Before assigning any approved workstream to a specific minor release, evaluate:
+Before assigning any unshipped approved workstream to a release, evaluate:
 
-**value + dependency + architecture + safety + performance + defects + data/provider readiness + rights + test evidence + accumulated outcomes**
+**value + dependency + architecture + safety + performance + defects + data/provider readiness + commercial/data rights + test evidence + operational recovery + accumulated outcomes**
 
-If moving a workstream is safer or more correct, update this roadmap and record the decision in `governance/DECISION-LOG.md` rather than silently changing scope.
+If moving a workstream is safer/more correct, update this canonical roadmap, the four CURRENT Adaptive governance files, relevant issue/handoff and `governance/DECISION-LOG.md` rather than silently changing scope.
