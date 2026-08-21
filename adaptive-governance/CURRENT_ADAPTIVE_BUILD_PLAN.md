@@ -2,58 +2,47 @@
 
 **Immutable Stable:** `v18.8.1-stable`  
 **Stable candidate:** `410679ba0d6459f66a44db15a0a55f30741a7c53`  
-**Stable qualified source:** `07624965519cdd406c6db1e19771cf75dec825b4`  
 **Current engineering branch:** `v18.8.2-development`  
-**Open defect:** GitHub issue #57  
-**Current line:** `v18.8.2 — Market Intelligence Reliability`.
+**PR:** #59  
+**Open defect:** #57 / `ADAPT-FRESHNESS-001 REOPENED`  
+**Current line:** `v18.8.2 — Market Intelligence Reliability / RC exact-head requalification`.
 
-## Entry condition — PASS
+## G0–G4 — PASS
 
-v18.8.1 post-Stable continuity is aligned across checkpoints, Stable evidence manifest, handoff and CURRENT Adaptive overlays. The v18.8.1 Stable binary/tag remains immutable and is not rebuilt by v18.8.2 development.
+G0 proved the existing canonical allocator already owns SPY/QQQ and all 15 breadth symbols; VIX remains canonical special-index demand. G1 froze issue #57 only. G2/G3 preserved the existing owner chain. G4 repaired the narrower quote-freshness accountability gap and unavailable-vs-zero presentation truth without adding routing, freshness or subscription owners.
 
-## v18.8.2 mandatory work
+## G5–G10 — implementation head PASS
 
-`ADAPT-FRESHNESS-001` is **REOPENED** for issue #57. Preserve its original requirement lineage rather than creating a disconnected reliability engine.
+Product head `5f2d229a9d63780e539705aa6c94cb62b36bf51d` passed Fast #432 / `32433235205` and Qualified #149 / `32433851064`, including full Go, race, randomized order, renderer, Chrome, WebKit, CI/harness and exact-head status evidence.
 
-### G0 — COMPLETE
+That evidence is not reused after release-candidate identity changes the branch head. Exact-head release provenance requires a new Fast + Qualified pair on the RC head.
 
-Exact-baseline diagnosis proved that the canonical live/snapshot allocator already owns SPY/QQQ and all 15 Market Intelligence breadth symbols. The escaped defect is the narrower freshness/recovery accountability gap: Market Intelligence quote demand was not included in the sole scoped quote-freshness row after transient missing/stale evidence.
+## RC identity promotion — current commit
 
-### G1 — FROZEN
+The same branch/PR now becomes release-capable by aligning:
+- v18.8.2 canonical `release_identity.json`, `VERSION.txt` and app bootstrap;
+- release-coupled renderer cache/title identity plus `release-identity-v18.8.2.js`;
+- `release/v18.8.2/release_contract.json` and exact-source `run_full_certification.sh`;
+- durable handoff/build/delivery overlays.
 
-Scope is issue #57 only. No TradeInsight/provider expansion, no execution, no Day/Swing/Long semantic change, no second router, no second freshness system, no second data engine and no duplicate subscription manager.
+Stable baseline and previous Stable are both v18.8.1. Build ID is `v18.8.2-stable-20260820`.
 
-### G2/G3 — FROZEN
+## Fresh exact-head qualification required
 
-Canonical owner chain remains:
+PR #59 remains Draft through this source-changing RC promotion. The new head must earn:
+1. one automatic Fast run;
+2. if Fast passes, one Ready-for-Review transition on the same PR;
+3. one fresh Qualified run, expected to cover backend/race/randomized, renderer, Chrome and WebKit because the RC changes backend/renderer/release tooling surfaces;
+4. no source change after Qualified unless a classified real defect requires it.
 
-`Existing Market Intelligence/master-market demand → existing multi-feed live/snapshot allocation → Smart Provider Router v2 → canonical quote/evidence-time/freshness/recovery → Market Intelligence consumers`.
+Only a head with both `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` success may merge. Release G11 then checks source-head → merged-candidate fingerprint equivalence and runs the existing G12–G16 no-rebuild path.
 
-SPY/QQQ remain protected by existing allocator priority; VIX remains on its canonical special-index path. Breadth remains the existing 15-symbol bounded market-context universe and is already admitted by the canonical allocator as live or snapshot demand. The repair therefore changes freshness accountability, not provider routing or subscription priority.
+## Protected boundaries
 
-### G4 — IMPLEMENTATION COMPLETE; EXIT PENDING FAST
-
-Bounded implementation:
-- add existing `broadBreadthUniverse` to canonical quote freshness scope in `Engine.Snapshot()`, deduped with active desk/Research symbols;
-- leave `multiFeedAllocationWithHints`, Smart Provider Router v2 and routed refresh ownership unchanged;
-- add deterministic regressions for allocator ownership, missing/recovered breadth freshness, SPY/QQQ/VIX individually missing, stale evidence and 0/15 unavailable truth;
-- add presentation-only truth reconciliation so `DATA DEGRADED`/`UNAVAILABLE` does not render as a meaningful `0/100`;
-- integrate renderer assertions into the existing Fast Node lane rather than creating a new workflow/job.
-
-No post-PR branch push is planned unless Fast exposes a real defect.
-
-## Remaining qualification matrix
-
-G5 Fast must prove Go formatting/vet/full suite, renderer syntax and existing renderer contract including v18.8.2 unavailable-vs-zero assertions.
-
-G6-G10 must then prove integration/data truth/provider fallback/recovery/performance-backpressure/browser behavior and exact-head readiness. Required scenarios include pre-market, regular session, post-market, partial breadth, VIX-only failure, total acquisition failure, stale evidence, Smart Router fallback and recovery-to-current.
-
-G11-G16 remains the normal immutable RC/certification/native-package/actual-artifact/assurance/publication/retrospective path. Actual macOS Apple Silicon and Windows x64 package proof is mandatory.
-
-## After v18.8.2
-
-v18.9.0 `ADAPT-TRADEINSIGHT-001` → v18.9.1 provider/Market-Mode hardening → v18.10 zero-gap closure.
+Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription allocator; BroadSnapshotBroker canonical reuse owner; deterministic Day/Swing/Long; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
 
 ## Exactly one next action
 
-Open exactly one Draft PR from `v18.8.2-development` to `main` and inspect the automatically triggered CI Fast result on that exact head. No retry/certification branches and no duplicate manual Fast run.
+Inspect the automatic Fast result on the new RC head. If PASS, mark the same PR #59 Ready exactly once for fresh Qualified. No retry/certification branch, duplicate workflow or manual duplicate run.
+
+After v18.8.2 Stable: v18.9.0 TradeInsight SHADOW → v18.9.1 provider/Market-Mode hardening → v18.10 zero-gap closure.

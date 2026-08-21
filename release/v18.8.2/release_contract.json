@@ -1,0 +1,38 @@
+{
+  "schema": "DE.PULSE-V18.8.2-RELEASE-CONTRACT-1",
+  "release": "18.8.2",
+  "title": "Market Intelligence Reliability & Freshness Recovery Closure",
+  "certifiedStableBaseline": "v18.8.1-stable",
+  "engineeringBaseline": "410679ba0d6459f66a44db15a0a55f30741a7c53",
+  "scope": "GitHub issue #57 / ADAPT-FRESHNESS-001 REOPENED",
+  "identity_asset": "release-identity-v18.8.2.js",
+  "documentationIdentityRule": "The current package/build/QA identity is owned by release_identity.json, this release contract, VERSION.txt/app bootstrap and the last-loaded v18.8.2 release identity overlay. Long-form historical documentation is not rewritten solely to duplicate release metadata.",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries. Current execution authority is the three canonical GitHub workflows plus this release contract and run_full_certification.sh.",
+  "g0Diagnosis": "The existing live/snapshot allocator already owns SPY, QQQ and the canonical 15-symbol breadth universe; VIX remains on the canonical special-index path. The escaped defect was Market Intelligence breadth quote freshness/recovery accountability plus presentation truth, not missing provider-routing or subscription ownership.",
+  "qualificationRule": "Exact-head Fast and full Qualified, including backend/race/randomized, renderer, Chrome and WebKit, must PASS after this release-identity promotion before merge. Source-changing corrections stay on PR #59 and require fresh exact-head evidence.",
+  "releaseRule": "One v18.8.2 development branch, one PR #59, one exact-head merge after Fast + Qualified, then one automatic G11-G16 Stable release run; publication must use exact same-run certified artifacts with no rebuild.",
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "DETERMINISTIC_DAY_SWING_LONG",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "CANONICAL_FRESHNESS_RECOVERY_SOLE_OWNER",
+    "EXISTING_MULTI_FEED_ALLOCATION_SOLE_SUBSCRIPTION_OWNER",
+    "BROAD_SNAPSHOT_BROKER_CANONICAL_REUSE_OWNER",
+    "GLD_SLV_USO_ACTIONABLE_TRADABLE_EXCEPTIONS"
+  ],
+  "requiredV1882Evidence": [
+    "Market Intelligence breadth demand participates in canonical quote freshness/recovery accountability",
+    "SPY and QQQ remain protected by existing allocation priority",
+    "VIX remains on the canonical special-index path",
+    "partial breadth and total acquisition loss remain truthful and scoped",
+    "unavailable/unknown is not presented as observed numeric zero",
+    "stale evidence is rejected and targeted recovery returns affected data to current",
+    "Smart Provider Router v2 fallback and provider ownership remain unchanged",
+    "full backend/race/randomized, renderer, Chrome and WebKit qualification",
+    "macOS Apple Silicon and Windows x64 packaged-runtime audits",
+    "G15 exact-artifact assurance and no-rebuild Stable publication"
+  ]
+}
