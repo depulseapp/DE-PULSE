@@ -45,6 +45,12 @@
       "release": "v18.9.0",
       "disposition": "COMPLETED_IN_V18.9.0_STABLE",
       "requirement": "ADAPT-TRADEINSIGHT-001"
+    },
+    {
+      "issue": 57,
+      "release": "v18.8.2",
+      "disposition": "RESOLVED_IN_V18.8.2_STABLE_AND_RECONCILED_CLOSED",
+      "requirement": "ADAPT-FRESHNESS-001"
     }
   ],
   "escapedRuntimeDefects": [
@@ -52,11 +58,33 @@
       "originalIssue": 63,
       "correctiveIssue": 64,
       "releaseFound": "v18.9.0",
+      "targetRelease": "v18.9.1",
       "disposition": "CARRIED_TO_NEXT_CORRECTIVE_RELEASE",
       "requirement": "ADAPT-RUNTIME-CRASH-001",
       "signature": "macOS Apple Silicon EXC_CRASH (SIGABRT) / abort() called"
     }
   ],
-  "nextStep":"Diagnose issue #64 / ADAPT-RUNTIME-CRASH-001 from the complete macOS crash evidence or a deterministic reproduction, then freeze a bounded corrective-release G1 before unrelated feature work.",
-  "updatedAt":"2026-08-21T14:12:00-07:00"
+  "activeProgram": {
+    "issue": 65,
+    "requirement": "ADAPT-PROVIDER-INTELLIGENCE-010",
+    "policy": "SMALL_DEPENDENCY_ORDERED_PATCHES_ONE_PRIMARY_RESPONSIBILITY",
+    "patchTrain": [
+      "v18.9.1 runtime crash corrective",
+      "v18.9.2 TradeInsight Settings/API-key UX",
+      "v18.9.3 coverage-aware Smart Provider Router core",
+      "v18.9.4 canonical company identity/all-desk presentation",
+      "v18.9.5 Market Data Modes/capability diagnostics",
+      "v18.9.6 TradeInsight SEC Form 4 enrichment",
+      "v18.9.7 TradeInsight ticker/company search",
+      "v18.9.8 TradeInsight movers/ranking evidence",
+      "v18.9.9 remaining useful TradeInsight capability sweep",
+      "v18.9.10 provider efficiency/Adaptive Intelligence telemetry",
+      "v18.9.11 professional closure audit"
+    ],
+    "splitFurtherIfNeeded": true,
+    "heavyMultiDomainBuildsProhibited": true,
+    "implementationMissRule": "No known miss may be silently deferred; fix in scope or durably assign to a later patch before closure."
+  },
+  "nextStep":"Diagnose issue #64 / ADAPT-RUNTIME-CRASH-001 from complete macOS crash evidence or deterministic reproduction and freeze narrow v18.9.1 G1. Do not start v18.9.2 until v18.9.1 is truthfully closed or crash is proven external/non-product.",
+  "updatedAt":"2026-08-21T15:12:00-07:00"
 }
