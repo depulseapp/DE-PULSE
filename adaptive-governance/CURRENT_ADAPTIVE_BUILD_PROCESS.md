@@ -58,11 +58,11 @@ The existing canonical U.S. market calendar/session owner defines protected-sess
 
 **Pre-market, regular market and after-hours** are first-class decision-support sessions. During them:
 
-- live/current data and intelligence outrank all maintenance;
+- live/current data and intelligence outrank all maintenance and background synchronization;
 - provider quota/headroom needed for current-session capability is reserved;
 - maintenance external-provider calls are suspended unless directly required by a current/live consumer;
 - CPU/memory/network/DB/background-worker capacity remains bounded and reserved for current-session work;
-- maintenance is preemptible/checkpointed and yields promptly to protected sessions, market shocks or high-priority current consumers;
+- maintenance and sync are preemptible/checkpointed and yield promptly to protected sessions, market shocks or high-priority current consumers;
 - no deep historical fan-out, heavy reconciliation, compaction or broad background work may run.
 
 ### Light overnight process
@@ -87,13 +87,31 @@ Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READ
 
 ## v19 process objective
 
-v19 is **Professional Data Infrastructure**, not another provider-router or maintenance rewrite. It consumes v18.9.x coverage-aware acquisition, persistence-first reuse, session-aware maintenance, identity and telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history/revision quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability, DB/index/pool/capacity hardening, maintenance economics/protected-session reserve sizing and measured paid-provider gap analysis. v19 must end with a mandatory Major Closure before v20.
+v19 is **Professional Data Infrastructure**, not another provider-router or maintenance rewrite. It consumes v18.9.x coverage-aware acquisition, persistence-first reuse, session-aware maintenance, identity and telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history/revision quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability, DB/index/pool/capacity hardening, maintenance economics/protected-session reserve sizing, measured paid-provider gap analysis, and the mandatory hosted account/sync/provider-gateway program #66 / `ADAPT-HOSTED-SYNC-001`. v19 must end with a mandatory Major Closure before v20.
 
-Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence, outcome lineage and protected-session reliability are release requirements, not documentation-only concerns.
+### Mandatory #66 process chain
+
+#66 is executable v19 scope and MUST be represented in G0/G1 sequencing rather than left only in handoff/issue text. Its implementation is split into dependency-ordered small patches and cannot begin before the v18.9.x closure permits v19 work.
+
+Required process ordering is:
+1. reconcile #66 into the current Roadmap, Build Plan, Build Process and Delivery Process at the v19 transition and freeze exact dependencies;
+2. prove canonical role/capability reuse (`SUPER_OWNER/OWNER/ADMIN/USER/DEMO`) and hosted account/user/device/session ownership; no duplicate identity/session truth;
+3. prove PostgreSQL tenancy/schema/pool/HA/PITR/backup/restore/migration and recovery objectives before broad sync activation;
+4. prove managed-secret/KMS lifecycle, environment isolation, rotation/rollback/compromise recovery and end-user zero-key deployment mode;
+5. wrap the existing Smart Provider Router v2 and multi-feed subscription owner behind the authenticated hosted Provider Gateway; do not create a second provider or live-subscription stack;
+6. make provider rights/entitlements machine-enforced across router/cache/persistence/REST/live fan-out before shared reuse is enabled;
+7. implement sync transport as application-level typed protocol: bootstrap, SQLite atomic outbox, idempotency, authoritative server sequence, change log, checkpoint, tombstone, retention/compaction, stale-device re-bootstrap and mixed-version capability negotiation;
+8. activate domains progressively: macOS preferences/watchlists first, then desks/workspaces, Windows parity, hosted-web parity, then rights-aware research/evidence;
+9. prove local account isolation, user switching, offline/restart/reconnect, lost/revoked device behavior and no provider secret on commercial clients;
+10. close with multi-user cost/usage/abuse/licensing/security/load/DR assurance and an implementation-miss audit.
+
+Every #66 patch follows the normal G0-G16 model. G2 must map canonical owners; G3 must freeze rights/security/sync/conflict/protocol contracts; G7 must prove tenant/security/secret/rights isolation; G8 must prove DB/pool/load/recovery and protected-session safety; G9 must prove role-aware Mac/Windows/web behavior; G10 blocks freeze on any unresolved P0 audit item; G12 replays on the immutable RC; G14 validates affected native artifacts; G15 requires hosted-sync/provider-gateway assurance before promotion; G16 records incidents/misses and the next bounded packet.
+
+Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence, outcome lineage, hosted account isolation, provider-secret boundaries, sync correctness and protected-session reliability are release requirements, not documentation-only concerns.
 
 ## v20 process objective
 
-v20 is **Adaptive Intelligence & Decision Research**. It may begin only after v19 Major Closure proves the evidence substrate is trustworthy enough for learning.
+v20 is **Adaptive Intelligence & Decision Research**. It may begin only after v19 Major Closure proves the evidence substrate and #66 hosted/synchronized account architecture are trustworthy enough for learning.
 
 Adaptive work is split by responsibility: experiment/evidence ledger, historical analogues, calibration/drift, ASBI, adaptive 13F, TDTI, AODR, ADR-GDI adaptive optimization, model/prompt governance and final closure. Production influence follows `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; no model or adaptive policy silently self-promotes. Deterministic Day/Swing/Long truth remains protected unless separately governed, and No Execution is permanent.
 
@@ -101,15 +119,15 @@ v20 may learn better provider/maintenance usefulness and reserve policies only t
 
 ## Cross-version dependency rule
 
-`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence + hosted account/sync infrastructure -> v20 governed adaptive learning`.
 
-v19 must not create a second router or maintenance coordinator to measure providers. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
+v19 must not create a second router or maintenance coordinator to measure providers. #66 must reuse canonical provider/freshness/cache/persistence/subscription/session owners and must be operationally assured before synchronized evidence reaches v20. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
 
 ## Adaptive provider process contract
 
 The sole routing owner evaluates residual missing coverage and eligible providers, acquires only what is needed, merges with provenance, re-evaluates remaining gaps and stops only when the bounded requirement is met or eligible budget is exhausted.
 
-A provider response marked successful does not imply consumer completeness. Static provider ordering is only a prior/tiebreaker. TradeInsight is never allowed to create its own router/cache/scanner/Market Mode/SEC truth/symbol/persistence/scheduler system.
+A provider response marked successful does not imply consumer completeness. Static provider ordering is only a prior/tiebreaker. TradeInsight is never allowed to create its own router/cache/scanner/Market Mode/SEC truth/symbol/persistence/scheduler system. Hosted mode likewise may not create another provider router or subscription manager.
 
 Provider validation lifecycle and runtime serving role are distinct concepts. SHADOW/VALIDATED/APPROVED describe evidence maturity; PRIMARY/FALLBACK/BACKFILL/ENRICH/CORROBORATE describe serving purpose. Promotion/demotion requires telemetry/evidence and must not silently alter deterministic Day/Swing/Long truth.
 
@@ -123,4 +141,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Run #64 / v18.9.1 G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before any product-source change.
+Run #64 / v18.9.1 G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before any product-source change. Do not start v18.9.2 or any v19 implementation branch until current release ordering permits it.
