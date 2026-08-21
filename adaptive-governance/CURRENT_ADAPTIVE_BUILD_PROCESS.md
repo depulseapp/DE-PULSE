@@ -1,144 +1,280 @@
 # DE.PULSE — Current Adaptive Build Process
 
 **Certified Stable:** `v18.9.0-stable`  
-**Current program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Immediate activity:** v18.9.1 corrective diagnosis for #64 / `ADAPT-RUNTIME-CRASH-001`  
-**Active development branch:** none.
+**Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Immediate product scope:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`  
+**Governance alignment:** draft PR #67.
 
-## Permanent process
+## 1. Permanent engineering loop
 
-**GitHub source of truth -> exact G0 baseline -> one bounded G1 scope -> G2 canonical-owner audit -> G3 dependency/contract readiness -> one version-development branch -> coherent code+tests -> one Draft PR -> exact-head Fast -> same PR Ready -> Qualified -> exact-head merge -> one canonical G11-G16 Release when release-capable -> post-release implementation-miss audit -> continuity reconciliation -> next patch.**
+DE.PULSE engineering follows:
 
-## Small-patch discipline
+`Understand -> impact-map -> reuse -> decompose -> design -> implement -> observe -> qualify -> recover/fix -> certify -> deliver -> learn`
 
-This discipline is permanent across v18.9.x, v19, v20 and later major versions.
+The permanent top-level release model is G0–G16. No G17+ is permitted. Heavy work is decomposed into the smallest independently meaningful evidence units when that improves diagnosis, recovery, traceability or cost.
 
-1. One primary responsibility per patch.
-2. Explicit non-goals are mandatory at G1.
-3. Do not combine stability, routing architecture, provider admission, UX/domain redesign, data-infrastructure hardening and adaptive-model work in one patch.
-4. Reuse existing owners first. Repair order remains `REUSE -> CONSOLIDATE -> REFACTOR -> DELETE/REPLACE -> ADD`.
-5. Every patch must have deterministic acceptance tests tied directly to its G1 scope.
-6. Before closure, re-audit implementation against the frozen scope and search for misses, bypasses, duplicate ownership and misleading UI/data truth.
-7. Any newly discovered out-of-scope miss must receive a durable issue/target patch before closure; chat-only carry-forward is prohibited.
-8. The next patch cannot begin until current patch evidence, issue state, handoff and checkpoints agree.
-9. CI is intentionally economical: batch coherent source/test changes before PR, avoid duplicate/manual runs, classify failures before rerun, and never create retry/certification branch families.
-10. If G0/G1 shows a planned packet is still too large, split it. A version number never justifies bundling.
-11. G0-G16 remains the only gate model; no G17+.
+Every release/patch has:
+- one primary responsibility;
+- one canonical owner/dependency graph;
+- exact predecessor/source identity;
+- explicit non-goals;
+- named data/provider/security/runtime/UI consumers;
+- deterministic acceptance evidence;
+- rollback/recovery/invalidation behavior;
+- durable issue/handoff state;
+- exactly one next action at closure.
 
-## v18.9.x process sequence
+## 2. Version/process alignment
 
-- `v18.9.1`: #64 runtime crash only.
-- `v18.9.2`: TradeInsight Settings/API-key UX only.
-- `v18.9.3`: coverage-aware Smart Provider Router v2 core + persistence-first residual-gap fulfillment only.
-- `v18.9.4`: canonical company identity/all-desk presentation only.
-- `v18.9.5`: Market Data Modes/capability diagnostics only.
-- `v18.9.6`: TradeInsight Form 4 enrichment only.
-- `v18.9.7`: TradeInsight ticker/company search only.
-- `v18.9.8`: TradeInsight movers/ranking evidence only.
-- `v18.9.9`: remaining useful TradeInsight capability admission only.
-- `v18.9.10`: provider efficiency/Adaptive Intelligence telemetry + protected-session headroom measurement only.
-- `v18.9.11`: session-aware Data Readiness Maintenance only — light overnight + heavy weekend, with strict protection for pre-market/regular-market/after-hours.
-- `v18.9.12`: professional closure audit only; no new feature scope.
+- Major versions define strategic maturity stages.
+- Minor bands define coherent dependency phases.
+- Patch releases remain one-primary-responsibility units.
+- Planned future numbers are reservations only and freeze at G1.
+- G0/G1 may split a broad future item and shift unstarted reservations; already shipped releases never move.
+- Corrective/security issues preempt the roadmap when necessary.
 
-## Persistence-first process contract
+Process invariant:
 
-Provider work must begin from a consumer requirement and existing canonical evidence, not from a provider-first fetch loop.
+`stability -> canonical ownership -> observability -> SHADOW validation -> expansion -> operational hardening -> closure`
 
-Canonical decision sequence:
+For hosted work:
 
-`consumer requirement -> in-memory canonical cache -> persisted canonical DB/state -> freshness/coverage/schema/provenance/rights validation -> residual gap -> Smart Provider Router -> targeted acquisition -> canonical merge/reconciliation -> persist -> serve`
+`rights/security/identity/recovery -> hosted provider boundary -> sync transport -> client activation -> parity -> adversarial assurance -> evidence expansion`
 
-Never refetch/recompute data already valid for the consumer solely because a provider is available. Revision-prone evidence must retain as-observed point-in-time history plus later revisions. Fast-changing evidence may be retained for history but cannot be reused as current truth beyond its freshness contract.
+For adaptive work:
 
-## Session-aware maintenance process contract
+`experiment/control plane -> model/prompt governance -> research features -> calibration -> bounded promotion -> closure`
 
-The existing canonical U.S. market calendar/session owner defines protected-session truth. Maintenance must not hard-code another market calendar.
+## 3. G0–G16 operating process
 
-### Protected Tier-0 sessions
+### G0 — Exact Baseline
+Re-fetch live GitHub head, current handoff, issues/comments, release identity, predecessor evidence and existing PR/branch state. Compare commits since the last certified baseline so completed work is not duplicated.
 
-**Pre-market, regular market and after-hours** are first-class decision-support sessions. During them:
+### G1 — Immutable Scope
+Freeze one primary responsibility, explicit non-goals, target version, issue/scope ID, affected contracts, acceptance and rollback disposition. Classify governance obligations as current blocker/process hardening/next mandatory/future strategic.
 
-- live/current data and intelligence outrank all maintenance and background synchronization;
-- provider quota/headroom needed for current-session capability is reserved;
-- maintenance external-provider calls are suspended unless directly required by a current/live consumer;
-- CPU/memory/network/DB/background-worker capacity remains bounded and reserved for current-session work;
-- maintenance and sync are preemptible/checkpointed and yield promptly to protected sessions, market shocks or high-priority current consumers;
-- no deep historical fan-out, heavy reconciliation, compaction or broad background work may run.
+### G2 — Architecture / Data Utility
+Map canonical owners and dependency blast radius. Run Functionality Utility checkpoint: purpose, consumer, reuse, correlation, freshness/materiality, retention/rights, cost, surface placement and retirement disposition.
 
-### Light overnight process
+For material hosted/security/data decisions, record an Architecture Decision Record or equivalent durable decision evidence, including:
+- authority/ownership boundary;
+- tenant/account/data classification;
+- trust boundaries and threat-model scope;
+- failure/availability assumptions;
+- alternatives rejected and migration implications.
 
-After protected after-hours work ends and before the next protected pre-market window, the coordinator may run **small, high-value, gap-driven** work under conservative provider/runtime budgets: finalize completed-session data, fill small residual historical gaps, check incremental disclosures/revisions, reconcile small corporate-action/fundamental/macro/identity gaps, resolve bounded outcomes, run lightweight integrity/readiness checks and prepare warm canonical state for the next session.
+### G3 — Design / Dependency Readiness
+Freeze executable contracts before coding:
+- API/schema/protocol and version compatibility;
+- provider/rights/entitlement behavior;
+- migration and rollback/roll-forward plan;
+- conflict/idempotency/retry semantics;
+- SLO/error-budget/observability requirements;
+- test fixtures/replay/live-provider boundaries;
+- failure-injection/load/negative-test matrix;
+- UI/role/capability composition;
+- feature flag/kill switch/canary controls where risk justifies them.
 
-It must stop/drain before the pre-market protection buffer, when provider headroom is inadequate or when runtime health deteriorates.
+### G4 — Development Exit
+Implementation exists in the canonical owner, compiles and has unit/contract tests. No convenience duplication or hidden parallel state owner remains. Backward-compatible migrations use expand/contract where practical.
 
-### Heavy weekend / extended market-closed process
+### G5 — FAST Qualification
+Affected-area deterministic tests first. No broad expensive rerun when the delta is narrow.
 
-Use larger non-trading windows for deeper but still bounded historical backfill/reconciliation, corporate actions, SEC/Form4/13F/congress/earnings/fundamental/macro history, point-in-time outcome resolution, provider-history consolidation, material feature preparation and DB/index/retention maintenance.
+### G6 — Integration / MEDIUM Qualification
+Cross-owner integration, persistence/cache reuse, shared-symbol/single-flight behavior, provider fallback/coverage and state transitions for affected scope.
 
-Heavy maintenance still requires named consumer/value, provider/data rights, rate/cost budgets and expected reuse. It is never a blind full-universe refetch.
+### G7 — Data / Security / Adaptive Intelligence
+Prove data rights, provenance, point-in-time behavior, account/tenant isolation, authorization, secret/redaction boundaries, revocation, SHADOW/promotion rules and no unsafe model influence.
 
-### Catch-up and restart
+Negative tests are mandatory for security-sensitive scope: unauthorized route/API/SSE access, role/capability downgrade, revoked device/session, cross-account access, rights expiry/downgrade and secret leakage attempts.
 
-If the app was not running during an eligible window, checkpointed/pending maintenance catches up only in a later eligible overnight/weekend period. Never dump maintenance backlog into pre-market/regular-market/after-hours. Restart/resume must avoid duplicate acquisition/work.
+### G8 — Performance / Capacity / Stability
+Bounded load/soak/capacity evidence for affected responsibility. Where relevant include provider quota/headroom, DB/index/pool behavior, queues/backpressure, circuit breakers, memory/CPU/workers, restart/warm-start, failure injection, failover/recovery and protected-session reserve.
 
-Manual maintenance uses the same budgets and cannot override protected-session safety.
+### G9 — Cross-Module / UI / UX
+Audit affected application surfaces across canonical role compositions and supported viewports. Direct-route/API authorization must match UI visibility. No blank role gaps, clipping/overlap, hidden privileged payload or duplicated deep-evidence surfaces.
 
-Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
+### G10 — Pre-Freeze Qualification
+Authoritative full coverage reconciliation. Every requirement is freshly evidenced or explicitly inherited from equivalent evidence. Unresolved P0 security/rights/recovery/compatibility/duplicate-owner issue blocks freeze.
 
-## v19 process objective
+### G11 — Immutable Release Candidate
+Freeze exact source/fingerprint and candidate provenance.
 
-v19 is **Professional Data Infrastructure**, not another provider-router or maintenance rewrite. It consumes v18.9.x coverage-aware acquisition, persistence-first reuse, session-aware maintenance, identity and telemetry and adds measured capability/entitlement/rights, provider quality/SLO/cost scorecards, reconciliation/history/revision quality, 13F point-in-time infrastructure, TDTI/AODR evidence lineage, ADR-GDI professional reliability, DB/index/pool/capacity hardening, maintenance economics/protected-session reserve sizing, measured paid-provider gap analysis, and the mandatory hosted account/sync/provider-gateway program #66 / `ADAPT-HOSTED-SYNC-001`. v19 must end with a mandatory Major Closure before v20.
+### G12 — Full Certification
+Replay mandatory system-wide certification on immutable RC. No source mutation.
 
-### Mandatory #66 process chain
+### G13 — Native Packaging / Provenance
+Produce required packages from certified RC with hashes/provenance; no hidden rebuild divergence.
 
-#66 is executable v19 scope and MUST be represented in G0/G1 sequencing rather than left only in handoff/issue text. Its implementation is split into dependency-ordered small patches and cannot begin before the v18.9.x closure permits v19 work.
+### G14 — Actual Artifact Runtime Audit
+Validate macOS Apple Silicon and Windows x64 independently where affected. Preserve an unchanged platform PASS only when exact RC/package identity and relevant assumptions remain equivalent.
 
-Required process ordering is:
-1. reconcile #66 into the current Roadmap, Build Plan, Build Process and Delivery Process at the v19 transition and freeze exact dependencies;
-2. prove canonical role/capability reuse (`SUPER_OWNER/OWNER/ADMIN/USER/DEMO`) and hosted account/user/device/session ownership; no duplicate identity/session truth;
-3. prove PostgreSQL tenancy/schema/pool/HA/PITR/backup/restore/migration and recovery objectives before broad sync activation;
-4. prove managed-secret/KMS lifecycle, environment isolation, rotation/rollback/compromise recovery and end-user zero-key deployment mode;
-5. wrap the existing Smart Provider Router v2 and multi-feed subscription owner behind the authenticated hosted Provider Gateway; do not create a second provider or live-subscription stack;
-6. make provider rights/entitlements machine-enforced across router/cache/persistence/REST/live fan-out before shared reuse is enabled;
-7. implement sync transport as application-level typed protocol: bootstrap, SQLite atomic outbox, idempotency, authoritative server sequence, change log, checkpoint, tombstone, retention/compaction, stale-device re-bootstrap and mixed-version capability negotiation;
-8. activate domains progressively: macOS preferences/watchlists first, then desks/workspaces, Windows parity, hosted-web parity, then rights-aware research/evidence;
-9. prove local account isolation, user switching, offline/restart/reconnect, lost/revoked device behavior and no provider secret on commercial clients;
-10. close with multi-user cost/usage/abuse/licensing/security/load/DR assurance and an implementation-miss audit.
+### G15 — Release Assurance / Promotion
+Consume complete evidence graph. For hosted/high-risk changes, use bounded/canary/feature-flag rollout or equivalent progressive activation where applicable, with explicit rollback/kill-switch readiness.
 
-Every #66 patch follows the normal G0-G16 model. G2 must map canonical owners; G3 must freeze rights/security/sync/conflict/protocol contracts; G7 must prove tenant/security/secret/rights isolation; G8 must prove DB/pool/load/recovery and protected-session safety; G9 must prove role-aware Mac/Windows/web behavior; G10 blocks freeze on any unresolved P0 audit item; G12 replays on the immutable RC; G14 validates affected native artifacts; G15 requires hosted-sync/provider-gateway assurance before promotion; G16 records incidents/misses and the next bounded packet.
+### G16 — Adaptive Retrospective / Handoff
+Deep implementation-miss review, incident/failure classification, calls/reruns avoided, obsolete machinery cleanup, scorecards, corrective learning and exact next release. Handoff/GitHub issues must agree with executable evidence.
 
-Each v19 responsibility is a separate small packet unless G0 proves two items are inseparable. Point-in-time provenance, data rights, source independence, outcome lineage, hosted account isolation, provider-secret boundaries, sync correctness and protected-session reliability are release requirements, not documentation-only concerns.
+## 4. Failure classification and recovery
 
-## v20 process objective
+Classify before rerun:
+- `PRODUCT_FAIL`
+- `GATE_TEST_FAIL`
+- `CI_HARNESS_FAIL`
+- `INFRA_FAIL`
+- `EXPECTED_NOOP`
+- `SUPERSEDED`
 
-v20 is **Adaptive Intelligence & Decision Research**. It may begin only after v19 Major Closure proves the evidence substrate and #66 hosted/synchronized account architecture are trustworthy enough for learning.
+On failure:
 
-Adaptive work is split by responsibility: experiment/evidence ledger, historical analogues, calibration/drift, ASBI, adaptive 13F, TDTI, AODR, ADR-GDI adaptive optimization, model/prompt governance and final closure. Production influence follows `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; no model or adaptive policy silently self-promotes. Deterministic Day/Swing/Long truth remains protected unless separately governed, and No Execution is permanent.
+`inspect actual state -> identify smallest affected package -> preserve unrelated PASS evidence -> repair -> rerun affected/dependent work only -> continue`
 
-v20 may learn better provider/maintenance usefulness and reserve policies only through governed SHADOW/Champion-Challenger evidence. It may not reduce protected live-session safety, bypass data rights/provenance or sacrifice current truth for background learning.
+Never weaken a gate to turn red into green. Repeated incidents become regressions/preflight checks when useful.
 
-## Cross-version dependency rule
+## 5. CI/resource efficiency
 
-`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence + hosted account/sync infrastructure -> v20 governed adaptive learning`.
+- one logical Build Coordinator owns authoritative release state;
+- one product branch + PR per patch;
+- no retry/certification branch families;
+- coherent source/test batch before PR;
+- exact-head FAST once per coherent candidate, Qualified once when ready, one G11–G16 release when release-capable;
+- share fixtures/canonical evidence/provider acquisition across independent lanes;
+- use deterministic replay/cached evidence when live behavior is not under test;
+- true provider/model calls only when their live behavior must be certified;
+- metadata/checkpoint-only changes do not wake full product qualification when fingerprints/contracts are unchanged;
+- superseded runs stop consuming authoritative status/resources.
 
-v19 must not create a second router or maintenance coordinator to measure providers. #66 must reuse canonical provider/freshness/cache/persistence/subscription/session owners and must be operationally assured before synchronized evidence reaches v20. v20 must not learn from data lacking point-in-time provenance/rights or bypass canonical evidence owners. Weak/missing evidence remains UNKNOWN/ABSTAIN rather than being filled by model confidence.
+## 6. Protected-session execution contract
 
-## Adaptive provider process contract
+The canonical U.S. market calendar/session owner defines protected sessions.
 
-The sole routing owner evaluates residual missing coverage and eligible providers, acquires only what is needed, merges with provenance, re-evaluates remaining gaps and stops only when the bounded requirement is met or eligible budget is exhausted.
+**Pre-market, regular market and after-hours** always outrank maintenance and background synchronization.
 
-A provider response marked successful does not imply consumer completeness. Static provider ordering is only a prior/tiebreaker. TradeInsight is never allowed to create its own router/cache/scanner/Market Mode/SEC truth/symbol/persistence/scheduler system. Hosted mode likewise may not create another provider router or subscription manager.
+During protected sessions:
+- live/current intelligence has first provider/runtime/DB/network/worker claim;
+- maintenance/sync uses bounded surplus capacity only;
+- low-priority external acquisition suspends unless directly required by a live consumer;
+- heavy reconciliation/compaction/backfill is prohibited;
+- maintenance/sync is preemptible/checkpointed and yields promptly to current work/market shock.
 
-Provider validation lifecycle and runtime serving role are distinct concepts. SHADOW/VALIDATED/APPROVED describe evidence maturity; PRIMARY/FALLBACK/BACKFILL/ENRICH/CORROBORATE describe serving purpose. Promotion/demotion requires telemetry/evidence and must not silently alter deterministic Day/Swing/Long truth.
+Missed maintenance or sync catch-up must wait for an eligible bounded window; it cannot flood a protected session.
 
-## Failure handling
+## 7. v18.9.x process sequence
 
-Classify before action: `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP`, `SUPERSEDED`. Never weaken a gate to make a patch pass. A real post-certification escape becomes the next learning/corrective loop without rewriting prior release evidence.
+The current corrective/hardening order is:
 
-## Permanent owners/boundaries
+1. `v18.9.1` runtime crash
+2. `v18.9.2` TradeInsight Settings/API-key UX
+3. `v18.9.3` coverage-aware persistence-first Smart Provider Router
+4. `v18.9.4` canonical identity
+5. `v18.9.5` Market Data Modes/capability diagnostics
+6. `v18.9.6` provider observability/Adaptive telemetry
+7. `v18.9.7` TradeInsight Form 4 SHADOW enrichment
+8. `v18.9.8` TradeInsight symbol search
+9. `v18.9.9` TradeInsight movers/ranking SHADOW evidence
+10. `v18.9.10` remaining useful capability admission
+11. `v18.9.11` session-aware Data Readiness Maintenance
+12. `v18.9.12` professional closure audit
 
-Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache owners; canonical U.S. market calendar/session owner; direct SEC/EDGAR authoritative; existing telemetry/symbol/state owners; deterministic Day/Swing/Long truth; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
+**Audit change:** telemetry moved ahead of provider capability expansion so subsequent SHADOW usefulness and promotion are measurable.
+
+## 8. v19 process sequence
+
+### v19.0.x — Control Plane / Data Foundation
+Order is mandatory because later hosted activation depends on it:
+1. rights/entitlement registry;
+2. hosted identity/device/session control plane;
+3. PostgreSQL tenancy/schema/pool/HA/PITR foundation;
+4. managed secrets/KMS;
+5. provider quality/cost/coverage/SLO scorecards;
+6. reconciliation/revision/point-in-time data quality.
+
+No broad hosted provider/sync activation before the required security/rights/recovery foundations pass.
+
+### v19.1.x — Hosted Data Plane / Sync Foundation
+1. authenticated zero-key Provider Gateway using existing Smart Provider Router v2;
+2. runtime rights/entitlement enforcement and live-stream fan-out using existing multi-feed owner;
+3. typed sync protocol/bootstrap/outbox/idempotency/change-log/checkpoint/tombstone/compaction/mixed-version contract;
+4. macOS preferences/watchlist pilot + local account/offline/lost-device behavior;
+5. desks/workspaces sync.
+
+### v19.2.x — Cross-Platform Parity / #66 Assurance
+1. Windows parity;
+2. hosted web parity;
+3. rights-aware research/state portability;
+4. multi-user security/cost/abuse/capacity hardening;
+5. #66 adversarial/failure/recovery closure audit.
+
+### v19.3.x — Point-in-Time Evidence
+1. institutional/13F infrastructure;
+2. two-sided Long/Short evidence substrate;
+3. AODR candidate/ranking/outcome lineage.
+
+### v19.4.x — Reliability / Economics / Readiness
+1. ADR-GDI professional reliability/capacity;
+2. specialized/paid-provider gap evaluation;
+3. v20 research-readiness audit.
+
+### v19.5.0 — Major Closure
+No feature scope. Full data/security/operational/commercial/hosted/account/package zero-miss closure.
+
+## 9. #66 hosted/sync process requirements
+
+Issue #66 is executable architecture scope, not a documentation project.
+
+Permanent request/data path:
+
+`authorized user -> DE.PULSE session/capability -> rights/entitlement -> canonical cache/persistence -> exact residual provider need -> Smart Provider Router v2 -> server-side provider credential -> authorized projection/fan-out`
+
+Sync path:
+
+`SQLite local mutation + atomic outbox -> authenticated idempotent server apply -> PostgreSQL authoritative revision/change sequence -> incremental pull -> transactional SQLite apply -> checkpoint advance`
+
+Required controls:
+- server-side zero-key customer model;
+- canonical roles/capabilities and revocation;
+- entitlement-aware cache/live fan-out;
+- stable IDs/revisions/tombstones;
+- new-device bootstrap + stale-checkpoint re-bootstrap;
+- retention/compaction/inactive-device behavior;
+- local account isolation/lost-device behavior;
+- secret lifecycle/rotation/compromise recovery;
+- provider-right expiry/downgrade runtime enforcement;
+- mixed-version protocol contract;
+- PostgreSQL HA/PITR/restore/migration safety;
+- per-account usage/cost/abuse telemetry;
+- failure injection and recovery proof;
+- no raw SQLite/PostgreSQL dual-master replication;
+- no parallel provider/router/subscription/freshness/persistence/session owner.
+
+## 10. v20 process sequence
+
+### v20.0.x — Control & Governance
+1. adaptive research/experiment ledger;
+2. model/prompt governance + Champion/Challenger **before broad adaptive rollout**;
+3. historical analogues/regime outcomes;
+4. calibration/FP-FN/miss/contradiction/drift.
+
+### v20.1.x — ASBI
+Behavioral fingerprints/state transitions, then scenarios/probability momentum/calibration.
+
+### v20.2.x — Institutional + TDTI
+Adaptive 13F, then competing Long/Short/No Reliable Edge, then two-sided trade-plan validation.
+
+### v20.3.x — AODR
+Shared opportunity ranking, then diversity/opportunity-cost/personalized relevance after shared truth.
+
+### v20.4.x — Adaptive Operations
+ADR-GDI adaptive provider/recovery/workload/maintenance/reserve optimization in SHADOW/Champion-Challenger only until explicit promotion.
+
+### v20.5.0 — Professional Closure
+No feature scope. Calibrated utility, abstention, deterministic-boundary protection, privacy/security/data-rights, reproducibility/rollback, actual artifacts and No Execution.
+
+## 11. Permanent owners / boundaries
+
+Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state owners; canonical U.S. market calendar/session owner; direct SEC/EDGAR authoritative; canonical identity/role/capability truth; deterministic Day/Swing/Long logic protected; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
 
 ## Exactly one next action
 
-Run #64 / v18.9.1 G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before any product-source change. Do not start v18.9.2 or any v19 implementation branch until current release ordering permits it.
+Run #64 / `v18.9.1` G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before any product-source change. Do not start `v18.9.2` or any v19 implementation branch until current release ordering permits it.
