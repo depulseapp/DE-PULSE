@@ -1,37 +1,25 @@
 # DE.PULSE — Current Adaptive Build Plan
 
-**Immutable Stable:** `v18.8.2-stable`  
-**Stable candidate:** `e51831b8269c3ae673edc93eb0ec88a0a954344f`  
-**Stable fingerprint:** `a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247`  
+**Immutable Stable:** `v18.9.0-stable`  
+**Stable candidate:** `9ea81cddae4875ae15d3719ca028519a36c597b6`  
+**Stable fingerprint:** `a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9`  
 **Active development branch:** none  
 **Active PR:** none  
-**Current line:** `v18.9.0 — G0 TradeInsight capability discovery / G1 planning`.
+**Immediate blocker:** issue #64 / `ADAPT-RUNTIME-CRASH-001`.
 
-## v18.8.2 closure — G0–G16 PASS
+## v18.9.0 closure — G0–G16 PASS
 
-Issue #57 was the sole bounded product scope. The implementation reused the existing Market Intelligence breadth universe, canonical quote freshness/recovery, existing multi-feed allocation, Smart Provider Router v2 and VIX special-index path; it added no second owner. Unavailable/degraded Market Tradeability evidence is now distinct from a genuine numeric zero.
+Issue #61 delivered TradeInsight integration through existing canonical owners only. Exact source head `9e86b5e731f7a585cc77c1521f3639fc7a208efc` passed Fast #481 and full Qualified #153. Merged candidate `9ea81cddae4875ae15d3719ca028519a36c597b6` passed Release #32 / `32526121817` through G11–G16, including native macOS Apple Silicon + Windows x64 package/runtime audits, G15 assurance and no-rebuild Stable publication.
 
-Final release evidence:
-- Fast #437 / `32435845178`: PASS on exact recovery/release head `66e59e4e5f803ca53520797e5eb6e9d3fe72e84c`;
-- Qualified #151 / `32435920048`: PASS across backend/full/race/randomized, renderer, Chrome, WebKit and CI/harness;
-- Release #31 / `32436189650`: G11–G16 PASS;
-- certified candidate `e51831b8269c3ae673edc93eb0ec88a0a954344f`;
-- `v18.8.2-stable` exact tag match and no-rebuild publication PASS.
+Delivered executable scope includes validated Congressional SHADOW evidence, daily adjusted OHLCV fallback/backfill, bounded admission-controlled multi-symbol history and shared provider telemetry. Smart Provider Router v2 remains sole executable routing authority. Direct SEC/EDGAR remains authoritative. TradeInsight Form 4 enrichment, top movers and ticker/company search remain contract-gated until exact production REST contracts are proven.
 
-Release #30 / `32435511692` is retained as classified historical evidence: G11 PASS, G12 harness failure caused by a stale README presentation-heading assertion. Recovery PR #60 changed release-harness/governance only, requalified fully, then Release #31 closed the release. No product/runtime behavior or package identity changed in that recovery.
+## Corrective release entry
 
-## v18.9.0 G0/G1 plan
+The user reported a v18.9.0 macOS Apple Silicon `EXC_CRASH (SIGABRT)` / `abort() called` after Stable publication. Issue #63 is superseded by issue #64, which is the only immediate corrective product packet.
 
-Before any product-source implementation:
-1. re-read current GitHub truth and provider/routing governance;
-2. enumerate the complete configured TradeInsight beta capability surface and entitlement/rights;
-3. map each capability to a real DE.PULSE consumer/purpose;
-4. classify it `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`;
-5. identify source-independence/double-counting risks, freshness, cache/retention, rate-limit/budget and Market Mode implications;
-6. preserve Smart Provider Router v2 as sole executable routing authority;
-7. propose one bounded G1 scope with explicit exclusions and tests before changing product source.
+G0 must capture the complete `.ips`/symbolized crash evidence or establish deterministic reproduction on the published Stable artifact. G1 then freezes only the proven affected lifecycle surface. Do not guess between startup, renderer/WebView, persistence/bootstrap, runtime lifecycle, shutdown or install path without evidence. Preserve `PersonalMarketTerminal` state/API keys unless corruption is proven and a safe migration/backup path exists.
 
-Mandatory minimum candidate roles are Congressional Trading, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill. They are not a cap on useful discovery.
+Normal execution remains one bounded corrective branch → one Draft PR → exact-head Fast → same PR Ready → Qualified → exact-head merge → one canonical G11–G16 release. No duplicate release workflow, no weakened gate, no unrelated feature bundling unless root cause requires it.
 
 ## Protected boundaries
 
@@ -39,4 +27,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Perform the v18.9.0 G0 exact-baseline / TradeInsight full-capability discovery and report findings plus bounded proposed G1 scope before product-source implementation.
+Perform issue #64 G0 crash diagnosis from concrete macOS evidence/reproduction and produce the bounded G1 corrective scope before product-source changes.
