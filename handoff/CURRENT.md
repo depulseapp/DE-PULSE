@@ -211,7 +211,7 @@ v20 begins only after `v19.5.0` PASS and consumes point-in-time, rights-valid, p
 - `v20.4.0` ADR-GDI adaptive provider/recovery/workload/maintenance/reserve optimization under SHADOW/Champion-Challenger
 
 ### v20.5.0 — v20 Professional Closure
-No feature scope. Calibration/utility/drift/abstention, deterministic boundaries, privacy/security/data rights, reproducibility/rollback, actual artifacts, zero silent self-modification and No Execution.
+No new feature scope. Calibration/utility/drift/abstention, deterministic boundaries, privacy/security/data rights, reproducibility/rollback, actual artifacts, zero silent self-modification and No Execution.
 
 ## Industry-strength controls inside G0-G16
 
