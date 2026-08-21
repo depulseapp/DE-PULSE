@@ -161,3 +161,33 @@ func TestV189TradeInsightDateOrdering(t *testing.T) {
 		t.Fatal("TradeInsight history must be canonicalized in ascending time order")
 	}
 }
+
+func TestV189TradeInsightHistoryFanoutObeysBulkAdmissionAndCap(t *testing.T) {
+	input := []string{"VIX", " aapl ", "AAPL"}
+	for i := 0; i < 60; i++ {
+		input = append(input, fmt.Sprintf("T%02d", i))
+	}
+
+	gated := tradeInsightHistorySymbolsForRefresh(nil, input, false)
+	if len(gated) != 1 || gated[0] != "AAPL" {
+		t.Fatalf("gated bulk history must collapse to one eligible canonical symbol, got %v", gated)
+	}
+
+	admitted := tradeInsightHistorySymbolsForRefresh(nil, input, true)
+	if len(admitted) != tradeInsightHistoryFanoutMaxSymbols {
+		t.Fatalf("admitted fan-out = %d symbols, want hard cap %d", len(admitted), tradeInsightHistoryFanoutMaxSymbols)
+	}
+	seen := map[string]bool{}
+	for _, sym := range admitted {
+		if sym == "" || sym == "VIX" {
+			t.Fatalf("ineligible symbol escaped bounded history selection: %q", sym)
+		}
+		if seen[sym] {
+			t.Fatalf("duplicate symbol escaped canonical history selection: %q", sym)
+		}
+		seen[sym] = true
+	}
+	if !seen["AAPL"] {
+		t.Fatalf("normalized canonical symbol missing from admitted fan-out: %v", admitted)
+	}
+}
