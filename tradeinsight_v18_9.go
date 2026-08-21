@@ -75,6 +75,15 @@ func tradeInsightRowsFromPayload(body []byte) ([]map[string]any, error) {
 }
 
 func tradeInsightFetchRowsAt(ctx context.Context, client *http.Client, baseURL, key, path string, params url.Values) ([]map[string]any, error) {
+	return tradeInsightFetchRowsAtObserved(ctx, client, baseURL, key, path, params, nil)
+}
+
+// tradeInsightFetchRowsAtObserved preserves the deterministic standalone fetch
+// helper while allowing runtime calls to report every HTTP page into DE.PULSE's
+// shared ProviderTelemetry. Smart Router v2 can therefore learn from actual
+// TradeInsight latency, errors and rate-limit pressure instead of treating this
+// provider as telemetry-unknown.
+func tradeInsightFetchRowsAtObserved(ctx context.Context, client *http.Client, baseURL, key, path string, params url.Values, begin func() func(error)) ([]map[string]any, error) {
 	key = strings.TrimSpace(key)
 	if key == "" {
 		return nil, fmt.Errorf("TradeInsight not configured: TIDATA_API_KEY missing")
@@ -103,26 +112,41 @@ func tradeInsightFetchRowsAt(ctx context.Context, client *http.Client, baseURL, 
 		}
 		req.Header.Set("Authorization", "Bearer "+key)
 		req.Header.Set("Accept", "application/json")
+
+		done := func(error) {}
+		if begin != nil {
+			if observed := begin(); observed != nil {
+				done = observed
+			}
+		}
 		resp, err := client.Do(req)
 		if err != nil {
-			return nil, fmt.Errorf("TradeInsight request failed: %w", err)
+			wrapped := fmt.Errorf("TradeInsight request failed: %w", err)
+			done(wrapped)
+			return nil, wrapped
 		}
 		body, readErr := io.ReadAll(io.LimitReader(resp.Body, 8<<20))
 		_ = resp.Body.Close()
 		if readErr != nil {
-			return nil, fmt.Errorf("TradeInsight response read failed: %w", readErr)
+			wrapped := fmt.Errorf("TradeInsight response read failed: %w", readErr)
+			done(wrapped)
+			return nil, wrapped
 		}
 		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 			detail := tradeInsightSafeError(body, key)
 			if retry := strings.TrimSpace(resp.Header.Get("Retry-After")); retry != "" {
 				detail += " · retry-after=" + retry
 			}
-			return nil, fmt.Errorf("TradeInsight HTTP %d: %s", resp.StatusCode, detail)
+			wrapped := fmt.Errorf("TradeInsight HTTP %d: %s", resp.StatusCode, detail)
+			done(wrapped)
+			return nil, wrapped
 		}
 		rows, err := tradeInsightRowsFromPayload(body)
 		if err != nil {
+			done(err)
 			return nil, err
 		}
+		done(nil)
 		all = append(all, rows...)
 		if len(rows) < tradeInsightPageSize {
 			return all, nil
@@ -133,6 +157,14 @@ func tradeInsightFetchRowsAt(ctx context.Context, client *http.Client, baseURL, 
 
 func tradeInsightFetchRows(ctx context.Context, path string, params url.Values) ([]map[string]any, error) {
 	return tradeInsightFetchRowsAt(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), path, params)
+}
+
+func (e *Engine) tradeInsightFetchRows(ctx context.Context, path string, params url.Values) ([]map[string]any, error) {
+	var begin func() func(error)
+	if e != nil && e.providerTelemetry != nil {
+		begin = func() func(error) { return e.providerTelemetry.begin(tradeInsightProviderName) }
+	}
+	return tradeInsightFetchRowsAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), path, params, begin)
 }
 
 func tradeInsightHistoryRows(rows []map[string]any) []tradeInsightHistoryRow {
@@ -299,7 +331,7 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 			"end":           []string{time.Now().AddDate(0, 0, 1).Format("2006-01-02")},
 			"adjust_volume": []string{"true"},
 		}
-		rows, err := tradeInsightFetchRows(ctx, "/ohlc", params)
+		rows, err := e.tradeInsightFetchRows(ctx, "/ohlc", params)
 		if err != nil {
 			e.recordProviderFailure(tradeInsightProviderName, err)
 			continue
