@@ -12,9 +12,9 @@
 **Active branch:** `v18.9.0-development`  
 **Draft PR:** #62  
 **Durable scope:** issue #61 / `ADAPT-TRADEINSIGHT-001`  
-**Latest product/admission commit immediately before this handoff update:** `4424bf2af54d4c5b5894773a2e58a4aa1474b37d`  
-**Latest known Fast proof before that admission-only commit:** Fast #470 at `c9402b431489c6935437fb4f66801372ab213905` — PASS  
-**Latest-head qualification:** must be read live from GitHub; do not infer a PASS from an earlier SHA.
+**Latest product/admission commit:** `4424bf2af54d4c5b5894773a2e58a4aa1474b37d`  
+**Latest known Fast proof before current handoff-only commits:** Fast #470 at `c9402b431489c6935437fb4f66801372ab213905` — PASS  
+**Latest-head qualification:** read live from GitHub; never infer PASS from an earlier SHA.
 
 ## v18.8.2 — COMPLETE / STABLE
 
@@ -35,7 +35,7 @@ Implemented on the existing owners only:
 - Adjusted daily OHLCV writes into canonical history state; weekly bars are derived from canonical daily bars.
 - Dividend/split evidence merges into the existing canonical `CorporateAction` ledger and semantic duplicates preserve existing canonical truth.
 - Multi-symbol history/backfill is client-side fan-out over the verified per-ticker `/ohlc` endpoint only. `historyRouteSymbols()` supplies the canonical deduplicated symbol set, the TradeInsight loop is sequential, and the provider attempt is capped at 50 symbols. No server-side bulk REST endpoint is assumed or invented.
-- Commit `4424bf2af54d4c5b5894773a2e58a4aa1474b37d` therefore admits `bulk-history` as **SHADOW**, with regression coverage that locks in canonical ownership, sequential/deduplicated behavior, the 50-symbol cap, and explicit-promotion requirement.
+- Commit `4424bf2af54d4c5b5894773a2e58a4aa1474b37d` admits `bulk-history` as **SHADOW**, with regression coverage locking in canonical ownership, sequential/deduplicated behavior, the 50-symbol cap, and explicit-promotion requirement.
 
 ### Congressional Trading Intelligence
 
@@ -76,17 +76,13 @@ Official SDK recheck on 2026-08-21 confirms `tidata/tifinance/multi.py` implemen
 
 ## Qualification truth
 
-- Fast #470 passed the exact prior head `c9402b431489c6935437fb4f66801372ab213905`.
-- `4424bf2` is an admission-contract/test change after that PASS. At the time this handoff update was prepared, GitHub had not yet surfaced a latest-head commit status/workflow result for `4424bf2`; therefore **do not claim latest-head Fast/G5 PASS unless GitHub now shows it**.
+- Fast #470 passed exact prior head `c9402b431489c6935437fb4f66801372ab213905`.
+- Fast #472 on handoff head `6ca0283a3bb419b5815bc45274192ea10d330527` failed only because this handoff did not contain the literal required `Exactly one next action` contract. Product/test steps did not run after that fail-fast governance check. This document corrects the contract without weakening the gate.
 - G5–G16 qualification/release proof must be earned from the current immutable candidate SHA in the normal workflow. Do not merge or release from this handoff alone.
 
-## Exactly next action
+## Exactly one next action
 
-1. Re-fetch the actual head of `v18.9.0-development` and PR #62 before changing anything.
-2. Read the latest issue #61 comments and live checks.
-3. If latest-head Fast is not green, run/diagnose the existing normal qualification path; do not create a duplicate workflow/branch.
-4. When Fast is green, continue the existing G5–G16 qualification sequence as far as permitted **without merging or releasing**.
-5. Keep Form 4, movers and ticker search gated unless an exact configured-key production REST endpoint + schema is captured/redacted and the issue admission contract is updated first.
+Re-fetch the actual `v18.9.0-development` head and latest issue #61/PR #62 checks, obtain a green **CI Fast** result on that exact head using the existing workflow, and only then advance the same immutable candidate into the existing G6+ qualification sequence without merging/releasing or admitting Form 4, movers, or ticker search unless their exact configured-key production REST contracts are first captured/redacted and added to issue #61.
 
 ## Resume rule
 
