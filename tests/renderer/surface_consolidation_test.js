@@ -2,11 +2,13 @@
 
 const fs = require('fs');
 const vm = require('vm');
+const marketTruth = require('../../renderer/market-intelligence-truth.js');
 
 const extension = fs.readFileSync('renderer/surface-consolidation-v18.6.js', 'utf8');
 const css = fs.readFileSync('renderer/surface-consolidation-v18.6.css', 'utf8');
 const index = fs.readFileSync('renderer/index.html', 'utf8');
 const renderer = fs.readFileSync('renderer/renderer.js', 'utf8');
+const marketTruthSource = fs.readFileSync('renderer/market-intelligence-truth.js', 'utf8');
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -22,6 +24,18 @@ assert(extension.includes("kind === 'news' || kind === 'earnings' ? 'catalysts'"
 assert(!extension.includes('/api/'), 'presentation consolidation must not create a new data acquisition path');
 assert(css.includes('.discovery-supporting-input > summary'), 'Market Activity must be collapsed behind an optional details summary');
 assert(renderer.includes('discovery-market-activity full-width'), 'base historical renderer marker unexpectedly disappeared; extension contract must consciously demote it');
+
+// v18.8.2 issue #57: DATA DEGRADED is an evidence state, not a calculated
+// zero. Keep evaluated scores numeric, but never present unavailable market
+// evidence as a meaningful 0/100 on Dashboard or Market Intelligence.
+assert(index.includes('<script src="market-intelligence-truth.js?v=18.8.2"></script>'), 'v18.8.2 Market Intelligence truth layer is not loaded');
+assert(index.indexOf('market-intelligence-truth.js?v=18.8.2') > index.indexOf('renderer.js?v=18.8.1'), 'Market Intelligence truth layer must load after the primary renderer');
+assert(marketTruthSource.includes("label.textContent.trim() !== 'Tradeability'"), 'Dashboard Tradeability row truth reconciliation missing');
+assert(marketTruthSource.includes("label.textContent.trim() !== 'Market Tradeability'"), 'Market Intelligence Tradeability card truth reconciliation missing');
+assert(marketTruth.tradeabilityScoreLabel('DATA DEGRADED', 0) === 'UNAVAILABLE', 'DATA DEGRADED must not render as 0/100');
+assert(marketTruth.tradeabilityScoreLabel('UNAVAILABLE', 0) === 'UNAVAILABLE', 'UNAVAILABLE must remain non-numeric');
+assert(marketTruth.tradeabilityScoreLabel('WAIT', 0) === '0/100', 'an evaluated zero remains numeric when evidence is current');
+assert(marketTruth.tradeabilityScoreLabel('SELECTIVE', 62) === '62/100', 'evaluated tradeability score must remain numeric');
 
 const calls = [];
 const sandbox = {
@@ -73,4 +87,4 @@ assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('filings') 
 assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('earnings') === 'catalysts', 'Earnings ticker evidence must resolve to Research Catalysts');
 assert(sandbox.window.__v186SurfaceConsolidation.evidenceResearchTab('news') === 'catalysts', 'News ticker evidence must resolve to Research Catalysts');
 
-console.log('PASS: v18.6 demotes Market Activity to an optional supporting-input drilldown and retires standalone News/Earnings/Filings navigation into canonical Research/Market Intelligence destinations.');
+console.log('PASS: v18.6 surface consolidation + v18.8.2 Market Intelligence degraded-score truth contracts.');
