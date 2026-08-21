@@ -44,7 +44,7 @@ func TestV189TradeInsightAdmissionRegistryCoversIssue61Matrix(t *testing.T) {
 }
 
 func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *testing.T) {
-	allowed := map[string]bool{"daily-history": true, "adjusted-history": true, "corporate-actions": true}
+	allowed := map[string]bool{"daily-history": true, "adjusted-history": true, "corporate-actions": true, "congressional-trades": true}
 	for _, row := range tradeInsightCapabilityAdmissionRegistry() {
 		if got := row.runtimeAdmitted(); got != allowed[row.ID] {
 			t.Fatalf("runtimeAdmitted(%s) = %v, want %v (row=%+v)", row.ID, got, allowed[row.ID], row)
@@ -56,12 +56,12 @@ func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *test
 }
 
 func TestV189TradeInsightLifecycleTruthNeverAdvertisesGatedCapability(t *testing.T) {
-	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions"} {
+	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions", "congressional-trades"} {
 		if got := tradeInsightCapabilityLifecycleTruth(id); got != "SHADOW" {
 			t.Fatalf("lifecycle truth for %s = %q, want SHADOW", id, got)
 		}
 	}
-	for _, id := range []string{"bulk-history", "congressional-trades", "sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
+	for _, id := range []string{"bulk-history", "sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
 		if got := tradeInsightCapabilityLifecycleTruth(id); got != "GATED" {
 			t.Fatalf("lifecycle truth for %s = %q, want GATED", id, got)
 		}
@@ -123,13 +123,16 @@ func TestV189TradeInsightCanonicalOwnerMapCoversRemainingG3Concerns(t *testing.T
 	}
 }
 
-func TestV189TradeInsightCongressEndpointKnownButSchemaGated(t *testing.T) {
+func TestV189TradeInsightCongressOfficialSchemaIsShadowAdmitted(t *testing.T) {
 	row := v189TradeInsightAdmissionByID(t, "congressional-trades")
-	if row.EndpointEvidence != "/trading-data/v1/congress/v1/trades" {
-		t.Fatalf("congress endpoint evidence = %q", row.EndpointEvidence)
+	if !strings.Contains(row.EndpointEvidence, "/trading-data/v1/congress/v1/trades") || !strings.Contains(row.EndpointEvidence, "insight-data.mdx") {
+		t.Fatalf("congress endpoint/schema evidence = %q", row.EndpointEvidence)
 	}
-	if row.SchemaVerified || row.RuntimeEnabled || row.runtimeAdmitted() {
-		t.Fatalf("Congress must remain schema-gated before configured-key contract proof: %+v", row)
+	if !row.SchemaVerified || !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "SHADOW" {
+		t.Fatalf("Congress official schema must be admitted SHADOW-only: %+v", row)
+	}
+	if !strings.Contains(strings.ToLower(row.GateReason), "explicit promotion approval") {
+		t.Fatalf("Congress SHADOW gate must prohibit automatic promotion: %q", row.GateReason)
 	}
 }
 
