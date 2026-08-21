@@ -3,65 +3,54 @@
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS**
 
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
-**Certified Stable:** `v18.8.2-stable`  
-**Certified Stable candidate:** `e51831b8269c3ae673edc93eb0ec88a0a954344f`  
-**Certified Stable fingerprint:** `a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247`  
-**Certified Stable build ID:** `v18.8.2-stable-20260820`  
-**Stable continuity / PR base:** `78378889e52c2ed3e0c3458aea6fbf36efe97ab3`  
-**Engineering branch:** `v18.9.0-development`  
-**PR:** #62 — Draft during release-candidate identity promotion  
-**Durable scope:** issue #61 / `ADAPT-TRADEINSIGHT-001`  
-**Candidate package identity:** `18.9.0` / `v18.9.0-stable-20260821`  
-**Pre-RC product head:** `6cdf250b725815277e007b329a8459c1cbf78a5c` — Fast #478 PASS / Qualified #152 PASS through G10 before release-identity promotion.
+**Certified Stable:** `v18.9.0-stable`  
+**Certified Stable candidate:** `9ea81cddae4875ae15d3719ca028519a36c597b6`  
+**Certified Stable qualified source:** `9e86b5e731f7a585cc77c1521f3639fc7a208efc`  
+**Certified Stable fingerprint:** `a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9`  
+**Certified Stable build ID:** `v18.9.0-stable-20260821`  
+**Release PR:** #62 — merged  
+**Completed release scope:** issue #61 / `ADAPT-TRADEINSIGHT-001` — closed completed  
+**Active development branch:** none  
+**Open corrective blocker:** issue #64 / `ADAPT-RUNTIME-CRASH-001`
 
-## Current truth
+## v18.9.0 — COMPLETE / STABLE
 
-v18.9.0 implementation is complete for every capability whose executable production contract is proven. The release-candidate promotion changes package/release identity, so the earlier G10 evidence remains implementation evidence but is not exact-head merge authority. The new RC head must earn fresh Fast and full Qualified before merge.
+v18.9.0 was qualified and published through the single canonical G0–G16 process:
+- Fast #481 / run `32525637987`: PASS on exact source head `9e86b5e731f7a585cc77c1521f3639fc7a208efc`;
+- Qualified #153 / run `32525738828`: PASS across backend/full/race/randomized, renderer, Chrome, WebKit, CI/provenance and exact-head evidence;
+- merged certified candidate `9ea81cddae4875ae15d3719ca028519a36c597b6`;
+- Release #32 / run `32526121817`: G11–G16 PASS;
+- macOS Apple Silicon and Windows x64 actual packaged-runtime audits: PASS;
+- G15 release assurance and exact same-run no-rebuild Stable publication: PASS;
+- G16 durable handoff artifact: PASS;
+- Stable tag: `v18.9.0-stable`;
+- durable manifest: `release/v18.9.0/stable-evidence-manifest.json`.
 
-The immutable v18.8.2 Stable checkpoints intentionally remain anchored to v18.8.2 while v18.9.0 is an in-flight candidate. They must not be rewritten merely to make candidate version strings match.
+The immutable Stable tag/candidate/fingerprint remain the release authority even if later fingerprint-excluded continuity metadata advances `main`.
 
-## Implemented v18.9.0 scope
+## v18.9.0 delivered scope
 
-- Smart Provider Router v2 remains the sole executable provider-routing authority.
-- TradeInsight configuration is runtime-secret-only through `TIDATA_API_KEY` with legacy `TRADEINSIGHT_API_KEY` compatibility.
-- TradeInsight daily adjusted OHLCV participates only in the canonical `Historical Bars` route as fallback/backfill; it never claims intraday support.
-- Weekly bars are derived from canonical daily bars; dividend/split evidence merges into the existing corporate-action ledger.
-- `bulk-history` is SHADOW-admitted as bounded client-side fan-out over the verified per-symbol `/ohlc` endpoint. Canonical symbols are normalized/deduplicated, VIX is excluded, requests remain sequential, and the hard ceiling is 50 symbols.
-- `bulk-history` admission is executable: if gated, TradeInsight collapses to one eligible symbol instead of silently performing multi-symbol fan-out.
-- Congressional Trading Intelligence uses the validated `/trading-data/v1/congress/v1/trades` contract and is wired SHADOW-only into the canonical Research alternative-evidence seam after direct SEC refresh.
-- Congress evidence has no user-facing/deterministic Day/Swing/Long impact and an optional TradeInsight failure cannot downgrade healthy Research readiness.
-- Shared ProviderTelemetry, provider capability lifecycle, freshness, cache, persistence and canonical state owners are reused. No TradeInsight-specific router/cache/store/scanner/scheduler/Market Mode/SEC owner exists.
+- Smart Provider Router v2 remains the sole executable routing authority.
+- TradeInsight daily adjusted OHLCV is admitted only through the canonical Historical Bars owner as fallback/backfill; no intraday capability is claimed.
+- Bounded multi-symbol history is SHADOW-admitted as sequential client-side fan-out over the verified per-symbol history endpoint, with canonical normalization/deduplication, VIX exclusion and a 50-symbol ceiling.
+- Congressional Trading Intelligence is validated and SHADOW-only inside canonical Research alternative evidence after direct SEC refresh.
+- Optional TradeInsight failure does not downgrade healthy canonical readiness.
+- Shared provider telemetry, freshness, cache, persistence, corporate-action and canonical state owners are reused.
+- No second router, scanner, scheduler, Market Mode engine, SEC truth owner, symbol authority or persistence subsystem was introduced.
+- Direct SEC/EDGAR remains authoritative for Form 4.
+- TradeInsight Form 4 enrichment, top movers and ticker/company search remain deliberately contract-gated until exact executable production REST contracts are independently verified; this is an explicit disposition, not forgotten v18.9.0 work.
+- Deterministic Day/Swing/Long truth, U.S. Equities Processing, GLD/SLV/USO actionable exceptions and No Execution remain preserved.
 
-## Contract-gated capabilities
+## Post-Stable runtime escape
 
-These remain intentionally non-executable until an exact production REST endpoint and output schema are independently verified:
+After v18.9.0 publication, the user reported a real macOS Apple Silicon crash on bundle version `18900`: `EXC_CRASH (SIGABRT)` / signal 6 / `abort() called`.
 
-- TradeInsight SEC Form 4 enrichment — Direct SEC/EDGAR remains authoritative.
-- Top movers — MCP `get_top_movers` discovery does not authorize a guessed REST endpoint.
-- Ticker/company search — MCP `search_ticker` discovery does not authorize a guessed REST endpoint.
-
-These are explicit issue-#61 dispositions, not forgotten scope. Future admission must reuse the existing canonical SEC, Opportunity Radar and symbol-validation owners.
-
-## Release-candidate promotion
-
-The release-capable v18.9.0 head aligns:
-- `release_identity.json` and `VERSION.txt` to v18.9.0 Stable package identity;
-- `app_bootstrap.go` runtime version/build identity;
-- renderer cache/title identity plus last-loaded `release-identity-v18.9.0.js`;
-- `release/v18.9.0/release_contract.json`;
-- `release/v18.9.0/run_full_certification.sh` for exact-source G12;
-- this authoritative cross-assistant handoff.
-
-The canonical three-workflow CI surface remains unchanged. `release_identity.json` makes PR #62 eligible for the existing merge-triggered `.github/workflows/release.yml` G11–G16 flow after fresh exact-head Fast + Qualified.
-
-## Protected boundaries
-
-US Equities Processing; GLD/SLV/USO actionable exceptions; deterministic Day/Swing/Long truth; Smart Provider Router v2 sole routing authority; direct SEC/EDGAR Form 4 authority; canonical freshness/cache/persistence/state owners; Opportunity Radar sole ranking owner; canonical symbol validation final authority; No Execution; no Python or MCP production dependency.
+Version-scoped issue #63 is closed as superseded, **not fixed**. Corrective ownership is issue #64 / `ADAPT-RUNTIME-CRASH-001`. The screenshot proves the v18.9.0 crash class and native ARM64 identity but not a symbolized root cause, so future work must obtain the full `.ips`/backtrace or reproduce before changing product code. Do not delete `PersonalMarketTerminal` state/API keys as a first troubleshooting step.
 
 ## Exactly one next action
 
-Inspect the automatic **CI Fast** result on the corrected v18.9.0 release-candidate head. If and only if that exact head passes Fast, mark the same PR #62 Ready for Review once so the existing full Qualified workflow re-certifies the exact RC head before any merge.
+Diagnose issue #64 from concrete crash evidence/reproduction and produce the bounded corrective-release G0/G1 proposal before optional provider/Market-Mode expansion or unrelated feature work.
 
 ## Resume rule
 
-Any ChatGPT account, Codex session, Claude or human maintainer must read `AGENTS.md` / `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, issue #61/comments, PR #62, `release_identity.json`, `release/v18.9.0/release_contract.json`, both `.depulse-certification/resume/` checkpoints and live GitHub branch/check state. GitHub objects and executable evidence outrank chat memory. No upload of an old chat handoff is required.
+Any ChatGPT account, Codex session, Claude or human maintainer must read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, `release_identity.json`, `release/v18.9.0/release_contract.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #64 and live GitHub state. GitHub objects and executable evidence outrank chat memory. No upload of an old chat handoff is required.
