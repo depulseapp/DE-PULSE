@@ -36,7 +36,7 @@ Scope owner #64. Crash diagnosis/fix only. No provider expansion, router redesig
 Settings integration only: existing Data Provider Settings + existing local secret owner, masked field, Save/Test/Clear, configured/connected/error/capability status, safe environment override. No provider-routing behavior change.
 
 ### v18.9.3 — Coverage-Aware Router Core
-Smart Provider Router v2 evolution only. Add consumer requirement/coverage contracts, cache-first gap calculation, eligible-provider ranking against remaining need, targeted acquisition, canonical merge/provenance/conflict handling, coverage re-evaluation and bounded stop criteria. Separate validation lifecycle from serving role. No UI/provider-feature expansion beyond what tests require.
+Smart Provider Router v2 evolution only. Add consumer requirement/coverage contracts, **in-memory + persisted canonical DB/state reuse before provider acquisition**, residual-gap calculation, eligible-provider ranking against remaining need, targeted acquisition, canonical merge/provenance/conflict handling, coverage re-evaluation and bounded stop criteria. Separate validation lifecycle from serving role. No UI/provider-feature expansion beyond what tests require.
 
 ### v18.9.4 — Company Identity
 Canonical identity owner and presentation only. All Day/Swing/Long state headings show symbol + company name when known, e.g. `APP - AppLovin : In Entry Zone`; reuse in Research/Discovery/Add Symbol; symbol-only fallback. No TradeInsight search admission yet.
@@ -57,24 +57,42 @@ Contract-validated mover/ranking evidence only. Opportunity Radar consumes it as
 Full useful-capability inventory/disposition only. Revalidate Congress, daily adjusted/raw OHLCV, corporate actions and bounded history under coverage-aware routing. Every useful entitlement needs a named consumer/disposition/freshness/retention/rate policy. No Python/MCP production dependency and no inferred intraday support.
 
 ### v18.9.10 — Provider Efficiency / Adaptive Telemetry
-Measure and harden only: coverage completion, residual gaps, calls avoided, cache reuse, provider usefulness, latency/errors/rate limits/backpressure, freshness failures, disagreement/corroboration, bounded fan-out, CPU/memory/goroutine stability and consumer materiality. Feed evidence into adaptive ranking without changing deterministic trading truth opaquely.
+Measure and harden only: coverage completion, residual gaps, DB/cache reuse, provider calls avoided, provider usefulness, latency/errors/rate limits/backpressure, freshness failures, disagreement/corroboration, bounded fan-out, CPU/memory/goroutine stability, consumer materiality and the provider/runtime headroom required to protect pre-market/regular-market/after-hours. Feed evidence into adaptive ranking without changing deterministic trading truth opaquely.
 
-### v18.9.11 — Professional Closure Audit
-No new feature scope. Audit whole v18.9.x for misses/duplication/bypasses/orphan useful capabilities; retest #57 and #64 regressions; deterministic Day/Swing/Long equivalence; all-desk identity; partial coverage/provider failure/recovery; actual macOS Apple Silicon + Windows x64 packages; Adaptive Intelligence Scorecard. Closure requires zero unexplained carry-forward and zero unowned useful capability.
+### v18.9.11 — Session-Aware Data Readiness Maintenance
+Single responsibility: implement one canonical maintenance coordinator using existing persistence/cache, Smart Provider Router v2, freshness, provider budgets, workload-priority and U.S. market calendar/session owners.
+
+Required behavior:
+- **Light overnight maintenance** only in eligible low-priority windows: bounded residual historical gaps, latest completed-session persistence, incremental SEC/disclosure/revision checks, small corporate-action/fundamental/macro/identity corrections, lightweight integrity/readiness work and bounded high-value precomputation.
+- **Heavy weekend/extended-market-closed maintenance** for deeper historical backfill/reconciliation, corporate-action audits, SEC/Form4/13F/congress/earnings/fundamental/macro history, point-in-time outcome resolution, provider-history consolidation and bounded DB/index/retention work.
+- **Protected Tier-0 sessions:** pre-market, regular market and after-hours. These sessions get first claim on provider quota/headroom, network, CPU, memory, DB and worker capacity.
+- Maintenance uses only bounded surplus capacity after protected-session reserves.
+- External-provider maintenance work suspends during protected sessions; data directly required by a current/live consumer becomes live fulfillment, not maintenance.
+- Maintenance must drain/preempt/checkpoint/resume promptly when protected or market-shock/high-priority work begins.
+- Missed overnight/weekend work catches up only in a later eligible window, never by dumping backlog into a protected session.
+- Manual `Run Data Readiness Maintenance Now`, if exposed, obeys the same provider/runtime/session protections.
+- No blind full-universe refetch and no second scheduler/calendar/router/cache/database owner.
+
+Acceptance must prove overnight light maintenance, weekend heavy maintenance, protected-session quota/runtime reservation, preemption/checkpoint/resume, restart de-duplication, bounded catch-up and **no material impact on decision-critical freshness/latency/readiness**.
+
+Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
+
+### v18.9.12 — Professional Closure Audit
+No new feature scope. Audit whole v18.9.x for misses/duplication/bypasses/orphan useful capabilities; retest #57 and #64 regressions; deterministic Day/Swing/Long equivalence; all-desk identity; DB-first reuse and residual-gap acquisition; provider failure/recovery; overnight/weekend maintenance; protected-session capacity reservation/preemption; actual macOS Apple Silicon + Windows x64 packages; Adaptive Intelligence Scorecard. Closure requires zero unexplained carry-forward and zero unowned useful capability.
 
 ## v19 build packets — Professional Data Infrastructure
 
-**Entry:** v18 final closure PASS. v19 consumes the coverage-aware routing, canonical identity, adaptive Market Modes and provider telemetry created in v18.9.x; it does not recreate them.
+**Entry:** v18 final closure PASS. v19 consumes the coverage-aware routing, persistence-first reuse, session-aware maintenance, canonical identity, adaptive Market Modes and provider telemetry created in v18.9.x; it does not recreate them.
 
 Provisional small packets, each independently frozen at G1:
 1. provider capability/entitlement/data-rights registry;
-2. provider quality/reliability/latency/rate/cost/coverage/SLO scorecards;
-3. data reconciliation/source-disagreement/historical-adjustment quality;
+2. provider quality/reliability/latency/rate/cost/coverage/SLO scorecards including calls-avoided and maintenance value;
+3. data reconciliation/source-disagreement/historical-adjustment/revision quality;
 4. institutional/13F evidence and identity/mapping hardening;
 5. two-sided Long/Short point-in-time evidence substrate;
 6. AODR candidate/ranking/outcome lineage infrastructure;
-7. ADR-GDI professional reliability/capacity/load-shedding hardening;
-8. measured specialized/paid-provider gap evaluation and migration readiness;
+7. ADR-GDI professional reliability/capacity/load-shedding hardening including protected-session reserve sizing, maintenance/preemption economics, DB/index/pool/capacity behavior and restart/warm-start;
+8. measured specialized/paid-provider gap evaluation and migration readiness through the same router/persistence/session-priority contracts;
 9. v20 point-in-time evidence/feature/outcome/provenance/research-readiness audit;
 10. mandatory v19 Major Closure with no unexplained provider role/dataset/right/reliability gap.
 
@@ -93,15 +111,21 @@ Provisional small packets, split further where G0/G1 shows coupling/risk:
 8. TDTI two-sided trade-plan/readiness/outcome validation, still No Execution;
 9. AODR adaptive shared opportunity ranking;
 10. AODR diversity/opportunity-cost/personalized relevance after shared truth;
-11. ADR-GDI adaptive provider/recovery/workload/capacity optimization in SHADOW/Champion-Challenger;
+11. ADR-GDI adaptive provider/recovery/workload/capacity optimization in SHADOW/Champion-Challenger, including evidence-based maintenance value and protected-session reserve optimization without self-promotion;
 12. model/prompt governance + Champion/Challenger + explainable promotion/rollback;
 13. v20 Professional Closure proving calibrated utility, abstention, deterministic boundaries, no silent self-modification and No Execution.
 
 ## Version dependency contract
 
-`v18.9.x trustworthy acquisition/truth -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
+`v18.9.x trustworthy acquisition/persistence/session readiness -> v19 measured professional evidence infrastructure -> v20 governed adaptive learning`.
 
-v19 must not undo v18 Smart Provider Router ownership. v20 must not bypass v19 provenance/rights/point-in-time lineage. No adaptive model may repair missing data by inventing confidence; missing/weak evidence remains UNKNOWN/ABSTAIN.
+v19 must not undo v18 Smart Provider Router or session-aware maintenance ownership. v20 must not bypass v19 provenance/rights/point-in-time lineage. No adaptive model may repair missing data by inventing confidence; missing/weak evidence remains UNKNOWN/ABSTAIN.
+
+## Protected-session resource contract
+
+Pre-market, regular market and after-hours are Tier-0 decision-support sessions. Their live/current workloads always outrank maintenance. Provider quota/headroom, network concurrency, CPU, memory, DB and worker capacity must retain explicit reserve for these sessions. Maintenance gets bounded surplus capacity and must yield/preempt before it can materially degrade live/current evidence.
+
+Session boundaries come only from the existing canonical U.S. market calendar/session owner, including holidays/half-days/exceptional closures. Maintenance may not implement a second market calendar.
 
 ## CI/release efficiency rule
 
@@ -109,7 +133,7 @@ For each patch: develop the coherent code+test batch before opening the PR; one 
 
 ## Protected boundaries
 
-Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; direct SEC/EDGAR authoritative; existing cache/persistence/telemetry/symbol/state owners reused; deterministic Day/Swing/Long protected; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; G0–G16 only.
+Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache owners reused; canonical U.S. market calendar/session owner reused; direct SEC/EDGAR authoritative; deterministic Day/Swing/Long protected; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; G0–G16 only.
 
 ## Exactly one next action
 
