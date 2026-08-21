@@ -1,0 +1,51 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.9.0",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.9.0-stable-20260821",
+  "stableTag": "v18.9.0-stable",
+  "certifiedCandidate": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+  "qualifiedSourceHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
+  "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9",
+  "runs": {
+    "fast": 32525637987,
+    "qualified": 32525738828,
+    "canonicalReleaseG11G16": 32526121817
+  },
+  "gates": {
+    "G0-G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "g12FullCertification": {"artifactId": 9462349733, "digest": "sha256:03763bbfc2cced86e886e36ec4dd1b5fe083befd74cd5ad162016c54fee6e828"},
+    "macOSAppleSilicon": {"artifactId": 9462372802, "digest": "sha256:5b2c583360a7779cf795e2588f4a05814efb2ed964d4e0b49efd23268953bc33"},
+    "windowsX64": {"artifactId": 9462402486, "digest": "sha256:7b7e74f9175c24d6a372008255740e4fa8028c56a8a7adb51ea74a359314cb64"},
+    "g15ReleaseAssurance": {"artifactId": 9462412823, "digest": "sha256:fe9b8bb43196cddc2899c8498ffacd07a2f73215ae060dee2faa263ecd22e28c"},
+    "g16Closure": {"artifactId": 9462424569, "digest": "sha256:d60c4a8d8c06cab1452420960401241c26894168ace91679786290adec2d305e"}
+  },
+  "scopeAuthority": {
+    "issue": 61,
+    "productPr": 62,
+    "releaseContract": "release/v18.9.0/release_contract.json",
+    "note": "TradeInsight integration closed with exact-head Fast #481, Qualified #153 and one canonical Release #32. Form 4 enrichment, top movers and ticker search remain deliberately contract-gated rather than guessed."
+  },
+  "postStableLearning": {
+    "escapedRuntimeIssue": 63,
+    "correctiveRequirement": 64,
+    "requirement": "ADAPT-RUNTIME-CRASH-001",
+    "classification": "REAL_WORLD_POST_CERTIFICATION_ESCAPE",
+    "note": "User-observed macOS ARM64 SIGABRT/abort() on bundle version 18900 is carried forward to corrective issue #64. The Stable release evidence remains immutable; the defect is not claimed fixed in v18.9.0."
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true
+  }
+}
