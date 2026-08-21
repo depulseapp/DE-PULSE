@@ -92,8 +92,8 @@ if patch_contract:
 elif release_contract and overlay_name:
     need(str(release_contract.get('release')) == VERSION, 'release contract version mismatch')
     need(bool(overlay_path and overlay_path.is_file()), 'release identity overlay missing')
-    legacy_cert = str(release_contract.get('legacy_certification_plan_version', '')).strip()
-    legacy_ci = str(release_contract.get('legacy_ci_plan_version', '')).strip()
+    legacy_cert = str((release_contract or {}).get('legacy_certification_plan_version', '')).strip()
+    legacy_ci = str((release_contract or {}).get('legacy_ci_plan_version', '')).strip()
     need(str(cert.get('version')) == (legacy_cert or VERSION), 'release contract certification plan inheritance mismatch')
     need(str(ci.get('version')) == (legacy_ci or VERSION), 'release contract CI plan inheritance mismatch')
     need(
@@ -105,12 +105,19 @@ elif release_contract and overlay_name:
         'release identity overlay' in str(release_contract.get('documentationIdentityRule', '')).lower(),
         'release contract documentation identity rule missing',
     )
-    # README remains a durable multi-release narrative; current candidate identity
-    # is governed by release_identity.json + release contract + overlay. Preserve
-    # the portability/resume entrypoint even when the historical README header is
-    # not rewritten merely for a release identity bump.
+    # README is intentionally version-neutral and remains the durable portability
+    # entrypoint. Validate semantic anchors rather than a presentation heading so
+    # harmless README reorganization cannot block an otherwise coherent release.
     readme = (ROOT / 'README.md').read_text()
-    need('## Resume with any AI assistant or account' in readme, 'README portability/resume entrypoint missing')
+    for marker in (
+        '## Current project truth',
+        'AGENTS.md',
+        'CLAUDE.md',
+        'governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md',
+        'handoff/CURRENT.md',
+        'GitHub is the durable source of truth',
+    ):
+        need(marker in readme, f'README portability/resume marker missing: {marker}')
 else:
     readme = (ROOT / 'README.md').read_text()
     need(readme.startswith(f'# DE.PULSE v{VERSION}'), 'README title mismatch')
