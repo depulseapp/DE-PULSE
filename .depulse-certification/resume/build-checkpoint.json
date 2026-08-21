@@ -1,56 +1,62 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.8.2",
+  "release": "v18.9.0",
   "channel": "STABLE",
   "branch": "main",
-  "pullRequest": 60,
-  "candidateSourceCommit": "e51831b8269c3ae673edc93eb0ec88a0a954344f",
-  "sourceFingerprint": "a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247",
+  "pullRequest": 62,
+  "candidateSourceCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+  "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.8.2-stable-20260820",
+  "buildId": "v18.9.0-stable-20260821",
   "certifiedStable": {
-    "version": "v18.8.2",
-    "tag": "v18.8.2-stable",
-    "promotionCommit": "e51831b8269c3ae673edc93eb0ec88a0a954344f",
-    "candidateSourceCommit": "e51831b8269c3ae673edc93eb0ec88a0a954344f",
-    "certifiedSourceCheckout": "e51831b8269c3ae673edc93eb0ec88a0a954344f",
-    "qualifiedSourceHead": "66e59e4e5f803ca53520797e5eb6e9d3fe72e84c",
-    "sourceFingerprint": "a3b8851f32ef251054ac92ffdd0a9f2ed24e34b44bc45f2fa47cd97da5792247"
+    "version": "v18.9.0",
+    "tag": "v18.9.0-stable",
+    "promotionCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+    "candidateSourceCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+    "certifiedSourceCheckout": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+    "qualifiedSourceHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
+    "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9"
   },
-  "metadataHeadRule": "The immutable v18.8.2 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future development branch.",
+  "metadataHeadRule": "The immutable v18.9.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future development branch.",
   "gates": {
     "G0":"PASS","G1":"PASS","G2":"PASS","G3":"PASS","G4":"PASS","G5":"PASS","G6":"PASS","G7":"PASS","G8":"PASS","G9":"PASS","G10":"PASS","G11":"PASS","G12":"PASS","G13":"PASS","G14":"PASS","G15":"PASS","G16":"PASS"
   },
   "releaseSummary": {
-    "qualifiedSourceHead": "66e59e4e5f803ca53520797e5eb6e9d3fe72e84c",
-    "fastRun": 32435845178,
-    "fastRunNumber": 437,
-    "qualifiedRun": 32435920048,
-    "qualifiedRunNumber": 151,
-    "releaseRun": 32436189650,
-    "releaseRunNumber": 31,
+    "qualifiedSourceHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
+    "fastRun": 32525637987,
+    "fastRunNumber": 481,
+    "qualifiedRun": 32525738828,
+    "qualifiedRunNumber": 153,
+    "releaseRun": 32526121817,
+    "releaseRunNumber": 32,
     "publication": "PASS_NO_REBUILD",
-    "originalProductPR": 59,
-    "failedReleaseHarnessRun": 32435511692,
-    "failedReleaseHarnessRunNumber": 30,
-    "failureClass": "CI_RELEASE_HARNESS_G12",
-    "recoveryPR": 60
+    "productPR": 62,
+    "scopeIssue": 61
   },
   "assistantPortability": {
     "status":"ENFORCED",
     "authoritativeHandoff":"handoff/CURRENT.md",
     "entrypoints":["AGENTS.md","CLAUDE.md"]
   },
-  "resolvedRuntimeDefects": [
+  "completedReleaseScope": [
     {
-      "issue": 57,
-      "releaseFound": "v18.8.1",
-      "releaseResolved": "v18.8.2",
-      "disposition": "RESOLVED_IN_V18.8.2_STABLE",
-      "requirement": "ADAPT-FRESHNESS-001 REOPENED / ADR-GDI Market Intelligence consumer-demand reliability"
+      "issue": 61,
+      "release": "v18.9.0",
+      "disposition": "COMPLETED_IN_V18.9.0_STABLE",
+      "requirement": "ADAPT-TRADEINSIGHT-001"
     }
   ],
-  "nextStep":"Perform v18.9.0 G0 exact-baseline and complete TradeInsight capability discovery for ADAPT-TRADEINSIGHT-001; report findings and a bounded G1 proposal before changing product source.",
-  "updatedAt":"2026-08-20T18:31:00-07:00"
+  "escapedRuntimeDefects": [
+    {
+      "originalIssue": 63,
+      "correctiveIssue": 64,
+      "releaseFound": "v18.9.0",
+      "disposition": "CARRIED_TO_NEXT_CORRECTIVE_RELEASE",
+      "requirement": "ADAPT-RUNTIME-CRASH-001",
+      "signature": "macOS Apple Silicon EXC_CRASH (SIGABRT) / abort() called"
+    }
+  ],
+  "nextStep":"Diagnose issue #64 / ADAPT-RUNTIME-CRASH-001 from the complete macOS crash evidence or a deterministic reproduction, then freeze a bounded corrective-release G1 before unrelated feature work.",
+  "updatedAt":"2026-08-21T14:12:00-07:00"
 }
