@@ -1,7 +1,7 @@
 # DE.PULSE — Current Adaptive Build Process
 
 **Certified Stable:** `v18.8.1-stable`  
-**Current activity after continuity merge:** prepare `v18.8.2-development` G0 for GitHub issue #57.
+**Current activity:** `v18.8.2-development` has completed G0–G3 diagnosis/design freeze and the bounded G4 implementation for GitHub issue #57; CI Fast is the next gate.
 
 Process remains:
 
@@ -17,15 +17,16 @@ The cheap `tools/ci/post_stable_continuity_gate.py` owns this repository-level c
 
 Issue #57 reopens `ADAPT-FRESHNESS-001` for the affected Market Intelligence path.
 
-- G0: capture all-session symptoms, provider/evidence timestamps, benchmark/breadth demand, allocation, freshness and recovery state.
-- G1: freeze the bounded reliability slice and explicit acceptance matrix.
-- G2: prove canonical owners and no duplicate router/freshness/subscription manager.
-- G3: freeze demand priority, provider/fallback, freshness/UNKNOWN/zero semantics and test oracle.
-- G4/G5: implement + targeted unit/contract regression; Fast is cheap-first.
+- G0: **COMPLETE** — allocator/provider demand already exists; freshness/recovery accountability is the escaped gap.
+- G1: **FROZEN** — issue #57 only; TradeInsight and unrelated product scope excluded.
+- G2: **FROZEN** — existing allocation → Smart Provider Router v2 → canonical freshness/recovery remains the only owner chain.
+- G3: **FROZEN** — SPY/QQQ protected by existing allocation, VIX remains canonical special path, breadth remains existing bounded 15-symbol market context; unknown/unavailable is not observed zero.
+- G4: **IMPLEMENTED** — existing breadth demand added to canonical quote freshness scope, unavailable-vs-zero renderer truth added, focused Go regressions added and renderer assertions integrated into the existing Fast lane. G4 exit is pending Fast evidence.
+- G5: **NEXT** — one Draft PR, one automatic exact-head Fast run, classify any failure before changing or rerunning anything.
 - G6-G10: integration, data truth, provider failure/recovery, performance/backpressure, browser/UI and exact-head reconciliation.
 - G11-G16: immutable RC, full certification, native packages, actual artifact runtime audit, assurance, publication and learning.
 
-Repair order follows REUSE → CONSOLIDATE → REFACTOR → DELETE/REPLACE → ADD. Do not introduce a Market Intelligence-specific fetch loop. Smart Provider Router v2 and canonical freshness/recovery remain sole executable owners.
+Repair order follows REUSE → CONSOLIDATE → REFACTOR → DELETE/REPLACE → ADD. No Market Intelligence-specific fetch loop was introduced. Smart Provider Router v2 and canonical freshness/recovery remain sole executable owners. No workflow was added or duplicated.
 
 Failure handling remains classify-first: `PRODUCT_FAIL`, `GATE_TEST_FAIL`, `CI_HARNESS_FAIL`, `INFRA_FAIL`, `EXPECTED_NOOP`, `SUPERSEDED`. No unchanged reruns or CI event manufacturing.
 
