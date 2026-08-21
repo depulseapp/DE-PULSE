@@ -135,8 +135,8 @@ func tradeInsightCapabilityAdmissionRegistry() []tradeInsightCapabilityAdmission
 		{
 			ID: "bulk-history", Capability: "Bounded multi-ticker history", Disposition: "USE SELECTIVELY",
 			Consumer: "Bounded history backfill and outcome-analysis jobs", Authority: "Reuse canonical history ownership; cache-first, budgeted and backpressure-aware; never continuous broad refetch.",
-			EndpointEvidence: "Official tidata SDK performs client-side bounded fan-out over per-ticker daily history; no server-side bulk endpoint is assumed.", SchemaVerified: true, RuntimeEnabled: false, Lifecycle: "NOT_IMPLEMENTED",
-			GateReason: "Bounded job/cache/backpressure consumer is not yet wired through the canonical history owner.",
+			EndpointEvidence: "Official tidata SDK performs client-side bounded fan-out over per-ticker daily history; no server-side bulk endpoint is assumed.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			GateReason: "Canonical Historical Bars route now provides deduplicated, sequential client-side fan-out capped at 50 symbols over the verified per-ticker daily endpoint; SHADOW-only pending validation evidence and explicit promotion approval.",
 		},
 		{
 			ID: "congressional-trades", Capability: "Congressional trades/disclosures", Disposition: "USE",

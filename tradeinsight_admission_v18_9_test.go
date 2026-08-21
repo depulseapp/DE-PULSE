@@ -44,7 +44,7 @@ func TestV189TradeInsightAdmissionRegistryCoversIssue61Matrix(t *testing.T) {
 }
 
 func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *testing.T) {
-	allowed := map[string]bool{"daily-history": true, "adjusted-history": true, "corporate-actions": true, "congressional-trades": true}
+	allowed := map[string]bool{"daily-history": true, "adjusted-history": true, "corporate-actions": true, "bulk-history": true, "congressional-trades": true}
 	for _, row := range tradeInsightCapabilityAdmissionRegistry() {
 		if got := row.runtimeAdmitted(); got != allowed[row.ID] {
 			t.Fatalf("runtimeAdmitted(%s) = %v, want %v (row=%+v)", row.ID, got, allowed[row.ID], row)
@@ -56,12 +56,12 @@ func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *test
 }
 
 func TestV189TradeInsightLifecycleTruthNeverAdvertisesGatedCapability(t *testing.T) {
-	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions", "congressional-trades"} {
+	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions", "bulk-history", "congressional-trades"} {
 		if got := tradeInsightCapabilityLifecycleTruth(id); got != "SHADOW" {
 			t.Fatalf("lifecycle truth for %s = %q, want SHADOW", id, got)
 		}
 	}
-	for _, id := range []string{"bulk-history", "sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
+	for _, id := range []string{"sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
 		if got := tradeInsightCapabilityLifecycleTruth(id); got != "GATED" {
 			t.Fatalf("lifecycle truth for %s = %q, want GATED", id, got)
 		}
@@ -157,15 +157,22 @@ func TestV189TradeInsightDoesNotInventUnverifiedRESTEndpoints(t *testing.T) {
 	}
 }
 
-func TestV189TradeInsightBulkHistoryDoesNotInventServerBulkEndpoint(t *testing.T) {
+func TestV189TradeInsightBulkHistoryUsesOnlyBoundedCanonicalFanout(t *testing.T) {
 	row := v189TradeInsightAdmissionByID(t, "bulk-history")
 	if !row.SchemaVerified {
 		t.Fatal("bounded bulk history should inherit the verified per-ticker daily history schema")
 	}
-	if !strings.Contains(strings.ToLower(row.EndpointEvidence), "client-side") || !strings.Contains(strings.ToLower(row.EndpointEvidence), "no server-side bulk endpoint") {
+	evidence := strings.ToLower(row.EndpointEvidence)
+	if !strings.Contains(evidence, "client-side") || !strings.Contains(evidence, "no server-side bulk endpoint") {
 		t.Fatalf("bulk semantics must record official SDK fan-out truth: %q", row.EndpointEvidence)
 	}
-	if row.RuntimeEnabled || row.runtimeAdmitted() {
-		t.Fatalf("bulk history must stay gated until bounded canonical job wiring exists: %+v", row)
+	if !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "SHADOW" {
+		t.Fatalf("bounded canonical bulk history must be admitted SHADOW-only: %+v", row)
+	}
+	reason := strings.ToLower(row.GateReason)
+	for _, required := range []string{"canonical historical bars", "deduplicated", "sequential", "50 symbols", "explicit promotion approval"} {
+		if !strings.Contains(reason, required) {
+			t.Fatalf("bulk history admission must document %q: %q", required, row.GateReason)
+		}
 	}
 }
