@@ -12,7 +12,7 @@ import re
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 errors: list[str] = []
 
 
@@ -58,7 +58,7 @@ if all(path.exists() for path in required_docs):
     for adapter, text in (("AGENTS.md", agents), ("CLAUDE.md", claude)):
         need("governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md" in text, f"{adapter} must point to the vendor-neutral portability contract")
         need("handoff/CURRENT.md" in text, f"{adapter} must point to the current authoritative handoff")
-        need("adaptive_resume_gate.py" in text, f"{adapter} must require the owning resume gate")
+        need("tools/ci/adaptive_resume_gate.py" in text, f"{adapter} must require the canonical resume gate")
     for term in (
         "GitHub source-of-truth hierarchy",
         "Mandatory fresh-session algorithm",

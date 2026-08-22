@@ -55,7 +55,7 @@ jobs:
       - name: Watchlist membership regression contract
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
-        run: python3 adaptive_resume_gate.py
+        run: python3 tools/ci/adaptive_resume_gate.py
       - name: Post-Stable continuity contract
         run: python3 tools/ci/post_stable_continuity_gate.py
       - name: Platform-neutral source provenance regression
@@ -63,7 +63,7 @@ jobs:
       - name: Release identity
         run: python3 release_identity.py --verify
       - name: Python syntax
-        run: python3 -m compileall -q tools/ci tools/release adaptive_resume_gate.py source_health_architecture_gate.py source_fingerprint.py
+        run: python3 -m compileall -q tools/ci tools/release source_health_architecture_gate.py source_fingerprint.py
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:
