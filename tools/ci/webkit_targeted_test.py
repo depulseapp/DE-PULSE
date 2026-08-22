@@ -132,12 +132,16 @@ def native_packaged_window_contract() -> None:
         "actualPackagedNativeWindowLaunch",
         "nativeWindowStartupDwell",
         "warmNativeWindowRelaunch",
+        "warmProfileSQLiteReuse",
+        "nativeWindowProtocolResolution",
+        "nativeWindowCleanup",
     ):
         assert checks.get(key) == "PASS", (key, evidence)
 
     print(
         "PASS: exact packaged macOS artifact exercised canonical executable, "
-        "actual native JXA/Cocoa/WKWebView startup dwell, and warm relaunch."
+        "actual native JXA/Cocoa/WKWebView startup dwell, warm relaunch, "
+        "profile reuse, protocol-resolution regression, and deterministic cleanup."
     )
 
 
