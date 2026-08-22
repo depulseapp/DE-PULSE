@@ -10,12 +10,6 @@
   "major_closure_requires_source_review": true,
   "known_orphan_helpers": [
     {
-      "path": "ai_hardening_v18_6.go",
-      "name": "aiInferenceTelemetrySnapshot",
-      "disposition": "DELETE_UNUSED",
-      "reason": "Declaration-only legacy telemetry accessor; shared telemetry state remains owned by the current AI hardening path."
-    },
-    {
       "path": "ai_research_v2.go",
       "name": "buildAIUserPrompt",
       "disposition": "DELETE_SUPERSEDED",
