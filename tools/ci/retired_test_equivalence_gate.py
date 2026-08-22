@@ -205,13 +205,15 @@ def main() -> int:
         referenced_bindings.update(str(x) for x in row.get("bindings", []))
 
     current_go_count = sum(len(ids) for ids in current_go.values())
+    required_go_assertion_count = 0
     for name in sorted(referenced_bindings):
         binding = bindings.get(name)
         if not isinstance(binding, dict):
             errors.append(f"unknown retired-test evidence binding: {name}")
             continue
-        for rel in binding.get("evidencePaths", []):
-            if not (ROOT / str(rel)).is_file():
+        evidence_paths = {str(rel) for rel in binding.get("evidencePaths", [])}
+        for rel in sorted(evidence_paths):
+            if not (ROOT / rel).is_file():
                 errors.append(f"retired-test evidence path missing for {name}: {rel}")
         for check in binding.get("executionChecks", []):
             if not isinstance(check, dict):
@@ -225,6 +227,31 @@ def main() -> int:
                 continue
             if token not in path.read_text(encoding="utf-8", errors="replace"):
                 errors.append(f"retired-test execution anchor drift for {name}: {rel} lacks {token!r}")
+        required_go_tests = binding.get("requiredGoTests", {})
+        if required_go_tests:
+            if not isinstance(required_go_tests, dict):
+                errors.append(f"requiredGoTests must be an object for {name}")
+            else:
+                for raw_rel, raw_names in required_go_tests.items():
+                    rel = str(raw_rel).strip()
+                    if rel not in evidence_paths:
+                        errors.append(f"required Go test owner must also be an evidencePath for {name}: {rel}")
+                    if not isinstance(raw_names, list) or not raw_names:
+                        errors.append(f"required Go test list missing/invalid for {name}: {rel}")
+                        continue
+                    names = [str(item).strip() for item in raw_names]
+                    if any(not item or not re.match(r"^(Test|Benchmark|Fuzz)[A-Za-z0-9_]+$", item) for item in names):
+                        errors.append(f"required Go test name invalid for {name}: {rel}")
+                        continue
+                    if len(set(names)) != len(names):
+                        errors.append(f"duplicate required Go test names for {name}: {rel}")
+                    actual_names = {identity.split(":", 1)[1] for identity in current_go.get(rel, [])}
+                    if not actual_names:
+                        errors.append(f"required Go test owner missing/discovery-empty for {name}: {rel}")
+                    missing = sorted(set(names) - actual_names)
+                    if missing:
+                        errors.append(f"required Go assertions missing for {name} in {rel}: " + ", ".join(missing))
+                    required_go_assertion_count += len(names)
         minimum = int(binding.get("minimumCurrentGoIdentities", 0))
         if minimum and current_go_count < minimum:
             errors.append(f"current Go test identity floor failed for {name}: {current_go_count} < {minimum}")
@@ -248,6 +275,7 @@ def main() -> int:
     print(f"retired executable paths mapped: {len(mapped_exec)}/{len(retired_exec)}")
     print(f"current Go test identities: {current_go_count}")
     print(f"current evidence bindings used: {len(referenced_bindings)}")
+    print(f"exact required current Go assertions: {required_go_assertion_count}")
     print("performance ceilings: MIGRATED_TO_CAPABILITY_OWNER")
     print("age/version-only retirement: PROHIBITED")
     if errors:
@@ -257,6 +285,7 @@ def main() -> int:
         return 1
     print("retired source-family coverage: 100%")
     print("current evidence path/execution-anchor validation: PASS")
+    print("exact current Go assertion ownership: PASS")
     print("historical scope-only retirement bounded to scope-named gates: PASS")
     print("DE.PULSE retired-test equivalence: PASS")
     return 0
