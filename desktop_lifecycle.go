@@ -56,27 +56,19 @@ func writeInstance(configDir, rawURL string, windowPID int) {
 	data, _ := json.Marshal(instanceInfo{URL: rawURL, BackendPID: os.Getpid(), WindowPID: windowPID})
 	_ = atomicWrite(instancePath(configDir), data, 0600)
 }
-func openAppWindow(rawURL, iconPath, configDir string) int {
-	if os.Getenv("DEPULSE_HEADLESS") == "1" {
-		return 0
-	}
-	if os.Getenv("PMT_NO_BROWSER") == "1" {
-		return 0
-	}
-	switch runtime.GOOS {
-	case "darwin":
 
-		script := fmt.Sprintf(`ObjC.import('Cocoa'); ObjC.import('WebKit');
+// macOSWindowScript deliberately uses an NSObject delegate that implements the
+// NSApplication delegate selectors without formally registering the protocol.
+// The formal protocol lookup is unnecessary for delegation and fails on the
+// exercised macOS 15 JXA bridge with "protocol does not exist (-2700)".
+func macOSWindowScript(rawURL, iconPath string) string {
+	return fmt.Sprintf(`ObjC.import('Cocoa'); ObjC.import('WebKit');
 const app=$.NSApplication.sharedApplication;
 app.setActivationPolicy($.NSApplicationActivationPolicyRegular);
 let mainWindow=null;
 ObjC.registerSubclass({
   name:'DePulseDelegateV121',
   superclass:'NSObject',
-  // Do not declare NSApplicationDelegate formally here. On current macOS JXA
-  // the bridge can fail protocol-name resolution with "protocol does not exist"
-  // before the window starts. NSApplication accepts an NSObject delegate that
-  // implements the selectors below; formal protocol conformance is unnecessary.
   methods:{
     'applicationShouldTerminateAfterLastWindowClosed:':{
       types:['bool',['id']],
@@ -136,6 +128,18 @@ app.finishLaunching;
 win.makeKeyAndOrderFront(null);
 app.activateIgnoringOtherApps(true);
 app.run;`, appVersion, strings.ReplaceAll(rawURL, "'", "%27"), strings.ReplaceAll(iconPath, "'", "\\'"))
+}
+
+func openAppWindow(rawURL, iconPath, configDir string) int {
+	if os.Getenv("DEPULSE_HEADLESS") == "1" {
+		return 0
+	}
+	if os.Getenv("PMT_NO_BROWSER") == "1" {
+		return 0
+	}
+	switch runtime.GOOS {
+	case "darwin":
+		script := macOSWindowScript(rawURL, iconPath)
 		windowLogPath := filepath.Join(configDir, "native-window.log")
 		windowLog, err := os.OpenFile(windowLogPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 		if err != nil {
@@ -183,7 +187,6 @@ app.run;`, appVersion, strings.ReplaceAll(rawURL, "'", "%27"), strings.ReplaceAl
 				if cmd.Start() == nil {
 					return cmd.Process.Pid
 				}
-			}
 		}
 		_ = exec.Command("xdg-open", rawURL).Start()
 	}
