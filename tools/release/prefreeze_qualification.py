@@ -157,7 +157,7 @@ def main():
         ('v18_typography', [py, 'v18_documentation_typography_gate.py'], 30),
         ('version', [py, 'version_consistency_test.py'], 30),
         ('documentation', [py, 'tools/ci/documentation_governance_gate.py'], 60),
-        ('data_utility', [py, 'data_utility_gate.py'], 45),
+        ('data_utility', [py, 'tools/ci/data_utility_gate.py'], 45),
         ('functionality_utility', [py, 'tools/ci/functionality_utility_checkpoint_gate.py'], 45),
         ('data_health', [py, 'tools/ci/data_health_policy_gate.py'], 30),
         ('source_health', [py, 'tools/ci/source_health_architecture_gate.py'], 120),

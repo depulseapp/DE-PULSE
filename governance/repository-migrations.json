@@ -118,6 +118,15 @@
       "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
     },
     {
+      "oldPath": "data_utility_gate.py",
+      "newPath": "tools/ci/data_utility_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-utility registry CI ownership",
+      "reason": "Dataset owner/purpose/consumer and freshness-registry consistency checks are reusable CI governance and belong under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_utility_gate.py and the migrated gate preserves the same dataset and data_freshness.go assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
+    },
+    {
       "oldPath": "source_health_architecture_gate.py",
       "newPath": "tools/ci/source_health_architecture_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership",

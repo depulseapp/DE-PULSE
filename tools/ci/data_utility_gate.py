@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json, re
 from pathlib import Path
-R=Path(__file__).resolve().parent
+R=Path(__file__).resolve().parents[2]
 reg=json.loads((R/'data_utility_registry.json').read_text())
 errs=[]; seen=set()
 for d in reg.get('datasets',[]):
