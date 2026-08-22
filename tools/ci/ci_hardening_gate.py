@@ -33,6 +33,7 @@ def main() -> int:
     qualified = (ROOT / '.github/workflows/ci-qualified.yml').read_text(encoding='utf-8')
     release = (ROOT / '.github/workflows/release.yml').read_text(encoding='utf-8')
     stable_gate = (ROOT / 'tools/ci/stable_evidence_gate.py').read_text(encoding='utf-8')
+    planner = (ROOT / 'tools/ci/impact_plan.py').read_text(encoding='utf-8')
 
     require_order(fast, [
         ('Python setup', 'actions/setup-python@'),
@@ -49,12 +50,30 @@ def main() -> int:
         'default: adaptive',
         '- adaptive',
         'requested="${INPUT_LANE:-adaptive}"',
-        'if [ "$requested" = adaptive ]; then lane="$planned"; else lane="$requested"; fi',
+        '--requested-lane "$requested"',
+        '--target-ref "$target"',
+        'base_sha:',
+        'target_ref:',
+        'selected_jobs: ${{ steps.resolve.outputs.selected_jobs }}',
     ):
         if token not in qualified:
-            errors.append(f'CI Qualified safe manual default missing: {token}')
+            errors.append(f'CI Qualified safe Planner v3 manual default missing: {token}')
     if 'default: full' in qualified:
         errors.append('CI Qualified manual/workflow-call default must not be full')
+
+    for token in (
+        'def resolve_base(base: str, head: str, target_ref: str)',
+        'trustworthy CI base unavailable',
+        'HEAD^ fallback is prohibited',
+        'apply_lane_override',
+        'if requested == "adaptive"',
+        'unknownPaths',
+        'failClosedFull',
+    ):
+        if token not in planner:
+            errors.append(f'Planner v3 trustworthy-base/fail-closed contract missing: {token}')
+    if 'HEAD^' in planner and 'HEAD^ fallback is prohibited' not in planner:
+        errors.append('Planner v3 must not retain an executable HEAD^ fallback')
 
     g11_start = release.find('\n  g11:\n')
     g12_start = release.find('\n  g12:\n')
@@ -78,7 +97,9 @@ def main() -> int:
 
     print('DE.PULSE CI hardening gate: PASS')
     print('Fast cheap-first setup ordering: PASS')
-    print('manual Qualified adaptive default: PASS')
+    print('manual/reusable Qualified adaptive Planner v3 default: PASS')
+    print('trustworthy full-delta base / no HEAD^ fallback: PASS')
+    print('unknown-path fail-closed contract: PASS')
     print('G11 coherence preflight before G12: PASS')
     print('publication collision defense-in-depth: PASS')
     return 0
