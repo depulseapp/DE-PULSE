@@ -12,14 +12,14 @@
 **Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
 **Active product branch/PR:** `v18.9.1-development` / Draft PR #69  
 **Active corrective scope:** #64 / `ADAPT-RUNTIME-CRASH-001` / `v18.9.1`  
-**Approved mandatory next process-hardening workstream:** #70 / `ADAPT-CI-CONVERGENCE-001`  
+**Approved mandatory next executable process/repository-hardening workstream:** #70 / `ADAPT-CI-CONVERGENCE-001`  
 **Governance alignment PR:** #67 merged  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`
 
 ## Immediate execution rule
 
-Do not start the next product capability until #64 / v18.9.1 is truthfully closed **and** #70 CI/versioning convergence has been executed/re-baselined as required below.
+Do not start the next product capability until #64 / v18.9.1 is truthfully closed **and** #70 CI/versioning/repository convergence has been implemented, evidenced and re-baselined as required below.
 
 First re-fetch live `main`, `v18.9.1-development`, PR #69, issue #64/comments and issue #70 because concurrent sessions/processes may advance governance or source.
 
@@ -33,7 +33,7 @@ Qualified #157 (`32541591746`) executed the real packaged macOS JXA/Cocoa/WKWebV
 
 The v18.9.1 corrective candidate removes only that unnecessary formal protocol declaration while preserving the NSObject delegate selectors and `app.delegate=delegate` behavior. Existing macOS packaging and WebKit qualification owners are hardened rather than replaced.
 
-Last runtime/test/harness implementation head before governance/handoff-only updates: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`. Re-fetch the branch before relying on any current head SHA.
+Last runtime/test/harness implementation head before governance/handoff-only updates: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`. Current governance/handoff-only head at this handoff update is `81dcbd8e6181e3752d343c9159a16833b7621ebc`; re-fetch the branch before relying on any current head SHA.
 
 Current corrective implementation includes:
 - root-cause JXA correction in `desktop_lifecycle.go`;
@@ -71,7 +71,9 @@ Do not burn repeated Actions retries while zero-step failures persist. The conne
 
 #70 / `ADAPT-CI-CONVERGENCE-001` is approved and is now part of the Adaptive Roadmap, Build Plan, Build Process and Delivery Process.
 
-It is a **process/release-engineering workstream, not a product feature/version**. It executes immediately after truthful v18.9.1 closure and before the next product implementation so DE.PULSE does not continue accumulating version-specific CI/release machinery.
+It is a **mandatory executable process/release-engineering/repository-hygiene workstream, not a product feature/version**. It executes immediately after truthful v18.9.1 closure and before the next product implementation so DE.PULSE does not continue accumulating version-specific CI/release/root machinery.
+
+**Documentation-only completion is prohibited.** #70 cannot close because audit notes, Markdown or issue comments exist. It must change the actual repository/code/workflows/tooling/layout and pass applicable executable evidence.
 
 Canonical detailed contract:
 `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md`
@@ -90,7 +92,18 @@ Required direction:
 - make a prospective SemVer-vs-explicit-custom versioning decision without rewriting shipped history;
 - canonical toolchain identity plus final runnable-artifact provenance/attestation/SBOM at the supply-chain milestone;
 - converge handoff and CURRENT Adaptive overlays on one actual current-state truth;
-- G16 reports runner minutes/reruns avoided and proves no quality evidence was removed.
+- G16 reports runner minutes/reruns avoided and proves no quality evidence was removed;
+- add a safe repository-root `.gitignore` without hiding tracked continuity checkpoints;
+- make source-health recursively/package-aware before production Go relocation;
+- extend the existing legacy inventory into the canonical root-layout inventory/allowlist owner;
+- move reusable root CI/dev/release tooling to stable `tools/` ownership with all consumers changed atomically;
+- consolidate useful logic from `certification_plan.json`, `certification_runner.py`, `ci_pipeline.py`, and `ci_pipeline_plan.json` into permanent owners and retire the stale competing orchestration when proven safe;
+- migrate historical/version-scoped non-Go root material into governed release/history ownership with evidence mapping;
+- migrate active version-named Go tests safely without losing package-local/full/race/randomized/focused coverage;
+- only after package-aware guards exist, incrementally decompose cohesive production code + tests into `internal/<capability>` packages;
+- move policies/registries/retained assets to stable canonical owners with consumer updates;
+- enforce a small CI root allowlist so version-stacked clutter cannot recur;
+- record root before/after inventory and every moved/renamed/consolidated/removed path at G16.
 
 ## Version/release planning rule after #70
 
@@ -155,7 +168,7 @@ Hosted serving keeps five dimensions separate:
 
 ## Planned v19 train — current authority
 
-Entry requires v18 native/data-plane closure plus #70 PASS.
+Entry requires v18 native/data-plane closure plus #70 executable CI/versioning/repository-hygiene PASS.
 
 ### v19.0.x — Hosted Foundations
 Provider legal-rights registry; tenant/identity/device/session control plane; product entitlement/metering; account data governance/privacy; hosted environment/IaC/service trust; PostgreSQL HA/PITR; managed secrets/KMS; software supply-chain/artifact/dependency assurance; provider SLO/cost/coverage scorecards; reconciliation/revision/point-in-time quality.
@@ -183,7 +196,7 @@ Every shared adaptive user-facing capability follows Mac + Windows + Web lockste
 
 ## G0-G16 lockstep/release enforcement
 
-G1 scope/platform/version disposition; G2 canonical owner/adapters; G3 one contract + equivalence/dependency plan; G4 all REQUIRED implementations; G5/G6 affected evidence with fail-closed uncertainty; G7 equivalent security/data outcomes; G8 mixed-client/runtime/CI efficiency; G9 function/meaning equivalence; G10 parity/evidence sufficiency blocks freeze; G11 exact candidate + publication feasibility; G12 canonical system certification; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass and no differing Stable-byte overwrite; G16 parity/CI-efficiency/provenance/handoff audit.
+G1 scope/platform/version/repository disposition; G2 canonical owner/adapters/path ownership; G3 one contract + equivalence/dependency/migration plan; G4 all REQUIRED implementations and actual process/repository changes; G5/G6 affected evidence with fail-closed uncertainty; G7 equivalent security/data outcomes; G8 mixed-client/runtime/CI efficiency; G9 function/meaning equivalence; G10 parity/evidence/owner/root-layout sufficiency blocks freeze; G11 exact candidate + publication feasibility; G12 canonical system certification; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass and no differing Stable-byte overwrite; G16 parity/CI-efficiency/provenance/root-inventory/handoff audit.
 
 ## Permanent boundaries
 
@@ -191,4 +204,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution, then re-fetch the exact current `v18.9.1-development` head and run exact-head Fast followed by full Qualified. Do not move PR #69 out of Draft, merge or release until that evidence passes. After truthful v18.9.1 closure, execute #70 before any next product implementation.
+Restore/confirm GitHub Actions hosted-runner execution, then re-fetch the exact current `v18.9.1-development` head and run exact-head Fast followed by full Qualified. Do not move PR #69 out of Draft, merge or release until that evidence passes. After truthful v18.9.1 closure, execute #70—including the actual repository-root implementation—before any next product implementation.
