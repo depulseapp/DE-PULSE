@@ -78,7 +78,7 @@
         "persistence_backend_sqlite.go"
       ],
       "fresh_executable_evidence": [
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -92,7 +92,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -105,7 +105,7 @@
         "persistence_backend_windows.go"
       ],
       "fresh_executable_evidence": [
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -119,7 +119,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -132,7 +132,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_persistence_test.go",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -146,7 +146,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {

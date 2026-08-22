@@ -34,7 +34,7 @@ fb=(R/'persistence_backend_fallback.go').read_text()
 need('if _, exists := b.data.Evidence[r.ID]; !exists' in fb,'fallback evidence immutability missing')
 need('if _, exists := b.data.Decisions[r.ID]; !exists' in fb,'fallback decision immutability missing')
 need('old.SourceHash != r.SourceHash' in fb and 'old.AsOf < r.AsOf' not in fb,'fallback feature store not source-hash incremental')
-tests=(R/'v17_2_canonical_pipeline_test.go').read_text()
+tests=(R/'canonical_pipeline_regression_test.go').read_text()
 for name in ['TestV172ImmaterialTicksUpdateMemoryButSuppressHeavyDownstream','TestV172MaterialPriceAndTruthStateChangesPropagate','TestV172CatalystQuotePropagationIsSymbolScoped','TestV172SnapshotProvidersUseCanonicalPropagationOwner','TestV172DecisionLineagePayloadIsFrozenFromLaterOutcomes','TestV172DerivedFeatureHashIgnoresOutcomeOnlyChanges','TestV172AlpacaIEXStreamDoesNotSelfDeadlockOnAllocationRead']:
     need(name in tests,f'acceptance test missing: {name}')
 if errors:
