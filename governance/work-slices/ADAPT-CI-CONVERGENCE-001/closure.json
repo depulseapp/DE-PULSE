@@ -8,19 +8,21 @@
   "gaps": [
     {
       "id": "FAST-640-QUALIFIED-PATH",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "VERIFIED",
       "owner": "Qualified workflow / canonical deterministic-equivalence evidence",
       "implementationPaths": [".github/workflows/ci-qualified.yml", "tools/ci/deterministic_equivalence_test.js", "governance/repository-migrations.json"],
       "evidenceRequired": ["Exact-head Fast PASS after Qualified consumer rewrite", "Repository migration safety PASS"],
+      "evidence": ["commit 3276ca29ebe21e2280e0ee98a8dd69510f7a5927", "Fast #644 / run 32555098099 PASS", "Repository migration safety PASS in Fast #644"],
       "closureCondition": "Qualified invokes tools/ci/deterministic_equivalence_test.js and no active old-path consumer remains.",
       "blocksIssueClosure": true
     },
     {
       "id": "PLANNER-EVIDENCE-OWNER-ROUTING",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "VERIFIED",
       "owner": "Planner v3",
       "implementationPaths": ["tools/ci/impact_plan.py", "tools/ci/impact_plan_self_test.py"],
       "evidenceRequired": ["Planner v3 self-test PASS", "Exact-head Fast PASS"],
+      "evidence": ["commit 43ed415fa0e0cc794762519100e85e4db195cd84", "Planner v3 capability evidence-owner path routing PASS in Fast #644", "WebKit/browser vs native-macOS ownership separation PASS in Fast #644", "Fast #644 / run 32555098099 PASS"],
       "closureCondition": "Canonical deterministic/WebKit/browser evidence owners select the evidence they validate; WebKit browser changes do not become a native-macOS proxy; unknown impact remains fail-closed.",
       "blocksIssueClosure": true
     },
