@@ -1,19 +1,22 @@
 {
   "schema": "DE.PULSE-TOOLCHAIN-MANIFEST-1",
   "go": {
-    "version": "1.26.6",
+    "selector": "1.26.6",
     "selectorPolicy": "EXACT_PATCH"
   },
   "node": {
-    "version": "24.19.0",
-    "selectorPolicy": "EXACT_PATCH"
+    "selector": "24",
+    "selectorPolicy": "GOVERNED_MAJOR_TRACK_RESOLVED_EXACT_RECORDED",
+    "lastObservedResolvedVersion": "24.19.0"
   },
   "python": {
-    "version": "3.13.15",
-    "selectorPolicy": "EXACT_PATCH"
+    "selector": "3.13",
+    "selectorPolicy": "GOVERNED_MINOR_TRACK_RESOLVED_EXACT_RECORDED",
+    "lastObservedResolvedVersion": "3.13.15"
   },
   "playwright": {
-    "version": "1.62.0",
+    "selector": "1.62.0",
+    "selectorPolicy": "EXACT_PATCH_LOCK",
     "lockFile": "tools/ci/browser-requirements.txt"
   },
   "runnerImages": {
@@ -28,5 +31,6 @@
     "playwright package version",
     "runner OS/image environment"
   ],
-  "updateRule": "Toolchain changes are grouped governed dependency-maintenance work and must pass affected Fast/Qualified/native evidence before release use."
+  "decision": "Exact-pin Go and Playwright. Keep Node on the governed Node 24 major and Python on the governed 3.13 minor because their setup actions/toolcache are intentionally maintained tracks; record the resolved exact patch versions in every G12 release evidence object so drift is explicit and auditable.",
+  "updateRule": "Selector or observed-resolution changes are grouped governed dependency-maintenance work and must pass affected Fast/Qualified/native evidence before release use."
 }
