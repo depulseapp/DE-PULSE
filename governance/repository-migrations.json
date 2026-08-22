@@ -1,6 +1,13 @@
 {
-  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-2",
+  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-3",
   "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "rootVersionRetention": {
+    "scope": "CURRENT_REPOSITORY_ROOT_ONLY",
+    "retainedMajors": [17, 18],
+    "retiredMajors": [14, 15, 16],
+    "historicalGitAndReleaseEvidence": "IMMUTABLE",
+    "rule": "Pre-v17 version-scoped root artifacts are removed. Still-live production behavior must first be migrated to a capability-oriented owner; v17/v18 root material remains eligible for later capability migration."
+  },
   "moves": [
     {
       "oldPath": "certification_plan.json",
@@ -8,6 +15,7 @@
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "release/history/v18.6.0/legacy-ci/certification_runner.py",
         "tools/ci/legacy_test_gate_inventory.py"
@@ -19,6 +27,7 @@
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The checkpointed v18.6 certification runner is superseded by the canonical GitHub workflows and current release G12 executor; preserve it only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
         "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
@@ -31,6 +40,7 @@
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The v18.6 isolated-job CI helper is not part of the current three-workflow control plane and is retained only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "tools/ci/legacy_test_gate_inventory.py"
       ]
@@ -41,11 +51,30 @@
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
         "source_health_architecture_gate.py",
         "tools/ci/legacy_test_gate_inventory.py"
       ]
+    },
+    {
+      "oldPath": "v14_0_3.go",
+      "newPath": "global_market_providers.go",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / provider capability ownership",
+      "reason": "Preserve still-live Twelve Data, Cboe VIX, official macro and provider contracts while removing pre-v17 version naming from the current root.",
+      "removalCondition": "Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "v14_3_3.go",
+      "newPath": "live_subscription_manager.go",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / live subscription ownership",
+      "reason": "Preserve still-live dynamic multi-feed allocation, failover, GLD/SLV/USO priority and manual-action logic while removing pre-v17 version naming from the current root.",
+      "removalCondition": "Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
     }
   ],
   "retiredExecutablePaths": [],
