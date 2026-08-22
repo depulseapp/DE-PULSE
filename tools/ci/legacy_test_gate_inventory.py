@@ -54,27 +54,35 @@ def load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def current_release_g12() -> Path:
+def canonical_g12_executor() -> Path:
+    path = ROOT / "tools" / "release" / "run_full_certification.py"
+    if not path.is_file():
+        raise RuntimeError(f"canonical version-neutral G12 executor missing: {relative(path)}")
+    return path
+
+
+def current_release_manifest() -> Path:
     identity = load_json(ROOT / "release_identity.json")
     version = str(identity.get("version", "")).strip()
     if not version:
         raise RuntimeError("release_identity.json version missing")
-    path = ROOT / "release" / f"v{version}" / "run_full_certification.sh"
+    path = ROOT / "release" / f"v{version}" / "certification-manifest.json"
     if not path.is_file():
-        raise RuntimeError(f"current release G12 executor missing: {relative(path)}")
+        raise RuntimeError(f"current release G12 manifest missing: {relative(path)}")
     return path
 
 
 def active_control_files() -> tuple[Path, ...]:
-    # Historical root certification_plan.json is deliberately excluded. The
-    # current release's G12 executor is the only release-scoped certification
-    # script that belongs to the executable control closure.
+    # Historical certification plans and per-version G12 shell orchestrators are
+    # deliberately excluded. Current G12 ownership is the version-neutral
+    # tools/release executor plus the current declarative release manifest.
     return (
         ROOT / ".github" / "workflows" / "ci-fast.yml",
         ROOT / ".github" / "workflows" / "ci-qualified.yml",
         ROOT / ".github" / "workflows" / "release.yml",
         ROOT / "tools" / "ci" / "workflow_policy.py",
-        current_release_g12(),
+        canonical_g12_executor(),
+        current_release_manifest(),
     )
 
 
@@ -117,9 +125,12 @@ def executable_candidate(path: Path) -> bool:
             or name.endswith("_test.js")
         )
     if rel.startswith("release/"):
+        # Every version-specific full-certification shell is historical after
+        # canonical G12 convergence. Current release behavior is driven by the
+        # declarative manifest already included in active_control_files().
         if name == "run_full_certification.sh":
-            return path.resolve() == current_release_g12().resolve()
-        # Current G12 may deliberately reuse older capability/browser tests.
+            return False
+        # Canonical G12 may deliberately reuse older capability/browser tests.
         # Those tests remain active evidence; historical G12 orchestrators do not.
         return (
             name.endswith("_test.py")
@@ -375,6 +386,7 @@ def inventory() -> dict[str, object]:
             "safeRemoval": "never inferred automatically; requires explicit assertion/evidence review",
             "staleCertificationPlanIsCurrentControl": False,
             "historicalReleaseG12IsCurrentControl": False,
+            "canonicalVersionNeutralG12IsCurrentControl": True,
         },
         "activeControlFiles": sorted(relative(path) for path in active_control_files()),
         "activeExecutableConsumerCount": len(controls),
@@ -426,23 +438,26 @@ def validate(report: dict[str, object]) -> list[str]:
         errors.append(
             "legacy certification_plan.json may not be a current executable control owner"
         )
-    identity = load_json(ROOT / "release_identity.json")
-    current_g12 = f"release/v{identity['version']}/run_full_certification.sh"
-    if current_g12 not in active_controls:
+    canonical_g12 = "tools/release/run_full_certification.py"
+    if canonical_g12 not in active_controls:
         errors.append(
-            f"current release G12 missing from executable control closure: {current_g12}"
+            f"canonical version-neutral G12 missing from executable control closure: {canonical_g12}"
         )
-    historical_g12 = [
+    identity = load_json(ROOT / "release_identity.json")
+    current_manifest = f"release/v{identity['version']}/certification-manifest.json"
+    if current_manifest not in active_controls:
+        errors.append(
+            f"current release G12 manifest missing from control closure: {current_manifest}"
+        )
+    version_shells = [
         rel
         for rel in active_controls
-        if rel.startswith("release/")
-        and rel.endswith("/run_full_certification.sh")
-        and rel != current_g12
+        if rel.startswith("release/") and rel.endswith("/run_full_certification.sh")
     ]
-    if historical_g12:
+    if version_shells:
         errors.append(
-            "historical release G12 incorrectly treated as current control: "
-            + ", ".join(historical_g12)
+            "version-specific release G12 shell incorrectly treated as current control: "
+            + ", ".join(version_shells)
         )
 
     root_layout = report.get("rootLayout", {})
@@ -534,6 +549,7 @@ def main() -> int:
     )
     print("active control files: " + ", ".join(report["activeControlFiles"]))
     print("stale certification_plan.json current-control ownership: REMOVED")
+    print("canonical version-neutral G12 current-control ownership: tools/release/run_full_certification.py")
     print("historical release G12 current-control ownership: EXCLUDED")
     print(
         "complete tracked root files classified: "

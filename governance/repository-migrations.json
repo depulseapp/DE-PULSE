@@ -85,14 +85,13 @@
       "newPath": "tools/ci/dependency_readiness_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership",
       "reason": "Reusable dependency/provider readiness enforcement belongs under tools/ci rather than the repository root.",
-      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/dependency_readiness_gate.py; Fast, Qualified and G12 evidence preserve behavior. The shipped v18.9.1 shell scaffold may retain the historical root-name text until Wave 2 removes it from current-control classification.",
+      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/dependency_readiness_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "tools/ci/dependency_readiness_gate.py",
         "tools/ci/workflow_policy.py",
         ".github/workflows/ci-qualified.yml",
-        "release/v18.9.1/certification-manifest.json",
-        "release/v18.9.1/run_full_certification.sh"
+        "release/v18.9.1/certification-manifest.json"
       ]
     },
     {
@@ -100,13 +99,12 @@
       "newPath": "tools/ci/ai_continuous_eval_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership",
       "reason": "Reusable offline AI hardening and data-rights evaluation belongs under tools/ci rather than the repository root.",
-      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/ai_continuous_eval_gate.py; Fast, Qualified and G12 evidence preserve behavior. The shipped v18.9.1 shell scaffold may retain the historical root-name text until Wave 2 removes it from current-control classification.",
+      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/ai_continuous_eval_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "tools/ci/workflow_policy.py",
         ".github/workflows/ci-qualified.yml",
-        "release/v18.9.1/certification-manifest.json",
-        "release/v18.9.1/run_full_certification.sh"
+        "release/v18.9.1/certification-manifest.json"
       ]
     },
     {
@@ -114,13 +112,12 @@
       "newPath": "tools/ci/adaptive_resume_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI portability ownership",
       "reason": "The assistant/account-independent resume contract is reusable CI governance and belongs under tools/ci rather than repository root.",
-      "removalCondition": "Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation. The shipped v18.9.1 shell scaffold may retain the historical root-name text only until Wave 2 removes that scaffold from current-control classification.",
+      "removalCondition": "Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "tools/ci/adaptive_resume_gate.py",
         ".github/workflows/ci-fast.yml",
-        "release/v18.9.1/certification-manifest.json",
-        "release/v18.9.1/run_full_certification.sh"
+        "release/v18.9.1/certification-manifest.json"
       ]
     }
   ],
