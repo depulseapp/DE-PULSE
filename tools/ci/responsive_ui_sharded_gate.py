@@ -10,7 +10,7 @@ single explicit timeout.
 from __future__ import annotations
 import os, subprocess, sys, time
 from pathlib import Path
-R=Path(__file__).resolve().parent
+R=Path(__file__).resolve().parents[2]
 
 env=os.environ.copy()
 env.pop('DEPULSE_VIEWPORT_SLICE', None)

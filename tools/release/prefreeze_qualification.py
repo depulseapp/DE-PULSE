@@ -184,7 +184,7 @@ def main():
         ('http_workflow', [py, 'http_workflow_test.py'], 300),
         ('deterministic', ['node', 'deterministic_equivalence_test.js'], 150),
         ('professional_trader', ['node', 'trader_acceptance_test.js'], 150),
-        ('responsive', [py, 'responsive_ui_sharded_gate.py'], 320),
+        ('responsive', [py, 'tools/ci/responsive_ui_sharded_gate.py'], 320),
     ]
 
     started = time.time()
