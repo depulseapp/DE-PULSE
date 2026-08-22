@@ -4,7 +4,7 @@
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`  
 **Immediate product scope:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`  
-**Governance alignment:** draft PR #67.
+**Governance alignment:** merged PR #67.
 
 ## 1. Delivery invariant
 
