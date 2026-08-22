@@ -16,6 +16,8 @@ G0-G16 is permanent. One primary responsibility per work slice. Canonical owners
 
 The CI/release process follows the same adaptive principle as the product: preserve trustworthy evidence, remove redundant work, fail closed on uncertainty, and never add parallel owners merely for convenience.
 
+A process/repository-hygiene scope is not complete because a document exists. It must produce the required code/workflow/tooling/layout changes and executable evidence.
+
 ## 2. Cross-Platform Lockstep Process
 
 DE.PULSE is one product across macOS, Windows and Web. Shared capability work is decomposed by capability, not by client.
@@ -45,8 +47,12 @@ Re-fetch live GitHub head, handoff, issues/comments, release identity and branch
 ### G1 — Immutable Scope
 Freeze one responsibility, explicit non-goals, product-version disposition, work-slice ID, acceptance, rollback and platform applicability matrix. A REQUIRED client cannot be deferred for convenience.
 
+For process/repository cleanup, freeze explicit before-state inventory, intended owners, migration conditions and deletion prohibitions.
+
 ### G2 — Architecture / Data Utility
 Map canonical owners, tenant/data/privacy classification, trust boundaries and platform adapters. No client or provider becomes an independent business-truth owner.
+
+For repository hygiene, map every moved/renamed/removed path to its canonical owner and active consumers. Source-health must cover every production Go package before package moves are allowed.
 
 ### G3 — Design / Dependency Readiness
 Freeze one domain/API/state contract, platform adapter contracts, compatibility/version/deprecation policy, equivalence tests, migration/rollback, retention/export/deletion, IaC/service trust, dependency/provenance, SLO/observability, conflict/idempotency/retry and negative/load/failure tests.
@@ -57,12 +63,16 @@ For CI/release tooling, also freeze:
 - explicit fail-closed fallback;
 - trusted base SHA/merge-base for manual/reusable runs;
 - release/publication feasibility checks;
-- immutable artifact/evidence ownership.
+- immutable artifact/evidence ownership;
+- root-layout migration order and active-consumer rewrites;
+- explicit proof condition before any historical/version-stacked file can be removed.
 
 ### G4 — Development Exit
 Canonical implementation plus every REQUIRED client adapter/surface exists and has unit/contract tests. Single-platform completion cannot satisfy a shared capability.
 
 For CI tooling, permanent executors/owners must be changed rather than adding version-specific workflow families.
+
+For #70 repository hygiene, G4 requires actual implementation: safe `.gitignore`, package-aware source-health, canonical root inventory/allowlist, migrated tooling/consumers, retirement/consolidation of stale orchestration where proven, capability-oriented test ownership progress, and root-layout enforcement. Documentation-only changes cannot satisfy G4.
 
 ### G5 — FAST Qualification
 Run affected deterministic tests. Share common fixtures/contracts; test only platform-specific deltas separately.
@@ -71,6 +81,8 @@ After #70, Fast/Qualified selection must be dependency-aware and explicit. Unkno
 
 ### G6 — Integration / MEDIUM Qualification
 Prove cross-owner and cross-platform state/API integration, persistence/cache reuse, provider fallback/coverage and convergence/conflict behavior.
+
+Repository/tooling migrations must prove every active consumer resolves the new canonical path and no old path silently remains active.
 
 ### G7 — Data / Security / Adaptive Intelligence
 Prove equivalent tenant/RBAC/product-entitlement/provider-right/privacy/data outcomes across clients, including downgrade/revocation/denial and SHADOW/promotion rules.
@@ -87,6 +99,14 @@ Audit all REQUIRED clients. Responsive/native interaction may differ; functional
 Unresolved P0 security/privacy/rights/environment/supply-chain/recovery/compatibility/duplicate-owner issue or material REQUIRED-platform parity gap blocks freeze.
 
 For CI/release changes, G10 must also prove that selected evidence is complete for the dependency graph and that no permanent gate was weakened.
+
+For #70 root hygiene, G10 additionally requires:
+- one current CI/release orchestration model only;
+- source-health still covers all production Go packages;
+- no package-local Go regression coverage was lost;
+- historical Stable tags/releases/evidence remain unchanged;
+- root allowlist/inventory enforcement is executable;
+- stale-control removal did not reduce required evidence.
 
 ### G11 — Immutable Release Candidate + Publication Feasibility
 Freeze exact source/fingerprint, product version, work-slice set, build identity and required-platform matrix.
@@ -121,7 +141,10 @@ After #70, G16 also records:
 - toolchain/runner identity;
 - release provenance/attestation status;
 - confirmation that no required evidence was removed;
-- residual versioned test/gate cleanup debt.
+- root before/after inventory;
+- files moved, renamed, consolidated and removed;
+- remaining intentional root owners and residual cleanup debt;
+- proof that source-health and test coverage still span all production packages/capabilities.
 
 ## 4. Failure and CI discipline
 
@@ -136,7 +159,9 @@ Rules:
 - manual/reusable qualification must bind a trustworthy complete delta;
 - stale/exact-head-invalid evidence is never reused;
 - Stable release execution is globally serialized;
-- CI cost is optimized through dependency awareness, caching, evidence reuse and fewer duplicate builds, not by lowering assurance.
+- CI cost is optimized through dependency awareness, caching, evidence reuse and fewer duplicate builds, not by lowering assurance;
+- no blind deletion based on filename, age or version prefix;
+- move/rename consumers atomically or fail closed.
 
 ## 5. Current corrective state
 
@@ -160,7 +185,7 @@ After truthful v18.9.1 closure, execute `ADAPT-CI-CONVERGENCE-001` before the ne
 
 The detailed executable target is `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md` plus issue #70.
 
-Core process changes:
+Core implementation changes:
 - Planner v3 dependency-aware job selection;
 - explicit/manual full-delta base binding;
 - targeted native rehearsal inside Qualified;
@@ -175,7 +200,18 @@ Core process changes:
 - prospective SemVer-or-custom decision;
 - monotonic platform build number;
 - canonical toolchain/provenance evidence;
-- common machine-readable current-state truth for handoff/Adaptive overlays.
+- common machine-readable current-state truth for handoff/Adaptive overlays;
+- safe root `.gitignore`;
+- recursive/package-aware source-health;
+- one canonical root-layout inventory/allowlist owner;
+- consolidation/retirement of stale root certification/CI orchestration;
+- governed migration of historical/version-scoped root material;
+- package-safe migration of active version-named Go tests;
+- incremental production package decomposition only after coverage guards exist;
+- stable ownership for policies/registries/retained assets;
+- CI-enforced small root allowlist.
+
+This section is executable scope. #70 cannot be closed by updating Markdown alone.
 
 ## 7. Product sequence after #70
 
@@ -191,7 +227,7 @@ Pre-market, regular market and after-hours are Tier-0. Live/current work has fir
 
 ## 9. v19 / v20 process inheritance
 
-v19 entry requires v18 native/data-plane closure plus #70 PASS. The existing hosted-foundation -> provider gateway/serving/sync -> cross-platform account/state -> shared product -> mixed-client assurance -> point-in-time evidence -> reliability ordering remains unchanged.
+v19 entry requires v18 native/data-plane closure plus #70 executable CI/versioning/repository-hygiene PASS. The existing hosted-foundation -> provider gateway/serving/sync -> cross-platform account/state -> shared product -> mixed-client assurance -> point-in-time evidence -> reliability ordering remains unchanged.
 
 v20 remains governed adaptive intelligence under `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`, immutable experiment/model/prompt governance and No Execution.
 
@@ -201,4 +237,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful v18.9.1 closure, execute #70 before any next product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful v18.9.1 closure, execute #70—including the actual repository-root implementation—before any next product implementation.
