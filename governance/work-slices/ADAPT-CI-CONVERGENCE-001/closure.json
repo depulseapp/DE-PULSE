@@ -37,10 +37,11 @@
     },
     {
       "id": "SOURCE-HEALTH-DEBT",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Recursive source-health / canonical capability owners",
       "implementationPaths": ["governance/source-health-policy.json", "tools/ci/source_health_architecture_gate.py"],
       "evidenceRequired": ["All registered orphan-helper dispositions completed", "No new orphan production helpers", "Go vet + full Go suite PASS"],
+      "evidence": ["commit 59c71b039c9d6d09c5182210bb48422f1b9cb55a", "Fast #654 / run 32557880965 PASS", "Recursive source-health PASS: 0 unregistered orphan production Go helpers, 0 tracked legacy orphan debt, 2 explicit interface-only contracts", "Go vet PASS and go test -count=1 ./... PASS in Fast #654", "MarshalBinary and UnmarshalBinary interface contracts retained"],
       "closureCondition": "The nine tracked orphan-helper debts are deleted, migrated to test/governance ownership, or otherwise resolved without removing MarshalBinary/UnmarshalBinary interface contracts.",
       "blocksIssueClosure": true
     },
