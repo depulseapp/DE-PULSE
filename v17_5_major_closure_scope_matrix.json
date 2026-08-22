@@ -173,7 +173,7 @@
         "runtime_observability.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go",
+        "workload_backpressure_regression_test.go",
         "v17_3_performance_test.go"
       ]
     },
@@ -187,7 +187,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_1_scope_gate.py",
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -198,7 +198,7 @@
         "workload_controller.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -212,7 +212,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_1_scope_gate.py",
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -225,7 +225,7 @@
         "opportunity_radar.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -237,7 +237,7 @@
       ],
       "fresh_executable_evidence": [
         "runtime_degradation_regression_test.go",
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
