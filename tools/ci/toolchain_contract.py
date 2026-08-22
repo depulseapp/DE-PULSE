@@ -28,18 +28,18 @@ def main() -> int:
     if manifest.get("schema") != "DE.PULSE-TOOLCHAIN-MANIFEST-1":
         errors.append("toolchain manifest schema mismatch")
 
-    go = str(manifest.get("go", {}).get("version", ""))
-    node = str(manifest.get("node", {}).get("version", ""))
-    python = str(manifest.get("python", {}).get("version", ""))
-    playwright = str(manifest.get("playwright", {}).get("version", ""))
-    for label, value, pattern in (
-        ("Go", go, r"\d+\.\d+\.\d+"),
-        ("Node", node, r"\d+\.\d+\.\d+"),
-        ("Python", python, r"\d+\.\d+\.\d+"),
-        ("Playwright", playwright, r"\d+\.\d+\.\d+"),
-    ):
-        if not re.fullmatch(pattern, value):
-            errors.append(f"{label} must be exact patch version, got {value!r}")
+    go = str(manifest.get("go", {}).get("selector", ""))
+    node = str(manifest.get("node", {}).get("selector", ""))
+    python = str(manifest.get("python", {}).get("selector", ""))
+    playwright = str(manifest.get("playwright", {}).get("selector", ""))
+    if not re.fullmatch(r"\d+\.\d+\.\d+", go):
+        errors.append(f"Go selector must be exact patch, got {go!r}")
+    if not re.fullmatch(r"\d+", node):
+        errors.append(f"Node selector must be governed major, got {node!r}")
+    if not re.fullmatch(r"\d+\.\d+", python):
+        errors.append(f"Python selector must be governed minor, got {python!r}")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", playwright):
+        errors.append(f"Playwright selector must be exact patch, got {playwright!r}")
 
     lock = ROOT / str(manifest.get("playwright", {}).get("lockFile", ""))
     if not lock.is_file() or f"playwright=={playwright}" not in lock.read_text(encoding="utf-8"):
@@ -59,7 +59,7 @@ def main() -> int:
             f"PYTHON_VERSION: '{python}'",
         ):
             if token not in text:
-                errors.append(f"{workflow.name} does not use canonical exact toolchain token {token}")
+                errors.append(f"{workflow.name} does not use canonical toolchain selector {token}")
         for runner in required_runners:
             if runner and runner not in text and workflow.name != "ci-fast.yml":
                 errors.append(f"{workflow.name} missing governed runner image {runner}")
@@ -73,17 +73,18 @@ def main() -> int:
         "importlib.metadata",
         "RUNNER_OS",
         "ImageOS",
+        "validate_resolved_toolchain",
     ):
         if token not in executor:
-            errors.append(f"canonical G12 executor does not record resolved toolchain identity: {token}")
+            errors.append(f"canonical G12 executor does not record/validate resolved toolchain identity: {token}")
 
     if errors:
         return fail(errors)
     print("DE.PULSE toolchain contract: PASS")
-    print(f"Go={go} Node={node} Python={python} Playwright={playwright}")
-    print("exact patch selectors in Fast/Qualified/Release: PASS")
+    print(f"Go={go} exact · Node={node}.x governed · Python={python}.x governed · Playwright={playwright} exact")
+    print("canonical selectors in Fast/Qualified/Release: PASS")
     print("canonical runner image contract: PASS")
-    print("resolved release provenance recording: PASS")
+    print("resolved exact release provenance recording: PASS")
     return 0
 
 
