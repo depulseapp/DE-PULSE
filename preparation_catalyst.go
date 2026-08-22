@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"math"
 	"reflect"
@@ -171,42 +170,6 @@ func (e *Engine) runMarketOpenPrep(reason string) {
 	e.evaluateCatalystWatch(now)
 	_ = e.saveCache()
 	e.app.broadcastRuntime()
-}
-
-func (e *Engine) marketOpenPrepLoop(ctx context.Context) {
-	t := time.NewTicker(time.Minute)
-	defer t.Stop()
-	run := func(now time.Time) {
-		if !e.isTradingDay(now) {
-			return
-		}
-		et := now.In(easternLocation())
-		mins := et.Hour()*60 + et.Minute()
-		e.mu.RLock()
-		p := e.preparations["market-open-prep"]
-		e.mu.RUnlock()
-		if preparationRanForTradingDay(p, now) {
-			return
-		}
-		if marketOpenPrepWindow(now) {
-			if preparationRetryDue(p, now, 2*time.Minute) {
-				e.runMarketOpenPrep("scheduled")
-			}
-			return
-		}
-		if mins > 9*60+25 && mins <= 10*60+15 && preparationRetryDue(p, now, 5*time.Minute) {
-			e.runMarketOpenPrep("missed-window catch-up")
-		}
-	}
-	run(time.Now())
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case now := <-t.C:
-			run(now)
-		}
-	}
 }
 
 func containsString(xs []string, s string) bool {

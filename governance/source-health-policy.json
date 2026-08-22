@@ -8,14 +8,7 @@
   "branch_watch_heuristic": 60,
   "branch_block_heuristic": 120,
   "major_closure_requires_source_review": true,
-  "known_orphan_helpers": [
-    {
-      "path": "preparation_catalyst.go",
-      "name": "marketOpenPrepLoop",
-      "disposition": "DELETE_SUPERSEDED",
-      "reason": "Automatic Market Open Prep scheduling is owned by sessionIntelligenceCoordinatorLoop; runMarketOpenPrep remains the execution owner."
-    }
-  ],
+  "known_orphan_helpers": [],
   "interface_contract_methods": [
     {
       "path": "internal/vendorcrypto/blake2b/blake2b.go",
