@@ -295,6 +295,7 @@ def main() -> int:
     policy_retired_go_by_path = go_test_identities_by_path(policy_retired_go_paths, baseline)
     policy_retired_test_count = len(baseline_tests_all - baseline_tests)
     current_tests = go_test_identities(current_paths)
+    current_go_by_path = go_test_identities_by_path(current_paths)
     rename_map = migrations.get("testIdentityRenames", {})
     retired_tests = set(migrations.get("removedGoTestIdentities", []))
     expected_tests = {str(rename_map.get(identity, identity)) for identity in baseline_tests if identity not in retired_tests}
@@ -350,6 +351,12 @@ def main() -> int:
     print(f"policy-retired pre-v17 executable paths: {policy_retired_exec_count}")
     for path in policy_retired_exec_paths:
         print(f"retired-executable-source: {path}")
+    print(f"current Go test source files: {len(current_go_by_path)}")
+    for path, identities in current_go_by_path.items():
+        print(f"current-go-source: {path} · identities={len(identities)} · names={','.join(i.split(':', 1)[1] for i in identities)}")
+    print(f"current executable evidence paths: {len(current_exec)}")
+    for path in sorted(current_exec):
+        print(f"current-executable-source: {path}")
     print(f"registered moves: {len(move_map)}")
     print(f"baseline retained Go test identities: {len(baseline_tests)}")
     print(f"current Go test identities: {len(current_tests)}")
