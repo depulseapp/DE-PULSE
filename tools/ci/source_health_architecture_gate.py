@@ -9,7 +9,7 @@ import json
 import re
 import sys
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 HEALTH_POLICY = json.loads((ROOT / "source_health_baseline.json").read_text())
 FILE_MAX = int(HEALTH_POLICY.get("production_file_max_lines", 1200))
 EXCLUDED_DIRS = {".git", "vendor", "node_modules", "testdata", ".depulse-certification"}
