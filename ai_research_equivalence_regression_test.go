@@ -163,21 +163,31 @@ func TestAIResearchMissingEvidenceNeverFabricatesGrounding(t *testing.T) {
 
 func TestAIResearchCacheKeyTracksMaterialTruthNotQuoteTick(t *testing.T) {
 	req := AIRequest{Ticker: "AAA", Kind: "ticker", Question: "review", ClientContext: map[string]any{"horizon": "swing"}}
+	settings := Settings{
+		AIProvider: "gemini", AIRoutingMode: "balanced",
+		GroqModel: "openai/gpt-oss-120b", GeminiModel: "gemini-3.1-flash-lite",
+		OpenRouterMode: "fast", OpenRouterSpecificModel: "openai/gpt-5.6-sol",
+	}
+	secrets := Secrets{Groq: "g", Gemini: "m", OpenRouter: "o"}
+	routing := resolveAIRouting(settings, secrets, req)
+	task := strings.TrimSpace(req.Question)
 	snap := aiResearchEquivalenceSnapshot()
 	p1 := buildAIResearchPackage(req, snap)
-	k1 := aiCacheKey(req, p1, "balanced")
+	k1 := aiInferenceCacheKey(req, task, p1, routing, settings)
 	snap.Quotes["AAA"] = Quote{Price: 111, Source: "Alpaca"}
 	p2 := buildAIResearchPackage(req, snap)
-	k2 := aiCacheKey(req, p2, "balanced")
+	k2 := aiInferenceCacheKey(req, task, p2, routing, settings)
 	if k1 != k2 {
 		t.Fatalf("ordinary quote tick invalidated material cache: %s %s", k1, k2)
 	}
-	if aiCacheKey(req, p2, "deep") == k1 {
+	deepSettings := settings
+	deepSettings.AIRoutingMode = "deep"
+	deepRouting := resolveAIRouting(deepSettings, secrets, req)
+	if aiInferenceCacheKey(req, task, p2, deepRouting, deepSettings) == k1 {
 		t.Fatal("routing policy did not partition cache")
 	}
-	req.Question = "different question"
-	if aiCacheKey(req, p2, "balanced") == k1 {
-		t.Fatal("question did not partition cache")
+	if aiInferenceCacheKey(req, "different question", p2, routing, settings) == k1 {
+		t.Fatal("question/task did not partition cache")
 	}
 }
 
