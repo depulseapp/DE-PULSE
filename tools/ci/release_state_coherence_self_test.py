@@ -60,7 +60,12 @@ def fixture(root: Path) -> tuple[str, str, str]:
     index = '<title>DE.PULSE v1.2.3</title>\n' + '\n'.join(f'{a}?v=1.2.3' for a in COUPLED)
     write(root, 'renderer/index.html', index)
     write(root, 'handoff/CURRENT.md', f'{tag}\n{candidate}\n{fp}\n{build_id}\n')
-    write(root, 'release/v1.2.3/run_full_certification.sh', '#!/usr/bin/env bash\n')
+    write_json(root, 'release/v1.2.3/certification-manifest.json', {
+        'schema': 'DE.PULSE-G12-EVIDENCE-MANIFEST-1', 'productVersion': '1.2.3',
+        'workSliceId': 'TEST-SLICE', 'evidenceSchemaVersion': 1,
+        'releaseContract': 'release/v1.2.3/release_contract.json',
+    })
+    write(root, 'tools/release/run_full_certification.py', '# canonical G12 executor\n')
     return candidate, fp, tag
 
 
@@ -104,7 +109,11 @@ def main() -> int:
         write(nextroot, 'renderer/renderer.js', f"const EXPECTED_RELEASE_VERSION='1.2.4';\nconst EXPECTED_BUILD_ID='{next_build}';\n")
         next_index = '<title>DE.PULSE v1.2.4</title>\n' + '\n'.join(f'{a}?v=1.2.4' for a in COUPLED)
         write(nextroot, 'renderer/index.html', next_index)
-        write(nextroot, 'release/v1.2.4/run_full_certification.sh', '#!/usr/bin/env bash\n')
+        write_json(nextroot, 'release/v1.2.4/certification-manifest.json', {
+            'schema': 'DE.PULSE-G12-EVIDENCE-MANIFEST-1', 'productVersion': next_version,
+            'workSliceId': 'NEXT-SLICE', 'evidenceSchemaVersion': 1,
+            'releaseContract': 'release/v1.2.4/release_contract.json',
+        })
         g11_candidate = 'c' * 40
         create = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=next_lookup)
         assert not create.errors, create.errors
@@ -117,6 +126,11 @@ def main() -> int:
         conflict = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=next_lookup)
         assert any('TARGET_TAG_CONFLICT' in error for error in conflict.errors), conflict.errors
 
+        missing_manifest = nextroot / 'release/v1.2.4/certification-manifest.json'
+        missing_manifest.unlink()
+        missing = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=lambda _r, n: next_candidate_stable if n == next_stable_tag else '')
+        assert any('G12_MANIFEST_MISSING' in error for error in missing.errors), missing.errors
+
     print('DE.PULSE Release State Coherence self-test: PASS')
     print('active release-coupled owner set: PASS')
     print('inactive legacy header exclusion: PASS')
@@ -124,6 +138,7 @@ def main() -> int:
     print('multi-mismatch aggregation: PASS')
     print('immutable Stable tag conflict detection: PASS')
     print('G11 target tag absent/exact/conflict preflight: PASS')
+    print('canonical version-neutral G12 manifest/executor requirement: PASS')
     return 0
 
 
