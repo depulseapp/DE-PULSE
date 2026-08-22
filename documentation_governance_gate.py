@@ -16,7 +16,7 @@ canon={
 # Permanent historical/product truth must survive new release families.
 req={
  'user.md':['v17.5.1 STABLE','30 FULL / 0 PARTIAL / 0 MISSING','Trade Readiness','STALE','INCOMPLETE','Professional Trader','No Execution'],
- 'developer.md':['v17.5.1 STABLE','Provider Router','release_identity.json','source_health_baseline.json','No v17 database','No Execution'],
+ 'developer.md':['v17.5.1 STABLE','Provider Router','release_identity.json','source-package hygiene','No v17 database','No Execution'],
  'limitations.md':['v17.5.1 STABLE','decision support, not a profit predictor','U.S.-listed only','stale/cached/history-only','physical native macOS/Windows','No Execution'],
 }
 
@@ -94,7 +94,11 @@ try:
     sel=json.loads((R/'renderer/qa/v16.11.0-adaptive-test-selection.json').read_text()); need(len(sel.get('mandatory',[]))>=25,'Major Closure Adaptive Test Selection incomplete')
     scope=json.loads((R/'renderer/qa/v16.11.0-master-scope.json').read_text()); need(len(scope.get('scope_lock',[]))==10,'v16.11 Major Closure scope not 10 clauses')
     acc=json.loads((R/'renderer/qa/v16.11.0-acceptance-evidence.json').read_text()); need(len(acc.get('clauses',[]))==10 and acc.get('status')=='10/10 PASS','v16.11 acceptance evidence not 10/10 PASS')
-    ci=json.loads((R/'ci_pipeline_plan.json').read_text()); need(version==str(ci.get('version')),'canonical release/CI identity drift')
+    g12_path=R/'release'/f'v{version}'/'certification-manifest.json'
+    need(g12_path.exists(),'canonical G12 certification manifest missing')
+    if g12_path.exists():
+        g12=json.loads(g12_path.read_text())
+        need(version==str(g12.get('productVersion')),'canonical release/G12 manifest identity drift')
 
     if version.startswith('18.'):
         need(channel in {'TEST','RC','STABLE'},'v18 release channel is not recognized')

@@ -11,7 +11,7 @@ if policy.get('market_critical_priority')[:2] != ['SPY','QQQ']: errs.append('SPY
 src=(R/'data_freshness.go').read_text()
 for token in ('ProviderTimestamp','CacheAt','CheckAgeMs','DataAgeMs','FreshLimitMs','StaleLimitMs','Fallback','Reason'):
     if token not in src: errs.append('freshness diagnostic '+token)
-live=(R/'v14_3_3.go').read_text()
+live=(R/'live_subscription_manager.go').read_text()
 if 'marketCriticalLiveSymbols = []string{"SPY", "QQQ"}' not in live: errs.append('live priority source')
 if errs:
     print('Adaptive Data Health: FAIL · '+', '.join(errs)); raise SystemExit(2)

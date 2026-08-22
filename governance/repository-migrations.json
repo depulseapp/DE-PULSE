@@ -88,7 +88,7 @@
       "reason": "The assistant/account-independent resume contract is reusable CI governance and belongs under tools/ci rather than repository root.",
       "removalCondition": "Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": ["tools/ci/adaptive_resume_gate.py", ".github/workflows/ci-fast.yml", "release/v18.9.1/certification-manifest.json"]
+      "allowedReferenceFiles": ["tools/ci/adaptive_resume_gate.py", ".github/workflows/ci-fast.yml", "release/v18.9.1/certification-manifest.json", "tools/release/prefreeze_qualification.py"]
     },
     {
       "oldPath": "functionality_utility_checkpoint_gate.py",
@@ -97,7 +97,7 @@
       "reason": "The reusable functionality/data-utility/provider-Market-Mode checkpoint is CI governance and belongs under tools/ci rather than repository root.",
       "removalCondition": "Old root path is absent; the canonical G12 manifest uses tools/ci/functionality_utility_checkpoint_gate.py and active executable closure follows the migrated owner with equivalent registry and provider/Market-Mode validation.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": ["tools/ci/functionality_utility_checkpoint_gate.py", "release/v18.9.1/certification-manifest.json"]
+      "allowedReferenceFiles": ["tools/ci/functionality_utility_checkpoint_gate.py", "release/v18.9.1/certification-manifest.json", "tools/release/prefreeze_qualification.py"]
     },
     {
       "oldPath": "source_health_architecture_gate.py",
@@ -106,7 +106,7 @@
       "reason": "Recursive package-aware source-health and architecture-fit enforcement is reusable CI tooling and belongs under tools/ci rather than repository root.",
       "removalCondition": "Old root path is absent; Fast executes tools/ci/source_health_architecture_gate.py with the same source-health policy and recursive package corpus, and migration safety reports no stale active consumer.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [".github/workflows/ci-fast.yml"]
+      "allowedReferenceFiles": [".github/workflows/ci-fast.yml", "tools/release/prefreeze_qualification.py"]
     },
     {
       "oldPath": "source_health_baseline.json",
@@ -124,7 +124,7 @@
       "reason": "Pre-freeze qualification is reusable G10 release tooling and belongs under tools/release rather than repository root.",
       "removalCondition": "Old root path is absent; the migrated pre-freeze runner resolves repository root correctly, calls canonical tools/ci gate paths, and resume/source-health contracts reference tools/release/prefreeze_qualification.py.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": []
+      "allowedReferenceFiles": ["tools/ci/adaptive_resume_gate.py", "tools/ci/source_health_architecture_gate.py"]
     }
   ],
   "retiredExecutablePaths": [],
