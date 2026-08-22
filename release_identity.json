@@ -1,13 +1,13 @@
 {
   "schema": "DE.PULSE-RELEASE-IDENTITY-1",
-  "version": "18.9.0",
-  "display_version": "DE.PULSE v18.9.0",
-  "build_id": "v18.9.0-stable-20260821",
+  "version": "18.9.1",
+  "display_version": "DE.PULSE v18.9.1",
+  "build_id": "v18.9.1-stable-20260821",
   "channel": "STABLE",
-  "stable_baseline": "v18.8.2",
-  "previous_stable": "v18.8.2",
-  "scope": "TradeInsight adaptive provider integration: Smart Provider Router v2 reuse; SHADOW Congressional Trading Intelligence; adjusted daily OHLCV fallback/backfill; bounded admission-controlled multi-symbol history; shared telemetry/freshness/cache/canonical owners preserved; direct SEC/EDGAR authoritative; Form 4, movers and ticker search contract-gated; deterministic Day/Swing/Long truth and permanent No Execution boundary preserved",
-  "bundle_version": "18900",
+  "stable_baseline": "v18.9.0",
+  "previous_stable": "v18.9.0",
+  "scope": "macOS native-window runtime reliability corrective: remove the failing formal NSApplicationDelegate JXA protocol registration while preserving NSObject delegate selectors and app.delegate assignment; harden canonical package identity and actual packaged fresh/warm JXA/Cocoa/WKWebView lifecycle evidence with SQLite profile reuse and deterministic cleanup; shared product behavior unchanged; permanent No Execution boundary preserved",
+  "bundle_version": "18901",
   "runtime_config": "PersonalMarketTerminal",
   "application_bundle": "De-Pulse.app"
 }

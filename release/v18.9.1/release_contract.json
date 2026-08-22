@@ -1,0 +1,46 @@
+{
+  "schema": "DE.PULSE-V18.9.1-RELEASE-CONTRACT-1",
+  "release": "18.9.1",
+  "title": "macOS Native Window Runtime Reliability Corrective",
+  "certifiedStableBaseline": "v18.9.0-stable",
+  "engineeringBaseline": "73aa2a3b1418b7e963bff40d523d4983ba3bfb0d",
+  "scope": "GitHub issue #64 / ADAPT-RUNTIME-CRASH-001",
+  "identity_asset": "release-identity-v18.9.1.js",
+  "documentationIdentityRule": "The current package/build/QA identity is owned by release_identity.json, this release contract, VERSION.txt/app bootstrap and the last-loaded v18.9.1 release identity overlay. Long-form historical documentation is not rewritten solely to duplicate release metadata. The version-neutral root README remains the durable portability/source-of-truth entrypoint.",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries. Current execution authority is the three canonical GitHub workflows plus this release contract and run_full_certification.sh.",
+  "g0Diagnosis": "Canonical Qualified reproduction #157 on macOS 15.7.7 Apple Silicon proved the packaged backend and SQLite healthy, then reproduced the real JXA/Cocoa/WKWebView native-window failure as protocol does not exist (-2700). The only explicit protocol-name lookup was the unnecessary formal NSApplicationDelegate declaration in the existing JXA registered subclass. The corrective removes only that formal declaration while preserving NSObject delegate selectors, app.delegate assignment, backend serving, WKWebView content, SQLite persistence and user state.",
+  "qualificationRule": "The v18.9.1 Stable identity promotion is source-changing and must earn fresh exact-head Fast and full Qualified evidence after identity preparation. Full Qualified must include backend full/race/randomized, renderer, Chrome and WebKit; the WebKit/macOS lane must execute the actual packaged fresh native startup, startup dwell, warm relaunch on the same profile, SQLite profile reuse, protocol-resolution regression and deterministic cleanup before merge.",
+  "releaseRule": "One v18.9.1-development branch, one PR #69, fresh exact-head Fast + Qualified after Stable identity preparation, exact-head merge, then the single canonical G11-G16 release workflow. No retry/certification/promotion branch, no duplicate release workflow and no #70 executable work inside this corrective release.",
+  "platformApplicability": {
+    "macOS": "REQUIRED — platform-specific corrective plus packaged runtime proof",
+    "Windows": "REQUIRED release artifact assurance; shared product behavior unchanged",
+    "Web": "N/A product corrective; shared behavior regression-covered by Qualified browser/renderer lanes"
+  },
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "DETERMINISTIC_DAY_SWING_LONG",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_OWNERS",
+    "EXISTING_MULTI_FEED_ALLOCATION_SOLE_SUBSCRIPTION_OWNER",
+    "DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4",
+    "OPPORTUNITY_RADAR_SOLE_MOVER_RANKING_OWNER",
+    "CANONICAL_SYMBOL_VALIDATION_FINAL_AUTHORITY",
+    "GLD_SLV_USO_ACTIONABLE_TRADABLE_EXCEPTIONS"
+  ],
+  "requiredV1891Evidence": [
+    "formal NSApplicationDelegate protocol registration is absent while NSObject delegate selectors and app.delegate assignment remain present",
+    "canonical package identity is DePulseLauncher -> DePulse-arm64 and legacy Contents/MacOS/De-Pulse is absent",
+    "actual packaged macOS backend health/readiness/root and SQLite migrations pass",
+    "actual packaged non-headless JXA/Cocoa/WKWebView fresh startup remains alive through the bounded startup dwell",
+    "the same exact package warm-relaunches using the same persisted profile",
+    "fresh/warm profile SQLite integrity and migrations pass",
+    "native-window evidence contains no protocol does not exist startup failure",
+    "native child/backend cleanup is deterministic and bounded including failure paths",
+    "full backend/race/randomized, renderer, Chrome and WebKit qualification passes on the exact release-preparation head",
+    "macOS Apple Silicon and Windows x64 G13/G14 packaged-runtime audits pass",
+    "G15 binds exact artifacts and Stable publication uses the same-run certified bytes without rebuild"
+  ]
+}
