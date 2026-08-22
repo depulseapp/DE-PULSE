@@ -65,7 +65,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_persistence_test.go",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -161,7 +161,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_3_scope_gate.py",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -174,7 +174,7 @@
       ],
       "fresh_executable_evidence": [
         "workload_backpressure_regression_test.go",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -251,7 +251,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_3_scope_gate.py",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
