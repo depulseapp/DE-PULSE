@@ -8,140 +8,108 @@
 
 ## 1. Permanent engineering loop
 
-DE.PULSE engineering follows:
-
 `Understand -> impact-map -> reuse -> decompose -> design -> implement -> observe -> qualify -> recover/fix -> certify -> deliver -> learn`
 
-G0-G16 is permanent. No G17+ is permitted. Heavy work is decomposed into the smallest independently meaningful evidence units when that improves diagnosis, recovery, traceability or cost.
+G0-G16 is permanent. No G17+ is permitted. Every patch has one primary responsibility, one canonical owner/dependency graph, exact predecessor identity, explicit non-goals, deterministic acceptance evidence, rollback/recovery behavior, durable issue/handoff state and exactly one next action at closure.
 
-Every patch has:
-- one primary responsibility;
-- one canonical owner/dependency graph;
-- exact predecessor/source identity;
-- explicit non-goals;
-- named data/provider/security/runtime/UI consumers;
-- deterministic acceptance evidence;
-- rollback/recovery/invalidation behavior;
-- durable issue/handoff state;
-- exactly one next action at closure.
+## 2. Cross-Platform Lockstep Process
 
-## 2. Version/process alignment
+DE.PULSE is one product across macOS, Windows and Web. Shared capability work is not decomposed by client unless the responsibility is genuinely platform-specific.
 
-- Major versions define strategic maturity generations.
-- Minor bands define coherent dependency phases.
-- Patch releases remain one-primary-responsibility units.
-- Planned future numbers are reservations only and freeze at G1.
-- G0/G1 may split a broad future item and shift unstarted reservations; shipped releases never move.
-- Corrective/security issues preempt the roadmap when necessary.
+At G1 every patch freezes:
 
-General process invariant:
+`Capability -> canonical owner -> macOS REQUIRED/N/A -> Windows REQUIRED/N/A -> Web REQUIRED/N/A`
 
-`stability -> canonical ownership -> observability -> SHADOW validation -> expansion -> operational hardening -> closure`
+Process invariants:
+- one canonical domain/API/state contract drives all required clients;
+- client adapters may differ for Keychain/Credential Manager/browser sessions, native SQLite/browser behavior, packaging, windowing, notifications and other platform concerns;
+- business logic, intelligence, authorization, product entitlement, provider-right decisions, state transitions, provenance/freshness and user-visible meaning may not fork by platform;
+- all REQUIRED client implementations belong to the same shared capability responsibility and must reach Development Exit before the shared capability can freeze;
+- a single platform may be used temporarily for debugging or adapter validation, but it does not satisfy delivery and may not be called a product pilot;
+- no new shared domain begins while a required client has unresolved material parity debt in the current domain;
+- temporary platform exceptions require an external blocker, explicit waiver/expiry, no GA/Delivered claim and a durable recovery scope;
+- platform-specific corrective releases remain valid where the actual defect is platform-specific, such as #64 / v18.9.1.
 
 Hosted process invariant:
 
-`tenant identity + RBAC + product entitlement + provider rights + privacy/data governance + hosted environment/IaC + persistence recovery + secret management + software-supply-chain assurance -> hosted provider boundary -> unified serving policy -> sync transport -> client activation -> platform parity -> tenant-aware metering/capacity -> adversarial assurance -> evidence expansion`
+`rights + tenant identity + RBAC + product entitlement + privacy + environment/IaC + persistence recovery + secrets + supply-chain assurance -> provider boundary -> serving policy -> sync protocol -> cross-platform account/session -> cross-platform domain capability -> equivalence certification -> multi-user hardening -> closure`
 
 Adaptive process invariant:
 
-`experiment/control plane -> model/prompt governance -> research features -> calibration -> bounded promotion -> closure`
+`experiment/control plane -> model/prompt governance -> adaptive capability implemented against canonical shared truth -> Mac/Windows/Web lockstep where user-facing -> calibration -> bounded promotion -> closure`
 
 ## 3. G0-G16 operating process
 
 ### G0 — Exact Baseline
-Re-fetch live GitHub head, current handoff, issues/comments, release identity, predecessor evidence and existing PR/branch state. Compare commits since the last certified baseline so completed work is not duplicated.
+Re-fetch live GitHub head, current handoff, issues/comments, release identity, predecessor evidence and existing PR/branch state. Compare commits since the last certified baseline so work is not duplicated.
 
 ### G1 — Immutable Scope
-Freeze one primary responsibility, explicit non-goals, target version, issue/scope ID, affected contracts, acceptance and rollback disposition. Classify governance obligations as current blocker/process hardening/next mandatory/future strategic.
+Freeze one primary responsibility, explicit non-goals, target version, scope ID, affected contracts, acceptance, rollback and the Mac/Windows/Web applicability matrix. A shared capability cannot defer a REQUIRED client to a later roadmap version merely for convenience.
 
 ### G2 — Architecture / Data Utility
-Map canonical owners and dependency blast radius. Run Functionality Utility checkpoint: purpose, consumer, reuse, correlation, freshness/materiality, retention/rights, cost, surface placement and retirement disposition.
+Map canonical owners and dependency blast radius. Run Functionality Utility checkpoint. For hosted/security/data work record authority, tenant/data/privacy classification, trust boundaries, threat-model scope, environment/service boundaries, failure assumptions and rejected alternatives. No client becomes an independent business-truth owner.
 
-For material hosted/security/data decisions, record an ADR or equivalent durable decision evidence including:
-- authority/ownership boundary;
-- tenant/account/data classification;
-- privacy purpose/minimization/retention implications;
-- trust boundaries and threat-model scope;
-- environment/service trust boundary implications;
-- failure/availability assumptions;
-- alternatives rejected and migration implications.
-
-Hosted designs explicitly distinguish:
+Hosted serving distinguishes:
 1. tenant/account identity;
 2. RBAC/capability authorization;
-3. DE.PULSE product-plan entitlement/quota policy;
+3. DE.PULSE product-plan entitlement/quota;
 4. upstream provider legal/data rights;
 5. privacy/data-governance policy.
 
-These may never collapse into one generic entitlement/authorization flag.
-
 ### G3 — Design / Dependency Readiness
-Freeze executable contracts before coding:
-- API/schema/protocol and version compatibility;
-- API inventory/ownership/deprecation policy for hosted endpoints;
-- tenant/RBAC/product-entitlement/provider-right/privacy serving order;
-- data inventory/classification/minimization/retention/export/deletion behavior;
-- environment/IaC desired state, environment isolation, service identities and network/TLS trust boundaries;
-- software dependency/component/SBOM/source/license/provenance policy;
-- migration and rollback/roll-forward plan;
+Freeze:
+- one canonical API/domain/state contract;
+- platform adapter contracts for every REQUIRED client;
+- compatibility/version/deprecation policy;
+- cross-platform equivalence tests;
+- migration/rollback/roll-forward;
+- data retention/export/deletion behavior;
+- environment/IaC/service-trust design;
+- dependency/SBOM/provenance policy;
+- SLO/error-budget/observability;
 - conflict/idempotency/retry semantics;
-- SLO/error-budget/tenant-aware observability requirements;
-- test fixtures/replay/live-provider boundaries;
-- failure-injection/load/negative-test matrix;
-- UI/role/capability composition;
-- feature flag/kill switch/canary controls where risk justifies them.
+- negative/load/failure matrix;
+- role/capability UI composition;
+- feature flag/kill/canary controls where risk justifies them.
 
 ### G4 — Development Exit
-Implementation exists in the canonical owner, compiles and has unit/contract tests. No convenience duplication or hidden parallel state owner remains. Backward-compatible migrations use expand/contract where practical. Hosted/environment work must be reproducible from versioned configuration rather than undocumented manual production mutations. Supply-chain scoped work must produce component/provenance evidence defined at G3.
+Canonical implementation exists and all REQUIRED platform adapters/surfaces for the frozen capability compile and have unit/contract tests. A Mac-only implementation of a shared scope is not G4 complete. Platform-specific diagnostic branches/tests may exist transiently but cannot redefine scope.
 
 ### G5 — FAST Qualification
-Affected-area deterministic tests first. No broad expensive rerun when the delta is narrow.
+Run affected deterministic tests per changed owner/adapter. Reuse common fixtures/contracts to avoid three independent business-logic suites.
 
 ### G6 — Integration / MEDIUM Qualification
-Cross-owner integration, persistence/cache reuse, shared-symbol/single-flight behavior, provider fallback/coverage and state transitions for affected scope.
+Cross-owner integration plus cross-platform state/API equivalence for REQUIRED clients. Prove persistence/cache reuse, shared-symbol/single-flight behavior and affected provider fallback/coverage.
 
 ### G7 — Data / Security / Adaptive Intelligence
-Prove data rights, provenance, point-in-time behavior, tenant isolation, object/function-level authorization, product-entitlement enforcement, provider-right enforcement, privacy/data-access/export/deletion enforcement, secret/redaction boundaries, revocation and SHADOW/promotion rules.
-
-Negative tests are mandatory for security-sensitive scope, including:
-- unauthorized route/API/SSE access;
-- cross-account object access;
-- role/capability downgrade;
-- product-plan downgrade/suspension/quota exhaustion;
-- revoked device/session;
-- provider-right expiry/downgrade;
-- prohibited retention/export/delete or operator-access behavior;
-- cross-environment identity/config/secret misuse;
-- unapproved/vulnerable/unverifiable dependency or artifact behavior where relevant;
-- secret leakage attempts;
-- unsafe model influence.
+Prove rights, provenance, point-in-time truth, tenant isolation, object/function authorization, product entitlement, provider-right enforcement, privacy/data lifecycle, secret boundaries, revocation and SHADOW/promotion rules. Equivalent requests from required clients must produce equivalent authorization/data outcomes.
 
 ### G8 — Performance / Capacity / Stability
-Bounded load/soak/capacity evidence for affected responsibility. Where relevant include tenant-aware resource usage, noisy-neighbor/fairness tests, provider quota/headroom, DB/index/pool behavior, queues/backpressure, circuit breakers, memory/CPU/workers, restart/warm-start, environment/config drift/failure, failure injection, failover/recovery and protected-session reserve.
+Bounded load/soak/capacity evidence. Where relevant exercise concurrent Mac/Windows/Web usage, noisy-neighbor/fairness, provider headroom, DB/index/pool behavior, queues/backpressure, circuits, restart/warm-start, environment/config failure and protected-session reserve.
 
 ### G9 — Cross-Module / UI / UX
-Audit affected surfaces across canonical role compositions and supported viewports. Direct-route/API authorization must match UI visibility. No blank role gaps, clipping/overlap, hidden privileged payload or duplicated deep-evidence surfaces. Where applicable, account export/deactivation/deletion, device revocation and privacy-status UX must be truthful and role-aware.
+Audit all REQUIRED clients. Responsive/native interaction differences are allowed; functionality, state meaning, role composition, explanations, source/freshness truth and direct-route/API authorization may not materially drift. No clipping/overlap/hidden privileged payload.
 
 ### G10 — Pre-Freeze Qualification
-Authoritative full coverage reconciliation. Every requirement is freshly evidenced or explicitly inherited from equivalent evidence. Any unresolved P0 security/tenant/product-entitlement/provider-right/privacy/environment/supply-chain/recovery/compatibility/duplicate-owner issue blocks freeze.
+Authoritative reconciliation. Any unresolved P0 security/privacy/rights/environment/supply-chain/recovery/compatibility/duplicate-owner issue **or material REQUIRED-platform parity gap** blocks freeze.
 
 ### G11 — Immutable Release Candidate
-Freeze exact source/fingerprint and candidate provenance.
+Freeze exact source/fingerprint plus required-platform matrix.
 
 ### G12 — Full Certification
-Replay mandatory system-wide certification on immutable RC. No source mutation.
+Replay mandatory system-wide certification on immutable RC.
 
 ### G13 — Native/Hosted Packaging / Provenance
-Produce required native and hosted artifacts from certified RC with hashes/provenance; no hidden rebuild divergence. Hosted releases include deployment identity and applicable component/SBOM/attestation evidence sufficient to trace source -> build -> artifact -> environment.
+Produce required macOS/Windows artifacts and Web/server deployments from certified source with hashes/provenance. No hidden rebuild divergence.
 
 ### G14 — Actual Artifact Runtime Audit
-Validate macOS Apple Silicon and Windows x64 independently where affected. For hosted scope, validate the actual deployed artifact/config/environment identity and trust boundaries. Preserve an unchanged platform PASS only when exact RC/package/deployment identity and relevant assumptions remain equivalent.
+Validate actual macOS Apple Silicon and Windows x64 artifacts where REQUIRED, plus actual Web/hosted deployment where REQUIRED. A PASS on one client cannot substitute for another REQUIRED client.
 
 ### G15 — Release Assurance / Promotion
-Consume the complete evidence graph. Hosted/high-risk changes use bounded/canary/progressive activation or equivalent controls where applicable, with explicit application/configuration/environment/dependency rollback or kill-switch readiness.
+A shared capability cannot be GA/Delivered until every REQUIRED client passes. Canary/bounded cohorts may be used across the release, but platform lag is not normal canary strategy. Rollback/kill-switch readiness remains mandatory where applicable.
 
 ### G16 — Adaptive Retrospective / Handoff
-Deep implementation-miss review, incident/failure classification, calls/reruns avoided, tenant/provider cost/usefulness metrics where applicable, privacy/data-lifecycle and supply-chain findings, obsolete machinery cleanup, scorecards, corrective learning and exact next release. Handoff/issues must agree with executable evidence.
+Review implementation misses, incidents, parity drift, calls/reruns avoided, cost/usefulness, privacy/supply-chain findings, cleanup and exact next release. Handoff/issues must state any temporary platform waiver explicitly; silent parity debt is forbidden.
 
 ## 4. Failure classification and recovery
 
@@ -155,164 +123,126 @@ Classify before rerun:
 
 On failure:
 
-`inspect actual state -> identify smallest affected package -> preserve unrelated PASS evidence -> repair -> rerun affected/dependent work only -> continue`
+`inspect actual state -> identify smallest affected owner/adapter -> preserve unrelated PASS evidence -> repair -> rerun affected/dependent work only -> continue`
 
-Never weaken a gate to make a candidate green. Repeated incidents become regressions/preflight controls where useful.
+Never weaken a gate or drop a REQUIRED platform to make a candidate green.
 
 ## 5. CI/resource efficiency
 
-- one logical Build Coordinator owns authoritative release state;
+- one logical Build Coordinator owns release state;
 - one product branch + PR per patch;
 - no retry/certification branch families;
-- coherent source/test batch before PR;
+- shared domain fixtures/contracts once, platform-adapter tests where they differ;
 - exact-head FAST once per coherent candidate, Qualified once when ready, one G11-G16 release when release-capable;
-- share fixtures/canonical evidence/provider acquisition across independent lanes;
-- deterministic replay/cached evidence when live behavior is not under test;
-- true provider/model calls only when live behavior must be certified;
-- metadata/checkpoint-only changes do not wake full product qualification when fingerprints/contracts are unchanged;
-- superseded runs stop consuming authoritative status/resources.
+- metadata/checkpoint-only changes do not wake full qualification when fingerprints/contracts are equivalent;
+- superseded runs stop consuming resources.
 
 ## 6. Protected-session execution contract
 
-The canonical U.S. market calendar/session owner defines protected sessions.
-
-**Pre-market, regular market and after-hours** always outrank maintenance and background synchronization.
-
-During protected sessions:
-- live/current intelligence has first provider/runtime/DB/network/worker claim;
-- maintenance/sync uses bounded surplus capacity only;
-- low-priority external acquisition suspends unless directly required by a live consumer;
-- heavy reconciliation/compaction/backfill is prohibited;
-- maintenance/sync is preemptible/checkpointed and yields promptly to current work/market shock.
-
-Missed maintenance/sync catch-up waits for an eligible bounded window; it cannot flood a protected session.
+Pre-market, regular market and after-hours always outrank maintenance/background sync. Live/current intelligence has first provider/runtime/DB/network/worker claim. Maintenance/sync uses bounded surplus capacity, is checkpointed/preemptible and cannot flood protected sessions.
 
 ## 7. v18.9.x process sequence
 
-1. `v18.9.1` runtime crash
-2. `v18.9.2` TradeInsight Settings/API-key UX
-3. `v18.9.3` coverage-aware persistence-first Smart Provider Router
-4. `v18.9.4` canonical company/instrument identity
-5. `v18.9.5` Market Data Modes/capability diagnostics
-6. `v18.9.6` provider observability/Adaptive telemetry
-7. `v18.9.7` TradeInsight Form 4 SHADOW enrichment
-8. `v18.9.8` TradeInsight symbol/company search
-9. `v18.9.9` TradeInsight movers/ranking SHADOW evidence
-10. `v18.9.10` remaining useful capability admission
-11. `v18.9.11` session-aware Data Readiness Maintenance
-12. `v18.9.12` professional closure audit
+1. `v18.9.1` runtime crash — macOS-specific corrective.
+2. `v18.9.2` TradeInsight Settings/API-key UX.
+3. `v18.9.3` coverage-aware persistence-first Smart Provider Router.
+4. `v18.9.4` canonical company/instrument identity.
+5. `v18.9.5` Market Data Modes/capability diagnostics.
+6. `v18.9.6` provider observability/Adaptive telemetry.
+7. `v18.9.7` TradeInsight Form 4 SHADOW enrichment.
+8. `v18.9.8` TradeInsight symbol/company search.
+9. `v18.9.9` TradeInsight movers/ranking SHADOW evidence.
+10. `v18.9.10` remaining useful capability admission.
+11. `v18.9.11` session-aware Data Readiness Maintenance.
+12. `v18.9.12` professional closure.
 
-**Audit change:** telemetry moved before provider capability expansion so subsequent SHADOW usefulness/promotion is measurable.
+Shared native capabilities remain canonical and equivalent across supported native clients where applicable; Web becomes a REQUIRED client for shared product work once the v19 cross-platform client foundation lands.
 
 ## 8. v19 process sequence
 
 ### v19.0.x — Governance / Control Plane / Data Foundation
-Mandatory order:
-1. `v19.0.0` provider capability/legal-rights registry;
+1. `v19.0.0` provider legal-rights registry;
 2. `v19.0.1` tenant/identity/device/session control plane;
-3. `v19.0.2` DE.PULSE product entitlement/metering policy;
+3. `v19.0.2` product entitlement/metering policy;
 4. `v19.0.3` account data governance/privacy lifecycle;
 5. `v19.0.4` hosted environment/IaC/service-trust foundation;
-6. `v19.0.5` PostgreSQL tenancy/schema/pool/HA/PITR foundation;
+6. `v19.0.5` PostgreSQL tenancy/schema/pool/HA/PITR;
 7. `v19.0.6` managed secrets/KMS;
 8. `v19.0.7` software supply-chain/artifact/dependency assurance;
-9. `v19.0.8` provider quality/cost/coverage/SLO scorecards;
-10. `v19.0.9` reconciliation/revision/point-in-time data quality.
+9. `v19.0.8` provider SLO/cost/coverage scorecards;
+10. `v19.0.9` reconciliation/revision/point-in-time quality.
 
-No broad hosted provider/sync activation until required tenant/security/rights/product-entitlement/privacy/environment/recovery/secrets/supply-chain foundations pass.
+### v19.1.x — Hosted Data Plane + Cross-Platform Account/Sync
+1. `v19.1.0` zero-key Hosted Provider Gateway;
+2. `v19.1.1` unified serving policy/live fan-out;
+3. `v19.1.2` sync protocol foundation;
+4. `v19.1.3` **Mac + Windows + Web account/session client foundation**;
+5. `v19.1.4` **Mac + Windows + Web preferences/watchlists**;
+6. `v19.1.5` **Mac + Windows + Web desks/workspaces**.
 
-### v19.1.x — Hosted Data Plane / Sync Foundation
-1. `v19.1.0` authenticated versioned zero-key Provider Gateway using existing Smart Provider Router v2 and v19.0 deployment/provenance foundations;
-2. `v19.1.1` unified serving policy + live fan-out isolation across tenant/RBAC/product-entitlement/provider-right/privacy dimensions;
-3. `v19.1.2` typed sync protocol/bootstrap/outbox/idempotency/change-log/checkpoint/tombstone/compaction/mixed-version contract with privacy/retention semantics;
-4. `v19.1.3` macOS preferences/watchlist pilot + local-account/offline/lost-device/account-deletion behavior;
-5. `v19.1.4` desks/workspaces sync.
+No Mac product pilot exists. Technical single-platform validation is internal only and cannot satisfy phase exit.
 
-### v19.2.x — Cross-Platform Parity / #66 Assurance
-1. `v19.2.0` Windows parity;
-2. `v19.2.1` hosted web parity;
-3. `v19.2.2` rights/privacy-aware research/state portability;
-4. `v19.2.3` tenant-aware metering/cost/usage observability with governed telemetry retention;
-5. `v19.2.4` multi-user security/abuse/noisy-neighbor/capacity/environment hardening;
-6. `v19.2.5` #66 adversarial/failure/recovery/privacy/environment/supply-chain closure audit.
+### v19.2.x — Cross-Platform Shared Product + Assurance
+1. `v19.2.0` **Mac + Windows + Web Research/durable state**;
+2. `v19.2.1` **Mac + Windows + Web Market Intelligence/Discovery/Market Modes**;
+3. `v19.2.2` **Mac + Windows + Web Settings/RBAC/product-entitlement UX**;
+4. `v19.2.3` tenant-aware metering/cost/usage observability;
+5. `v19.2.4` mixed-client security/abuse/noisy-neighbor/capacity hardening;
+6. `v19.2.5` #66 cross-platform adversarial/failure/recovery closure.
 
 ### v19.3.x — Point-in-Time Evidence
 1. `v19.3.0` institutional/13F infrastructure;
 2. `v19.3.1` two-sided Long/Short evidence substrate;
 3. `v19.3.2` AODR candidate/ranking/outcome lineage.
 
+Any user-facing capability follows lockstep delivery.
+
 ### v19.4.x — Reliability / Economics / Readiness
-1. `v19.4.0` ADR-GDI professional reliability/capacity + operational runbook readiness including privacy/environment/supply-chain incidents;
+1. `v19.4.0` ADR-GDI reliability/capacity/runbooks;
 2. `v19.4.1` specialized/paid-provider gap evaluation;
 3. `v19.4.2` v20 research-readiness audit.
 
 ### v19.5.0 — Major Closure
-No feature scope. Full privacy/data/security/tenant/product-entitlement/provider-right/environment/IaC/supply-chain/operational/commercial/hosted/account/package zero-miss closure.
+No feature scope. Zero unresolved P0 and zero material cross-platform parity debt for shared capabilities.
 
 ## 9. #66 hosted/sync process requirements
 
-#66 is executable architecture scope, not a documentation project.
+#66 is executable architecture scope, not documentation. Mac, Windows and Web consume the same account, authorization, provider, state and intelligence truth. Native offline mechanics may differ from Web, but semantic equivalence is required.
 
 Canonical serving path:
 
-`authenticated tenant/user/device -> RBAC -> DE.PULSE product entitlement -> provider legal/data rights -> privacy/data-governance policy -> canonical cache/persistence/freshness -> exact residual need -> Smart Provider Router v2 -> server-side provider credential -> authorized projection/fan-out`
+`authenticated tenant/user/device -> RBAC -> product entitlement -> provider rights -> privacy policy -> canonical cache/persistence/freshness -> residual need -> Smart Provider Router v2 -> server-side credential -> authorized projection`
 
-Sync path:
+Sync/state path:
 
-`SQLite local mutation + atomic outbox -> authenticated idempotent server apply -> PostgreSQL authoritative revision/change sequence -> incremental pull -> transactional SQLite apply -> checkpoint advance`
+`native SQLite mutation + outbox / Web hosted mutation -> authenticated idempotent server apply -> PostgreSQL authoritative revision/change sequence -> authorized client projection/checkpoint`
 
-Required controls:
-- first-class tenant/account identity on hosted requests/data/metrics;
-- server-side zero-key customer model;
-- canonical roles/capabilities + revocation;
-- separate product-plan entitlement/quota policy;
-- separate provider legal/data rights enforcement;
-- separate privacy/data-governance lifecycle enforcement;
-- data inventory/classification/minimization/retention/export/deactivation/deletion/residency disposition;
-- entitlement/right/privacy-aware cache/live fan-out;
-- stable IDs/revisions/tombstones;
-- new-device bootstrap + stale-checkpoint re-bootstrap;
-- retention/compaction/inactive-device behavior;
-- local account isolation/lost-device behavior;
-- environment isolation/IaC/service identities/network/TLS/config drift/reproducible deployment;
-- secret lifecycle/rotation/compromise recovery;
-- dependency/component inventory, vulnerability scanning, SBOM where applicable, source/license policy and artifact/deployment provenance;
-- API inventory/version/deprecation policy;
-- mixed-version sync protocol;
-- PostgreSQL HA/PITR/restore/migration safety;
-- tenant-aware usage/cost/health/abuse telemetry with governed retention;
-- noisy-neighbor/fairness/resource controls;
-- failure injection and recovery proof;
-- no raw SQLite/PostgreSQL dual-master replication;
-- no parallel provider/router/subscription/freshness/persistence/session owner.
+No raw DB replication, no client-specific provider/router/session truth and no platform-specific business logic fork.
 
 ## 10. v20 process sequence
 
 ### v20.0.x — Control & Governance
-1. adaptive research/experiment ledger;
-2. model/prompt governance + Champion/Challenger **before broad adaptive rollout**;
-3. historical analogues/regime outcomes;
-4. calibration/FP-FN/miss/contradiction/drift.
+Research/experiment ledger, then model/prompt governance + Champion/Challenger, then analogue/calibration work.
 
 ### v20.1.x — ASBI
 Behavioral fingerprints/state transitions, then scenarios/probability momentum/calibration.
 
 ### v20.2.x — Institutional + TDTI
-Adaptive 13F, then competing Long/Short/No Reliable Edge, then two-sided trade-plan validation.
+Adaptive 13F, competing Long/Short/No Reliable Edge, two-sided trade-plan validation.
 
 ### v20.3.x — AODR
-Shared opportunity ranking, then diversity/opportunity-cost/personalized relevance after shared truth.
+Shared opportunity ranking, then diversity/opportunity-cost/personal relevance after shared truth.
 
 ### v20.4.x — Adaptive Operations
-ADR-GDI adaptive provider/recovery/workload/maintenance/reserve optimization remains SHADOW/Champion-Challenger until explicit promotion.
+ADR-GDI adaptive optimization remains SHADOW/Champion-Challenger until explicit promotion.
 
 ### v20.5.0 — Professional Closure
-No feature scope. Calibrated utility, abstention, deterministic-boundary protection, privacy/security/data rights, reproducibility/rollback, actual artifacts and No Execution.
+No feature scope. Cross-platform parity is mandatory for every shared adaptive user-facing capability. No Execution remains permanent.
 
 ## 11. Permanent owners / boundaries
 
-Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state owners; canonical U.S. market calendar/session owner; direct SEC/EDGAR authoritative; canonical tenant/identity/role/capability truth; deterministic Day/Swing/Long protected; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
+Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state/session/calendar/identity owners; direct SEC/EDGAR authoritative; deterministic Day/Swing/Long protected; U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution.
 
 ## Exactly one next action
 
-Run #64 / `v18.9.1` G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before any product-source change. Do not start `v18.9.2` or any v19 implementation branch until current release ordering permits it.
+Run #64 / `v18.9.1` G0 from complete macOS crash evidence or deterministic reproduction and freeze the narrow G1 before product-source change. Do not start `v18.9.2` or v19 implementation until ordering permits it.
