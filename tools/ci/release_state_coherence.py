@@ -232,6 +232,23 @@ def collect_errors(
         elif stable_candidate and existing_stable != stable_candidate:
             errors.append(f'IMMUTABLE_STABLE_TAG_CONFLICT: {stable_tag} -> {existing_stable}, expected {stable_candidate}')
 
+    if current_version:
+        g12_manifest_path = root / 'release' / f'v{current_version}' / 'certification-manifest.json'
+        if not g12_manifest_path.is_file():
+            errors.append(f'G12_MANIFEST_MISSING: {g12_manifest_path.relative_to(root).as_posix()}')
+        else:
+            g12_manifest = read_json(g12_manifest_path, errors, 'G12_MANIFEST_UNREADABLE')
+            if g12_manifest:
+                add_mismatch(errors, 'G12_MANIFEST_SCHEMA_MISMATCH', str(g12_manifest.get('schema', '')), 'DE.PULSE-G12-EVIDENCE-MANIFEST-1')
+                add_mismatch(errors, 'G12_MANIFEST_VERSION_MISMATCH', str(g12_manifest.get('productVersion', '')), current_version)
+                if not str(g12_manifest.get('workSliceId', '')).strip():
+                    errors.append('G12_MANIFEST_WORK_SLICE_MISSING: workSliceId is required')
+                if not isinstance(g12_manifest.get('evidenceSchemaVersion'), int):
+                    errors.append('G12_MANIFEST_EVIDENCE_SCHEMA_INVALID: evidenceSchemaVersion must be an integer')
+        canonical_executor = root / 'tools' / 'release' / 'run_full_certification.py'
+        if not canonical_executor.is_file():
+            errors.append('G12_CANONICAL_EXECUTOR_MISSING: tools/release/run_full_certification.py')
+
     target_tag = f'v{current_version}-stable' if current_version else ''
     target_action = 'NOT_EVALUATED'
     if target_tag:
@@ -246,9 +263,6 @@ def collect_errors(
             else:
                 target_action = 'CONFLICT'
                 errors.append(f'TARGET_TAG_CONFLICT: {target_tag} -> {existing_target}, candidate={g11_candidate_sha}')
-            scaffold = root / 'release' / f'v{current_version}' / 'run_full_certification.sh'
-            if not scaffold.is_file():
-                errors.append(f'RELEASE_SCAFFOLD_MISSING: {scaffold.relative_to(root).as_posix()}')
         elif current_semver and stable_semver and current_semver > stable_semver and existing_target:
             target_action = 'CONFLICT'
             errors.append(f'TARGET_TAG_ALREADY_EXISTS: next-release target {target_tag} -> {existing_target}')
@@ -282,7 +296,7 @@ def main() -> int:
             g11_candidate_sha = proc.stdout.strip()
     result = collect_errors(args.root.resolve(), g11_candidate_sha=g11_candidate_sha)
     payload = {
-        'schema': 'DE.PULSE-RELEASE-STATE-COHERENCE-1',
+        'schema': 'DE.PULSE-RELEASE-STATE-COHERENCE-2',
         'status': 'PASS' if not result.errors else 'FAIL',
         'stableRelease': result.stable_release,
         'stableTag': result.stable_tag,
@@ -290,6 +304,7 @@ def main() -> int:
         'currentVersion': result.current_version,
         'targetTag': result.target_tag,
         'targetTagAction': result.target_tag_action,
+        'canonicalG12Executor': 'tools/release/run_full_certification.py',
         'errors': result.errors,
     }
     if args.json_out:
@@ -305,6 +320,7 @@ def main() -> int:
     print(f'certified Stable: {result.stable_tag} -> {result.stable_candidate}')
     print(f'current release identity: {result.current_version}')
     print(f'target tag state: {result.target_tag_action} ({result.target_tag})')
+    print('canonical G12 executor + declarative manifest: PASS')
     return 0
 
 
