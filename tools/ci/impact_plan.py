@@ -23,6 +23,7 @@ PROCESS_ONLY_EXACT = {
     "CLAUDE.md",
 }
 STABLE_EVIDENCE_RE = re.compile(r"^release/v[^/]+/stable-evidence-manifest\.json$")
+ACTIVE_RELEASE_BROWSER_TEST_RE = re.compile(r"^release/v[^/]+/browser_[^/]+_test\.py$")
 
 FAILURE_TAXONOMY = (
     "PRODUCT_FAIL",
@@ -46,14 +47,20 @@ CHANGE_CLASSES = (
     "CERTIFICATION_GOVERNANCE",
 )
 
+RENDERER_EVIDENCE_FILES = {
+    "tools/ci/deterministic_equivalence_test.js",
+}
 WEBKIT_EVIDENCE_FILES = {
+    "tools/ci/webkit_browser_test.py",
     "tools/ci/webkit_targeted_test.py",
     "tools/ci/browser_risk_routing_gate.py",
+}
+CAPABILITY_EVIDENCE_FILES = RENDERER_EVIDENCE_FILES | {
+    "tools/ci/webkit_browser_test.py",
 }
 NATIVE_MACOS_FILES = {
     "tools/release/native_macos.sh",
     "desktop_lifecycle.go",
-    "tools/ci/webkit_targeted_test.py",
     "v18_9_1_desktop_lifecycle_test.go",
 }
 NATIVE_WINDOWS_FILES = {
@@ -106,6 +113,8 @@ def resolve_base(base: str, head: str, target_ref: str) -> tuple[str, str]:
 
 
 def is_process_only(path: str) -> bool:
+    if path in CAPABILITY_EVIDENCE_FILES:
+        return False
     if STABLE_EVIDENCE_RE.fullmatch(path):
         return True
     return path in PROCESS_ONLY_EXACT or path.startswith(PROCESS_ONLY_PREFIXES)
@@ -129,7 +138,12 @@ def explicit_classes(path: str) -> set[str]:
     if path.startswith(("adaptive-governance/", "governance/", "handoff/", ".depulse-certification/")):
         classes.add("CERTIFICATION_GOVERNANCE")
 
-    if path.startswith(("renderer/", "tests/renderer/", "tests/browser/")) or path.endswith((".html", ".css")):
+    if (
+        path.startswith(("renderer/", "tests/renderer/", "tests/browser/"))
+        or path.endswith((".html", ".css"))
+        or path in RENDERER_EVIDENCE_FILES
+        or ACTIVE_RELEASE_BROWSER_TEST_RE.fullmatch(path)
+    ):
         classes.add("RENDERER_UI")
     if path.endswith(".go") or path in {"go.mod", "go.sum"}:
         classes.add("BACKEND")
@@ -187,6 +201,8 @@ def adaptive_requirements(changed: list[str]) -> dict[str, object]:
         qualified_lane = "ci-harness"
     elif renderer_required and not backend_required and not security_rights_required and not db_integration_required:
         qualified_lane = "renderer"
+    elif (chrome_required or webkit_required) and not backend_required and not security_rights_required and not db_integration_required:
+        qualified_lane = "browser"
     elif backend_required and not renderer_required and not chrome_required and not webkit_required:
         qualified_lane = "backend"
     else:
