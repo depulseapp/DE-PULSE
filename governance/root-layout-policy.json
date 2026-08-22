@@ -16,10 +16,7 @@
     "CLAUDE.md",
     "README.md"
   ],
-  "retainedRootVersionMajors": [
-    17,
-    18
-  ],
+  "retainedRootVersionMajors": [17, 18],
   "preRetainedVersionDisposition": "DELETE_FROM_CURRENT_ROOT_AFTER_ACTIVE_PRODUCTION_LOGIC_IS_MIGRATED_TO_CAPABILITY_OWNER",
   "historicalReleaseEvidenceRule": "Current-root cleanup never rewrites or deletes shipped Git history, Stable tags, published releases, or immutable release evidence.",
   "grandfatherExistingBaselineRootFiles": true,
@@ -45,27 +42,24 @@
     },
     "performance_regression_test.go": {
       "owner": "ADAPT-CI-CONVERGENCE-001 / product performance regression evidence",
-      "reason": "The retired pre-v17 v16.8 and v16.10 performance gates carried four material 500-symbol/candidate runtime and allocation ceilings. They are preserved under a version-neutral package test owner so Fast and Qualified full Go suites continue to enforce them without restoring legacy version-named files.",
+      "reason": "The retired pre-v17 v16.8 and v16.10 performance gates carried material 500-symbol/candidate runtime and allocation ceilings plus v16.11 long-run capacity assertions. They are preserved under a version-neutral package-test owner so Fast and Qualified full Go suites continue to enforce them without restoring legacy version-named files.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
       "removalCondition": "Move the bounded performance assertions with their implementation capability during package decomposition; do not remove the ceilings unless equivalent current performance evidence remains executable."
     },
     "retired_equivalence_regression_test.go": {
       "owner": "ADAPT-CI-CONVERGENCE-001 / specialized retired-test behavior equivalence",
-      "reason": "Version-neutral package tests preserve specialized behavioral assertions from policy-retired pre-v17 families when generic full-suite execution alone cannot prove semantic equivalence. This owner is assertion-level evidence, not a compatibility wrapper or restored legacy version file.",
+      "reason": "Version-neutral package tests preserve specialized event/macro/news assertions from policy-retired pre-v17 families when generic full-suite execution alone cannot prove semantic equivalence. This owner is assertion-level evidence, not a compatibility wrapper or restored legacy version file.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
       "removalCondition": "Move each preserved assertion with its final capability package/test owner during decomposition and update the retired-test evidence bindings atomically; no assertion may disappear merely because its original version-named source was retired."
+    },
+    "signal_intelligence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / signal-validation intelligence equivalence",
+      "reason": "Version-neutral package tests preserve the retired signal outcome-ordering, frozen evidence identity, split-adjusted outcome, seasonality, calibration and correlation/concentration assertions that generic full-suite execution did not independently prove.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move these assertions with the final signal-validation/market-intelligence capability package and update retired-test bindings atomically; preserve all outcome, seasonality, calibration and concentration semantics."
     }
   },
-  "requiredTopLevelDirectories": [
-    ".github",
-    "adaptive-governance",
-    "governance",
-    "handoff",
-    "release",
-    "renderer",
-    "tests",
-    "tools"
-  ],
+  "requiredTopLevelDirectories": [".github", "adaptive-governance", "governance", "handoff", "release", "renderer", "tests", "tools"],
   "forbiddenNewRootVersionPrefixPattern": "^v[0-9]+(?:[_\\.][0-9]+)*[_-]",
   "safeRemovalRule": "Pre-v17 version-scoped current-root artifacts are explicitly retired by ADAPT-CI-CONVERGENCE-001; all other deletion still requires assertion/evidence mapping."
 }
