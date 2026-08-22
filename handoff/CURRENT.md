@@ -12,15 +12,18 @@
 **Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
 **Active product branch/PR:** `v18.9.1-development` / Draft PR #69  
 **Active corrective scope:** #64 / `ADAPT-RUNTIME-CRASH-001` / `v18.9.1`  
+**Approved mandatory next process-hardening workstream:** #70 / `ADAPT-CI-CONVERGENCE-001`  
 **Governance alignment PR:** #67 merged  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`
 
 ## Immediate execution rule
 
-Do not start v18.9.2 or v19 implementation until #64 / v18.9.1 is truthfully closed. First refetch live `main`, `v18.9.1-development`, PR #69, issue #64 and current comments because concurrent sessions/processes may advance the branch.
+Do not start the next product capability until #64 / v18.9.1 is truthfully closed **and** #70 CI/versioning convergence has been executed/re-baselined as required below.
 
-Do **not** restart G0. G0 deterministic reproduction is complete and the canonical macOS native-window root cause is isolated. Continue from the exact current branch/PR state and the current qualification blocker described below.
+First re-fetch live `main`, `v18.9.1-development`, PR #69, issue #64/comments and issue #70 because concurrent sessions/processes may advance governance or source.
+
+Do **not** restart #64 G0. Deterministic reproduction is complete and the canonical macOS native-window root cause is isolated. Continue from the exact current branch/PR state and qualification blocker.
 
 ## v18.9.1 current execution state
 
@@ -28,11 +31,11 @@ The canonical v18.9.0 package audit proved the Stable artifact uses `DePulseLaun
 
 Qualified #157 (`32541591746`) executed the real packaged macOS JXA/Cocoa/WKWebView path on macOS 15.7.7 Apple Silicon with pinned Go 1.26.6. Packaged backend/readiness/root and SQLite migrations `[1,2,3,4]` passed, then the native JXA child failed with `protocol does not exist (-2700)`. The only explicit protocol lookup was formal `protocols:['NSApplicationDelegate']` in the JXA registered subclass.
 
-The v18.9.1 corrective candidate therefore removes only that unnecessary formal protocol declaration while preserving the NSObject delegate selectors and `app.delegate=delegate` behavior. The existing macOS packaging and WebKit qualification owners are hardened rather than replaced.
+The v18.9.1 corrective candidate removes only that unnecessary formal protocol declaration while preserving the NSObject delegate selectors and `app.delegate=delegate` behavior. Existing macOS packaging and WebKit qualification owners are hardened rather than replaced.
 
-Implementation head immediately before this handoff-only update: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`. Re-fetch the branch before relying on that SHA.
+Last runtime/test/harness implementation head before governance/handoff-only updates: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`. Re-fetch the branch before relying on any current head SHA.
 
-Current implementation includes:
+Current corrective implementation includes:
 - root-cause JXA correction in `desktop_lifecycle.go`;
 - `macOSWindowScript(...)` extraction plus `v18_9_1_desktop_lifecycle_test.go` regression coverage preventing formal `NSApplicationDelegate` reintroduction while protecting Cocoa/WebKit/delegate/url/icon behavior;
 - canonical executable identity checks (`DePulseLauncher`, `DePulse-arm64`, legacy `Contents/MacOS/De-Pulse` absent);
@@ -48,11 +51,11 @@ Current implementation includes:
 
 Last executable Fast: #557 (`32541805955`) on earlier head `89c95e4ae156cd77d66cfbd96d3911375fdee940` — PASS including gofmt, go vet and full Go suite.
 
-Later source/test/harness hardening moved the branch beyond that SHA. Current-head Fast/Qualified attempts subsequently fail **before runner execution** with `steps=null`, including Fast #559/#560/#565/#566 and controlled required-lane retries. This is classified `INFRA_FAIL`, not product-test failure. Therefore the current branch head is **not claimed Fast- or Qualified-passed**.
+Later source/test/harness hardening moved the branch beyond that SHA. Current-head Fast/Qualified attempts subsequently failed **before runner execution** with `steps=null`, including Fast #559/#560/#565/#566 and controlled required-lane retries. This is classified `INFRA_FAIL`, not product-test failure. Therefore the current branch is **not claimed Fast- or Qualified-passed**.
 
-Do not burn repeated Actions retries while zero-step failures persist. The connected repository API cannot prove the account-level reason for hosted-runner refusal. Public GitHub status was operational when checked; private-repository usage/budget/payment/quota constraints remain a possible but unproven account-specific class.
+Do not burn repeated Actions retries while zero-step failures persist. The connected repository API cannot prove the account-level reason for hosted-runner refusal.
 
-### Mandatory resume sequence once runner execution is available
+### Mandatory v18.9.1 resume sequence once runner execution is available
 
 1. Re-fetch live `main`, development branch head, PR #69 and #64 comments.
 2. Confirm no concurrent source changes invalidate the frozen v18.9.1 scope.
@@ -64,9 +67,62 @@ Do not burn repeated Actions retries while zero-step failures persist. The conne
 
 `ADAPT-RUNTIME-CRASH-001` remains **OPEN / NOT CLOSED**.
 
+## Mandatory post-v18.9.1 checkpoint — #70
+
+#70 / `ADAPT-CI-CONVERGENCE-001` is approved and is now part of the Adaptive Roadmap, Build Plan, Build Process and Delivery Process.
+
+It is a **process/release-engineering workstream, not a product feature/version**. It executes immediately after truthful v18.9.1 closure and before the next product implementation so DE.PULSE does not continue accumulating version-specific CI/release machinery.
+
+Canonical detailed contract:
+`adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md`
+
+Required direction:
+- keep exactly three routine workflows: Fast, Qualified, Release;
+- Planner v3 dependency-aware job/evidence selection with fail-closed full fallback;
+- manual/reusable runs bind trustworthy full-delta base/merge-base;
+- targeted native rehearsal inside Qualified, with WebKit/browser and native-lifecycle ownership separated while canonical packaging scripts are reused;
+- one canonical version-neutral G12 executor plus declarative release/capability manifests;
+- incremental migration of active version-named tests to capability-oriented paths with equivalence proof;
+- early G11 version/predecessor/tag/publication-feasibility checks before expensive certification/native work;
+- Stable asset digest immutability and repository-wide release serialization;
+- verify/harden actual repository rulesets/branch protection;
+- separate public product version, work-slice ID, candidate SHA/fingerprint, build ID, evidence schema and monotonic platform build number;
+- make a prospective SemVer-vs-explicit-custom versioning decision without rewriting shipped history;
+- canonical toolchain identity plus final runnable-artifact provenance/attestation/SBOM at the supply-chain milestone;
+- converge handoff and CURRENT Adaptive overlays on one actual current-state truth;
+- G16 reports runner minutes/reruns avoided and proves no quality evidence was removed.
+
+## Version/release planning rule after #70
+
+Do **not** make every independently governed work slice or CI build a public version.
+
+Preferred model:
+
+`work slice -> commits -> Fast -> deliberate Qualified checkpoint -> exact candidate SHA/fingerprint -> optional coherent release grouping -> one public product version -> one canonical G11-G16/native publication`
+
+Current post-v18.9.1 `v18.9.2` ... `v18.9.12` labels are planning reservations pending #70. Preserve their dependency/work-slice intent; #70 may regroup future public releases prospectively. Shipped versions/tags/evidence remain immutable.
+
+## Remaining v18 product dependency order after #70
+
+1. TradeInsight Settings/API-key UX — currently reserved `v18.9.2`
+2. Coverage-aware Smart Provider Router — reserved `v18.9.3`
+3. Canonical company/instrument identity — reserved `v18.9.4`
+4. Market Data Modes/capability diagnostics — reserved `v18.9.5`
+5. Provider observability/Adaptive telemetry — reserved `v18.9.6`
+6. TradeInsight Form 4 SHADOW enrichment — reserved `v18.9.7`
+7. TradeInsight symbol/company search — reserved `v18.9.8`
+8. TradeInsight movers/ranking SHADOW evidence — reserved `v18.9.9`
+9. Remaining useful capability admission — reserved `v18.9.10`
+10. Session-Aware Data Readiness Maintenance — reserved `v18.9.11`
+11. Professional Closure — reserved `v18.9.12`
+
+Dependency order remains authoritative even if future public release grouping changes.
+
 ## Permanent release philosophy
 
-Small dependency-ordered patches, one primary responsibility each, G0-G16 only, canonical owners reused, observability before broad capability admission, point-in-time evidence before adaptive learning, model/prompt governance before broad adaptive influence, and durable issue/handoff truth.
+Small dependency-ordered work slices, one primary responsibility each, G0-G16 only, canonical owners reused, observability before broad capability admission, point-in-time evidence before adaptive learning, model/prompt governance before broad adaptive influence, and durable issue/handoff truth.
+
+Release engineering follows the same rule: reuse/consolidate permanent workflow and test owners, remove duplicate/version-specific machinery only after equivalence proof, and optimize runner cost through dependency awareness/evidence reuse rather than reduced assurance.
 
 ## Permanent Cross-Platform Lockstep Rule
 
@@ -77,21 +133,6 @@ For every shared capability G1 freezes Mac/Windows/Web as REQUIRED or justified 
 A single platform may be used for diagnosis/technical validation, but there is **no product pilot** and no normal `Mac -> Windows -> Web catch-up` sequence. Shared capability GA/Delivered state and G10/G15 require all REQUIRED clients. No next shared domain begins while material parity debt remains. Temporary exceptions require an external blocker, waiver/expiry, no misleading GA claim and a named recovery release.
 
 Platform-specific corrective work is valid where the defect itself is platform-specific; #64/v18.9.1 is the current example.
-
-## Ordered v18.9.x train
-
-1. `v18.9.1` runtime crash corrective
-2. `v18.9.2` TradeInsight Settings/API-key UX
-3. `v18.9.3` coverage-aware Smart Provider Router
-4. `v18.9.4` canonical company/instrument identity
-5. `v18.9.5` Market Data Modes/capability diagnostics
-6. `v18.9.6` provider observability/Adaptive telemetry
-7. `v18.9.7` TradeInsight Form 4 SHADOW enrichment
-8. `v18.9.8` TradeInsight symbol/company search
-9. `v18.9.9` TradeInsight movers/ranking SHADOW evidence
-10. `v18.9.10` remaining useful capability admission
-11. `v18.9.11` Session-Aware Data Readiness Maintenance
-12. `v18.9.12` Professional Closure
 
 ## Provider/persistence contract
 
@@ -114,59 +155,35 @@ Hosted serving keeps five dimensions separate:
 
 ## Planned v19 train — current authority
 
+Entry requires v18 native/data-plane closure plus #70 PASS.
+
 ### v19.0.x — Hosted Foundations
-- `v19.0.0` provider legal-rights registry
-- `v19.0.1` tenant/identity/device/session control plane
-- `v19.0.2` product entitlement/metering policy
-- `v19.0.3` account data governance/privacy lifecycle
-- `v19.0.4` hosted environment/IaC/service trust
-- `v19.0.5` PostgreSQL tenancy/schema/pool/HA-PITR
-- `v19.0.6` managed secrets/KMS
-- `v19.0.7` software supply-chain/artifact/dependency assurance
-- `v19.0.8` provider SLO/cost/coverage scorecards
-- `v19.0.9` reconciliation/revision/point-in-time quality
+Provider legal-rights registry; tenant/identity/device/session control plane; product entitlement/metering; account data governance/privacy; hosted environment/IaC/service trust; PostgreSQL HA/PITR; managed secrets/KMS; software supply-chain/artifact/dependency assurance; provider SLO/cost/coverage scorecards; reconciliation/revision/point-in-time quality.
 
 ### v19.1.x — Hosted Data Plane + Cross-Platform Account/State
-- `v19.1.0` Hosted Provider Gateway
-- `v19.1.1` Unified Serving Policy + Live Fan-Out
-- `v19.1.2` Sync Protocol Foundation
-- `v19.1.3` **Mac + Windows + Web Account/Session Client Foundation**
-- `v19.1.4` **Mac + Windows + Web Preferences**
-- `v19.1.5` **Mac + Windows + Web Watchlists/Master Symbols**
-- `v19.1.6` **Mac + Windows + Web Desks/Workspaces**
+Hosted Provider Gateway; Unified Serving Policy + Live Fan-Out; Sync Protocol Foundation; **Mac + Windows + Web** Account/Session, Preferences, Watchlists/Master Symbols and Desks/Workspaces.
 
 ### v19.2.x — Cross-Platform Shared Product + Assurance
-- `v19.2.0` **Mac + Windows + Web Research/Durable State**
-- `v19.2.1` **Mac + Windows + Web Discovery/Opportunity Radar**
-- `v19.2.2` **Mac + Windows + Web Market State/Market Modes/Readiness/Explanations**
-- `v19.2.3` **Mac + Windows + Web Settings/Account/Device Controls**
-- `v19.2.4` **Mac + Windows + Web RBAC/Product-Entitlement UX**
-- `v19.2.5` tenant-aware metering/cost/usage observability
-- `v19.2.6` mixed-client security/abuse/noisy-neighbor/capacity hardening
-- `v19.2.7` **#66 Cross-Platform Assurance Closure**
+**Mac + Windows + Web** Research/Durable State, Discovery/Opportunity Radar, Market State/Modes/Readiness/Explanations, Settings/Account/Device Controls and RBAC/Product-Entitlement UX; tenant-aware metering; mixed-client security/abuse/capacity; #66 Cross-Platform Assurance Closure.
 
 ### v19.3.x — Point-in-Time Evidence
-- `v19.3.0` institutional/13F infrastructure
-- `v19.3.1` two-sided Long/Short evidence substrate
-- `v19.3.2` AODR candidate/ranking/outcome lineage
+Institutional/13F -> Two-sided Long/Short evidence -> AODR lineage.
 
 ### v19.4.x — Reliability / Economics / Readiness
-- `v19.4.0` ADR-GDI professional reliability/capacity/runbooks
-- `v19.4.1` specialized/paid-provider gap evaluation
-- `v19.4.2` v20 research-readiness audit
+ADR-GDI reliability/capacity -> specialized/paid-provider gap evaluation -> v20 research-readiness audit.
 
-### v19.5.0 — v19 Major Closure
+### v19.5.0 — Major Closure
 No feature scope. #66 must PASS with zero material Mac/Windows/Web parity debt plus rights/privacy/security/IaC/supply-chain/API/recovery/SLO/capacity proof.
 
 ## Planned v20 train
 
-`v20.0.x` adaptive control/model governance -> `v20.1.x` ASBI -> `v20.2.x` adaptive Institutional/TDTI -> `v20.3.x` AODR -> `v20.4.0` adaptive operations -> `v20.5.0` Professional Closure.
+`adaptive control/model governance -> ASBI -> adaptive Institutional/TDTI -> AODR -> adaptive operations -> Professional Closure`
 
 Every shared adaptive user-facing capability follows Mac + Windows + Web lockstep. No Execution remains permanent.
 
-## G0-G16 lockstep enforcement
+## G0-G16 lockstep/release enforcement
 
-G1 platform matrix; G2 canonical owner/adapters; G3 one contract + equivalence tests; G4 all REQUIRED implementations; G6 cross-platform integration; G7 equivalent security/data outcomes; G8 mixed-client load; G9 function/meaning equivalence; G10 parity debt blocks freeze; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass; G16 parity-drift audit.
+G1 scope/platform/version disposition; G2 canonical owner/adapters; G3 one contract + equivalence/dependency plan; G4 all REQUIRED implementations; G5/G6 affected evidence with fail-closed uncertainty; G7 equivalent security/data outcomes; G8 mixed-client/runtime/CI efficiency; G9 function/meaning equivalence; G10 parity/evidence sufficiency blocks freeze; G11 exact candidate + publication feasibility; G12 canonical system certification; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass and no differing Stable-byte overwrite; G16 parity/CI-efficiency/provenance/handoff audit.
 
 ## Permanent boundaries
 
@@ -174,4 +191,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution, then re-fetch the exact current `v18.9.1-development` head and run exact-head Fast followed by full Qualified. Do not move PR #69 out of Draft, merge, release, or start v18.9.2 until that evidence passes.
+Restore/confirm GitHub Actions hosted-runner execution, then re-fetch the exact current `v18.9.1-development` head and run exact-head Fast followed by full Qualified. Do not move PR #69 out of Draft, merge or release until that evidence passes. After truthful v18.9.1 closure, execute #70 before any next product implementation.
