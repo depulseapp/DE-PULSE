@@ -46,12 +46,6 @@
       "reason": "Automatic Market Open Prep scheduling is owned by sessionIntelligenceCoordinatorLoop; runMarketOpenPrep remains the execution owner."
     },
     {
-      "path": "tradeinsight_admission_v18_9.go",
-      "name": "tradeInsightCanonicalOwnerDependencies",
-      "disposition": "MOVE_TO_TEST_OR_GOVERNANCE",
-      "reason": "G3 canonical-owner matrix is consumed only by certification tests and should not remain runtime production code."
-    },
-    {
       "path": "internal/vendorcrypto/blake2b/blake2b.go",
       "name": "appendUint32",
       "disposition": "DELETE_UNUSED",
