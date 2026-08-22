@@ -1,0 +1,32 @@
+{
+  "schema": "DE.PULSE-TOOLCHAIN-MANIFEST-1",
+  "go": {
+    "version": "1.26.6",
+    "selectorPolicy": "EXACT_PATCH"
+  },
+  "node": {
+    "version": "24.19.0",
+    "selectorPolicy": "EXACT_PATCH"
+  },
+  "python": {
+    "version": "3.13.15",
+    "selectorPolicy": "EXACT_PATCH"
+  },
+  "playwright": {
+    "version": "1.62.0",
+    "lockFile": "tools/ci/browser-requirements.txt"
+  },
+  "runnerImages": {
+    "linux": "ubuntu-24.04",
+    "macos": "macos-15",
+    "windows": "windows-2025"
+  },
+  "recordResolvedAtRelease": [
+    "go version",
+    "node --version",
+    "python3 --version",
+    "playwright package version",
+    "runner OS/image environment"
+  ],
+  "updateRule": "Toolchain changes are grouped governed dependency-maintenance work and must pass affected Fast/Qualified/native evidence before release use."
+}
