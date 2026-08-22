@@ -1,0 +1,58 @@
+{
+  "schema": "DE.PULSE-V18.9.1-SCOPE-1",
+  "version": "18.9.1",
+  "title": "macOS Native Window Runtime Reliability Corrective",
+  "status": "G1_FROZEN",
+  "scopeId": "ADAPT-RUNTIME-CRASH-001",
+  "issue": 64,
+  "stableBaseline": "v18.9.0-stable",
+  "stableCandidateCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+  "engineeringBaselineCommit": "73aa2a3b1418b7e963bff40d523d4983ba3bfb0d",
+  "platformApplicability": {
+    "macOS": "REQUIRED",
+    "Windows": "N/A — defect and corrective ownership are specific to the macOS JXA/Cocoa/WKWebView adapter; shared product/domain behavior is unchanged",
+    "Web": "N/A — defect and corrective ownership are specific to the macOS native-window adapter; shared product/domain behavior is unchanged"
+  },
+  "scope": [
+    "Correct the reproducible macOS native-window startup failure caused by formal NSApplicationDelegate protocol-name resolution in the JXA Objective-C bridge.",
+    "Retain the existing NSObject delegate selectors and NSApplication delegate assignment while removing the unnecessary formal protocol declaration that fails with 'protocol does not exist (-2700)' on the exercised macOS 15 Apple Silicon runtime.",
+    "Preserve the existing Go backend, local HTTP serving, WKWebView content, SQLite persistence, user state and API-key continuity; no reset/delete-first remediation is allowed.",
+    "Harden the canonical macOS package audit so the exact extracted package executes the real JXA/Cocoa/WKWebView window path rather than only a headless backend launch.",
+    "Require canonical bundle executable identity: CFBundleExecutable=DePulseLauncher, executable DePulse-arm64 present, and legacy Contents/MacOS/De-Pulse absent from the certified artifact.",
+    "Prove fresh native startup, bounded startup dwell, orderly test cleanup and warm relaunch against the same persisted profile on Apple Silicon.",
+    "Bind the actual packaged native-window lifecycle proof into the existing macOS WebKit qualification path and existing G13/G14 package owner; do not create a parallel workflow or packaging subsystem."
+  ],
+  "acceptance": [
+    "Exact-head Fast passes.",
+    "Full exact-head Qualified passes, including backend, renderer, Chrome and WebKit lanes required by the impact plan.",
+    "Actual packaged macOS backend health/readiness/root and SQLite integrity/migrations pass.",
+    "Actual packaged non-headless JXA/Cocoa/WKWebView child remains alive through the startup dwell on a fresh profile.",
+    "The same exact package warm-relaunches successfully using the same persisted profile.",
+    "native-window.log contains no 'protocol does not exist (-2700)' startup failure and no immediate native-window error exit.",
+    "No user state/API-key deletion or silent fatal-error masking is introduced.",
+    "Canonical G11-G16 release flow remains the only promotion path; merge/release requires explicit authorization."
+  ],
+  "outOfScope": [
+    "No TradeInsight Settings/API-key UX.",
+    "No coverage-aware Smart Provider Router work.",
+    "No company/instrument identity, Market Data Modes, provider observability, Form 4, ticker search, movers/ranking or other provider expansion.",
+    "No Windows or Web feature work beyond proving their shared-domain non-impact through normal regression qualification.",
+    "No new provider, router, cache, persistence, scanner, scheduler, SEC, Market Mode or native-window subsystem.",
+    "No Execution, paper trading, order routing, P&L, portfolio or journal features.",
+    "No claim that the canonical JXA exit-status-1 reproduction is the same signature as the original SIGABRT report from a legacy/non-canonical Contents/MacOS/De-Pulse executable without matching crash evidence."
+  ],
+  "rollback": [
+    "Before merge, revert the v18.9.1 branch commits if actual packaged lifecycle qualification disproves the corrective behavior.",
+    "After any authorized release, rollback means reinstalling the immutable prior Stable artifact while preserving the PersonalMarketTerminal data directory; never roll back by deleting user state.",
+    "If a new native error appears, fail qualification and isolate the exact native adapter statement before further correction."
+  ],
+  "permanentBoundaries": [
+    "U.S. Equities Processing only",
+    "No Execution",
+    "Smart Provider Router v2 is sole provider-routing authority",
+    "Canonical freshness/recovery and persistence/state owners remain unchanged",
+    "Direct SEC/EDGAR remains authoritative",
+    "Deterministic Day/Swing/Long market truth remains protected",
+    "GLD/SLV/USO remain actionable tradable exceptions"
+  ]
+}

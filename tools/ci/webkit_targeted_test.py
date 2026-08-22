@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-"""Focused WebKit compatibility proof for renderer/UI-sensitive DE.PULSE changes.
+"""Focused WebKit + native macOS compatibility proof for DE.PULSE.
 
 Chrome and WebKit are the primary browser qualification engines. Chrome keeps
 the broad regression suite; this WebKit proof is the primary compatibility
-counterpart for core cross-engine UI behavior. Other engines remain secondary.
+counterpart for core cross-engine UI behavior. On macOS it also invokes the
+canonical native packaging harness so the actual JXA/Cocoa/WKWebView desktop
+window path is exercised before release instead of only in post-merge G13/G14.
 """
 from __future__ import annotations
 
+import json
+import os
 from pathlib import Path
+import subprocess
+import sys
+import tempfile
+
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -74,6 +82,67 @@ SETTINGS_FIXTURE = """
   </main>
 </div>
 """
+
+
+def native_packaged_window_contract() -> None:
+    """Run the canonical packaged macOS harness on the exact current Git object.
+
+    The v18.9.0 escape happened because G13/G14's packaged launch was headless
+    and never executed desktop_lifecycle.go's JXA/Cocoa/WKWebView path. This
+    pre-release proof is intentionally macOS-only and reuses native_macos.sh so
+    there is still one packaging/runtime owner.
+    """
+    if sys.platform != "darwin":
+        return
+
+    sha = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    fingerprint = subprocess.check_output(
+        [sys.executable, "source_fingerprint.py", "--mode", "git", "--commit", sha],
+        cwd=ROOT,
+        text=True,
+    ).strip()
+    identity = json.loads((ROOT / "release_identity.json").read_text(encoding="utf-8"))
+    out_dir = Path(tempfile.mkdtemp(prefix="depulse-qualified-native-macos-"))
+
+    env = os.environ.copy()
+    env.update(
+        {
+            "DEPULSE_CANDIDATE_SHA": sha,
+            "DEPULSE_SOURCE_FINGERPRINT": fingerprint,
+            "DEPULSE_VERSION": str(identity["version"]),
+            "DEPULSE_BUILD_ID": str(identity["build_id"]),
+            "DEPULSE_OUTPUT_DIR": str(out_dir),
+        }
+    )
+    subprocess.run(
+        ["bash", "tools/release/native_macos.sh"],
+        cwd=ROOT,
+        env=env,
+        check=True,
+    )
+
+    evidence = json.loads((out_dir / "G13-G14-macOS-Apple-Silicon.json").read_text(encoding="utf-8"))
+    checks = evidence.get("checks", {})
+    for key in (
+        "canonicalBundleExecutable",
+        "legacyExecutableAbsent",
+        "actualPackagedBackendLaunch",
+        "actualPackagedNativeWindowLaunch",
+        "nativeWindowStartupDwell",
+        "warmNativeWindowRelaunch",
+        "warmProfileSQLiteReuse",
+        "nativeWindowProtocolResolution",
+        "nativeWindowCleanup",
+    ):
+        assert checks.get(key) == "PASS", (key, evidence)
+
+    print(
+        "PASS: exact packaged macOS artifact exercised canonical executable, "
+        "actual native JXA/Cocoa/WKWebView startup dwell, warm relaunch, "
+        "profile reuse, protocol-resolution regression, and deterministic cleanup."
+    )
 
 
 def watchlist_contract(page) -> None:
@@ -173,6 +242,8 @@ def main() -> None:
     assert "justify-self:stretch!important" in PATCH_CSS
     assert "text-align:center!important" in PATCH_CSS
 
+    native_packaged_window_contract()
+
     with sync_playwright() as p:
         browser = p.webkit.launch(headless=True)
         page = browser.new_page(viewport={"width": 1440, "height": 800})
@@ -180,7 +251,7 @@ def main() -> None:
         settings_layout_contract(page)
         browser.close()
 
-    print("PASS: primary WebKit compatibility for watchlist/global-remove, no-CURRENT membership semantics, Settings short-height save bar, and centered header alert.")
+    print("PASS: primary WebKit compatibility for watchlist/global-remove, no-CURRENT membership semantics, Settings short-height save bar, centered header alert, and packaged native macOS lifecycle when running on Darwin.")
 
 
 if __name__ == "__main__":

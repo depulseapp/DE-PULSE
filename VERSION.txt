@@ -1,9 +1,9 @@
-DE.PULSE v18.9.0
-Build: v18.9.0-stable-20260821
+DE.PULSE v18.9.1
+Build: v18.9.1-stable-20260821
 Channel: STABLE
-Stable baseline: v18.8.2
-Previous Stable: v18.8.2
-Scope: TradeInsight adaptive provider integration: Smart Provider Router v2 reuse; SHADOW Congressional Trading Intelligence; adjusted daily OHLCV fallback/backfill; bounded admission-controlled multi-symbol history; shared telemetry/freshness/cache/canonical owners preserved; direct SEC/EDGAR authoritative; Form 4, movers and ticker search contract-gated; deterministic Day/Swing/Long truth and permanent No Execution boundary preserved
+Stable baseline: v18.9.0
+Previous Stable: v18.9.0
+Scope: macOS native-window runtime reliability corrective: remove the failing formal NSApplicationDelegate JXA protocol registration while preserving NSObject delegate selectors and app.delegate assignment; harden canonical package identity and actual packaged fresh/warm JXA/Cocoa/WKWebView lifecycle evidence with SQLite profile reuse and deterministic cleanup; shared product behavior unchanged; permanent No Execution boundary preserved
 Application bundle: De-Pulse.app
 Deterministic Day/Swing/Long formulas: unchanged / v14.3.7-compatible
 Runtime/config continuity: PersonalMarketTerminal (preserves compatible prior Stable settings and API keys)
