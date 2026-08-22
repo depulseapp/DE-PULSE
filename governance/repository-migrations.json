@@ -100,6 +100,15 @@
       "allowedReferenceFiles": ["tools/ci/functionality_utility_checkpoint_gate.py", "release/v18.9.1/certification-manifest.json", "tools/release/prefreeze_qualification.py"]
     },
     {
+      "oldPath": "data_health_policy_gate.py",
+      "newPath": "tools/ci/data_health_policy_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-health CI ownership",
+      "reason": "Session-aware freshness/cache/fallback policy enforcement is reusable CI governance and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_health_policy_gate.py and the migrated gate resolves repository-root policy/runtime owners without changing assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
+    },
+    {
       "oldPath": "source_health_architecture_gate.py",
       "newPath": "tools/ci/source_health_architecture_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership",

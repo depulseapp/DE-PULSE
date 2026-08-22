@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
 from pathlib import Path
-R=Path(__file__).resolve().parent
+R=Path(__file__).resolve().parents[2]
 p=json.loads((R/'data_health_policy.json').read_text())
 errs=[]
 policy=p.get('policy',{})
