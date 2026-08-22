@@ -64,6 +64,20 @@ def go_test_identities(paths: list[str], commit: str | None = None) -> set[str]:
     return identities
 
 
+def go_test_identities_by_path(paths: list[str], commit: str | None = None) -> dict[str, list[str]]:
+    """Return exact discovered Go test identities grouped by their source owner."""
+    grouped: dict[str, list[str]] = {}
+    for path in paths:
+        if not path.endswith("_test.go"):
+            continue
+        text = read_at(commit, path) if commit else (ROOT / path).read_text(encoding="utf-8", errors="replace")
+        package_dir = str(Path(path).parent.as_posix())
+        identities = [f"{package_dir}:{m.group(1)}" for m in GO_TEST_RE.finditer(text)]
+        if identities:
+            grouped[path] = sorted(set(identities))
+    return grouped
+
+
 def executable_candidate(path: str) -> bool:
     p = Path(path)
     name = p.name.lower()
@@ -275,6 +289,10 @@ def main() -> int:
     baseline_tests_all = go_test_identities(baseline_paths, baseline)
     baseline_retained_paths = [p for p in baseline_paths if not policy_retired_root_path(p, retained_majors)]
     baseline_tests = go_test_identities(baseline_retained_paths, baseline)
+    policy_retired_go_paths = sorted(
+        p for p in baseline_paths if p.endswith("_test.go") and policy_retired_root_path(p, retained_majors)
+    )
+    policy_retired_go_by_path = go_test_identities_by_path(policy_retired_go_paths, baseline)
     policy_retired_test_count = len(baseline_tests_all - baseline_tests)
     current_tests = go_test_identities(current_paths)
     rename_map = migrations.get("testIdentityRenames", {})
@@ -286,7 +304,8 @@ def main() -> int:
 
     baseline_exec_all = {path for path in baseline_paths if executable_candidate(path)}
     baseline_exec = {path for path in baseline_exec_all if not policy_retired_root_path(path, retained_majors)}
-    policy_retired_exec_count = len(baseline_exec_all - baseline_exec)
+    policy_retired_exec_paths = sorted(baseline_exec_all - baseline_exec)
+    policy_retired_exec_count = len(policy_retired_exec_paths)
     current_exec = {path for path in current_paths if executable_candidate(path)}
     retired_exec = set(migrations.get("retiredExecutablePaths", []))
     expected_exec = {canonicalize(path, move_map) for path in baseline_exec if path not in retired_exec}
@@ -325,7 +344,12 @@ def main() -> int:
     print(f"current root files: {len(current_root)}")
     print("retained root version majors: " + ", ".join(f"v{x}" for x in sorted(retained_majors)))
     print(f"policy-retired pre-v17 Go test identities: {policy_retired_test_count}")
+    print(f"policy-retired pre-v17 Go test source files: {len(policy_retired_go_by_path)}")
+    for path, identities in policy_retired_go_by_path.items():
+        print(f"retired-go-source: {path} · identities={len(identities)} · names={','.join(i.split(':', 1)[1] for i in identities)}")
     print(f"policy-retired pre-v17 executable paths: {policy_retired_exec_count}")
+    for path in policy_retired_exec_paths:
+        print(f"retired-executable-source: {path}")
     print(f"registered moves: {len(move_map)}")
     print(f"baseline retained Go test identities: {len(baseline_tests)}")
     print(f"current Go test identities: {len(current_tests)}")
