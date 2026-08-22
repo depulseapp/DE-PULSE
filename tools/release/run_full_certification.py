@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -21,6 +22,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED_TOOLS = ("git", "go", "gofmt", "node", "python3")
+TOOLCHAIN_MANIFEST = ROOT / "governance" / "toolchain-manifest.json"
 
 
 def utc_now() -> str:
@@ -72,6 +74,53 @@ def run(log, argv: list[str], *, env: dict[str, str] | None = None) -> None:
     log.flush()
     if rc != 0:
         raise subprocess.CalledProcessError(rc, argv)
+
+
+def resolved_toolchain() -> dict[str, Any]:
+    manifest = load_json(TOOLCHAIN_MANIFEST)
+    resolved = {
+        "go version": subprocess.check_output(["go", "version"], cwd=ROOT, text=True).strip(),
+        "node --version": subprocess.check_output(["node", "--version"], cwd=ROOT, text=True).strip(),
+        "python3 --version": subprocess.check_output(["python3", "--version"], cwd=ROOT, text=True).strip(),
+        "playwright package version": importlib.metadata.version("playwright"),
+    }
+    runner = {
+        "RUNNER_OS": os.environ.get("RUNNER_OS", "local"),
+        "ImageOS": os.environ.get("ImageOS", "local"),
+        "ImageVersion": os.environ.get("ImageVersion", "local"),
+        "RUNNER_ARCH": os.environ.get("RUNNER_ARCH", "local"),
+    }
+    return {
+        "manifest": "governance/toolchain-manifest.json",
+        "requested": manifest,
+        "resolved": resolved,
+        "runner": runner,
+    }
+
+
+def validate_resolved_toolchain(toolchain: dict[str, Any]) -> None:
+    requested = toolchain["requested"]
+    resolved = toolchain["resolved"]
+    expected = {
+        "go version": str(requested["go"]["version"]),
+        "node --version": str(requested["node"]["version"]),
+        "python3 --version": str(requested["python"]["version"]),
+        "playwright package version": str(requested["playwright"]["version"]),
+    }
+    checks = {
+        "go version": f"go{expected['go version']}",
+        "node --version": f"v{expected['node --version']}",
+        "python3 --version": f"Python {expected['python3 --version']}",
+        "playwright package version": expected["playwright package version"],
+    }
+    for key, token in checks.items():
+        value = str(resolved[key])
+        if key == "playwright package version":
+            ok = value == token
+        else:
+            ok = token in value
+        if not ok:
+            raise AssertionError(f"resolved toolchain mismatch for {key}: actual={value!r} expected token={token!r}")
 
 
 def validate_manifest(identity: dict[str, Any], manifest: dict[str, Any], manifest_path: Path) -> None:
@@ -169,6 +218,10 @@ def main() -> int:
     manifest = load_json(manifest_path)
     validate_manifest(identity, manifest, manifest_path)
 
+    ensure_python_module("playwright")
+    toolchain = resolved_toolchain()
+    validate_resolved_toolchain(toolchain)
+
     evidence_root = Path(
         os.environ.get(
             "DEPULSE_EVIDENCE_DIR",
@@ -187,9 +240,12 @@ def main() -> int:
         write_line(log, f"Work slice: {manifest['workSliceId']}")
         write_line(log, f"Evidence schema: {manifest['evidenceSchemaVersion']}")
         write_line(log, f"Started: {started_at}")
+        write_line(log, "Resolved toolchain: " + json.dumps(toolchain["resolved"], sort_keys=True))
+        write_line(log, "Runner identity: " + json.dumps(toolchain["runner"], sort_keys=True))
 
         write_line(log, "\n[G0/G1] Canonical release identity + declarative release evidence")
         run(log, ["python3", "release_identity.py", "--verify"])
+        run(log, ["python3", "tools/release/release_identity_contract.py", "--verify"])
         run(log, ["python3", "version_consistency_test.py"])
         validate_assertions(log, manifest)
 
@@ -223,7 +279,6 @@ def main() -> int:
         chrome_tests = manifest.get("chromeTests", [])
         if chrome_tests:
             write_line(log, "\n[G9/G10/G12] Current primary Chrome behavior")
-            ensure_python_module("playwright")
             if not chrome_available():
                 raise RuntimeError("set CHROME_BIN to an installed Chrome/Chromium executable")
             for command in chrome_tests:
@@ -249,6 +304,7 @@ def main() -> int:
             "productVersion": version,
             "workSliceId": manifest["workSliceId"],
             "buildId": identity.get("build_id"),
+            "platformBuildNumber": identity.get("bundle_version"),
             "sourceSha": source_sha,
             "sourceFingerprint": source_fingerprint,
             "sourceBranch": source_branch,
@@ -259,6 +315,7 @@ def main() -> int:
             "manifest": str(manifest_path.relative_to(ROOT)),
             "releaseContract": manifest["releaseContract"],
             "logSha256": log_sha,
+            "resolvedToolchain": toolchain,
             "goFull": "PASS",
             "race": "PASS",
             "randomized": "PASS",
