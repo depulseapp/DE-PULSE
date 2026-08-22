@@ -9,8 +9,17 @@ on:
         description: Exact source SHA to qualify; blank uses triggering SHA
         required: false
         type: string
+      base_sha:
+        description: Optional explicit base commit; blank derives merge-base from target_ref
+        required: false
+        type: string
+      target_ref:
+        description: Authoritative target branch/ref used when base_sha is blank
+        required: true
+        default: main
+        type: string
       lane:
-        description: Qualification lane; adaptive uses impact-planned minimum safe lane; full is explicit override
+        description: Qualification lane override; adaptive uses Planner v3 dependency selection
         required: true
         default: adaptive
         type: choice
@@ -25,6 +34,14 @@ on:
     inputs:
       candidate_sha:
         required: true
+        type: string
+      base_sha:
+        required: false
+        default: ''
+        type: string
+      target_ref:
+        required: false
+        default: main
         type: string
       lane:
         required: false
@@ -46,15 +63,26 @@ env:
 
 jobs:
   context:
-    name: Resolve qualification identity and impact
+    name: Resolve qualification identity and Planner v3 impact
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
-      lane: ${{ steps.resolve.outputs.lane }}
       fingerprint: ${{ steps.resolve.outputs.fingerprint }}
+      lane: ${{ steps.resolve.outputs.qualified_lane }}
       process_only: ${{ steps.resolve.outputs.process_only }}
+      portability_required: ${{ steps.resolve.outputs.portability_required }}
+      backend_required: ${{ steps.resolve.outputs.backend_required }}
+      renderer_required: ${{ steps.resolve.outputs.renderer_required }}
+      chrome_required: ${{ steps.resolve.outputs.chrome_required }}
       webkit_required: ${{ steps.resolve.outputs.webkit_required }}
+      security_rights_required: ${{ steps.resolve.outputs.security_rights_required }}
+      db_integration_required: ${{ steps.resolve.outputs.db_integration_required }}
+      native_macos_required: ${{ steps.resolve.outputs.native_macos_required }}
+      native_windows_required: ${{ steps.resolve.outputs.native_windows_required }}
+      base_sha: ${{ steps.resolve.outputs.base_sha }}
+      base_resolution: ${{ steps.resolve.outputs.base_resolution }}
+      selected_jobs: ${{ steps.resolve.outputs.selected_jobs }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -67,24 +95,30 @@ jobs:
         shell: bash
         env:
           INPUT_SHA: ${{ inputs.candidate_sha }}
+          INPUT_BASE_SHA: ${{ inputs.base_sha }}
+          INPUT_TARGET_REF: ${{ inputs.target_ref }}
           INPUT_LANE: ${{ inputs.lane }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
           set -euo pipefail
           sha="${INPUT_SHA:-${PR_HEAD_SHA:-$GITHUB_SHA}}"
-          test "$(git rev-parse HEAD)" = "$sha"
-          python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$sha" --github-output "$GITHUB_OUTPUT" --json-out ci-qualified-impact-plan.json
-          planned="$(python3 -c "import json; print(json.load(open('ci-qualified-impact-plan.json'))['qualifiedLane'])")"
-          webkit="$(python3 -c "import json; print(str(json.load(open('ci-qualified-impact-plan.json'))['webkitRequired']).lower())")"
+          base="${INPUT_BASE_SHA:-${PR_BASE_SHA:-}}"
+          target="${PR_BASE_REF:-${INPUT_TARGET_REF:-main}}"
           requested="${INPUT_LANE:-adaptive}"
-          if [ "$requested" = adaptive ]; then lane="$planned"; else lane="$requested"; fi
-          case "$lane" in full|backend|renderer|browser|ci-harness) ;; *) echo "invalid lane: $lane"; exit 1;; esac
+          test "$(git rev-parse HEAD)" = "$sha"
+          python3 tools/ci/impact_plan.py \
+            --base "$base" \
+            --target-ref "$target" \
+            --head "$sha" \
+            --requested-lane "$requested" \
+            --github-output "$GITHUB_OUTPUT" \
+            --json-out ci-qualified-impact-plan.json
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          echo "lane=$lane" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp lane=$lane planned=$planned requested=$requested primary-webkit-signal=$webkit"
+          echo "qualification SHA=$sha fingerprint=$fp base=$(python3 -c \"import json; print(json.load(open('ci-qualified-impact-plan.json'))['baseSha'])\") target=$target mode=$requested selected=$(python3 -c \"import json; print(','.join(json.load(open('ci-qualified-impact-plan.json'))['selectedJobs']))\")"
 
   ci-harness:
     name: CI/harness contract
@@ -113,8 +147,8 @@ jobs:
 
   portability:
     name: CI portability (${{ matrix.os }})
-    needs: context
-    if: ${{ needs.context.outputs.lane == 'ci-harness' }}
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.portability_required == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -142,6 +176,10 @@ jobs:
         run: |
           $actual=(python source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
           if($actual -ne '${{ needs.context.outputs.fingerprint }}'){ throw "cross-platform fingerprint mismatch: $actual" }
+      - name: Parse reusable native/release tooling
+        shell: bash
+        if: ${{ runner.os == 'Linux' }}
+        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/webkit_browser_test.py
       - name: Parse reusable macOS harness
         if: ${{ runner.os == 'macOS' }}
         shell: bash
@@ -153,14 +191,11 @@ jobs:
           $tokens=$null; $errors=$null
           [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'tools/release/native_windows.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
           if($errors.Count -gt 0){ $errors | ForEach-Object { Write-Error $_.Message }; throw 'Windows native harness parse failed' }
-      - name: Parse reusable release assurance tooling
-        if: ${{ runner.os == 'Linux' }}
-        run: python3 -m py_compile tools/release/g15_assurance.py tools/ci/branch_hygiene.py tools/ci/workflow_policy.py tools/ci/impact_plan.py tools/ci/reproducibility_gate.py tools/ci/browser_risk_routing_gate.py tools/ci/webkit_targeted_test.py tools/ci/documentation_owner_browser_test.py tools/ci/renderer_owner_contract.py tools/ci/ci_telemetry.py tools/ci/ci_telemetry_self_test.py tools/ci/stable_evidence_gate.py tools/ci/release_state_coherence.py tools/ci/release_state_coherence_self_test.py tools/ci/workflow_structural_lint.py
 
   backend:
     name: Qualified backend
     needs: [context, ci-harness]
-    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'backend' }}
+    if: ${{ needs.context.outputs.backend_required == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -187,10 +222,47 @@ jobs:
       - name: Randomized package order
         run: go test -shuffle=on -count=1 ./...
 
+  db-integration:
+    name: Qualified persistence / DB integration
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.db_integration_required == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - name: Persistence-focused regression
+        run: go test -count=1 ./... -run 'Test.*(SQLite|Persistence|Migration|Canonical|Cache)'
+
+  security-rights:
+    name: Qualified security / data-rights contracts
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.security_rights_required == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Provider/dependency rights readiness
+        run: python3 dependency_readiness_gate.py
+      - name: AI rights/offline evaluation contract
+        run: python3 ai_continuous_eval_gate.py
+
   renderer:
     name: Qualified renderer contracts
     needs: [context, ci-harness]
-    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'renderer' }}
+    if: ${{ needs.context.outputs.renderer_required == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -218,7 +290,7 @@ jobs:
   browser:
     name: Primary Chrome behavior
     needs: [context, ci-harness]
-    if: ${{ needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
+    if: ${{ needs.context.outputs.chrome_required == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     outputs:
@@ -262,9 +334,9 @@ jobs:
         run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome
 
   webkit:
-    name: Primary WebKit compatibility
+    name: Primary WebKit browser compatibility
     needs: [context, ci-harness]
-    if: ${{ needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser' }}
+    if: ${{ needs.context.outputs.webkit_required == 'true' }}
     runs-on: macos-15
     timeout-minutes: 15
     outputs:
@@ -275,10 +347,6 @@ jobs:
         with:
           ref: ${{ needs.context.outputs.sha }}
           fetch-depth: 0
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: false
       - id: webkit_python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -295,14 +363,95 @@ jobs:
           python -m playwright install webkit
           end="$(date +%s)"
           echo "seconds=$((end-start))" >> "$GITHUB_OUTPUT"
-      - name: Primary WebKit core compatibility
-        run: python3 tools/ci/webkit_targeted_test.py
+      - name: Primary WebKit browser-only compatibility
+        run: python3 tools/ci/webkit_browser_test.py
       - name: Documentation owner WebKit compatibility
         run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit
 
+  native-macos:
+    name: Qualified macOS native lifecycle rehearsal
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.native_macos_required == 'true' }}
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Actual packaged macOS lifecycle rehearsal
+        shell: bash
+        env:
+          DEPULSE_CANDIDATE_SHA: ${{ needs.context.outputs.sha }}
+          DEPULSE_SOURCE_FINGERPRINT: ${{ needs.context.outputs.fingerprint }}
+          DEPULSE_OUTPUT_DIR: ${{ runner.temp }}/depulse-qualified-native-macos
+        run: |
+          set -euo pipefail
+          eval "$(python3 - <<'PY'
+          import json, shlex
+          r=json.load(open('release_identity.json'))
+          print('DEPULSE_VERSION='+shlex.quote(str(r['version'])))
+          print('DEPULSE_BUILD_ID='+shlex.quote(str(r['build_id'])))
+          PY
+          )"
+          export DEPULSE_VERSION DEPULSE_BUILD_ID
+          bash tools/release/native_macos.sh
+      - name: Retain macOS rehearsal evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-qualified-native-macos-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: ${{ runner.temp }}/depulse-qualified-native-macos/G13-G14-macOS-Apple-Silicon.json
+          if-no-files-found: error
+          retention-days: 14
+
+  native-windows:
+    name: Qualified Windows native runtime rehearsal
+    needs: [context, ci-harness]
+    if: ${{ needs.context.outputs.native_windows_required == 'true' }}
+    runs-on: windows-2025
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Actual packaged Windows runtime rehearsal
+        shell: pwsh
+        env:
+          DEPULSE_CANDIDATE_SHA: ${{ needs.context.outputs.sha }}
+          DEPULSE_SOURCE_FINGERPRINT: ${{ needs.context.outputs.fingerprint }}
+          DEPULSE_OUTPUT_DIR: ${{ runner.temp }}/depulse-qualified-native-windows
+        run: |
+          $rid=Get-Content -Raw release_identity.json | ConvertFrom-Json
+          $env:DEPULSE_VERSION=[string]$rid.version
+          $env:DEPULSE_BUILD_ID=[string]$rid.build_id
+          & tools/release/native_windows.ps1
+          if($LASTEXITCODE -ne 0){ throw 'Windows native rehearsal failed' }
+      - name: Retain Windows rehearsal evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-qualified-native-windows-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: ${{ runner.temp }}/depulse-qualified-native-windows/G13-G14-Windows-x64.json
+          if-no-files-found: error
+          retention-days: 14
+
   evidence:
     name: Qualified evidence summary
-    needs: [context, ci-harness, portability, backend, renderer, browser, webkit]
+    needs: [context, ci-harness, portability, backend, db-integration, security-rights, renderer, browser, webkit, native-macos, native-windows]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 8
@@ -318,34 +467,42 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - name: Require selected lanes to pass
+      - name: Require Planner v3 selected jobs to pass
         shell: bash
         env:
-          LANE: ${{ needs.context.outputs.lane }}
-          WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}
           HARNESS: ${{ needs.ci-harness.result }}
+          PORTABILITY_REQUIRED: ${{ needs.context.outputs.portability_required }}
           PORTABILITY: ${{ needs.portability.result }}
+          BACKEND_REQUIRED: ${{ needs.context.outputs.backend_required }}
           BACKEND: ${{ needs.backend.result }}
+          DB_REQUIRED: ${{ needs.context.outputs.db_integration_required }}
+          DB: ${{ needs.db-integration.result }}
+          SECURITY_REQUIRED: ${{ needs.context.outputs.security_rights_required }}
+          SECURITY: ${{ needs.security-rights.result }}
+          RENDERER_REQUIRED: ${{ needs.context.outputs.renderer_required }}
           RENDERER: ${{ needs.renderer.result }}
-          BROWSER: ${{ needs.browser.result }}
+          CHROME_REQUIRED: ${{ needs.context.outputs.chrome_required }}
+          CHROME: ${{ needs.browser.result }}
+          WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}
           WEBKIT: ${{ needs.webkit.result }}
+          NATIVE_MACOS_REQUIRED: ${{ needs.context.outputs.native_macos_required }}
+          NATIVE_MACOS: ${{ needs.native-macos.result }}
+          NATIVE_WINDOWS_REQUIRED: ${{ needs.context.outputs.native_windows_required }}
+          NATIVE_WINDOWS: ${{ needs.native-windows.result }}
         run: |
           set -euo pipefail
           test "$HARNESS" = success
-          require(){ v="$1"; test "$v" = success || { echo "required lane result=$v"; exit 1; }; }
-          case "$LANE" in
-            full) require "$BACKEND"; require "$RENDERER"; require "$BROWSER" ;;
-            backend) require "$BACKEND" ;;
-            renderer) require "$RENDERER" ;;
-            browser) require "$BROWSER" ;;
-            ci-harness) require "$PORTABILITY" ;;
-          esac
-          if [ "$WEBKIT_REQUIRED" = true ] || [ "$LANE" = full ] || [ "$LANE" = browser ]; then
-            require "$WEBKIT"
-          else
-            test "$WEBKIT" = skipped
-          fi
-          echo "PASS: DE.PULSE qualified lane $LANE for ${{ needs.context.outputs.sha }}; Chrome+WebKit primary browser policy; webkit signal=$WEBKIT_REQUIRED"
+          require_if(){ flag="$1"; result="$2"; name="$3"; if [ "$flag" = true ]; then test "$result" = success || { echo "$name required result=$result"; exit 1; }; else test "$result" = skipped || { echo "$name unexpected result=$result"; exit 1; }; fi; }
+          require_if "$PORTABILITY_REQUIRED" "$PORTABILITY" portability
+          require_if "$BACKEND_REQUIRED" "$BACKEND" backend
+          require_if "$DB_REQUIRED" "$DB" db-integration
+          require_if "$SECURITY_REQUIRED" "$SECURITY" security-rights
+          require_if "$RENDERER_REQUIRED" "$RENDERER" renderer
+          require_if "$CHROME_REQUIRED" "$CHROME" chrome
+          require_if "$WEBKIT_REQUIRED" "$WEBKIT" webkit
+          require_if "$NATIVE_MACOS_REQUIRED" "$NATIVE_MACOS" native-macos
+          require_if "$NATIVE_WINDOWS_REQUIRED" "$NATIVE_WINDOWS" native-windows
+          echo "PASS: Planner v3 selected jobs=${{ needs.context.outputs.selected_jobs }} base=${{ needs.context.outputs.base_sha }} resolution=${{ needs.context.outputs.base_resolution }}"
       - name: Collect CI telemetry
         if: ${{ always() }}
         shell: bash
