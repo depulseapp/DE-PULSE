@@ -220,7 +220,7 @@ for required in (
     "release_identity.json",
     "data_utility_registry.json",
     "data_health_policy.json",
-    "prefreeze_qualification.py",
+    "tools/release/prefreeze_qualification.py",
     "governance/current-state.json",
     "governance/work-slices/ADAPT-CI-CONVERGENCE-001/work-slice.json",
 ):

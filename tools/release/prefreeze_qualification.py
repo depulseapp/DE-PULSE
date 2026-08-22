@@ -9,10 +9,13 @@ does not invalidate the candidate it describes.
 """
 from __future__ import annotations
 import concurrent.futures, datetime as dt, json, os, signal, subprocess, sys, time
-from source_fingerprint import canonical_source_fingerprint
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from source_fingerprint import canonical_source_fingerprint
+
 FINGERPRINT_EXCLUDED_DIRS = {'.git', '__pycache__', '.depulse-certification'}
 FINGERPRINT_EXCLUDED_SUFFIXES = {'.log', '.tmp', '.out', '.exe'}
 
@@ -144,7 +147,7 @@ def main():
     light = [
         ('v18_baseline', [py, 'v18_baseline_gate.py'], 30),
         ('release_identity', [py, 'release_identity.py', '--verify'], 30),
-        ('adaptive_resume', [py, 'adaptive_resume_gate.py'], 30),
+        ('adaptive_resume', [py, 'tools/ci/adaptive_resume_gate.py'], 30),
         ('v183_scope', [py, 'v18_3_scope_gate.py'], 30),
         ('v183_principal', [py, 'v18_3_principal_engineer_gate.py'], 30),
         ('v182_principal_inherited', [py, 'v18_2_principal_engineer_gate.py'], 30),
@@ -155,9 +158,9 @@ def main():
         ('version', [py, 'version_consistency_test.py'], 30),
         ('documentation', [py, 'documentation_governance_gate.py'], 60),
         ('data_utility', [py, 'data_utility_gate.py'], 45),
-        ('functionality_utility', [py, 'functionality_utility_checkpoint_gate.py'], 45),
+        ('functionality_utility', [py, 'tools/ci/functionality_utility_checkpoint_gate.py'], 45),
         ('data_health', [py, 'data_health_policy_gate.py'], 30),
-        ('source_health', [py, 'source_health_architecture_gate.py'], 120),
+        ('source_health', [py, 'tools/ci/source_health_architecture_gate.py'], 120),
         ('content', [py, 'content_copy_audit_test.py'], 60),
         ('renderer', ['node', 'renderer_logic_test.js'], 90),
     ]

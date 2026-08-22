@@ -124,7 +124,7 @@ try:
     routine = sorted(path.name for path in workflow_dir.glob("*.yml"))
     need(routine == ["ci-fast.yml", "ci-qualified.yml", "release.yml"], f"routine workflow set drift: {routine}")
 
-    prefreeze_text = (ROOT / "prefreeze_qualification.py").read_text(errors="ignore")
+    prefreeze_text = (ROOT / "tools" / "release" / "prefreeze_qualification.py").read_text(errors="ignore")
     need("'.depulse-certification'" in prefreeze_text or '".depulse-certification"' in prefreeze_text, "prefreeze fingerprint must exclude .depulse-certification metadata")
 except Exception as exc:
     errors.append(f"canonical current-state/work-slice validation failed: {exc}")
