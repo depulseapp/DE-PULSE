@@ -47,7 +47,13 @@
       "owner": "ADAPT-CI-CONVERGENCE-001 / product performance regression evidence",
       "reason": "The retired pre-v17 v16.8 and v16.10 performance gates carried four material 500-symbol/candidate runtime and allocation ceilings. They are preserved under a version-neutral package test owner so Fast and Qualified full Go suites continue to enforce them without restoring legacy version-named files.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
-      "removalCondition": "Move the four bounded performance assertions with their implementation capability during package decomposition; do not remove the ceilings unless equivalent current performance evidence remains executable."
+      "removalCondition": "Move the bounded performance assertions with their implementation capability during package decomposition; do not remove the ceilings unless equivalent current performance evidence remains executable."
+    },
+    "retired_equivalence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / specialized retired-test behavior equivalence",
+      "reason": "Version-neutral package tests preserve specialized behavioral assertions from policy-retired pre-v17 families when generic full-suite execution alone cannot prove semantic equivalence. This owner is assertion-level evidence, not a compatibility wrapper or restored legacy version file.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move each preserved assertion with its final capability package/test owner during decomposition and update the retired-test evidence bindings atomically; no assertion may disappear merely because its original version-named source was retired."
     }
   },
   "requiredTopLevelDirectories": [
