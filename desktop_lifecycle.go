@@ -187,6 +187,7 @@ func openAppWindow(rawURL, iconPath, configDir string) int {
 				if cmd.Start() == nil {
 					return cmd.Process.Pid
 				}
+			}
 		}
 		_ = exec.Command("xdg-open", rawURL).Start()
 	}
