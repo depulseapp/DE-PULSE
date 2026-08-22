@@ -181,15 +181,18 @@ run_native_window_cycle() {
     return 1
   fi
 
-  readarray -t native_identity < <(python3 - "$GUI_INSTANCE" <<'PY'
+  base_url="$(python3 - "$GUI_INSTANCE" <<'PY'
 import json,sys
 inst=json.load(open(sys.argv[1]))
 print(inst.get('url',''))
+PY
+)"
+  window_pid="$(python3 - "$GUI_INSTANCE" <<'PY'
+import json,sys
+inst=json.load(open(sys.argv[1]))
 print(int(inst.get('windowPid') or 0))
 PY
-  )
-  base_url="${native_identity[0]}"
-  window_pid="${native_identity[1]}"
+)"
   if [ -z "$base_url" ] || [ "$window_pid" -le 0 ]; then
     echo "ERROR: native window identity incomplete (cycle=$cycle url=$base_url pid=$window_pid)" >&2
     dump_native_logs
