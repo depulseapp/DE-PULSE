@@ -164,6 +164,29 @@ run_native_window_cycle() {
     cat "$GUI_WINDOW_LOG" >&2 2>/dev/null || true
   }
 
+  stop_native_cycle() {
+    if [ "$window_pid" -gt 0 ]; then
+      kill -TERM "$window_pid" 2>/dev/null || true
+      for _ in $(seq 1 30); do
+        kill -0 "$window_pid" 2>/dev/null || break
+        sleep 0.1
+      done
+      kill -KILL "$window_pid" 2>/dev/null || true
+    fi
+    for _ in $(seq 1 50); do
+      kill -0 "$gui_pid" 2>/dev/null || break
+      sleep 0.1
+    done
+    kill -INT "$gui_pid" 2>/dev/null || true
+    for _ in $(seq 1 30); do
+      kill -0 "$gui_pid" 2>/dev/null || break
+      sleep 0.1
+    done
+    kill -KILL "$gui_pid" 2>/dev/null || true
+    wait "$gui_pid" 2>/dev/null || true
+    rm -f "$GUI_INSTANCE"
+  }
+
   for _ in $(seq 1 180); do
     if ! kill -0 "$gui_pid" 2>/dev/null; then
       echo "ERROR: packaged backend exited before native window became ready (cycle=$cycle)" >&2
@@ -177,8 +200,7 @@ run_native_window_cycle() {
   if [ ! -s "$GUI_INSTANCE" ]; then
     echo "ERROR: native-window instance evidence missing (cycle=$cycle)" >&2
     dump_native_logs
-    kill -INT "$gui_pid" 2>/dev/null || true
-    wait "$gui_pid" 2>/dev/null || true
+    stop_native_cycle
     return 1
   fi
 
@@ -197,15 +219,13 @@ PY
   if [ -z "$base_url" ] || [ "$window_pid" -le 0 ]; then
     echo "ERROR: native window identity incomplete (cycle=$cycle url=$base_url pid=$window_pid)" >&2
     dump_native_logs
-    kill -INT "$gui_pid" 2>/dev/null || true
-    wait "$gui_pid" 2>/dev/null || true
+    stop_native_cycle
     return 1
   fi
   if ! kill -0 "$window_pid" 2>/dev/null; then
     echo "ERROR: JXA/Cocoa window process already exited (cycle=$cycle pid=$window_pid)" >&2
     dump_native_logs
-    kill -INT "$gui_pid" 2>/dev/null || true
-    wait "$gui_pid" 2>/dev/null || true
+    stop_native_cycle
     return 1
   fi
 
@@ -235,23 +255,14 @@ PY
   if ! kill -0 "$gui_pid" 2>/dev/null || ! kill -0 "$window_pid" 2>/dev/null; then
     echo "ERROR: native window lifecycle did not remain alive (cycle=$cycle backend=$gui_pid window=$window_pid)" >&2
     dump_native_logs
-    kill -TERM "$window_pid" 2>/dev/null || true
-    kill -INT "$gui_pid" 2>/dev/null || true
-    wait "$gui_pid" 2>/dev/null || true
+    stop_native_cycle
     return 1
   fi
 
-  # Test-owned cleanup. Terminating the window child causes the existing
-  # desktop lifecycle to interrupt the backend; fall back to an explicit
-  # backend interrupt if needed. This cleanup exit is intentionally ignored.
-  kill -TERM "$window_pid" 2>/dev/null || true
-  for _ in $(seq 1 50); do
-    kill -0 "$gui_pid" 2>/dev/null || break
-    sleep 0.1
-  done
-  kill -INT "$gui_pid" 2>/dev/null || true
-  wait "$gui_pid" 2>/dev/null || true
-  rm -f "$GUI_INSTANCE"
+  # Test-owned cleanup. Terminating the JXA child causes the existing desktop
+  # lifecycle to interrupt the backend. Bounded TERM/INT/KILL fallbacks ensure
+  # no orphaned process can contaminate the warm-relaunch cycle.
+  stop_native_cycle
   echo "PASS: actual packaged native macOS window cycle=$cycle backendPid=$gui_pid windowPid=$window_pid"
 }
 
@@ -299,7 +310,7 @@ data={
    'canonicalBundleExecutable':'PASS','legacyExecutableAbsent':'PASS',
    'actualPackagedBackendLaunch':'PASS','healthIdentity':'PASS','readySQLite':'PASS','sqliteMigrations':'PASS','sqliteIntegrity':'PASS','rootSurface':'PASS',
    'actualPackagedNativeWindowLaunch':'PASS','nativeWindowStartupDwell':'PASS','warmNativeWindowRelaunch':'PASS',
-   'warmProfileSQLiteReuse':'PASS','nativeWindowProtocolResolution':'PASS'
+   'warmProfileSQLiteReuse':'PASS','nativeWindowProtocolResolution':'PASS','nativeWindowCleanup':'PASS'
  },
  'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()
 }
