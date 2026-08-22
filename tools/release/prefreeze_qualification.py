@@ -153,7 +153,7 @@ def main():
         ('v182_principal_inherited', [py, 'v18_2_principal_engineer_gate.py'], 30),
         ('v181_principal_inherited', [py, 'v18_1_principal_engineer_gate.py'], 30),
         ('v1805_ui', ['node', 'v18_0_5_renderer_test.js'], 60),
-        ('fingerprint_portability', [py, 'source_fingerprint_portability_test.py'], 30),
+        ('fingerprint_portability', [py, 'tools/ci/source_fingerprint_portability_test.py'], 30),
         ('v18_typography', [py, 'v18_documentation_typography_gate.py'], 30),
         ('version', [py, 'version_consistency_test.py'], 30),
         ('documentation', [py, 'tools/ci/documentation_governance_gate.py'], 60),

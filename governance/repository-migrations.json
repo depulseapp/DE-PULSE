@@ -127,6 +127,15 @@
       "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
     },
     {
+      "oldPath": "source_fingerprint_portability_test.py",
+      "newPath": "tools/ci/source_fingerprint_portability_test.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-provenance portability evidence",
+      "reason": "Cross-platform source fingerprint path/digest portability is reusable CI evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes the canonical tools/ci portability test with explicit repository-root import setup and identical POSIX/Windows digest assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
+    },
+    {
       "oldPath": "source_health_architecture_gate.py",
       "newPath": "tools/ci/source_health_architecture_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership",

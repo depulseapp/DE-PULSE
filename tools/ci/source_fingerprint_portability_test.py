@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 from pathlib import Path, PurePosixPath, PureWindowsPath
+import sys
 import tempfile
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 from source_fingerprint import canonical_rel_key, canonical_source_fingerprint
 
 def need(ok, msg):
