@@ -14,10 +14,12 @@
       "newPath": "release/history/v18.6.0/legacy-ci/certification_plan.json",
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.",
-      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "release/history/v18.6.0/legacy-ci/certification_runner.py",
+        "release_identity.py",
+        "version_consistency_test.py",
         "tools/ci/legacy_test_gate_inventory.py"
       ]
     },
@@ -50,11 +52,13 @@
       "newPath": "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
       "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
       "reason": "The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.",
-      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [
         "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+        "release_identity.py",
         "source_health_architecture_gate.py",
+        "version_consistency_test.py",
         "tools/ci/legacy_test_gate_inventory.py"
       ]
     },
