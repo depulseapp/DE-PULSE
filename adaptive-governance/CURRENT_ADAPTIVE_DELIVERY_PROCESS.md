@@ -16,6 +16,8 @@ A DE.PULSE release is not delivered because code compiles, CI is green, one plat
 
 Release engineering is part of delivery quality. CI efficiency may remove redundant computation, but may not remove required evidence.
 
+For process/repository-hardening work, documentation does not equal implementation. A scope is Delivered only when the repository/workflow/tooling changes exist and the enforcement/evidence proves them.
+
 ## 2. Cross-Platform Definition of Delivered
 
 For every G1 capability, freeze `macOS / Windows / Web = REQUIRED or justified N/A`.
@@ -77,7 +79,7 @@ After truthful v18.9.1 closure, #70 is the mandatory next delivery/process works
 - targeted native rehearsals occur before final Release when impact requires them;
 - WebKit/browser and native-lifecycle responsibilities are explicit and reuse canonical packaging owners;
 - future G12 has one version-neutral executor;
-- active version-named tests are being migrated under governed capability ownership;
+- active version-named tests are migrated under governed capability ownership without regression-coverage loss;
 - impossible publication fails at G11 before expensive work;
 - Stable publication is digest-immutable and same-digest idempotent;
 - Stable releases are globally serialized;
@@ -87,7 +89,19 @@ After truthful v18.9.1 closure, #70 is the mandatory next delivery/process works
 - platform build numbering is monotonic and collision-safe;
 - final runnable artifact provenance/toolchain identity is durable;
 - handoff and Adaptive overlays share actual current-state truth;
-- G16 reports runner minutes/reruns avoided and confirms no assurance was removed.
+- G16 reports runner minutes/reruns avoided and confirms no assurance was removed;
+- a safe repository-root `.gitignore` exists without hiding tracked continuity checkpoints;
+- source-health recursively covers every production Go package before any package relocation;
+- one canonical root-layout inventory/allowlist owner exists;
+- stale root `certification_plan.json` / `certification_runner.py` / `ci_pipeline.py` / `ci_pipeline_plan.json` no longer act as a competing current CI/release model;
+- reusable root tooling is owned under stable `tools/` paths with consumers migrated atomically;
+- historical/version-scoped root material is moved/retired only with evidence mapping and without altering shipped Stable history;
+- package-local Go test coverage remains intact through capability-oriented renames and any later package extraction;
+- retained assets/policies/registries have explicit stable owners and passing consumers;
+- a CI root allowlist prevents the version-stacked root problem from returning;
+- before/after root inventory and moved/renamed/removed file counts are recorded.
+
+**Documentation-only completion is explicitly insufficient.** #70 cannot be marked Delivered or closed until those repository/code/workflow/tooling changes exist and applicable Fast/Qualified/full evidence passes.
 
 Detailed contract: `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md` and issue #70.
 
@@ -118,7 +132,8 @@ Rules:
 - differing existing Stable digest = release integrity failure, never overwrite;
 - only one Stable G11-G16 graph may publish at a time;
 - candidate/toolchain/artifact provenance is retained durably;
-- exact-head-invalid evidence is not reusable.
+- exact-head-invalid evidence is not reusable;
+- repository-layout enforcement remains part of permanent CI so version-stacked root clutter cannot recur.
 
 ## 6. Remaining v18.9.x product work — current reservations
 
@@ -144,7 +159,7 @@ Pre-market, regular market and after-hours are protected. Live/current work has 
 
 ## 8. v19 delivery train
 
-**Entry:** v18 native/data-plane closure + #70 PASS.
+**Entry:** v18 native/data-plane closure + #70 executable CI/versioning/repository-hygiene PASS.
 
 ### v19.0.x — Hosted Foundations
 Provider legal-rights registry; tenant/identity/device/session control plane; product entitlement/metering; account data governance/privacy; IaC/service trust; PostgreSQL HA/PITR; managed secrets/KMS; software supply-chain assurance; provider quality/cost/SLO scorecards; point-in-time reconciliation.
@@ -187,14 +202,14 @@ No feature scope. Require #66 PASS, zero material shared-capability parity debt,
 ## 9. G0-G16 delivery enforcement
 
 - G1 freezes scope/work-slice identity, product-version disposition and REQUIRED/N/A platform matrix.
-- G4 requires every REQUIRED client implementation for shared scope.
+- G4 requires every REQUIRED client implementation for shared scope and requires actual executable changes for process/repository-hardening work.
 - G5/G6 may select affected evidence adaptively, but ambiguity fails closed.
-- G10 blocks freeze on material parity debt or insufficient evidence mapping.
+- G10 blocks freeze on material parity debt, insufficient evidence mapping, competing CI/release owners, lost package/test coverage or unenforced root-layout migration.
 - G11 freezes source/build/release identity and proves publication feasibility.
 - G12 uses canonical full certification.
 - G13/G14 validate actual required native/Web artifacts/deployments.
 - G15 forbids shared-capability GA until all REQUIRED clients pass and forbids differing Stable-byte overwrite.
-- G16 audits parity drift, CI efficiency, provenance and temporary waivers.
+- G16 audits parity drift, CI efficiency, provenance, root before/after inventory, moved/renamed/removed paths and temporary waivers.
 
 ## 10. v20 delivery train
 
@@ -208,4 +223,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 is the mandatory next delivery/process workstream before any next product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 is the mandatory executable next delivery/process workstream—including actual repository-root cleanup and enforcement—before any next product implementation.
