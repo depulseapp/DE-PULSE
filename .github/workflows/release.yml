@@ -13,7 +13,7 @@ permissions:
   statuses: read
 
 concurrency:
-  group: depulse-release-${{ github.event.pull_request.number }}
+  group: depulse-stable-release
   cancel-in-progress: false
 
 env:
@@ -35,7 +35,8 @@ jobs:
       fingerprint: ${{ steps.identity.outputs.fingerprint }}
       version: ${{ steps.identity.outputs.version }}
       build_id: ${{ steps.identity.outputs.build_id }}
-      certification_script: ${{ steps.identity.outputs.certification_script }}
+      certification_manifest: ${{ steps.identity.outputs.certification_manifest }}
+      publication_state: ${{ steps.identity.outputs.publication_state }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -67,13 +68,16 @@ jobs:
           assert r['channel']=='STABLE', r
           print(r['version'])
           print(r['build_id'])
-          print(f"release/v{r['version']}/run_full_certification.sh")
+          print(f"release/v{r['version']}/certification-manifest.json")
+          print(r['previous_stable'])
           PY
           )
           version="${identity[0]}"
           build_id="${identity[1]}"
-          script="${identity[2]}"
-          test -f "$script"
+          manifest="${identity[2]}"
+          previous_stable="${identity[3]}"
+          test -f "$manifest"
+          test -f tools/release/run_full_certification.py
 
           source_fp="$(python3 source_fingerprint.py --mode git --commit "$source_head_sha")"
           candidate_fp="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
@@ -95,28 +99,54 @@ jobs:
           require_status 'DE.PULSE/fast-head'
           require_status 'DE.PULSE/qualified-head'
 
+          previous_tag="${previous_stable}-stable"
+          previous_ref="$(git ls-remote --refs origin "refs/tags/$previous_tag" | awk 'NR==1{print $1}')"
+          if [ -z "$previous_ref" ]; then
+            echo "ERROR: declared previous Stable tag $previous_tag does not exist" >&2
+            exit 2
+          fi
+
+          tag="v${version}-stable"
+          existing_ref="$(git ls-remote --refs origin "refs/tags/$tag" | awk 'NR==1{print $1}')"
+          if [ -n "$existing_ref" ] && [ "$existing_ref" != "$candidate_sha" ]; then
+            echo "ERROR: immutable Stable tag conflict: $tag -> $existing_ref, candidate=$candidate_sha" >&2
+            exit 2
+          fi
+          publication_state=CREATE
+          if [ "$existing_ref" = "$candidate_sha" ]; then
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              publication_state=EXACT_ALREADY_PUBLISHED
+            else
+              publication_state=TAG_REUSE
+            fi
+          fi
+
           echo "candidate_sha=$candidate_sha" >> "$GITHUB_OUTPUT"
           echo "source_head_sha=$source_head_sha" >> "$GITHUB_OUTPUT"
           echo "source_pr=$source_pr" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$candidate_fp" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
-          echo "certification_script=$script" >> "$GITHUB_OUTPUT"
+          echo "certification_manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "publication_state=$publication_state" >> "$GITHUB_OUTPUT"
           {
             echo '## G11 immutable merged candidate'
             echo "- source PR: #$source_pr"
             echo "- qualified source head: \`$source_head_sha\`"
             echo "- merged candidate: \`$candidate_sha\`"
             echo "- fingerprint: \`$candidate_fp\`"
+            echo "- canonical G12 manifest: \`$manifest\`"
+            echo "- publication feasibility: \`$publication_state\`"
             echo '- exact-head DE.PULSE/fast-head status: PASS'
             echo '- exact-head DE.PULSE/qualified-head status: PASS'
             echo '- source-head → merged-candidate fingerprint equivalence: PASS'
+            echo '- previous Stable tag existence: PASS'
           } >> "$GITHUB_STEP_SUMMARY"
 
   g12:
     name: G12 Full certification
     needs: g11
-    if: ${{ needs.g11.result == 'success' }}
+    if: ${{ needs.g11.result == 'success' && needs.g11.outputs.publication_state != 'EXACT_ALREADY_PUBLISHED' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     env:
@@ -144,13 +174,13 @@ jobs:
         run: |
           python3 tools/ci/workflow_policy.py
           test "$(python3 source_fingerprint.py --mode git --commit '${{ needs.g11.outputs.candidate_sha }}')" = "${{ needs.g11.outputs.fingerprint }}"
-      - name: Authoritative full certification
+      - name: Authoritative version-neutral full certification
         env:
           DEPULSE_EXPECTED_SHA: ${{ needs.g11.outputs.candidate_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          bash '${{ needs.g11.outputs.certification_script }}'
+          python3 tools/release/run_full_certification.py --manifest '${{ needs.g11.outputs.certification_manifest }}'
       - name: Retain G12 evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -303,7 +333,7 @@ jobs:
             --source-fingerprint '${{ needs.g11.outputs.fingerprint }}' \
             --certified-run-head '${{ needs.g11.outputs.candidate_sha }}' \
             --out promotion-verification.json
-      - name: Publish Stable release without rebuild
+      - name: Publish Stable release without rebuild or overwrite
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.g11.outputs.version }}
@@ -333,34 +363,70 @@ jobs:
               f"- Canonical source fingerprint: {os.environ['SOURCE_FP']}\n"
               f"- Build ID: {os.environ['BUILD_ID']}\n"
               "- Publication uploads the exact artifacts produced and certified in this same workflow run; no rebuild occurs.\n"
+              "- Existing Stable assets are reused only when byte-identical; differing bytes are never overwritten.\n"
           )
           PY
           if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$CANDIDATE_SHA" --title "DE.PULSE v${VERSION} Stable" --notes-file release-notes.md
           fi
-          gh release upload "$tag" --repo "$GITHUB_REPOSITORY" --clobber \
-            "release-assets/macos/De-Pulse-v${VERSION}-Stable-macOS-Apple-Silicon.zip" \
-            "release-assets/windows/De-Pulse-v${VERSION}-Stable-Windows-x64.zip" \
-            "release-assets/macos/G13-G14-macOS-Apple-Silicon.json" \
-            "release-assets/windows/G13-G14-Windows-x64.json" \
-            "release-assets/g15/G15-Release-Assurance.json" \
-            promotion-verification.json
-          echo "PASS: published $tag from this exact certified run without rebuilding"
+
+          assets=(
+            "release-assets/macos/De-Pulse-v${VERSION}-Stable-macOS-Apple-Silicon.zip"
+            "release-assets/windows/De-Pulse-v${VERSION}-Stable-Windows-x64.zip"
+            "release-assets/macos/G13-G14-macOS-Apple-Silicon.json"
+            "release-assets/windows/G13-G14-Windows-x64.json"
+            "release-assets/g15/G15-Release-Assurance.json"
+            "promotion-verification.json"
+          )
+          existing_names="$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')"
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          for asset in "${assets[@]}"; do
+            name="$(basename "$asset")"
+            if printf '%s\n' "$existing_names" | grep -Fxq "$name"; then
+              rm -f "$tmp/$name"
+              gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir "$tmp"
+              local_digest="$(sha256sum "$asset" | awk '{print $1}')"
+              remote_digest="$(sha256sum "$tmp/$name" | awk '{print $1}')"
+              if [ "$local_digest" != "$remote_digest" ]; then
+                echo "ERROR: immutable Stable asset conflict for $name: existing=$remote_digest candidate=$local_digest" >&2
+                exit 2
+              fi
+              echo "PASS: existing Stable asset byte-identical; reuse $name"
+            else
+              gh release upload "$tag" --repo "$GITHUB_REPOSITORY" "$asset"
+              echo "PASS: uploaded new immutable Stable asset $name"
+            fi
+          done
+          echo "PASS: published/reused $tag from this exact certified run without rebuilding or overwriting differing bytes"
 
   g16:
     name: G16 Adaptive release handoff evidence
     needs: [g11, publish]
-    if: ${{ needs.publish.result == 'success' }}
+    if: ${{ always() && needs.g11.result == 'success' && (needs.g11.outputs.publication_state == 'EXACT_ALREADY_PUBLISHED' || needs.publish.result == 'success') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Generate durable G16 workflow result
+        env:
+          PUBLICATION_STATE: ${{ needs.g11.outputs.publication_state }}
         shell: bash
         run: |
           mkdir -p g16
+          if [ "$PUBLICATION_STATE" = EXACT_ALREADY_PUBLISHED ]; then
+            certification_state=REUSED_ALREADY_CERTIFIED_STABLE
+            native_state=REUSED_ALREADY_CERTIFIED_STABLE
+            assurance_state=REUSED_ALREADY_CERTIFIED_STABLE
+            publication_result=IDEMPOTENT_NOOP
+          else
+            certification_state=PASS
+            native_state=PASS
+            assurance_state=PASS
+            publication_result=PASS
+          fi
           cat > g16/G16-CI-DELIVERY-SUMMARY.json <<EOF
           {
-            "schema": "DE.PULSE-G16-CI-DELIVERY-3",
+            "schema": "DE.PULSE-G16-CI-DELIVERY-4",
             "version": "v${{ needs.g11.outputs.version }}",
             "sourcePr": "${{ needs.g11.outputs.source_pr }}",
             "qualifiedSourceHead": "${{ needs.g11.outputs.source_head_sha }}",
@@ -368,15 +434,18 @@ jobs:
             "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
             "buildId": "${{ needs.g11.outputs.build_id }}",
             "releaseRunId": "${{ github.run_id }}",
-            "mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH",
+            "mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH_OR_EXACT_IDEMPOTENT_REUSE",
+            "publicationFeasibility": "$PUBLICATION_STATE",
             "g10FastExactHead": "PASS",
             "g10QualifiedExactHead": "PASS",
-            "g12": "PASS",
-            "g13g14MacOS": "PASS",
-            "g13g14Windows": "PASS",
-            "g15": "PASS",
-            "publication": "PASS",
+            "g12": "$certification_state",
+            "g13g14MacOS": "$native_state",
+            "g13g14Windows": "$native_state",
+            "g15": "$assurance_state",
+            "publication": "$publication_result",
+            "canonicalG12Executor": "tools/release/run_full_certification.py",
             "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
+            "stableAssetsDifferingBytesOverwrite": false,
             "noRebuildPublication": true
           }
           EOF
