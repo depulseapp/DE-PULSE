@@ -13,6 +13,7 @@
   "branch": "adapt-ci-convergence-001",
   "productBehaviorChange": false,
   "blocksNextProductCapability": true,
+  "closureLedger": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json",
   "implementationWaves": [
     "WAVE_0_GUARDRAILS",
     "WAVE_1_CANONICAL_TOOLING",
@@ -25,10 +26,16 @@
   ],
   "closureRequires": [
     "EXECUTABLE_IMPLEMENTATION",
+    "CLOSURE_LEDGER_ALL_VERIFIED",
     "FAST_PASS",
     "QUALIFIED_PASS",
     "ROOT_BEFORE_AFTER_EVIDENCE",
     "NO_QUALITY_EVIDENCE_REMOVED",
+    "SOURCE_HEALTH_DEBT_ZERO_OR_JUSTIFIED_INTERFACE_ONLY",
+    "ACTUAL_MAIN_PROTECTION_EVIDENCE",
+    "ARTIFACT_PROVENANCE_ATTESTATION_SBOM",
+    "G16_CI_EFFICIENCY_EVIDENCE",
+    "CURRENT_STATE_ADAPTIVE_OVERLAY_CONVERGENCE",
     "VERSION_RELEASE_REBASELINE"
   ]
 }

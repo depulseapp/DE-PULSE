@@ -1,0 +1,145 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-CI-CONVERGENCE-001",
+  "issue": 70,
+  "branch": "adapt-ci-convergence-001",
+  "closurePolicy": "#70 closes only after every blocking gap is VERIFIED by implemented repository/workflow/tooling changes and executable evidence. Documentation or issue comments alone are never verification evidence.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "FAST-640-QUALIFIED-PATH",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "owner": "Qualified workflow / canonical deterministic-equivalence evidence",
+      "implementationPaths": [".github/workflows/ci-qualified.yml", "tools/ci/deterministic_equivalence_test.js", "governance/repository-migrations.json"],
+      "evidenceRequired": ["Exact-head Fast PASS after Qualified consumer rewrite", "Repository migration safety PASS"],
+      "closureCondition": "Qualified invokes tools/ci/deterministic_equivalence_test.js and no active old-path consumer remains.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PLANNER-EVIDENCE-OWNER-ROUTING",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "owner": "Planner v3",
+      "implementationPaths": ["tools/ci/impact_plan.py", "tools/ci/impact_plan_self_test.py"],
+      "evidenceRequired": ["Planner v3 self-test PASS", "Exact-head Fast PASS"],
+      "closureCondition": "Canonical deterministic/WebKit/browser evidence owners select the evidence they validate; WebKit browser changes do not become a native-macOS proxy; unknown impact remains fail-closed.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "RETIRED-TEST-EQUIVALENCE",
+      "status": "OPEN",
+      "owner": "Repository migration safety / capability test owners",
+      "implementationPaths": ["tools/ci/repository_migration_gate.py", "tools/ci/legacy_test_gate_inventory.py", "governance/repository-migrations.json"],
+      "evidenceRequired": ["Machine-readable assertion/supersession mapping for policy-retired pre-v17 tests/gates", "Current capability evidence proves no applicable quality assertion was lost", "Fast + Qualified PASS"],
+      "closureCondition": "Every retired pre-v17 executable test/gate family has explicit supersession, migration or justified retirement evidence; age/version alone is insufficient.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "SOURCE-HEALTH-DEBT",
+      "status": "OPEN",
+      "owner": "Recursive source-health / canonical capability owners",
+      "implementationPaths": ["governance/source-health-policy.json", "tools/ci/source_health_architecture_gate.py"],
+      "evidenceRequired": ["All registered orphan-helper dispositions completed", "No new orphan production helpers", "Go vet + full Go suite PASS"],
+      "closureCondition": "The nine tracked orphan-helper debts are deleted, migrated to test/governance ownership, or otherwise resolved without removing MarshalBinary/UnmarshalBinary interface contracts.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ACTIVE-VERSIONED-TEST-MIGRATION",
+      "status": "OPEN",
+      "owner": "Capability-oriented test ownership",
+      "implementationPaths": ["tests/", "tools/ci/legacy_test_gate_inventory.py", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["Active version-named tests migrated incrementally with equivalence proof", "No test identity/assertion loss", "Qualified browser/renderer evidence PASS"],
+      "closureCondition": "Current CI/G12 no longer relies on version-named active tests where capability ownership is required by #70; historical release provenance remains immutable.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PACKAGE-DECOMPOSITION",
+      "status": "OPEN",
+      "owner": "Production capability package ownership",
+      "implementationPaths": ["internal/", "global_market_providers.go", "live_subscription_manager.go"],
+      "evidenceRequired": ["Recursive source-health covers extracted packages", "Implementation and package-local tests move together", "Go full/race/randomized + Qualified PASS"],
+      "closureCondition": "Required #70 Wave 5 cohesive production/package decomposition is completed without parallel domain owners or package-local coverage loss.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PERMANENT-ROOT-ALLOWLIST",
+      "status": "OPEN",
+      "owner": "Root-layout policy / inventory",
+      "implementationPaths": ["governance/root-layout-policy.json", "tools/ci/legacy_test_gate_inventory.py", "tools/ci/repository_migration_gate.py"],
+      "evidenceRequired": ["grandfatherExistingBaselineRootFiles removed/disabled for final state", "Small explicit root allowlist enforced", "Root before/after inventory PASS"],
+      "closureCondition": "CI rejects arbitrary/version-stacked root recurrence and all remaining root owners are canonical or explicitly justified final owners.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ASSET-REGISTRY-OWNERSHIP",
+      "status": "OPEN",
+      "owner": "Governance/assets ownership",
+      "implementationPaths": ["source_retained_assets.json", "De-Pulse-approved-v13.2.7-master.png", "assets/", "governance/"],
+      "evidenceRequired": ["Retained branding asset and registry moved to stable owners", "Packaging/renderer consumers updated atomically", "Icon/branding regressions PASS"],
+      "closureCondition": "Approved branding is retained under canonical stable asset ownership; root-relative legacy ownership is removed without deleting the approved source asset.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "RELEASE-IDENTITY-FANOUT",
+      "status": "OPEN",
+      "owner": "Canonical release identity",
+      "implementationPaths": ["release_identity.py", "release_identity.json", "renderer/"],
+      "evidenceRequired": ["Version-only transition no longer rewrites unnecessary product assets", "Cache busting uses stable/content-derived ownership", "Release identity/renderer regressions PASS"],
+      "closureCondition": "Release identity is centralized enough that public-version changes do not require broad unrelated product-source edits or version-named overlay sprawl.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "SEMVER-RELEASE-CUTOVER",
+      "status": "OPEN",
+      "owner": "Versioning policy / Release G11-G16",
+      "implementationPaths": ["governance/versioning-policy.json", "tools/release/release_identity_contract.py", ".github/workflows/release.yml"],
+      "evidenceRequired": ["Release derives Stable/predecessor tags from canonical prospective SemVer policy", "Historical <=18.9.1 -stable tags remain immutable", "Release-state self-tests PASS"],
+      "closureCondition": "Future Stable publication follows vX.Y.Z and prerelease vX.Y.Z-rc.N semantics prospectively; Release contains no unconditional legacy -stable construction for future versions.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "MAIN-PROTECTION-RULESET",
+      "status": "BLOCKED_EXTERNAL",
+      "owner": "GitHub repository administration",
+      "implementationPaths": ["main repository ruleset/branch settings", "governance/current-state.json"],
+      "evidenceRequired": ["Actual GitHub ruleset/protection snapshot for main", "PR-only trustworthy required checks", "No force-push/deletion and controlled bypass evidence"],
+      "closureCondition": "Actual main protection/ruleset is enabled and recorded; source documentation cannot substitute for repository settings evidence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ARTIFACT-ATTESTATION-SBOM",
+      "status": "OPEN",
+      "owner": "Release supply-chain provenance",
+      "implementationPaths": [".github/workflows/release.yml", "tools/release/"],
+      "evidenceRequired": ["Final runnable macOS/Windows artifact provenance/attestation", "SBOM evidence", "Least-privilege attestation permissions", "No routine-test attestation"],
+      "closureCondition": "Final runnable Stable artifacts receive modern provenance/attestation and SBOM evidence without broadening routine CI permissions.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "CURRENT-STATE-OVERLAY-CONVERGENCE",
+      "status": "OPEN",
+      "owner": "Machine current-state + Adaptive/handoff projections",
+      "implementationPaths": ["governance/current-state.json", "handoff/CURRENT.md", "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md"],
+      "evidenceRequired": ["Executable current-state projection/convergence gate PASS", "All five human-readable current surfaces reflect Stable v18.9.1 and active #70/PR #71"],
+      "closureCondition": "Machine current-state is canonical and all current Adaptive/handoff projections agree with it; stale #64/#69/v18.9.0 current-state claims are absent.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "G16-ROOT-CI-EFFICIENCY",
+      "status": "OPEN",
+      "owner": "G16 adaptive delivery evidence",
+      "implementationPaths": [".github/workflows/release.yml", "tools/ci/legacy_test_gate_inventory.py", "tools/ci/ci_telemetry.py"],
+      "evidenceRequired": ["Root before/after counts and moved/renamed/removed totals", "Remaining intentional root owners", "Runner minutes/reruns avoided/evidence reuse", "No-quality-evidence-removed result"],
+      "closureCondition": "G16 emits machine-readable #70 repository and CI-efficiency closure evidence, not only release-publication status.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "FINAL-QUALIFIED",
+      "status": "OPEN",
+      "owner": "Qualified exact-head evidence",
+      "implementationPaths": [".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["Final exact-head DE.PULSE/fast-head PASS", "Final exact-head DE.PULSE/qualified-head PASS", "Applicable backend/race/randomized/Chrome/WebKit/macOS-native/Windows-native evidence PASS"],
+      "closureCondition": "The complete #70 candidate head earns applicable full Qualified evidence after all implementation gaps are closed; earlier intermediate green runs cannot substitute.",
+      "blocksIssueClosure": true
+    }
+  ]
+}
