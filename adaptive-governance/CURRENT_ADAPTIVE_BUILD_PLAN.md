@@ -5,7 +5,7 @@
 **Stable fingerprint:** `a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9`  
 **Active product development branch:** none  
 **Active product PR:** none  
-**Governance alignment PR:** #67 (draft)  
+**Governance alignment PR:** #67 (merged)  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`  
 **Immediate next product patch:** `v18.9.1` / #64 / `ADAPT-RUNTIME-CRASH-001`.
