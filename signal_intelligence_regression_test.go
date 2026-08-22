@@ -40,7 +40,7 @@ func signalProfessionalSnapshot(ts int64) SignalSnapshot {
 		EvidenceSnapshotID: "evidence-1", FormulaVersion: validationFormulaVersion,
 		SettingsFingerprint: "abc123", EarningsPenalty: 10, SignalProfile: "balanced",
 		FamilyScores: map[string]float64{"Trend": 70, "Momentum": 70, "Participation": 70, "Structure": 70, "RelativeStrength": 70, "Market": 70},
-		EntryLow: 98, EntryHigh: 100, TargetLow: 110, TargetHigh: 115, Invalidation: 94,
+		EntryLow:     98, EntryHigh: 100, TargetLow: 110, TargetHigh: 115, Invalidation: 94,
 	}
 }
 
