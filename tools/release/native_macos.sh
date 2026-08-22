@@ -204,20 +204,22 @@ run_native_window_cycle() {
     return 1
   fi
 
-  base_url="$(python3 - "$GUI_INSTANCE" <<'PY'
+  if ! native_identity="$(python3 - "$GUI_INSTANCE" <<'PY'
 import json,sys
 inst=json.load(open(sys.argv[1]))
 print(inst.get('url',''))
-PY
-)"
-  window_pid="$(python3 - "$GUI_INSTANCE" <<'PY'
-import json,sys
-inst=json.load(open(sys.argv[1]))
 print(int(inst.get('windowPid') or 0))
 PY
-)"
-  if [ -z "$base_url" ] || [ "$window_pid" -le 0 ]; then
-    echo "ERROR: native window identity incomplete (cycle=$cycle url=$base_url pid=$window_pid)" >&2
+)"; then
+    echo "ERROR: unable to parse native-window instance identity (cycle=$cycle)" >&2
+    dump_native_logs
+    stop_native_cycle
+    return 1
+  fi
+  base_url="$(printf '%s\n' "$native_identity" | sed -n '1p')"
+  window_pid="$(printf '%s\n' "$native_identity" | sed -n '2p')"
+  if [ -z "$base_url" ] || [ "${window_pid:-0}" -le 0 ]; then
+    echo "ERROR: native window identity incomplete (cycle=$cycle url=$base_url pid=${window_pid:-0})" >&2
     dump_native_logs
     stop_native_cycle
     return 1
@@ -229,7 +231,7 @@ PY
     return 1
   fi
 
-  python3 - "$base_url" "$DEPULSE_VERSION" "$DEPULSE_BUILD_ID" <<'PY'
+  if ! python3 - "$base_url" "$DEPULSE_VERSION" "$DEPULSE_BUILD_ID" <<'PY'
 import json,sys,time,urllib.request
 base=sys.argv[1].rstrip('/'); version=sys.argv[2]; build=sys.argv[3]
 last=None
@@ -247,6 +249,12 @@ for _ in range(40):
 else:
     raise SystemExit(f'native window backend unavailable: {last}')
 PY
+  then
+    echo "ERROR: native window backend health/root probe failed (cycle=$cycle)" >&2
+    dump_native_logs
+    stop_native_cycle
+    return 1
+  fi
 
   # Immediate framework/JXA aborts normally surface within startup. Keep both
   # processes alive for a bounded dwell so SIGABRT/uncaught-exception exits are
