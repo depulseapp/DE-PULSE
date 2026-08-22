@@ -1,11 +1,81 @@
 {
-  "schema": "DE.PULSE-SOURCE-HEALTH-POLICY-2",
-  "version": "16.11.0-major-closure",
-  "policy": "Maintainability thresholds are guardrails, not rewrite quotas. Watch large functions/modules and refactor when touched or when tests/performance/ownership show risk; block only clearly excessive growth or unresolved debt.",
+  "schema": "DE.PULSE-SOURCE-HEALTH-POLICY-3",
+  "version": "ADAPT-CI-CONVERGENCE-001-wave0",
+  "policy": "Maintainability thresholds are guardrails, not rewrite quotas. Recursive/package-aware source health must fail closed on new production orphan helpers. Pre-existing declaration-only debt is tracked exactly until removed or moved to the correct owner; interface-only methods require explicit contract metadata.",
   "production_file_max_lines": 1200,
   "function_watch_lines": 200,
   "function_block_lines": 320,
   "branch_watch_heuristic": 60,
   "branch_block_heuristic": 120,
-  "major_closure_requires_source_review": true
+  "major_closure_requires_source_review": true,
+  "known_orphan_helpers": [
+    {
+      "path": "ai_hardening_v18_6.go",
+      "name": "aiInferenceTelemetrySnapshot",
+      "disposition": "DELETE_UNUSED",
+      "reason": "Declaration-only legacy telemetry accessor; shared telemetry state remains owned by the current AI hardening path."
+    },
+    {
+      "path": "ai_research_v2.go",
+      "name": "buildAIUserPrompt",
+      "disposition": "DELETE_SUPERSEDED",
+      "reason": "Superseded by bounded semantic prompt construction in the v18.6 AI hardening owner."
+    },
+    {
+      "path": "ai_research_v2.go",
+      "name": "compactAIResearchPackage",
+      "disposition": "DELETE_SUPERSEDED",
+      "reason": "Superseded by semantic materiality compaction in the v18.6 AI hardening owner."
+    },
+    {
+      "path": "ai_research_v2.go",
+      "name": "aiCacheKey",
+      "disposition": "DELETE_SUPERSEDED",
+      "reason": "Superseded by aiInferenceCacheKey, which includes provider/model/routing identity."
+    },
+    {
+      "path": "ai_research_v2.go",
+      "name": "loadAICache",
+      "disposition": "DELETE_SUPERSEDED",
+      "reason": "Superseded by TTL-aware loadAICacheV186."
+    },
+    {
+      "path": "preparation_catalyst.go",
+      "name": "marketOpenPrepLoop",
+      "disposition": "DELETE_SUPERSEDED",
+      "reason": "Automatic Market Open Prep scheduling is owned by sessionIntelligenceCoordinatorLoop; runMarketOpenPrep remains the execution owner."
+    },
+    {
+      "path": "tradeinsight_admission_v18_9.go",
+      "name": "tradeInsightCanonicalOwnerDependencies",
+      "disposition": "MOVE_TO_TEST_OR_GOVERNANCE",
+      "reason": "G3 canonical-owner matrix is consumed only by certification tests and should not remain runtime production code."
+    },
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "appendUint32",
+      "disposition": "DELETE_UNUSED",
+      "reason": "Unused residue in the retained internal BLAKE2b subset; marshaling uses 64-bit helpers."
+    },
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "consumeUint32",
+      "disposition": "DELETE_UNUSED",
+      "reason": "Unused residue in the retained internal BLAKE2b subset; unmarshaling uses 64-bit helpers."
+    }
+  ],
+  "interface_contract_methods": [
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "MarshalBinary",
+      "interface": "encoding.BinaryMarshaler",
+      "reason": "BLAKE2b digest state serialization is intentionally exposed through the standard binary marshaling interface."
+    },
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "UnmarshalBinary",
+      "interface": "encoding.BinaryUnmarshaler",
+      "reason": "BLAKE2b digest state restoration is intentionally exposed through the standard binary unmarshaling interface."
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DE.PULSE G2 — recursive whole-source health, architecture fit and reuse audit."""
+"""DE.PULSE G2 — recursive/package-aware whole-source health, architecture fit and reuse audit."""
 from __future__ import annotations
 
 from collections import Counter, defaultdict
@@ -26,6 +26,39 @@ def production_go(path: Path) -> bool:
     return not any(part in EXCLUDED_DIRS for part in relative.parts)
 
 
+def exact_policy_records(key: str, required_fields: tuple[str, ...]) -> dict[tuple[str, str], dict]:
+    rows = HEALTH_POLICY.get(key, [])
+    if not isinstance(rows, list):
+        raise ValueError(f"{key} must be a list")
+    records: dict[tuple[str, str], dict] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError(f"{key} rows must be objects")
+        for field in required_fields:
+            if not isinstance(row.get(field), str) or not row[field].strip():
+                raise ValueError(f"{key} row missing non-empty {field}")
+        identity = (row["path"], row["name"])
+        if identity in records:
+            raise ValueError(f"{key} contains duplicate {identity[0]}:{identity[1]}")
+        records[identity] = row
+    return records
+
+
+try:
+    KNOWN_ORPHAN_DEBT = exact_policy_records(
+        "known_orphan_helpers", ("path", "name", "disposition", "reason")
+    )
+    INTERFACE_CONTRACT_METHODS = exact_policy_records(
+        "interface_contract_methods", ("path", "name", "interface", "reason")
+    )
+except Exception as exc:
+    print("FAIL: source-health policy metadata invalid:", exc)
+    sys.exit(1)
+
+if set(KNOWN_ORPHAN_DEBT) & set(INTERFACE_CONTRACT_METHODS):
+    print("FAIL: source-health identity cannot be both orphan debt and interface contract")
+    sys.exit(1)
+
 PROD = sorted((p for p in ROOT.rglob("*.go") if production_go(p)), key=rel)
 errors: list[str] = []
 
@@ -34,34 +67,84 @@ def fail(message: str) -> None:
     errors.append(message)
 
 
-prod_text = "\n".join(p.read_text(errors="ignore") for p in PROD)
-# Preserve the historical whole-corpus reference semantics while making discovery
-# recursive. This prevents package moves from silently disappearing from G2.
+prod_text_by_path = {p: p.read_text(errors="ignore") for p in PROD}
+prod_text = "\n".join(prod_text_by_path.values())
 prod_identifier_counts = Counter(re.findall(r"\b[A-Za-z_]\w*\b", prod_text))
+
+# Build per-package corpora so package-local helpers cannot be hidden by an
+# unrelated identifier with the same spelling in another Go package.
+prod_by_package: dict[Path, list[Path]] = defaultdict(list)
+for p in PROD:
+    prod_by_package[p.parent].append(p)
+package_identifier_counts: dict[Path, Counter] = {}
+for package_dir, paths in prod_by_package.items():
+    package_text = "\n".join(prod_text_by_path[p] for p in paths)
+    package_identifier_counts[package_dir] = Counter(
+        re.findall(r"\b[A-Za-z_]\w*\b", package_text)
+    )
 
 # Maintenance debt and module budget across every production Go package.
 for p in PROD:
-    lines = p.read_text(errors="ignore").splitlines()
+    lines = prod_text_by_path[p].splitlines()
     if len(lines) > FILE_MAX:
         fail(f"{rel(p)}: {len(lines)} lines exceeds {FILE_MAX:,}-line responsibility budget")
     for i, line in enumerate(lines, 1):
         if re.search(r"\b(TODO|FIXME|HACK)\b", line):
             fail(f"{rel(p)}:{i}: unresolved maintenance marker")
 
-# Unreferenced production functions/methods using the conserved whole-corpus
-# name-reference rule. Exported cross-package users remain visible in the corpus.
+# Unreferenced production functions/methods.
+#
+# Unexported names are package-scoped, so their reference count is evaluated
+# only inside their Go package. Exported names may have legitimate consumers in
+# another repository package, so they are also checked against the recursive
+# production corpus. Interface-dispatched methods with no textual call site are
+# accepted only through an exact path+method contract in the source-health policy.
 func_decl = re.compile(r"(?m)^func\s+(?:\([^\n]*?\)\s*)?([A-Za-z_]\w*)\s*\(")
+observed_declaration_only: set[tuple[str, str]] = set()
+observed_interface_contracts: set[tuple[str, str]] = set()
+observed_known_debt: set[tuple[str, str]] = set()
+
 for p in PROD:
-    for match in func_decl.finditer(p.read_text(errors="ignore")):
+    package_counts = package_identifier_counts[p.parent]
+    for match in func_decl.finditer(prod_text_by_path[p]):
         name = match.group(1)
         if name in {"main", "init"}:
             continue
-        if prod_identifier_counts.get(name, 0) == 1:
-            fail(f"{rel(p)}: production helper {name} has no production reference")
+        local_refs = package_counts.get(name, 0)
+        repo_refs = prod_identifier_counts.get(name, 0)
+        exported = name[:1].isupper()
+        referenced = local_refs > 1 or (exported and repo_refs > 1)
+        if referenced:
+            continue
+
+        identity = (rel(p), name)
+        observed_declaration_only.add(identity)
+        if identity in INTERFACE_CONTRACT_METHODS:
+            observed_interface_contracts.add(identity)
+            continue
+        if identity in KNOWN_ORPHAN_DEBT:
+            observed_known_debt.add(identity)
+            continue
+        fail(f"{rel(p)}: production helper {name} has no production reference")
+
+# Policy entries are exact and self-pruning. Once a debt helper is removed,
+# moved, or legitimately wired, the stale policy entry must also be deleted.
+for identity, row in KNOWN_ORPHAN_DEBT.items():
+    if identity not in observed_known_debt:
+        fail(
+            "stale known-orphan policy entry: "
+            f"{identity[0]}:{identity[1]} ({row['disposition']})"
+        )
+for identity, row in INTERFACE_CONTRACT_METHODS.items():
+    if identity not in observed_interface_contracts:
+        fail(
+            "stale interface-contract policy entry: "
+            f"{identity[0]}:{identity[1]} ({row['interface']})"
+        )
 
 # Exact duplicate sizeable Go function bodies across the recursive production tree.
 def bodies(path: Path):
-    source = path.read_text(errors="ignore")
+    source = prod_text_by_path[path]
     head = re.compile(r"(?m)^func\s+(?:\([^\n]*?\)\s*)?([A-Za-z_]\w*)\s*\([^\n]*?\)[^{]*\{")
     for match in head.finditer(source):
         i = match.end() - 1
@@ -188,12 +271,19 @@ if "const sectorETF=" in js:
     fail("renderer-owned ticker/sector map returned; classification must remain backend-owned")
 
 package_dirs = sorted({rel(p.parent) if p.parent != ROOT else "." for p in PROD})
-print("DE.PULSE G2 — Recursive Source Health + Architecture Fit + Reuse Audit")
+print("DE.PULSE G2 — Recursive Package-Aware Source Health + Architecture Fit + Reuse Audit")
 print(f"Production Go files: {len(PROD)}")
 print(f"Production Go packages/directories: {len(package_dirs)}")
 print("Production package directories: " + ", ".join(package_dirs))
-print(f"Production Go lines: {sum(len(p.read_text(errors='ignore').splitlines()) for p in PROD)}")
-print("Orphan production Go helpers: 0" if not any("production helper" in e for e in errors) else "Orphan production Go helpers: FAIL")
+print(f"Production Go lines: {sum(len(prod_text_by_path[p].splitlines()) for p in PROD)}")
+unregistered = [
+    identity
+    for identity in observed_declaration_only
+    if identity not in KNOWN_ORPHAN_DEBT and identity not in INTERFACE_CONTRACT_METHODS
+]
+print(f"Unregistered orphan production Go helpers: {len(unregistered)}")
+print(f"Tracked legacy orphan debt: {len(observed_known_debt)}")
+print(f"Explicit interface-only method contracts: {len(observed_interface_contracts)}")
 print("Orphan named renderer helpers: 0" if not any("renderer helper" in e for e in errors) else "Orphan named renderer helpers: FAIL")
 print("Exact duplicate sizeable Go bodies: 0" if not any("duplicate production" in e for e in errors) else "Exact duplicate sizeable Go bodies: FAIL")
 print("Canonical current-state owner: governance/current-state.json")
@@ -201,4 +291,4 @@ if errors:
     for error in errors:
         print("FAIL:", error)
     sys.exit(1)
-print("G2 PASS — recursive production discovery · one canonical owner per responsibility · REUSE/CONSOLIDATE/REFACTOR/DELETE before ADD")
+print("G2 PASS — recursive/package-aware discovery · bounded legacy debt · explicit interface contracts · REUSE/CONSOLIDATE/REFACTOR/DELETE before ADD")
