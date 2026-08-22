@@ -155,12 +155,14 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return 1
 
     if require_tokens(
-        "single-run Release G11-G16 contract",
+        "single-run Release G11-G16 canonical G12/immutable publication contract",
         release,
         (
             "types: [closed]",
             "- 'release_identity.json'",
             "- '.github/workflows/release.yml'",
+            "group: depulse-stable-release",
+            "cancel-in-progress: false",
             "statuses: read",
             "github.event.pull_request.merged == true",
             "github.event.pull_request.base.ref == 'main'",
@@ -172,7 +174,12 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "DE.PULSE/qualified-head",
             "require_status",
             'test "$source_fp" = "$candidate_fp"',
+            "certification-manifest.json",
+            "tools/release/run_full_certification.py",
+            "publication_state=EXACT_ALREADY_PUBLISHED",
+            "immutable Stable tag conflict",
             "G12 Full certification",
+            "Authoritative version-neutral full certification",
             "G13/G14 macOS Apple Silicon",
             "G13/G14 Windows x64",
             "G15 Release Assurance",
@@ -181,7 +188,10 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "git ls-remote --refs origin",
             "gh release create",
             "gh release upload",
-            '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH"',
+            "immutable Stable asset conflict",
+            "existing Stable asset byte-identical; reuse",
+            '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH_OR_EXACT_IDEMPOTENT_REUSE"',
+            '"stableAssetsDifferingBytesOverwrite": false',
             '"noRebuildPublication": true',
         ),
         (
@@ -194,6 +204,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "gh run list",
             "READY_NOT_PROMOTED",
             "git/ref/tags/$tag",
+            "--clobber",
         ),
     ) != 0:
         return 1
@@ -218,7 +229,10 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("Qualified DB + security/data-rights dependency evidence: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
-    print("Release single merged-PR certify-and-publish contract: PASS")
+    print("Release canonical version-neutral G12 executor/manifest: PASS")
+    print("Release early publication feasibility + exact-idempotent reuse: PASS")
+    print("Stable asset differing-byte overwrite prohibition: PASS")
+    print("repository-wide Stable serialization: PASS")
     print("squash-merged/stable-line branch hygiene: PASS")
     return 0
 
