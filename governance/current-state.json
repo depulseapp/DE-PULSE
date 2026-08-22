@@ -1,0 +1,36 @@
+{
+  "schema": "DE.PULSE-CURRENT-STATE-1",
+  "stable": {
+    "productVersion": "18.9.1",
+    "tag": "v18.9.1-stable",
+    "candidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+    "qualifiedSourceSha": "d7276c3421dd2b4529ac2a987466be3cffa05678",
+    "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+    "buildId": "v18.9.1-stable-20260821",
+    "platformBuildNumber": "18901",
+    "releaseRunId": 32546555659,
+    "evidenceSchemaVersion": "DE.PULSE-G16-CI-DELIVERY-3",
+    "publication": "PASS_NO_REBUILD"
+  },
+  "activeWorkSlice": {
+    "workSliceId": "ADAPT-CI-CONVERGENCE-001",
+    "issue": 70,
+    "type": "PROCESS_RELEASE_ENGINEERING",
+    "publicProductVersion": null,
+    "branch": "adapt-ci-convergence-001",
+    "status": "IMPLEMENTATION",
+    "productBehaviorChange": false
+  },
+  "productCapabilityGate": {
+    "blocked": true,
+    "blockedByIssue": 70,
+    "nextReservedCapability": "TradeInsight Settings/API-key UX"
+  },
+  "permanentBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS"
+  ]
+}

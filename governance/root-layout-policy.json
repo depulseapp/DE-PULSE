@@ -1,0 +1,34 @@
+{
+  "schema": "DE.PULSE-ROOT-LAYOUT-POLICY-1",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "canonicalRootFiles": [
+    ".gitignore",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "VERSION.txt",
+    "go.mod",
+    "go.sum",
+    "release_identity.json"
+  ],
+  "retainedDiscoveryFiles": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md"
+  ],
+  "grandfatherExistingBaselineRootFiles": true,
+  "newRootFileRule": "A new root file must be canonical or explicitly registered as transitional with owner, reason, expiry and removal condition.",
+  "transitionalRootFiles": {},
+  "requiredTopLevelDirectories": [
+    ".github",
+    "adaptive-governance",
+    "governance",
+    "handoff",
+    "release",
+    "renderer",
+    "tests",
+    "tools"
+  ],
+  "forbiddenNewRootVersionPrefixPattern": "^v[0-9]+(?:[_\\.][0-9]+)*[_-]",
+  "safeRemovalRule": "Never inferred automatically; explicit assertion/evidence mapping is required."
+}

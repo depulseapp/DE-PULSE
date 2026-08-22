@@ -1,0 +1,34 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-1",
+  "workSliceId": "ADAPT-CI-CONVERGENCE-001",
+  "issue": 70,
+  "title": "Adaptive CI convergence, versioning and repository hygiene",
+  "type": "PROCESS_RELEASE_ENGINEERING",
+  "status": "IMPLEMENTATION",
+  "publicProductVersion": null,
+  "stableProductVersionAtStart": "18.9.1",
+  "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "baselineBuildId": "v18.9.1-stable-20260821",
+  "branch": "adapt-ci-convergence-001",
+  "productBehaviorChange": false,
+  "blocksNextProductCapability": true,
+  "implementationWaves": [
+    "WAVE_0_GUARDRAILS",
+    "WAVE_1_CANONICAL_TOOLING",
+    "WAVE_2_LEGACY_ORCHESTRATION_RETIREMENT",
+    "WAVE_3_HISTORICAL_NON_GO_ROOT",
+    "WAVE_4_ACTIVE_TEST_CAPABILITY_OWNERSHIP",
+    "WAVE_5_PACKAGE_DECOMPOSITION",
+    "WAVE_6_POLICIES_REGISTRIES_ASSETS",
+    "WAVE_7_PERMANENT_ROOT_ALLOWLIST"
+  ],
+  "closureRequires": [
+    "EXECUTABLE_IMPLEMENTATION",
+    "FAST_PASS",
+    "QUALIFIED_PASS",
+    "ROOT_BEFORE_AFTER_EVIDENCE",
+    "NO_QUALITY_EVIDENCE_REMOVED",
+    "VERSION_RELEASE_REBASELINE"
+  ]
+}

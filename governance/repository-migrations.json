@@ -1,0 +1,9 @@
+{
+  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-1",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "moves": [],
+  "retiredExecutablePaths": [],
+  "removedGoTestIdentities": [],
+  "testIdentityRenames": {},
+  "temporaryAliases": []
+}
