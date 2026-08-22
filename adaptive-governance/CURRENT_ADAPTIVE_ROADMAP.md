@@ -6,13 +6,13 @@
 **Build ID:** `v18.9.0-stable-20260821`  
 **Active product branch/PR:** `v18.9.1-development` / Draft PR #69  
 **Active corrective:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`  
-**Approved CI/versioning convergence:** #70 / `ADAPT-CI-CONVERGENCE-001` — mandatory immediately after truthful v18.9.1 closure  
+**Approved CI/versioning/repository convergence:** #70 / `ADAPT-CI-CONVERGENCE-001` — mandatory immediately after truthful v18.9.1 closure  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`
 
 ## 1. North star
 
-`v18.9 trustworthy native runtime/data plane + scalable release engineering -> v19 one hosted DE.PULSE product delivered Mac/Windows/Web in lockstep -> v20 governed adaptive intelligence under the same lockstep contract`
+`v18.9 trustworthy native runtime/data plane + scalable release engineering + clean enforceable repository ownership -> v19 one hosted DE.PULSE product delivered Mac/Windows/Web in lockstep -> v20 governed adaptive intelligence under the same lockstep contract`
 
 Permanent boundaries: U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; G0-G16 only; Smart Provider Router v2 sole routing owner; canonical freshness/cache/persistence/subscription/session/SEC/identity owners; direct SEC/EDGAR authority; deterministic Day/Swing/Long protection; SHADOW -> VALIDATED -> APPROVED -> PRODUCTION.
 
@@ -35,9 +35,9 @@ Platform-specific corrective work is allowed when the actual responsibility is p
 ## 3. Immediate ordered roadmap
 
 1. **Finish `v18.9.1` / #64 truthfully.** G0/root cause is complete. Restore hosted-runner execution, then exact-head Fast + full Qualified + required macOS fresh/warm native evidence. PR #69 stays Draft until that passes.
-2. **Execute #70 / `ADAPT-CI-CONVERGENCE-001`.** This is a mandatory process-hardening checkpoint before the next product implementation. It does not change product behavior and must not weaken v18.9.1 evidence.
+2. **Execute #70 / `ADAPT-CI-CONVERGENCE-001`.** This is a mandatory executable process/repository-hardening checkpoint before the next product implementation. Documentation alone cannot satisfy it. It includes actual CI/release changes and repository-root cleanup/enforcement.
 3. **Re-baseline future v18.9.x reservations** under the approved separation of public product version, work-slice ID, source SHA/fingerprint, build ID and evidence schema. Shipped versions/tags/evidence remain immutable.
-4. **Resume product capability work** only after #70 has established the scalable CI/versioning contract.
+4. **Resume product capability work** only after #70 has established and proven the scalable CI/versioning/repository contract.
 
 The detailed #70 contract is `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md` and GitHub issue #70. It is part of this roadmap, not optional backlog.
 
@@ -60,9 +60,9 @@ The following product identities remain planning reservations until #70 makes th
 
 Dependency order remains authoritative even if future public release grouping changes:
 
-`runtime reliability -> scalable CI/versioning -> settings/secret UX -> coverage-aware routing -> canonical identity -> diagnostics -> observability -> SHADOW capability validation -> operational readiness -> closure`
+`runtime reliability -> scalable CI/versioning/repository ownership -> settings/secret UX -> coverage-aware routing -> canonical identity -> diagnostics -> observability -> SHADOW capability validation -> operational readiness -> closure`
 
-## 5. CI / versioning roadmap checkpoint — #70
+## 5. CI / versioning / repository roadmap checkpoint — #70
 
 The permanent workflow topology stays exactly:
 
@@ -83,11 +83,24 @@ Roadmap outcomes required from #70:
 - future version/tag semantics are explicitly SemVer-compliant or explicitly custom; historical releases remain untouched;
 - native build numbers are monotonic/collision-safe;
 - toolchain identity and final runnable-artifact provenance/attestation become durable release evidence;
-- G16 reports runner minutes/reruns avoided and proves no required evidence was removed.
+- G16 reports runner minutes/reruns avoided and proves no required evidence was removed;
+- repository-root `.gitignore` safely excludes transient local/build/editor evidence without hiding tracked continuity state;
+- source-health becomes recursive/package-aware before production Go files are moved;
+- the existing legacy inventory becomes the canonical root-layout inventory/allowlist owner;
+- reusable root CI/dev/release tooling migrates to stable `tools/` ownership with consumers changed atomically;
+- stale `certification_plan.json`, `certification_runner.py`, `ci_pipeline.py`, and `ci_pipeline_plan.json` cease to act as a competing current CI/release model through consolidation/retirement with equivalence proof;
+- historical/version-scoped non-Go root material moves to governed release/history ownership only after evidence mapping;
+- active version-named Go tests migrate safely without losing package-local/full/race/randomized/focused coverage;
+- production package decomposition occurs only after package-aware source-health guards exist and implementation/tests move together;
+- policies, registries and retained assets move to stable canonical owners with all consumers preserved;
+- a CI-enforced small root allowlist prevents version-stacked clutter from recurring;
+- G16 records before/after root inventory and files moved/renamed/consolidated/removed.
+
+**Roadmap completion rule:** #70 is not complete if only Markdown/issues were updated. Actual repository/code/workflow/tooling changes and applicable executable evidence are mandatory.
 
 ## 6. v19 — Professional Hosted Product
 
-**Entry:** v18 native/data-plane closure plus #70 CI/versioning convergence PASS.
+**Entry:** v18 native/data-plane closure plus #70 CI/versioning/repository-hygiene convergence PASS.
 
 ### v19.0.x — Governance / Control Plane / Data Foundation
 - `v19.0.0` provider legal-rights registry
@@ -151,8 +164,8 @@ Every shared adaptive user-facing capability follows Mac + Windows + Web lockste
 
 ## 8. G0-G16 lockstep enforcement
 
-G1 platform matrix -> G2 canonical owner/adapters -> G3 one contract + equivalence tests -> G4 all REQUIRED client implementations -> G6 cross-platform integration -> G7 equivalent security/data outcomes -> G8 mixed-client capacity -> G9 UX/function/meaning equivalence -> G10 parity debt blocks freeze -> G11 exact candidate + publication feasibility -> G12 system certification -> G13/G14 actual artifacts/deployments -> G15 no GA until all REQUIRED clients pass -> G16 parity/CI-efficiency/handoff audit.
+G1 platform matrix -> G2 canonical owner/adapters -> G3 one contract + equivalence tests -> G4 all REQUIRED client implementations/process changes -> G6 cross-platform/integration/path-consumer proof -> G7 equivalent security/data outcomes -> G8 mixed-client/cost/capacity -> G9 UX/function/meaning equivalence -> G10 parity debt/competing owner/lost coverage blocks freeze -> G11 exact candidate + publication feasibility -> G12 system certification -> G13/G14 actual artifacts/deployments -> G15 no GA until all REQUIRED clients pass -> G16 parity/CI-efficiency/root-inventory/handoff audit.
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution, then finish exact-head #64 / `v18.9.1` Fast + full Qualified + native proof. After truthful v18.9.1 closure, #70 is the mandatory next build/process workstream before any v18.9.2+ product implementation.
+Restore/confirm GitHub Actions hosted-runner execution, then finish exact-head #64 / `v18.9.1` Fast + full Qualified + native proof. After truthful v18.9.1 closure, #70—including actual repository-root implementation—is the mandatory next build/process workstream before any v18.9.2+ product implementation.
