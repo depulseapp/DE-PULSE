@@ -236,7 +236,7 @@
         "runtime_degradation.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_degradation_test.go",
+        "runtime_degradation_regression_test.go",
         "v17_1_backpressure_test.go"
       ]
     },
