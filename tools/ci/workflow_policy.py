@@ -54,6 +54,16 @@ def branch_name_contract() -> int:
     return 0
 
 
+def require_tokens(label: str, text: str, required: tuple[str, ...], forbidden: tuple[str, ...] = ()) -> int:
+    missing = [token for token in required if token not in text]
+    bad = [token for token in forbidden if token in text]
+    if missing:
+        return fail(f"{label} missing", missing)
+    if bad:
+        return fail(f"{label} forbidden contract", bad)
+    return 0
+
+
 def canonical_workflow_contract(workflows: Path) -> int:
     ci_fast = (workflows / "ci-fast.yml").read_text(encoding="utf-8")
     qualified = (workflows / "ci-qualified.yml").read_text(encoding="utf-8")
@@ -61,133 +71,132 @@ def canonical_workflow_contract(workflows: Path) -> int:
     root = workflows.parents[1]
     branch_hygiene = (root / "tools" / "ci" / "branch_hygiene.py").read_text(encoding="utf-8")
 
-    fast_required = (
-        "types: [opened, synchronize, reopened]",
-        "- main",
-        "workflow_dispatch:",
-        "cancel-in-progress: true",
-        "if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}",
-        "ref: ${{ github.event.pull_request.head.sha || github.sha }}",
-        "statuses: write",
-        "DE.PULSE/fast-head",
-        "main-continuity:",
-        "name: Post-Stable continuity sentinel",
-        "python3 tools/ci/post_stable_continuity_gate.py",
-        "python3 tools/ci/stable_evidence_gate.py",
-        "branch-hygiene:",
-        "tools/ci/branch_hygiene.py --apply",
-        "node tests/renderer/surface_consolidation_test.js",
-        "node tests/renderer/documentation_access_test.js",
-        "release dispatch: NOT PERMITTED from CI Fast",
-    )
-    fast_forbidden = (
-        "types: [opened, synchronize, reopened, closed]",
-        "'v*-development'",
-        "'v*-release-certification'",
-        "'v*-stable-promotion'",
-        "release-dispatch:",
-        "gh workflow run release.yml",
-        "actions: write",
-        "DE-PULSE-ci-impact-${{ github.sha }}",
-        "needs: fast",
-        "node v18_6_surface_consolidation_test.js",
-        "node v18_6_documentation_access_test.js",
-    )
-    missing = [x for x in fast_required if x not in ci_fast]
-    forbidden = [x for x in fast_forbidden if x in ci_fast]
-    if missing:
-        return fail("CI Fast efficiency/exact-head/capability-test/post-Stable-continuity contract missing", missing)
-    if forbidden:
-        return fail("CI Fast duplicate-trigger/dispatcher/legacy-test contract violated", forbidden)
+    if require_tokens(
+        "CI Fast efficiency/exact-head/capability-test/post-Stable-continuity contract",
+        ci_fast,
+        (
+            "types: [opened, synchronize, reopened]",
+            "- main",
+            "workflow_dispatch:",
+            "cancel-in-progress: true",
+            "if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}",
+            "ref: ${{ github.event.pull_request.head.sha || github.sha }}",
+            "python3 tools/ci/impact_plan.py",
+            "python3 tools/ci/post_stable_continuity_gate.py",
+            "python3 tools/ci/stable_evidence_gate.py",
+            "tools/ci/branch_hygiene.py --apply",
+            "node tests/renderer/surface_consolidation_test.js",
+            "node tests/renderer/documentation_access_test.js",
+            "DE.PULSE/fast-head",
+            "release dispatch: NOT PERMITTED from CI Fast",
+        ),
+        (
+            "types: [opened, synchronize, reopened, closed]",
+            "gh workflow run release.yml",
+            "actions: write",
+            "node v18_6_surface_consolidation_test.js",
+            "node v18_6_documentation_access_test.js",
+        ),
+    ) != 0:
+        return 1
 
-    qualified_required = (
-        "types: [ready_for_review]",
-        "workflow_dispatch:",
-        "workflow_call:",
-        "PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}",
-        "ref: ${{ github.event.pull_request.head.sha || inputs.candidate_sha || github.sha }}",
-        "webkit_required: ${{ steps.resolve.outputs.webkit_required }}",
-        "needs.context.outputs.lane == 'ci-harness'",
-        "ci-harness) require \"$PORTABILITY\"",
-        "full) require \"$BACKEND\"; require \"$RENDERER\"; require \"$BROWSER\"",
-        "name: Primary Chrome behavior",
-        "name: Primary WebKit compatibility",
-        "needs.context.outputs.webkit_required == 'true' || needs.context.outputs.lane == 'full' || needs.context.outputs.lane == 'browser'",
-        "WEBKIT_REQUIRED: ${{ needs.context.outputs.webkit_required }}",
-        "WEBKIT: ${{ needs.webkit.result }}",
-        "Chrome+WebKit primary browser policy",
-        "run: node documentation_ui_owner_test.js",
-        "run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome",
-        "run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit",
-        "actions: read",
-        "Collect CI telemetry",
-        "tools/ci/ci_telemetry.py",
-        "DE-PULSE-ci-telemetry-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
-        "retention-days: 30",
-        "statuses: write",
-        "DE.PULSE/qualified-head",
-    )
-    qualified_forbidden = (
-        "paths:",
-        "types: [opened",
-        "types: [synchronize",
-        "types: [closed",
-        "browser: [chromium, webkit]",
-        "browser: [chrome, webkit]",
-        "playwright install --with-deps firefox",
-    )
-    missing = [x for x in qualified_required if x not in qualified]
-    forbidden = [x for x in qualified_forbidden if x in qualified]
-    if missing:
-        return fail("CI Qualified candidate/exact-head/primary-browser/renderer-owner/telemetry contract missing", missing)
-    if forbidden:
-        return fail("CI Qualified must not run routine updates or promote secondary engines by default", forbidden)
+    if require_tokens(
+        "CI Qualified Planner v3/exact-head/dependency/native evidence contract",
+        qualified,
+        (
+            "types: [ready_for_review]",
+            "workflow_dispatch:",
+            "workflow_call:",
+            "base_sha:",
+            "target_ref:",
+            "--target-ref \"$target\"",
+            "--requested-lane \"$requested\"",
+            "portability_required: ${{ steps.resolve.outputs.portability_required }}",
+            "backend_required: ${{ steps.resolve.outputs.backend_required }}",
+            "renderer_required: ${{ steps.resolve.outputs.renderer_required }}",
+            "chrome_required: ${{ steps.resolve.outputs.chrome_required }}",
+            "webkit_required: ${{ steps.resolve.outputs.webkit_required }}",
+            "security_rights_required: ${{ steps.resolve.outputs.security_rights_required }}",
+            "db_integration_required: ${{ steps.resolve.outputs.db_integration_required }}",
+            "native_macos_required: ${{ steps.resolve.outputs.native_macos_required }}",
+            "native_windows_required: ${{ steps.resolve.outputs.native_windows_required }}",
+            "if: ${{ needs.context.outputs.backend_required == 'true' }}",
+            "if: ${{ needs.context.outputs.renderer_required == 'true' }}",
+            "if: ${{ needs.context.outputs.chrome_required == 'true' }}",
+            "if: ${{ needs.context.outputs.webkit_required == 'true' }}",
+            "name: Primary Chrome behavior",
+            "name: Primary WebKit browser compatibility",
+            "run: python3 tools/ci/webkit_browser_test.py",
+            "name: Qualified macOS native lifecycle rehearsal",
+            "bash tools/release/native_macos.sh",
+            "name: Qualified Windows native runtime rehearsal",
+            "tools/release/native_windows.ps1",
+            "name: Qualified persistence / DB integration",
+            "name: Qualified security / data-rights contracts",
+            "Require Planner v3 selected jobs to pass",
+            "needs.context.outputs.selected_jobs",
+            "actions: read",
+            "Collect CI telemetry",
+            "tools/ci/ci_telemetry.py",
+            "DE-PULSE-ci-telemetry-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
+            "retention-days: 30",
+            "DE.PULSE/qualified-head",
+        ),
+        (
+            "paths:",
+            "types: [opened",
+            "types: [synchronize",
+            "types: [closed",
+            "browser: [chromium, webkit]",
+            "playwright install --with-deps firefox",
+            "run: python3 tools/ci/webkit_targeted_test.py",
+        ),
+    ) != 0:
+        return 1
 
-    release_required = (
-        "types: [closed]",
-        "- 'release_identity.json'",
-        "- '.github/workflows/release.yml'",
-        "statuses: read",
-        "github.event.pull_request.merged == true",
-        "github.event.pull_request.base.ref == 'main'",
-        "startsWith(github.event.pull_request.head.ref, 'v')",
-        "endsWith(github.event.pull_request.head.ref, '-development')",
-        "github.event.pull_request.merge_commit_sha",
-        "github.event.pull_request.head.sha",
-        "DE.PULSE/fast-head",
-        "DE.PULSE/qualified-head",
-        "require_status",
-        'test "$source_fp" = "$candidate_fp"',
-        "G12 Full certification",
-        "G13/G14 macOS Apple Silicon",
-        "G13/G14 Windows x64",
-        "G15 Release Assurance",
-        "Publish exact same-run certified artifacts",
-        "tools/release/verify_promotion_evidence.py",
-        "git ls-remote --refs origin",
-        "gh release create",
-        "gh release upload",
-        '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH"',
-        '"noRebuildPublication": true',
-    )
-    release_forbidden = (
-        "workflow_dispatch:",
-        "certification_run_id:",
-        "promotion_sha:",
-        "stable-promotion",
-        "release-certification",
-        "gh workflow run",
-        "gh run list",
-        "run-id:",
-        "READY_NOT_PROMOTED",
-        "git/ref/tags/$tag",
-    )
-    missing = [x for x in release_required if x not in release]
-    forbidden = [x for x in release_forbidden if x in release]
-    if missing:
-        return fail("single-run Release G11-G16 contract missing", missing)
-    if forbidden:
-        return fail("legacy/ambiguous release evidence contract still present", forbidden)
+    if require_tokens(
+        "single-run Release G11-G16 contract",
+        release,
+        (
+            "types: [closed]",
+            "- 'release_identity.json'",
+            "- '.github/workflows/release.yml'",
+            "statuses: read",
+            "github.event.pull_request.merged == true",
+            "github.event.pull_request.base.ref == 'main'",
+            "startsWith(github.event.pull_request.head.ref, 'v')",
+            "endsWith(github.event.pull_request.head.ref, '-development')",
+            "github.event.pull_request.merge_commit_sha",
+            "github.event.pull_request.head.sha",
+            "DE.PULSE/fast-head",
+            "DE.PULSE/qualified-head",
+            "require_status",
+            'test "$source_fp" = "$candidate_fp"',
+            "G12 Full certification",
+            "G13/G14 macOS Apple Silicon",
+            "G13/G14 Windows x64",
+            "G15 Release Assurance",
+            "Publish exact same-run certified artifacts",
+            "tools/release/verify_promotion_evidence.py",
+            "git ls-remote --refs origin",
+            "gh release create",
+            "gh release upload",
+            '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH"',
+            '"noRebuildPublication": true',
+        ),
+        (
+            "workflow_dispatch:",
+            "certification_run_id:",
+            "promotion_sha:",
+            "stable-promotion",
+            "release-certification",
+            "gh workflow run",
+            "gh run list",
+            "READY_NOT_PROMOTED",
+            "git/ref/tags/$tag",
+        ),
+    ) != 0:
+        return 1
 
     hygiene_required = (
         'pr_heads("open")',
@@ -197,23 +206,20 @@ def canonical_workflow_contract(workflows: Path) -> int:
         "stable_line_closed",
         "DE.PULSE-BRANCH-HYGIENE-3",
     )
-    missing = [x for x in hygiene_required if x not in branch_hygiene]
+    missing = [token for token in hygiene_required if token not in branch_hygiene]
     if missing:
         return fail("branch hygiene squash/stable-line contract missing", missing)
 
     print("CI Fast single-event exact-head development contract: PASS")
-    print("CI Fast main-push product-test suppression + hygiene/continuity-only contract: PASS")
-    print("CI Fast capability-oriented renderer test paths: PASS")
-    print("CI Qualified ready-candidate exact-head contract: PASS")
-    print("Chrome + WebKit co-primary browser contract: PASS")
-    print("Documentation renderer-owner primary-engine evidence: PASS")
+    print("CI Qualified Planner v3 deterministic job selection: PASS")
+    print("Qualified trustworthy merge-base/manual target binding: PASS")
+    print("Chrome + WebKit browser evidence ownership: PASS")
+    print("macOS + Windows native rehearsal ownership separation: PASS")
+    print("Qualified DB + security/data-rights dependency evidence: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
-    print("secondary browser engines remain risk-directed: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release single merged-PR certify-and-publish contract: PASS")
-    print("Release-tooling recovery trigger + missing-tag lookup hardening: PASS")
     print("squash-merged/stable-line branch hygiene: PASS")
-    print("premium runner separation: PASS")
     return 0
 
 
@@ -239,36 +245,30 @@ def main() -> int:
         return 1
     if canonical_workflow_contract(workflows) != 0:
         return 1
-    if run_gate(root, "tools/ci/workflow_structural_lint.py", "zero-network workflow structural lint") != 0:
-        return 1
-    if run_gate(root, "tools/ci/impact_plan_self_test.py", "CI impact planner v2 contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/legacy_test_gate_inventory.py", "legacy test/gate inventory contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/renderer_owner_contract.py", "capability-oriented renderer ownership contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/post_stable_continuity_gate.py", "post-Stable repository continuity contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/stable_evidence_gate.py", "durable Stable evidence contract") != 0:
-        return 1
-    if run_gate(root, "tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract") != 0:
-        return 1
-    if run_gate(root, "dependency_readiness_gate.py", "dependency/provider readiness contract") != 0:
-        return 1
-    if run_gate(root, "ai_continuous_eval_gate.py", "AI continuous eval/rights contract") != 0:
-        return 1
+
+    gates = (
+        ("tools/ci/workflow_structural_lint.py", "zero-network workflow structural lint"),
+        ("tools/ci/impact_plan_self_test.py", "CI impact planner v3 contract"),
+        ("tools/ci/legacy_test_gate_inventory.py", "legacy test/gate inventory contract"),
+        ("tools/ci/reproducibility_gate.py", "CI reproducibility/dependency/permission contract"),
+        ("tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract"),
+        ("tools/ci/renderer_owner_contract.py", "capability-oriented renderer ownership contract"),
+        ("tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract"),
+        ("tools/ci/post_stable_continuity_gate.py", "post-Stable repository continuity contract"),
+        ("tools/ci/stable_evidence_gate.py", "durable Stable evidence contract"),
+        ("tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract"),
+        ("dependency_readiness_gate.py", "dependency/provider readiness contract"),
+        ("ai_continuous_eval_gate.py", "AI continuous eval/rights contract"),
+    )
+    for filename, label in gates:
+        if run_gate(root, filename, label) != 0:
+            return 1
 
     print("DE.PULSE workflow policy: PASS")
     print("active workflows: " + ", ".join(present))
     print("branch/retry event-amplification prevention: PASS")
     print("zero-network workflow structural lint: PASS")
-    print("CI impact planner v2 self-test: PASS")
+    print("CI impact planner v3 self-test: PASS")
     print("legacy test/gate inventory contract: PASS")
     print("CI reproducibility/dependency/permission contract: PASS")
     print("Chrome/WebKit primary browser routing contract: PASS")
