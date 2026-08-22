@@ -99,7 +99,14 @@ After truthful v18.9.1 closure, #70 is the mandatory next delivery/process works
 - package-local Go test coverage remains intact through capability-oriented renames and any later package extraction;
 - retained assets/policies/registries have explicit stable owners and passing consumers;
 - a CI root allowlist prevents the version-stacked root problem from returning;
-- before/after root inventory and moved/renamed/removed file counts are recorded.
+- before/after root inventory and moved/renamed/removed file counts are recorded;
+- future active scope/G0-G3/work-slice metadata uses one enforced version-independent canonical home rather than returning to the root;
+- repository-wide stale-reference scanning is clean after every move/rename, including workflow/tooling/manifest/docs/renderer/package/`go:embed` references;
+- executable script modes and exact case-sensitive/cross-platform paths are preserved;
+- before/after executable Go/JS/Python/gate identities prove no silent test/gate loss;
+- Planner v3 and changed-path classifiers route the new layout correctly, with unknown/unclassified paths failing closed;
+- no indefinite forwarding wrappers, duplicate old/new copies or second owners remain; any temporary shim has owner/reason/expiry/removal condition and is resolved before closure unless explicitly bounded by an external blocker;
+- tracked generated/transient residue is audited and normal governed builds/tests leave a clean checkout without `.gitignore` hiding authoritative continuity evidence.
 
 **Documentation-only completion is explicitly insufficient.** #70 cannot be marked Delivered or closed until those repository/code/workflow/tooling changes exist and applicable Fast/Qualified/full evidence passes.
 
@@ -133,7 +140,11 @@ Rules:
 - only one Stable G11-G16 graph may publish at a time;
 - candidate/toolchain/artifact provenance is retained durably;
 - exact-head-invalid evidence is not reusable;
-- repository-layout enforcement remains part of permanent CI so version-stacked root clutter cannot recur.
+- repository-layout enforcement remains part of permanent CI so version-stacked root clutter cannot recur;
+- active work-slice metadata has one canonical non-root owner;
+- stale references, path/mode portability regressions, test/gate discovery loss and unknown changed-path classification are delivery blockers;
+- compatibility aliases are transitional only and cannot become a permanent second architecture;
+- governed builds/tests must not leave unowned source-tree residue.
 
 ## 6. Remaining v18.9.x product work — current reservations
 
@@ -201,15 +212,15 @@ No feature scope. Require #66 PASS, zero material shared-capability parity debt,
 
 ## 9. G0-G16 delivery enforcement
 
-- G1 freezes scope/work-slice identity, product-version disposition and REQUIRED/N/A platform matrix.
+- G1 freezes scope/work-slice identity, product-version disposition and REQUIRED/N/A platform matrix, including canonical metadata ownership for process/repository work.
 - G4 requires every REQUIRED client implementation for shared scope and requires actual executable changes for process/repository-hardening work.
-- G5/G6 may select affected evidence adaptively, but ambiguity fails closed.
-- G10 blocks freeze on material parity debt, insufficient evidence mapping, competing CI/release owners, lost package/test coverage or unenforced root-layout migration.
+- G5/G6 may select affected evidence adaptively, but ambiguity or unknown path classification fails closed.
+- G10 blocks freeze on material parity debt, insufficient evidence mapping, competing CI/release owners, lost package/test coverage, stale references, path/mode portability regressions, indefinite compatibility aliases, residue debt or unenforced root-layout migration.
 - G11 freezes source/build/release identity and proves publication feasibility.
 - G12 uses canonical full certification.
 - G13/G14 validate actual required native/Web artifacts/deployments.
 - G15 forbids shared-capability GA until all REQUIRED clients pass and forbids differing Stable-byte overwrite.
-- G16 audits parity drift, CI efficiency, provenance, root before/after inventory, moved/renamed/removed paths and temporary waivers.
+- G16 audits parity drift, CI efficiency, provenance, root before/after inventory, moved/renamed/removed paths, executable identity conservation, stale-reference/path-mode results, compatibility-alias cleanup, clean-checkout result and temporary waivers.
 
 ## 10. v20 delivery train
 
@@ -223,4 +234,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 is the mandatory executable next delivery/process workstream—including actual repository-root cleanup and enforcement—before any next product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 is the mandatory executable next delivery/process workstream—including actual repository-root cleanup, enforcement and all migration-safety gap fixes—before any next product implementation.
