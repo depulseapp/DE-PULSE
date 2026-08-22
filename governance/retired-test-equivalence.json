@@ -1,0 +1,205 @@
+{
+  "schema": "DE.PULSE-RETIRED-TEST-EQUIVALENCE-1",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "scope": "POLICY_RETIRED_PRE_V17_CURRENT_ROOT_EXECUTABLE_EVIDENCE",
+  "qualityPolicy": "Age/version alone never justifies retirement. Every retired source family maps to current executable capability evidence or a narrowly justified historical scope-only retirement; applicable behavior/performance quality remains executable.",
+  "bindingCatalog": "governance/retired-test-evidence-bindings.json",
+  "expected": {
+    "retiredGoSourceFiles": 38,
+    "retiredGoIdentities": 325,
+    "retiredExecutablePaths": 37
+  },
+  "goGroups": [
+    {
+      "id": "provider-core-current",
+      "sources": [
+        {"path": "v14_0_3_test.go", "identities": 11},
+        {"path": "v14_3_0_test.go", "identities": 7},
+        {"path": "v14_3_1_test.go", "identities": 7},
+        {"path": "v14_3_2_test.go", "identities": 3},
+        {"path": "v14_features_test.go", "identities": 15}
+      ],
+      "capability": "provider routing, official macro/VIX, market preparation and inherited core provider behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["PROVIDER_ROUTING_CURRENT", "FRESHNESS_READINESS_CURRENT", "MARKET_EVENT_CURRENT", "PERSISTENCE_RUNTIME_CURRENT"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "freshness-watchlist-sec-current",
+      "sources": [
+        {"path": "v15_0_1_test.go", "identities": 10},
+        {"path": "v15_1_1_test.go", "identities": 14},
+        {"path": "v15_1_2_test.go", "identities": 40},
+        {"path": "v15_1_test.go", "identities": 4},
+        {"path": "v15_test.go", "identities": 8}
+      ],
+      "capability": "freshness, watchlist, persistence, SEC/corporate-event and provider baseline behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["CURRENT_GO_FULL_SUITE", "FRESHNESS_READINESS_CURRENT", "WATCHLIST_CURRENT", "SEC_CORPORATE_CURRENT", "PERSISTENCE_RUNTIME_CURRENT"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "sec-fault-professional-current",
+      "sources": [
+        {"path": "v16_0_0_test.go", "identities": 13},
+        {"path": "v16_0_1_test.go", "identities": 7},
+        {"path": "v16_0_2_professional_test.go", "identities": 14},
+        {"path": "v16_0_3_fault_injection_test.go", "identities": 4},
+        {"path": "v16_0_3_fresh_authorization_regression_test.go", "identities": 5},
+        {"path": "v16_0_3_independent_authorization_test.go", "identities": 6},
+        {"path": "v16_0_3_professional_test.go", "identities": 9},
+        {"path": "v16_0_4_professional_test.go", "identities": 17}
+      ],
+      "capability": "SEC, authorization, degraded-data/fault-injection, freshness and professional decision-support behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["CURRENT_GO_FULL_PLUS_RACE", "SEC_CORPORATE_CURRENT", "SECURITY_RIGHTS_CURRENT", "FRESHNESS_READINESS_CURRENT", "MARKET_EVENT_CURRENT"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "opportunity-radar-current",
+      "sources": [
+        {"path": "v16_10_professional_test.go", "identities": 5},
+        {"path": "v16_10_test.go", "identities": 9}
+      ],
+      "capability": "Opportunity Radar ranking, RVOL, bounded promotion, hysteresis, cadence, shadow control and adaptive data policy",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["OPPORTUNITY_RADAR_CURRENT", "CURRENT_GO_FULL_PLUS_RACE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "performance-migrated",
+      "sources": [
+        {"path": "v16_10_performance_test.go", "identities": 2},
+        {"path": "v16_8_performance_test.go", "identities": 2}
+      ],
+      "capability": "the four material 500-symbol/candidate runtime and allocation ceilings",
+      "disposition": "MIGRATED_TO_CAPABILITY_OWNER",
+      "bindings": ["PERFORMANCE_500_SCALE_CURRENT"],
+      "reason": "The original measurable ceilings were re-established under a version-neutral package-test owner and execute in current full Go suites."
+    },
+    {
+      "id": "major-closure-current",
+      "sources": [{"path": "v16_11_major_closure_test.go", "identities": 4}],
+      "capability": "major-closure boundedness, adaptive behavior and performance continuity",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["PERFORMANCE_STABILITY_CURRENT", "GOVERNANCE_SCOPE_CURRENT"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "market-intelligence-current",
+      "sources": [
+        {"path": "v16_1_1_test.go", "identities": 4},
+        {"path": "v16_1_test.go", "identities": 10},
+        {"path": "v16_7_test.go", "identities": 7},
+        {"path": "v16_8_test.go", "identities": 5}
+      ],
+      "capability": "market intelligence, breadth, relative strength, regime, liquidity, tradeability and bounded data efficiency",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["MARKET_INTELLIGENCE_CURRENT", "MARKET_EVENT_CURRENT", "DATA_UTILITY_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "event-intelligence-current",
+      "sources": [
+        {"path": "v16_2_professional_test.go", "identities": 12},
+        {"path": "v16_2_test.go", "identities": 7}
+      ],
+      "capability": "event intelligence, catalyst/reaction watch and professional decision-support behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["MARKET_EVENT_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "signal-validation-current",
+      "sources": [
+        {"path": "v16_3_professional_test.go", "identities": 14},
+        {"path": "v16_3_test.go", "identities": 15}
+      ],
+      "capability": "signal validation, evidence identity and outcome lifecycle behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["SIGNAL_VALIDATION_CURRENT", "PERSISTENCE_RUNTIME_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "ai-current",
+      "sources": [
+        {"path": "v16_4_professional_test.go", "identities": 6},
+        {"path": "v16_4_test.go", "identities": 4}
+      ],
+      "capability": "AI research safety, routing, evidence boundaries and professional acceptance",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["AI_SAFETY_RIGHTS_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "alternative-community-current",
+      "sources": [
+        {"path": "v16_5_professional_test.go", "identities": 5},
+        {"path": "v16_5_test.go", "identities": 6},
+        {"path": "v16_9_test.go", "identities": 7}
+      ],
+      "capability": "alternative/community context intelligence and governed untrusted external-evidence behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["ALTERNATIVE_COMMUNITY_CURRENT", "SECURITY_RIGHTS_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "watchlist-current",
+      "sources": [{"path": "v16_6_integration_test.go", "identities": 3}],
+      "capability": "watchlist and membership integration behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["WATCHLIST_CURRENT", "CURRENT_GO_FULL_SUITE"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    },
+    {
+      "id": "us-trust-current",
+      "sources": [{"path": "v16_8_1_test.go", "identities": 4}],
+      "capability": "US-equities boundary and trust/readiness closure behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["US_SCOPE_TRUST_CURRENT", "FRESHNESS_READINESS_CURRENT"],
+      "reason": "Applicable behavior is preserved by the named current capability evidence; retirement is not based on source age/version."
+    }
+  ],
+  "executableGroups": [
+    {
+      "id": "scope-certification-historical",
+      "sourcePaths": ["v16_0_4_scope_gate.py", "v16_0_5_scope_gate.py", "v16_0_6_scope_gate.py", "v16_0_scope_gate.py", "v16_10_scope_gate.py", "v16_11_major_scope_matrix_gate.py", "v16_11_scope_gate.py", "v16_1_1_scope_gate.py", "v16_1_scope_gate.py", "v16_2_scope_gate.py", "v16_3_scope_gate.py", "v16_4_scope_gate.py", "v16_5_scope_gate.py", "v16_6_scope_gate.py", "v16_7_scope_gate.py", "v16_8_1_scope_gate.py", "v16_8_scope_gate.py", "v16_9_scope_gate.py"],
+      "capability": "version-specific release/scope certification",
+      "disposition": "JUSTIFIED_HISTORICAL_SCOPE_RETIREMENT",
+      "bindings": ["GOVERNANCE_SCOPE_CURRENT"],
+      "reason": "These gates certified version-specific scope/file matrices. Current scope closure is machine-owned by the active work-slice and v17/v18 reconciliation gates while immutable Stable Git/release evidence preserves the historical certification."
+    },
+    {
+      "id": "renderer-browser-current",
+      "sourcePaths": ["v16_10_renderer_test.js", "v16_3_renderer_test.js", "v16_4_renderer_test.js", "v16_5_renderer_test.js", "v16_6_renderer_test.js", "v16_7_renderer_test.js", "v16_8_1_renderer_test.js", "v16_8_renderer_test.js", "v16_9_renderer_test.js"],
+      "capability": "renderer/browser behavior",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["RENDERER_BROWSER_CURRENT"],
+      "reason": "Applicable renderer assertions are carried by current deterministic-equivalence, renderer-owner, Chrome and WebKit evidence rather than version-named renderer files."
+    },
+    {
+      "id": "performance-current",
+      "sourcePaths": ["v16_10_performance_gate.py", "v16_11_performance_stability_gate.py", "v16_8_performance_gate.py"],
+      "capability": "product performance and stability",
+      "disposition": "MIGRATED_TO_CAPABILITY_OWNER",
+      "bindings": ["PERFORMANCE_500_SCALE_CURRENT", "PERFORMANCE_STABILITY_CURRENT"],
+      "reason": "Material runtime/allocation ceilings and stability evidence are preserved under version-neutral performance package tests plus current race/randomized qualification."
+    },
+    {
+      "id": "engineering-governance-current",
+      "sourcePaths": ["v16_11_adaptive_retrospective_gate.py", "v16_11_data_utility_source_hygiene_gate.py", "v16_11_senior_engineer_gate.py", "v16_11_source_hygiene_gate.py", "v16_10_ia_data_efficiency_gate.py"],
+      "capability": "adaptive governance, data utility, source hygiene and engineering quality",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["GOVERNANCE_SCOPE_CURRENT", "DATA_UTILITY_CURRENT", "SOURCE_HEALTH_CURRENT", "CURRENT_GO_FULL_PLUS_RACE"],
+      "reason": "Current work-slice closure, data-utility, recursive source-health and full/race/randomized Go owners enforce the applicable engineering-quality assertions."
+    },
+    {
+      "id": "professional-acceptance-current",
+      "sourcePaths": ["v16_11_real_money_acceptance_test.js", "v16_11_trader_investor_gate.py"],
+      "capability": "professional trader/investor acceptance",
+      "disposition": "SUPERSEDED_BY_CURRENT_CAPABILITY_EVIDENCE",
+      "bindings": ["TRADER_ACCEPTANCE_CURRENT"],
+      "reason": "Current deterministic equivalence, full Go, renderer/browser qualification and protected NO_EXECUTION boundary preserve professional decision-support acceptance."
+    }
+  ]
+}
