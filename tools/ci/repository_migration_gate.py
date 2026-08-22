@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import sys
 
@@ -101,8 +102,12 @@ def policy_retired_root_path(path: str, retained_majors: set[int]) -> bool:
 def current_active_reference_texts(current_paths: list[str]) -> dict[str, str]:
     """Return current executable/control and runtime text, excluding history/prose."""
     texts: dict[str, str] = {}
+    inventory_path = ROOT / "tools" / "ci" / "legacy_test_gate_inventory.py"
     try:
-        from tools.ci.legacy_test_gate_inventory import active_executable_text
+        namespace = runpy.run_path(str(inventory_path))
+        active_executable_text = namespace.get("active_executable_text")
+        if not callable(active_executable_text):
+            raise RuntimeError("legacy inventory does not expose active_executable_text")
         texts.update(active_executable_text())
     except Exception as exc:
         raise RuntimeError(f"cannot resolve canonical executable closure: {exc}") from exc
