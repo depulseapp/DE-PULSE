@@ -44,18 +44,6 @@
       "name": "marketOpenPrepLoop",
       "disposition": "DELETE_SUPERSEDED",
       "reason": "Automatic Market Open Prep scheduling is owned by sessionIntelligenceCoordinatorLoop; runMarketOpenPrep remains the execution owner."
-    },
-    {
-      "path": "internal/vendorcrypto/blake2b/blake2b.go",
-      "name": "appendUint32",
-      "disposition": "DELETE_UNUSED",
-      "reason": "Unused residue in the retained internal BLAKE2b subset; marshaling uses 64-bit helpers."
-    },
-    {
-      "path": "internal/vendorcrypto/blake2b/blake2b.go",
-      "name": "consumeUint32",
-      "disposition": "DELETE_UNUSED",
-      "reason": "Unused residue in the retained internal BLAKE2b subset; unmarshaling uses 64-bit helpers."
     }
   ],
   "interface_contract_methods": [
