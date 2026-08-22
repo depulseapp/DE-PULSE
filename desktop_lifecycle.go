@@ -183,6 +183,7 @@ app.run;`, appVersion, strings.ReplaceAll(rawURL, "'", "%27"), strings.ReplaceAl
 				if cmd.Start() == nil {
 					return cmd.Process.Pid
 				}
+			}
 		}
 		_ = exec.Command("xdg-open", rawURL).Start()
 	}
