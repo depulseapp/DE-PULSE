@@ -1,0 +1,91 @@
+{
+  "schema": "DE.PULSE-V18.9.1-G0-G3-1",
+  "version": "18.9.1",
+  "channel": "DEVELOPMENT",
+  "scopeId": "ADAPT-RUNTIME-CRASH-001",
+  "issue": 64,
+  "g0": {
+    "certifiedStable": "v18.9.0-stable",
+    "stableCandidateCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
+    "qualifiedStableSource": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
+    "engineeringBaseline": "73aa2a3b1418b7e963bff40d523d4983ba3bfb0d",
+    "baselineState": "v18.9.0 remains immutable Stable. Post-Stable main changes before this patch are governance/evidence only; no runtime correction was already implemented.",
+    "artifactIdentityEvidence": {
+      "releaseRun": 32526121817,
+      "macOSArtifactId": 9462372802,
+      "canonicalBundleExecutable": "DePulseLauncher",
+      "canonicalRuntimeExecutable": "DePulse-arm64",
+      "legacyExecutableAbsent": "Contents/MacOS/De-Pulse",
+      "reportedCrashExecutableMismatch": "/Applications/De-Pulse.app/Contents/MacOS/De-Pulse"
+    },
+    "deterministicReproduction": {
+      "qualifiedRun": 32541591746,
+      "head": "6f4baf26b7c4da8212abd877ce392317967dda1b",
+      "host": "macOS 15.7.7 Apple Silicon",
+      "backend": "PASS",
+      "sqlite": "PASS migrations=[1,2,3,4]",
+      "nativeWindow": "FAIL",
+      "nativeError": "protocol does not exist (-2700)",
+      "failingOwner": "desktop_lifecycle.go macOS JXA ObjC.registerSubclass formal NSApplicationDelegate protocol lookup",
+      "signatureNote": "This canonical JXA exit-status-1 reproduction proves a product native-window defect but is not asserted to be the same crash signature as the original legacy/non-canonical executable SIGABRT without matching .ips evidence."
+    }
+  },
+  "g1": {
+    "scope": "v18_9_1_scope.json",
+    "status": "FROZEN",
+    "primaryResponsibility": "macOS native-window runtime reliability corrective only",
+    "platformMatrix": {
+      "macOS": "REQUIRED",
+      "Windows": "N/A_PLATFORM_SPECIFIC_CORRECTIVE",
+      "Web": "N/A_PLATFORM_SPECIFIC_CORRECTIVE"
+    }
+  },
+  "g2": {
+    "canonicalOwners": {
+      "desktopNativeLifecycle": "desktop_lifecycle.go",
+      "macOSPackagingAndArtifactAudit": "tools/release/native_macos.sh",
+      "macOSWebKitQualification": "tools/ci/webkit_targeted_test.py via .github/workflows/ci-qualified.yml",
+      "backendAndPersistence": "existing application/bootstrap + canonical SQLite persistence owners"
+    },
+    "reuseClassification": {
+      "desktopLifecycle": "HARDEN_EXISTING_OWNER",
+      "macOSPackaging": "HARDEN_EXISTING_OWNER",
+      "webkitQualification": "EXTEND_EXISTING_OWNER",
+      "newNativeSubsystem": "PROHIBITED",
+      "newWorkflow": "PROHIBITED",
+      "persistenceReset": "PROHIBITED"
+    },
+    "rootCauseCorrection": "Remove only the formal protocols:['NSApplicationDelegate'] declaration from the existing JXA registered subclass while preserving the implemented delegate selectors and app.delegate assignment."
+  },
+  "g3": {
+    "newProviderDependencies": false,
+    "newExternalServices": false,
+    "newDatabase": false,
+    "newMigration": false,
+    "newTopLevelGate": false,
+    "newParallelNativeOwner": false,
+    "newParallelWorkflow": false,
+    "compatibility": {
+      "sharedDomainContractChanged": false,
+      "macOSNativeAdapterChanged": true,
+      "userDataFormatChanged": false,
+      "apiContractChanged": false
+    },
+    "qualification": [
+      "exact-head Fast including Go formatting, vet and full package/unit suite",
+      "full exact-head Qualified because BACKEND + CI_HARNESS + RELEASE_TOOLING changed",
+      "actual extracted arm64 package code-sign/linkage/backend/readiness/root proof",
+      "canonical CFBundleExecutable and absence of legacy Contents/MacOS/De-Pulse",
+      "actual non-headless JXA/Cocoa/WKWebView fresh startup and bounded liveness dwell",
+      "warm relaunch using the same persisted profile",
+      "SQLite integrity/migrations and user-state continuity",
+      "Chrome/WebKit/renderer/shared backend regression required by impact planning",
+      "canonical G11-G16 only after explicit merge/release authorization"
+    ],
+    "failureClassification": {
+      "native protocol resolution error": "PRODUCT_FAIL",
+      "missing Go toolchain in WebKit job": "CI_HARNESS_FAIL — corrected by existing pinned GO_VERSION setup",
+      "job fails with zero started steps/log blob": "INFRA_FAIL — no product conclusion"
+    }
+  }
+}
