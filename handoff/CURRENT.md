@@ -27,13 +27,13 @@ DE.PULSE uses many small, dependency-ordered, independently certifiable patches 
 
 Permanent sequence:
 
-`stabilize -> establish canonical owners -> instrument -> validate -> expand -> operationalize -> close -> hosted control plane -> hosted data plane -> sync/parity -> assurance -> evidence substrate -> reliability -> learn`
+`stabilize -> establish canonical owners -> instrument -> validate -> expand -> operationalize -> close -> hosted identity/rights/entitlement/privacy control plane -> hosted environment/IaC -> persistence/secrets -> supply-chain provenance -> hosted data plane -> sync/parity -> assurance -> evidence substrate -> reliability -> learn`
 
 - one primary responsibility per patch;
 - G0-G16 only;
 - canonical owners are reused rather than duplicated;
 - observability needed for a capability exists before broad production admission;
-- tenant identity, RBAC, DE.PULSE product entitlement, provider legal/data rights, DB recovery and secret management precede multi-user data-plane activation;
+- tenant identity, RBAC, DE.PULSE product entitlement, provider legal/data rights, privacy/data-governance lifecycle, hosted environment/IaC trust, DB recovery, secret management and software-supply-chain assurance precede multi-user data-plane activation;
 - point-in-time evidence precedes adaptive learning;
 - model/prompt governance precedes broad adaptive production influence;
 - known misses are fixed in-scope or durably assigned; no chat-only carry-forward.
@@ -104,6 +104,7 @@ macOS / Windows
             ├─ RBAC/capability authorization
             ├─ DE.PULSE product-plan entitlement/quota
             ├─ upstream provider legal/data-rights gate
+            ├─ privacy/data-governance policy
             ├─ Smart Provider Router v2
             ├─ canonical freshness/cache/persistence reuse
             ├─ existing multi-feed subscription owner
@@ -124,10 +125,13 @@ Permanent boundaries:
 - Platform provider credentials remain server-side in managed secrets/KMS and never appear in ordinary SQLite/Postgres sync rows, browser storage, client logs or normal telemetry.
 - Hosted Provider Gateway wraps the existing Smart Provider Router v2; no second provider stack.
 - REST/snapshot/WebSocket/SSE reuse canonical provider/subscription owners.
-- Hosted serving keeps four dimensions separate: tenant/account identity, RBAC/capabilities, DE.PULSE product entitlement, and upstream provider legal/data rights.
-- Shared cache/live fan-out occurs only after the relevant four-dimensional checks and only where provider licensing permits reuse/redistribution.
+- Hosted serving keeps five dimensions separate: tenant/account identity, RBAC/capabilities, DE.PULSE product entitlement, upstream provider legal/data rights, and privacy/data-governance policy.
+- Shared cache/live fan-out occurs only after the relevant checks and only where provider licensing/privacy policy permit reuse/redistribution.
 - Server-side canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO` + capability truth applies across Mac/Windows/web/API/streams.
 - New-device/stale-device bootstrap, outbox/idempotency/change-log/checkpoints/tombstones/compaction and mixed-version compatibility are mandatory.
+- Account data inventory/minimization/retention/export/deactivation/deletion, SQLite/PostgreSQL/sync/cache/backup lifecycle, operator-access/audit retention and data-residency disposition are mandatory.
+- Hosted environments must be isolated and reproducibly defined via IaC/equivalent desired state, service identities/network/TLS boundaries, configuration drift detection and rollback.
+- Software/deployment provenance must cover component/dependency inventory, vulnerability scanning, SBOM where applicable, source/license policy, reproducible builds and artifact/deployment integrity/attestation.
 - Lost/revoked devices, local account isolation, API inventory/version/deprecation, secret rotation, product-plan downgrade/suspension, provider-right expiry, PostgreSQL PITR/restore, tenant-aware metering and multi-user load/security assurance are mandatory.
 - Current/live market truth remains canonical freshness/provider/state-owned.
 
@@ -151,25 +155,28 @@ Exact identity freezes at each G1; these are dependency-aligned reservations.
 - `v19.0.0` provider capability/legal-rights registry
 - `v19.0.1` hosted tenant/identity/device/session control plane
 - `v19.0.2` DE.PULSE product entitlement/metering policy — billing-provider agnostic
-- `v19.0.3` PostgreSQL tenancy/schema/pool/HA/PITR foundation
-- `v19.0.4` managed secrets/KMS lifecycle
-- `v19.0.5` provider quality/cost/coverage/SLO scorecards
-- `v19.0.6` data reconciliation/revision/point-in-time quality
+- `v19.0.3` account data governance/privacy lifecycle
+- `v19.0.4` hosted environment/IaC/service-trust foundation
+- `v19.0.5` PostgreSQL tenancy/schema/pool/HA/PITR foundation
+- `v19.0.6` managed secrets/KMS lifecycle
+- `v19.0.7` software supply-chain/artifact/dependency assurance
+- `v19.0.8` provider quality/cost/coverage/SLO scorecards
+- `v19.0.9` data reconciliation/revision/point-in-time quality
 
 ### v19.1.x — Zero-key provider data plane / native sync
-- `v19.1.0` authenticated/versioned Hosted Provider Gateway
-- `v19.1.1` unified tenant/RBAC/product-entitlement/provider-right serving policy + live fan-out isolation
-- `v19.1.2` sync protocol foundation
+- `v19.1.0` authenticated/versioned Hosted Provider Gateway consuming v19.0 environment/supply-chain foundations
+- `v19.1.1` unified tenant/RBAC/product-entitlement/provider-right/privacy serving policy + live fan-out isolation
+- `v19.1.2` sync protocol foundation with governed retention/deletion semantics
 - `v19.1.3` macOS preferences/watchlist pilot
 - `v19.1.4` desks/workspaces sync
 
 ### v19.2.x — Cross-platform parity / #66 assurance
 - `v19.2.0` Windows x64 parity
 - `v19.2.1` hosted web parity
-- `v19.2.2` rights-aware research/state portability
+- `v19.2.2` rights/privacy-aware research/state portability
 - `v19.2.3` tenant-aware metering/cost/usage/health observability
-- `v19.2.4` multi-user security/abuse/noisy-neighbor/capacity hardening
-- `v19.2.5` #66 hosted-sync/gateway adversarial/failure/recovery closure
+- `v19.2.4` multi-user security/abuse/noisy-neighbor/capacity/environment hardening
+- `v19.2.5` #66 hosted-sync/gateway adversarial/failure/recovery/privacy/environment/supply-chain closure
 
 ### v19.3.x — Point-in-time evidence
 - `v19.3.0` institutional/13F infrastructure
@@ -177,16 +184,16 @@ Exact identity freezes at each G1; these are dependency-aligned reservations.
 - `v19.3.2` AODR candidate/ranking/outcome lineage
 
 ### v19.4.x — Reliability/economics/readiness
-- `v19.4.0` ADR-GDI professional reliability/capacity + hosted operational runbooks
+- `v19.4.0` ADR-GDI professional reliability/capacity + hosted operational runbooks including privacy/environment/supply-chain incidents
 - `v19.4.1` specialized/paid-provider gap evaluation
 - `v19.4.2` v20 research-readiness audit
 
 ### v19.5.0 — v19 Major Closure
-No feature scope. #66, tenant isolation, product-entitlement/provider-right separation, API compatibility/inventory, rights/commercial posture, point-in-time quality, SLO/capacity, recovery/rollback and supported runtime/package evidence must PASS with zero unresolved P0 architecture gap.
+No feature scope. #66, tenant isolation, product-entitlement/provider-right/privacy separation, account-data lifecycle/export/deletion/retention/residency, environment/IaC drift/rollback, software-supply-chain/SBOM/artifact/deployment provenance, API compatibility/inventory, rights/commercial posture, point-in-time quality, SLO/capacity, recovery/rollback and supported runtime/package/deployment evidence must PASS with zero unresolved P0 architecture gap.
 
 ## Planned v20 version train
 
-v20 begins only after `v19.5.0` PASS and consumes point-in-time, rights-valid, provenance-bound evidence.
+v20 begins only after `v19.5.0` PASS and consumes point-in-time, rights-valid, privacy-compatible, provenance-bound evidence.
 
 ### v20.0.x — adaptive control/governance
 - `v20.0.0` adaptive research control plane + immutable experiment ledger
@@ -216,17 +223,17 @@ No new feature scope. Calibration/utility/drift/abstention, deterministic bounda
 ## Industry-strength controls inside G0-G16
 
 Hosted/security/data/adaptive releases absorb within existing gates:
-- architecture decision + threat/data classification at G2;
-- API/schema/protocol compatibility, API inventory/deprecation, SLO/observability, migration/rollback and failure-test plan at G3;
-- contract tests + feature/kill-switch controls where appropriate at G4;
-- negative authorization/tenant/product-entitlement/provider-right/secret/adaptive tests at G7;
-- load/soak/capacity/fairness/noisy-neighbor/failure-injection/failover/protected-session proof at G8;
-- role-aware cross-platform UX/direct-route/API consistency at G9;
+- architecture decision + threat/data/privacy classification at G2;
+- API/schema/protocol compatibility, API inventory/deprecation, data minimization/retention/export/deletion/residency, environment/IaC/service-trust design, dependency/SBOM/source/license/provenance policy, SLO/observability, migration/rollback and failure-test plan at G3;
+- contract tests + reproducible configuration/build proof + feature/kill-switch controls where appropriate at G4;
+- negative authorization/tenant/product-entitlement/provider-right/privacy/environment/secret/adaptive tests at G7;
+- load/soak/capacity/fairness/noisy-neighbor/failure-injection/failover/environment/protected-session proof at G8;
+- role-aware cross-platform UX/export/deletion/direct-route/API consistency at G9;
 - production-readiness/P0 blocking at G10;
 - immutable RC/full certification G11/G12;
-- package/provenance/runtime G13/G14;
-- bounded/canary promotion for hosted-risk changes where applicable at G15;
-- implementation-miss/incident/metric learning and cleanup at G16.
+- package/component/SBOM/artifact/deployment provenance and runtime proof G13/G14;
+- bounded/canary promotion for hosted-risk changes with application/config/environment/dependency rollback at G15;
+- implementation-miss/privacy/supply-chain/incident/metric learning and cleanup at G16.
 
 ## Other continuity truth
 
