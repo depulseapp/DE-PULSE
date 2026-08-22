@@ -3,7 +3,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "functionality_utility_registry.json"
 REMEDIATION = ROOT / "functionality_utility_remediation.json"
 INDEX = ROOT / "renderer" / "index.html"

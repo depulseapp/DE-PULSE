@@ -16,12 +16,7 @@
       "reason": "The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "release/history/v18.6.0/legacy-ci/certification_runner.py",
-        "release_identity.py",
-        "version_consistency_test.py",
-        "tools/ci/legacy_test_gate_inventory.py"
-      ]
+      "allowedReferenceFiles": ["release/history/v18.6.0/legacy-ci/certification_runner.py", "release_identity.py", "version_consistency_test.py", "tools/ci/legacy_test_gate_inventory.py"]
     },
     {
       "oldPath": "certification_runner.py",
@@ -30,11 +25,7 @@
       "reason": "The checkpointed v18.6 certification runner is superseded by the canonical GitHub workflows and current release G12 executor; preserve it only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
-        "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
-        "tools/ci/legacy_test_gate_inventory.py"
-      ]
+      "allowedReferenceFiles": ["release/history/v18.6.0/legacy-ci/ci_pipeline.py", "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json", "tools/ci/legacy_test_gate_inventory.py"]
     },
     {
       "oldPath": "ci_pipeline.py",
@@ -43,9 +34,7 @@
       "reason": "The v18.6 isolated-job CI helper is not part of the current three-workflow control plane and is retained only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "tools/ci/legacy_test_gate_inventory.py"
-      ]
+      "allowedReferenceFiles": ["tools/ci/legacy_test_gate_inventory.py"]
     },
     {
       "oldPath": "ci_pipeline_plan.json",
@@ -54,13 +43,7 @@
       "reason": "The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.",
       "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
-        "release_identity.py",
-        "source_health_architecture_gate.py",
-        "version_consistency_test.py",
-        "tools/ci/legacy_test_gate_inventory.py"
-      ]
+      "allowedReferenceFiles": ["release/history/v18.6.0/legacy-ci/ci_pipeline.py", "release_identity.py", "source_health_architecture_gate.py", "version_consistency_test.py", "tools/ci/legacy_test_gate_inventory.py"]
     },
     {
       "oldPath": "v14_0_3.go",
@@ -87,12 +70,7 @@
       "reason": "Reusable dependency/provider readiness enforcement belongs under tools/ci rather than the repository root.",
       "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/dependency_readiness_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "tools/ci/dependency_readiness_gate.py",
-        "tools/ci/workflow_policy.py",
-        ".github/workflows/ci-qualified.yml",
-        "release/v18.9.1/certification-manifest.json"
-      ]
+      "allowedReferenceFiles": ["tools/ci/dependency_readiness_gate.py", "tools/ci/workflow_policy.py", ".github/workflows/ci-qualified.yml", "release/v18.9.1/certification-manifest.json"]
     },
     {
       "oldPath": "ai_continuous_eval_gate.py",
@@ -101,11 +79,7 @@
       "reason": "Reusable offline AI hardening and data-rights evaluation belongs under tools/ci rather than the repository root.",
       "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/ai_continuous_eval_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "tools/ci/workflow_policy.py",
-        ".github/workflows/ci-qualified.yml",
-        "release/v18.9.1/certification-manifest.json"
-      ]
+      "allowedReferenceFiles": ["tools/ci/workflow_policy.py", ".github/workflows/ci-qualified.yml", "release/v18.9.1/certification-manifest.json"]
     },
     {
       "oldPath": "adaptive_resume_gate.py",
@@ -114,11 +88,16 @@
       "reason": "The assistant/account-independent resume contract is reusable CI governance and belongs under tools/ci rather than repository root.",
       "removalCondition": "Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": [
-        "tools/ci/adaptive_resume_gate.py",
-        ".github/workflows/ci-fast.yml",
-        "release/v18.9.1/certification-manifest.json"
-      ]
+      "allowedReferenceFiles": ["tools/ci/adaptive_resume_gate.py", ".github/workflows/ci-fast.yml", "release/v18.9.1/certification-manifest.json"]
+    },
+    {
+      "oldPath": "functionality_utility_checkpoint_gate.py",
+      "newPath": "tools/ci/functionality_utility_checkpoint_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-utility CI ownership",
+      "reason": "The reusable functionality/data-utility/provider-Market-Mode checkpoint is CI governance and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; the canonical G12 manifest uses tools/ci/functionality_utility_checkpoint_gate.py and active executable closure follows the migrated owner with equivalent registry and provider/Market-Mode validation.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": ["tools/ci/functionality_utility_checkpoint_gate.py", "release/v18.9.1/certification-manifest.json"]
     }
   ],
   "retiredExecutablePaths": [],
