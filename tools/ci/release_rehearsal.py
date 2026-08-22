@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 
@@ -44,6 +45,8 @@ def main() -> int:
         "types: [closed]",
         "- 'release_identity.json'",
         "- '.github/workflows/release.yml'",
+        "group: depulse-stable-release",
+        "cancel-in-progress: false",
         "github.event.pull_request.merged == true",
         "github.event.pull_request.base.ref == 'main'",
         "github.event.pull_request.merge_commit_sha",
@@ -51,6 +54,8 @@ def main() -> int:
         "DE.PULSE/fast-head",
         "DE.PULSE/qualified-head",
         'test "$source_fp" = "$candidate_fp"',
+        "certification-manifest.json",
+        "tools/release/run_full_certification.py",
         "G12 Full certification",
         "G13/G14 macOS Apple Silicon",
         "G13/G14 Windows x64",
@@ -62,11 +67,15 @@ def main() -> int:
         'gh release create "$tag"',
         '--target "$CANDIDATE_SHA"',
         'gh release upload "$tag"',
+        "immutable Stable asset conflict",
+        "existing Stable asset byte-identical; reuse",
         "G16 Adaptive release handoff evidence",
     )
     missing = [token for token in required if token not in text]
     if missing:
         return fail("missing release invariant(s): " + ", ".join(missing))
+    if "--clobber" in text:
+        return fail("Stable release publication must never use --clobber")
 
     try:
         publish = extract_publish_block(text)
@@ -95,11 +104,20 @@ def main() -> int:
     else:
         return fail("mismatched Stable tag model must fail closed")
 
+    hardening = subprocess.run(
+        [sys.executable, str(root / "tools" / "ci" / "ci_hardening_gate.py")],
+        cwd=root,
+        check=False,
+    )
+    if hardening.returncode != 0:
+        return fail("CI/release identity, versioning, toolchain hardening contract failed")
+
     print("DE.PULSE pre-merge release rehearsal: PASS")
     print("G11 exact-head status + fingerprint contract: PASS")
     print("G12/G13/G14/G15/G16 topology contract: PASS")
     print("same-run no-rebuild publication contract: PASS")
     print("Stable tag absent/same/mismatch model: PASS")
+    print("identity/versioning/toolchain hardening contracts: PASS")
     return 0
 
 
