@@ -26,7 +26,8 @@ Permanent rules:
 - known misses are fixed in-scope or durably assigned;
 - G0-G16 is the only top-level release model;
 - exactly three routine workflow families remain: Fast, Qualified and Release;
-- CI efficiency may reduce redundant work, never required evidence.
+- CI efficiency may reduce redundant work, never required evidence;
+- documentation does not satisfy implementation scope: build-plan items close only when executable repository/code/workflow/tooling changes and required evidence exist.
 
 ## 2. Cross-Platform Lockstep Product Contract
 
@@ -91,7 +92,7 @@ Remaining requirements:
 
 ### Step B — Execute #70 / `ADAPT-CI-CONVERGENCE-001`
 
-This is now a **mandatory build-plan checkpoint**, not optional backlog. It begins only after truthful v18.9.1 closure unless a discovered CI defect makes current evidence structurally untrustworthy.
+This is now a **mandatory executable build-plan checkpoint**, not optional backlog and not documentation-only. It begins only after truthful v18.9.1 closure unless a discovered CI defect makes current evidence structurally untrustworthy.
 
 Required build outcomes:
 1. Planner v3 selects deterministic affected jobs/lane requirements with explicit reasons and fail-closed full fallback.
@@ -112,6 +113,18 @@ Required build outcomes:
 16. One canonical toolchain manifest records resolved toolchain/runner identity.
 17. Handoff and four CURRENT Adaptive overlays consume/check one actual current-state truth.
 18. G16 reports runner minutes/reruns avoided and confirms no quality requirement was removed.
+19. Add a safe root `.gitignore` that excludes transient local/build/editor evidence without hiding tracked continuity checkpoints.
+20. Make source-health and production-package discovery recursive/package-aware before any production Go relocation.
+21. Extend the existing legacy inventory into the canonical root-layout inventory/allowlist owner; do not create a parallel inventory subsystem.
+22. Move reusable root CI/dev/release tooling into stable `tools/` ownership and update all active consumers atomically.
+23. Consolidate useful behavior from `certification_plan.json`, `certification_runner.py`, `ci_pipeline.py`, and `ci_pipeline_plan.json` into the permanent CI/release owners, then retire the stale competing model when no active consumer remains.
+24. Reclassify and migrate historical/version-scoped non-Go root material into governed release/history ownership with evidence mapping; no age/name-based deletion.
+25. Rename active version-named Go tests toward capability-oriented ownership while preserving package-local access, full Go/race/randomized/focused coverage and all existing assertions.
+26. After source-health is package-aware, incrementally extract cohesive production code + tests into `internal/<capability>` packages only with exact equivalence proof and without parallel canonical owners.
+27. Move policy/registry/retained-asset files to stable governance/config/asset ownership only with all runtime/test/package consumers updated atomically.
+28. Enforce a small CI root allowlist that blocks new arbitrary/version-prefixed root gates/tests/contracts/release scripts unless explicitly transitional with a migration owner/expiry.
+29. Record root before/after inventory, files moved/renamed/removed, remaining intentional root owners and assurance proof at G16.
+30. #70 cannot close on audit/docs alone; all applicable executable changes above must exist and pass Fast/Qualified/full evidence.
 
 Detailed contract: `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md` and issue #70.
 
@@ -168,7 +181,7 @@ Preferred build flow:
 
 ## 7. v19 — Professional Hosted Product
 
-**Entry:** v18 native/data-plane closure + #70 CI/versioning convergence PASS.
+**Entry:** v18 native/data-plane closure + #70 CI/versioning/repository-hygiene convergence PASS.
 
 Architecture target:
 
@@ -234,7 +247,7 @@ Every shared adaptive user-facing capability is implemented and promoted Mac + W
 - G12 uses the canonical version-neutral executor after #70.
 - G13/G14 validate actual required native/Web artifacts/deployments.
 - G15 cannot mutate differing Stable bytes.
-- G16 records parity drift, CI efficiency, evidence reuse, toolchain/provenance and remaining cleanup debt.
+- G16 records parity drift, CI efficiency, evidence reuse, toolchain/provenance, root-layout before/after inventory and remaining cleanup debt.
 
 ## 10. Protected boundaries
 
@@ -242,4 +255,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 / `ADAPT-CI-CONVERGENCE-001` is the mandatory next build-plan workstream before any v18.9.2+ product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 / `ADAPT-CI-CONVERGENCE-001` is the mandatory executable next build-plan workstream—including repository-root implementation, not documentation alone—before any v18.9.2+ product implementation.
