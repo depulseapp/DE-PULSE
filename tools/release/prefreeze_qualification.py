@@ -161,7 +161,7 @@ def main():
         ('functionality_utility', [py, 'tools/ci/functionality_utility_checkpoint_gate.py'], 45),
         ('data_health', [py, 'tools/ci/data_health_policy_gate.py'], 30),
         ('source_health', [py, 'tools/ci/source_health_architecture_gate.py'], 120),
-        ('content', [py, 'content_copy_audit_test.py'], 60),
+        ('content', [py, 'tools/ci/content_copy_audit_test.py'], 60),
         ('renderer', ['node', 'renderer_logic_test.js'], 90),
     ]
 
