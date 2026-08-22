@@ -34,7 +34,7 @@
   ],
   "focusedGoPattern": "TestV18_9_1|TestV189|TestV1882|TestV1881|TestV188",
   "nodeTests": [
-    ["node", "deterministic_equivalence_test.js"],
+    ["node", "tools/ci/deterministic_equivalence_test.js"],
     ["node", "--require", "./tools/ci/release_identity_renderer_preload.js", "renderer_logic_test.js"],
     ["node", "v18_0_5_renderer_test.js"],
     ["node", "documentation_ui_owner_test.js"],
@@ -52,26 +52,9 @@
     ["python3", "tools/ci/documentation_owner_browser_test.py", "--engine", "chrome"]
   ],
   "staticSourceAssertions": [
-    {
-      "file": "desktop_lifecycle.go",
-      "present": ["app.delegate=delegate"],
-      "absent": ["protocols:['NSApplicationDelegate']", "protocols: ['NSApplicationDelegate']"]
-    },
-    {
-      "file": "v18_9_1_desktop_lifecycle_test.go",
-      "present": ["TestV18_9_1MacOSWindowScriptAvoidsFormalDelegateProtocolLookup"]
-    }
+    {"file": "desktop_lifecycle.go", "present": ["app.delegate=delegate"], "absent": ["protocols:['NSApplicationDelegate']", "protocols: ['NSApplicationDelegate']"]},
+    {"file": "v18_9_1_desktop_lifecycle_test.go", "present": ["TestV18_9_1MacOSWindowScriptAvoidsFormalDelegateProtocolLookup"]}
   ],
-  "protectedBoundaries": [
-    "US_EQUITIES_PROCESSING",
-    "NO_EXECUTION",
-    "DETERMINISTIC_DAY_SWING_LONG",
-    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
-    "DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4"
-  ],
-  "premergeEvidence": {
-    "webkit": "REQUIRED_PREMERGE_EXACT_HEAD_QUALIFIED",
-    "nativeMacos": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS",
-    "nativeWindows": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS"
-  }
+  "protectedBoundaries": ["US_EQUITIES_PROCESSING","NO_EXECUTION","DETERMINISTIC_DAY_SWING_LONG","SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER","DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4"],
+  "premergeEvidence": {"webkit": "REQUIRED_PREMERGE_EXACT_HEAD_QUALIFIED","nativeMacos": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS","nativeWindows": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS"}
 }
