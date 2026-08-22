@@ -48,7 +48,7 @@
     },
     "retired_equivalence_regression_test.go": {
       "owner": "ADAPT-CI-CONVERGENCE-001 / specialized retired-test behavior equivalence",
-      "reason": "Version-neutral package tests preserve specialized event/macro/news assertions from policy-retired pre-v17 families when generic full-suite execution alone cannot prove semantic equivalence. This owner is assertion-level evidence, not a compatibility wrapper or restored legacy version file.",
+      "reason": "Version-neutral package tests preserve specialized event/macro/news and Opportunity Radar assertions from policy-retired pre-v17 families when generic full-suite execution alone cannot prove semantic equivalence. This owner is assertion-level evidence, not a compatibility wrapper or restored legacy version file.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
       "removalCondition": "Move each preserved assertion with its final capability package/test owner during decomposition and update the retired-test evidence bindings atomically; no assertion may disappear merely because its original version-named source was retired."
     },
@@ -57,6 +57,12 @@
       "reason": "Version-neutral package tests preserve the retired signal outcome-ordering, frozen evidence identity, split-adjusted outcome, seasonality, calibration and correlation/concentration assertions that generic full-suite execution did not independently prove.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
       "removalCondition": "Move these assertions with the final signal-validation/market-intelligence capability package and update retired-test bindings atomically; preserve all outcome, seasonality, calibration and concentration semantics."
+    },
+    "alternative_intelligence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / alternative-community-options intelligence equivalence",
+      "reason": "Version-neutral package tests preserve retired alternative/community/options/replay assertions: GEX and open-interest truth, untrusted/rights-gated community evidence, USO-versus-WTI semantics, source diversity, anti-scraping and US-symbol boundaries, AI eligibility, and replay non-fabrication.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move these assertions with their final alternative-intelligence/community/options/replay capability owners during package decomposition and update retired-test bindings atomically; do not weaken evidence-rights or non-fabrication semantics."
     }
   },
   "requiredTopLevelDirectories": [".github", "adaptive-governance", "governance", "handoff", "release", "renderer", "tests", "tools"],
