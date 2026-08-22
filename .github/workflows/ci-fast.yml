@@ -50,6 +50,8 @@ jobs:
         run: python3 tools/ci/source_health_architecture_gate.py
       - name: Repository migration safety
         run: python3 tools/ci/repository_migration_gate.py
+      - name: Active work-slice executable closure ledger
+        run: python3 tools/ci/work_slice_closure_gate.py
       - name: Conserved v17/v18 requirement-ledger integrity
         run: python3 v18_5_1_v17_v18_reconciliation_gate.py
       - name: Watchlist membership regression contract
@@ -132,6 +134,7 @@ jobs:
             echo '- workflow policy: PASS'
             echo '- recursive source-health/package discovery: PASS'
             echo '- repository migration safety: PASS'
+            echo '- active work-slice closure-ledger enforcement: PASS'
             echo '- conserved v17/v18 ledger integrity: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- post-Stable continuity: PASS'
