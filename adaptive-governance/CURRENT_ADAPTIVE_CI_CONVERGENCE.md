@@ -41,6 +41,13 @@ No CI efficiency optimization may weaken G0-G16, exact-head evidence, macOS Appl
 18. Converge `handoff/CURRENT.md` and the four `CURRENT_ADAPTIVE_*` overlays on one actual current-state truth; prefer a machine-readable current release state over repeated hand-authored fields.
 19. G16 must report runner minutes/reruns avoided, evidence reuse and confirmation that no quality requirement was removed.
 20. Execute repository-root hygiene as real implementation: add safe ignore policy, make source-health package-aware, eliminate contradictory legacy certification ownership, migrate historical/version-scoped root machinery, migrate active version-named tests safely, move stable assets/policies to canonical owners, and enforce a root allowlist.
+21. Establish one version-independent active work-slice metadata home so future G0-G3/scope records do not recreate version-stacked root clutter.
+22. Enforce repository-wide stale-reference detection for moved/renamed paths across workflows, code, tooling, manifests, docs, renderer/package assets and `go:embed` consumers.
+23. Preserve executable file modes and case-sensitive/cross-platform path correctness for every move.
+24. Conserve executable test/gate identity before/after cleanup, not merely file counts.
+25. Update Planner v3/path classifiers for the new layout and fail closed on unknown/unclassified paths.
+26. Prohibit indefinite forwarding wrappers/duplicate old-new copies/second owners; temporary compatibility aliases require owner, reason, expiry and removal condition.
+27. Audit tracked generated/transient residue and require normal builds/tests to leave a clean governed checkout without hiding authoritative continuity evidence.
 
 ## 3. Mandatory executable repository-hygiene packet
 
@@ -64,6 +71,18 @@ Implementation waves:
 6. **Production package decomposition** — only after source-health is package-aware, extract cohesive implementation + tests together into `internal/<capability>` packages with canonical-owner/equivalence proof.
 7. **Policies, registries and retained assets** — converge them into stable governance/config/asset owners with atomic path-consumer updates.
 8. **Permanent root allowlist** — CI fails on newly introduced arbitrary/version-prefixed root gates/tests/contracts/release scripts unless explicitly transitional with a migration owner and expiry.
+
+### Mandatory migration-safety implementation
+
+These safeguards are part of the executable packet and are not advisory documentation:
+
+1. **Canonical active work-slice home** — create and enforce a version-independent location, target pattern `governance/work-slices/<workSliceId>/` (or an explicitly equivalent canonical owner), for future scope/G0-G3/work-slice metadata. New version-prefixed root scope/contract files are prohibited after migration.
+2. **Repository-wide stale-reference gate** — implement a gate that rejects stale active paths after move/rename. It must inspect GitHub workflows, shell/Python/Node tooling, JSON/YAML manifests, Markdown/governance references, renderer/resource paths, packaging paths, `go:embed` and other discovered path consumers.
+3. **File-mode/filesystem portability** — migration tooling and evidence must prove executable scripts retain `+x`, path case is exact, and supported macOS/Windows/Linux CI semantics do not rely on a case-insensitive filesystem or shell-only path behavior.
+4. **Executable identity conservation** — capture before/after discovered Go test identities and active JS/Python/gate identities/assertion owners. A lower discovered executable identity set without explicit equivalence/retirement proof is a failure even if the root file count decreases.
+5. **Planner/path migration** — Planner v3 and every changed-path/evidence classifier must understand the new layout. Every moved path maps to the intended evidence; unknown/unclassified impact fails closed to full.
+6. **No permanent compatibility clutter** — do not leave indefinite old-path wrappers, symlink-like aliases, duplicate scripts/tests or parallel owners. A temporary compatibility shim requires owner, reason, expiry, removal condition and must be absent at #70 closure unless explicitly waived with a bounded external blocker.
+7. **Generated/transient residue audit** — identify tracked generated/transient artifacts, remove/relocate non-authoritative residue, and prove a normal governed build/test cycle leaves the source checkout clean except for explicitly approved generated outputs. `.gitignore` must never conceal tracked continuity checkpoints or required release evidence.
 
 ## 4. Versioning / build identity target
 
@@ -121,7 +140,7 @@ Never delete version-named tests/gates merely because their names are old. Never
 
 1. #64 / `v18.9.1` remains the active product corrective and must obtain exact-head Fast + full Qualified + required native proof.
 2. After truthful v18.9.1 closure, execute #70 / `ADAPT-CI-CONVERGENCE-001` as a dedicated process-hardening packet before further version-specific CI/release machinery accumulates.
-3. The repository-hygiene packet above is part of #70 implementation and must be executed, not merely documented.
+3. The repository-hygiene packet and migration-safety implementation above are part of #70 implementation and must be executed, not merely documented.
 4. Reconcile future v18.9.x product reservations against the approved product-version/work-slice separation before starting the next product implementation.
 5. No #70 work may be used to weaken v18.9.1 evidence or retroactively redefine shipped Stable history.
 
@@ -136,10 +155,17 @@ In addition, #70 cannot close unless:
 - package-local Go regression coverage is preserved;
 - historical Stable tags/releases/evidence remain unchanged;
 - a CI-enforced root allowlist prevents recurrence;
+- a canonical version-independent work-slice metadata home exists and is enforced;
+- repository-wide stale-reference scanning passes after migrations;
+- executable file modes and case-sensitive/cross-platform paths are proven;
+- before/after executable test/gate identity is conserved or explicitly equivalence-retired;
+- Planner v3/path classifiers correctly route the new layout and fail closed on unknown paths;
+- no indefinite compatibility wrappers or duplicate owners remain;
+- normal build/test execution leaves no ungoverned tracked/transient source-tree residue;
 - G16 records before/after root inventory and proves no quality requirement was removed.
 
 Documentation-only completion is prohibited.
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. #70 is approved and must execute immediately after truthful v18.9.1 closure, including the mandatory executable repository-hygiene packet, before the next product implementation creates additional version-specific CI/release machinery.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. #70 is approved and must execute immediately after truthful v18.9.1 closure, including the mandatory executable repository-hygiene and migration-safety packet, before the next product implementation creates additional version-specific CI/release machinery.
