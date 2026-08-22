@@ -125,6 +125,13 @@ Required build outcomes:
 28. Enforce a small CI root allowlist that blocks new arbitrary/version-prefixed root gates/tests/contracts/release scripts unless explicitly transitional with a migration owner/expiry.
 29. Record root before/after inventory, files moved/renamed/removed, remaining intentional root owners and assurance proof at G16.
 30. #70 cannot close on audit/docs alone; all applicable executable changes above must exist and pass Fast/Qualified/full evidence.
+31. Establish one **version-independent canonical active work-slice home** (target pattern such as `governance/work-slices/<workSliceId>/`) for future scope/G0-G3/work-slice metadata so root clutter is not recreated under a different naming convention.
+32. Add a **repository-wide stale-reference gate** for every move/rename. It must cover workflows, shell/Python/Node tooling, JSON/YAML manifests, Markdown/docs, renderer/resource references, packaging paths, `go:embed` and other path consumers; stale active references block completion.
+33. Preserve **file mode and filesystem portability** during moves: executable scripts retain `+x`; case-sensitive path semantics and supported macOS/Windows/Linux CI path behavior must pass.
+34. Add **executable test/gate identity conservation**: record and compare before/after discovered Go tests plus active JS/Python/gate identities so cleanup cannot silently reduce discovery or assertions even when file counts look correct.
+35. Update **Planner v3 and every changed-path classifier** for the new repository layout; moved files must still select the correct evidence graph and unknown/unclassified paths must fail closed.
+36. Prohibit **permanent compatibility clutter**: forwarding wrappers, duplicate old/new copies or second owners may only be temporary with explicit owner, reason, expiry and removal condition; #70 cannot close with indefinite compatibility aliases.
+37. Perform a **generated/transient residue audit**: remove or relocate already-tracked non-authoritative generated/transient artifacts, prove normal tests/builds leave a clean governed checkout, and ensure `.gitignore` never conceals authoritative continuity checkpoints/evidence.
 
 Detailed contract: `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md` and issue #70.
 
@@ -247,7 +254,7 @@ Every shared adaptive user-facing capability is implemented and promoted Mac + W
 - G12 uses the canonical version-neutral executor after #70.
 - G13/G14 validate actual required native/Web artifacts/deployments.
 - G15 cannot mutate differing Stable bytes.
-- G16 records parity drift, CI efficiency, evidence reuse, toolchain/provenance, root-layout before/after inventory and remaining cleanup debt.
+- G16 records parity drift, CI efficiency, evidence reuse, toolchain/provenance, root-layout before/after inventory, test/gate identity conservation, stale-reference cleanliness, compatibility-alias cleanup and remaining repository debt.
 
 ## 10. Protected boundaries
 
@@ -255,4 +262,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 / `ADAPT-CI-CONVERGENCE-001` is the mandatory executable next build-plan workstream—including repository-root implementation, not documentation alone—before any v18.9.2+ product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, #70 / `ADAPT-CI-CONVERGENCE-001` is the mandatory executable next build-plan workstream—including repository-root implementation and all migration-safety gap fixes above, not documentation alone—before any v18.9.2+ product implementation.
