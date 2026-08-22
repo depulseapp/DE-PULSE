@@ -1,7 +1,53 @@
 {
-  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-1",
+  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-2",
   "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-  "moves": [],
+  "moves": [
+    {
+      "oldPath": "certification_plan.json",
+      "newPath": "release/history/v18.6.0/legacy-ci/certification_plan.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/certification_runner.py",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "certification_runner.py",
+      "newPath": "release/history/v18.6.0/legacy-ci/certification_runner.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The checkpointed v18.6 certification runner is superseded by the canonical GitHub workflows and current release G12 executor; preserve it only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+        "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "ci_pipeline.py",
+      "newPath": "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 isolated-job CI helper is not part of the current three-workflow control plane and is retained only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "allowedReferenceFiles": [
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "ci_pipeline_plan.json",
+      "newPath": "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+        "source_health_architecture_gate.py",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    }
+  ],
   "retiredExecutablePaths": [],
   "removedGoTestIdentities": [],
   "testIdentityRenames": {},
