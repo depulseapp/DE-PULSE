@@ -2,7 +2,7 @@
 
 **Status:** APPROVED / ADAPTIVE  
 **Authority:** canonical product sequencing and approved strategic workstreams  
-**Rule:** mission/workstreams are durable; future minor/patch placement may adapt when dependency, safety, performance, evidence, commercial rights, or operational reality justify movement. Shipped releases and certified evidence are immutable truth.
+**Rule:** mission/workstreams are durable; future minor/patch placement may adapt when dependency, safety, performance, evidence, commercial rights, privacy, environment, supply-chain or operational reality justify movement. Shipped releases and certified evidence are immutable truth.
 
 ---
 
@@ -15,7 +15,7 @@ Permanent rules:
 - actual Stable tags, release evidence, source/artifact provenance and current handoff define what was truly delivered;
 - future placement may be re-ordered only with durable rationale and synchronized Build Plan / Build Process / Delivery Process / handoff updates;
 - no roadmap edit may retroactively claim an unimplemented capability was delivered;
-- corrective/security/reliability work may preempt planned feature ordering;
+- corrective/security/reliability/privacy/supply-chain work may preempt planned feature ordering;
 - every known miss is implemented in-scope or durably assigned to a named later release;
 - G0–G16 remains the only release model.
 
@@ -27,6 +27,7 @@ Current certified truth is:
 - `v18.9.0-stable` is the immutable Stable baseline;
 - `v18.9.x` remains native-first and must not introduce hosted PostgreSQL synchronization;
 - PostgreSQL shared authority, zero-key hosted Provider Gateway and Mac/Windows/web account parity are explicitly planned for `v19` under issue #66 / `ADAPT-HOSTED-SYNC-001`;
+- privacy/data lifecycle, hosted environment/IaC and software-supply-chain assurance are explicit v19 foundations before hosted production activation;
 - previously approved hosted/security/data-rights objectives remain durable but land in the dependency-correct v19 train below.
 
 Historical v18 recovery/reconciliation detail remains preserved in dedicated governance records, including `governance/V18_ADAPTIVE_RECOVERY_AND_CLOSURE_PROGRAM.md`, release evidence and reconciliation files.
@@ -48,6 +49,8 @@ Permanent constraints:
 - direct SEC/EDGAR remains authoritative for filing truth/Form 4 authority;
 - equivalent lawful symbol/evidence work is processed canonically once and fan-outs to authorized consumers rather than `users × symbols` duplicate pipelines;
 - normal UI shows synthesized intelligence, not provider/runtime plumbing;
+- hosted account/data use obeys distinct tenant/RBAC/product-entitlement/provider-right/privacy controls;
+- hosted production infrastructure/configuration is versioned/reproducible and software/artifact provenance is auditable;
 - deterministic Day/Swing/Long truth remains protected unless separately governed;
 - adaptive production influence follows **SHADOW → VALIDATED → APPROVED → PRODUCTION** with evidence, rollback and explicit approval;
 - no silent self-modification and no model confidence used to hide missing/weak evidence.
@@ -113,7 +116,7 @@ v18.9.12 must produce a zero-gap-enough native foundation for v19: runtime stabi
 **Entry:** `v18.9.12` closure PASS.  
 **Hosted program:** #66 / `ADAPT-HOSTED-SYNC-001`.
 
-v19 professionalizes data rights/quality/provenance/reliability/economics and delivers one DE.PULSE account across macOS, Windows and hosted web.
+v19 professionalizes data rights/quality/privacy/provenance/reliability/economics and delivers one DE.PULSE account across macOS, Windows and hosted web.
 
 ### Target hosted architecture
 
@@ -129,6 +132,7 @@ DE.PULSE hosted API / services
         ├─ RBAC/capabilities
         ├─ DE.PULSE product-plan entitlement
         ├─ upstream provider legal/data-rights gate
+        ├─ privacy/data-governance policy
         ├─ Smart Provider Router v2 + canonical freshness/cache/persistence
         ├─ existing multi-feed subscription owner
         └─ server-side managed provider secrets
@@ -142,44 +146,48 @@ PostgreSQL shared account/state authority
 
 Commercial normal users are **zero-key**: they authenticate only to DE.PULSE and never receive/configure platform provider credentials.
 
-### Four separate hosted authorization dimensions
+### Separate hosted control dimensions
 
 These are related but must never collapse into one generic entitlement flag:
 1. **Tenant/account identity** — which DE.PULSE tenant/account owns the request/data.
 2. **RBAC/capability authorization** — what this user/device/session may do.
 3. **DE.PULSE product entitlement** — what the customer plan/status/quota allows DE.PULSE to expose.
 4. **Provider legal/data rights** — what DE.PULSE is contractually allowed to acquire/cache/retain/derive/display/redistribute.
+5. **Privacy/data-governance policy** — what user/account/device data may be retained, exported, deleted, accessed operationally, and where it may reside.
 
-Every hosted read/write/stream projection applies the relevant dimensions before returning data.
+Every hosted read/write/stream projection and retention decision applies the relevant dimensions.
 
 ### v19.0.x — Governance / Control Plane / Data Foundation
 
 - **v19.0.0 — Provider Capability / Legal Rights Registry.** Runtime-enforceable commercial/multi-user, proxying, cache/retention, redistribution/display, derived/AI-use, attribution, limits/environment/expiry policy. Unknown/expired rights fail closed.
 - **v19.0.1 — Hosted Tenant / Identity / Device / Session Control Plane.** Tenant context first-class; canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO` + capabilities, account/device lifecycle, revocation, API/SSE/native/web session truth and privileged re-authentication/strong-auth controls where appropriate.
 - **v19.0.2 — DE.PULSE Product Entitlement / Metering Policy.** Billing-provider-agnostic plan/status/feature/quota/grace/suspension model and metering dimensions. Separate from provider rights and RBAC. External checkout/invoicing can be deferred for internal pilot, but entitlement enforcement cannot be deferred past external multi-user activation.
-- **v19.0.3 — PostgreSQL Tenancy / Schema / Pool / HA-PITR Foundation.** Shared authority, tenant/account isolation, migrations, indexes/pools/capacity, encrypted backup, restore/failover, PITR and RPO/RTO; no broad sync activation.
-- **v19.0.4 — Managed Secrets / KMS Lifecycle.** Environment isolation, least privilege, rotation/rollback/compromise revoke, redaction/audit; zero platform provider secret in commercial clients.
-- **v19.0.5 — Provider Quality / Cost / Coverage / SLO Scorecards.** Measured freshness/completeness/latency/reliability/rate/cost/usefulness/calls-avoided/fallback/maintenance value, error budgets and tenant-aware operational signals.
-- **v19.0.6 — Data Reconciliation / Revision / Point-in-Time Quality.** Source independence/conflicts, historical corrections/adjustments, observed/effective/revision truth and provenance.
+- **v19.0.3 — Account Data Governance / Privacy Lifecycle.** Data inventory/classification, purpose/minimization, retention/deletion, review/export, account deactivation/deletion, SQLite/PostgreSQL/sync/cache/backup semantics, audit/log retention, operator/support access and data-residency/region disposition before hosted schema/retention freeze.
+- **v19.0.4 — Hosted Environment / IaC / Service Trust Foundation.** Isolated dev/test/stage/prod, environment-specific identities/config/secrets, least-privilege service identities, network/ingress/egress/TLS trust boundaries, versioned infrastructure/config desired state, drift detection, change review and reproducible deploy/rollback. No production snowflake.
+- **v19.0.5 — PostgreSQL Tenancy / Schema / Pool / HA-PITR Foundation.** Shared authority, tenant/account isolation, migrations, indexes/pools/capacity, encrypted backup, restore/failover, PITR and RPO/RTO. Schema/retention consumes v19.0.3. No broad sync activation.
+- **v19.0.6 — Managed Secrets / KMS Lifecycle.** Environment-aware least privilege, rotation/rollback/compromise revoke, redaction/audit; zero platform provider secret in commercial clients.
+- **v19.0.7 — Software Supply-Chain / Artifact & Dependency Assurance.** Direct/transitive component inventory, vulnerability/advisory scanning, SBOM where applicable, source/license policy, reproducible builds, artifact signing/attestation or equivalent integrity proof, deployment provenance and vulnerable-component patch/revocation procedure.
+- **v19.0.8 — Provider Quality / Cost / Coverage / SLO Scorecards.** Measured freshness/completeness/latency/reliability/rate/cost/usefulness/calls-avoided/fallback/maintenance value, error budgets and tenant-aware operational signals.
+- **v19.0.9 — Data Reconciliation / Revision / Point-in-Time Quality.** Source independence/conflicts, historical corrections/adjustments, observed/effective/revision truth and provenance.
 
-**Phase invariant:** shared hosted provider/sync activation waits for required tenant identity, provider legal rights, product entitlement, PostgreSQL recovery, secret, observability and data-quality foundations.
+**Phase invariant:** shared hosted provider/sync activation waits for required tenant identity, provider legal rights, product entitlement, privacy/data lifecycle, environment/IaC trust, PostgreSQL recovery, secrets, supply-chain provenance, observability and data-quality foundations.
 
 ### v19.1.x — Zero-Key Provider Data Plane + Native Sync Foundation
 
-- **v19.1.0 — Authenticated Hosted Provider Gateway.** Expose existing Smart Provider Router v2 through a versioned hosted API boundary; server-side credentials, cache/persistence reuse, API inventory/deprecation ownership and bounded circuits/backpressure/kill controls; no second provider stack.
-- **v19.1.1 — Unified Serving Policy + Live Fan-Out Isolation.** Machine-enforce tenant/RBAC/product-entitlement/provider-right dimensions across router/cache/persistence/REST/WebSocket/SSE using the existing multi-feed owner; no cross-tenant, premium-tier or legally restricted leakage.
-- **v19.1.2 — Sync Protocol Foundation.** Snapshot/high-watermark bootstrap, stable IDs, SQLite atomic outbox, authenticated idempotent push, authoritative server sequence/change log, incremental pull, per-device checkpoints, tombstones, retention/compaction, stale-device re-bootstrap and mixed-version negotiation; never raw DB replication.
-- **v19.1.3 — macOS Preferences + Watchlist Pilot.** Offline/restart/reconnect/conflicts, local account isolation/user switching, lost/revoked device and non-destructive state proof.
+- **v19.1.0 — Authenticated Hosted Provider Gateway.** Expose existing Smart Provider Router v2 through a versioned hosted API boundary; server-side credentials, cache/persistence reuse, API inventory/deprecation ownership and bounded circuits/backpressure/kill controls; deployment consumes v19.0 environment/IaC and supply-chain foundations; no second provider stack.
+- **v19.1.1 — Unified Serving Policy + Live Fan-Out Isolation.** Machine-enforce tenant/RBAC/product-entitlement/provider-right/privacy dimensions across router/cache/persistence/REST/WebSocket/SSE using the existing multi-feed owner; no cross-tenant, premium-tier, legally restricted or privacy-incompatible leakage.
+- **v19.1.2 — Sync Protocol Foundation.** Snapshot/high-watermark bootstrap, stable IDs, SQLite atomic outbox, authenticated idempotent push, authoritative server sequence/change log, incremental pull, per-device checkpoints, tombstones, retention/compaction, stale-device re-bootstrap and mixed-version negotiation; retention/deletion consumes v19.0.3; never raw DB replication.
+- **v19.1.3 — macOS Preferences + Watchlist Pilot.** Offline/restart/reconnect/conflicts, local account isolation/user switching, lost/revoked device, account-deletion semantics and non-destructive state proof.
 - **v19.1.4 — Desks / Workspaces Sync.** Versioned membership/configuration/delete/history semantics through the same transport/state owners.
 
 ### v19.2.x — Cross-Platform Account Parity + #66 Assurance
 
-- **v19.2.0 — Windows x64 Sync Parity.** Same account/protocol/security semantics; no Windows-specific truth.
-- **v19.2.1 — Hosted Web Account Parity.** Same authenticated APIs/session/capability/product-entitlement/PostgreSQL account truth; browser cache non-authoritative; direct-route/API/web-session controls evidenced.
-- **v19.2.2 — Rights-Aware Research / Durable State Portability.** Only product-owned, lawful, entitled, provenance-bound durable artifacts; live market truth remains provider/freshness/state-owned.
-- **v19.2.3 — Tenant-Aware Metering / Cost / Usage Observability.** Tenant/account/user/device/capability attribution, plan/quota consumption, cache/call avoidance, stream usage, provider cost where known, tenant-health/throttling/anomalous-consumption signals.
-- **v19.2.4 — Multi-User Security / Abuse / Capacity Hardening.** Object/function-level authorization negatives, rate limits, fairness/noisy-neighbor isolation, sensitive-flow abuse protection, edge/API controls, circuits/load shedding, DB/pool limits and protected-session capacity.
-- **v19.2.5 — #66 Hosted Sync / Gateway Assurance Closure.** No feature scope; adversarial/failure/recovery matrix covering cross-account denial, role/session/device revocation, replay/network interruption, bootstrap/re-bootstrap, provider-right and product-plan downgrade/expiry/suspension, secret rotation, DB failover/PITR/restore, mixed clients, backpressure and protected-session pressure.
+- **v19.2.0 — Windows x64 Sync Parity.** Same account/protocol/security/privacy semantics; no Windows-specific truth.
+- **v19.2.1 — Hosted Web Account Parity.** Same authenticated APIs/session/capability/product-entitlement/privacy/PostgreSQL account truth; browser cache non-authoritative; direct-route/API/web-session controls evidenced.
+- **v19.2.2 — Rights/Privacy-Aware Research / Durable State Portability.** Only product-owned, lawful, entitled, privacy-compatible, provenance-bound durable artifacts; live market truth remains provider/freshness/state-owned.
+- **v19.2.3 — Tenant-Aware Metering / Cost / Usage Observability.** Tenant/account/user/device/capability attribution, plan/quota consumption, cache/call avoidance, stream usage, provider cost where known, tenant-health/throttling/anomalous-consumption signals; telemetry/log retention follows v19.0.3.
+- **v19.2.4 — Multi-User Security / Abuse / Capacity Hardening.** Object/function-level authorization negatives, rate limits, fairness/noisy-neighbor isolation, sensitive-flow abuse protection, edge/API controls, environment-boundary/configuration tests, circuits/load shedding, DB/pool limits and protected-session capacity.
+- **v19.2.5 — #66 Hosted Sync / Gateway Assurance Closure.** No feature scope; adversarial/failure/recovery/privacy/environment/supply-chain matrix covering cross-account denial, role/session/device revocation, account export/deletion/retention, replay/network interruption, bootstrap/re-bootstrap, provider-right and product-plan downgrade/expiry/suspension, secret rotation, DB failover/PITR/restore, environment/config drift, dependency/artifact provenance, mixed clients, backpressure and protected-session pressure.
 
 ### v19.3.x — Professional Point-in-Time Evidence Substrate
 
@@ -189,12 +197,12 @@ Every hosted read/write/stream projection applies the relevant dimensions before
 
 ### v19.4.x — Reliability / Economics / v20 Readiness
 
-- **v19.4.0 — ADR-GDI Professional Reliability / Capacity.** Capability SLO/error-budget/degradation history, provider/DB/runtime scorecards, warm start, indexes/pools, bounded operating limits, load shedding, protected-session reserves, maintenance/preemption economics and hosted incident/runbook readiness.
+- **v19.4.0 — ADR-GDI Professional Reliability / Capacity.** Capability SLO/error-budget/degradation history, provider/DB/runtime scorecards, warm start, indexes/pools, bounded operating limits, load shedding, protected-session reserves, maintenance/preemption economics and hosted incident/runbook readiness including privacy/environment/supply-chain incidents.
 - **v19.4.1 — Specialized / Paid Provider Gap Evaluation.** Add/replace only when measured quality/capability/rights/cost evidence proves a material gap; same canonical router/rights/persistence/session contracts.
-- **v19.4.2 — v20 Research-Readiness Audit.** No model scope; prove point-in-time features/outcomes, provenance, rights, independence, synchronized-evidence safety, leakage controls and reliability history.
+- **v19.4.2 — v20 Research-Readiness Audit.** No model scope; prove point-in-time features/outcomes, provenance, rights, privacy compatibility, independence, synchronized-evidence safety, leakage controls and reliability history.
 
 ### v19.5.0 — v19 Major Closure
-No new feature scope. Principal Engineer + security/data/operational/commercial audit. Require #66 PASS, tenant isolation, product-entitlement/provider-right separation, API inventory/version compatibility, deterministic sync/offline/conflict/delete/bootstrap behavior, PostgreSQL/secret/provider-right recovery drills, SLO/error-budget/capacity/economics, point-in-time readiness, actual supported runtime/package/service provenance, zero unowned dataset/provider role/duplicate owner and zero unresolved P0 architecture gap.
+No new feature scope. Principal Engineer + security/privacy/data/operational/commercial audit. Require #66 PASS, tenant isolation, product-entitlement/provider-right separation, account-data lifecycle/export/deletion/retention/residency proof, environment/IaC isolation+drift+rollback proof, software-supply-chain/SBOM/artifact/deployment provenance, API inventory/version compatibility, deterministic sync/offline/conflict/delete/bootstrap behavior, PostgreSQL/secret/provider-right recovery drills, SLO/error-budget/capacity/economics, point-in-time readiness, actual supported runtime/package/service/deployment provenance, zero unowned dataset/provider role/duplicate owner and zero unresolved P0 architecture gap.
 
 **Mandatory v19 Major Closure before v20.**
 
@@ -261,17 +269,17 @@ No feature scope. Require calibration/decision utility/drift/abstention, determi
 ## 8. Industry-strength controls inside G0–G16
 
 For material hosted/security/data/adaptive work, existing gates absorb the following without G17+:
-- **G2:** canonical owner map, ADR/equivalent, tenant/data classification and threat model;
-- **G3:** API/schema/protocol compatibility, API inventory/deprecation, migration/rollback/roll-forward, SLO/error-budget, observability, negative/failure/load test and rollout plans;
-- **G4:** implementation + unit/contract tests + backward-compatible migration and feature/kill controls where useful;
-- **G7:** negative tenant/RBAC/product-entitlement/provider-right/secret/adaptive promotion evidence;
-- **G8:** load/soak/capacity, fairness/noisy-neighbor, queues/backpressure, circuits, provider/DB failure, failover/recovery and protected-session proof;
-- **G9:** role-aware Mac/Windows/web UX and direct-route/API authorization consistency;
-- **G10:** unresolved P0 security/rights/recovery/compatibility/duplicate-owner issue blocks freeze;
+- **G2:** canonical owner map, ADR/equivalent, tenant/data/privacy classification and threat model;
+- **G3:** API/schema/protocol compatibility, API inventory/deprecation, data minimization/retention/export/deletion/residency, environment/IaC/service-trust design, dependency/SBOM/source/license/provenance policy, migration/rollback/roll-forward, SLO/error-budget, observability, negative/failure/load test and rollout plans;
+- **G4:** implementation + unit/contract tests + backward-compatible migration + reproducible configuration/build proof and feature/kill controls where useful;
+- **G7:** negative tenant/RBAC/product-entitlement/provider-right/privacy/environment/secret/adaptive promotion evidence;
+- **G8:** load/soak/capacity, fairness/noisy-neighbor, queues/backpressure, circuits, provider/DB/environment failure, failover/recovery and protected-session proof;
+- **G9:** role-aware Mac/Windows/web UX, account export/deletion/status UX where applicable and direct-route/API authorization consistency;
+- **G10:** unresolved P0 security/privacy/rights/environment/supply-chain/recovery/compatibility/duplicate-owner issue blocks freeze;
 - **G11/G12:** immutable RC + full certification;
-- **G13/G14:** package/provenance/actual-artifact runtime proof where applicable;
-- **G15:** bounded/canary/progressive promotion and explicit rollback/kill criteria for hosted-risk changes where applicable;
-- **G16:** implementation-miss/incident/metric learning, obsolete machinery cleanup and authoritative next handoff.
+- **G13/G14:** package/component/SBOM/artifact/deployment provenance and actual-artifact runtime proof where applicable;
+- **G15:** bounded/canary/progressive promotion and explicit application/config/environment/dependency rollback/kill criteria for hosted-risk changes where applicable;
+- **G16:** implementation-miss/privacy/supply-chain/incident/metric learning, obsolete machinery cleanup and authoritative next handoff.
 
 ---
 
@@ -279,6 +287,6 @@ For material hosted/security/data/adaptive work, existing gates absorb the follo
 
 Before assigning any unshipped approved workstream to a release, evaluate:
 
-**value + dependency + architecture + safety + performance + defects + data/provider readiness + tenant model + product entitlement + commercial/data rights + test evidence + operational recovery + accumulated outcomes**
+**value + dependency + architecture + safety + performance + defects + data/provider readiness + tenant model + product entitlement + privacy/data lifecycle + commercial/data rights + environment/IaC readiness + software-supply-chain provenance + test evidence + operational recovery + accumulated outcomes**
 
 If moving a workstream is safer/more correct, update this canonical roadmap, the four CURRENT Adaptive governance files, relevant issue/handoff and an approved material decision record rather than silently changing scope.
