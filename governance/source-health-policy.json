@@ -10,30 +10,6 @@
   "major_closure_requires_source_review": true,
   "known_orphan_helpers": [
     {
-      "path": "ai_research_v2.go",
-      "name": "buildAIUserPrompt",
-      "disposition": "DELETE_SUPERSEDED",
-      "reason": "Superseded by bounded semantic prompt construction in the v18.6 AI hardening owner."
-    },
-    {
-      "path": "ai_research_v2.go",
-      "name": "compactAIResearchPackage",
-      "disposition": "DELETE_SUPERSEDED",
-      "reason": "Superseded by semantic materiality compaction in the v18.6 AI hardening owner."
-    },
-    {
-      "path": "ai_research_v2.go",
-      "name": "aiCacheKey",
-      "disposition": "DELETE_SUPERSEDED",
-      "reason": "Superseded by aiInferenceCacheKey, which includes provider/model/routing identity."
-    },
-    {
-      "path": "ai_research_v2.go",
-      "name": "loadAICache",
-      "disposition": "DELETE_SUPERSEDED",
-      "reason": "Superseded by TTL-aware loadAICacheV186."
-    },
-    {
       "path": "preparation_catalyst.go",
       "name": "marketOpenPrepLoop",
       "disposition": "DELETE_SUPERSEDED",
