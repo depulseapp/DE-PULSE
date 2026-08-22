@@ -133,8 +133,8 @@ func extreme30LiquidityWithoutValidBidAskIsUnknown(t *testing.T) {
 // retired version-scoped tests as standalone test identities. Wave 4 removes
 // the aliases when the matrix call sites are capability-renamed.
 var (
-	TestV1611LongStructureRequiresWeeklyEvidence                 = extreme30LongStructureRequiresWeeklyEvidence
-	TestV1611StructureRejectsStaleHistoricalBars                 = extreme30StructureRejectsStaleHistoricalBars
+	TestV1611LongStructureRequiresWeeklyEvidence                      = extreme30LongStructureRequiresWeeklyEvidence
+	TestV1611StructureRejectsStaleHistoricalBars                      = extreme30StructureRejectsStaleHistoricalBars
 	TestV1611RelativeStrengthRejectsStaleBarsAndUsesEvidenceTimestamp = extreme30RelativeStrengthRejectsStaleBarsAndUsesEvidenceTimestamp
-	TestV1611LiquidityWithoutValidBidAskIsUnknown                = extreme30LiquidityWithoutValidBidAskIsUnknown
+	TestV1611LiquidityWithoutValidBidAskIsUnknown                     = extreme30LiquidityWithoutValidBidAskIsUnknown
 )
