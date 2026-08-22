@@ -42,6 +42,12 @@
       "reason": "Live multi-feed subscription and failover logic formerly carried by v14_3_3.go is preserved under a capability-oriented current owner before later package decomposition.",
       "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
       "removalCondition": "Move the implementation and its current tests together into the canonical live-subscription capability package with full equivalence evidence."
+    },
+    "performance_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / product performance regression evidence",
+      "reason": "The retired pre-v17 v16.8 and v16.10 performance gates carried four material 500-symbol/candidate runtime and allocation ceilings. They are preserved under a version-neutral package test owner so Fast and Qualified full Go suites continue to enforce them without restoring legacy version-named files.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move the four bounded performance assertions with their implementation capability during package decomposition; do not remove the ceilings unless equivalent current performance evidence remains executable."
     }
   },
   "requiredTopLevelDirectories": [
