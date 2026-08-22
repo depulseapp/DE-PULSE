@@ -8,12 +8,14 @@ is immutable and is not treated as a current executable path consumer.
 """
 from __future__ import annotations
 
+import io
 import json
 from pathlib import Path
 import re
 import runpy
 import subprocess
 import sys
+import tokenize
 
 ROOT = Path(__file__).resolve().parents[2]
 POLICY_PATH = ROOT / "governance" / "root-layout-policy.json"
@@ -99,6 +101,22 @@ def policy_retired_root_path(path: str, retained_majors: set[int]) -> bool:
     return major is not None and major not in retained_majors
 
 
+def active_reference_text(path: str, text: str) -> str:
+    """Remove comments from executable scans while preserving code/string refs."""
+    if not path.endswith(".py"):
+        return text
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(text).readline)
+        filtered = [
+            (token.type, "" if token.type == tokenize.COMMENT else token.string)
+            for token in tokens
+        ]
+        return tokenize.untokenize(filtered)
+    except (tokenize.TokenError, IndentationError):
+        # Fail closed to the original text when parsing is incomplete.
+        return text
+
+
 def current_active_reference_texts(current_paths: list[str]) -> dict[str, str]:
     """Return current executable/control and runtime text, excluding history/prose."""
     texts: dict[str, str] = {}
@@ -108,7 +126,8 @@ def current_active_reference_texts(current_paths: list[str]) -> dict[str, str]:
         active_executable_text = namespace.get("active_executable_text")
         if not callable(active_executable_text):
             raise RuntimeError("legacy inventory does not expose active_executable_text")
-        texts.update(active_executable_text())
+        for path, text in active_executable_text().items():
+            texts[path] = active_reference_text(path, text)
     except Exception as exc:
         raise RuntimeError(f"cannot resolve canonical executable closure: {exc}") from exc
 
@@ -229,7 +248,7 @@ def main() -> int:
             scan = active_refs
         elif scope == "ALL_TEXT":
             scan = {
-                path: (ROOT / path).read_text(encoding="utf-8", errors="replace")
+                path: active_reference_text(path, (ROOT / path).read_text(encoding="utf-8", errors="replace"))
                 for path in textual_tracked_files(current_paths)
             }
         else:
