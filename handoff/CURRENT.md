@@ -8,98 +8,126 @@
 **Certified Stable qualified source:** `9e86b5e731f7a585cc77c1521f3639fc7a208efc`  
 **Certified Stable fingerprint:** `a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9`  
 **Certified Stable build ID:** `v18.9.0-stable-20260821`  
-**Release PR:** #62 — merged  
-**Completed release scope:** #61 / `ADAPT-TRADEINSIGHT-001` — closed completed  
-**Active development branch:** none  
+**Release PR:** #62 merged  
+**Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
+**Active product branch/PR:** none  
+**Governance alignment PR:** #67 draft  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Immediate blocker/next patch:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`.
+**Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`  
+**Immediate next product patch:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`.
 
-## v18.9.0 — COMPLETE / IMMUTABLE STABLE
+## Immediate execution rule
 
-Fast #481 / `32525637987`, Qualified #153 / `32525738828`, merged candidate `9ea81cddae4875ae15d3719ca028519a36c597b6`, and Release #32 / `32526121817` are the release authority. G11-G16, actual macOS Apple Silicon + Windows x64 packaged-runtime audits, G15 assurance, same-run no-rebuild publication and G16 evidence passed. Stable tag: `v18.9.0-stable`. Durable manifest: `release/v18.9.0/stable-evidence-manifest.json`.
+Do not start v18.9.2 or v19 implementation until #64 / v18.9.1 is truthfully closed or the crash is proven external/non-product. First refetch live GitHub state, issue #64/comments and current branch/PR state.
 
-## Post-Stable audit direction — issue #65
+## Permanent release philosophy
 
-The architectural foundation remains valid: Smart Provider Router v2 is the sole executable router; canonical freshness/cache/telemetry/persistence/state owners remain authoritative; direct SEC/EDGAR remains authoritative; no TradeInsight-specific parallel system is allowed.
+Small dependency-ordered patches, one primary responsibility each, G0-G16 only, canonical owners reused, observability before broad capability admission, point-in-time evidence before adaptive learning, model/prompt governance before broad adaptive influence, and durable issue/handoff truth.
 
-The audit identified corrective/product gaps: TradeInsight Settings/API-key UX, first-success vs coverage-aware fulfillment, canonical company-name identity/presentation, behavior-oriented Market Data Modes, Form 4 enrichment, ticker/company search, movers/ranking evidence, full useful-capability admission and stronger provider-efficiency/adaptive telemetry.
+## Permanent Cross-Platform Lockstep Rule
 
-The user explicitly prefers **many small complete builds over heavy builds** to reduce implementation misses. This is now a permanent process rule: one primary responsibility per patch, explicit non-goals, implementation-miss audit before moving on, and no known miss left only in chat.
+DE.PULSE is **one product across macOS, Windows and Web**.
 
-## Ordered v18.9.x patch train
+For every shared capability G1 freezes Mac/Windows/Web as REQUIRED or justified N/A. One canonical domain/API/state contract drives all REQUIRED clients. Platform adapters may differ only for OS/browser mechanics; business logic, intelligence, account/state semantics, authorization, product entitlement, provider-right decisions, freshness/provenance and explanation meaning may not fork.
 
-1. `v18.9.1` — #64 runtime crash corrective ONLY.
-2. `v18.9.2` — TradeInsight Settings/API-key UX ONLY.
-3. `v18.9.3` — coverage-aware Smart Provider Router v2 + persistence-first residual-gap fulfillment ONLY.
-4. `v18.9.4` — canonical company identity + all-desk presentation ONLY.
-5. `v18.9.5` — Market Data Modes + capability diagnostics ONLY.
-6. `v18.9.6` — TradeInsight SEC Form 4 enrichment ONLY.
-7. `v18.9.7` — TradeInsight ticker/company search ONLY.
-8. `v18.9.8` — TradeInsight movers/ranking evidence ONLY.
-9. `v18.9.9` — remaining useful TradeInsight capability sweep ONLY.
-10. `v18.9.10` — provider efficiency + Adaptive Intelligence telemetry + protected-session headroom measurement ONLY.
-11. `v18.9.11` — Session-Aware Data Readiness Maintenance ONLY: light overnight + heavy weekend, using canonical persistence/router/session owners and strict protection for pre-market/regular-market/after-hours.
-12. `v18.9.12` — whole v18.9.x professional closure audit ONLY; no new feature scope.
+A single platform may be used for diagnosis/technical validation, but there is **no product pilot** and no normal `Mac -> Windows -> Web catch-up` sequence. Shared capability GA/Delivered state and G10/G15 require all REQUIRED clients. No next shared domain begins while material parity debt remains. Temporary exceptions require an external blocker, waiver/expiry, no misleading GA claim and a named recovery release.
 
-A later patch may be split further at G0/G1 if it is still too broad. Never merge patches merely to reduce version count.
+Platform-specific corrective work is valid where the defect itself is platform-specific; #64/v18.9.1 is the current example.
 
-## Permanent adaptive provider + persistence contract
+## Ordered v18.9.x train
 
-`consumer requirement -> in-memory canonical cache -> persisted canonical DB/state -> validate freshness/coverage/schema/provenance/rights -> exact residual gap -> eligible-provider ranking -> targeted acquisition -> canonical merge/provenance -> coverage re-evaluation -> persist -> next provider only if still needed -> synthesized consumer state`
+1. `v18.9.1` runtime crash corrective
+2. `v18.9.2` TradeInsight Settings/API-key UX
+3. `v18.9.3` coverage-aware Smart Provider Router
+4. `v18.9.4` canonical company/instrument identity
+5. `v18.9.5` Market Data Modes/capability diagnostics
+6. `v18.9.6` provider observability/Adaptive telemetry
+7. `v18.9.7` TradeInsight Form 4 SHADOW enrichment
+8. `v18.9.8` TradeInsight symbol/company search
+9. `v18.9.9` TradeInsight movers/ranking SHADOW evidence
+10. `v18.9.10` remaining useful capability admission
+11. `v18.9.11` Session-Aware Data Readiness Maintenance
+12. `v18.9.12` Professional Closure
 
-Provider success does not equal consumer completeness. No fixed provider chain is authoritative. Static ordering is at most a prior/tiebreaker. Validation lifecycle (`SHADOW/VALIDATED/...`) is separate from serving role (`PRIMARY/FALLBACK/BACKFILL/ENRICH/CORROBORATE/...`).
+## Provider/persistence contract
 
-Never refetch/recompute trustworthy evidence already valid for the consumer solely because a provider is available. Revision-prone evidence preserves point-in-time/as-observed history plus later revisions. Live-sensitive values obey freshness TTLs and cannot be presented as current merely because they exist in the DB.
+`consumer requirement -> memory cache -> persisted canonical state -> validate freshness/coverage/schema/provenance/rights -> residual gap -> Smart Provider Router v2 -> targeted acquisition -> canonical merge/reconciliation -> persist -> serve`
 
-## Permanent session-aware maintenance contract
+Direct SEC/EDGAR remains authoritative for Form 4. TradeInsight validation-required capabilities start SHADOW-first. No provider-specific router/cache/scanner/scheduler/Market Mode/SEC/symbol/persistence subsystem.
 
-Pre-market, regular market and after-hours are protected Tier-0 decision-support sessions. They always receive first claim on provider quota/headroom, network, CPU, memory, DB and worker capacity.
+## Hosted / zero-key architecture
 
-- **Light overnight maintenance:** small, high-value, gap-driven readiness work only after protected after-hours and before the next protected pre-market window.
-- **Heavy weekend/extended market-closed maintenance:** deeper but bounded backfill/reconciliation/index/retention/outcome work.
-- Maintenance uses only bounded surplus capacity after protected-session reserves.
-- External-provider maintenance acquisition suspends during protected sessions unless directly required by a current/live consumer.
-- Maintenance must drain/preempt/checkpoint/resume around protected sessions or market shocks.
-- Missed work catches up only in a later eligible overnight/weekend window, not during live sessions.
-- No blind full-universe refetch and no parallel maintenance calendar/scheduler/router/cache/database owner.
+`Mac/Windows native SQLite edge + Web -> DE.PULSE hosted APIs -> tenant/RBAC/product-entitlement/provider-right/privacy checks -> canonical router/freshness/cache/state -> PostgreSQL shared authority`
 
-Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
+Normal commercial users authenticate only to DE.PULSE; platform provider credentials remain server-side in managed secrets/KMS.
 
-## Hosted / multi-device / account architecture — APPROVED DIRECTION
+Hosted serving keeps five dimensions separate:
+1. tenant/account identity;
+2. RBAC/capabilities;
+3. DE.PULSE product entitlement/plan/quota;
+4. upstream provider legal/data rights;
+5. privacy/data-governance policy.
 
-DE.PULSE is intentionally being kept compatible with a future single-account experience across macOS, Windows and hosted web without replacing the current native architecture.
+## Planned v19 train — current authority
 
-- `SQLite` remains the fast local edge/offline store and warm working set for native clients.
-- Future hosted `PostgreSQL` becomes the shared authority for sync-eligible account/device state and lawful hosted evidence.
-- Synchronization is application-level, incremental, typed, idempotent and checkpointed using stable IDs/outbox/change events — never blind raw database replication or dual-master table sync.
-- Native clients continue to work from SQLite during hosted/network outages and reconcile later from durable checkpoints.
-- Watchlists, desk membership, preferences and other account state use explicit versions/optimistic concurrency and deterministic conflict handling.
-- Provider secrets do not sync through ordinary SQLite/PostgreSQL data tables; they remain under the canonical secret/security owner.
-- Current/live market truth still comes from canonical freshness/provider/state owners; neither SQLite nor PostgreSQL becomes a competing market-truth subsystem.
-- v18.9.x must **not** introduce PostgreSQL; it must preserve clean repository/persistence boundaries, stable IDs, provenance and sync compatibility. Hosted sync architecture belongs to v19+ in small governed packets.
-- Cross-platform session validity is server-side canonical truth for macOS, Windows and hosted web; clients consume it rather than inventing their own authentication/session truth.
+### v19.0.x — Hosted Foundations
+- `v19.0.0` provider legal-rights registry
+- `v19.0.1` tenant/identity/device/session control plane
+- `v19.0.2` product entitlement/metering policy
+- `v19.0.3` account data governance/privacy lifecycle
+- `v19.0.4` hosted environment/IaC/service trust
+- `v19.0.5` PostgreSQL tenancy/schema/pool/HA-PITR
+- `v19.0.6` managed secrets/KMS
+- `v19.0.7` software supply-chain/artifact/dependency assurance
+- `v19.0.8` provider SLO/cost/coverage scorecards
+- `v19.0.9` reconciliation/revision/point-in-time quality
 
-Governing contracts:
-- `adaptive-governance/SQLITE_POSTGRES_SYNC_CONTRACT.md`
-- `adaptive-governance/ROLE_AWARE_SESSION_SECURITY_CONTRACT.md`
-- `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`
+### v19.1.x — Hosted Data Plane + Cross-Platform Account/State
+- `v19.1.0` Hosted Provider Gateway
+- `v19.1.1` Unified Serving Policy + Live Fan-Out
+- `v19.1.2` Sync Protocol Foundation
+- `v19.1.3` **Mac + Windows + Web Account/Session Client Foundation**
+- `v19.1.4` **Mac + Windows + Web Preferences**
+- `v19.1.5` **Mac + Windows + Web Watchlists/Master Symbols**
+- `v19.1.6` **Mac + Windows + Web Desks/Workspaces**
 
-## v19 / v20 continuity
+### v19.2.x — Cross-Platform Shared Product + Assurance
+- `v19.2.0` **Mac + Windows + Web Research/Durable State**
+- `v19.2.1` **Mac + Windows + Web Discovery/Opportunity Radar**
+- `v19.2.2` **Mac + Windows + Web Market State/Market Modes/Readiness/Explanations**
+- `v19.2.3` **Mac + Windows + Web Settings/Account/Device Controls**
+- `v19.2.4` **Mac + Windows + Web RBAC/Product-Entitlement UX**
+- `v19.2.5` tenant-aware metering/cost/usage observability
+- `v19.2.6` mixed-client security/abuse/noisy-neighbor/capacity hardening
+- `v19.2.7` **#66 Cross-Platform Assurance Closure**
 
-v19 Professional Data Infrastructure inherits persistence-first reuse, session-aware maintenance, provider/data-rights governance and the approved SQLite/PostgreSQL hosted-sync contract. It measures provider/data rights, quality, cost, coverage, reliability, revision correctness, DB/index/pool/capacity behavior, calls avoided, maintenance value and protected-session reserve sizing. It must not recreate the router, canonical persistence owner or maintenance coordinator.
+### v19.3.x — Point-in-Time Evidence
+- `v19.3.0` institutional/13F infrastructure
+- `v19.3.1` two-sided Long/Short evidence substrate
+- `v19.3.2` AODR candidate/ranking/outcome lineage
 
-v20 Adaptive Intelligence consumes provenance-bound point-in-time evidence/outcomes and may learn provider/maintenance usefulness only through governed SHADOW/Champion-Challenger promotion. It may not reduce protected live-session safety, bypass rights/provenance or sacrifice current truth for background learning.
+### v19.4.x — Reliability / Economics / Readiness
+- `v19.4.0` ADR-GDI professional reliability/capacity/runbooks
+- `v19.4.1` specialized/paid-provider gap evaluation
+- `v19.4.2` v20 research-readiness audit
 
-## Other continuity truth
+### v19.5.0 — v19 Major Closure
+No feature scope. #66 must PASS with zero material Mac/Windows/Web parity debt plus rights/privacy/security/IaC/supply-chain/API/recovery/SLO/capacity proof.
 
-Issue #57 / v18.8.1 Market Intelligence escape is now closed completed because `release/v18.8.2/stable-evidence-manifest.json` already records `RESOLVED_IN_V18.8.2_STABLE`. Its regression remains mandatory in final v18.9.x closure.
+## Planned v20 train
 
-The real v18.9.0 macOS Apple Silicon `EXC_CRASH (SIGABRT)` remains unresolved under #64. Do not guess root cause or delete `PersonalMarketTerminal` state/API keys as a first troubleshooting step.
+`v20.0.x` adaptive control/model governance -> `v20.1.x` ASBI -> `v20.2.x` adaptive Institutional/TDTI -> `v20.3.x` AODR -> `v20.4.0` adaptive operations -> `v20.5.0` Professional Closure.
+
+Every shared adaptive user-facing capability follows Mac + Windows + Web lockstep. No Execution remains permanent.
+
+## G0-G16 lockstep enforcement
+
+G1 platform matrix; G2 canonical owner/adapters; G3 one contract + equivalence tests; G4 all REQUIRED implementations; G6 cross-platform integration; G7 equivalent security/data outcomes; G8 mixed-client load; G9 function/meaning equivalence; G10 parity debt blocks freeze; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass; G16 parity-drift audit.
+
+## Permanent boundaries
+
+U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state/session/calendar/identity owners; direct SEC/EDGAR authoritative; canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO`; no parallel client/provider truth.
 
 ## Exactly one next action
 
-Diagnose #64 using the complete macOS crash evidence or deterministic reproduction and freeze the narrow `v18.9.1` G1. Do not create a `v18.9.2` branch until `v18.9.1` is truthfully closed or the crash is proven external/non-product.
-
-## Resume rule
-
-Any ChatGPT account, Codex session, Claude or human maintainer must first fetch the **current live GitHub head** because another session/process may have advanced it. Then read `AGENTS.md`, `CLAUDE.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this file, all four `adaptive-governance/CURRENT_ADAPTIVE_*` files, `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`, `adaptive-governance/SQLITE_POSTGRES_SYNC_CONTRACT.md`, `adaptive-governance/ROLE_AWARE_SESSION_SECURITY_CONTRACT.md`, `adaptive-governance/ROLE_AWARE_UI_COMPOSITION_CONTRACT.md`, `release_identity.json`, `release/v18.9.0/stable-evidence-manifest.json`, both `.depulse-certification/resume/` checkpoints, issue #65, issue #64 and their current comments before changing code. Inspect commits since the certified Stable/source baseline so completed work is not duplicated. GitHub objects and executable evidence outrank chat memory.
+Run G0 for #64 / `v18.9.1` from complete macOS crash evidence or deterministic reproduction and freeze narrow G1. No merge/release without explicit authorization.
