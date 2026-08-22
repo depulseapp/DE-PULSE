@@ -25,6 +25,12 @@
   "grandfatherExistingBaselineRootFiles": true,
   "newRootFileRule": "A new root file must be canonical or explicitly registered as transitional with owner, reason, expiry and removal condition.",
   "transitionalRootFiles": {
+    "extreme_30_test_fixture_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / Extreme-30 capability test ownership",
+      "reason": "The permanent Extreme-30 matrix depended on two generic fixture helpers from the retired pre-v17 test stack. The helpers are retained here without restoring any v14/v15/v16 test file.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 4",
+      "removalCondition": "Inline or consolidate the fixture under the final capability-oriented test owner and remove the temporary v15TestApp call-site alias while preserving all Extreme-30 assertions."
+    },
     "global_market_providers.go": {
       "owner": "ADAPT-CI-CONVERGENCE-001 / provider capability ownership",
       "reason": "Live production logic formerly carried by v14_0_3.go is preserved under a capability-oriented current owner before later package decomposition.",
