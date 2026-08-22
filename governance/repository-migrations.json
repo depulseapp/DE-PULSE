@@ -1,28 +1,272 @@
 {
-  "schema":"DE.PULSE-REPOSITORY-MIGRATIONS-3",
-  "baselineCommit":"e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-  "rootVersionRetention":{"scope":"CURRENT_REPOSITORY_ROOT_ONLY","retainedMajors":[17,18],"retiredMajors":[14,15,16],"historicalGitAndReleaseEvidence":"IMMUTABLE","rule":"Pre-v17 version-scoped root artifacts are removed. Still-live production behavior must first be migrated to a capability-oriented owner; v17/v18 root material remains eligible for later capability migration."},
-  "moves":[
-    {"oldPath":"certification_plan.json","newPath":"release/history/v18.6.0/legacy-ci/certification_plan.json","owner":"ADAPT-CI-CONVERGENCE-001 / historical release evidence","reason":"The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.","removalCondition":"Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["release/history/v18.6.0/legacy-ci/certification_runner.py","release_identity.py","version_consistency_test.py","tools/ci/legacy_test_gate_inventory.py"]},
-    {"oldPath":"certification_runner.py","newPath":"release/history/v18.6.0/legacy-ci/certification_runner.py","owner":"ADAPT-CI-CONVERGENCE-001 / historical release evidence","reason":"The checkpointed v18.6 certification runner is superseded by the canonical GitHub workflows and current release G12 executor; preserve it only as historical evidence.","removalCondition":"Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["release/history/v18.6.0/legacy-ci/ci_pipeline.py","release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json","tools/ci/legacy_test_gate_inventory.py"]},
-    {"oldPath":"ci_pipeline.py","newPath":"release/history/v18.6.0/legacy-ci/ci_pipeline.py","owner":"ADAPT-CI-CONVERGENCE-001 / historical release evidence","reason":"The v18.6 isolated-job CI helper is not part of the current three-workflow control plane and is retained only as historical evidence.","removalCondition":"Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/legacy_test_gate_inventory.py"]},
-    {"oldPath":"ci_pipeline_plan.json","newPath":"release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json","owner":"ADAPT-CI-CONVERGENCE-001 / historical release evidence","reason":"The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.","removalCondition":"Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["release/history/v18.6.0/legacy-ci/ci_pipeline.py","release_identity.py","source_health_architecture_gate.py","version_consistency_test.py","tools/ci/legacy_test_gate_inventory.py"]},
-    {"oldPath":"v14_0_3.go","newPath":"global_market_providers.go","owner":"ADAPT-CI-CONVERGENCE-001 / provider capability ownership","reason":"Preserve still-live Twelve Data, Cboe VIX, official macro and provider contracts while removing pre-v17 version naming from the current root.","removalCondition":"Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
-    {"oldPath":"v14_3_3.go","newPath":"live_subscription_manager.go","owner":"ADAPT-CI-CONVERGENCE-001 / live subscription ownership","reason":"Preserve still-live dynamic multi-feed allocation, failover, GLD/SLV/USO priority and manual-action logic while removing pre-v17 version naming from the current root.","removalCondition":"Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
-    {"oldPath":"dependency_readiness_gate.py","newPath":"tools/ci/dependency_readiness_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership","reason":"Reusable dependency/provider readiness enforcement belongs under tools/ci rather than the repository root.","removalCondition":"Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/dependency_readiness_gate.py; Fast, Qualified and G12 evidence preserve behavior.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/dependency_readiness_gate.py","tools/ci/workflow_policy.py",".github/workflows/ci-qualified.yml","release/v18.9.1/certification-manifest.json"]},
-    {"oldPath":"ai_continuous_eval_gate.py","newPath":"tools/ci/ai_continuous_eval_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership","reason":"Reusable offline AI hardening and data-rights evaluation belongs under tools/ci rather than the repository root.","removalCondition":"Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/ai_continuous_eval_gate.py; Fast, Qualified and G12 evidence preserve behavior.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/workflow_policy.py",".github/workflows/ci-qualified.yml","release/v18.9.1/certification-manifest.json"]},
-    {"oldPath":"adaptive_resume_gate.py","newPath":"tools/ci/adaptive_resume_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical CI portability ownership","reason":"The assistant/account-independent resume contract is reusable CI governance and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/adaptive_resume_gate.py",".github/workflows/ci-fast.yml","release/v18.9.1/certification-manifest.json","tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"functionality_utility_checkpoint_gate.py","newPath":"tools/ci/functionality_utility_checkpoint_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical data-utility CI ownership","reason":"The reusable functionality/data-utility/provider-Market-Mode checkpoint is CI governance and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; the canonical G12 manifest uses tools/ci/functionality_utility_checkpoint_gate.py and active executable closure follows the migrated owner with equivalent registry and provider/Market-Mode validation.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/functionality_utility_checkpoint_gate.py","release/v18.9.1/certification-manifest.json","tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"data_health_policy_gate.py","newPath":"tools/ci/data_health_policy_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical data-health CI ownership","reason":"Session-aware freshness/cache/fallback policy enforcement is reusable CI governance and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_health_policy_gate.py and the migrated gate resolves repository-root policy/runtime owners without changing assertions.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"documentation_governance_gate.py","newPath":"tools/ci/documentation_governance_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical documentation-governance CI ownership","reason":"G16 documentation identity/history/QA governance is reusable CI evidence and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/documentation_governance_gate.py, repository-root resolution is preserved, and documentation/QA/G12-manifest assertions remain unchanged.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"data_utility_gate.py","newPath":"tools/ci/data_utility_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical data-utility registry CI ownership","reason":"Dataset owner/purpose/consumer and freshness-registry consistency checks are reusable CI governance and belong under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_utility_gate.py and the migrated gate preserves the same dataset and data_freshness.go assertions.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"source_fingerprint_portability_test.py","newPath":"tools/ci/source_fingerprint_portability_test.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical source-provenance portability evidence","reason":"Cross-platform source fingerprint path/digest portability is reusable CI evidence and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes the canonical tools/ci portability test with explicit repository-root import setup and identical POSIX/Windows digest assertions.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"content_copy_audit_test.py","newPath":"tools/ci/content_copy_audit_test.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical renderer content-copy CI ownership","reason":"Cross-surface terminology, action copy and Data Engine wording consistency is reusable CI evidence and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/content_copy_audit_test.py and the migrated test preserves identical renderer/docs/traceability assertions.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"responsive_ui_sharded_gate.py","newPath":"tools/ci/responsive_ui_sharded_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical responsive-layout CI orchestration","reason":"Bounded full-matrix responsive/layout orchestration is reusable CI tooling and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/responsive_ui_sharded_gate.py, which runs the unchanged responsive_ui_test.py matrix from repository root with the same timeout and environment semantics.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"deterministic_equivalence_test.js","newPath":"tools/ci/deterministic_equivalence_test.js","owner":"ADAPT-CI-CONVERGENCE-001 / canonical deterministic-equivalence evidence","reason":"The 2403-case Day/Swing/Long renderer equivalence test is reusable CI/G12 evidence and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; Qualified, Planner v3, tools/release/prefreeze_qualification.py and the canonical v18.9.1 G12 manifest use the migrated deterministic-equivalence evidence with unchanged 2403/2403 assertions.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[".github/workflows/ci-qualified.yml","tools/ci/impact_plan.py","tools/ci/impact_plan_self_test.py","tools/release/prefreeze_qualification.py","release/v18.9.1/certification-manifest.json"]},
-    {"oldPath":"source_health_architecture_gate.py","newPath":"tools/ci/source_health_architecture_gate.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership","reason":"Recursive package-aware source-health and architecture-fit enforcement is reusable CI tooling and belongs under tools/ci rather than repository root.","removalCondition":"Old root path is absent; Fast executes tools/ci/source_health_architecture_gate.py with the same source-health policy and recursive package corpus, and migration safety reports no stale active consumer.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[".github/workflows/ci-fast.yml","tools/release/prefreeze_qualification.py"]},
-    {"oldPath":"source_health_baseline.json","newPath":"governance/source-health-policy.json","owner":"ADAPT-CI-CONVERGENCE-001 / source-health governance policy","reason":"Source-health thresholds, exact orphan-debt records and interface-contract exceptions are governance policy data, not repository-root identity.","removalCondition":"Old root policy path is absent; the canonical tools/ci source-health gate reads governance/source-health-policy.json and preserves identical policy content and fail-closed semantics.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
-    {"oldPath":"prefreeze_qualification.py","newPath":"tools/release/prefreeze_qualification.py","owner":"ADAPT-CI-CONVERGENCE-001 / canonical pre-freeze release tooling","reason":"Pre-freeze qualification is reusable G10 release tooling and belongs under tools/release rather than repository root.","removalCondition":"Old root path is absent; the migrated pre-freeze runner resolves repository root correctly, calls canonical tools/ci gate paths, and resume/source-health contracts reference tools/release/prefreeze_qualification.py.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":["tools/ci/adaptive_resume_gate.py","tools/ci/source_health_architecture_gate.py"]}
+  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-3",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "rootVersionRetention": {
+    "scope": "CURRENT_REPOSITORY_ROOT_ONLY",
+    "retainedMajors": [
+      17,
+      18
+    ],
+    "retiredMajors": [
+      14,
+      15,
+      16
+    ],
+    "historicalGitAndReleaseEvidence": "IMMUTABLE",
+    "rule": "Pre-v17 version-scoped root artifacts are removed. Still-live production behavior must first be migrated to a capability-oriented owner; v17/v18 root material remains eligible for later capability migration."
+  },
+  "moves": [
+    {
+      "oldPath": "certification_plan.json",
+      "newPath": "release/history/v18.6.0/legacy-ci/certification_plan.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 certification plan is retained as historical evidence but is no longer a current CI or release authority.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/certification_runner.py",
+        "release_identity.py",
+        "version_consistency_test.py",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "certification_runner.py",
+      "newPath": "release/history/v18.6.0/legacy-ci/certification_runner.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The checkpointed v18.6 certification runner is superseded by the canonical GitHub workflows and current release G12 executor; preserve it only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+        "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "ci_pipeline.py",
+      "newPath": "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 isolated-job CI helper is not part of the current three-workflow control plane and is retained only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-control references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "ci_pipeline_plan.json",
+      "newPath": "release/history/v18.6.0/legacy-ci/ci_pipeline_plan.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / historical release evidence",
+      "reason": "The v18.6 CI/CD plan is superseded by the current workflows, release identity and #70 current-state/work-slice truth; preserve it only as historical evidence.",
+      "removalCondition": "Old root path is absent and no current executable control references it; only explicit historical/migration-aware resolver references may retain the legacy name.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "release/history/v18.6.0/legacy-ci/ci_pipeline.py",
+        "release_identity.py",
+        "source_health_architecture_gate.py",
+        "version_consistency_test.py",
+        "tools/ci/legacy_test_gate_inventory.py"
+      ]
+    },
+    {
+      "oldPath": "v14_0_3.go",
+      "newPath": "global_market_providers.go",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / provider capability ownership",
+      "reason": "Preserve still-live Twelve Data, Cboe VIX, official macro and provider contracts while removing pre-v17 version naming from the current root.",
+      "removalCondition": "Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "v14_3_3.go",
+      "newPath": "live_subscription_manager.go",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / live subscription ownership",
+      "reason": "Preserve still-live dynamic multi-feed allocation, failover, GLD/SLV/USO priority and manual-action logic while removing pre-v17 version naming from the current root.",
+      "removalCondition": "Old version-scoped root path is absent; behavior remains byte-identical at this migration step and later moves with tests into a capability package.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "dependency_readiness_gate.py",
+      "newPath": "tools/ci/dependency_readiness_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership",
+      "reason": "Reusable dependency/provider readiness enforcement belongs under tools/ci rather than the repository root.",
+      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/dependency_readiness_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/dependency_readiness_gate.py",
+        "tools/ci/workflow_policy.py",
+        ".github/workflows/ci-qualified.yml",
+        "release/v18.9.1/certification-manifest.json"
+      ]
+    },
+    {
+      "oldPath": "ai_continuous_eval_gate.py",
+      "newPath": "tools/ci/ai_continuous_eval_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI tooling ownership",
+      "reason": "Reusable offline AI hardening and data-rights evaluation belongs under tools/ci rather than the repository root.",
+      "removalCondition": "Old root path is absent; canonical workflow policy, Qualified and G12 manifest use tools/ci/ai_continuous_eval_gate.py; Fast, Qualified and G12 evidence preserve behavior.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/workflow_policy.py",
+        ".github/workflows/ci-qualified.yml",
+        "release/v18.9.1/certification-manifest.json"
+      ]
+    },
+    {
+      "oldPath": "adaptive_resume_gate.py",
+      "newPath": "tools/ci/adaptive_resume_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical CI portability ownership",
+      "reason": "The assistant/account-independent resume contract is reusable CI governance and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; Fast, the canonical G12 manifest and assistant portability entrypoints use tools/ci/adaptive_resume_gate.py with equivalent GitHub/current-state/checkpoint validation.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/adaptive_resume_gate.py",
+        ".github/workflows/ci-fast.yml",
+        "release/v18.9.1/certification-manifest.json",
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "functionality_utility_checkpoint_gate.py",
+      "newPath": "tools/ci/functionality_utility_checkpoint_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-utility CI ownership",
+      "reason": "The reusable functionality/data-utility/provider-Market-Mode checkpoint is CI governance and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; the canonical G12 manifest uses tools/ci/functionality_utility_checkpoint_gate.py and active executable closure follows the migrated owner with equivalent registry and provider/Market-Mode validation.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/functionality_utility_checkpoint_gate.py",
+        "release/v18.9.1/certification-manifest.json",
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "data_health_policy_gate.py",
+      "newPath": "tools/ci/data_health_policy_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-health CI ownership",
+      "reason": "Session-aware freshness/cache/fallback policy enforcement is reusable CI governance and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_health_policy_gate.py and the migrated gate resolves repository-root policy/runtime owners without changing assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "documentation_governance_gate.py",
+      "newPath": "tools/ci/documentation_governance_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical documentation-governance CI ownership",
+      "reason": "G16 documentation identity/history/QA governance is reusable CI evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/documentation_governance_gate.py, repository-root resolution is preserved, and documentation/QA/G12-manifest assertions remain unchanged.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "data_utility_gate.py",
+      "newPath": "tools/ci/data_utility_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical data-utility registry CI ownership",
+      "reason": "Dataset owner/purpose/consumer and freshness-registry consistency checks are reusable CI governance and belong under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/data_utility_gate.py and the migrated gate preserves the same dataset and data_freshness.go assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "source_fingerprint_portability_test.py",
+      "newPath": "tools/ci/source_fingerprint_portability_test.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-provenance portability evidence",
+      "reason": "Cross-platform source fingerprint path/digest portability is reusable CI evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes the canonical tools/ci portability test with explicit repository-root import setup and identical POSIX/Windows digest assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "content_copy_audit_test.py",
+      "newPath": "tools/ci/content_copy_audit_test.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical renderer content-copy CI ownership",
+      "reason": "Cross-surface terminology, action copy and Data Engine wording consistency is reusable CI evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/content_copy_audit_test.py and the migrated test preserves identical renderer/docs/traceability assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "responsive_ui_sharded_gate.py",
+      "newPath": "tools/ci/responsive_ui_sharded_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical responsive-layout CI orchestration",
+      "reason": "Bounded full-matrix responsive/layout orchestration is reusable CI tooling and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/responsive_ui_sharded_gate.py, which runs the unchanged responsive_ui_test.py matrix from repository root with the same timeout and environment semantics.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "deterministic_equivalence_test.js",
+      "newPath": "tools/ci/deterministic_equivalence_test.js",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical deterministic-equivalence evidence",
+      "reason": "The 2403-case Day/Swing/Long renderer equivalence test is reusable CI/G12 evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; Qualified, Planner v3, tools/release/prefreeze_qualification.py and the canonical v18.9.1 G12 manifest use the migrated deterministic-equivalence evidence with unchanged 2403/2403 assertions.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        ".github/workflows/ci-qualified.yml",
+        "tools/ci/impact_plan.py",
+        "tools/ci/impact_plan_self_test.py",
+        "tools/release/prefreeze_qualification.py",
+        "release/v18.9.1/certification-manifest.json"
+      ]
+    },
+    {
+      "oldPath": "source_health_architecture_gate.py",
+      "newPath": "tools/ci/source_health_architecture_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership",
+      "reason": "Recursive package-aware source-health and architecture-fit enforcement is reusable CI tooling and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; Fast executes tools/ci/source_health_architecture_gate.py with the same source-health policy and recursive package corpus, and migration safety reports no stale active consumer.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        ".github/workflows/ci-fast.yml",
+        "tools/release/prefreeze_qualification.py"
+      ]
+    },
+    {
+      "oldPath": "source_health_baseline.json",
+      "newPath": "governance/source-health-policy.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / source-health governance policy",
+      "reason": "Source-health thresholds, exact orphan-debt records and interface-contract exceptions are governance policy data, not repository-root identity.",
+      "removalCondition": "Old root policy path is absent; the canonical tools/ci source-health gate reads governance/source-health-policy.json and preserves identical policy content and fail-closed semantics.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "prefreeze_qualification.py",
+      "newPath": "tools/release/prefreeze_qualification.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical pre-freeze release tooling",
+      "reason": "Pre-freeze qualification is reusable G10 release tooling and belongs under tools/release rather than repository root.",
+      "removalCondition": "Old root path is absent; the migrated pre-freeze runner resolves repository root correctly, calls canonical tools/ci gate paths, and resume/source-health contracts reference tools/release/prefreeze_qualification.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": [
+        "tools/ci/adaptive_resume_gate.py",
+        "tools/ci/source_health_architecture_gate.py"
+      ]
+    },
+    {
+      "oldPath": "tradeinsight_admission_v18_9_test.go",
+      "newPath": "tradeinsight_admission_regression_test.go",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / TradeInsight admission capability evidence",
+      "reason": "Migrate the active v18.9-named TradeInsight admission test to a version-neutral capability owner without changing package, test identities, assertions or behavior.",
+      "removalCondition": "Old version-named root path is absent; the new path reuses the exact same Go test blob and all current test identities remain discoverable.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
   ],
-  "retiredExecutablePaths":[],"removedGoTestIdentities":[],"testIdentityRenames":{},"temporaryAliases":[]
+  "retiredExecutablePaths": [],
+  "removedGoTestIdentities": [],
+  "testIdentityRenames": {},
+  "temporaryAliases": []
 }

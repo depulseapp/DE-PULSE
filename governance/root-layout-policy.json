@@ -1,24 +1,95 @@
 {
-  "schema":"DE.PULSE-ROOT-LAYOUT-POLICY-2",
-  "baselineCommit":"e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-  "canonicalRootFiles":[".gitignore","AGENTS.md","CLAUDE.md","README.md","VERSION.txt","go.mod","go.sum","release_identity.json"],
-  "retainedDiscoveryFiles":["AGENTS.md","CLAUDE.md","README.md"],
-  "retainedRootVersionMajors":[17,18],
-  "preRetainedVersionDisposition":"DELETE_FROM_CURRENT_ROOT_AFTER_ACTIVE_PRODUCTION_LOGIC_IS_MIGRATED_TO_CAPABILITY_OWNER",
-  "historicalReleaseEvidenceRule":"Current-root cleanup never rewrites or deletes shipped Git history, Stable tags, published releases, or immutable release evidence.",
-  "grandfatherExistingBaselineRootFiles":true,
-  "newRootFileRule":"A new root file must be canonical or explicitly registered as transitional with owner, reason, expiry and removal condition.",
-  "transitionalRootFiles":{
-    "extreme_30_test_fixture_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / Extreme-30 capability test ownership","reason":"Retains generic fixtures required by the permanent Extreme-30 matrix without restoring retired versioned test files.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 4","removalCondition":"Consolidate the fixture under the final capability-oriented test owner while preserving all Extreme-30 assertions."},
-    "global_market_providers.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / provider capability ownership","reason":"Preserves live provider logic under a capability-oriented owner before package decomposition.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move implementation and tests together into the canonical provider capability package with equivalence evidence."},
-    "live_subscription_manager.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / live subscription ownership","reason":"Preserves live multi-feed subscription and failover logic under a capability-oriented owner before package decomposition.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move implementation and tests together into the canonical live-subscription package with equivalence evidence."},
-    "performance_regression_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / product performance regression evidence","reason":"Preserves retired 500-symbol/candidate ceilings and long-run capacity assertions under a version-neutral package-test owner.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move assertions with their implementation capability while retaining equivalent executable performance evidence."},
-    "retired_equivalence_regression_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / specialized retired-test behavior equivalence","reason":"Preserves specialized event and Opportunity Radar assertions where generic full-suite execution alone is insufficient.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move preserved assertions with final capability owners and update retired-test bindings atomically."},
-    "signal_intelligence_regression_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / signal-validation intelligence equivalence","reason":"Preserves signal outcome, evidence identity, seasonality, calibration and concentration assertions under a version-neutral owner.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move assertions with the final signal-validation/market-intelligence package and update bindings atomically."},
-    "alternative_intelligence_regression_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / alternative-community-options intelligence equivalence","reason":"Preserves alternative/community/options/replay truth, rights and non-fabrication assertions under a version-neutral owner.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move assertions with final alternative-intelligence owners and update bindings atomically."},
-    "ai_research_equivalence_regression_test.go":{"owner":"ADAPT-CI-CONVERGENCE-001 / AI research safety and routing equivalence","reason":"Preserves retired AI evidence, injection isolation, routing, cache identity, configured-provider and No-Execution authority assertions without restoring v16.4 test files.","expiry":"ADAPT-CI-CONVERGENCE-001 Wave 5","removalCondition":"Move assertions with the final AI research capability owner and update retired-test bindings atomically."}
+  "schema": "DE.PULSE-ROOT-LAYOUT-POLICY-2",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "canonicalRootFiles": [
+    ".gitignore",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "VERSION.txt",
+    "go.mod",
+    "go.sum",
+    "release_identity.json"
+  ],
+  "retainedDiscoveryFiles": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md"
+  ],
+  "retainedRootVersionMajors": [
+    17,
+    18
+  ],
+  "preRetainedVersionDisposition": "DELETE_FROM_CURRENT_ROOT_AFTER_ACTIVE_PRODUCTION_LOGIC_IS_MIGRATED_TO_CAPABILITY_OWNER",
+  "historicalReleaseEvidenceRule": "Current-root cleanup never rewrites or deletes shipped Git history, Stable tags, published releases, or immutable release evidence.",
+  "grandfatherExistingBaselineRootFiles": true,
+  "newRootFileRule": "A new root file must be canonical or explicitly registered as transitional with owner, reason, expiry and removal condition.",
+  "transitionalRootFiles": {
+    "extreme_30_test_fixture_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / Extreme-30 capability test ownership",
+      "reason": "Retains generic fixtures required by the permanent Extreme-30 matrix without restoring retired versioned test files.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 4",
+      "removalCondition": "Consolidate the fixture under the final capability-oriented test owner while preserving all Extreme-30 assertions."
+    },
+    "global_market_providers.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / provider capability ownership",
+      "reason": "Preserves live provider logic under a capability-oriented owner before package decomposition.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move implementation and tests together into the canonical provider capability package with equivalence evidence."
+    },
+    "live_subscription_manager.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / live subscription ownership",
+      "reason": "Preserves live multi-feed subscription and failover logic under a capability-oriented owner before package decomposition.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move implementation and tests together into the canonical live-subscription package with equivalence evidence."
+    },
+    "performance_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / product performance regression evidence",
+      "reason": "Preserves retired 500-symbol/candidate ceilings and long-run capacity assertions under a version-neutral package-test owner.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move assertions with their implementation capability while retaining equivalent executable performance evidence."
+    },
+    "retired_equivalence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / specialized retired-test behavior equivalence",
+      "reason": "Preserves specialized event and Opportunity Radar assertions where generic full-suite execution alone is insufficient.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move preserved assertions with final capability owners and update retired-test bindings atomically."
+    },
+    "signal_intelligence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / signal-validation intelligence equivalence",
+      "reason": "Preserves signal outcome, evidence identity, seasonality, calibration and concentration assertions under a version-neutral owner.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move assertions with the final signal-validation/market-intelligence package and update bindings atomically."
+    },
+    "alternative_intelligence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / alternative-community-options intelligence equivalence",
+      "reason": "Preserves alternative/community/options/replay truth, rights and non-fabrication assertions under a version-neutral owner.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move assertions with final alternative-intelligence owners and update bindings atomically."
+    },
+    "ai_research_equivalence_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / AI research safety and routing equivalence",
+      "reason": "Preserves retired AI evidence, injection isolation, routing, cache identity, configured-provider and No-Execution authority assertions without restoring v16.4 test files.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move assertions with the final AI research capability owner and update retired-test bindings atomically."
+    },
+    "tradeinsight_admission_regression_test.go": {
+      "owner": "ADAPT-CI-CONVERGENCE-001 / TradeInsight admission capability evidence",
+      "reason": "Preserves current TradeInsight admission, canonical-owner reuse, SHADOW lifecycle, SEC authority and bounded-history assertions under a version-neutral package-test owner.",
+      "expiry": "ADAPT-CI-CONVERGENCE-001 Wave 5",
+      "removalCondition": "Move assertions with the final TradeInsight/provider capability owner while preserving all current Go test identities and admission safeguards."
+    }
   },
-  "requiredTopLevelDirectories":[".github","adaptive-governance","governance","handoff","release","renderer","tests","tools"],
-  "forbiddenNewRootVersionPrefixPattern":"^v[0-9]+(?:[_\\.][0-9]+)*[_-]",
-  "safeRemovalRule":"Pre-v17 version-scoped current-root artifacts are explicitly retired by ADAPT-CI-CONVERGENCE-001; all other deletion still requires assertion/evidence mapping."
+  "requiredTopLevelDirectories": [
+    ".github",
+    "adaptive-governance",
+    "governance",
+    "handoff",
+    "release",
+    "renderer",
+    "tests",
+    "tools"
+  ],
+  "forbiddenNewRootVersionPrefixPattern": "^v[0-9]+(?:[_\\.][0-9]+)*[_-]",
+  "safeRemovalRule": "Pre-v17 version-scoped current-root artifacts are explicitly retired by ADAPT-CI-CONVERGENCE-001; all other deletion still requires assertion/evidence mapping."
 }
