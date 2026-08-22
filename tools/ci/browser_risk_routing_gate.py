@@ -92,8 +92,14 @@ def main() -> int:
             "does not package or launch the native macOS app",
         ),
     )
-    if "native_packaged_window_contract()" in browser_test or "native_macos.sh" in browser_test:
-        errors.append("WebKit browser owner must not invoke native lifecycle packaging")
+    executable_native_markers = (
+        "native_packaged_window_contract()",
+        "subprocess.run(",
+        "[\"bash\", \"tools/release/native_macos.sh\"]",
+        "bash tools/release/native_macos.sh",
+    )
+    if any(marker in browser_test for marker in executable_native_markers):
+        errors.append("WebKit browser owner must not execute native lifecycle packaging")
 
     # The legacy combined harness may remain temporarily for historical/current
     # release compatibility, but Qualified must no longer call it. Its native
