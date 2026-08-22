@@ -10,15 +10,59 @@
 **Certified Stable build ID:** `v18.9.0-stable-20260821`  
 **Release PR:** #62 merged  
 **Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
-**Active product branch/PR:** none  
+**Active product branch/PR:** `v18.9.1-development` / Draft PR #69  
+**Active corrective scope:** #64 / `ADAPT-RUNTIME-CRASH-001` / `v18.9.1`  
 **Governance alignment PR:** #67 merged  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`  
-**Immediate next product patch:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`.
+**Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`
 
 ## Immediate execution rule
 
-Do not start v18.9.2 or v19 implementation until #64 / v18.9.1 is truthfully closed or the crash is proven external/non-product. First refetch live GitHub state, issue #64/comments and current branch/PR state.
+Do not start v18.9.2 or v19 implementation until #64 / v18.9.1 is truthfully closed. First refetch live `main`, `v18.9.1-development`, PR #69, issue #64 and current comments because concurrent sessions/processes may advance the branch.
+
+Do **not** restart G0. G0 deterministic reproduction is complete and the canonical macOS native-window root cause is isolated. Continue from the exact current branch/PR state and the current qualification blocker described below.
+
+## v18.9.1 current execution state
+
+The canonical v18.9.0 package audit proved the Stable artifact uses `DePulseLauncher` -> `DePulse-arm64`; the original user crash path `/Applications/De-Pulse.app/Contents/MacOS/De-Pulse` is a distinct/non-matching executable signature and must not be conflated with the canonical reproduction.
+
+Qualified #157 (`32541591746`) executed the real packaged macOS JXA/Cocoa/WKWebView path on macOS 15.7.7 Apple Silicon with pinned Go 1.26.6. Packaged backend/readiness/root and SQLite migrations `[1,2,3,4]` passed, then the native JXA child failed with `protocol does not exist (-2700)`. The only explicit protocol lookup was formal `protocols:['NSApplicationDelegate']` in the JXA registered subclass.
+
+The v18.9.1 corrective candidate therefore removes only that unnecessary formal protocol declaration while preserving the NSObject delegate selectors and `app.delegate=delegate` behavior. The existing macOS packaging and WebKit qualification owners are hardened rather than replaced.
+
+Implementation head immediately before this handoff-only update: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`. Re-fetch the branch before relying on that SHA.
+
+Current implementation includes:
+- root-cause JXA correction in `desktop_lifecycle.go`;
+- `macOSWindowScript(...)` extraction plus `v18_9_1_desktop_lifecycle_test.go` regression coverage preventing formal `NSApplicationDelegate` reintroduction while protecting Cocoa/WebKit/delegate/url/icon behavior;
+- canonical executable identity checks (`DePulseLauncher`, `DePulse-arm64`, legacy `Contents/MacOS/De-Pulse` absent);
+- real packaged non-headless fresh startup, 3-second liveness dwell and warm relaunch on the same profile;
+- fresh/warm SQLite integrity and profile reuse checks;
+- explicit rejection of retained `protocol does not exist` evidence;
+- bounded deterministic TERM/INT/KILL native cleanup, including instance/identity/health probe failure paths;
+- additive evidence checks while preserving established `DE.PULSE-G13-G14-NATIVE-2` schema compatibility;
+- existing macOS WebKit lane pinned to Go 1.26.6 and required to consume the full native lifecycle evidence contract;
+- frozen v18.9.1 G0-G3/scope files: `v18_9_1_g0_g3_contract.json` and `v18_9_1_scope.json`.
+
+### Qualification truth
+
+Last executable Fast: #557 (`32541805955`) on earlier head `89c95e4ae156cd77d66cfbd96d3911375fdee940` — PASS including gofmt, go vet and full Go suite.
+
+Later source/test/harness hardening moved the branch beyond that SHA. Current-head Fast/Qualified attempts subsequently fail **before runner execution** with `steps=null`, including Fast #559/#560/#565/#566 and controlled required-lane retries. This is classified `INFRA_FAIL`, not product-test failure. Therefore the current branch head is **not claimed Fast- or Qualified-passed**.
+
+Do not burn repeated Actions retries while zero-step failures persist. The connected repository API cannot prove the account-level reason for hosted-runner refusal. Public GitHub status was operational when checked; private-repository usage/budget/payment/quota constraints remain a possible but unproven account-specific class.
+
+### Mandatory resume sequence once runner execution is available
+
+1. Re-fetch live `main`, development branch head, PR #69 and #64 comments.
+2. Confirm no concurrent source changes invalidate the frozen v18.9.1 scope.
+3. Run exact-head Fast and require PASS.
+4. Re-arm/run full exact-head Qualified and require backend, renderer, Chrome and WebKit lanes PASS.
+5. In WebKit/macOS proof require actual packaged fresh native startup + 3-second dwell, warm relaunch on the same profile, SQLite/profile reuse, no `protocol does not exist`, and deterministic cleanup evidence PASS.
+6. Only after exact-head evidence is green may PR #69 leave Draft and proceed to normal review/readiness assessment.
+7. Merge/release remains prohibited without explicit authorization; canonical G11-G16 is the only promotion path.
+
+`ADAPT-RUNTIME-CRASH-001` remains **OPEN / NOT CLOSED**.
 
 ## Permanent release philosophy
 
@@ -130,4 +174,4 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-Run G0 for #64 / `v18.9.1` from complete macOS crash evidence or deterministic reproduction and freeze narrow G1. No merge/release without explicit authorization.
+Restore/confirm GitHub Actions hosted-runner execution, then re-fetch the exact current `v18.9.1-development` head and run exact-head Fast followed by full Qualified. Do not move PR #69 out of Draft, merge, release, or start v18.9.2 until that evidence passes.
