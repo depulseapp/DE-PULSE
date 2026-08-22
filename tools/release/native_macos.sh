@@ -147,6 +147,7 @@ trap - EXIT
 # and is not interpreted as a product crash.
 GUI_INSTANCE="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/instance.json"
 GUI_WINDOW_LOG="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/native-window.log"
+GUI_DB="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/depulse-v17.db"
 
 run_native_window_cycle() {
   cycle="$1"
@@ -254,25 +255,51 @@ PY
   echo "PASS: actual packaged native macOS window cycle=$cycle backendPid=$gui_pid windowPid=$window_pid"
 }
 
+check_gui_profile_db() {
+  phase="$1"
+  test -s "$GUI_DB"
+  python3 - "$GUI_DB" "$phase" <<'PY'
+import sqlite3,sys
+path,phase=sys.argv[1:]
+con=sqlite3.connect(path)
+assert con.execute('pragma integrity_check').fetchone()[0]=='ok'
+versions=[r[0] for r in con.execute('select version from schema_migrations order by version')]
+assert versions and versions==sorted(set(versions)),versions
+assert con.execute('select count(*) from symbol_registry').fetchone()[0] > 0
+assert con.execute('select count(*) from identity_state').fetchone()[0] >= 1
+print(f'Native-window profile SQLite {phase}: PASS migrations={versions}')
+con.close()
+PY
+}
+
 run_native_window_cycle fresh
+check_gui_profile_db fresh
 run_native_window_cycle warm
+check_gui_profile_db warm
 
 test -s "$GUI_WINDOW_LOG"
-grep -q -- "--- DE.PULSE $DEPULSE_VERSION window start" "$GUI_WINDOW_LOG"
+start_count="$(grep -c -- "--- DE.PULSE $DEPULSE_VERSION window start" "$GUI_WINDOW_LOG")"
+test "$start_count" -ge 2
+if grep -q -- 'protocol does not exist' "$GUI_WINDOW_LOG"; then
+  echo "ERROR: native-window.log still contains Objective-C protocol resolution failure" >&2
+  cat "$GUI_WINDOW_LOG" >&2
+  exit 1
+fi
 
 ART_SHA="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
 python3 - "$OUT/G13-G14-macOS-Apple-Silicon.json" "$PACKAGE" "$ART_SHA" <<'PY'
 import json,os,sys,datetime,platform
 path,artifact,sha=sys.argv[1:]
 data={
- 'schema':'DE.PULSE-G13-G14-NATIVE-3','release':'v'+os.environ['DEPULSE_VERSION'],'platform':'macOS Apple Silicon','status':'PASS',
+ 'schema':'DE.PULSE-G13-G14-NATIVE-2','release':'v'+os.environ['DEPULSE_VERSION'],'platform':'macOS Apple Silicon','status':'PASS',
  'certifiedSourceSha':os.environ['DEPULSE_CANDIDATE_SHA'],'sourceFingerprint':os.environ['DEPULSE_SOURCE_FINGERPRINT'],'buildId':os.environ['DEPULSE_BUILD_ID'],
  'artifact':artifact,'artifactSha256':sha,'host':{'os':platform.platform(),'arch':platform.machine()},
  'checks':{
    'exactGitObjectFingerprint':'PASS','nativeBuild':'PASS','arm64Format':'PASS','sqliteLinkage':'PASS','codeSign':'PASS','cleanExtraction':'PASS',
    'canonicalBundleExecutable':'PASS','legacyExecutableAbsent':'PASS',
    'actualPackagedBackendLaunch':'PASS','healthIdentity':'PASS','readySQLite':'PASS','sqliteMigrations':'PASS','sqliteIntegrity':'PASS','rootSurface':'PASS',
-   'actualPackagedNativeWindowLaunch':'PASS','nativeWindowStartupDwell':'PASS','warmNativeWindowRelaunch':'PASS'
+   'actualPackagedNativeWindowLaunch':'PASS','nativeWindowStartupDwell':'PASS','warmNativeWindowRelaunch':'PASS',
+   'warmProfileSQLiteReuse':'PASS','nativeWindowProtocolResolution':'PASS'
  },
  'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()
 }
