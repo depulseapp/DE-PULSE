@@ -47,7 +47,7 @@ Re-fetch live GitHub head, handoff, issues/comments, release identity and branch
 ### G1 — Immutable Scope
 Freeze one responsibility, explicit non-goals, product-version disposition, work-slice ID, acceptance, rollback and platform applicability matrix. A REQUIRED client cannot be deferred for convenience.
 
-For process/repository cleanup, freeze explicit before-state inventory, intended owners, migration conditions and deletion prohibitions.
+For process/repository cleanup, freeze explicit before-state inventory, intended owners, migration conditions and deletion prohibitions. Future active work-slice metadata must use one version-independent canonical home rather than recreating root version prefixes.
 
 ### G2 — Architecture / Data Utility
 Map canonical owners, tenant/data/privacy classification, trust boundaries and platform adapters. No client or provider becomes an independent business-truth owner.
@@ -65,24 +65,31 @@ For CI/release tooling, also freeze:
 - release/publication feasibility checks;
 - immutable artifact/evidence ownership;
 - root-layout migration order and active-consumer rewrites;
-- explicit proof condition before any historical/version-stacked file can be removed.
+- explicit proof condition before any historical/version-stacked file can be removed;
+- canonical version-independent work-slice metadata owner/path;
+- repository-wide stale-reference scan coverage for workflows, shell/Python/Node, JSON/YAML, Markdown, renderer/resources, packaging and `go:embed`;
+- executable file-mode and case-sensitive/cross-platform path preservation requirements;
+- before/after executable test/gate identity inventory and equivalence criteria;
+- Planner v3/new-layout changed-path classification mapping with unknown-path fail-closed behavior;
+- temporary compatibility-alias owner, reason, expiry and removal condition;
+- generated/transient residue inventory plus clean-checkout post-build/test acceptance.
 
 ### G4 — Development Exit
 Canonical implementation plus every REQUIRED client adapter/surface exists and has unit/contract tests. Single-platform completion cannot satisfy a shared capability.
 
 For CI tooling, permanent executors/owners must be changed rather than adding version-specific workflow families.
 
-For #70 repository hygiene, G4 requires actual implementation: safe `.gitignore`, package-aware source-health, canonical root inventory/allowlist, migrated tooling/consumers, retirement/consolidation of stale orchestration where proven, capability-oriented test ownership progress, and root-layout enforcement. Documentation-only changes cannot satisfy G4.
+For #70 repository hygiene, G4 requires actual implementation: safe `.gitignore`, package-aware source-health, canonical root inventory/allowlist, canonical work-slice metadata home, repository-wide stale-reference gate, file-mode/path portability enforcement, test/gate identity conservation, Planner/path-classifier migration, migrated tooling/consumers, retirement/consolidation of stale orchestration where proven, bounded compatibility alias handling, generated/transient residue cleanup, capability-oriented test ownership progress and root-layout enforcement. Documentation-only changes cannot satisfy G4.
 
 ### G5 — FAST Qualification
 Run affected deterministic tests. Share common fixtures/contracts; test only platform-specific deltas separately.
 
-After #70, Fast/Qualified selection must be dependency-aware and explicit. Unknown/mixed risk fails closed to broader evidence.
+After #70, Fast/Qualified selection must be dependency-aware and explicit. Unknown/mixed risk fails closed to broader evidence. New/moved repository paths that are not classified by Planner v3 fail closed rather than being skipped.
 
 ### G6 — Integration / MEDIUM Qualification
 Prove cross-owner and cross-platform state/API integration, persistence/cache reuse, provider fallback/coverage and convergence/conflict behavior.
 
-Repository/tooling migrations must prove every active consumer resolves the new canonical path and no old path silently remains active.
+Repository/tooling migrations must prove every active consumer resolves the new canonical path and no old path silently remains active. Stale-reference scans, executable-bit checks, case-sensitive path checks and supported-OS path behavior must pass. Before/after executable identity must show no silent test/gate loss.
 
 ### G7 — Data / Security / Adaptive Intelligence
 Prove equivalent tenant/RBAC/product-entitlement/provider-right/privacy/data outcomes across clients, including downgrade/revocation/denial and SHADOW/promotion rules.
@@ -106,6 +113,13 @@ For #70 root hygiene, G10 additionally requires:
 - no package-local Go regression coverage was lost;
 - historical Stable tags/releases/evidence remain unchanged;
 - root allowlist/inventory enforcement is executable;
+- canonical version-independent work-slice metadata ownership is enforced;
+- repository-wide stale-reference scan is clean;
+- executable modes and case-sensitive/cross-platform path behavior are proven;
+- before/after executable test/gate identity is conserved or explicitly equivalence-retired;
+- Planner/path classification correctly understands all moved/new canonical paths and fails closed on unknown paths;
+- no indefinite compatibility wrappers, duplicate old/new copies or parallel owners remain;
+- normal governed build/test execution leaves no ungoverned tracked/generated source-tree residue;
 - stale-control removal did not reduce required evidence.
 
 ### G11 — Immutable Release Candidate + Publication Feasibility
@@ -144,7 +158,14 @@ After #70, G16 also records:
 - root before/after inventory;
 - files moved, renamed, consolidated and removed;
 - remaining intentional root owners and residual cleanup debt;
-- proof that source-health and test coverage still span all production packages/capabilities.
+- proof that source-health and test coverage still span all production packages/capabilities;
+- canonical active work-slice metadata location and enforcement result;
+- stale-reference scan result;
+- executable-mode and path-portability result;
+- before/after executable test/gate identity report;
+- Planner/path-classifier migration result;
+- compatibility-alias inventory showing none remain indefinitely;
+- clean-checkout/residue audit result after normal governed build/test execution.
 
 ## 4. Failure and CI discipline
 
@@ -161,7 +182,9 @@ Rules:
 - Stable release execution is globally serialized;
 - CI cost is optimized through dependency awareness, caching, evidence reuse and fewer duplicate builds, not by lowering assurance;
 - no blind deletion based on filename, age or version prefix;
-- move/rename consumers atomically or fail closed.
+- move/rename consumers atomically or fail closed;
+- unknown new/moved paths fail closed until classified;
+- compatibility shims cannot become permanent second owners.
 
 ## 5. Current corrective state
 
@@ -209,7 +232,14 @@ Core implementation changes:
 - package-safe migration of active version-named Go tests;
 - incremental production package decomposition only after coverage guards exist;
 - stable ownership for policies/registries/retained assets;
-- CI-enforced small root allowlist.
+- CI-enforced small root allowlist;
+- canonical version-independent work-slice metadata home;
+- repository-wide stale-reference gate;
+- executable file-mode and cross-platform/case-sensitive path preservation;
+- before/after executable test/gate identity conservation;
+- Planner/path-classifier migration for the new layout with fail-closed unknown handling;
+- bounded temporary compatibility aliases only, with owner/expiry/removal condition;
+- generated/transient residue audit and clean-checkout enforcement.
 
 This section is executable scope. #70 cannot be closed by updating Markdown alone.
 
@@ -237,4 +267,4 @@ Smart Provider Router v2 sole routing authority; canonical freshness/recovery so
 
 ## Exactly one next action
 
-Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful v18.9.1 closure, execute #70—including the actual repository-root implementation—before any next product implementation.
+Restore/confirm GitHub Actions hosted-runner execution and finish exact-head #64 / `v18.9.1` qualification. After truthful closure, execute #70—including the actual repository-root implementation and all migration-safety gap fixes—before any next product implementation.
