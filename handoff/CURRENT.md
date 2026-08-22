@@ -11,7 +11,7 @@
 **Release PR:** #62 merged  
 **Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
 **Active product branch/PR:** none  
-**Governance alignment PR:** #67 draft  
+**Governance alignment PR:** #67 merged  
 **Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`  
 **Immediate next product patch:** #64 / `ADAPT-RUNTIME-CRASH-001` -> `v18.9.1`.
