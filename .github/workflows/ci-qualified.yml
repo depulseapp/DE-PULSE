@@ -255,9 +255,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Provider/dependency rights readiness
-        run: python3 dependency_readiness_gate.py
+        run: python3 tools/ci/dependency_readiness_gate.py
       - name: AI rights/offline evaluation contract
-        run: python3 ai_continuous_eval_gate.py
+        run: python3 tools/ci/ai_continuous_eval_gate.py
 
   renderer:
     name: Qualified renderer contracts
