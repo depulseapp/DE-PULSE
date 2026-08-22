@@ -73,7 +73,10 @@ let mainWindow=null;
 ObjC.registerSubclass({
   name:'DePulseDelegateV121',
   superclass:'NSObject',
-  protocols:['NSApplicationDelegate'],
+  // Do not declare NSApplicationDelegate formally here. On current macOS JXA
+  // the bridge can fail protocol-name resolution with "protocol does not exist"
+  // before the window starts. NSApplication accepts an NSObject delegate that
+  // implements the selectors below; formal protocol conformance is unnecessary.
   methods:{
     'applicationShouldTerminateAfterLastWindowClosed:':{
       types:['bool',['id']],
@@ -180,7 +183,6 @@ app.run;`, appVersion, strings.ReplaceAll(rawURL, "'", "%27"), strings.ReplaceAl
 				if cmd.Start() == nil {
 					return cmd.Process.Pid
 				}
-			}
 		}
 		_ = exec.Command("xdg-open", rawURL).Start()
 	}
