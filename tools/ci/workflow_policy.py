@@ -271,8 +271,8 @@ def main() -> int:
         ("tools/ci/post_stable_continuity_gate.py", "post-Stable repository continuity contract"),
         ("tools/ci/stable_evidence_gate.py", "durable Stable evidence contract"),
         ("tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract"),
-        ("dependency_readiness_gate.py", "dependency/provider readiness contract"),
-        ("ai_continuous_eval_gate.py", "AI continuous eval/rights contract"),
+        ("tools/ci/dependency_readiness_gate.py", "dependency/provider readiness contract"),
+        ("tools/ci/ai_continuous_eval_gate.py", "AI continuous eval/rights contract"),
     )
     for filename, label in gates:
         if run_gate(root, filename, label) != 0:

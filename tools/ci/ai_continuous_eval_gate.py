@@ -8,7 +8,7 @@ import pathlib
 import re
 import sys
 
-ROOT = pathlib.Path(__file__).resolve().parent
+ROOT = pathlib.Path(__file__).resolve().parents[2]
 POLICY = ROOT / "ai_eval_policy.json"
 RIGHTS = ROOT / "provider_dataset_ai_rights_registry.json"
 HARDENING = ROOT / "ai_hardening_v18_6.go"

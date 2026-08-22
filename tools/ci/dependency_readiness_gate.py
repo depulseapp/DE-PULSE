@@ -8,7 +8,7 @@ import pathlib
 import re
 import sys
 
-ROOT = pathlib.Path(__file__).resolve().parent
+ROOT = pathlib.Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "dependency_readiness_registry.json"
 ACTION_PATH = ROOT / "user_action_required_registry.json"
 DOC_IMPACT_PATH = ROOT / "release" / "v18.6.0" / "DOCUMENTATION-IMPACT.md"
@@ -193,8 +193,8 @@ def main() -> int:
         fail(f"preferred Go version {preferred} is outside approved minor lines {sorted(approved)}")
 
     policy_text = WORKFLOW_POLICY_PATH.read_text(encoding="utf-8")
-    if "dependency_readiness_gate.py" not in policy_text:
-        fail("canonical workflow policy does not execute dependency_readiness_gate.py")
+    if "tools/ci/dependency_readiness_gate.py" not in policy_text:
+        fail("canonical workflow policy does not execute tools/ci/dependency_readiness_gate.py")
     for workflow_name, text in (("CI Fast", fast_text), ("CI Qualified", qualified_text)):
         if "tools/ci/workflow_policy.py" not in text:
             fail(f"{workflow_name} does not execute the canonical workflow policy")
