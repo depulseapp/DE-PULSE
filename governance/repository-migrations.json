@@ -109,6 +109,15 @@
       "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
     },
     {
+      "oldPath": "documentation_governance_gate.py",
+      "newPath": "tools/ci/documentation_governance_gate.py",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / canonical documentation-governance CI ownership",
+      "reason": "G16 documentation identity/history/QA governance is reusable CI evidence and belongs under tools/ci rather than repository root.",
+      "removalCondition": "Old root path is absent; tools/release/prefreeze_qualification.py executes tools/ci/documentation_governance_gate.py, repository-root resolution is preserved, and documentation/QA/G12-manifest assertions remain unchanged.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": ["tools/release/prefreeze_qualification.py"]
+    },
+    {
       "oldPath": "source_health_architecture_gate.py",
       "newPath": "tools/ci/source_health_architecture_gate.py",
       "owner": "ADAPT-CI-CONVERGENCE-001 / canonical source-health CI ownership",

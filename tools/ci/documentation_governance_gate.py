@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json,re,sys
-R=Path(__file__).resolve().parent; e=[]
+R=Path(__file__).resolve().parents[2]; e=[]
 def need(ok,msg):
     if not ok: e.append(msg)
 
