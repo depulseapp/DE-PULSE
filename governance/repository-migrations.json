@@ -107,6 +107,15 @@
       "removalCondition": "Old root path is absent; Fast executes tools/ci/source_health_architecture_gate.py with the same source-health policy and recursive package corpus, and migration safety reports no stale active consumer.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
       "allowedReferenceFiles": [".github/workflows/ci-fast.yml"]
+    },
+    {
+      "oldPath": "source_health_baseline.json",
+      "newPath": "governance/source-health-policy.json",
+      "owner": "ADAPT-CI-CONVERGENCE-001 / source-health governance policy",
+      "reason": "Source-health thresholds, exact orphan-debt records and interface-contract exceptions are governance policy data, not repository-root identity.",
+      "removalCondition": "Old root policy path is absent; the canonical tools/ci source-health gate reads governance/source-health-policy.json and preserves identical policy content and fail-closed semantics.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
     }
   ],
   "retiredExecutablePaths": [],
