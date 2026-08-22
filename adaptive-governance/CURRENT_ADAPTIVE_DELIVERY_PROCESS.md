@@ -8,238 +8,176 @@
 
 ## 1. Delivery invariant
 
-A DE.PULSE release is not delivered merely because code compiles, CI is green or governance is documented.
+A DE.PULSE release is not delivered merely because code compiles, CI is green, one platform works or governance is documented.
 
 Delivery follows:
 
-`Governed -> Implemented -> Enforced -> Evidenced -> Packaged/Deployed -> Verified -> Delivered -> Learned`
+`Governed -> Implemented -> Enforced -> Evidenced -> Packaged/Deployed -> Cross-Platform Verified -> Delivered -> Learned`
 
-Every patch proves:
-- frozen G1 scope fully implemented;
-- explicit non-goals untouched;
-- canonical owners preserved;
-- deterministic regression evidence for changed responsibility;
-- truthful partial/degraded/UNKNOWN/ABSTAIN behavior;
-- no known implementation miss left without a durable target;
-- required native/hosted runtime evidence;
-- issue/handoff/checkpoint truth agrees with executable evidence.
+Every patch proves frozen G1 scope, explicit non-goals, canonical-owner preservation, deterministic regression evidence, truthful degraded/UNKNOWN behavior, required runtime evidence and issue/handoff truth.
 
-## 2. Release-train delivery model
+## 2. Cross-Platform Definition of Delivered
 
-Major versions are strategic maturity generations; minor bands are coherent dependency phases; patch releases remain small independent units.
+For each capability, G1 freezes `macOS / Windows / Web = REQUIRED or justified N/A`.
 
-A minor band never authorizes one large bundle. Each patch inside the band passes its own G0-G16 lifecycle and can be held/rolled back independently.
+A **shared capability is Delivered only when**:
+1. canonical domain/API/state implementation is complete;
+2. every REQUIRED client implementation is complete;
+3. all REQUIRED clients pass equivalent authorization, state, data, freshness/provenance and user-meaning tests;
+4. required macOS/Windows artifacts and Web deployment/runtime evidence pass;
+5. no material parity debt remains.
 
-Planned future version labels are reservations until G1. G0/G1 may split broad work and shift unstarted reservations. Shipped versions are immutable. Corrective/security work can preempt the planned train.
+There is no normal delivery state called “Mac done, Windows/Web later.” A platform may be used internally for technical validation, but that does not satisfy delivery or GA.
 
-## 3. v18.9.x delivery train
+Platform-specific releases remain allowed when the responsibility itself is platform-specific. #64 / `v18.9.1` is therefore valid as macOS-only crash corrective work.
 
-1. **v18.9.1 — Runtime crash corrective** — packaged macOS reproduction/root cause/fix, preserved user state/API keys, warm-state/relaunch regression.
-2. **v18.9.2 — TradeInsight Settings/API-key UX** — canonical secret owner, masked controls, truthful status, scroll/focus preservation.
-3. **v18.9.3 — Coverage-aware router** — DB/cache reuse first, residual-gap acquisition, provenance/coverage proof.
-4. **v18.9.4 — Canonical company/instrument identity** — shared identity/presentation.
-5. **v18.9.5 — Market Data Modes/diagnostics** — behavior-oriented modes and capability freshness/coverage/source truth.
-6. **v18.9.6 — Provider observability/Adaptive telemetry** — deliberately before provider expansion; measurable SHADOW usefulness, provider/call-avoidance/runtime/headroom evidence.
-7. **v18.9.7 — Form 4 enrichment** — SHADOW-first, SEC authoritative, measured using v18.9.6 telemetry.
-8. **v18.9.8 — Symbol/company search** — canonical fallback/corroboration.
-9. **v18.9.9 — Movers/ranking evidence** — SHADOW candidate evidence through Opportunity Radar.
-10. **v18.9.10 — Remaining useful capability admission** — explicit disposition/consumer/rights/freshness/rate/retention/lifecycle for each useful entitlement.
-11. **v18.9.11 — Session-Aware Data Readiness Maintenance** — overnight/weekend bounded maintenance with protected-session priority/preemption/checkpoints.
-12. **v18.9.12 — Professional closure audit** — no new feature scope; zero-miss/duplicate-owner/provider/runtime/package closure.
+Temporary platform exceptions require a proven external blocker, explicit waiver/expiry, no misleading Delivered/GA status and a named recovery release. They are emergency exceptions, not roadmap structure.
 
-No later patch begins until the current patch handoff identifies exactly one next action and every discovered miss is durably dispositioned.
+## 3. Release-train delivery model
 
-## 4. Protected Tier-0 delivery contract
+Major versions are strategic maturity generations; minor bands are coherent dependency phases; patches remain one-primary-responsibility units. For a shared capability, its required platform adapters are part of that one responsibility.
 
-Pre-market, regular market and after-hours are protected Tier-0 decision-support sessions.
+No next shared domain begins while current required-platform parity debt is material. Planned version labels remain reservations until G1; shipped releases are immutable.
 
-Maintenance, hosted gateway, synchronization, DB/pool and adaptive workload releases must show:
-- provider/runtime/DB/worker reserve for current-session capabilities;
-- live/current decision support outranks background work;
-- maintenance/sync acquisition suspends/yields when not required by live consumers;
-- background queues/concurrency are bounded and preemptible;
-- no heavy compaction/reconciliation/backfill during protected sessions;
-- recovery/catch-up occurs in eligible lower-priority windows without request storms.
+## 4. v18.9.x delivery train
 
-Machine contract: `adaptive-governance/PERSISTENCE_REUSE_AND_OFF_HOURS_DATA_READINESS_CONTRACT.md`.
+1. `v18.9.1` runtime crash corrective — macOS-specific escaped defect.
+2. `v18.9.2` TradeInsight Settings/API-key UX.
+3. `v18.9.3` coverage-aware router.
+4. `v18.9.4` canonical company/instrument identity.
+5. `v18.9.5` Market Data Modes/diagnostics.
+6. `v18.9.6` provider observability/Adaptive telemetry.
+7. `v18.9.7` Form 4 SHADOW enrichment.
+8. `v18.9.8` symbol/company search.
+9. `v18.9.9` movers/ranking SHADOW evidence.
+10. `v18.9.10` remaining useful capability admission.
+11. `v18.9.11` Session-Aware Data Readiness Maintenance.
+12. `v18.9.12` professional closure.
 
-## 5. v19 delivery train — Professional Data Infrastructure + Hosted Account Platform
+Where v18.9 shared functionality exists on both supported native clients, delivery preserves semantic equivalence. Web becomes a REQUIRED shared client when the v19 cross-platform client foundation is delivered.
 
-v19 begins only after `v18.9.12` PASS.
+## 5. Protected Tier-0 delivery contract
 
-### v19.0.x — Governance, Control Plane & Data Foundation
+Pre-market, regular market and after-hours are protected Tier-0 decision-support sessions. Live/current work outranks background maintenance/sync; provider/runtime/DB/worker reserve is explicit; background work is bounded, preemptible and cannot flood protected sessions.
 
-Delivery is dependency-enforced:
-1. **v19.0.0 Provider Capability / Legal Rights Registry** — runtime-consumable provider/capability rights; unknown/expired disallowed behavior fails closed.
-2. **v19.0.1 Hosted Tenant/Identity/Device/Session** — first-class tenant context plus canonical role/capability/session/device truth across API/SSE/native/web; revocation and privileged re-authentication evidenced.
-3. **v19.0.2 DE.PULSE Product Entitlement / Metering Policy** — billing-provider-agnostic plan/status/feature/quota/grace/suspension policy. Separate from RBAC and upstream provider rights.
-4. **v19.0.3 Account Data Governance / Privacy Lifecycle** — executable data inventory/classification, purpose/minimization, retention/deletion, export/review, account deactivation/deletion, SQLite/PostgreSQL/sync/cache/backup semantics, audit/log retention, operator access and data-residency disposition.
-5. **v19.0.4 Hosted Environment / IaC / Service Trust Foundation** — isolated dev/test/stage/prod, versioned desired state, service identities/network/TLS boundaries, drift detection, reproducible deploy/rollback and no unmanaged production snowflake.
-6. **v19.0.5 PostgreSQL Foundation** — tenancy/schema/pool/index/HA/PITR/backup/restore/migration/RPO/RTO with retention/schema behavior consuming v19.0.3; no broad sync activation.
-7. **v19.0.6 Managed Secrets/KMS** — environment-aware isolation, rotation/rollback/compromise recovery/redaction; zero platform provider secret on commercial clients.
-8. **v19.0.7 Software Supply-Chain / Artifact & Dependency Assurance** — component/dependency inventory, vulnerability scanning, SBOM where applicable, source/license policy, reproducible builds, artifact integrity/attestation/provenance and vulnerable-component response.
-9. **v19.0.8 Provider SLO/Cost/Coverage Scorecards** — measured freshness/completeness/latency/reliability/rate/cost/usefulness/calls-avoided/error-budget and tenant-aware health evidence.
-10. **v19.0.9 Data Reconciliation/Revision Quality** — independence/conflict/revisions/adjustments/point-in-time provenance.
+## 6. v19 delivery train — foundations first, then lockstep capabilities
 
-**Phase exit:** hosted provider/sync activation is blocked until tenant identity, RBAC, product entitlement, provider rights, privacy/data lifecycle, environment/IaC trust, DB/recovery, secrets, supply-chain provenance, observability and data-quality controls are executable and evidenced.
+### v19.0.x — Governance / Control Plane / Data Foundation
 
-### v19.1.x — Zero-Key Provider Data Plane & Native Sync
+1. `v19.0.0` Provider Capability / Legal Rights Registry.
+2. `v19.0.1` Hosted Tenant/Identity/Device/Session Control Plane.
+3. `v19.0.2` DE.PULSE Product Entitlement / Metering Policy.
+4. `v19.0.3` Account Data Governance / Privacy Lifecycle.
+5. `v19.0.4` Hosted Environment / IaC / Service Trust Foundation.
+6. `v19.0.5` PostgreSQL Tenancy / Schema / Pool / HA-PITR Foundation.
+7. `v19.0.6` Managed Secrets / KMS Lifecycle.
+8. `v19.0.7` Software Supply-Chain / Artifact & Dependency Assurance.
+9. `v19.0.8` Provider Quality / Cost / Coverage / SLO Scorecards.
+10. `v19.0.9` Data Reconciliation / Revision / Point-in-Time Quality.
 
-1. **v19.1.0 Hosted Provider Gateway** — authenticated/versioned server boundary around existing Smart Provider Router v2; canonical freshness/cache/persistence reuse; bounded circuits/backpressure/kill switch; API inventory/version/deprecation ownership; actual deployment consumes v19.0 environment/IaC and supply-chain controls.
-2. **v19.1.1 Unified Serving Policy + Live Fan-Out** — tenant/RBAC/product-entitlement/provider-right/privacy-data-class gating at router/cache/persistence/REST/WebSocket/SSE; existing multi-feed owner; no cross-tenant/tier/right/privacy leakage.
-3. **v19.1.2 Sync Protocol Foundation** — snapshot/high-watermark bootstrap, SQLite atomic outbox, idempotent push, authoritative server sequence/change log, incremental pull, checkpoints/tombstones/retention/compaction/re-bootstrap/mixed-version negotiation; retention/deletion consumes v19.0.3.
-4. **v19.1.3 macOS Pilot** — preferences/watchlists, offline/restart/reconnect/conflicts/local-account isolation/user switching/lost-device/account-deletion proof.
-5. **v19.1.4 Desks/Workspaces** — versioned membership/config/delete/history convergence using the same transport.
+Hosted shared capability delivery is blocked until applicable foundations are executable and evidenced.
 
-### v19.2.x — Cross-Platform Parity & #66 Assurance
+### v19.1.x — Hosted Data Plane + Cross-Platform Account/Sync
 
-1. **v19.2.0 Windows x64 parity** — same account/sync/security/privacy semantics.
-2. **v19.2.1 Hosted web parity** — same API/session/capability/product-entitlement/privacy/PostgreSQL state; browser cache non-authoritative.
-3. **v19.2.2 Rights/privacy-aware research/state portability** — only lawful/provenance-bound/retention-compatible durable artifacts.
-4. **v19.2.3 Tenant-Aware Metering / Cost / Usage Observability** — tenant/account/user/device/capability attribution, plan/quota consumption, cache/call avoidance, streaming usage, provider cost where known and tenant-health signals; log/telemetry retention follows data-governance policy.
-5. **v19.2.4 Multi-User Security / Abuse / Capacity Hardening** — object/function authorization negatives, sensitive-flow abuse protection, rate limits, fairness/noisy-neighbor isolation, edge limits, circuits/load shedding, environment-boundary/configuration tests and protected-session capacity.
-6. **v19.2.5 #66 assurance closure** — no feature scope; full adversarial/failure/recovery/privacy/environment/supply-chain matrix and implementation-miss audit.
+1. **v19.1.0 Hosted Provider Gateway** — versioned zero-key server boundary around Smart Provider Router v2; shared canonical backend for all clients.
+2. **v19.1.1 Unified Serving Policy + Live Fan-Out** — same tenant/RBAC/product-entitlement/provider-right/privacy decisions for REST/WebSocket/SSE/native/web consumers.
+3. **v19.1.2 Sync Protocol Foundation** — one versioned state protocol; native SQLite/outbox behavior and Web hosted mutation behavior converge on PostgreSQL authority.
+4. **v19.1.3 Cross-Platform Account/Session Client Foundation** — **Mac + Windows + Web in the same release responsibility**.
+5. **v19.1.4 Cross-Platform Preferences + Watchlists** — **Mac + Windows + Web in the same release responsibility**.
+6. **v19.1.5 Cross-Platform Desks/Workspaces** — **Mac + Windows + Web in the same release responsibility**.
 
-#66 is complete only after actual supported clients/services prove the architecture. Documentation alone does not close it.
+No Mac product pilot exists. Phase exit requires all required clients for these capabilities to pass.
 
-### Required #66 negative/adversarial evidence
+### v19.2.x — Cross-Platform Shared Product + Assurance
+
+1. **v19.2.0 Cross-Platform Research / Durable State** — Mac + Windows + Web.
+2. **v19.2.1 Cross-Platform Market Intelligence / Discovery / Market Modes** — Mac + Windows + Web; same canonical intelligence and explanation/source/freshness meaning.
+3. **v19.2.2 Cross-Platform Settings / RBAC / Product-Entitlement UX** — Mac + Windows + Web; same role/capability truth and direct-route/API denial.
+4. **v19.2.3 Tenant-Aware Metering / Cost / Usage Observability** — platform dimension is observable but does not become separate business truth.
+5. **v19.2.4 Multi-User Security / Abuse / Capacity Hardening** — mixed-client concurrent load, fairness, rate/circuit/load-shedding and protected-session capacity.
+6. **v19.2.5 #66 Cross-Platform Assurance Closure** — no feature scope; explicit equivalence + adversarial/failure/recovery matrix.
+
+#66 is complete only after actual Mac + Windows + Web clients/services prove the architecture. Documentation or one-client success cannot close it.
+
+### Required #66 cross-platform evidence
 
 At minimum:
-- cross-account object/API/stream access denial;
-- role/capability downgrade;
-- product-plan downgrade/suspension/quota exhaustion;
-- revoked session/device behavior;
-- account data review/export/deactivation/deletion and retention-expiry behavior;
-- SQLite/PostgreSQL/sync-log/tombstone/cache/backup deletion or expiry semantics;
-- operator/support-access boundaries and audit retention;
-- stale/unsupported client protocol behavior without losing local outbox mutations;
-- duplicate replay/idempotency;
-- network loss during server/client apply;
-- new-device and checkpoint-expired bootstrap/re-bootstrap;
-- concurrent edit/delete/tombstone behavior;
-- provider-right downgrade/expiry;
-- secret rotation failure, rollback and compromise revoke;
-- DB failover/PITR/restore/migration rollback;
-- environment isolation and cross-environment identity/secret/config denial;
-- IaC/config drift detection and reproducible environment rollback;
-- dependency/component inventory completeness and vulnerability/advisory handling;
-- SBOM/artifact provenance/attestation or equivalent integrity failure behavior where applicable;
-- vulnerable-component patch/revocation response;
-- long-lived stream reauthorization/revocation;
-- API inventory/version/deprecation compatibility;
-- provider outage vs DB/gateway/outbound-network/deployment outage distinction;
-- queue/backpressure/circuit/load shedding;
-- noisy-neighbor/fairness pressure;
-- protected-session load pressure/background-yield behavior;
-- user switching/local SQLite account isolation;
-- no provider secret or excessive user data in clients/logs/telemetry/sync payloads.
+- same account/session/role/product-entitlement state across clients;
+- same authorized watchlists/preferences/desks/workspaces/research state;
+- same Market Intelligence/Discovery/Market Mode meaning for equivalent evidence;
+- same provider/freshness/provenance labels and degraded/UNKNOWN behavior;
+- same revocation/downgrade/denial outcomes;
+- native offline/reconnect convergence without Web becoming a second authority;
+- mixed Mac/Windows/Web concurrent edit/conflict/delete/tombstone behavior;
+- cross-account and direct-route/API/stream denial;
+- provider-right/product-plan downgrade behavior;
+- account export/deactivation/deletion/retention behavior;
+- secret rotation and DB failover/PITR/restore;
+- mixed-version protocol behavior;
+- environment/config drift and artifact/dependency provenance failure behavior;
+- noisy-neighbor/fairness/backpressure/protected-session pressure;
+- no provider secret or unnecessary user data leakage.
 
 ### v19.3.x — Point-in-Time Evidence
 
-- **v19.3.0 Institutional/13F infrastructure** — direct SEC truth, manager/security identity, amendments/filing lag/point-in-time holdings/outcome lineage.
-- **v19.3.1 Two-sided Long/Short evidence substrate** — point-in-time plan/thesis/outcome evidence and explicit UNKNOWN for missing lawful data.
-- **v19.3.2 AODR candidate/ranking/outcome lineage** — point-in-time candidate/rank/reason transitions and surfaced-vs-missed outcomes.
+- `v19.3.0` Institutional/13F infrastructure.
+- `v19.3.1` Two-sided Long/Short evidence substrate.
+- `v19.3.2` AODR candidate/ranking/outcome lineage.
+
+Any user-facing capability surfaced from these substrates follows the Cross-Platform Definition of Delivered.
 
 ### v19.4.x — Reliability / Economics / v20 Readiness
 
-- **v19.4.0 ADR-GDI professional reliability/capacity** — SLO/error-budget/degradation, warm start, indexes/pools, load shedding, bounds/reserves, maintenance/preemption economics, controlled failure/soak proof and hosted operational runbooks including privacy, environment and supply-chain incident/recovery procedures.
-- **v19.4.1 Specialized/paid-provider gap evaluation** — only measured gaps justify provider change; same canonical router/rights/persistence/session contracts.
-- **v19.4.2 v20 research-readiness audit** — no new model scope; point-in-time/provenance/rights/privacy/independence/leakage/reliability readiness.
+- `v19.4.0` ADR-GDI professional reliability/capacity/runbooks.
+- `v19.4.1` Specialized/paid-provider gap evaluation.
+- `v19.4.2` v20 research-readiness audit.
 
 ### v19.5.0 — Major Closure
 
-No feature scope. Require:
-- #66 PASS;
-- tenant isolation and negative cross-tenant evidence;
-- canonical RBAC/session/device revocation;
-- DE.PULSE product entitlement separated from provider legal/data rights;
-- account data inventory/classification/minimization/retention/export/deactivation/deletion evidence;
-- data-residency/operator-access/audit-log disposition;
-- provider/data-rights/commercial posture truthful and machine-enforced;
-- hosted environment/IaC isolation, drift detection and reproducible rollback evidence;
-- dependency/component/SBOM/source/license/vulnerability posture and source->artifact->environment provenance;
-- API inventory/version/deprecation truth;
-- point-in-time/revision/provenance quality;
-- SLO/error-budget/reliability/capacity evidence;
-- DB/secret/provider-right recovery drills;
-- tenant-aware metering/cost/usage/health evidence;
-- multi-user abuse/noisy-neighbor/capacity proof;
-- no unowned dataset/provider role/parallel owner;
-- actual supported packages/runtimes/services/deployments and provenance;
-- zero unresolved P0 security/privacy/rights/product-entitlement/environment/supply-chain/recovery/compatibility issue.
+No feature scope. Require #66 PASS, zero material shared-capability parity debt, tenant/product-entitlement/provider-right/privacy separation, data lifecycle, environment/IaC, supply-chain provenance, API compatibility, SLO/capacity, recovery/rollback and actual Mac/Windows/Web runtime/deployment evidence where applicable.
 
-## 6. Delivery acceptance for hosted/security/data patches
+## 7. Delivery acceptance for shared capabilities
 
-In addition to normal G0-G16 evidence, affected patches require:
-- ADR/equivalent durable decision for material authority/trust-boundary changes;
-- threat model + data/tenant/privacy classification;
-- API/schema/protocol compatibility and inventory/deprecation contract;
-- data inventory/minimization/retention/export/deletion and residency disposition;
-- hosted environment/IaC/service identity/network/TLS/configuration ownership and drift/rollback evidence;
-- component/dependency/vulnerability/SBOM/source/license/artifact provenance controls where applicable;
-- backward-compatible migration + rollback/roll-forward plan;
-- SLO/error-budget + tenant-aware observability before broad activation;
-- contract and negative authorization/privacy/environment tests;
-- load/soak/capacity/fairness/failure-injection/failover evidence where relevant;
-- bounded feature flag/kill switch/circuit breaker/canary controls for risky hosted activation where appropriate;
-- operator runbook/recovery steps not dependent on the original developer;
-- no secrets or unnecessary personal/account data in source/client/sync/ordinary logs/traces/crash output;
-- exact source/build/artifact/deployment provenance.
+In addition to normal G0-G16 evidence:
+- one canonical capability contract;
+- required-platform matrix frozen at G1;
+- platform adapters implemented in-scope, not deferred;
+- cross-platform state/data/authorization/UX meaning equivalence;
+- cross-platform conflict/reconnect/revocation behavior where stateful;
+- actual supported artifact/deployment proof;
+- no separate provider/router/freshness/persistence/session/intelligence owner per client;
+- no GA until all REQUIRED platforms pass.
 
-## 7. v20 delivery train — Adaptive Intelligence
+Responsive layout and native interaction patterns may differ. Product truth and capability meaning may not.
 
-v20 begins only after `v19.5.0` PASS.
+## 8. v20 delivery train — Adaptive Intelligence
 
-### v20.0.x — Adaptive control/governance before broad rollout
-- **v20.0.0 Adaptive research control plane + immutable experiment ledger**;
-- **v20.0.1 Model/prompt governance + Champion/Challenger**;
-- **v20.0.2 Historical analogues/regime outcomes**;
-- **v20.0.3 Calibration/FP-FN/miss/contradiction/drift**.
+v20 begins only after `v19.5.0` PASS. Model/prompt governance precedes broad adaptive rollout.
 
-### v20.1.x — ASBI
-- `v20.1.0` behavioral fingerprints/state transitions;
-- `v20.1.1` scenarios/probability momentum/calibration.
+- `v20.0.x` adaptive control/governance/analogues/calibration.
+- `v20.1.x` ASBI.
+- `v20.2.x` adaptive Institutional + TDTI.
+- `v20.3.x` AODR.
+- `v20.4.0` ADR-GDI adaptive operations.
+- `v20.5.0` Professional Closure.
 
-### v20.2.x — Institutional + TDTI
-- `v20.2.0` adaptive 13F;
-- `v20.2.1` competing Long/Short/No Reliable Edge;
-- `v20.2.2` two-sided trade-plan/readiness/outcome validation; No Execution.
+Every shared adaptive user-facing capability follows Mac + Windows + Web lockstep and `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`. No Execution remains permanent.
 
-### v20.3.x — AODR
-- `v20.3.0` adaptive shared ranking;
-- `v20.3.1` diversity/opportunity cost/personalized relevance after shared truth.
+## 9. Per-patch G15 promotion guidance
 
-### v20.4.x — Adaptive operations
-- `v20.4.0` ADR-GDI adaptive provider/recovery/workload/maintenance/reserve optimization under SHADOW/Champion-Challenger until explicit promotion.
+For shared capabilities, G15 promotion is capability-wide, not platform-by-platform. Canary/bounded cohorts may be used, but a Mac-only GA followed by Windows/Web catch-up is prohibited. Rollback/kill criteria must preserve a coherent supported-platform experience.
 
-### v20.5.0 — Professional Closure
-No feature scope. Require calibration/utility/drift/abstention, deterministic-boundary protection, privacy/security/data rights, reproducibility, rollback, actual supported artifacts, zero silent self-modification and No Execution.
+## 10. Major-version handoff contract
 
-Adaptive production influence remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`.
+- **v18.9 -> v19:** trustworthy native runtime/data foundation.
+- **v19 -> v20:** one canonical hosted/account/data/intelligence product with Mac/Windows/Web parity, point-in-time evidence, reliability/capacity and outcome lineage trustworthy enough for governed learning.
 
-## 8. Per-patch G15 delivery/promotion guidance
+Major closure cannot be bypassed by starting the next major early.
 
-For local/native-only low-risk patches, normal certified artifact promotion is sufficient.
+## 11. Permanent boundaries
 
-For hosted/server/security/data-plane changes where partial rollout is possible, G15 prefers:
-- disabled-by-default or controlled capability activation until evidence is complete;
-- canary/bounded cohort or owner-only pilot where practical;
-- explicit application/configuration/environment/dependency rollback/kill-switch criteria;
-- health/SLO/error-budget/tenant-health monitoring during activation;
-- no irreversible schema/protocol/client/environment dependency before compatibility and recovery are proven.
-
-This remains inside G15; no additional gate is created.
-
-## 9. Major-version handoff contract
-
-- **v18.9 -> v19:** runtime, coverage-aware acquisition, persistence reuse, identity, Market Modes, provider telemetry and session-aware maintenance are trustworthy enough for hosted/professional infrastructure.
-- **v19 -> v20:** tenant/RBAC/product-entitlement/provider-right/privacy boundaries, environment/deployment and supply-chain provenance, point-in-time/provenance data, hosted account/sync/gateway security, reliability/capacity and outcome lineage are trustworthy enough for governed learning.
-- Major closure cannot be bypassed by starting the next major early.
-
-## 10. Permanent boundaries
-
-U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state owners; canonical U.S. market calendar/session owner; direct SEC/EDGAR authoritative; canonical tenant/identity/role/capability truth; G0-G16 only.
+U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state/session/calendar/identity owners; direct SEC/EDGAR authoritative; G0-G16 only.
 
 ## Exactly one next action
 
-Obtain/reproduce the #64 macOS crash and freeze the narrow `v18.9.1` scope. Do not create `v18.9.2` or v19 product implementation branches until `v18.9.1` is truthfully closed or the crash is proven external/non-product.
+Obtain/reproduce the #64 macOS crash and freeze the narrow `v18.9.1` G1. Do not create `v18.9.2` or v19 product implementation branches until ordering permits it.
