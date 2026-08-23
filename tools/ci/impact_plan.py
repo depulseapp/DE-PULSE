@@ -61,7 +61,7 @@ CAPABILITY_EVIDENCE_FILES = RENDERER_EVIDENCE_FILES | {
 NATIVE_MACOS_FILES = {
     "tools/release/native_macos.sh",
     "desktop_lifecycle.go",
-    "v18_9_1_desktop_lifecycle_test.go",
+    "desktop_lifecycle_regression_test.go",
 }
 NATIVE_WINDOWS_FILES = {
     "tools/release/native_windows.ps1",
