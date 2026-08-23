@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse, os, re, subprocess, sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
 ap = argparse.ArgumentParser()
 default_cert_dir = Path(os.environ.get("DEPULSE_CERT_DIR", str(ROOT.parent / f".depulse-certification-{ROOT.name}"))).resolve()
 ap.add_argument("--output", default=str(default_cert_dir / "artifacts" / "coverage.out"))

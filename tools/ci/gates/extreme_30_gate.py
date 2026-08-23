@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
 TEST_FILE = ROOT / "extreme_30_matrix_test.go"
 text = TEST_FILE.read_text(encoding="utf-8")
 found = {int(x) for x in re.findall(r"func\s+TestExtreme30_(\d{2})", text)}

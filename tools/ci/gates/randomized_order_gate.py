@@ -13,7 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
 SEEDS = [1670701, 1670702, 1670703, 1670704, 1670705,
          1670706, 1670707, 1670708, 1670709, 1670710]
 HEAVY_SKIP = (

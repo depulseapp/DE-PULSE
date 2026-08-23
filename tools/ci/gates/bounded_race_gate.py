@@ -8,7 +8,7 @@ from __future__ import annotations
 import argparse, re, subprocess, sys, time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
 ap = argparse.ArgumentParser()
 ap.add_argument("--shard", type=int, required=True, help="1-based shard number")
 ap.add_argument("--shards", type=int, default=10)
