@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 """Regression contract for canonical Day/Swing/Long membership behavior."""
 from pathlib import Path
+import hashlib
 import json
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-JS = (ROOT / "renderer" / "watchlist-v18.5.1.js").read_text(encoding="utf-8")
+JS_PATH = ROOT / "renderer" / "watchlist-v18.5.1.js"
+JS = JS_PATH.read_text(encoding="utf-8")
 CSS = (ROOT / "renderer" / "watchlist-v18.5.1.css").read_text(encoding="utf-8")
 INDEX = (ROOT / "renderer" / "index.html").read_text(encoding="utf-8")
 IDENTITY = json.loads((ROOT / "release_identity.json").read_text(encoding="utf-8"))
 VERSION = IDENTITY["version"]
 CURRENT_CERT = ROOT / "release" / f"v{VERSION}" / "run_full_certification.sh"
 BASE_PROOF = ROOT / "release" / "v18.6.0" / "browser_watchlist_membership_test.py"
+
+
+def git_blob_token(path: Path) -> str:
+    data = path.read_bytes()
+    return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()[:16]
+
 
 required_js = (
     "deskMembershipStripV186",
@@ -39,9 +47,9 @@ if not BASE_PROOF.is_file():
 
 # Runtime behavior ownership is determined by the asset actually loaded in
 # production, not by assuming every later app release must duplicate the same
-# compatibility contract under a new versioned filename. This lets a release
-# identity overlay advance independently while preserving the proven DESKS
-# behavior owner until that behavior is deliberately migrated.
+# compatibility contract under a new versioned filename. The desk contract
+# itself still carries its compatibility-version cache key, while the shared
+# watchlist extension follows the canonical content-derived cache identity.
 contract_matches = re.findall(r'(watchlist-desk-contract-v([0-9.]+)\.js\?v=([0-9.]+))', INDEX)
 if len(contract_matches) != 1:
     raise SystemExit(f"watchlist contract FAIL: expected exactly one runtime desk contract asset, found {len(contract_matches)}")
@@ -56,7 +64,7 @@ contract = contract_path.read_text(encoding="utf-8")
 required_contract = "var DESKS = Object.freeze(['day', 'swing', 'long'])"
 if required_contract not in contract:
     raise SystemExit("watchlist contract FAIL: canonical DESKS runtime binding missing")
-extension_asset = f"watchlist-v18.5.1.js?v={VERSION}"
+extension_asset = f"watchlist-v18.5.1.js?v={git_blob_token(JS_PATH)}"
 if contract_asset not in INDEX or extension_asset not in INDEX or INDEX.index(contract_asset) > INDEX.index(extension_asset):
     raise SystemExit("watchlist contract FAIL: DESKS runtime contract must load before watchlist extension")
 
@@ -75,5 +83,5 @@ if not proof_path.is_file():
 
 print(
     f"watchlist membership contract PASS · app v{VERSION} uses {contract_filename} "
-    f"with toggle semantics and G12 edge proof {proof_matches[0]}"
+    f"with toggle semantics, content-derived extension cache identity, and G12 edge proof {proof_matches[0]}"
 )
