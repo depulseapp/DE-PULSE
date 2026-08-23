@@ -63,7 +63,7 @@ def main() -> int:
         return 1
 
     compatibility = synthesized_migration_policy(migrations)
-    original_root_migrations = root_ownership_gate.MIGRATIONS
+    original_root_loader = root_ownership_gate.load_repository_migrations
     original_impl_policy = repository_migration_gate_impl.POLICY_PATH
     original_impl_migrations = repository_migration_gate_impl.MIGRATIONS_PATH
     EPHEMERAL_DIR.mkdir(parents=True, exist_ok=True)
@@ -76,7 +76,7 @@ def main() -> int:
         policy_tmp.write("\n")
         policy_tmp.flush()
 
-        root_ownership_gate.MIGRATIONS = Path(migration_tmp.name)
+        root_ownership_gate.load_repository_migrations = lambda: migrations
         repository_migration_gate_impl.MIGRATIONS_PATH = Path(migration_tmp.name)
         repository_migration_gate_impl.POLICY_PATH = Path(policy_tmp.name)
         try:
@@ -88,7 +88,7 @@ def main() -> int:
                 return 1
             result = repository_migration_gate_impl.main()
         finally:
-            root_ownership_gate.MIGRATIONS = original_root_migrations
+            root_ownership_gate.load_repository_migrations = original_root_loader
             repository_migration_gate_impl.POLICY_PATH = original_impl_policy
             repository_migration_gate_impl.MIGRATIONS_PATH = original_impl_migrations
 
