@@ -609,6 +609,7 @@ func parseAIStructuredPayloadStrict(text string, pkg AIResearchPackage) (aiStruc
 			if strings.TrimSpace(value) == "" || len([]byte(value)) > 600 {
 				return aiStructuredPayload{}, fmt.Errorf("AI structured output %s contains an invalid item", name)
 			}
+		}
 	}
 	if len(out.EvidenceIDs) > 8 {
 		return aiStructuredPayload{}, fmt.Errorf("AI structured output evidenceIds exceeds max items")
