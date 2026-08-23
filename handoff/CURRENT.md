@@ -3,247 +3,27 @@
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS**
 
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
-**Certified Stable:** `v18.9.0-stable`  
-**Certified Stable candidate:** `9ea81cddae4875ae15d3719ca028519a36c597b6`  
-**Certified Stable qualified source:** `9e86b5e731f7a585cc77c1521f3639fc7a208efc`  
-**Certified Stable fingerprint:** `a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9`  
-**Certified Stable build ID:** `v18.9.0-stable-20260821`  
-**Release PR:** #62 merged  
-**Completed scope:** #61 / `ADAPT-TRADEINSIGHT-001`  
-**Engineering branch:** `v18.9.1-development`  
-**Candidate package identity:** `18.9.1` / `v18.9.1-stable-20260821`  
-**Active product branch/PR:** `v18.9.1-development` / Ready PR #69  
-**Active corrective scope:** #64 / `ADAPT-RUNTIME-CRASH-001` / `v18.9.1`  
-**Approved mandatory next executable process/repository-hardening workstream:** #70 / `ADAPT-CI-CONVERGENCE-001`  
-**Governance alignment PR:** #67 merged  
-**Master corrective program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Hosted architecture program:** #66 / `ADAPT-HOSTED-SYNC-001`
-
-## Immutable Stable vs in-flight candidate rule
-
-The v18.9.0 Stable checkpoints intentionally remain anchored to the immutable certified v18.9.0 release evidence while the v18.9.1 candidate is prepared, requalified and promoted. Candidate identity changes must never rewrite prior Stable PASS evidence merely to make version strings match. The current candidate earns its own exact-head Fast/Qualified/G11–G16 evidence and only becomes the new Stable after same-run G11–G16 publication succeeds.
-
-## Immediate execution rule
-
-Do not start the next product capability until #64 / v18.9.1 is truthfully closed **and** #70 CI/versioning/repository convergence has been implemented, evidenced and re-baselined.
-
-Always re-fetch live `main`, `v18.9.1-development`, PR #69, issue #64/comments and issue #70 before acting because concurrent sessions/processes may advance governance or source.
-
-Do **not** restart #64 G0. Deterministic reproduction/root-cause isolation is complete. Continue the authorized G11–G16 promotion from the exact current branch state.
-
-## v18.9.1 corrective truth
-
-The canonical v18.9.0 package audit proved the Stable artifact uses `DePulseLauncher` -> `DePulse-arm64`; the original user crash path `/Applications/De-Pulse.app/Contents/MacOS/De-Pulse` is a distinct/non-matching executable signature and must not be conflated with the canonical reproduction.
-
-Qualified #157 (`32541591746`) executed the real packaged macOS JXA/Cocoa/WKWebView path on macOS 15.7.7 Apple Silicon with pinned Go 1.26.6. Packaged backend/readiness/root and SQLite migrations `[1,2,3,4]` passed, then the native JXA child failed with `protocol does not exist (-2700)`. The only explicit protocol lookup was formal `protocols:['NSApplicationDelegate']` in the existing JXA registered subclass.
-
-The corrective removes only that unnecessary formal protocol declaration while preserving the NSObject delegate selectors and `app.delegate=delegate`. Existing macOS packaging, WebKit qualification, backend, persistence and application owners are hardened/reused rather than replaced.
-
-Last runtime/test/harness implementation head before governance/identity-only updates: `083b69c6772bb7a0fa14a7cdea70f4bd695a10bb`.
-
-Corrective implementation includes:
-- root-cause JXA correction in `desktop_lifecycle.go`;
-- `macOSWindowScript(...)` extraction plus `v18_9_1_desktop_lifecycle_test.go` regression coverage preventing formal `NSApplicationDelegate` reintroduction while protecting Cocoa/WebKit/delegate/url/icon behavior;
-- canonical executable identity checks (`DePulseLauncher`, `DePulse-arm64`, legacy `Contents/MacOS/De-Pulse` absent);
-- real packaged non-headless fresh startup, 3-second liveness dwell and warm relaunch on the same profile;
-- fresh/warm SQLite integrity and profile reuse checks;
-- explicit rejection of retained `protocol does not exist` evidence;
-- bounded deterministic TERM/INT/KILL native cleanup, including failure paths;
-- additive evidence checks while preserving established `DE.PULSE-G13-G14-NATIVE-2` schema compatibility;
-- existing macOS WebKit lane pinned to Go 1.26.6 and required to consume the full native lifecycle evidence contract;
-- frozen v18.9.1 G0-G3/scope files: `v18_9_1_g0_g3_contract.json` and `v18_9_1_scope.json`.
-
-## Qualification and authorization truth
-
-Pre-promotion exact source head `24b44bfd2c22321896ddbe5928b9904c286f802f` earned:
-- Fast #579 / `32545134110`, attempt 2: PASS;
-- Qualified #161 / `32545581403`: PASS;
-- readiness-triggered Qualified #162 / `32545775335`: PASS;
-- backend full suite, race and randomized order: PASS;
-- renderer and Chrome: PASS;
-- WebKit/macOS packaged fresh + warm lifecycle: PASS;
-- SQLite migrations `[1,2,3,4]`, profile reuse, protocol-resolution regression and deterministic cleanup: PASS.
-
-Pre-promotion candidate source fingerprint: `75d23e61f43939d3f27e07b935b66c4287c9ce9a5496bb530e4fe17bf83d47f8`.
-
-The user explicitly authorized merge/release promotion after that qualification. Canonical G11–G16 remains the only promotion path.
-
-### G11 Stable identity preparation
-
-The same existing `v18.9.1-development` branch now carries a narrow source-changing Stable identity preparation:
-- `release_identity.json` -> v18.9.1 STABLE;
-- build ID `v18.9.1-stable-20260821`;
-- predecessor/baseline `v18.9.0`;
-- monotonic native bundle number `18901`;
-- `VERSION.txt` and `app_bootstrap.go` aligned;
-- renderer cache-bust identity aligned and `renderer/release-identity-v18.9.1.js` added;
-- `release/v18.9.1/release_contract.json` added;
-- executable `release/v18.9.1/run_full_certification.sh` added as the version-specific G12 owner.
-
-This preparation changes source identity, so all pre-promotion Fast/Qualified PASS evidence remains historical proof of the corrective but cannot satisfy the final exact-head G11 requirement.
-
-Fast #580 (`32546174856`) on promotion-preparation head `d32e3bce2c5452c1e089dee4f51446d2b95842be` correctly failed in `adaptive_resume_gate.py` because this handoff still described the old candidate state. The failure was classified as a real governance/source-of-truth mismatch, not a product/runtime failure. This handoff update resolves the three explicit missing contract markers: engineering branch, candidate package identity/build, and immutable Stable checkpoint anchoring.
-
-After this handoff commit, the current source fingerprint is intentionally **PENDING_REQUALIFICATION** until the new exact head earns Fast + full Qualified.
-
-`ADAPT-RUNTIME-CRASH-001` remains **OPEN / NOT CLOSED** until merge, G11–G16, publication/evidence and closure are complete.
-
-## Authorized v18.9.1 promotion sequence
-
-1. Re-fetch the exact current `v18.9.1-development` head after this handoff update.
-2. Require exact-head Fast PASS, including Adaptive resume portability and release identity verification.
-3. Require full exact-head Qualified PASS: CI/harness, backend full/race/randomized, renderer, Chrome, WebKit.
-4. Require WebKit/macOS actual packaged fresh startup + dwell, warm same-profile relaunch, SQLite reuse, no `protocol does not exist`, deterministic cleanup.
-5. Confirm PR #69 head did not move after PASS and remains mergeable.
-6. Merge PR #69 only with expected-head protection.
-7. Follow the single canonical `Release G11-G16` workflow triggered by the merged release-identity PR.
-8. Require G11 source-head -> merged-candidate fingerprint equivalence and exact-head Fast/Qualified status binding.
-9. Require G12 authoritative full certification.
-10. Require G13/G14 macOS Apple Silicon and Windows x64 exact packaged-runtime audits.
-11. Require G15 exact-artifact assurance and same-run/no-rebuild publication.
-12. Require G16 closure/evidence, Stable tag/release/artifact integrity and durable source-of-truth synchronization.
-13. Only then close #64 / declare v18.9.1 Stable and begin #70.
-
-No retry/certification/promotion branch. No duplicate release workflow. No source change after final Qualified unless a classified defect requires another fresh qualification.
-
-## Mandatory post-v18.9.1 checkpoint — #70
-
-#70 / `ADAPT-CI-CONVERGENCE-001` is approved and part of the Adaptive Roadmap, Build Plan, Build Process and Delivery Process.
-
-It is a **mandatory executable process/release-engineering/repository-hygiene workstream, not a product feature/version**. It executes immediately after truthful v18.9.1 closure and before the next product implementation.
-
-**Documentation-only completion is prohibited.** #70 cannot close because audit notes, Markdown or issue comments exist. It must change the actual repository/code/workflows/tooling/layout and pass applicable executable evidence.
-
-Canonical detailed contract: `adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md`.
-
-Required direction:
-- keep exactly three routine workflows: Fast, Qualified, Release;
-- Planner v3 dependency-aware job/evidence selection with fail-closed full fallback;
-- manual/reusable runs bind trustworthy full-delta base/merge-base;
-- targeted native rehearsal inside Qualified, with WebKit/browser and native-lifecycle ownership separated while canonical packaging scripts are reused;
-- one canonical version-neutral G12 executor plus declarative release/capability manifests;
-- incremental migration of active version-named tests to capability-oriented paths with equivalence proof;
-- early G11 version/predecessor/tag/publication-feasibility checks before expensive certification/native work;
-- Stable asset digest immutability and repository-wide release serialization;
-- verify/harden actual repository rulesets/branch protection;
-- separate public product version, work-slice ID, candidate SHA/fingerprint, build ID, evidence schema and monotonic platform build number;
-- make a prospective SemVer-vs-explicit-custom versioning decision without rewriting shipped history;
-- canonical toolchain identity plus final runnable-artifact provenance/attestation/SBOM at the supply-chain milestone;
-- converge handoff and CURRENT Adaptive overlays on one actual current-state truth;
-- G16 reports runner minutes/reruns avoided and proves no quality evidence was removed;
-- add a safe repository-root `.gitignore` without hiding tracked continuity checkpoints;
-- make source-health recursively/package-aware before production Go relocation;
-- extend the existing legacy inventory into the canonical root-layout inventory/allowlist owner;
-- move reusable root CI/dev/release tooling to stable `tools/` ownership with all consumers changed atomically;
-- consolidate useful logic from `certification_plan.json`, `certification_runner.py`, `ci_pipeline.py`, and `ci_pipeline_plan.json` into permanent owners and retire stale competing orchestration when proven safe;
-- migrate historical/version-scoped non-Go root material into governed release/history ownership with evidence mapping;
-- migrate active version-named Go tests safely without losing package-local/full/race/randomized/focused coverage;
-- only after package-aware guards exist, incrementally decompose cohesive production code + tests into `internal/<capability>` packages;
-- move policies/registries/retained assets to stable canonical owners with consumer updates;
-- enforce a small CI root allowlist so version-stacked clutter cannot recur;
-- record root before/after inventory and every moved/renamed/consolidated/removed path at G16.
-
-## Version/release planning rule after #70
-
-Do **not** make every independently governed work slice or CI build a public version.
-
-Preferred model:
-
-`work slice -> commits -> Fast -> deliberate Qualified checkpoint -> exact candidate SHA/fingerprint -> optional coherent release grouping -> one public product version -> one canonical G11-G16/native publication`
-
-Current post-v18.9.1 `v18.9.2` ... `v18.9.12` labels are planning reservations pending #70. Preserve their dependency/work-slice intent; #70 may regroup future public releases prospectively. Shipped versions/tags/evidence remain immutable.
-
-## Remaining v18 product dependency order after #70
-
-1. TradeInsight Settings/API-key UX — currently reserved `v18.9.2`
-2. Coverage-aware Smart Provider Router — reserved `v18.9.3`
-3. Canonical company/instrument identity — reserved `v18.9.4`
-4. Market Data Modes/capability diagnostics — reserved `v18.9.5`
-5. Provider observability/Adaptive telemetry — reserved `v18.9.6`
-6. TradeInsight Form 4 SHADOW enrichment — reserved `v18.9.7`
-7. TradeInsight symbol/company search — reserved `v18.9.8`
-8. TradeInsight movers/ranking SHADOW evidence — reserved `v18.9.9`
-9. Remaining useful capability admission — reserved `v18.9.10`
-10. Session-Aware Data Readiness Maintenance — reserved `v18.9.11`
-11. Professional Closure — reserved `v18.9.12`
-
-Dependency order remains authoritative even if future public release grouping changes.
-
-## Permanent release philosophy
-
-Small dependency-ordered work slices, one primary responsibility each, G0–G16 only, canonical owners reused, observability before broad capability admission, point-in-time evidence before adaptive learning, model/prompt governance before broad adaptive influence, and durable GitHub issue/handoff truth.
-
-Release engineering follows the same rule: reuse/consolidate permanent workflow and test owners, remove duplicate/version-specific machinery only after equivalence proof, and optimize runner cost through dependency awareness/evidence reuse rather than reduced assurance.
-
-## Permanent Cross-Platform Lockstep Rule
-
-DE.PULSE is **one product across macOS, Windows and Web**.
-
-For every shared capability G1 freezes Mac/Windows/Web as REQUIRED or justified N/A. One canonical domain/API/state contract drives all REQUIRED clients. Platform adapters may differ only for OS/browser mechanics; business logic, intelligence, account/state semantics, authorization, product entitlement, provider-right decisions, freshness/provenance and explanation meaning may not fork.
-
-A single platform may be used for diagnosis/technical validation, but there is **no product pilot** and no normal `Mac -> Windows -> Web catch-up` sequence. Shared capability GA/Delivered state and G10/G15 require all REQUIRED clients. No next shared domain begins while material parity debt remains. Temporary exceptions require an external blocker, waiver/expiry, no misleading GA claim and a named recovery release.
-
-Platform-specific corrective work is valid where the defect itself is platform-specific; #64/v18.9.1 is the current example.
-
-## Provider/persistence contract
-
-`consumer requirement -> memory cache -> persisted canonical state -> validate freshness/coverage/schema/provenance/rights -> residual gap -> Smart Provider Router v2 -> targeted acquisition -> canonical merge/reconciliation -> persist -> serve`
-
-Direct SEC/EDGAR remains authoritative for Form 4. TradeInsight validation-required capabilities start SHADOW-first. No provider-specific router/cache/scanner/scheduler/Market Mode/SEC/symbol/persistence subsystem.
-
-## Hosted / zero-key architecture
-
-`Mac/Windows native SQLite edge + Web -> DE.PULSE hosted APIs -> tenant/RBAC/product-entitlement/provider-right/privacy checks -> canonical router/freshness/cache/state -> PostgreSQL shared authority`
-
-Normal commercial users authenticate only to DE.PULSE; platform provider credentials remain server-side in managed secrets/KMS.
-
-Hosted serving keeps five dimensions separate:
-1. tenant/account identity;
-2. RBAC/capabilities;
-3. DE.PULSE product entitlement/plan/quota;
-4. upstream provider legal/data rights;
-5. privacy/data-governance policy.
-
-## Planned v19 train — current authority
-
-Entry requires v18 native/data-plane closure plus #70 executable CI/versioning/repository-hygiene PASS.
-
-### v19.0.x — Hosted Foundations
-Provider legal-rights registry; tenant/identity/device/session control plane; product entitlement/metering; account data governance/privacy; hosted environment/IaC/service trust; PostgreSQL HA/PITR; managed secrets/KMS; software supply-chain/artifact/dependency assurance; provider SLO/cost/coverage scorecards; reconciliation/revision/point-in-time quality.
-
-### v19.1.x — Hosted Data Plane + Cross-Platform Account/State
-Hosted Provider Gateway; Unified Serving Policy + Live Fan-Out; Sync Protocol Foundation; **Mac + Windows + Web** Account/Session, Preferences, Watchlists/Master Symbols and Desks/Workspaces.
-
-### v19.2.x — Cross-Platform Shared Product + Assurance
-**Mac + Windows + Web** Research/Durable State, Discovery/Opportunity Radar, Market State/Modes/Readiness/Explanations, Settings/Account/Device Controls and RBAC/Product-Entitlement UX; tenant-aware metering; mixed-client security/abuse/capacity; #66 Cross-Platform Assurance Closure.
-
-### v19.3.x — Point-in-Time Evidence
-Institutional/13F -> Two-sided Long/Short evidence -> AODR lineage.
-
-### v19.4.x — Reliability / Economics / Readiness
-ADR-GDI reliability/capacity -> specialized/paid-provider gap evaluation -> v20 research-readiness audit.
-
-### v19.5.0 — Major Closure
-No feature scope. #66 must PASS with zero material Mac/Windows/Web parity debt plus rights/privacy/security/IaC/supply-chain/API/recovery/SLO/capacity proof.
-
-## Planned v20 train
-
-`adaptive control/model governance -> ASBI -> adaptive Institutional/TDTI -> AODR -> adaptive operations -> Professional Closure`
-
-Every shared adaptive user-facing capability follows Mac + Windows + Web lockstep. No Execution remains permanent.
-
-## G0-G16 lockstep/release enforcement
-
-G1 scope/platform/version/repository disposition; G2 canonical owner/adapters/path ownership; G3 one contract + equivalence/dependency/migration plan; G4 all REQUIRED implementations and actual process/repository changes; G5/G6 affected evidence with fail-closed uncertainty; G7 equivalent security/data outcomes; G8 mixed-client/runtime/CI efficiency; G9 function/meaning equivalence; G10 parity/evidence/owner/root-layout sufficiency blocks freeze; G11 exact candidate + publication feasibility; G12 canonical system certification; G13/G14 actual artifacts/deployments; G15 no GA until all REQUIRED clients pass and no differing Stable-byte overwrite; G16 parity/CI-efficiency/provenance/root-inventory/handoff audit.
-
-## Permanent portability / resume rule
-
-GitHub objects and executable evidence outrank chat memory. `handoff/CURRENT.md` is the authoritative current handoff and `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md` is the vendor-neutral contract for ChatGPT, Codex, Claude or another assistant/account. Resume from the last trustworthy PASS and current GitHub source fingerprint; never require an old chat handoff upload when GitHub already contains the durable state.
-
-## Permanent boundaries
-
-U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart Provider Router v2 sole routing authority; canonical freshness/recovery sole freshness owner; existing multi-feed allocator sole subscription owner; BroadSnapshotBroker canonical reuse owner; canonical persistence/cache/state/session/calendar/identity owners; direct SEC/EDGAR authoritative; canonical `SUPER_OWNER/OWNER/ADMIN/USER/DEMO`; no parallel client/provider truth.
-
-## Exactly one next action
-
-Re-fetch the new exact `v18.9.1-development` head created by this handoff correction and run exact-head Fast. If Fast passes, require full exact-head Qualified; if both pass with the packaged macOS lifecycle evidence, merge PR #69 with expected-head protection under the user's explicit authorization and follow the single canonical Release G11–G16 workflow through publication/closure. Do not start #70 or any v18.9.2+ product implementation until v18.9.1 is truthfully Stable/closed.
+**Canonical machine state:** `governance/current-state.json`  
+**Certified Stable:** `v18.9.1-stable`  
+**Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
+**Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
+**Certified Stable fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
+**Certified Stable build ID:** `v18.9.1-stable-20260821`  
+**Certified release run:** `32546555659`  
+**Active work:** #70 / `ADAPT-CI-CONVERGENCE-001`  
+**Active branch / PR:** `adapt-ci-convergence-001` / Draft PR #71  
+**Public product version consumed by #70:** none.
+
+## Resume Rule
+
+1. Fetch the CURRENT live head of `adapt-ci-convergence-001`; another session/process may have advanced it.
+2. Read `governance/current-state.json`, issue #70 and current comments, then `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`.
+3. Inspect commits since the v18.9.1 Stable baseline so implemented work is never duplicated.
+4. Continue actual executable closure from the exact current state; GitHub objects and CI evidence outrank chat memory.
+5. Do not merge/promote/close #70 unless every closure-ledger criterion is truthfully satisfied. In particular, a file-level substitute does not satisfy actual GitHub `main` protection/ruleset evidence.
+
+## Current implementation checkpoint
+
+The branch already contains the large Wave 0–4 CI/repository convergence packet. Wave 5 has started with canonical `internal/adaptivepolicy` ownership and package-local tests. Release publication now uses the prospective tag contract and includes SBOM/provenance-attestation integration. Continue remaining root/assets/current-state/G16/Qualified closure work from live GitHub evidence.
+
+Permanent product boundaries remain unchanged: US Equities Processing; No Execution; Smart Provider Router v2 as sole routing owner; direct SEC/EDGAR authority for Form 4; GLD/SLV/USO actionable exceptions.
