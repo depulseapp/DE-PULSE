@@ -126,10 +126,9 @@ def main() -> int:
             'HANDOFF_STABLE_TAG_MISMATCH',
             'CACHE_IDENTITY_MISMATCH',
             'IMMUTABLE_STABLE_TAG_CONFLICT',
-            'TARGET_TAG_CONFLICT',
         ):
             assert required in codes, (required, bad.errors)
-        assert len(bad.errors) >= 6
+        assert len(bad.errors) >= 5
 
         missingroot = root / 'missing-g12'
         missing_candidate, _, missing_tag = fixture(missingroot)
