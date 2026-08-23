@@ -5,18 +5,66 @@
   "evidenceSchemaVersion": 1,
   "releaseContract": "release/v18.9.1/release_contract.json",
   "assertions": [
-    {"file": "release_identity.json", "path": "version", "equals": "18.9.1"},
-    {"file": "release_identity.json", "path": "channel", "equals": "STABLE"},
-    {"file": "release_identity.json", "path": "previous_stable", "equals": "v18.9.0"},
-    {"file": "release_identity.json", "path": "stable_baseline", "equals": "v18.9.0"},
-    {"file": "release_identity.json", "path": "bundle_version", "equals": "18901"},
-    {"file": "release/v18.9.1/release_contract.json", "path": "release", "equals": "18.9.1"},
-    {"file": "release/v18.9.1/release_contract.json", "path": "certifiedStableBaseline", "equals": "v18.9.0-stable"},
-    {"file": "release/v18.9.1/release_contract.json", "path": "identity_asset", "equals": "release-identity-v18.9.1.js"},
-    {"file": "release/v18.9.1/release_contract.json", "path": "scope", "contains": "ADAPT-RUNTIME-CRASH-001"},
-    {"file": "v18_9_1_scope.json", "path": "scopeId", "equals": "ADAPT-RUNTIME-CRASH-001"},
-    {"file": "v18_9_1_scope.json", "path": "version", "equals": "18.9.1"},
-    {"file": "v18_9_1_g0_g3_contract.json", "path": "scopeId", "equals": "ADAPT-RUNTIME-CRASH-001"}
+    {
+      "file": "release_identity.json",
+      "path": "version",
+      "equals": "18.9.1"
+    },
+    {
+      "file": "release_identity.json",
+      "path": "channel",
+      "equals": "STABLE"
+    },
+    {
+      "file": "release_identity.json",
+      "path": "previous_stable",
+      "equals": "v18.9.0"
+    },
+    {
+      "file": "release_identity.json",
+      "path": "stable_baseline",
+      "equals": "v18.9.0"
+    },
+    {
+      "file": "release_identity.json",
+      "path": "bundle_version",
+      "equals": "18901"
+    },
+    {
+      "file": "release/v18.9.1/release_contract.json",
+      "path": "release",
+      "equals": "18.9.1"
+    },
+    {
+      "file": "release/v18.9.1/release_contract.json",
+      "path": "certifiedStableBaseline",
+      "equals": "v18.9.0-stable"
+    },
+    {
+      "file": "release/v18.9.1/release_contract.json",
+      "path": "identity_asset",
+      "equals": "release-identity-v18.9.1.js"
+    },
+    {
+      "file": "release/v18.9.1/release_contract.json",
+      "path": "scope",
+      "contains": "ADAPT-RUNTIME-CRASH-001"
+    },
+    {
+      "file": "v18_9_1_scope.json",
+      "path": "scopeId",
+      "equals": "ADAPT-RUNTIME-CRASH-001"
+    },
+    {
+      "file": "v18_9_1_scope.json",
+      "path": "version",
+      "equals": "18.9.1"
+    },
+    {
+      "file": "v18_9_1_g0_g3_contract.json",
+      "path": "scopeId",
+      "equals": "ADAPT-RUNTIME-CRASH-001"
+    }
   ],
   "pythonGates": [
     ["python3", "tools/ci/workflow_policy.py"],
@@ -38,7 +86,7 @@
   "nodeTests": [
     ["node", "tools/ci/deterministic_equivalence_test.js"],
     ["node", "--require", "./tools/ci/release_identity_renderer_preload.js", "renderer_logic_test.js"],
-    ["node", "v18_0_5_renderer_test.js"],
+    ["node", "tools/ci/renderer_role_responsive_regression_test.js"],
     ["node", "documentation_ui_owner_test.js"],
     ["node", "tests/renderer/v18_8_1_trust_closure_test.js"],
     ["node", "tests/renderer/surface_consolidation_test.js"],
@@ -54,9 +102,20 @@
     ["python3", "tools/ci/documentation_owner_browser_test.py", "--engine", "chrome"]
   ],
   "staticSourceAssertions": [
-    {"file": "desktop_lifecycle.go", "present": ["app.delegate=delegate"], "absent": ["protocols:['NSApplicationDelegate']", "protocols: ['NSApplicationDelegate']"]},
-    {"file": "v18_9_1_desktop_lifecycle_test.go", "present": ["TestV18_9_1MacOSWindowScriptAvoidsFormalDelegateProtocolLookup"]}
+    {
+      "file": "desktop_lifecycle.go",
+      "present": ["app.delegate=delegate"],
+      "absent": ["protocols:['NSApplicationDelegate']", "protocols: ['NSApplicationDelegate']"]
+    },
+    {
+      "file": "desktop_lifecycle_regression_test.go",
+      "present": ["TestV18_9_1MacOSWindowScriptAvoidsFormalDelegateProtocolLookup"]
+    }
   ],
-  "protectedBoundaries": ["US_EQUITIES_PROCESSING","NO_EXECUTION","DETERMINISTIC_DAY_SWING_LONG","SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER","DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4"],
-  "premergeEvidence": {"webkit": "REQUIRED_PREMERGE_EXACT_HEAD_QUALIFIED","nativeMacos": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS","nativeWindows": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS"}
+  "protectedBoundaries": ["US_EQUITIES_PROCESSING", "NO_EXECUTION", "DETERMINISTIC_DAY_SWING_LONG", "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER", "DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4"],
+  "premergeEvidence": {
+    "webkit": "REQUIRED_PREMERGE_EXACT_HEAD_QUALIFIED",
+    "nativeMacos": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS",
+    "nativeWindows": "REQUIRED_PREMERGE_WHEN_PLANNER_V3_SELECTS"
+  }
 }
