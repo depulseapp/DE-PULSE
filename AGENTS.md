@@ -13,7 +13,7 @@ Before planning, editing or claiming status:
 5. Inspect the actual GitHub default branch, active branch, open PR, current HEAD, latest Stable tag/release, checks and artifacts.
 6. Read `release_identity.json`, `.depulse-certification/resume/build-checkpoint.json` and `.depulse-certification/resume/release-evidence-checkpoint.json`.
 7. Read `governance/ROADMAP.md`, `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`, `ADAPTIVE_BUILD_PROCESS.md` and `ADAPTIVE_DELIVERY_PROCESS.md`.
-8. Run or inspect `python3 adaptive_resume_gate.py` and `python3 tools/ci/workflow_policy.py`.
+8. Run or inspect `python3 tools/ci/adaptive_resume_gate.py` and `python3 tools/ci/workflow_policy.py`.
 9. Reconcile disagreements and resume from the last trustworthy PASS / earliest required G0–G16 gate.
 
 Actual GitHub source, immutable tags/releases, PR/check/artifact state and package evidence outrank chat summaries. Do not ask the user to restate context already committed in GitHub.

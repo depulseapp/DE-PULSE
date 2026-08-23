@@ -11,7 +11,7 @@ need(major.get('scope_frozen') is True,'v17 major scope is not frozen')
 need(len(major.get('items',[]))==20,'v17 major scope must retain exactly 20 approved G1 items')
 v170=next((x for x in slices.get('slices',[]) if x.get('id')=='v17.0'),None)
 need(v170 is not None and (v170.get('status')=='IN DEVELOPMENT' or str(v170.get('status','')).startswith('SOURCE TEST CHECKPOINT')),'v17.0 foundation slice missing/inactive')
-for f in ['persistence_repository.go','persistence_backend_sqlite.go','persistence_backend_fallback.go','runtime_load_profile.go','runtime_observability.go','runtime_slo.go','workload_controller.go','runtime_degradation.go','v17_0_persistence_test.go','v17_0_degradation_test.go']:
+for f in ['persistence_repository.go','persistence_backend_sqlite.go','persistence_backend_fallback.go','runtime_load_profile.go','runtime_observability.go','runtime_slo.go','workload_controller.go','runtime_degradation.go','canonical_persistence_regression_test.go','runtime_degradation_regression_test.go']:
     need((R/f).exists(),f'missing v17.0 evidence file: {f}')
 repo=(R/'persistence_repository.go').read_text()
 sql=(R/'persistence_backend_sqlite.go').read_text()

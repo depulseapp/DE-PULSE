@@ -2,8 +2,9 @@ package main
 
 import (
 	"sort"
-	"strings"
 	"time"
+
+	"depulse/internal/adaptivepolicy"
 )
 
 type AdaptiveDataPolicyState struct {
@@ -32,42 +33,18 @@ type ShadowControlState struct {
 	UpdatedAt     int64              `json:"updatedAt"`
 }
 
+// These narrow adapters preserve the package-main integration surface while
+// internal/adaptivepolicy is the canonical owner of cadence/health policy.
 func adaptiveIntradayHistoryCadence(session string, hot bool) time.Duration {
-	switch session {
-	case "regular":
-		if hot {
-			return 2 * time.Minute
-		}
-		return 5 * time.Minute
-	case "pre-market", "after-hours":
-		if hot {
-			return 3 * time.Minute
-		}
-		return 5 * time.Minute
-	case "overnight":
-		return 15 * time.Minute
-	default:
-		return 30 * time.Minute
-	}
+	return adaptivepolicy.IntradayHistoryCadence(session, hot)
 }
 
 func adaptiveCachePersistCadence(session string, hot bool) time.Duration {
-	switch session {
-	case "regular", "pre-market", "after-hours":
-		if hot {
-			return time.Minute
-		}
-		return 2 * time.Minute
-	case "overnight":
-		return 5 * time.Minute
-	default:
-		return 10 * time.Minute
-	}
+	return adaptivepolicy.CachePersistCadence(session, hot)
 }
 
 func adaptiveProviderDegraded(health map[string]string) bool {
-	h := strings.ToLower(health["alpaca-live"] + " " + health["alpaca-stream"] + " " + health["quotes"])
-	return strings.Contains(h, "error") || strings.Contains(h, "failed") || strings.Contains(h, "reconnecting") || strings.Contains(h, "degraded")
+	return adaptivepolicy.ProviderDegraded(health)
 }
 
 func buildAdaptiveDataPolicyState(scanner ScannerState, health map[string]string, now time.Time) AdaptiveDataPolicyState {

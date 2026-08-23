@@ -1,0 +1,36 @@
+{
+  "schema": "DE.PULSE-VERSIONING-POLICY-1",
+  "decision": "PROSPECTIVE_SEMVER",
+  "effectiveAfterProductVersion": "18.9.1",
+  "historyRule": "All shipped versions, tags, releases and evidence through v18.9.1 remain immutable and retain their historical naming.",
+  "legacyStableTagPattern": "v{productVersion}-stable",
+  "futureStableTagPattern": "v{productVersion}",
+  "futurePrereleaseTagPattern": "v{productVersion}-rc.{sequence}",
+  "productVersion": {
+    "standard": "Semantic Versioning 2.0.0",
+    "major": "Backward-incompatible public product changes.",
+    "minor": "Backward-compatible product capability groups.",
+    "patch": "Backward-compatible bug, security or reliability corrections."
+  },
+  "workSlice": {
+    "independentOfProductVersion": true,
+    "rule": "A workSliceId is an independently traceable engineering packet and does not consume a public product version by itself. Multiple completed work slices may be grouped into one public Stable version."
+  },
+  "sourceIdentity": {
+    "candidateSha": "Exact immutable source candidate identity.",
+    "sourceFingerprint": "Canonical governed content identity."
+  },
+  "buildIdentity": {
+    "buildId": "Immutable build/evidence identity independent of product compatibility version.",
+    "platformBuildNumber": "Positive decimal integer, globally monotonic across newly published runnable builds and independent of SemVer components."
+  },
+  "evidenceIdentity": {
+    "evidenceSchemaVersion": "Version of the evidence contract, independent of product and build versions."
+  },
+  "currentLegacyStable": {
+    "productVersion": "18.9.1",
+    "tag": "v18.9.1-stable",
+    "platformBuildNumber": "18901"
+  },
+  "nextReleaseGroupingRule": "After ADAPT-CI-CONVERGENCE-001 closes and the product backlog is re-baselined, backward-compatible feature work normally groups into a MINOR release; urgent corrective-only work may use PATCH."
+}

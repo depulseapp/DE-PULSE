@@ -47,6 +47,16 @@ func v186FixturePackage() AIResearchPackage {
 	}
 }
 
+// aiInferenceTelemetrySnapshot exists only in test compilation. Runtime
+// production owns telemetry recording; tests may inspect the shared state
+// directly without retaining a declaration-only production accessor.
+func (a *Application) aiInferenceTelemetrySnapshot() AIInferenceTelemetry {
+	state := aiTelemetryStateFor(a)
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	return state.diag
+}
+
 func TestV186AIGoldenStructuredOutput(t *testing.T) {
 	pkg := v186FixturePackage()
 	parsed, err := parseAIStructuredPayloadStrict(v186ValidAIPayload([]string{"ev-1"}), pkg)

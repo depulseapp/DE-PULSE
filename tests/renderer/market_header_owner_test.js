@@ -3,10 +3,16 @@
 const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
+const crypto=require('crypto');
 
 const ownerSource=fs.readFileSync('renderer/market-header-ui.js','utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
-const releaseIdentity=JSON.parse(fs.readFileSync('release_identity.json','utf8'));
+
+function gitBlobToken(path){
+  const data=fs.readFileSync(path);
+  const header=Buffer.from(`blob ${data.length}\0`,'utf8');
+  return crypto.createHash('sha1').update(header).update(data).digest('hex').slice(0,16);
+}
 
 class Element {
   constructor(tagName='div') {
@@ -143,8 +149,8 @@ vm.runInContext("updateChrome('QQQ')",context);
 assert.strictEqual(baseCalls,2,'wrapper must not multiply base update calls');
 assert.strictEqual(healthCalls,2,'wrapper must not multiply health evaluation');
 
-const ownerTag=`<script src="market-header-ui.js?v=${releaseIdentity.version}"></script>`;
-assert(index.includes(ownerTag),'index must load stable Market Header owner with canonical cache identity');
+const ownerTag=`<script src="market-header-ui.js?v=${gitBlobToken('renderer/market-header-ui.js')}"></script>`;
+assert(index.includes(ownerTag),'index must load stable Market Header owner with content-derived cache identity');
 assert(!index.includes('<script src="header-v18.5.1.js'),'version-stacked header must remain inactive runtime evidence');
 
 console.log('Market Header capability owner regression PASS');

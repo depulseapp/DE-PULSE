@@ -1,0 +1,31 @@
+{
+  "schema": "DE.PULSE-ROOT-LAYOUT-POLICY-3",
+  "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "canonicalRootFiles": [".gitignore", "AGENTS.md", "CLAUDE.md", "README.md", "VERSION.txt", "go.mod", "go.sum", "release_identity.json"],
+  "retainedDiscoveryFiles": ["AGENTS.md", "CLAUDE.md", "README.md"],
+  "retainedRootVersionMajors": [17, 18],
+  "preRetainedVersionDisposition": "DELETE_FROM_CURRENT_ROOT_AFTER_ACTIVE_PRODUCTION_LOGIC_IS_MIGRATED_TO_CAPABILITY_OWNER",
+  "historicalReleaseEvidenceRule": "Current-root cleanup never rewrites or deletes shipped Git history, Stable tags, published releases, or immutable release evidence.",
+  "grandfatherExistingBaselineRootFiles": false,
+  "baselineRootOwnershipClasses": [
+    {"id":"PACKAGE_MAIN_GO","pattern":"^[A-Za-z0-9_]+\\.go$","owner":"Go package-main compatibility boundary","scope":"EXISTING_BASELINE_ONLY","disposition":"MIGRATE_WITH_COHESIVE_CAPABILITY_WHEN_TOUCHED"},
+    {"id":"ROOT_CONTROL_EVIDENCE","pattern":"^[A-Za-z0-9_.-]+\\.(?:py|js|sh|ps1)$","owner":"Legacy root control/evidence compatibility boundary","scope":"EXISTING_BASELINE_ONLY","disposition":"MOVE_TO_TOOLS_OR_TEST_OWNER_WHEN_TOUCHED"},
+    {"id":"ROOT_METADATA","pattern":"^[A-Za-z0-9_.-]+\\.(?:json|txt|md)$","owner":"Legacy root metadata compatibility boundary","scope":"EXISTING_BASELINE_ONLY","disposition":"MOVE_TO_GOVERNANCE_RELEASE_OR_TEST_OWNER_WHEN_TOUCHED"},
+    {"id":"ROOT_RETAINED_BINARY","pattern":"^[A-Za-z0-9_.-]+\\.(?:png|ico|icns)$","owner":"Legacy retained binary compatibility boundary","scope":"EXISTING_BASELINE_ONLY","disposition":"MOVE_TO_STABLE_ASSET_OWNER_BEFORE_WORK_SLICE_CLOSURE"}
+  ],
+  "finalRootEvidenceFiles": {
+    "ai_research_equivalence_regression_test.go": {"owner":"AI research package-main regression evidence","reason":"Requires unexported package-main integration access; retained as a final evidence owner rather than creating test-only production exports."},
+    "alternative_intelligence_regression_test.go": {"owner":"Alternative intelligence package-main regression evidence","reason":"Requires unexported package-main integration access; retained as a final evidence owner rather than creating test-only production exports."},
+    "extreme_30_test_fixture_test.go": {"owner":"Extreme-30 package-main evidence fixture","reason":"Shared package-main fixture for conserved Extreme-30 evidence; moving it would force artificial public/test APIs."},
+    "performance_regression_test.go": {"owner":"Performance package-main regression evidence","reason":"Measures integrated package-main behavior and internal state without introducing production-only test seams."},
+    "retired_equivalence_regression_test.go": {"owner":"Retired-test equivalence package-main evidence","reason":"Conserves legacy assertions against current package-main behavior and intentionally remains colocated with that behavior."},
+    "signal_intelligence_regression_test.go": {"owner":"Signal intelligence package-main regression evidence","reason":"Requires unexported package-main integration access; retained as a final evidence owner rather than creating test-only production exports."}
+  },
+  "migrationRegisteredRootTargetsAreOwned": true,
+  "transitionalRootFiles": {},
+  "newRootFileRule": "A new root path is rejected unless it is canonical, an explicitly justified final package-main evidence owner, or the registered target of a repository migration with owner, reason and removal condition. Baseline ownership classes never authorize new root files.",
+  "requiredTopLevelDirectories": [".github", "adaptive-governance", "governance", "handoff", "internal", "release", "renderer", "tests", "tools"],
+  "forbiddenNewRootVersionPrefixPattern": "^v[0-9]+(?:[_\\.][0-9]+)*[_-]",
+  "safeRemovalRule": "Pre-v17 version-scoped current-root artifacts are explicitly retired by ADAPT-CI-CONVERGENCE-001; all other deletion still requires assertion/evidence mapping.",
+  "temporaryAliasRule": "No compatibility alias or symlink may survive work-slice closure without a separately approved compatibility requirement."
+}

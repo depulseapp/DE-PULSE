@@ -49,7 +49,7 @@ Before proposing or changing work, every new assistant/account must:
 5. inspect the actual default branch, active branch, open PR, current HEAD, latest Stable tag/release and available checks/artifacts;
 6. read `release_identity.json`, the Build State Ledger and release-evidence checkpoint;
 7. read the canonical Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process;
-8. run or inspect `adaptive_resume_gate.py` and classify any disagreement;
+8. run or inspect `tools/ci/adaptive_resume_gate.py` and classify any disagreement;
 9. determine the last trustworthy PASS and earliest required resume gate;
 10. continue exactly one smallest safe next action, without asking the user to restate repository-resident context.
 
@@ -90,7 +90,7 @@ Connecting the same GitHub repository from another ChatGPT/Claude account must b
 
 ## Validation
 
-`adaptive_resume_gate.py` is the owning machine check inside existing G0/G2/G10 qualification. It verifies:
+`tools/ci/adaptive_resume_gate.py` is the owning machine check inside existing G0/G2/G10 qualification. It verifies:
 
 - both assistant adapters exist and point to the same canonical contract;
 - the canonical handoff and machine checkpoints exist;

@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CI-DEPENDENCY-LOCK-1",
-  "updated_at": "2026-08-19",
+  "updated_at": "2026-08-22",
   "scope": {
     "immutable_action_pin_workflows": [
       ".github/workflows/ci-fast.yml",
@@ -32,6 +32,10 @@
     "actions/download-artifact": {
       "label": "v8.0.1",
       "sha": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c"
+    },
+    "actions/attest-build-provenance": {
+      "label": "v4.2.2",
+      "sha": "4d101475d8b20a2381f78447822ac1eab6504dd8"
     }
   },
   "browser": {
@@ -46,16 +50,16 @@
       "ci-fast.yml:fast": ["statuses: write"],
       "ci-fast.yml:branch-hygiene": ["contents: write"],
       "ci-qualified.yml:evidence": ["statuses: write"],
-      "release.yml:publish": ["contents: write"]
+      "release.yml:publish": ["contents: write", "id-token: write", "attestations: write"]
     },
     "forbidden_in_scoped_workflows": [
       "actions: write",
       "checks: write",
       "deployments: write",
-      "id-token: write",
       "packages: write",
       "security-events: write",
       "write-all"
-    ]
+    ],
+    "release_provenance_exception": "release.yml publish may use id-token: write and attestations: write only to create signed provenance attestations for the exact same-run certified runnable artifacts; all other jobs retain read-only defaults unless separately enumerated above."
   }
 }

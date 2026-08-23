@@ -3,12 +3,21 @@
 const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
+const crypto=require('crypto');
 
-const ownerSource=fs.readFileSync('renderer/documentation-ui.js','utf8');
-const accessSource=fs.readFileSync('renderer/documentation-access-v18.6.js','utf8');
+const ownerPath='renderer/documentation-ui.js';
+const accessPath='renderer/documentation-access-v18.6.js';
+const ownerSource=fs.readFileSync(ownerPath,'utf8');
+const accessSource=fs.readFileSync(accessPath,'utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
-const releaseIdentity=JSON.parse(fs.readFileSync('release_identity.json','utf8'));
 const context=vm.createContext({console});
+
+function gitBlobToken(path){
+  const data=fs.readFileSync(path);
+  const header=Buffer.from(`blob ${data.length}\0`,'utf8');
+  return crypto.createHash('sha1').update(header).update(data).digest('hex').slice(0,16);
+}
+
 vm.runInContext(`
 let authPrincipal={role:'USER'};
 let documentationTab='developer';
@@ -56,11 +65,11 @@ vm.runInContext(`authPrincipal={role:'USER'};documentationTab='developer';docCac
 vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert.strictEqual(vm.runInContext('documentationTab',context),'user','hydrate must not fetch forbidden developer docs');
   assert.strictEqual(vm.runInContext('docCache.user',context),'/docs/user.md','normalized owner hydrate must fetch user docs');
-  const ownerTag=`<script src="documentation-ui.js?v=${releaseIdentity.version}"></script>`;
-  const accessTag=`<script src="documentation-access-v18.6.js?v=${releaseIdentity.version}"></script>`;
-  assert(index.includes(ownerTag),'index must load capability-oriented Documentation owner with canonical release cache identity');
-  assert(index.includes(accessTag),'index must load v18.6 documentation access extension with canonical release cache identity');
+  const ownerTag=`<script src="documentation-ui.js?v=${gitBlobToken(ownerPath)}"></script>`;
+  const accessTag=`<script src="documentation-access-v18.6.js?v=${gitBlobToken(accessPath)}"></script>`;
+  assert(index.includes(ownerTag),'index must load capability-oriented Documentation owner with content-derived cache identity');
+  assert(index.includes(accessTag),'index must load documentation access extension with content-derived cache identity');
   assert(index.indexOf(ownerTag)<index.indexOf(accessTag),'owner must load before access decorator');
   assert(!accessSource.includes('/api/'),'composition extension must not create a parallel authorization API');
-  console.log('v18.6 Documentation owner + role access regression PASS');
+  console.log('Documentation owner + role access regression PASS · content-derived cache identity');
 }).catch(err=>{console.error(err);process.exitCode=1});

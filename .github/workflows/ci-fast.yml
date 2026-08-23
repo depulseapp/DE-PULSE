@@ -46,12 +46,20 @@ jobs:
         run: python3 tools/ci/impact_plan.py --base "${BASE_SHA:-}" --head "$HEAD_SHA" --github-output "$GITHUB_OUTPUT" --json-out ci-impact-plan.json
       - name: Canonical workflow policy
         run: python3 tools/ci/workflow_policy.py
+      - name: Recursive source-health / package discovery
+        run: python3 tools/ci/source_health_architecture_gate.py
+      - name: Repository migration safety
+        run: python3 tools/ci/repository_migration_gate.py
+      - name: Retired pre-v17 test/gate equivalence
+        run: python3 tools/ci/retired_test_equivalence_gate.py
+      - name: Active work-slice executable closure ledger
+        run: python3 tools/ci/work_slice_closure_gate.py
       - name: Conserved v17/v18 requirement-ledger integrity
-        run: python3 v18_5_1_v17_v18_reconciliation_gate.py
+        run: python3 tools/ci/implementation_reconciliation_gate.py
       - name: Watchlist membership regression contract
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
-        run: python3 adaptive_resume_gate.py
+        run: python3 tools/ci/adaptive_resume_gate.py
       - name: Post-Stable continuity contract
         run: python3 tools/ci/post_stable_continuity_gate.py
       - name: Platform-neutral source provenance regression
@@ -59,7 +67,7 @@ jobs:
       - name: Release identity
         run: python3 release_identity.py --verify
       - name: Python syntax
-        run: python3 -m compileall -q tools/ci tools/release adaptive_resume_gate.py source_fingerprint.py
+        run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:
@@ -126,6 +134,10 @@ jobs:
             echo "- Node/renderer syntax required: ${{ steps.impact.outputs.node_required }}"
             echo '- release-state/coherence + governance checks complete before Go/Node setup'
             echo '- workflow policy: PASS'
+            echo '- recursive source-health/package discovery: PASS'
+            echo '- repository migration safety: PASS'
+            echo '- retired pre-v17 test/gate equivalence: PASS'
+            echo '- active work-slice closure-ledger enforcement: PASS'
             echo '- conserved v17/v18 ledger integrity: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- post-Stable continuity: PASS'

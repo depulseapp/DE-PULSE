@@ -12,7 +12,7 @@ need(is_native_v17 or is_inherited_v18,'inherited v17 scope release identity mis
 if is_native_v17: need(identity.get('stable_baseline')=='v16.11.0','v16.11 Stable baseline drifted')
 v173=next((x for x in slices.get('slices',[]) if x.get('id')=='v17.3'),None)
 need(v173 is not None and v173.get('status') in {'SOURCE TEST CHECKPOINT','TEST QUALIFIED','SOURCE QUALIFIED','COMPLETE'},'v17.3 slice must be completed/preserved before later v17.x qualification')
-slo=(R/'runtime_slo.go').read_text(); load=(R/'runtime_load_profile.go').read_text(); persist=(R/'persistence_repository.go').read_text(); renderer=(R/'renderer/renderer.js').read_text(); tests=(R/'v17_3_performance_test.go').read_text()
+slo=(R/'runtime_slo.go').read_text(); load=(R/'runtime_load_profile.go').read_text(); persist=(R/'persistence_repository.go').read_text(); renderer=(R/'renderer/renderer.js').read_text(); tests=(R/'runtime_performance_slo_regression_test.go').read_text()
 for token in ['Selected-symbol freshness','Actionable-watchlist freshness','Stale→current recovery','Degradation recovery','CPU utilization','DB write rate','Storage growth','Startup/warm-start time','Provider request budgets','Live subscription utilization','Canonical reuse / provider calls avoided']:
     need(token in slo,f'missing v17.3 SLO: {token}')
 for token in ['CPUUtilizationPct','GOMAXPROCS','CanonicalReuseHitRatePct','StorageGrowthBytes','RuntimeStartupDiagnostics','RuntimeRecoveryDiagnostics','runtimeCPUTotalSeconds']:

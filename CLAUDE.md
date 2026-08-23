@@ -10,7 +10,7 @@ Before planning, editing or claiming status:
 4. Inspect the actual GitHub default branch, active branch, open PR, current HEAD, latest Stable tag/release, checks and artifacts.
 5. Read `release_identity.json`, `.depulse-certification/resume/build-checkpoint.json` and `.depulse-certification/resume/release-evidence-checkpoint.json`.
 6. Read the canonical Roadmap plus the Adaptive Build Plan, Build Process and Delivery Process.
-7. Run or inspect `python3 adaptive_resume_gate.py`.
+7. Run or inspect `python3 tools/ci/adaptive_resume_gate.py`.
 8. Reconcile GitHub/checkpoint disagreements and resume the smallest safe step from the last trustworthy PASS.
 
 GitHub evidence outranks this file and all assistant prose. Use G0–G16 only; preserve the U.S. Equities Processing Boundary, No Execution Boundary, deterministic Market Mode ownership, secrets policy and governed promotion lifecycles. Never ask the user to recreate context already present in the repository.

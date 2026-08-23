@@ -5,6 +5,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[2]
 PREP=ROOT/'preparation_catalyst.go'
+COORD=ROOT/'session_intelligence_coordinator.go'
 TYPES=ROOT/'preparation_types_liquidity.go'
 JOBS=ROOT/'runtime_jobs.go'
 
@@ -16,6 +17,7 @@ def fail(errors):
 def main():
     errors=[]
     prep=PREP.read_text(encoding='utf-8')
+    coord=COORD.read_text(encoding='utf-8')
     types=TYPES.read_text(encoding='utf-8')
     jobs=JOBS.read_text(encoding='utf-8')
     required_prep=[
@@ -25,14 +27,21 @@ def main():
         'readinessFreshnessGate(freshSnap.Freshness, []string{"Quotes", "VIX", "Intraday Bars", "News", "Earnings", "SEC Filings"}, now)',
         'e.setPreparationRich("market-open-prep", attention',
         'e.evaluateCatalystWatch(now)',
-        'if marketOpenPrepWindow(now)',
-        'e.runMarketOpenPrep("scheduled")',
-        'mins > 9*60+25 && mins <= 10*60+15',
-        'e.runMarketOpenPrep("missed-window catch-up")',
         'return "PREMARKET REACTION"','return "OPENING REACTION"','return "5m"','return "15m"','return "30m"','return "60m"','return "SESSION REACTION"','return "COMPLETE"'
     ]
     for token in required_prep:
         if token not in prep: errors.append(f'preparation semantic missing: {token}')
+    required_coord=[
+        'func marketOpenCheckpointPlan(now time.Time, status PreparationJobStatus) sessionCheckpointPlan',
+        'if marketOpenPrepWindow(now)',
+        'return sessionCheckpointPlan{Run: true, Reason: "scheduled"}',
+        'mins > 9*60+25 && mins <= 10*60+15',
+        'return sessionCheckpointPlan{Run: true, Reason: "missed-window catch-up", Late: true}',
+        'e.runMarketOpenPrep(openPlan.Reason)',
+        'func (e *Engine) sessionIntelligenceCoordinatorLoop(ctx context.Context, finnhubKey, alpacaKey, alpacaSecret string)'
+    ]
+    for token in required_coord:
+        if token not in coord: errors.append(f'session coordinator semantic missing: {token}')
     required_types=[
         'type PreparationJobStatus struct','LastAttempt  int64','LastSuccess  int64','AttemptCount int','NextWindow   int64','TradingDay   string','Late         bool','Attention    string','Changed      []string','Exceptions   []CheckpointException',
         'type CatalystReactionState struct','GapPercent','RelativeVolume','SpreadPct','Liquidity','VWAPState','OpeningRangeState','HoldFadeState','VolatilityState','ReactionPercent','CompletedAt',
@@ -46,7 +55,7 @@ def main():
         errors.append('freshness recovery support is not started')
 
     start=prep.find('func (e *Engine) runMarketOpenPrep(reason string)')
-    end=prep.find('\nfunc (e *Engine) marketOpenPrepLoop', start)
+    end=prep.find('\nfunc ', start+1) if start>=0 else -1
     body=prep[start:end] if start>=0 and end>start else ''
     for forbidden in ('refreshQuotesRouted(', 'refreshHistoryRouted', 'refreshNews(', 'refreshEarnings', 'refreshFilings', 'refreshFundamentals', 'refreshMacroRouted', 'refreshOptions'):
         if forbidden in body: errors.append(f'Market Open Prep must reconcile current evidence, not broad-refetch: {forbidden}')
@@ -55,7 +64,7 @@ def main():
     if errors: return fail(errors)
     print('DE.PULSE v18.8.1 readiness contract: PASS')
     print('Market Open Prep cached-evidence reconciliation / no broad refetch: PASS')
-    print('scheduled + missed-window catch-up semantics: PASS')
+    print('session coordinator scheduled + missed-window catch-up semantics: PASS')
     print('liquidity/EXTENDED/SEC-event-risk/freshness exceptions: PASS')
     print('persistent preparation + catalyst lifecycle measurements: PASS')
     return 0

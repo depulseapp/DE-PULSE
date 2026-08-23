@@ -38,7 +38,7 @@ for token in ['LiveSubscriptionBudgetDiagnostics','ReservedCapacity','ReserveUse
     need(token in load,f'live subscription budget telemetry missing: {token}')
 deg=(R/'runtime_degradation.go').read_text()
 need('LIVE CAPACITY SATURATED' in deg,'live subscription saturation reason code missing')
-tests=(R/'v17_1_backpressure_test.go').read_text()
+tests=(R/'workload_backpressure_regression_test.go').read_text()
 for name in ['TestV171ReservedCapacityProtectsTierZeroAndOne','TestV171ProviderQueueIsHardBounded','TestV171LowPriorityShedsBeforeActionable','TestV171LiveSubscriptionBudgetsExposeReservedHeadroom','TestV171ProviderRateLimitCooldownShedsLowTierButProtectsActionable','TestV171FinnhubBudgetComesFromLocalPacingNotGuessedEntitlement']:
     need(name in tests,f'v17.1 acceptance test missing: {name}')
 if errors:

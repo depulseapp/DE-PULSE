@@ -432,66 +432,6 @@ TRUTH BOUNDARY: use only supplied DE.PULSE evidence. Never fabricate missing evi
 Return VALID JSON ONLY in the requested schema.`
 }
 
-func buildAIUserPrompt(task string, pkg AIResearchPackage) string {
-	envelope := map[string]any{
-		"task":            task,
-		"evidencePackage": pkg,
-		"responseSchema": map[string]any{
-			"verdict":         "FAVORABLE|MIXED|CAUTION|INFORMATIONAL",
-			"confidence":      "0-100 integer; confidence in the analysis completeness, not win probability",
-			"bullCase":        "array max 3 concise strings",
-			"baseCase":        "array max 3 concise strings",
-			"bearCase":        "array max 3 concise strings",
-			"reasons":         "array max 3 concise strings",
-			"risks":           "array max 3 concise strings",
-			"contradictions":  "array max 3 concise strings",
-			"missingEvidence": "array max 3 concise strings",
-			"evidenceIds":     "array max 8; each ID must exist in evidencePackage.evidence",
-			"catalyst":        "one concise string",
-			"bestFitHorizon":  "day|swing|long|none",
-			"nextAction":      "one user-controlled review/navigation step; never a trade/order action",
-			"summary":         "one sentence",
-			"details":         "optional evidence explanation, maximum 1200 characters",
-		},
-	}
-	b := marshalBoundedContext(envelope, 30000)
-	return string(b)
-}
-
-func compactAIResearchPackage(pkg AIResearchPackage, maxEvidence int) AIResearchPackage {
-	if maxEvidence <= 0 || len(pkg.Evidence) <= maxEvidence {
-		return pkg
-	}
-	pkg.Evidence = append([]AIEvidenceItem{}, pkg.Evidence[:maxEvidence]...)
-	allowed := allowedEvidenceIDs(pkg)
-	filter := func(values []string) []string {
-		out := []string{}
-		for _, value := range values {
-			if allowed[value] {
-				out = append(out, value)
-			}
-		}
-		return out
-	}
-	pkg.BullEvidenceIDs = filter(pkg.BullEvidenceIDs)
-	pkg.BaseEvidenceIDs = filter(pkg.BaseEvidenceIDs)
-	pkg.BearEvidenceIDs = filter(pkg.BearEvidenceIDs)
-	pkg.RiskEvidenceIDs = filter(pkg.RiskEvidenceIDs)
-	pkg.CatalystEvidenceIDs = filter(pkg.CatalystEvidenceIDs)
-	pkg.MarketEvidenceIDs = filter(pkg.MarketEvidenceIDs)
-	pkg.EventEvidenceIDs = filter(pkg.EventEvidenceIDs)
-	return pkg
-}
-
-func aiCacheKey(req AIRequest, pkg AIResearchPackage, routingPolicy string) string {
-	kind := strings.ToLower(strings.TrimSpace(req.Kind))
-	question := strings.ToLower(strings.TrimSpace(req.Question))
-	if len(question) > 500 {
-		question = question[:500]
-	}
-	return shortAIHash(aiEvidenceArchitectureVersion, pkg.PackageID, pkg.Symbol, pkg.Horizon, kind, question, strings.ToLower(strings.TrimSpace(routingPolicy)))
-}
-
 func configuredAIProvider(secrets Secrets, provider string) bool {
 	switch strings.ToLower(strings.TrimSpace(provider)) {
 	case "groq":
@@ -551,16 +491,6 @@ func resolveAIRouting(settings Settings, secrets Secrets, req AIRequest) AIRouti
 		reason = "No configured AI provider is available for the selected routing policy."
 	}
 	return AIRoutingDecision{Policy: policy, Candidates: out, Reason: reason}
-}
-
-func (a *Application) loadAICache(key string) (AIResponse, bool) {
-	a.mu.RLock()
-	defer a.mu.RUnlock()
-	entry, ok := a.aiCache[key]
-	if !ok {
-		return AIResponse{}, false
-	}
-	return entry.Response, true
 }
 
 func (a *Application) storeAICache(key string, response AIResponse) {

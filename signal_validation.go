@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -133,24 +132,6 @@ func nearestEvents(events []MacroEvent, n int) []MacroEvent {
 		}
 	}
 	return out
-}
-func marshalBoundedContext(v any, maxBytes int) []byte {
-	b, _ := json.Marshal(v)
-	if len(b) <= maxBytes {
-		return b
-	}
-	var m map[string]any
-	if json.Unmarshal(b, &m) != nil {
-		return b[:maxBytes]
-	}
-	for _, k := range []string{"secIntelligence", "filings", "recentNews", "earnings", "macroEvents"} {
-		delete(m, k)
-		b, _ = json.Marshal(m)
-		if len(b) <= maxBytes {
-			return b
-		}
-	}
-	return b
 }
 func isContextLimitError(err error) bool {
 	if err == nil {

@@ -1,0 +1,26 @@
+{
+  "schema": "DE.PULSE-SOURCE-HEALTH-POLICY-3",
+  "version": "ADAPT-CI-CONVERGENCE-001-wave0",
+  "policy": "Maintainability thresholds are guardrails, not rewrite quotas. Recursive/package-aware source health must fail closed on new production orphan helpers. Pre-existing declaration-only debt is tracked exactly until removed or moved to the correct owner; interface-only methods require explicit contract metadata.",
+  "production_file_max_lines": 1200,
+  "function_watch_lines": 200,
+  "function_block_lines": 320,
+  "branch_watch_heuristic": 60,
+  "branch_block_heuristic": 120,
+  "major_closure_requires_source_review": true,
+  "known_orphan_helpers": [],
+  "interface_contract_methods": [
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "MarshalBinary",
+      "interface": "encoding.BinaryMarshaler",
+      "reason": "BLAKE2b digest state serialization is intentionally exposed through the standard binary marshaling interface."
+    },
+    {
+      "path": "internal/vendorcrypto/blake2b/blake2b.go",
+      "name": "UnmarshalBinary",
+      "interface": "encoding.BinaryUnmarshaler",
+      "reason": "BLAKE2b digest state restoration is intentionally exposed through the standard binary unmarshaling interface."
+    }
+  ]
+}

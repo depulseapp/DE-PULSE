@@ -1,0 +1,45 @@
+# OS / editor residue
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python / Node transient output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.node_repl_history
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Build / runtime output
+bin/
+build/
+dist/
+coverage/
+*.cover
+*.coverage
+*.log
+*.tmp
+*.pid
+
+# CI scratch files generated inside a checkout
+ci-impact-plan.json
+ci-qualified-impact-plan.json
+ci-telemetry*.json
+branch-hygiene.json
+promotion-verification.json
+release-notes.md
+
+# Local certification output. Durable Git-tracked continuity state is explicitly retained.
+.depulse-certification/*
+!.depulse-certification/resume/
+!.depulse-certification/resume/**
+!.depulse-certification/handoff/
+!.depulse-certification/handoff/**

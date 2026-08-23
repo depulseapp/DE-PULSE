@@ -15,7 +15,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_scope_gate.py",
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     },
     {
@@ -28,7 +28,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_cross_platform_persistence_gate.py",
-        "v17_0_sqlite_backend_test.go"
+        "native_sqlite_persistence_regression_test.go"
       ]
     },
     {
@@ -52,7 +52,7 @@
         "persistence_backend_windows.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     },
     {
@@ -64,8 +64,8 @@
         "persistence_repository.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go",
-        "v17_3_performance_test.go"
+        "canonical_persistence_regression_test.go",
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -78,7 +78,7 @@
         "persistence_backend_sqlite.go"
       ],
       "fresh_executable_evidence": [
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -92,7 +92,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -105,7 +105,7 @@
         "persistence_backend_windows.go"
       ],
       "fresh_executable_evidence": [
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -119,7 +119,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -131,8 +131,8 @@
         "canonical_pipeline.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_persistence_regression_test.go",
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -146,7 +146,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_2_scope_gate.py",
-        "v17_2_canonical_pipeline_test.go"
+        "canonical_pipeline_regression_test.go"
       ]
     },
     {
@@ -161,7 +161,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_3_scope_gate.py",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -173,8 +173,8 @@
         "runtime_observability.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go",
-        "v17_3_performance_test.go"
+        "workload_backpressure_regression_test.go",
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -187,7 +187,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_1_scope_gate.py",
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -198,7 +198,7 @@
         "workload_controller.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -212,7 +212,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_1_scope_gate.py",
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -225,7 +225,7 @@
         "opportunity_radar.go"
       ],
       "fresh_executable_evidence": [
-        "v17_1_backpressure_test.go"
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -236,8 +236,8 @@
         "runtime_degradation.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_degradation_test.go",
-        "v17_1_backpressure_test.go"
+        "runtime_degradation_regression_test.go",
+        "workload_backpressure_regression_test.go"
       ]
     },
     {
@@ -251,7 +251,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_3_scope_gate.py",
-        "v17_3_performance_test.go"
+        "runtime_performance_slo_regression_test.go"
       ]
     },
     {
@@ -265,7 +265,7 @@
       ],
       "fresh_executable_evidence": [
         "main_test.go",
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     }
   ],

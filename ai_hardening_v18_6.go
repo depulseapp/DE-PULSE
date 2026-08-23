@@ -686,10 +686,3 @@ func (a *Application) recordAIInferenceTelemetry(outcome string, latencyMs int64
 	d.LastOutcome = strings.TrimSpace(outcome)
 	d.LastUpdated = time.Now().UnixMilli()
 }
-
-func (a *Application) aiInferenceTelemetrySnapshot() AIInferenceTelemetry {
-	state := aiTelemetryStateFor(a)
-	state.mu.Lock()
-	defer state.mu.Unlock()
-	return state.diag
-}

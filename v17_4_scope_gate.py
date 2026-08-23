@@ -12,7 +12,7 @@ need(is_native_v17 or is_inherited_v18,'inherited v17 scope release identity mis
 if is_native_v17: need(identity.get('stable_baseline')=='v16.11.0','v16.11 Stable baseline drifted')
 v174=next((x for x in slices.get('slices',[]) if x.get('id')=='v17.4'),None)
 need(v174 is not None and v174.get('status') in {'SOURCE TEST CHECKPOINT','TEST QUALIFIED','SOURCE QUALIFIED','COMPLETE'},'v17.4 slice must be completed/preserved before v17 Major Closure')
-renderer=(R/'renderer/renderer.js').read_text(); css=(R/'renderer/styles.css').read_text(); prep=(R/'preparation_catalyst.go').read_text(); liq=(R/'preparation_types_liquidity.go').read_text(); gotests=(R/'v17_4_operational_hardening_test.go').read_text(); jstests=(R/'v17_4_renderer_test.js').read_text()
+renderer=(R/'renderer/renderer.js').read_text(); css=(R/'renderer/styles.css').read_text(); prep=(R/'preparation_catalyst.go').read_text(); liq=(R/'preparation_types_liquidity.go').read_text(); gotests=(R/'liquidity_truth_regression_test.go').read_text(); jstests=(R/'v17_4_renderer_test.js').read_text()
 need(renderer.count('function masterMarketSymbolsPanel(')==1 and 'masterMarketSymbolsPanel=function' not in renderer,'OPEN-001 still has duplicate Master Market Symbols renderer owner')
 for token in ['master-add-primary','master-remove-all','data-master-add','data-master-remove-all','master-symbol-chip-list']:
     need(token in renderer,f'OPEN-001 behavior/hierarchy missing: {token}')
