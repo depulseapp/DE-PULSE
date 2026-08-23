@@ -1,2 +1,0 @@
-- Preserve baseline executable modes across historical relocations.
-- Require exact-head Fast before governance moves.
