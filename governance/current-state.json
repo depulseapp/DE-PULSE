@@ -18,10 +18,20 @@
     "type": "PROCESS_RELEASE_ENGINEERING",
     "publicProductVersion": null,
     "branch": "adapt-ci-convergence-001",
-    "status": "IMPLEMENTATION",
+    "status": "FINAL_QUALIFICATION",
     "productBehaviorChange": false,
     "closureLedger": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json",
-    "adaptiveProjection": "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md"
+    "adaptiveProjection": "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md",
+    "externalControlWaivers": [
+      {
+        "id": "WAIVER-GITHUB-MAIN-PROTECTION-001",
+        "gapId": "MAIN-PROTECTION-RULESET",
+        "status": "APPROVED",
+        "path": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json",
+        "actualEnforcement": "UNAVAILABLE_CURRENT_PLAN",
+        "mainProtected": false
+      }
+    ]
   },
   "productCapabilityGate": {
     "blocked": true,

@@ -15,6 +15,12 @@ SURFACES = (
     "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md",
     "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md",
     "adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md",
+    "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md",
+)
+WAIVER_PROJECTIONS = (
+    "handoff/CURRENT.md",
+    "adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md",
+    "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md",
 )
 
 
@@ -67,6 +73,29 @@ def main() -> int:
     if closure and closure not in ci_projection:
         errors.append("CURRENT_ADAPTIVE_CI_CONVERGENCE.md does not name canonical closure ledger")
 
+    waivers = active.get("externalControlWaivers", [])
+    if waivers is not None and not isinstance(waivers, list):
+        errors.append("activeWorkSlice.externalControlWaivers must be an array")
+        waivers = []
+    for waiver in waivers or []:
+        if not isinstance(waiver, dict):
+            errors.append("externalControlWaivers entries must be objects")
+            continue
+        wid = str(waiver.get("id", "")).strip()
+        gap = str(waiver.get("gapId", "")).strip()
+        path = str(waiver.get("path", "")).strip()
+        status = str(waiver.get("status", "")).strip()
+        if not all((wid, gap, path, status)):
+            errors.append("external control waiver projection fields missing")
+            continue
+        if not (ROOT / path).is_file():
+            errors.append(f"external control waiver file missing: {path}")
+        for rel in WAIVER_PROJECTIONS:
+            text = texts.get(rel, "")
+            for token in (wid, gap, path):
+                if token not in text:
+                    errors.append(f"{rel} does not project external waiver token: {token}")
+
     stale_claims = (
         "Status:** NOT STARTED",
         "Active work slice:** #64",
@@ -82,6 +111,7 @@ def main() -> int:
     print(f"canonical Stable: {stable_tag} @ {stable_sha}")
     print(f"active work slice: #{issue} / {work_slice} / {branch}")
     print(f"projected current surfaces: {len(texts)}/{len(SURFACES)}")
+    print(f"projected external-control waivers: {len(waivers or [])}")
     if errors:
         print("DE.PULSE current-state projection convergence: FAIL", file=sys.stderr)
         for error in errors:

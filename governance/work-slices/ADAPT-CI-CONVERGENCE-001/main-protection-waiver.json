@@ -1,0 +1,86 @@
+{
+  "schema": "DE.PULSE-EXTERNAL-CONTROL-WAIVER-1",
+  "id": "WAIVER-GITHUB-MAIN-PROTECTION-001",
+  "status": "APPROVED",
+  "workSliceId": "ADAPT-CI-CONVERGENCE-001",
+  "issue": 70,
+  "gapId": "MAIN-PROTECTION-RULESET",
+  "scope": "GITHUB_MAIN_PROTECTION_ONLY",
+  "effectiveDate": "2026-08-23",
+  "actualState": {
+    "repository": "depulseapp/DE-PULSE",
+    "visibility": "private",
+    "mainProtected": false,
+    "rulesetName": "DE.PULSE main protection",
+    "rulesetConfigured": true,
+    "rulesetEnforced": false,
+    "enforcementAvailability": "UNAVAILABLE_CURRENT_PLAN"
+  },
+  "limitation": {
+    "provider": "GitHub",
+    "category": "PLAN_ENFORCEMENT_LIMITATION",
+    "enforcementAvailable": false,
+    "detail": "GitHub UI states that rulesets will not be enforced on this private repository until the organization moves to a GitHub Team organization account. Live branch metadata continues to report main protected=false and protection enforcement off."
+  },
+  "ownerDecision": {
+    "approved": true,
+    "upgradeDecision": "DECLINED",
+    "decisionRecordedAt": "2026-08-23",
+    "decisionSource": "Explicit repository-owner instruction in the active DE.PULSE continuation session",
+    "scopeLimited": true
+  },
+  "riskAcceptance": {
+    "accepted": true,
+    "residualRisks": [
+      "GitHub does not technically prevent a direct push to main under the current plan.",
+      "GitHub does not technically enforce the required Fast and Qualified statuses before merge under the current plan.",
+      "GitHub does not technically block force-push or deletion through protected-branch enforcement under the current plan."
+    ]
+  },
+  "compensatingControls": [
+    {
+      "id": "PR_FIRST_DEVELOPMENT",
+      "mandatory": true,
+      "detail": "Normal DE.PULSE changes continue through a development/work-slice branch and pull request; direct-to-main changes remain prohibited by governance."
+    },
+    {
+      "id": "EXACT_HEAD_FAST_STATUS",
+      "mandatory": true,
+      "detail": "DE.PULSE/fast-head must pass on the exact candidate SHA before merge."
+    },
+    {
+      "id": "EXACT_HEAD_QUALIFIED_STATUS",
+      "mandatory": true,
+      "detail": "DE.PULSE/qualified-head must pass on the exact candidate SHA when required by the governed work-slice/release process."
+    },
+    {
+      "id": "NO_DIRECT_MAIN_PUSH_POLICY",
+      "mandatory": true,
+      "detail": "Direct pushes to main are prohibited even though GitHub cannot technically enforce the rule on the current plan."
+    },
+    {
+      "id": "NO_FORCE_PUSH_POLICY",
+      "mandatory": true,
+      "detail": "Force-push and branch deletion of main remain prohibited by DE.PULSE governance."
+    },
+    {
+      "id": "CANONICAL_RELEASE_G11_G16",
+      "mandatory": true,
+      "detail": "Public Stable publication still uses the single canonical G11-G16 path with exact-source/native/no-rebuild assurance."
+    },
+    {
+      "id": "EXACT_SHA_FINGERPRINT_PROVENANCE",
+      "mandatory": true,
+      "detail": "Candidate SHA, source fingerprint, build/evidence identity and artifact provenance remain immutable evidence owners."
+    }
+  ],
+  "revalidationTriggers": [
+    "GitHub organization plan changes",
+    "Repository ownership or visibility changes",
+    "GitHub makes private-repository ruleset enforcement available on the current plan",
+    "A second maintainer or developer gains write access"
+  ],
+  "retirementCondition": "Enable and verify actual main protection/ruleset when enforcement becomes available; retire this waiver only after live GitHub evidence reports the control enforced.",
+  "noProductBehaviorChange": true,
+  "noReleaseEvidenceInvalidation": true
+}

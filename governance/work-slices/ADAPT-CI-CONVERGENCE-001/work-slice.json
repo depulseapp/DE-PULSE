@@ -4,7 +4,7 @@
   "issue": 70,
   "title": "Adaptive CI convergence, versioning and repository hygiene",
   "type": "PROCESS_RELEASE_ENGINEERING",
-  "status": "IMPLEMENTATION",
+  "status": "FINAL_QUALIFICATION",
   "publicProductVersion": null,
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
@@ -14,6 +14,9 @@
   "productBehaviorChange": false,
   "blocksNextProductCapability": true,
   "closureLedger": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json",
+  "externalControlWaivers": {
+    "MAIN-PROTECTION-RULESET": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json"
+  },
   "implementationWaves": [
     "WAVE_0_GUARDRAILS",
     "WAVE_1_CANONICAL_TOOLING",
@@ -26,16 +29,18 @@
   ],
   "closureRequires": [
     "EXECUTABLE_IMPLEMENTATION",
-    "CLOSURE_LEDGER_ALL_VERIFIED",
+    "CLOSURE_LEDGER_ALL_VERIFIED_OR_VALIDATED_EXTERNAL_WAIVER",
     "FAST_PASS",
     "QUALIFIED_PASS",
     "ROOT_BEFORE_AFTER_EVIDENCE",
     "NO_QUALITY_EVIDENCE_REMOVED",
     "SOURCE_HEALTH_DEBT_ZERO_OR_JUSTIFIED_INTERFACE_ONLY",
-    "ACTUAL_MAIN_PROTECTION_EVIDENCE",
+    "MAIN_PROTECTION_OR_VALIDATED_EXTERNAL_WAIVER",
+    "EXTERNAL_WAIVER_COMPENSATING_CONTROLS",
     "ARTIFACT_PROVENANCE_ATTESTATION_SBOM",
     "G16_CI_EFFICIENCY_EVIDENCE",
     "CURRENT_STATE_ADAPTIVE_OVERLAY_CONVERGENCE",
-    "VERSION_RELEASE_REBASELINE"
+    "VERSION_RELEASE_REBASELINE",
+    "FINAL_EXACT_HEAD_REQUALIFICATION"
   ]
 }
