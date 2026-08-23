@@ -9,6 +9,7 @@ POLICY=ROOT/"governance"/"work-slices"/"ADAPT-ROOT-CONVERGENCE-001"/"root-conver
 ROOT_POLICY=ROOT/"governance"/"root-layout-policy.json"
 STATE=ROOT/"governance"/"current-state.json"
 VERSIONED=re.compile(r"^v(?:17|18)(?:[_\.-]|$)",re.I)
+VERSIONED_GO=re.compile(r"(?:^|_)v(?:17|18)(?:[_\.]\d+)*(?:_|\.|$)",re.I)
 CLOSED={"READY_FOR_CLOSURE","COMPLETE","COMPLETED","CLOSED","DELIVERED"}
 
 def tracked_root_files():
@@ -18,7 +19,7 @@ def tracked_root_files():
 def classify(name,canonical,remaining):
     if name in canonical:return "KEEP","Canonical steady-state project root owner."
     if name.endswith(".go"):
-        if VERSIONED.match(name):return "CONSOLIDATE","Active version-named package-main Go owner; rename or cohesively extract."
+        if name in remaining or VERSIONED_GO.search(name):return "CONSOLIDATE","Active version-named package-main Go owner; rename or cohesively extract."
         return "KEEP","Current package-main Go source/test owner; relocation is architectural, not cosmetic."
     if VERSIONED.match(name):return "MOVE","Historical/version-scoped non-Go evidence belongs under governed release/history ownership."
     if Path(name).suffix.lower() in {".py",".js",".sh",".ps1"}:return "MOVE","Reusable root tooling/evidence should converge to tools/ci, tools/release or tests."
@@ -35,7 +36,7 @@ def main():
     canonical={str(x) for x in rp.get("canonicalRootFiles",[])};remaining={str(x) for x in policy.get("remainingVersionedGo",[])};files=tracked_root_files();rows=[];counts=Counter()
     for name in files:
         disp,reason=classify(name,canonical,remaining);rows.append({"path":name,"disposition":disp,"reason":reason});counts[disp]+=1
-    actual={n for n in files if n.endswith(".go") and VERSIONED.match(n)}
+    actual={n for n in files if n.endswith(".go") and VERSIONED_GO.search(n)}
     unregistered=sorted(actual-remaining);stale=sorted(remaining-actual)
     if unregistered:errors.append("unregistered version-named Go root owners: "+", ".join(unregistered))
     phase=str(policy.get("phase","")).upper();hist=sorted(n for n in files if VERSIONED.match(n) and not n.endswith(".go"));tools=sorted(n for n in files if Path(n).suffix.lower() in {".py",".js",".sh",".ps1"} and n not in canonical and not VERSIONED.match(n));moves=[r["path"] for r in rows if r["disposition"]=="MOVE"]
@@ -50,6 +51,8 @@ def main():
     if a.json_out:
         out=Path(a.json_out);out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
     print("DE.PULSE #73 root convergence");print(f"root files: {len(files)}");print("dispositions: "+", ".join(f"{k}={counts[k]}" for k in sorted(counts)));print(f"historical versioned non-Go root: {len(hist)}");print(f"versioned Go root: {len(actual)}");print(f"non-canonical root tooling: {len(tools)}");print("unclassified root files: 0")
+    print("MOVE root files: "+(", ".join(moves) if moves else "NONE"))
+    print("CONSOLIDATE versioned Go: "+(", ".join(sorted(actual)) if actual else "NONE"))
     if errors:
         print("DE.PULSE root convergence: FAIL",file=sys.stderr)
         for e in errors:print(" - "+e,file=sys.stderr)
