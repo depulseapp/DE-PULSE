@@ -268,6 +268,7 @@ def main() -> int:
         ("tools/ci/browser_risk_routing_gate.py", "Chrome/WebKit primary browser routing contract"),
         ("tools/ci/renderer_owner_contract.py", "capability-oriented renderer ownership contract"),
         ("tools/ci/ci_telemetry_self_test.py", "CI telemetry/amplification contract"),
+        ("tools/ci/g16_delivery_evidence_self_test.py", "G16 repository/CI efficiency evidence contract"),
         ("tools/ci/post_stable_continuity_gate.py", "post-Stable repository continuity contract"),
         ("tools/ci/stable_evidence_gate.py", "durable Stable evidence contract"),
         ("tools/ci/release_rehearsal.py", "pre-merge release rehearsal contract"),
@@ -288,6 +289,7 @@ def main() -> int:
     print("Chrome/WebKit primary browser routing contract: PASS")
     print("capability-oriented renderer ownership contract: PASS")
     print("CI telemetry/amplification contract: PASS")
+    print("G16 repository/CI efficiency evidence contract: PASS")
     print("post-Stable repository continuity contract: PASS")
     print("durable Stable evidence contract: PASS")
     print("pre-merge release rehearsal: PASS")
