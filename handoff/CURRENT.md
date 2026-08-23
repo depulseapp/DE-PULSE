@@ -11,6 +11,7 @@
 **Certified Stable fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Certified release run:** `32546555659`  
+**Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Completed work:** #70 / `ADAPT-CI-CONVERGENCE-001`  
 **Implementation branch:** `adapt-ci-convergence-001`  
 **Closure branch:** `adapt-ci-convergence-001-closure`  
