@@ -6,7 +6,7 @@
   "historicalAuthority": {
     "ledger": "release/v18.5.1/V17-V18-IMPLEMENTATION-RECONCILIATION.json",
     "identity": "release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json",
-    "gate": "v18_5_1_v17_v18_reconciliation_gate.py",
+    "gate": "tools/ci/implementation_reconciliation_gate.py",
     "expectedRows": 296,
     "disposition": "DELEGATED_IMMUTABLE"
   },
@@ -27,7 +27,7 @@
     {"id":"ADAPT-ARCH-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EVIDENCE","owner":"symbol_universe.go","evidence":["universe_hardening_regression_test.go","broad_snapshot_broker_test.go"]},
     {"id":"ADAPT-UI-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"renderer/market-header-ui.js","evidence":["tests/renderer/market_header_owner_test.js","tools/ci/renderer_owner_contract.py"]},
     {"id":"ADAPT-QA-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tests/renderer/market_header_owner_test.js","evidence":["documentation_ui_owner_test.js","tools/ci/legacy_test_gate_inventory.py"]},
-    {"id":"ADAPT-GOV-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json","evidence":["tools/ci/historical_reconciliation_identity.py","v18_5_1_v17_v18_reconciliation_gate.py"]},
+    {"id":"ADAPT-GOV-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json","evidence":["tools/ci/historical_reconciliation_identity.py","tools/ci/implementation_reconciliation_gate.py"]},
     {"id":"ADAPT-COST-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tools/ci/ci_telemetry.py","evidence":["tools/ci/ci_telemetry_self_test.py"]},
     {"id":"ADAPT-RECON-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json","evidence":["tools/ci/v18_8_1_zero_miss_reconciliation_gate.py"]},
     {"id":"ADAPT-UX-RESEARCH-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"renderer/renderer.js","evidence":["tests/renderer/research_information_architecture_test.js"]},
@@ -37,7 +37,7 @@
     {"id":"ADAPT-RESEARCH-002","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EXECUTABLE_EVIDENCE","owner":"research_truth.go","evidence":["tests/renderer/research_correctness_closure_test.js","tests/renderer/v18_8_1_trust_closure_test.js"]}
   ],
   "rules": [
-    "Historical v17-v18.5.1 rows are not copied or reinterpreted; the immutable historical gate remains authoritative.",
+    "Historical v17-v18.5.1 ledger and identity remain immutable; the capability-owned implementation reconciliation gate enforces that authority without copying or reinterpreting rows.",
     "Certified post-ledger releases remain delegated to their own immutable scope/release evidence.",
     "Every v18.8.1 Adaptive packet appears exactly once with a current owner, evidence path and explicit disposition.",
     "PENDING is permitted only while requireAllClosed=false during coherent packet development.",
