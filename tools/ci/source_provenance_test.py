@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "tools" / "release"))
 
 from source_fingerprint import canonical_git_object_fingerprint, canonical_source_fingerprint  # noqa: E402
 
