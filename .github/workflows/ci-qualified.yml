@@ -284,8 +284,8 @@ jobs:
         run: node tools/ci/deterministic_equivalence_test.js
       - name: Renderer logic regression
         run: node --require ./tools/ci/release_identity_renderer_preload.js renderer_logic_test.js
-      - name: v18.0.5 role/responsive regression
-        run: node v18_0_5_renderer_test.js
+      - name: Renderer role/responsive regression
+        run: node tools/ci/renderer_role_responsive_regression_test.js
       - name: Documentation capability owner regression
         run: node documentation_ui_owner_test.js
 
