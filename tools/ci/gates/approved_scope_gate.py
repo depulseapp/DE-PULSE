@@ -13,7 +13,7 @@ responsive proof exactly once on the frozen source fingerprint.
 from pathlib import Path
 import json, sys
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 manifest=json.loads((ROOT/'renderer/qa/v15.1.2-approved-scope.json').read_text())
 override_path=ROOT/'renderer/qa/v18.5-approved-scope-current-owners.json'
 overrides={}

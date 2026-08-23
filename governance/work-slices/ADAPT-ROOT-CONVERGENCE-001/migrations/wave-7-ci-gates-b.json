@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_7_CI_GATE_OWNERSHIP_B",
+  "moves": [
+    {
+      "oldPath": "approved_scope_gate.py",
+      "newPath": "tools/ci/gates/approved_scope_gate.py",
+      "owner": "CI gate / approved-scope traceability",
+      "reason": "Standalone source/traceability gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves repository root, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "code_quality_performance_gate.py",
+      "newPath": "tools/ci/gates/code_quality_performance_gate.py",
+      "owner": "CI gate / code quality and performance health",
+      "reason": "Standalone source/performance gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves repository-root source discovery, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "edge_case_hardening_test.py",
+      "newPath": "tools/ci/gates/edge_case_hardening_test.py",
+      "owner": "CI gate / edge-case hardening evidence",
+      "reason": "Standalone source/behavior hardening gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves source and Go-test ownership, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "role_aware_ui_composition_gate.py",
+      "newPath": "tools/ci/gates/role_aware_ui_composition_gate.py",
+      "owner": "CI gate / role-aware UI composition",
+      "reason": "Standalone renderer/source contract gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves renderer/audit/contract bindings, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

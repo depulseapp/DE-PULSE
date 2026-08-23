@@ -13,7 +13,7 @@ import re
 import subprocess
 import sys
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 ap=argparse.ArgumentParser()
 ap.add_argument('--static-only',action='store_true',help='run formatting/static/comment/resource hygiene only; performance checks are checkpointed separately by certification_runner.py')
 args=ap.parse_args()
