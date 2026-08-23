@@ -11,6 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 SELF = Path(__file__).resolve()
 ROOT_POLICY = ROOT / "governance" / "root-layout-policy.json"
+RETAINED_ASSET_REGISTRY = ROOT / "governance" / "retained-assets.json"
 
 FIRST_WAVE_RENAMES = {
     "v18_6_ai_hardening_test.go": "ai_hardening_test.go",
@@ -217,10 +218,10 @@ def tracked_root_files(commit: str | None = None) -> set[str]:
 
 
 def retained_assets() -> dict[str, dict[str, object]]:
-    registry = load_json(ROOT / "source_retained_assets.json")
+    registry = load_json(RETAINED_ASSET_REGISTRY)
     rows = registry.get("assets", [])
     if not isinstance(rows, list):
-        raise RuntimeError("source_retained_assets.json assets must be a list")
+        raise RuntimeError("governance/retained-assets.json assets must be a list")
     out: dict[str, dict[str, object]] = {}
     for row in rows:
         if isinstance(row, dict):
@@ -321,12 +322,13 @@ def root_layout_inventory(controls: dict[str, str]) -> dict[str, object]:
         counts[key] = counts.get(key, 0) + 1
 
     return {
-        "schema": "DE.PULSE-ROOT-LAYOUT-INVENTORY-1",
+        "schema": "DE.PULSE-ROOT-LAYOUT-INVENTORY-2",
         "baselineCommit": baseline,
         "baselineRootFileCount": len(baseline_root),
         "currentRootFileCount": len(rows),
         "canonicalRootFiles": sorted(policy.get("canonicalRootFiles", [])),
         "newTrackedRootFiles": sorted(current_root - baseline_root),
+        "retainedAssets": sorted(retained),
         "rows": rows,
         "counts": counts,
         "automaticDeletionInference": "PROHIBITED",
@@ -474,11 +476,16 @@ def validate(report: dict[str, object]) -> list[str]:
                 )
         if root_layout.get("automaticDeletionInference") != "PROHIBITED":
             errors.append("automatic root deletion inference must remain PROHIBITED")
-        if not any(
-            isinstance(row, dict) and row.get("classification") == "RETAINED_ASSET"
-            for row in root_rows if isinstance(root_rows, list)
-        ):
-            errors.append("retained branding/source asset is not explicitly classified")
+        retained = root_layout.get("retainedAssets", [])
+        if not isinstance(retained, list) or not retained:
+            errors.append("governed retained branding/source asset registry is empty")
+        else:
+            for rel in retained:
+                if not isinstance(rel, str) or not rel or "/" not in rel:
+                    errors.append(f"retained asset lacks stable non-root ownership: {rel}")
+                    continue
+                if not (ROOT / rel).is_file():
+                    errors.append(f"registered retained asset missing: {rel}")
 
     fast = (ROOT / ".github" / "workflows" / "ci-fast.yml").read_text(
         encoding="utf-8"
@@ -562,7 +569,7 @@ def main() -> int:
         )
     )
     print("new unclassified root files: 0")
-    print("retained branding/assets classification: PASS")
+    print("retained branding/assets stable ownership: PASS")
     print("first-wave capability-oriented renames/moves: PASS")
     print("first-wave legacy executable references: NONE")
     print("conserved v17/v18 reconciliation inventory remains Fast-bound: PASS")
