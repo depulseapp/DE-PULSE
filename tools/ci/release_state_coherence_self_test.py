@@ -105,6 +105,7 @@ def main() -> int:
         lookup = lambda _root, name: tags.get(name, '')
         ok = mod.collect_errors(root, tag_lookup=lookup)
         assert not ok.errors, ok.errors
+        assert ok.target_tag_action == 'REUSE', ok.target_tag_action
 
         build = json.loads((root / '.depulse-certification/resume/build-checkpoint.json').read_text())
         build['release'] = 'v1.2.2'
@@ -125,44 +126,18 @@ def main() -> int:
             'HANDOFF_STABLE_TAG_MISMATCH',
             'CACHE_IDENTITY_MISMATCH',
             'IMMUTABLE_STABLE_TAG_CONFLICT',
+            'TARGET_TAG_CONFLICT',
         ):
             assert required in codes, (required, bad.errors)
-        assert len(bad.errors) >= 5
+        assert len(bad.errors) >= 6
 
-        nextroot = root / 'g11-next'
-        next_candidate_stable, _, next_stable_tag = fixture(nextroot)
-        next_tags = {next_stable_tag: next_candidate_stable}
-        next_lookup = lambda _root, name: next_tags.get(name, '')
-        next_version = '1.2.4'
-        next_build = 'v1.2.4-stable-test'
-        write_json(nextroot, 'release_identity.json', {
-            'version': next_version, 'display_version': 'DE.PULSE v1.2.4', 'build_id': next_build, 'channel': 'STABLE',
-            'stable_baseline': 'v1.2.3', 'previous_stable': 'v1.2.3',
-        })
-        write(nextroot, 'VERSION.txt', f'DE.PULSE v1.2.4\nBuild: {next_build}\nPrevious Stable: v1.2.3\n')
-        write(nextroot, 'app_bootstrap.go', f'const appVersion = "1.2.4"\nconst buildID = "{next_build}"\nconst releaseChannel = "STABLE"\n')
-        write_renderer_assets(nextroot, next_version, next_build)
-        write_index(nextroot, next_version)
-        write_json(nextroot, 'release/v1.2.4/certification-manifest.json', {
-            'schema': 'DE.PULSE-G12-EVIDENCE-MANIFEST-1', 'productVersion': next_version,
-            'workSliceId': 'NEXT-SLICE', 'evidenceSchemaVersion': 1,
-            'releaseContract': 'release/v1.2.4/release_contract.json',
-        })
-        g11_candidate = 'c' * 40
-        create = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=next_lookup)
-        assert not create.errors, create.errors
-        assert create.target_tag_action == 'CREATE', create.target_tag_action
-        next_tags['v1.2.4-stable'] = g11_candidate
-        reuse = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=next_lookup)
-        assert not reuse.errors, reuse.errors
-        assert reuse.target_tag_action == 'REUSE', reuse.target_tag_action
-        next_tags['v1.2.4-stable'] = 'd' * 40
-        conflict = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=next_lookup)
-        assert any('TARGET_TAG_CONFLICT' in error for error in conflict.errors), conflict.errors
-
-        missing_manifest = nextroot / 'release/v1.2.4/certification-manifest.json'
-        missing_manifest.unlink()
-        missing = mod.collect_errors(nextroot, g11_candidate_sha=g11_candidate, tag_lookup=lambda _r, n: next_candidate_stable if n == next_stable_tag else '')
+        missingroot = root / 'missing-g12'
+        missing_candidate, _, missing_tag = fixture(missingroot)
+        (missingroot / 'release/v1.2.3/certification-manifest.json').unlink()
+        missing = mod.collect_errors(
+            missingroot,
+            tag_lookup=lambda _r, name: missing_candidate if name == missing_tag else '',
+        )
         assert any('G12_MANIFEST_MISSING' in error for error in missing.errors), missing.errors
 
     print('DE.PULSE Release State Coherence self-test: PASS')
@@ -171,9 +146,9 @@ def main() -> int:
     print('coherent current Stable fixture: PASS')
     print('predecessor resume checkpoint separation: PASS')
     print('content-derived cache identity fixture: PASS')
+    print('current Stable tag exact-reuse/conflict preflight: PASS')
     print('multi-mismatch aggregation: PASS')
     print('immutable Stable tag conflict detection: PASS')
-    print('G11 target tag absent/exact/conflict preflight: PASS')
     print('canonical version-neutral G12 manifest/executor requirement: PASS')
     return 0
 
