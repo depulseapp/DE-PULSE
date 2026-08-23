@@ -47,6 +47,7 @@ def main() -> int:
         "actions/setup-node",
         "actions/upload-artifact",
         "actions/download-artifact",
+        "actions/attest-build-provenance",
     }
     if set(actions) != expected_actions:
         errors.append(f"dependency lock Action set drift: {sorted(actions)}")
@@ -62,7 +63,7 @@ def main() -> int:
     allowed_write = {
         ".github/workflows/ci-fast.yml": {"statuses": 1, "contents": 1},
         ".github/workflows/ci-qualified.yml": {"statuses": 1},
-        ".github/workflows/release.yml": {"contents": 1},
+        ".github/workflows/release.yml": {"contents": 1, "id-token": 1, "attestations": 1},
     }
     forbidden_permissions = set(lock.get("permission_policy", {}).get("forbidden_in_scoped_workflows", []))
 
@@ -117,6 +118,17 @@ def main() -> int:
             if forbidden in text:
                 errors.append(f"{relative} contains forbidden permission: {forbidden}")
 
+    release_text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    provenance_required = (
+        "actions/attest-build-provenance@",
+        "id-token: write",
+        "attestations: write",
+        "subject-path:",
+    )
+    for token in provenance_required:
+        if token not in release_text:
+            errors.append(f"release provenance least-privilege contract missing: {token}")
+
     browser = lock.get("browser", {})
     requirements_path = ROOT / str(browser.get("requirements_file", ""))
     if not requirements_path.is_file():
@@ -151,6 +163,7 @@ def main() -> int:
     print("Fast/Qualified/Release third-party Actions immutable-SHA pinned: PASS")
     print("Qualified/Release Playwright exact-version requirements + safe pip cache: PASS")
     print("scoped least-privilege permission contract: PASS")
+    print("Release provenance OIDC/attestation exception is explicit and publish-job scoped: PASS")
     print("Release workflow Action/browser reproducibility deferral closed in v18.7.0: PASS")
     return 0
 
