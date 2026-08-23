@@ -3,13 +3,24 @@
 const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
+const crypto=require('crypto');
 require('./tests/renderer/market_header_owner_test.js');
 require('./tests/renderer/v18_8_1_trust_closure_test.js');
 
-const ownerSource=fs.readFileSync('renderer/documentation-ui.js','utf8');
-const accessSource=fs.readFileSync('renderer/documentation-access-v18.6.js','utf8');
+const ownerBytes=fs.readFileSync('renderer/documentation-ui.js');
+const accessBytes=fs.readFileSync('renderer/documentation-access-v18.6.js');
+const ownerSource=ownerBytes.toString('utf8');
+const accessSource=accessBytes.toString('utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
-const releaseIdentity=JSON.parse(fs.readFileSync('release_identity.json','utf8'));
+
+function gitBlobToken(data){
+  const bytes=Buffer.isBuffer(data)?data:Buffer.from(data,'utf8');
+  return crypto.createHash('sha1')
+    .update(Buffer.from(`blob ${bytes.length}\0`,'utf8'))
+    .update(bytes)
+    .digest('hex')
+    .slice(0,16);
+}
 
 const context=vm.createContext({console});
 vm.runInContext(`
@@ -66,8 +77,8 @@ vm.runInContext("authPrincipal={role:'USER'};documentationTab='limitations';docC
 vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert.deepStrictEqual(Array.from(vm.runInContext('fetchCalls',context)),['/docs/limitations.md']);
   assert.strictEqual(vm.runInContext('renderCalls',context),1);
-  const ownerTag=`<script src="documentation-ui.js?v=${releaseIdentity.version}"></script>`;
-  const accessTag=`<script src="documentation-access-v18.6.js?v=${releaseIdentity.version}"></script>`;
+  const ownerTag=`<script src="documentation-ui.js?v=${gitBlobToken(ownerBytes)}"></script>`;
+  const accessTag=`<script src="documentation-access-v18.6.js?v=${gitBlobToken(accessBytes)}"></script>`;
   assert(index.includes(ownerTag),'index must load capability-oriented Documentation owner with canonical cache identity');
   assert(index.includes(accessTag),'index must retain role-access decorator');
   assert(index.indexOf(ownerTag)<index.indexOf(accessTag),'Documentation owner must load before role-access decorator');
