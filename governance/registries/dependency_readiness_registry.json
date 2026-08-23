@@ -91,7 +91,7 @@
       "blocker": "Qualification is invalid outside an approved Go minor line or when workflow pins and release policy drift.",
       "userAction": "No normal user action; release engineering updates the approved runtime policy and workflows together.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["go.mod", "release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+      "evidence": ["go.mod", "governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
     },
     {
       "id": "DEP-RUNTIME-JS-BROWSER",
@@ -102,7 +102,7 @@
       "blocker": "Renderer/browser qualification cannot complete without the policy-required JavaScript runtime and Chromium-compatible browser.",
       "userAction": "No normal user action; qualification runners provision the pinned Node runtime and browser prerequisite.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+      "evidence": ["governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
     },
     {
       "id": "DEP-RUNTIME-PYTHON",
@@ -113,7 +113,7 @@
       "blocker": "Governance and certification evidence cannot be generated without the required Python runtime.",
       "userAction": "No normal user action; CI provisions the pinned Python runtime.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+      "evidence": ["governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
     },
     {
       "id": "DEP-RUNTIME-GOVULNCHECK",
@@ -124,7 +124,7 @@
       "blocker": "Release assurance is incomplete when the required security command is unavailable or not executed.",
       "userAction": "No normal user action; release engineering provisions govulncheck for release certification.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["release_environment_policy.json", "release_environment_gate.py"]
+      "evidence": ["governance/policies/release_environment_policy.json", "release_environment_gate.py"]
     },
     {
       "id": "DEP-CONFIG-LIVE-EQUITY",
