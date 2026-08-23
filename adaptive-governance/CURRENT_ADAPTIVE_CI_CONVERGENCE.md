@@ -1,19 +1,11 @@
-# DE.PULSE — Current Adaptive CI / Versioning Convergence
+# DE.PULSE — Current Adaptive CI / Repository Convergence
 
-**Program:** #70 / `ADAPT-CI-CONVERGENCE-001`  
-**Status:** COMPLETE  
-**Certified Stable:** `v18.9.1-stable`  
-**Implementation branch:** `adapt-ci-convergence-001`  
-**Merged PR / commit:** #71 / `6ba8c0c2b486bdbbebac4611f440741d0588c65f`  
 **Canonical machine state:** `governance/current-state.json`  
-**Closure ledger:** `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`
+**Certified Stable:** `v18.9.1-stable`  
+**Active work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
+**Active branch:** `adapt-root-convergence-001`  
+**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
 
-#70 executable convergence is complete: three-workflow control plane, Planner v3, trustworthy base binding, targeted native rehearsals, version-neutral G12, release identity/toolchain contracts, immutable publication checks, legacy CI retirement/history ownership, recursive source health, migration/equivalence gates, capability-oriented active tests, package decomposition, stable retained assets, prospective SemVer, G16 CI-efficiency evidence and final-binary SBOM/provenance are retained.
+#70 CI convergence is complete and remains the control-plane foundation. #73 extends repository hygiene through `tools/ci/root_convergence_gate.py`, which assigns every tracked root file exactly one `KEEP`, `MOVE`, `CONSOLIDATE` or `DELETE` disposition and progressively tightens enforcement by implementation phase. No parallel workflow family is introduced.
 
-Final exact-head evidence is `governance/work-slices/ADAPT-CI-CONVERGENCE-001/final-qualification-evidence.json`: Fast #742 / `32656818767` and Qualified #175 / `32656912135` passed candidate `ffeb1640174a744cf85578e26bbed7abd828cee1`, then expected-head PR #71 merged it as `6ba8c0c2b486bdbbebac4611f440741d0588c65f`.
-
-## GitHub main-protection exception
-
-`MAIN-PROTECTION-RULESET` remains factually `BLOCKED_EXTERNAL`. `WAIVER-GITHUB-MAIN-PROTECTION-001` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json` is the only bounded exception. Actual `main` protection remains false; the waiver is validated fail-closed and retains mandatory compensating controls/revalidation triggers.
-
-The product capability gate is now unblocked. The next reserved capability is TradeInsight Settings/API-key UX, which must begin as a new governed work slice rather than extending #70.
+`WAIVER-GITHUB-MAIN-PROTECTION-001` remains the bounded current-plan exception under the completed #70 work slice; it does not claim technical branch protection. Exact-head Fast/Qualified remains mandatory for #73 closure.
