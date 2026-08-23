@@ -1,0 +1,21 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_1_HISTORICAL_NON_GO_RELOCATION",
+  "moveDefaults": {
+    "owner": "ADAPT-ROOT-CONVERGENCE-001 / governed historical release evidence",
+    "reason": "Remove historical version-scoped evidence from current repository root while preserving exact tracked bytes and original executable mode under release history.",
+    "removalCondition": "Old root path absent; exact relocated path remains tracked; original executable mode is preserved where applicable; historical evidence is not a current runtime/control owner.",
+    "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+    "allowedReferenceFiles": []
+  },
+  "moves": [],
+  "historicalRootRelocations": [],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": [],
+  "note": "The complete Wave 1 relocation map remains in the parent work-slice repository-migrations.json until the next atomic ledger-normalization commit. This wave file establishes the durable wave-scoped owner without duplicating move rows."
+}
