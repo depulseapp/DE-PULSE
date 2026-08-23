@@ -218,8 +218,8 @@ for rows in duplicates.values():
 # competing orchestration only after consumer/evidence equivalence is proven.
 for required in (
     "release_identity.json",
-    "data_utility_registry.json",
-    "data_health_policy.json",
+    "governance/registries/data_utility_registry.json",
+    "governance/policies/data_health_policy.json",
     "tools/release/prefreeze_qualification.py",
     "governance/current-state.json",
     "governance/work-slices/ADAPT-CI-CONVERGENCE-001/work-slice.json",
