@@ -4,8 +4,8 @@ const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
 const crypto=require('crypto');
-require('./tests/renderer/market_header_owner_test.js');
-require('./tests/renderer/v18_8_1_trust_closure_test.js');
+require('./market_header_owner_test.js');
+require('./v18_8_1_trust_closure_test.js');
 
 const ownerBytes=fs.readFileSync('renderer/documentation-ui.js');
 const accessBytes=fs.readFileSync('renderer/documentation-access-v18.6.js');

@@ -283,11 +283,11 @@ jobs:
       - name: Protected deterministic equivalence
         run: node tools/ci/deterministic_equivalence_test.js
       - name: Renderer logic regression
-        run: node --require ./tools/ci/release_identity_renderer_preload.js renderer_logic_test.js
+        run: node --require ./tools/ci/release_identity_renderer_preload.js tests/renderer/renderer_logic_test.js
       - name: Renderer role/responsive regression
         run: node tools/ci/renderer_role_responsive_regression_test.js
       - name: Documentation capability owner regression
-        run: node documentation_ui_owner_test.js
+        run: node tests/renderer/documentation_ui_owner_test.js
 
   browser:
     name: Primary Chrome behavior
