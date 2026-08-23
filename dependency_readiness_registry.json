@@ -69,7 +69,7 @@
       "blocker": "Desktop persistence is blocked if the local SQLite backend cannot initialize or pass integrity/write checks.",
       "userAction": "No normal setup action; investigate local filesystem and persistence diagnostics only if health checks fail.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["persistence_backend_select.go", "persistence_backend_sqlite.go", "v17_0_sqlite_backend_test.go"]
+      "evidence": ["persistence_backend_select.go", "persistence_backend_sqlite.go", "native_sqlite_persistence_regression_test.go"]
     },
     {
       "id": "DEP-DB-POSTGRES",
