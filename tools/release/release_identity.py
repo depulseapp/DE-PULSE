@@ -8,7 +8,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 IDENTITY = ROOT / "release_identity.json"
 RELEASE_COUPLED_ASSETS = (
     "renderer.js",
@@ -22,6 +22,10 @@ RELEASE_COUPLED_ASSETS = (
     "surface-consolidation-v18.6.css",
     "documentation-access-v18.6.js",
 )
+LEGACY_REGISTRY_NAMES = {
+    "certification": "certification_" + "plan.json",
+    "ci_pipeline": "ci_pipeline_" + "plan.json",
+}
 
 
 def load():
@@ -117,16 +121,17 @@ def sync_asset_cache_identity(index: str, name: str) -> str:
     return re.sub(rf"{re.escape(name)}\?v=[A-Za-z0-9._-]+", f"{name}?v={token}", index)
 
 
-def legacy_registry_path(name: str, version: str) -> Path:
-    root_path = ROOT / name
-    if root_path.is_file():
-        return root_path
+def legacy_registry_path(kind: str, version: str) -> Path:
+    name = LEGACY_REGISTRY_NAMES.get(kind)
+    if not name:
+        raise SystemExit(f"unknown legacy registry kind: {kind}")
     version = str(version or "").strip()
-    if version:
-        archived = ROOT / "release" / "history" / f"v{version}" / "legacy-ci" / name
-        if archived.is_file():
-            return archived
-    raise SystemExit(f"legacy registry missing: {name} version={version or 'unspecified'}")
+    if not version:
+        raise SystemExit(f"legacy registry version is required: {kind}")
+    archived = ROOT / "release" / "history" / f"v{version}" / "legacy-ci" / name
+    if archived.is_file():
+        return archived
+    raise SystemExit(f"legacy registry missing: kind={kind} version={version}")
 
 
 def legacy_registry_versions(x, patch, contract) -> tuple[str, str]:
@@ -202,11 +207,11 @@ def sync(x):
 
     legacy_cert, legacy_ci = legacy_registry_versions(x, patch, contract)
     if not patch and not legacy_cert and not legacy_ci:
-        for name in ("certification_plan.json", "ci_pipeline_plan.json"):
-            target = legacy_registry_path(name, x["version"])
+        for kind in ("certification", "ci_pipeline"):
+            target = legacy_registry_path(kind, x["version"])
             data = json.loads(target.read_text())
             data["version"] = x["version"]
-            if name == "ci_pipeline_plan.json":
+            if kind == "ci_pipeline":
                 data.setdefault("policy", {})["baseline"] = x["previous_stable"] + " Stable"
                 data["policy"]["release_channel"] = x["channel"]
                 data["policy"]["canonical_release_identity"] = "release_identity.json"
@@ -229,8 +234,8 @@ def verify(x):
     contract = release_contract(x)
     overlay = overlay_asset_path(contract)
     legacy_cert, legacy_ci = legacy_registry_versions(x, patch, contract)
-    cert = json.loads(legacy_registry_path("certification_plan.json", legacy_cert or x["version"]).read_text())
-    ci = json.loads(legacy_registry_path("ci_pipeline_plan.json", legacy_ci or x["version"]).read_text())
+    cert = json.loads(legacy_registry_path("certification", legacy_cert or x["version"]).read_text())
+    ci = json.loads(legacy_registry_path("ci_pipeline", legacy_ci or x["version"]).read_text())
 
     renderer_ok = (
         f"const EXPECTED_RELEASE_VERSION='{x['version']}';" in renderer

@@ -10,8 +10,8 @@ from __future__ import annotations
 import json, platform, re, shutil, subprocess, sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
-policy = json.loads((ROOT / "release_environment_policy.json").read_text())
+ROOT = Path(__file__).resolve().parents[2]
+policy = json.loads((ROOT / "governance" / "policies" / "release_environment_policy.json").read_text())
 blocked: list[str] = []
 errors: list[str] = []
 

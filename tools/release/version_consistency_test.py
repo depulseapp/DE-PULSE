@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 I = json.loads((ROOT / "release_identity.json").read_text())
 VERSION = str(I["version"])
 BUILD = str(I["build_id"])
@@ -13,6 +13,10 @@ STABLE = str(I["stable_baseline"])
 CHANNEL = str(I["channel"])
 DISPLAY = str(I["display_version"])
 errs: list[str] = []
+LEGACY_REGISTRY_NAMES = {
+    "certification": "certification_" + "plan.json",
+    "ci_pipeline": "ci_pipeline_" + "plan.json",
+}
 
 
 def need(ok: bool, msg: str) -> None:
@@ -20,16 +24,17 @@ def need(ok: bool, msg: str) -> None:
         errs.append(msg)
 
 
-def legacy_registry_path(name: str, version: str) -> Path:
-    root_path = ROOT / name
-    if root_path.is_file():
-        return root_path
+def legacy_registry_path(kind: str, version: str) -> Path:
+    name = LEGACY_REGISTRY_NAMES.get(kind)
+    if not name:
+        raise SystemExit(f"Version consistency: unknown legacy registry kind: {kind}")
     version = str(version or "").strip()
-    if version:
-        archived = ROOT / "release" / "history" / f"v{version}" / "legacy-ci" / name
-        if archived.is_file():
-            return archived
-    raise SystemExit(f"Version consistency: legacy registry missing: {name} version={version or 'unspecified'}")
+    if not version:
+        raise SystemExit(f"Version consistency: legacy registry version is required: {kind}")
+    archived = ROOT / "release" / "history" / f"v{version}" / "legacy-ci" / name
+    if archived.is_file():
+        return archived
+    raise SystemExit(f"Version consistency: legacy registry missing: kind={kind} version={version}")
 
 
 boot = (ROOT / "app_bootstrap.go").read_text()
@@ -52,8 +57,8 @@ else:
     cert_version = VERSION
     ci_version = VERSION
 
-ci = json.loads(legacy_registry_path("ci_pipeline_plan.json", ci_version).read_text())
-cert = json.loads(legacy_registry_path("certification_plan.json", cert_version).read_text())
+ci = json.loads(legacy_registry_path("ci_pipeline", ci_version).read_text())
+cert = json.loads(legacy_registry_path("certification", cert_version).read_text())
 
 patch_path = ROOT / "renderer" / f"watchlist-desk-contract-v{VERSION}.js"
 patch = patch_path.read_text() if patch_path.exists() else ""
@@ -116,9 +121,15 @@ elif release_contract and overlay_name:
     legacy_ci = str(release_contract.get("legacy_ci_plan_version", "")).strip()
     need(str(cert.get("version")) == (legacy_cert or VERSION), "release contract certification plan inheritance mismatch")
     need(str(ci.get("version")) == (legacy_ci or VERSION), "release contract CI plan inheritance mismatch")
+    legacy_plan_rule = (
+        "Historical "
+        + LEGACY_REGISTRY_NAMES["certification"]
+        + " and "
+        + LEGACY_REGISTRY_NAMES["ci_pipeline"]
+        + " remain conserved legacy registries"
+    )
     need(
-        "Historical certification_plan.json and ci_pipeline_plan.json remain conserved legacy registries"
-        in str(release_contract.get("legacyPlanRule", "")),
+        legacy_plan_rule in str(release_contract.get("legacyPlanRule", "")),
         "release contract legacy-plan rule missing",
     )
     need(

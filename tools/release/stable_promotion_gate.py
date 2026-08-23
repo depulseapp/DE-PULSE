@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import subprocess,sys
-R=Path(__file__).resolve().parent
+R=Path(__file__).resolve().parents[2]
 go='\n'.join(p.read_text(errors='ignore') for p in R.glob('*.go') if not p.name.endswith('_test.go'))
 model=(R/'app_model.go').read_text()
 errors=[]
