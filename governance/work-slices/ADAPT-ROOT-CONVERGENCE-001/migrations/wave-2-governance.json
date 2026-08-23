@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_2_GOVERNANCE_OWNERSHIP",
+  "moves": [
+    {
+      "oldPath": "ai_eval_policy.json",
+      "newPath": "governance/policies/ai_eval_policy.json",
+      "owner": "Governance / AI evaluation policy",
+      "reason": "Machine policy belongs to the canonical governance policy owner rather than repository root.",
+      "removalCondition": "Old root path absent; canonical CI consumer uses governance/policies; migration safety finds no active stale reference.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "data_health_policy.json",
+      "newPath": "governance/policies/data_health_policy.json",
+      "owner": "Governance / adaptive data-health policy",
+      "reason": "Machine policy belongs to the canonical governance policy owner rather than repository root.",
+      "removalCondition": "Old root path absent; canonical CI consumer uses governance/policies; migration safety finds no active stale reference.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "provider_dataset_ai_rights_registry.json",
+      "newPath": "governance/registries/provider_dataset_ai_rights_registry.json",
+      "owner": "Governance / provider dataset and AI-rights registry",
+      "reason": "Durable provider/dataset rights evidence is a governance registry, not a project-root owner.",
+      "removalCondition": "Old root path absent; canonical AI evaluation consumer uses governance/registries; migration safety finds no active stale reference.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "data_utility_registry.json",
+      "newPath": "governance/registries/data_utility_registry.json",
+      "owner": "Governance / data utility registry",
+      "reason": "Durable data ownership/utility evidence is a governance registry, not a project-root owner.",
+      "removalCondition": "Old root path absent; canonical data-utility consumer uses governance/registries; migration safety finds no active stale reference.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}
