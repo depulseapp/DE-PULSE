@@ -65,9 +65,9 @@ jobs:
       - name: Platform-neutral source provenance regression
         run: python3 tools/ci/source_provenance_test.py
       - name: Release identity
-        run: python3 release_identity.py --verify
+        run: python3 tools/release/release_identity.py --verify
       - name: Python syntax
-        run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
+        run: python3 -m compileall -q tools/ci tools/release tools/release/source_fingerprint.py
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:

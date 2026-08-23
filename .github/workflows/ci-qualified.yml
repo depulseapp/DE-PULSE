@@ -115,7 +115,7 @@ jobs:
             --requested-lane "$requested" \
             --github-output "$GITHUB_OUTPUT" \
             --json-out ci-qualified-impact-plan.json
-          fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
+          fp="$(python3 tools/release/source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
           plan_base="$(python3 -c 'import json; print(json.load(open("ci-qualified-impact-plan.json"))["baseSha"])')"
@@ -140,12 +140,12 @@ jobs:
       - name: Git-object provenance regression
         shell: bash
         run: |
-          test "$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')" = "${{ needs.context.outputs.fingerprint }}"
+          test "$(python3 tools/release/source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')" = "${{ needs.context.outputs.fingerprint }}"
           python3 tools/ci/source_provenance_test.py
       - name: Release identity
-        run: python3 release_identity.py --verify
+        run: python3 tools/release/release_identity.py --verify
       - name: Python syntax
-        run: python3 -m compileall -q tools/ci tools/release source_fingerprint.py
+        run: python3 -m compileall -q tools/ci tools/release tools/release/source_fingerprint.py
 
   portability:
     name: CI portability (${{ matrix.os }})
@@ -170,13 +170,13 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: |
           set -euo pipefail
-          actual="$(python3 source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')"
+          actual="$(python3 tools/release/source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}')"
           test "$actual" = "${{ needs.context.outputs.fingerprint }}"
       - name: Same canonical Git-object fingerprint on Windows
         shell: pwsh
         if: ${{ runner.os == 'Windows' }}
         run: |
-          $actual=(python source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
+          $actual=(python tools/release/source_fingerprint.py --mode git --commit '${{ needs.context.outputs.sha }}').Trim()
           if($actual -ne '${{ needs.context.outputs.fingerprint }}'){ throw "cross-platform fingerprint mismatch: $actual" }
       - name: Parse reusable native/release tooling
         shell: bash

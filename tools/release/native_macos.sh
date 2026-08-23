@@ -17,8 +17,8 @@ mkdir -p "$OUT" "$STAGE" "$CLEAN" "$HOME_DIR" "$GUI_HOME"
 
 cd "$ROOT"
 test "$(git rev-parse HEAD)" = "$DEPULSE_CANDIDATE_SHA"
-test "$(python3 source_fingerprint.py --mode git --commit "$DEPULSE_CANDIDATE_SHA")" = "$DEPULSE_SOURCE_FINGERPRINT"
-python3 release_identity.py --verify
+test "$(python3 tools/release/source_fingerprint.py --mode git --commit "$DEPULSE_CANDIDATE_SHA")" = "$DEPULSE_SOURCE_FINGERPRINT"
+python3 tools/release/release_identity.py --verify
 
 eval "$(python3 - <<'PY'
 import json,shlex

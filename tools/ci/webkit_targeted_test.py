@@ -99,7 +99,7 @@ def native_packaged_window_contract() -> None:
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
     fingerprint = subprocess.check_output(
-        [sys.executable, "source_fingerprint.py", "--mode", "git", "--commit", sha],
+        [sys.executable, "tools/release/source_fingerprint.py", "--mode", "git", "--commit", sha],
         cwd=ROOT,
         text=True,
     ).strip()

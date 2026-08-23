@@ -16,9 +16,9 @@ New-Item -ItemType Directory -Force -Path $out,$stage,$clean,$profile | Out-Null
 Push-Location $root
 try {
   if((git rev-parse HEAD).Trim() -ne $env:DEPULSE_CANDIDATE_SHA){ throw 'candidate SHA mismatch' }
-  $gitFp=(python source_fingerprint.py --mode git --commit $env:DEPULSE_CANDIDATE_SHA).Trim()
+  $gitFp=(python tools/release/source_fingerprint.py --mode git --commit $env:DEPULSE_CANDIDATE_SHA).Trim()
   if($gitFp -ne $env:DEPULSE_SOURCE_FINGERPRINT){ throw "Git-object fingerprint mismatch: $gitFp" }
-  python release_identity.py --verify
+  python tools/release/release_identity.py --verify
   if($LASTEXITCODE -ne 0){ throw 'release identity verification failed' }
   $rid=Get-Content -Raw release_identity.json | ConvertFrom-Json
   if($rid.version -ne $env:DEPULSE_VERSION){ throw 'release version mismatch' }

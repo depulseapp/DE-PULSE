@@ -244,9 +244,9 @@ def main() -> int:
         write_line(log, "Runner identity: " + json.dumps(toolchain["runner"], sort_keys=True))
 
         write_line(log, "\n[G0/G1] Canonical release identity + declarative release evidence")
-        run(log, ["python3", "release_identity.py", "--verify"])
+        run(log, ["python3", "tools/release/release_identity.py", "--verify"])
         run(log, ["python3", "tools/release/release_identity_contract.py", "--verify"])
-        run(log, ["python3", "version_consistency_test.py"])
+        run(log, ["python3", "tools/release/version_consistency_test.py"])
         validate_assertions(log, manifest)
 
         write_line(log, "\n[G2/G7/G10] Governance, reproducibility, portability and inherited trust contracts")
@@ -294,7 +294,7 @@ def main() -> int:
         log.flush()
         log_sha = hashlib.sha256(log_file.read_bytes()).hexdigest()
         source_fingerprint = subprocess.check_output(
-            ["python3", "source_fingerprint.py", "--mode", "git", "--commit", source_sha],
+            ["python3", "tools/release/source_fingerprint.py", "--mode", "git", "--commit", source_sha],
             cwd=ROOT,
             text=True,
         ).strip()
