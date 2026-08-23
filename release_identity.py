@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -65,13 +66,48 @@ def overlay_asset_path(contract):
     return ROOT / "renderer" / asset
 
 
-def asset_cache_token(name: str) -> str:
+def clean_head_blob_bytes(relative_path: str) -> bytes | None:
+    """Return canonical HEAD bytes only when the tracked worktree path is unchanged.
+
+    Windows checkouts may materialize CRLF while Git stores LF. Cache identity is
+    a source identity, so verification must use repository blob bytes when the
+    logical tracked file is unchanged. If the file is intentionally staged or
+    modified (for example during --sync --verify), callers fall back to the
+    working-tree bytes that are being prepared for the next commit.
+    """
+    for diff_args in (
+        ("git", "diff", "--quiet", "--", relative_path),
+        ("git", "diff", "--cached", "--quiet", "--", relative_path),
+    ):
+        result = subprocess.run(
+            diff_args,
+            cwd=ROOT,
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if result.returncode != 0:
+            return None
+    result = subprocess.run(
+        ("git", "cat-file", "blob", f"HEAD:{relative_path}"),
+        cwd=ROOT,
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def asset_cache_token(name: str, *, canonical_git: bool = False) -> str:
     path = ROOT / "renderer" / name
     if not path.is_file():
         raise SystemExit(f"renderer cache identity asset missing: {path}")
-    data = path.read_bytes()
-    # Match Git's blob object identity so the token is deterministic from file
-    # bytes, independent of product version/build/work-slice identity.
+    relative_path = f"renderer/{name}"
+    data = clean_head_blob_bytes(relative_path) if canonical_git else None
+    if data is None:
+        data = path.read_bytes()
+    # Match Git's blob object identity so the token is deterministic from source
+    # bytes, independent of product version/build/work-slice and OS materialization.
     header = f"blob {len(data)}\0".encode("utf-8")
     return hashlib.sha1(header + data).hexdigest()[:16]
 
@@ -180,7 +216,7 @@ def sync(x):
 
 
 def verify_cache_identity(index: str, name: str) -> bool:
-    return f"{name}?v={asset_cache_token(name)}" in index
+    return f"{name}?v={asset_cache_token(name, canonical_git=True)}" in index
 
 
 def verify(x):
