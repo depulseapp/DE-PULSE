@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed active work-slice closure-ledger validation.
 
-Normal Fast validates a complete canonical machine-readable gap ledger. Final
-closure/G16 invokes --require-closed. Blocking gaps normally require VERIFIED
-status. A narrowly scoped external platform control may satisfy closure only
-through an explicit machine-readable owner-approved waiver validated here; the
-factual blocked state is never relabeled as technically enforced.
+Blocking gaps normally require VERIFIED status. Two narrowly governed special
+bindings exist for #70: the factual GitHub-plan external-control waiver and the
+post-run immutable final-qualification evidence binding. Neither mechanism may
+be generalized to hide ordinary implementation gaps.
 """
 from __future__ import annotations
 
@@ -21,6 +20,7 @@ STATE_PATH = ROOT / "governance" / "current-state.json"
 ALLOWED_STATUSES = {"OPEN", "IMPLEMENTED_UNVERIFIED", "BLOCKED_EXTERNAL", "VERIFIED"}
 CLOSED_WORK_SLICE_STATES = {"READY_FOR_CLOSURE", "COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
 WAIVABLE_EXTERNAL_GAPS = {("ADAPT-CI-CONVERGENCE-001", "MAIN-PROTECTION-RULESET")}
+FINAL_EVIDENCE_BINDABLE_GAPS = {("ADAPT-CI-CONVERGENCE-001", "FINAL-QUALIFIED")}
 REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS = {
     "PR_FIRST_DEVELOPMENT",
     "EXACT_HEAD_FAST_STATUS",
@@ -30,21 +30,27 @@ REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS = {
     "CANONICAL_RELEASE_G11_G16",
     "EXACT_SHA_FINGERPRINT_PROVENANCE",
 }
+REQUIRED_FINAL_EVIDENCE_OWNERS = {
+    "CI_HARNESS",
+    "BACKEND_FULL_GO",
+    "RACE_DETECTOR",
+    "RANDOMIZED_PACKAGE_ORDER",
+    "PERSISTENCE_DB",
+    "SECURITY_DATA_RIGHTS",
+    "RENDERER",
+    "CHROME",
+    "WEBKIT",
+    "NATIVE_MACOS_PACKAGED_LIFECYCLE",
+    "NATIVE_WINDOWS_PACKAGED_RUNTIME",
+}
 REQUIRED_70_GAPS = {
-    "FAST-640-QUALIFIED-PATH",
-    "PLANNER-EVIDENCE-OWNER-ROUTING",
-    "RETIRED-TEST-EQUIVALENCE",
-    "SOURCE-HEALTH-DEBT",
-    "ACTIVE-VERSIONED-TEST-MIGRATION",
-    "PACKAGE-DECOMPOSITION",
-    "PERMANENT-ROOT-ALLOWLIST",
-    "ASSET-REGISTRY-OWNERSHIP",
-    "RELEASE-IDENTITY-FANOUT",
-    "SEMVER-RELEASE-CUTOVER",
-    "MAIN-PROTECTION-RULESET",
-    "ARTIFACT-ATTESTATION-SBOM",
-    "CURRENT-STATE-OVERLAY-CONVERGENCE",
-    "G16-ROOT-CI-EFFICIENCY",
+    "FAST-640-QUALIFIED-PATH", "PLANNER-EVIDENCE-OWNER-ROUTING",
+    "RETIRED-TEST-EQUIVALENCE", "SOURCE-HEALTH-DEBT",
+    "ACTIVE-VERSIONED-TEST-MIGRATION", "PACKAGE-DECOMPOSITION",
+    "PERMANENT-ROOT-ALLOWLIST", "ASSET-REGISTRY-OWNERSHIP",
+    "RELEASE-IDENTITY-FANOUT", "SEMVER-RELEASE-CUTOVER",
+    "MAIN-PROTECTION-RULESET", "ARTIFACT-ATTESTATION-SBOM",
+    "CURRENT-STATE-OVERLAY-CONVERGENCE", "G16-ROOT-CI-EFFICIENCY",
     "FINAL-QUALIFIED",
 }
 
@@ -57,24 +63,13 @@ def nonempty_strings(value: object) -> bool:
     return isinstance(value, list) and bool(value) and all(isinstance(item, str) and item.strip() for item in value)
 
 
-def validate_external_waiver(
-    work_slice_id: str,
-    issue: object,
-    work: dict[str, Any],
-    gap: dict[str, Any],
-    errors: list[str],
-) -> bool:
-    """Validate the one bounded external-control waiver allowed by #70."""
+def validate_external_waiver(work_slice_id: str, issue: object, work: dict[str, Any], gap: dict[str, Any], errors: list[str]) -> bool:
     gid = str(gap.get("id", "")).strip()
     if (work_slice_id, gid) not in WAIVABLE_EXTERNAL_GAPS:
         errors.append(f"{gid}: external waiver is not permitted for this work slice/gap")
         return False
-
     mapping = work.get("externalControlWaivers", {})
-    if not isinstance(mapping, dict):
-        errors.append("work-slice externalControlWaivers must be an object")
-        return False
-    waiver_rel = str(mapping.get(gid, "")).strip()
+    waiver_rel = str(mapping.get(gid, "")).strip() if isinstance(mapping, dict) else ""
     if not waiver_rel:
         errors.append(f"{gid}: BLOCKED_EXTERNAL requires a registered waiver path")
         return False
@@ -82,244 +77,161 @@ def validate_external_waiver(
     if not waiver_path.is_file():
         errors.append(f"{gid}: registered waiver file missing: {waiver_rel}")
         return False
-
-    start_errors = len(errors)
+    start = len(errors)
     waiver = load(waiver_path)
-    if waiver.get("schema") != "DE.PULSE-EXTERNAL-CONTROL-WAIVER-1":
-        errors.append(f"{gid}: unsupported external waiver schema")
-    if waiver.get("status") != "APPROVED":
-        errors.append(f"{gid}: external waiver status must be APPROVED")
-    if waiver.get("workSliceId") != work_slice_id:
-        errors.append(f"{gid}: waiver workSliceId mismatch")
-    if waiver.get("issue") != issue:
-        errors.append(f"{gid}: waiver issue mismatch")
-    if waiver.get("gapId") != gid:
-        errors.append(f"{gid}: waiver gapId mismatch")
-    if waiver.get("scope") != "GITHUB_MAIN_PROTECTION_ONLY":
-        errors.append(f"{gid}: waiver scope must remain GITHUB_MAIN_PROTECTION_ONLY")
-    if waiver.get("noProductBehaviorChange") is not True:
-        errors.append(f"{gid}: waiver must assert noProductBehaviorChange=true")
-    if waiver.get("noReleaseEvidenceInvalidation") is not True:
-        errors.append(f"{gid}: waiver must preserve existing release evidence")
-
+    checks = (
+        (waiver.get("schema") == "DE.PULSE-EXTERNAL-CONTROL-WAIVER-1", "unsupported external waiver schema"),
+        (waiver.get("status") == "APPROVED", "external waiver status must be APPROVED"),
+        (waiver.get("workSliceId") == work_slice_id, "waiver workSliceId mismatch"),
+        (waiver.get("issue") == issue, "waiver issue mismatch"),
+        (waiver.get("gapId") == gid, "waiver gapId mismatch"),
+        (waiver.get("scope") == "GITHUB_MAIN_PROTECTION_ONLY", "waiver scope mismatch"),
+        (waiver.get("noProductBehaviorChange") is True, "waiver must assert noProductBehaviorChange=true"),
+        (waiver.get("noReleaseEvidenceInvalidation") is True, "waiver must preserve release evidence"),
+    )
+    for ok, message in checks:
+        if not ok:
+            errors.append(f"{gid}: {message}")
     actual = waiver.get("actualState", {})
-    if not isinstance(actual, dict):
-        errors.append(f"{gid}: waiver actualState missing")
-    else:
-        if actual.get("repository") != "depulseapp/DE-PULSE":
-            errors.append(f"{gid}: waiver repository mismatch")
-        if actual.get("mainProtected") is not False:
-            errors.append(f"{gid}: waiver must truthfully retain mainProtected=false")
-        if actual.get("rulesetConfigured") is not True:
-            errors.append(f"{gid}: configured ruleset evidence missing")
-        if actual.get("rulesetEnforced") is not False:
-            errors.append(f"{gid}: waiver must truthfully retain rulesetEnforced=false")
-        if actual.get("enforcementAvailability") != "UNAVAILABLE_CURRENT_PLAN":
-            errors.append(f"{gid}: unexpected enforcement availability classification")
-
+    if not isinstance(actual, dict) or actual.get("repository") != "depulseapp/DE-PULSE" or actual.get("mainProtected") is not False or actual.get("rulesetConfigured") is not True or actual.get("rulesetEnforced") is not False or actual.get("enforcementAvailability") != "UNAVAILABLE_CURRENT_PLAN":
+        errors.append(f"{gid}: factual unenforced main/ruleset state changed or is incomplete")
     limitation = waiver.get("limitation", {})
-    if not isinstance(limitation, dict):
-        errors.append(f"{gid}: waiver limitation missing")
-    else:
-        if limitation.get("provider") != "GitHub":
-            errors.append(f"{gid}: waiver provider must be GitHub")
-        if limitation.get("category") != "PLAN_ENFORCEMENT_LIMITATION":
-            errors.append(f"{gid}: waiver category mismatch")
-        if limitation.get("enforcementAvailable") is not False:
-            errors.append(f"{gid}: waiver may only apply while technical enforcement is unavailable")
-        if not str(limitation.get("detail", "")).strip():
-            errors.append(f"{gid}: waiver limitation detail missing")
-
+    if not isinstance(limitation, dict) or limitation.get("provider") != "GitHub" or limitation.get("category") != "PLAN_ENFORCEMENT_LIMITATION" or limitation.get("enforcementAvailable") is not False or not str(limitation.get("detail", "")).strip():
+        errors.append(f"{gid}: GitHub plan limitation contract invalid")
     decision = waiver.get("ownerDecision", {})
-    if not isinstance(decision, dict):
-        errors.append(f"{gid}: ownerDecision missing")
-    else:
-        if decision.get("approved") is not True:
-            errors.append(f"{gid}: owner approval missing")
-        if decision.get("upgradeDecision") != "DECLINED":
-            errors.append(f"{gid}: owner upgrade decision must be DECLINED for this waiver")
-        if decision.get("scopeLimited") is not True:
-            errors.append(f"{gid}: waiver must be explicitly scope-limited")
-        if not str(decision.get("decisionRecordedAt", "")).strip():
-            errors.append(f"{gid}: owner decision date missing")
-
+    if not isinstance(decision, dict) or decision.get("approved") is not True or decision.get("upgradeDecision") != "DECLINED" or decision.get("scopeLimited") is not True or not str(decision.get("decisionRecordedAt", "")).strip():
+        errors.append(f"{gid}: explicit owner decision contract invalid")
     risk = waiver.get("riskAcceptance", {})
-    if not isinstance(risk, dict) or risk.get("accepted") is not True:
-        errors.append(f"{gid}: residual risk must be explicitly accepted")
-    elif not nonempty_strings(risk.get("residualRisks")):
-        errors.append(f"{gid}: residual risks must be enumerated")
-
+    if not isinstance(risk, dict) or risk.get("accepted") is not True or not nonempty_strings(risk.get("residualRisks")):
+        errors.append(f"{gid}: residual risk acceptance invalid")
     controls = waiver.get("compensatingControls", [])
-    control_ids: set[str] = set()
-    if not isinstance(controls, list) or not controls:
-        errors.append(f"{gid}: compensatingControls must be non-empty")
-    else:
+    ids: set[str] = set()
+    if isinstance(controls, list):
         for item in controls:
-            if not isinstance(item, dict):
-                errors.append(f"{gid}: compensating control must be an object")
-                continue
-            cid = str(item.get("id", "")).strip()
-            if not cid:
-                errors.append(f"{gid}: compensating control id missing")
-                continue
-            control_ids.add(cid)
-            if item.get("mandatory") is not True:
-                errors.append(f"{gid}: compensating control {cid} must remain mandatory")
-            if not str(item.get("detail", "")).strip():
-                errors.append(f"{gid}: compensating control {cid} detail missing")
-    missing_controls = sorted(REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS - control_ids)
-    if missing_controls:
-        errors.append(f"{gid}: missing required compensating controls: {', '.join(missing_controls)}")
-
-    if not nonempty_strings(waiver.get("revalidationTriggers")):
-        errors.append(f"{gid}: revalidationTriggers must be non-empty")
-    if not str(waiver.get("retirementCondition", "")).strip():
-        errors.append(f"{gid}: retirementCondition missing")
-
-    return len(errors) == start_errors
+            if isinstance(item, dict) and str(item.get("id", "")).strip():
+                cid = str(item["id"]).strip(); ids.add(cid)
+                if item.get("mandatory") is not True or not str(item.get("detail", "")).strip():
+                    errors.append(f"{gid}: compensating control {cid} must remain mandatory and documented")
+    missing = sorted(REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS - ids)
+    if missing:
+        errors.append(f"{gid}: missing required compensating controls: {', '.join(missing)}")
+    if not nonempty_strings(waiver.get("revalidationTriggers")) or not str(waiver.get("retirementCondition", "")).strip():
+        errors.append(f"{gid}: waiver revalidation/retirement contract missing")
+    return len(errors) == start
 
 
-def validate(require_closed: bool) -> tuple[list[str], Counter[str], str, set[str]]:
+def validate_final_qualification_binding(work_slice_id: str, issue: object, work: dict[str, Any], gap: dict[str, Any], errors: list[str]) -> bool:
+    gid = str(gap.get("id", "")).strip()
+    if (work_slice_id, gid) not in FINAL_EVIDENCE_BINDABLE_GAPS:
+        return False
+    rel = str(work.get("finalQualificationEvidence", "")).strip()
+    if not rel:
+        errors.append(f"{gid}: finalQualificationEvidence path missing")
+        return False
+    path = ROOT / rel
+    if not path.is_file():
+        errors.append(f"{gid}: final qualification evidence file missing: {rel}")
+        return False
+    start = len(errors)
+    evidence = load(path)
+    if evidence.get("schema") != "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-1" or evidence.get("status") != "VERIFIED":
+        errors.append(f"{gid}: final qualification evidence schema/status invalid")
+    if evidence.get("workSliceId") != work_slice_id or evidence.get("issue") != issue or evidence.get("gapId") != gid:
+        errors.append(f"{gid}: final qualification identity mismatch")
+    candidate = str(evidence.get("candidateSha", "")).strip()
+    merge_sha = str(evidence.get("mergeCommitSha", "")).strip()
+    if len(candidate) != 40 or len(merge_sha) != 40:
+        errors.append(f"{gid}: candidate/merge SHA must be full immutable SHAs")
+    fast = evidence.get("fast", {})
+    qualified = evidence.get("qualified", {})
+    if not isinstance(fast, dict) or fast.get("context") != "DE.PULSE/fast-head" or fast.get("conclusion") != "success" or fast.get("candidateSha") != candidate or not isinstance(fast.get("runId"), int):
+        errors.append(f"{gid}: exact-head Fast binding invalid")
+    if not isinstance(qualified, dict) or qualified.get("context") != "DE.PULSE/qualified-head" or qualified.get("conclusion") != "success" or qualified.get("candidateSha") != candidate or not isinstance(qualified.get("runId"), int):
+        errors.append(f"{gid}: exact-head Qualified binding invalid")
+    owners = set(qualified.get("evidenceOwners", [])) if isinstance(qualified, dict) and isinstance(qualified.get("evidenceOwners"), list) else set()
+    missing = sorted(REQUIRED_FINAL_EVIDENCE_OWNERS - owners)
+    if missing:
+        errors.append(f"{gid}: final Qualified evidence owners missing: {', '.join(missing)}")
+    merge = evidence.get("merge", {})
+    if not isinstance(merge, dict) or merge.get("merged") is not True or merge.get("expectedHeadSha") != candidate or merge.get("mergeCommitSha") != merge_sha or merge.get("pullRequest") != 71 or merge.get("base") != "main":
+        errors.append(f"{gid}: expected-head protected merge binding invalid")
+    if work.get("mergedPullRequest") != 71 or work.get("mergedCommitSha") != merge_sha:
+        errors.append(f"{gid}: work-slice merge binding mismatch")
+    if evidence.get("noProductBehaviorChange") is not True or evidence.get("stableReleaseEvidenceUnchanged") is not True:
+        errors.append(f"{gid}: final binding must preserve product/release boundaries")
+    return len(errors) == start
+
+
+def validate(require_closed: bool) -> tuple[list[str], Counter[str], str, set[str], set[str]]:
     errors: list[str] = []
     if not STATE_PATH.is_file():
-        return ["missing governance/current-state.json"], Counter(), "", set()
-
-    state = load(STATE_PATH)
-    active = state.get("activeWorkSlice", {})
+        return ["missing governance/current-state.json"], Counter(), "", set(), set()
+    state = load(STATE_PATH); active = state.get("activeWorkSlice", {})
     work_slice_id = str(active.get("workSliceId", "")).strip()
     if not work_slice_id:
-        return ["current-state activeWorkSlice.workSliceId missing"], Counter(), "", set()
-
+        return ["current-state activeWorkSlice.workSliceId missing"], Counter(), "", set(), set()
     work_dir = ROOT / "governance" / "work-slices" / work_slice_id
-    work_path = work_dir / "work-slice.json"
-    closure_path = work_dir / "closure.json"
-    if not work_path.is_file():
-        errors.append(f"missing canonical work-slice contract: {work_path.relative_to(ROOT)}")
-        return errors, Counter(), work_slice_id, set()
-    if not closure_path.is_file():
-        errors.append(f"missing executable closure ledger: {closure_path.relative_to(ROOT)}")
-        return errors, Counter(), work_slice_id, set()
-
-    work = load(work_path)
-    closure = load(closure_path)
-    if closure.get("schema") != "DE.PULSE-WORK-SLICE-CLOSURE-1":
-        errors.append("unsupported work-slice closure schema")
-    for field, expected in (
-        ("workSliceId", work_slice_id),
-        ("issue", active.get("issue")),
-        ("branch", active.get("branch")),
-    ):
-        if closure.get(field) != expected:
-            errors.append(f"closure/current-state mismatch for {field}: {closure.get(field)!r} != {expected!r}")
-    if work.get("workSliceId") != work_slice_id:
-        errors.append("work-slice/current-state workSliceId mismatch")
-    if work.get("issue") != active.get("issue"):
-        errors.append("work-slice/current-state issue mismatch")
-    if work.get("branch") != active.get("branch"):
-        errors.append("work-slice/current-state branch mismatch")
+    work_path, closure_path = work_dir / "work-slice.json", work_dir / "closure.json"
+    if not work_path.is_file() or not closure_path.is_file():
+        return ["missing canonical work-slice contract or closure ledger"], Counter(), work_slice_id, set(), set()
+    work, closure = load(work_path), load(closure_path)
+    if closure.get("schema") != "DE.PULSE-WORK-SLICE-CLOSURE-1": errors.append("unsupported work-slice closure schema")
+    for field, expected in (("workSliceId", work_slice_id), ("issue", active.get("issue")), ("branch", active.get("branch"))):
+        if closure.get(field) != expected: errors.append(f"closure/current-state mismatch for {field}: {closure.get(field)!r} != {expected!r}")
+    if work.get("workSliceId") != work_slice_id or work.get("issue") != active.get("issue") or work.get("branch") != active.get("branch"):
+        errors.append("work-slice/current-state identity mismatch")
     expected_ledger = f"governance/work-slices/{work_slice_id}/closure.json"
-    if work.get("closureLedger") != expected_ledger:
-        errors.append(f"work-slice must name canonical closure ledger {expected_ledger}")
-    if closure.get("allGapsMustBeVerified") is not True:
-        errors.append("closure ledger must retain allGapsMustBeVerified=true; only validated external-control waivers may satisfy a factual BLOCKED_EXTERNAL gap")
-    if not str(closure.get("closurePolicy", "")).strip():
-        errors.append("closure policy text missing")
-
+    if work.get("closureLedger") != expected_ledger: errors.append(f"work-slice must name canonical closure ledger {expected_ledger}")
+    if closure.get("allGapsMustBeVerified") is not True: errors.append("closure ledger must retain allGapsMustBeVerified=true")
+    if not str(closure.get("closurePolicy", "")).strip(): errors.append("closure policy text missing")
     gaps = closure.get("gaps")
-    if not isinstance(gaps, list) or not gaps:
-        errors.append("closure ledger gaps must be a non-empty array")
-        return errors, Counter(), work_slice_id, set()
-
-    seen: set[str] = set()
-    statuses: Counter[str] = Counter()
-    waived_external: set[str] = set()
+    if not isinstance(gaps, list) or not gaps: return errors + ["closure ledger gaps must be a non-empty array"], Counter(), work_slice_id, set(), set()
+    seen: set[str] = set(); statuses: Counter[str] = Counter(); waived: set[str] = set(); bound: set[str] = set()
     for index, gap in enumerate(gaps):
-        if not isinstance(gap, dict):
-            errors.append(f"gap[{index}] must be an object")
-            continue
-        gid = str(gap.get("id", "")).strip()
-        if not gid:
-            errors.append(f"gap[{index}] missing id")
-            continue
-        if gid in seen:
-            errors.append(f"duplicate closure gap id: {gid}")
-        seen.add(gid)
-        status = str(gap.get("status", "")).strip()
-        statuses[status] += 1
-        if status not in ALLOWED_STATUSES:
-            errors.append(f"{gid}: unsupported status {status!r}")
-        if gap.get("blocksIssueClosure") is not True:
-            errors.append(f"{gid}: blocksIssueClosure must be true for #70")
-        if not str(gap.get("owner", "")).strip():
-            errors.append(f"{gid}: owner missing")
-        if not nonempty_strings(gap.get("implementationPaths")):
-            errors.append(f"{gid}: implementationPaths must contain real repository/settings owners")
-        if not nonempty_strings(gap.get("evidenceRequired")):
-            errors.append(f"{gid}: evidenceRequired must be non-empty")
-        if not str(gap.get("closureCondition", "")).strip():
-            errors.append(f"{gid}: closureCondition missing")
+        if not isinstance(gap, dict): errors.append(f"gap[{index}] must be an object"); continue
+        gid = str(gap.get("id", "")).strip(); status = str(gap.get("status", "")).strip()
+        if not gid: errors.append(f"gap[{index}] missing id"); continue
+        if gid in seen: errors.append(f"duplicate closure gap id: {gid}")
+        seen.add(gid); statuses[status] += 1
+        if status not in ALLOWED_STATUSES: errors.append(f"{gid}: unsupported status {status!r}")
+        if gap.get("blocksIssueClosure") is not True: errors.append(f"{gid}: blocksIssueClosure must be true for #70")
+        if not str(gap.get("owner", "")).strip() or not nonempty_strings(gap.get("implementationPaths")) or not nonempty_strings(gap.get("evidenceRequired")) or not str(gap.get("closureCondition", "")).strip(): errors.append(f"{gid}: incomplete owner/path/evidence/closure contract")
         evidence = gap.get("evidence", [])
-        if evidence is not None and not isinstance(evidence, list):
-            errors.append(f"{gid}: evidence must be an array when present")
-        if status == "VERIFIED" and not nonempty_strings(evidence):
-            errors.append(f"{gid}: VERIFIED requires non-empty executable evidence references")
-        if status == "BLOCKED_EXTERNAL":
-            if validate_external_waiver(work_slice_id, active.get("issue"), work, gap, errors):
-                waived_external.add(gid)
-
+        if evidence is not None and not isinstance(evidence, list): errors.append(f"{gid}: evidence must be an array")
+        if status == "VERIFIED" and not nonempty_strings(evidence): errors.append(f"{gid}: VERIFIED requires evidence")
+        if status == "BLOCKED_EXTERNAL" and validate_external_waiver(work_slice_id, active.get("issue"), work, gap, errors): waived.add(gid)
+        if gid == "FINAL-QUALIFIED" and status != "VERIFIED" and validate_final_qualification_binding(work_slice_id, active.get("issue"), work, gap, errors): bound.add(gid)
     if work_slice_id == "ADAPT-CI-CONVERGENCE-001":
         missing = sorted(REQUIRED_70_GAPS - seen)
-        extra = sorted(seen - REQUIRED_70_GAPS)
-        if missing:
-            errors.append("#70 closure ledger missing mandatory gap ids: " + ", ".join(missing))
-        if extra:
-            print("additional registered #70 closure gaps: " + ", ".join(extra))
-
-    unresolved = [
-        str(gap.get("id"))
-        for gap in gaps
-        if isinstance(gap, dict)
-        and gap.get("blocksIssueClosure") is True
-        and gap.get("status") != "VERIFIED"
-        and str(gap.get("id")) not in waived_external
-    ]
+        if missing: errors.append("#70 closure ledger missing mandatory gap ids: " + ", ".join(missing))
+    unresolved = [str(g.get("id")) for g in gaps if isinstance(g, dict) and g.get("blocksIssueClosure") is True and g.get("status") != "VERIFIED" and str(g.get("id")) not in waived and str(g.get("id")) not in bound]
     work_status = str(work.get("status", active.get("status", ""))).strip().upper()
-    final_required = require_closed or work_status in CLOSED_WORK_SLICE_STATES
-    if final_required and unresolved:
-        errors.append("work-slice closure blocked by unresolved gaps: " + ", ".join(sorted(unresolved)))
-
-    return errors, statuses, work_slice_id, waived_external
+    if (require_closed or work_status in CLOSED_WORK_SLICE_STATES) and unresolved: errors.append("work-slice closure blocked by unresolved gaps: " + ", ".join(sorted(unresolved)))
+    if work_status in CLOSED_WORK_SLICE_STATES and work.get("blocksNextProductCapability") is not False: errors.append("closed work slice must set blocksNextProductCapability=false")
+    return errors, statuses, work_slice_id, waived, bound
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate DE.PULSE active work-slice executable closure ledger")
-    parser.add_argument(
-        "--require-closed",
-        action="store_true",
-        help="Fail unless every blocking gap is VERIFIED or is the narrowly validated external-control waiver",
-    )
+    parser.add_argument("--require-closed", action="store_true")
     args = parser.parse_args()
-
-    errors, statuses, work_slice_id, waived_external = validate(args.require_closed)
+    errors, statuses, work_slice_id, waived, bound = validate(args.require_closed)
     print(f"DE.PULSE active work-slice closure ledger: {work_slice_id or 'UNKNOWN'}")
-    for status in sorted(ALLOWED_STATUSES):
-        print(f"{status}: {statuses.get(status, 0)}")
-    print(f"validated external-control waivers: {len(waived_external)}")
-    for gid in sorted(waived_external):
-        print(f"waiver-satisfied factual BLOCKED_EXTERNAL: {gid}")
-    unresolved = sum(count for status, count in statuses.items() if status != "VERIFIED") - len(waived_external)
-    print(f"unresolved blocking gaps: {max(unresolved, 0)}")
+    for status in sorted(ALLOWED_STATUSES): print(f"{status}: {statuses.get(status, 0)}")
+    print(f"validated external-control waivers: {len(waived)}")
+    print(f"validated post-run evidence bindings: {len(bound)}")
+    for gid in sorted(waived): print(f"waiver-satisfied factual BLOCKED_EXTERNAL: {gid}")
+    for gid in sorted(bound): print(f"runtime-evidence-satisfied static ledger state: {gid}")
+    unresolved_count = sum(count for status, count in statuses.items() if status != "VERIFIED") - len(waived) - len(bound)
+    print(f"unresolved blocking gaps: {max(unresolved_count, 0)}")
     print("documentation-only closure: PROHIBITED")
-    print("external waiver does not claim technical enforcement: PASS")
+    print("special bindings are scope-limited and fail-closed: PASS")
     if errors:
         print("DE.PULSE work-slice closure ledger: FAIL", file=sys.stderr)
-        for error in errors:
-            print(" - " + error, file=sys.stderr)
+        for error in errors: print(" - " + error, file=sys.stderr)
         return 1
-    if args.require_closed:
-        print("all blocking gaps verified or explicitly external-control-waived: PASS")
-    else:
-        print("ledger completeness/enforcement contract: PASS")
+    if args.require_closed: print("all blocking gaps verified or narrowly evidence-satisfied: PASS")
+    else: print("ledger completeness/enforcement contract: PASS")
     return 0
 
 

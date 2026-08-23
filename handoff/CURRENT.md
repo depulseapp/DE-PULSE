@@ -4,6 +4,7 @@
 
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
 **Canonical machine state:** `governance/current-state.json`  
+**Canonical #70 closure ledger:** `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
@@ -11,33 +12,34 @@
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Certified release run:** `32546555659`  
 **Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
-**Active work:** #70 / `ADAPT-CI-CONVERGENCE-001`  
-**Active branch / PR:** `adapt-ci-convergence-001` / Draft PR #71  
-**Work-slice state:** FINAL_QUALIFICATION  
-**Public product version consumed by #70:** none.
+**Completed work:** #70 / `ADAPT-CI-CONVERGENCE-001`  
+**Implementation branch:** `adapt-ci-convergence-001`  
+**Closure branch:** `adapt-ci-convergence-001-closure`  
+**Merged implementation PR / commit:** #71 / `6ba8c0c2b486bdbbebac4611f440741d0588c65f`  
+**Work-slice state:** COMPLETE  
+**Next reserved capability:** TradeInsight Settings/API-key UX.
 
 ## Resume Rule
 
-1. Fetch the CURRENT live head of `adapt-ci-convergence-001`; another session/process may have advanced it.
-2. Read `governance/current-state.json`, issue #70 and current comments, `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`, and the active external-control waiver below.
-3. Inspect commits since the v18.9.1 Stable baseline so implemented work is never duplicated.
-4. Continue actual executable closure from the exact current state; GitHub objects and CI evidence outrank chat memory.
-5. Do not begin the next product capability while #70 remains open.
+1. Fetch live `main` first; concurrent sessions may advance it.
+2. Read `governance/current-state.json` and this handoff before starting new work.
+3. #70 is complete only with its machine closure ledger, final qualification binding and bounded external-control waiver retained.
+4. Start the next product capability as a **new work slice/branch/PR** from current `main`; do not reopen or extend #70 for product scope.
+
+## #70 closure truth
+
+The exact implementation candidate `ffeb1640174a744cf85578e26bbed7abd828cee1` earned Fast #742 / `32656818767` and Qualified #175 / `32656912135`, both PASS. Qualified covered CI/harness, backend full Go, race detector, randomized package order, persistence/DB, security/data-rights, renderer, Chrome, WebKit, actual packaged macOS lifecycle rehearsal and actual packaged Windows runtime rehearsal. PR #71 merged with expected-head protection as `6ba8c0c2b486bdbbebac4611f440741d0588c65f`.
+
+Post-run immutable evidence is bound at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/final-qualification-evidence.json`. This avoids falsely editing the pre-run `FINAL-QUALIFIED` ledger entry after qualification and thereby creating an endless requalification loop.
 
 ## GitHub main-protection truth and approved waiver
 
-GitHub still truthfully reports `main` as unprotected. The repository owner configured the ruleset named `DE.PULSE main protection`, but GitHub states that rulesets are not enforced for this private organization repository on the current plan unless the organization upgrades to GitHub Team. The owner explicitly declined that upgrade on 2026-08-23.
+`main` remains factually unprotected on the current GitHub plan. The configured `DE.PULSE main protection` ruleset is not technically enforced for this private organization repository without GitHub Team, and the owner declined that upgrade. This remains `MAIN-PROTECTION-RULESET = BLOCKED_EXTERNAL`, not a technical PASS.
 
-This limitation is not relabeled as technical enforcement. It is governed by `WAIVER-GITHUB-MAIN-PROTECTION-001` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json` for the single closure gap `MAIN-PROTECTION-RULESET`.
-
-The executable `tools/ci/work_slice_closure_gate.py` validates that waiver fail-closed and requires the compensating controls to remain mandatory: PR-first development, exact-head `DE.PULSE/fast-head`, exact-head `DE.PULSE/qualified-head`, no direct main push, no force push/deletion, canonical G11-G16 release, and exact-SHA/fingerprint provenance. If GitHub enforcement becomes available or repository ownership/visibility/maintainer conditions change, the waiver must be revalidated and actual protection becomes required again.
+The only accepted exception is `WAIVER-GITHUB-MAIN-PROTECTION-001` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json`. `tools/ci/work_slice_closure_gate.py` validates it fail-closed and preserves PR-first development, exact-head Fast/Qualified, no direct-main/force-push/deletion policy, canonical G11-G16 and exact-SHA/fingerprint provenance. The waiver must be revalidated if plan, repository visibility/ownership, platform capability, or maintainer population changes.
 
 ## Exactly one next action
 
-Obtain final exact-head Fast + full Qualified evidence on the waiver/governance head. If both pass and the head does not move, PR #71 may proceed to merge/#70 closure under the approved external-control waiver. Do not begin TradeInsight Settings/API-key UX before #70 is truthfully closed.
+Create the next governed product work slice for **TradeInsight Settings/API-key UX** from current `main`, re-checking the master provider program and dependencies before implementation. Do not assign a public product version merely because a new work slice starts; #70 established work-slice identity separately from public SemVer release grouping.
 
-## Current implementation checkpoint
-
-All substantive #70 implementation gaps are already evidenced on the prior exact head. The only factual external control remains GitHub main protection, now handled through the bounded owner-approved waiver above. This source update itself changes the exact head, so final Fast + Qualified must be rerun before closure; previous qualification remains historical evidence and is not reused as exact-head certification for the newer governance head.
-
-Permanent product boundaries remain unchanged: US Equities Processing; No Execution; Smart Provider Router v2 as sole routing owner; direct SEC/EDGAR authority for Form 4; GLD/SLV/USO actionable exceptions.
+Permanent product boundaries remain unchanged: US Equities Processing; No Execution; Smart Provider Router v2 sole routing owner; direct SEC/EDGAR authority for Form 4; GLD/SLV/USO actionable exceptions.
