@@ -69,7 +69,11 @@ def asset_cache_token(name: str) -> str:
     path = ROOT / "renderer" / name
     if not path.is_file():
         raise SystemExit(f"renderer cache identity asset missing: {path}")
-    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+    data = path.read_bytes()
+    # Match Git's blob object identity so the token is deterministic from file
+    # bytes, independent of product version/build/work-slice identity.
+    header = f"blob {len(data)}\0".encode("utf-8")
+    return hashlib.sha1(header + data).hexdigest()[:16]
 
 
 def sync_asset_cache_identity(index: str, name: str) -> str:
