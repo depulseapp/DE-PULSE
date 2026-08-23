@@ -29,7 +29,7 @@
     ["python3", "tools/ci/functionality_utility_checkpoint_gate.py"],
     ["python3", "tools/ci/ai_continuous_eval_gate.py"],
     ["python3", "tools/ci/watchlist_membership_contract.py"],
-    ["python3", "v18_5_1_v17_v18_reconciliation_gate.py"],
+    ["python3", "tools/ci/implementation_reconciliation_gate.py"],
     ["python3", "tools/ci/v18_8_1_zero_miss_reconciliation_gate.py"],
     ["python3", "tools/ci/v18_8_1_readiness_contract.py"],
     ["python3", "tools/ci/v18_8_1_freshness_contract.py"]

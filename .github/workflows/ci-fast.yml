@@ -55,7 +55,7 @@ jobs:
       - name: Active work-slice executable closure ledger
         run: python3 tools/ci/work_slice_closure_gate.py
       - name: Conserved v17/v18 requirement-ledger integrity
-        run: python3 v18_5_1_v17_v18_reconciliation_gate.py
+        run: python3 tools/ci/implementation_reconciliation_gate.py
       - name: Watchlist membership regression contract
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
