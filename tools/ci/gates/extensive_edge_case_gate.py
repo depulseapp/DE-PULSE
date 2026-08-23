@@ -2,12 +2,12 @@
 """Permanent extensive edge-case and failure-mode gate for DE.PULSE."""
 from pathlib import Path
 import subprocess,sys
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 errors=[]
 commands=[
  ['go','test','-count=1','-run','TestV160(2|3)Edge','./...'],
  ['node','tests/acceptance/professional_expert_runtime_test.js'],
- [sys.executable,'edge_case_hardening_test.py'],
+ [sys.executable,'tools/ci/gates/edge_case_hardening_test.py'],
 ]
 for cmd in commands:
  p=subprocess.run(cmd,cwd=ROOT,text=True,capture_output=True)

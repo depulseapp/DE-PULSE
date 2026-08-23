@@ -2,7 +2,7 @@
 """Permanent professional expert trader/investor acceptance gate for DE.PULSE."""
 from pathlib import Path
 import subprocess,sys
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 errors=[]
 commands=[
  ['go','test','-count=1','-run','TestV160(2|3)Professional','./...'],

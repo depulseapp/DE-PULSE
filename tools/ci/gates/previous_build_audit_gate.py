@@ -2,7 +2,7 @@
 """G0 previous-Stable closure + adaptive learning audit for v16.11 Major Closure."""
 from pathlib import Path
 import hashlib,json,os,sys
-R=Path(__file__).resolve().parent; e=[]
+R=Path(__file__).resolve().parents[3]; e=[]
 go='\n'.join(p.read_text(errors='ignore') for p in R.glob('*.go') if not p.name.endswith('_test.go'))
 if 'filepath.Join(base, "PersonalMarketTerminal")' not in go: e.append('canonical Stable runtime directory missing')
 if 'PersonalMarketTerminal-v16-TEST' in go: e.append('retired TEST runtime identity remains in production source')

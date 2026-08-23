@@ -7,7 +7,7 @@ instead of being repeated from the beginning.
 """
 from pathlib import Path
 import subprocess,sys
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 ids=['g10_professional_expert','g10_trader_acceptance','g10_v162_professional','g10_v163_professional_go','g10_v163_replay_renderer','g11_edge_cases','g11_prior_authorization_regressions','g11_fault_injection','g11_fresh_adversarial','g11_v162_scope','g11_v163_scope','g10_v168_professional_go','g10_v168_renderer','g11_v168_scope']
 cmd=[sys.executable,'certification_runner.py']
 for cid in ids: cmd += ['--check',cid]

@@ -1,0 +1,76 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_7_CI_GATE_OWNERSHIP_C",
+  "moves": [
+    {
+      "oldPath": "canonical_naming_gate.py",
+      "newPath": "tools/ci/gates/canonical_naming_gate.py",
+      "owner": "CI gate / canonical naming and identity",
+      "reason": "Standalone governance consistency gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves current canonical registry owners, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "extensive_edge_case_gate.py",
+      "newPath": "tools/ci/gates/extensive_edge_case_gate.py",
+      "owner": "CI gate / extensive edge-case and failure-mode acceptance",
+      "reason": "Standalone CI acceptance gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate calls semantic acceptance and edge-hardening owners, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "independent_adversarial_authorization_gate.py",
+      "newPath": "tools/ci/gates/independent_adversarial_authorization_gate.py",
+      "owner": "CI gate / independent adversarial authorization",
+      "reason": "Standalone authorization regression gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves repository root, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "next_build_audit_gate.py",
+      "newPath": "tools/ci/gates/next_build_audit_gate.py",
+      "owner": "CI gate / historical next-build transition audit",
+      "reason": "Standalone transition-audit gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves checkpointed transition-audit behavior, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "previous_build_audit_gate.py",
+      "newPath": "tools/ci/gates/previous_build_audit_gate.py",
+      "owner": "CI gate / historical previous-build closure audit",
+      "reason": "Standalone historical closure-audit gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent and historical audit behavior remains byte-equivalent apart from repository-root resolution.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "professional_build_authorization_gate.py",
+      "newPath": "tools/ci/gates/professional_build_authorization_gate.py",
+      "owner": "CI gate / professional build authorization aggregate",
+      "reason": "Standalone checkpoint-aware authorization aggregate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves certification-runner checkpoint delegation, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "professional_expert_gate.py",
+      "newPath": "tools/ci/gates/professional_expert_gate.py",
+      "owner": "CI gate / professional expert trader-investor acceptance",
+      "reason": "Standalone professional acceptance aggregate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves semantic acceptance and deterministic evidence bindings, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

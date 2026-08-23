@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import subprocess,sys
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 checks=[
  (['go','test','-count=1','-run','TestV160(3Authorization|4Authorization)','./...'],'inherited v16 authorization'),
  (['go','test','-count=1','-run','TestV1611','./...'],'v16.1.1 escaped Market Intelligence truth'),

@@ -2,7 +2,7 @@
 """G16 transition gate: authorize a new DE.PULSE minor only from a closed Stable handoff."""
 from pathlib import Path
 import hashlib,json,os,subprocess,sys
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[3]
 closure_path=Path(os.environ.get('DEPULSE_PREVIOUS_CLOSURE', ROOT/'renderer/qa/v16.0.4-working-candidate-closure.json'))
 errors=[]
 if not closure_path.exists():

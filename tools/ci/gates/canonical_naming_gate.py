@@ -3,9 +3,9 @@ import json
 import pathlib
 import sys
 
-ROOT = pathlib.Path(__file__).resolve().parent
-REG = ROOT / "canonical_naming_registry.json"
-FUNC = ROOT / "functionality_utility_registry.json"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+REG = ROOT / "governance" / "registries" / "canonical_naming_registry.json"
+FUNC = ROOT / "governance" / "registries" / "functionality_utility_registry.json"
 ROADMAP = ROOT / "adaptive-governance" / "ADAPTIVE_ROADMAP.md"
 PROCESS = ROOT / "adaptive-governance" / "ADAPTIVE_BUILD_PROCESS.md"
 CONTRACT = ROOT / "adaptive-governance" / "NAMING_AND_IDENTITY_CONTRACT.md"
