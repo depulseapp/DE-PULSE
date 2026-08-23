@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+CLOSED_PROCESS_STATES = {"COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
 
 
 def load_json(path: Path) -> dict:
@@ -113,6 +114,20 @@ def process_work_slice_errors(
     expected_tag = f"v{identity_version}-stable"
     previous_stable = clean_version(identity.get("previous_stable"))
 
+    registered_branch = str(active.get("branch", "")).strip()
+    work_registered_branch = str(work_slice.get("branch", "")).strip() if work_slice else ""
+    closure_branch = str(active.get("closureBranch", "")).strip()
+    work_closure_branch = str(work_slice.get("closureBranch", "")).strip() if work_slice else ""
+    active_status = str(active.get("status", "")).strip().upper()
+    work_status = str(work_slice.get("status", "")).strip().upper() if work_slice else ""
+    is_closure_phase = (
+        bool(closure_branch)
+        and branch == closure_branch
+        and work_closure_branch == closure_branch
+        and active_status in CLOSED_PROCESS_STATES
+        and work_status in CLOSED_PROCESS_STATES
+    )
+
     if identity.get("channel") != "STABLE":
         errors.append("process work slice requires unchanged STABLE release identity")
     if clean_version(stable.get("productVersion")) != identity_version:
@@ -156,25 +171,44 @@ def process_work_slice_errors(
             errors.append("process work-slice baseline fingerprint / current Stable fingerprint drift")
         if str(work_slice.get("baselineBuildId", "")) != str(identity.get("build_id", "")):
             errors.append("process work-slice baseline build / release identity drift")
-        if str(work_slice.get("branch", "")) != branch:
-            errors.append("process work-slice registered branch / current branch drift")
-        if work_slice.get("blocksNextProductCapability") is not True:
-            errors.append("process work slice must keep next product capability blocked")
+        if work_registered_branch != registered_branch:
+            errors.append("current-state/work-slice registered implementation branch drift")
+
+        if is_closure_phase:
+            if work_slice.get("blocksNextProductCapability") is not False:
+                errors.append("completed process work slice must unblock next product capability")
+            final_evidence = str(work_slice.get("finalQualificationEvidence", "")).strip()
+            if not final_evidence or not (ROOT / final_evidence).is_file():
+                errors.append("completed process closure requires retained finalQualificationEvidence")
+            if str(work_slice.get("mergedCommitSha", "")).strip() != str(active.get("mergedCommitSha", "")).strip():
+                errors.append("completed process merged-commit binding drift")
+        else:
+            if branch != work_registered_branch:
+                errors.append("process work-slice registered branch / current branch drift")
+            if work_slice.get("blocksNextProductCapability") is not True:
+                errors.append("in-flight process work slice must keep next product capability blocked")
         if active.get("issue") != work_slice.get("issue"):
             errors.append("current-state/work-slice issue drift")
 
-    if str(active.get("branch", "")) != branch:
-        errors.append("current-state active process branch / current branch drift")
+    if is_closure_phase:
+        if capability_gate.get("blocked") is not False:
+            errors.append("completed process closure must unblock product capability gate")
+        if capability_gate.get("blockedByIssue") is not None:
+            errors.append("completed process closure must clear product capability blocker")
+    else:
+        if registered_branch != branch:
+            errors.append("current-state active process branch / current branch drift")
+        if capability_gate.get("blocked") is not True:
+            errors.append("next product capability must remain blocked during in-flight process work slice")
+        if capability_gate.get("blockedByIssue") != active.get("issue"):
+            errors.append("product capability blocker must be the active process issue")
+
     if active.get("type") != "PROCESS_RELEASE_ENGINEERING":
         errors.append("current-state active work slice is not PROCESS_RELEASE_ENGINEERING")
     if active.get("publicProductVersion") is not None:
         errors.append("current-state process work slice must not have a public product version")
     if active.get("productBehaviorChange") is not False:
         errors.append("current-state process work slice must declare productBehaviorChange=false")
-    if capability_gate.get("blocked") is not True:
-        errors.append("next product capability must remain blocked during process work slice")
-    if capability_gate.get("blockedByIssue") != active.get("issue"):
-        errors.append("product capability blocker must be the active process issue")
 
     # The resume checkpoint files are immutable evidence for the prior Stable. A
     # process-only work slice may run with those checkpoints one Stable behind,
@@ -234,27 +268,19 @@ def main() -> int:
 
     if identity_version == checkpoint_version:
         mode = "STABLE_ALIGNED"
-        manifest = (
-            ROOT
-            / "release"
-            / f"v{identity_version}"
-            / "stable-evidence-manifest.json"
-        )
+        manifest = ROOT / "release" / f"v{identity_version}" / "stable-evidence-manifest.json"
         if not manifest.is_file():
             errors.append(f"Stable evidence manifest missing: {manifest.relative_to(ROOT)}")
         errors.extend(stable_documentation_errors(stable_tag))
     else:
         expected_candidate_branch = f"v{identity_version}-development"
         state = load_json(ROOT / "governance" / "current-state.json")
-        active = (
-            state.get("activeWorkSlice", {})
-            if isinstance(state.get("activeWorkSlice"), dict)
-            else {}
-        )
+        active = state.get("activeWorkSlice", {}) if isinstance(state.get("activeWorkSlice"), dict) else {}
         registered_process_branch = str(active.get("branch", "")).strip()
+        registered_closure_branch = str(active.get("closureBranch", "")).strip()
         is_registered_process = (
-            bool(registered_process_branch)
-            and branch == registered_process_branch
+            branch in {registered_process_branch, registered_closure_branch}
+            and bool(branch)
             and active.get("type") == "PROCESS_RELEASE_ENGINEERING"
         )
 
@@ -265,7 +291,7 @@ def main() -> int:
         elif branch == expected_candidate_branch:
             mode = "IN_FLIGHT_CANDIDATE"
         elif is_registered_process:
-            mode = "PROCESS_WORK_SLICE"
+            mode = "PROCESS_WORK_SLICE_CLOSURE" if branch == registered_closure_branch else "PROCESS_WORK_SLICE"
             errors.extend(
                 process_work_slice_errors(
                     identity=identity,
@@ -277,7 +303,7 @@ def main() -> int:
         else:
             errors.append(
                 "identity/checkpoint differ outside an allowed product candidate or registered process work slice: "
-                f"candidate={expected_candidate_branch}, process={registered_process_branch or '<none>'}, current={branch or '<detached>'}"
+                f"candidate={expected_candidate_branch}, process={registered_process_branch or '<none>'}, closure={registered_closure_branch or '<none>'}, current={branch or '<detached>'}"
             )
 
     if errors:
@@ -287,8 +313,8 @@ def main() -> int:
         "DE.PULSE post-Stable continuity: PASS · "
         f"mode={mode} · branch={branch or '<detached>'} · identity=v{identity_version} · durable checkpoint=v{checkpoint_version}"
     )
-    if mode == "PROCESS_WORK_SLICE":
-        print("registered process branch / Stable tag / ancestry / no-product-version invariants: PASS")
+    if mode.startswith("PROCESS_WORK_SLICE"):
+        print("registered process/closure branch / Stable tag / ancestry / no-product-version invariants: PASS")
         print("prior-Stable immutable resume checkpoint exception: BOUNDED_TO_IMMEDIATE_PREDECESSOR")
     return 0
 
