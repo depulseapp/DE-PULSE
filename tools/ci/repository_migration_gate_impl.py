@@ -156,6 +156,19 @@ def current_active_reference_texts(current_paths: list[str]) -> dict[str, str]:
     return texts
 
 
+def has_stale_reference(text: str, old: str, new: str) -> bool:
+    """Detect the retired path without misclassifying the registered target.
+
+    A durable target may intentionally preserve the old basename, for example
+    `file.png -> assets/branding/file.png`. Strip exact registered-target
+    occurrences before looking for the retired path so a real independent old
+    reference still fails closed.
+    """
+    if new:
+        text = text.replace(new, "")
+    return old in text
+
+
 def main() -> int:
     errors: list[str] = []
     for required in (POLICY_PATH, MIGRATIONS_PATH, STATE_PATH):
@@ -271,7 +284,7 @@ def main() -> int:
         for path, text in scan.items():
             if path in allowed_refs:
                 continue
-            if old in text:
+            if has_stale_reference(text, old, new):
                 errors.append(f"stale active reference after move {old} -> {new}: {path}")
 
     baseline_modes = tracked_modes(baseline)
@@ -370,6 +383,7 @@ def main() -> int:
     print("case-sensitive path safety: PASS")
     print("root recurrence + v17/v18 retention guard: PASS")
     print("stale active-reference registry: PASS")
+    print("registered-target basename collision handling: PASS")
     print("executable mode conservation: PASS")
     print("non-retired Go test identity conservation: PASS")
     print("non-retired executable path identity conservation: PASS")
