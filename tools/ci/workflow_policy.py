@@ -190,9 +190,11 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "gh release upload",
             "immutable Stable asset conflict",
             "existing Stable asset byte-identical; reuse",
-            '"mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH_OR_EXACT_IDEMPOTENT_REUSE"',
-            '"stableAssetsDifferingBytesOverwrite": false',
-            '"noRebuildPublication": true',
+            "Generate measured G16 repository and CI efficiency evidence",
+            "tools/ci/ci_telemetry.py",
+            "tools/ci/root_ownership_gate.py --json-out",
+            "tools/release/g16_delivery_evidence.py",
+            "G16-CI-DELIVERY-SUMMARY.json",
         ),
         (
             "workflow_dispatch:",
@@ -233,6 +235,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("Release early publication feasibility + exact-idempotent reuse: PASS")
     print("Stable asset differing-byte overwrite prohibition: PASS")
     print("repository-wide Stable serialization: PASS")
+    print("G16 measured repository/CI efficiency wiring: PASS")
     print("squash-merged/stable-line branch hygiene: PASS")
     return 0
 

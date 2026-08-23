@@ -432,57 +432,47 @@ jobs:
     needs: [g11, publish]
     if: ${{ always() && needs.g11.result == 'success' && (needs.g11.outputs.publication_state == 'EXACT_ALREADY_PUBLISHED' || needs.publish.result == 'success') }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - name: Generate durable G16 workflow result
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.g11.outputs.candidate_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Generate measured G16 repository and CI efficiency evidence
         env:
+          GH_TOKEN: ${{ github.token }}
           PUBLICATION_STATE: ${{ needs.g11.outputs.publication_state }}
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p g16
-          if [ "$PUBLICATION_STATE" = EXACT_ALREADY_PUBLISHED ]; then
-            certification_state=REUSED_ALREADY_CERTIFIED_STABLE
-            native_state=REUSED_ALREADY_CERTIFIED_STABLE
-            assurance_state=REUSED_ALREADY_CERTIFIED_STABLE
-            publication_result=IDEMPOTENT_NOOP
-            evidence_reuse=true
-          else
-            certification_state=PASS
-            native_state=PASS
-            assurance_state=PASS
-            publication_result=PASS
-            evidence_reuse=false
-          fi
-          cat > g16/G16-CI-DELIVERY-SUMMARY.json <<EOF
-          {
-            "schema": "DE.PULSE-G16-CI-DELIVERY-5",
-            "version": "v${{ needs.g11.outputs.version }}",
-            "stableTag": "${{ needs.g11.outputs.target_tag }}",
-            "sourcePr": "${{ needs.g11.outputs.source_pr }}",
-            "qualifiedSourceHead": "${{ needs.g11.outputs.source_head_sha }}",
-            "candidateSha": "${{ needs.g11.outputs.candidate_sha }}",
-            "sourceFingerprint": "${{ needs.g11.outputs.fingerprint }}",
-            "buildId": "${{ needs.g11.outputs.build_id }}",
-            "releaseRunId": "${{ github.run_id }}",
-            "mode": "SINGLE_RUN_CERTIFY_AND_PUBLISH_OR_EXACT_IDEMPOTENT_REUSE",
-            "publicationFeasibility": "$PUBLICATION_STATE",
-            "g10FastExactHead": "PASS",
-            "g10QualifiedExactHead": "PASS",
-            "g12": "$certification_state",
-            "g13g14MacOS": "$native_state",
-            "g13g14Windows": "$native_state",
-            "g15": "$assurance_state",
-            "publication": "$publication_result",
-            "canonicalG12Executor": "tools/release/run_full_certification.py",
-            "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
-            "stableAssetsDifferingBytesOverwrite": false,
-            "noRebuildPublication": true,
-            "runnableArtifactAttestation": true,
-            "sbom": "SPDX-2.3",
-            "evidenceReuse": $evidence_reuse,
-            "qualityRequirementsRemoved": false
-          }
-          EOF
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/${{ github.run_id }}/jobs?per_page=100" > g16/release-jobs.json
+          python3 tools/ci/ci_telemetry.py \
+            --jobs-json g16/release-jobs.json \
+            --workflow "DE.PULSE | Release G11-G16" \
+            --run-id '${{ github.run_id }}' \
+            --candidate-sha '${{ needs.g11.outputs.candidate_sha }}' \
+            --lane release \
+            --output g16/release-ci-telemetry.json \
+            --summary-output g16/release-ci-telemetry.md
+          python3 tools/ci/root_ownership_gate.py --json-out g16/root-ownership.json
+          python3 tools/release/g16_delivery_evidence.py \
+            --telemetry-json g16/release-ci-telemetry.json \
+            --root-ownership-json g16/root-ownership.json \
+            --version '${{ needs.g11.outputs.version }}' \
+            --stable-tag '${{ needs.g11.outputs.target_tag }}' \
+            --source-pr '${{ needs.g11.outputs.source_pr }}' \
+            --qualified-source-head '${{ needs.g11.outputs.source_head_sha }}' \
+            --candidate-sha '${{ needs.g11.outputs.candidate_sha }}' \
+            --source-fingerprint '${{ needs.g11.outputs.fingerprint }}' \
+            --build-id '${{ needs.g11.outputs.build_id }}' \
+            --release-run-id '${{ github.run_id }}' \
+            --run-attempt '${{ github.run_attempt }}' \
+            --publication-state "$PUBLICATION_STATE" \
+            --output g16/G16-CI-DELIVERY-SUMMARY.json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G16-Handoff
