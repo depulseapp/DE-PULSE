@@ -24,7 +24,7 @@ renderDocumentation=function(){
 const v186DocumentationOwner=globalThis.__DE_PULSE_RENDERER_OWNERS__?.documentation;
 if(v186DocumentationOwner){
   const decorators=Array.isArray(v186DocumentationOwner.decorators)?v186DocumentationOwner.decorators:[];
-  if(!decorators.includes('renderer/documentation-access-v18.6.js'))decorators.push('renderer/documentation-access-v18.6.js');
+  if(!decorators.includes('renderer/documentation-access.js'))decorators.push('renderer/documentation-access.js');
   v186DocumentationOwner.decorators=decorators;
   v186DocumentationOwner.accessPolicy='developer documentation requires SUPER_OWNER, OWNER, or ADMIN';
 }

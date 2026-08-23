@@ -14,13 +14,13 @@ RELEASE_COUPLED_ASSETS = (
     "renderer.js",
     "documentation-ui.js",
     "live-dom-reconcile.js",
-    "watchlist-v18.5.1.js",
-    "watchlist-v18.5.1.css",
+    "watchlist-ui.js",
+    "watchlist-desk.css",
     "market-header-ui.js",
-    "ui-v18.5.1.css",
-    "surface-consolidation-v18.6.js",
-    "surface-consolidation-v18.6.css",
-    "documentation-access-v18.6.js",
+    "ui-layout-contracts.css",
+    "surface-consolidation.js",
+    "surface-consolidation.css",
+    "documentation-access.js",
 )
 LEGACY_REGISTRY_NAMES = {
     "certification": "certification_" + "plan.json",
@@ -173,7 +173,7 @@ def sync(x):
     contract = release_contract(x)
     overlay = overlay_asset_path(contract)
     if patch:
-        path = ROOT / "renderer" / f"watchlist-desk-contract-v{x['version']}.js"
+        path = ROOT / "renderer" / "watchlist-desk-contract.js"
         if not path.exists():
             raise SystemExit(f"patch identity asset missing: {path}")
         text = path.read_text()
@@ -202,7 +202,7 @@ def sync(x):
     if overlay:
         text = sync_asset_cache_identity(text, overlay.name)
     if patch:
-        text = sync_asset_cache_identity(text, f"watchlist-desk-contract-v{x['version']}.js")
+        text = sync_asset_cache_identity(text, "watchlist-desk-contract.js")
     path.write_text(text)
 
     legacy_cert, legacy_ci = legacy_registry_versions(x, patch, contract)
@@ -243,7 +243,7 @@ def verify(x):
     )
     legacy_plans = False
     if patch:
-        patch_name = f"watchlist-desk-contract-v{x['version']}.js"
+        patch_name = "watchlist-desk-contract.js"
         patch_asset = (ROOT / "renderer" / patch_name).read_text()
         renderer_ok = (
             f"DEPULSE_PATCH_VERSION = '{x['version']}'" in patch_asset

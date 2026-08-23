@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[2]
 INDEX=ROOT/'renderer'/'index.html'
 MONOLITH=ROOT/'renderer'/'renderer.js'
 OWNER=ROOT/'renderer'/'documentation-ui.js'
-ACCESS=ROOT/'renderer'/'documentation-access-v18.6.js'
+ACCESS=ROOT/'renderer'/'documentation-access.js'
 HEADER=ROOT/'renderer'/'market-header-ui.js'
 LEGACY_HEADER=ROOT/'renderer'/'header-v18.5.1.js'
 QUALIFIED=ROOT/'.github'/'workflows'/'ci-qualified.yml'
@@ -40,14 +40,14 @@ def main()->int:
 
     scripts=re.findall(r'<script\s+src="([^"]+)"',index)
     names=[x.split('?',1)[0] for x in scripts]
-    required=['renderer.js','documentation-ui.js','market-header-ui.js','documentation-access-v18.6.js']
+    required=['renderer.js','documentation-ui.js','market-header-ui.js','documentation-access.js']
     for name in required:
         if names.count(name)!=1: errors.append(f'{name} must load exactly once; got {names.count(name)}')
     if 'header-v18.5.1.js' in names:
         errors.append('version-stacked header-v18.5.1.js must not remain an active runtime owner')
-    if all(name in names for name in ('renderer.js','documentation-ui.js','documentation-access-v18.6.js')):
-        if not (names.index('renderer.js')<names.index('documentation-ui.js')<names.index('documentation-access-v18.6.js')):
-            errors.append('load order must be renderer.js -> documentation-ui.js -> documentation-access-v18.6.js')
+    if all(name in names for name in ('renderer.js','documentation-ui.js','documentation-access.js')):
+        if not (names.index('renderer.js')<names.index('documentation-ui.js')<names.index('documentation-access.js')):
+            errors.append('load order must be renderer.js -> documentation-ui.js -> documentation-access.js')
     if all(name in names for name in ('renderer.js','market-header-ui.js')):
         if not names.index('renderer.js')<names.index('market-header-ui.js'):
             errors.append('market-header-ui.js must load after renderer.js so it decorates the canonical chrome owner')
