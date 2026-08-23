@@ -86,8 +86,6 @@ identity_build = str(ident.get("build_id", ""))
 identity_previous_stable = str(ident.get("previous_stable", "")).lstrip("v")
 identity_stable_baseline = str(ident.get("stable_baseline", "")).lstrip("v")
 
-# Canonical post-#70 resume/control truth. This replaces the retired v18.6
-# ci_pipeline_plan.json / ci_pipeline.py dependency.
 try:
     state = json.loads(state_path.read_text())
     stable = state.get("stable", {}) if isinstance(state.get("stable"), dict) else {}
@@ -173,7 +171,14 @@ try:
     need(portability.get("authoritativeHandoff") == "handoff/CURRENT.md", "checkpoint authoritative handoff drift")
     need(portability.get("entrypoints") == ["AGENTS.md", "CLAUDE.md"], "checkpoint assistant entrypoints drift")
 
-    stable_handoff_ok = f"**Certified Stable:** `v{stable_release}-stable`" in handoff or f"**Release:** `v{stable_release}`" in handoff
+    stable_handoff_ok = any(
+        marker in handoff
+        for marker in (
+            f"**Certified Stable:** `v{stable_release}-stable`",
+            f"**Release:** `v{stable_release}`",
+            f"**Immutable predecessor resume checkpoint release:** `v{stable_release}` / `v{stable_release}-stable`",
+        )
+    )
     need(stable_handoff_ok, "current handoff must identify the immutable Stable checkpoint release")
 except Exception as exc:
     errors.append(f"build checkpoint invalid/unreadable: {exc}")
