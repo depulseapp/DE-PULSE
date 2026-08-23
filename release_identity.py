@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -64,8 +65,19 @@ def overlay_asset_path(contract):
     return ROOT / "renderer" / asset
 
 
+def asset_cache_token(name: str) -> str:
+    path = ROOT / "renderer" / name
+    if not path.is_file():
+        raise SystemExit(f"renderer cache identity asset missing: {path}")
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def sync_asset_cache_identity(index: str, name: str) -> str:
+    token = asset_cache_token(name)
+    return re.sub(rf"{re.escape(name)}\?v=[A-Za-z0-9._-]+", f"{name}?v={token}", index)
+
+
 def legacy_registry_path(name: str, version: str) -> Path:
-    """Resolve conserved legacy registries without requiring stale root copies."""
     root_path = ROOT / name
     if root_path.is_file():
         return root_path
@@ -141,9 +153,11 @@ def sync(x):
     text = path.read_text()
     text = re.sub(r"<title>DE\.PULSE v[^<]+</title>", f"<title>DE.PULSE v{x['version']}</title>", text)
     for asset in RELEASE_COUPLED_ASSETS:
-        text = re.sub(rf"{re.escape(asset)}\?v=[0-9.]+", f"{asset}?v={x['version']}", text)
+        text = sync_asset_cache_identity(text, asset)
     if overlay:
-        text = re.sub(rf"{re.escape(overlay.name)}\?v=[0-9.]+", f"{overlay.name}?v={x['version']}", text)
+        text = sync_asset_cache_identity(text, overlay.name)
+    if patch:
+        text = sync_asset_cache_identity(text, f"watchlist-desk-contract-v{x['version']}.js")
     path.write_text(text)
 
     legacy_cert, legacy_ci = legacy_registry_versions(x, patch, contract)
@@ -159,6 +173,10 @@ def sync(x):
                 data["policy"]["pre_freeze_qualification"] = True
                 data["policy"]["unique_test_evidence"] = True
             target.write_text(json.dumps(data, indent=2) + "\n")
+
+
+def verify_cache_identity(index: str, name: str) -> bool:
+    return f"{name}?v={asset_cache_token(name)}" in index
 
 
 def verify(x):
@@ -180,11 +198,12 @@ def verify(x):
     )
     legacy_plans = False
     if patch:
-        patch_asset = (ROOT / "renderer" / f"watchlist-desk-contract-v{x['version']}.js").read_text()
+        patch_name = f"watchlist-desk-contract-v{x['version']}.js"
+        patch_asset = (ROOT / "renderer" / patch_name).read_text()
         renderer_ok = (
             f"DEPULSE_PATCH_VERSION = '{x['version']}'" in patch_asset
             and f"DEPULSE_PATCH_BUILD_ID = '{x['build_id']}'" in patch_asset
-            and f"watchlist-desk-contract-v{x['version']}.js?v={x['version']}" in index
+            and verify_cache_identity(index, patch_name)
         )
         cert_ok = str(cert.get("version")) == str(patch.get("inherited_certification_plan"))
         ci_ok = str(ci.get("version")) == str(patch.get("inherited_ci_plan"))
@@ -196,7 +215,7 @@ def verify(x):
         renderer_ok = (
             f"DEPULSE_RELEASE_VERSION = '{x['version']}'" in overlay_text
             and f"DEPULSE_RELEASE_BUILD_ID = '{x['build_id']}'" in overlay_text
-            and f"{overlay.name}?v={x['version']}" in index
+            and verify_cache_identity(index, overlay.name)
         )
         cert_ok = str(cert.get("version")) == (legacy_cert or str(x["version"]))
         ci_ok = str(ci.get("version")) == (legacy_ci or str(x["version"]))
@@ -220,14 +239,16 @@ def verify(x):
     if not patch and not legacy_plans:
         checks.append((ci.get("policy", {}).get("baseline") == x["previous_stable"] + " Stable", "CI baseline"))
     checks.extend(
-        (f"{asset}?v={x['version']}" in index, f"{asset} cache-bust version")
+        (verify_cache_identity(index, asset), f"{asset} content-derived cache identity")
         for asset in RELEASE_COUPLED_ASSETS
     )
+    if f"?v={x['version']}" in index:
+        checks.append((False, "renderer cache identity must not use public version"))
     errs.extend(label for ok, label in checks if not ok)
     if errs:
         raise SystemExit("Release identity: FAIL · " + ", ".join(errs))
     mode = "overlay" if overlay else ("patch" if patch else "monolith")
-    print(f"Release identity: PASS · {x['version']} · {x['build_id']} · renderer identity={mode}")
+    print(f"Release identity: PASS · {x['version']} · {x['build_id']} · renderer identity={mode} · cache identity=content-derived")
 
 
 def main():
