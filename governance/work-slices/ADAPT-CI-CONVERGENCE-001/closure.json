@@ -10,9 +10,20 @@
       "id": "FAST-640-QUALIFIED-PATH",
       "status": "VERIFIED",
       "owner": "Qualified workflow / canonical deterministic-equivalence evidence",
-      "implementationPaths": [".github/workflows/ci-qualified.yml", "tools/ci/deterministic_equivalence_test.js", "governance/repository-migrations.json"],
-      "evidenceRequired": ["Exact-head Fast PASS after Qualified consumer rewrite", "Repository migration safety PASS"],
-      "evidence": ["commit 3276ca29ebe21e2280e0ee98a8dd69510f7a5927", "Fast #644 / run 32555098099 PASS", "Repository migration safety PASS in Fast #644"],
+      "implementationPaths": [
+        ".github/workflows/ci-qualified.yml",
+        "tools/ci/deterministic_equivalence_test.js",
+        "governance/repository-migrations.json"
+      ],
+      "evidenceRequired": [
+        "Exact-head Fast PASS after Qualified consumer rewrite",
+        "Repository migration safety PASS"
+      ],
+      "evidence": [
+        "commit 3276ca29ebe21e2280e0ee98a8dd69510f7a5927",
+        "Fast #644 / run 32555098099 PASS",
+        "Repository migration safety PASS in Fast #644"
+      ],
       "closureCondition": "Qualified invokes tools/ci/deterministic_equivalence_test.js and no active old-path consumer remains.",
       "blocksIssueClosure": true
     },
@@ -20,18 +31,46 @@
       "id": "PLANNER-EVIDENCE-OWNER-ROUTING",
       "status": "VERIFIED",
       "owner": "Planner v3",
-      "implementationPaths": ["tools/ci/impact_plan.py", "tools/ci/impact_plan_self_test.py"],
-      "evidenceRequired": ["Planner v3 self-test PASS", "Exact-head Fast PASS"],
-      "evidence": ["commit 43ed415fa0e0cc794762519100e85e4db195cd84", "Planner v3 capability evidence-owner path routing PASS in Fast #644", "WebKit/browser vs native-macOS ownership separation PASS in Fast #644", "Fast #644 / run 32555098099 PASS"],
+      "implementationPaths": [
+        "tools/ci/impact_plan.py",
+        "tools/ci/impact_plan_self_test.py"
+      ],
+      "evidenceRequired": [
+        "Planner v3 self-test PASS",
+        "Exact-head Fast PASS"
+      ],
+      "evidence": [
+        "commit 43ed415fa0e0cc794762519100e85e4db195cd84",
+        "Planner v3 capability evidence-owner path routing PASS in Fast #644",
+        "WebKit/browser vs native-macOS ownership separation PASS in Fast #644",
+        "Fast #644 / run 32555098099 PASS"
+      ],
       "closureCondition": "Canonical deterministic/WebKit/browser evidence owners select the evidence they validate; WebKit browser changes do not become a native-macOS proxy; unknown impact remains fail-closed.",
       "blocksIssueClosure": true
     },
     {
       "id": "RETIRED-TEST-EQUIVALENCE",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Repository migration safety / capability test owners",
-      "implementationPaths": ["tools/ci/repository_migration_gate.py", "tools/ci/legacy_test_gate_inventory.py", "governance/repository-migrations.json"],
-      "evidenceRequired": ["Machine-readable assertion/supersession mapping for policy-retired pre-v17 tests/gates", "Current capability evidence proves no applicable quality assertion was lost", "Fast + Qualified PASS"],
+      "implementationPaths": [
+        "tools/ci/repository_migration_gate.py",
+        "tools/ci/legacy_test_gate_inventory.py",
+        "governance/repository-migrations.json",
+        "governance/retired-test-equivalence.json",
+        "governance/retired-test-evidence-bindings.json"
+      ],
+      "evidenceRequired": [
+        "Machine-readable assertion/supersession mapping for policy-retired pre-v17 tests/gates",
+        "Current capability evidence proves no applicable quality assertion was lost",
+        "Fast + Qualified PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 / run 32626160908 PASS",
+        "Retired Go source families mapped 38/38 and retired executable paths mapped 37/37",
+        "325 retired Go identities covered; 98 exact required current assertions; 100% source-family coverage",
+        "Qualified #173 / run 32626232817 PASS"
+      ],
       "closureCondition": "Every retired pre-v17 executable test/gate family has explicit supersession, migration or justified retirement evidence; age/version alone is insufficient.",
       "blocksIssueClosure": true
     },
@@ -39,63 +78,167 @@
       "id": "SOURCE-HEALTH-DEBT",
       "status": "VERIFIED",
       "owner": "Recursive source-health / canonical capability owners",
-      "implementationPaths": ["governance/source-health-policy.json", "tools/ci/source_health_architecture_gate.py"],
-      "evidenceRequired": ["All registered orphan-helper dispositions completed", "No new orphan production helpers", "Go vet + full Go suite PASS"],
-      "evidence": ["commit 59c71b039c9d6d09c5182210bb48422f1b9cb55a", "Fast #654 / run 32557880965 PASS", "Recursive source-health PASS: 0 unregistered orphan production Go helpers, 0 tracked legacy orphan debt, 2 explicit interface-only contracts", "Go vet PASS and go test -count=1 ./... PASS in Fast #654", "MarshalBinary and UnmarshalBinary interface contracts retained"],
+      "implementationPaths": [
+        "governance/source-health-policy.json",
+        "tools/ci/source_health_architecture_gate.py"
+      ],
+      "evidenceRequired": [
+        "All registered orphan-helper dispositions completed",
+        "No new orphan production helpers",
+        "Go vet + full Go suite PASS"
+      ],
+      "evidence": [
+        "commit 59c71b039c9d6d09c5182210bb48422f1b9cb55a",
+        "Fast #654 / run 32557880965 PASS",
+        "Recursive source-health PASS: 0 unregistered orphan production Go helpers, 0 tracked legacy orphan debt, 2 explicit interface-only contracts",
+        "Go vet PASS and go test -count=1 ./... PASS in Fast #654",
+        "MarshalBinary and UnmarshalBinary interface contracts retained"
+      ],
       "closureCondition": "The nine tracked orphan-helper debts are deleted, migrated to test/governance ownership, or otherwise resolved without removing MarshalBinary/UnmarshalBinary interface contracts.",
       "blocksIssueClosure": true
     },
     {
       "id": "ACTIVE-VERSIONED-TEST-MIGRATION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Capability-oriented test ownership",
-      "implementationPaths": ["tests/", "tools/ci/legacy_test_gate_inventory.py", ".github/workflows/ci-qualified.yml"],
-      "evidenceRequired": ["Active version-named tests migrated incrementally with equivalence proof", "No test identity/assertion loss", "Qualified browser/renderer evidence PASS"],
+      "implementationPaths": [
+        "tests/",
+        "tools/ci/legacy_test_gate_inventory.py",
+        ".github/workflows/ci-qualified.yml",
+        "governance/repository-migrations.json"
+      ],
+      "evidenceRequired": [
+        "Active version-named tests migrated incrementally with equivalence proof",
+        "No test identity/assertion loss",
+        "Qualified browser/renderer evidence PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 / run 32626160908 PASS",
+        "Legacy/root inventory reports no ACTIVE_REQUIRED version-stacked executable owner; remaining 51 are UNREFERENCED_USEFUL",
+        "Repository migration safety reports current Go test identities=447 with non-retired identity conservation PASS",
+        "Qualified #173 renderer, Chrome, WebKit, backend/race/randomized PASS"
+      ],
       "closureCondition": "Current CI/G12 no longer relies on version-named active tests where capability ownership is required by #70; historical release provenance remains immutable.",
       "blocksIssueClosure": true
     },
     {
       "id": "PACKAGE-DECOMPOSITION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Production capability package ownership",
-      "implementationPaths": ["internal/", "global_market_providers.go", "live_subscription_manager.go"],
-      "evidenceRequired": ["Recursive source-health covers extracted packages", "Implementation and package-local tests move together", "Go full/race/randomized + Qualified PASS"],
+      "implementationPaths": [
+        "internal/adaptivepolicy/",
+        "global_market_providers.go",
+        "live_subscription_manager.go",
+        "tools/ci/source_health_architecture_gate.py"
+      ],
+      "evidenceRequired": [
+        "Recursive source-health covers extracted packages",
+        "Implementation and package-local tests move together",
+        "Go full/race/randomized + Qualified PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 recursive source-health PASS across 4 production package directories including internal/adaptivepolicy",
+        "Fast #740 go test ./... PASS for depulse and depulse/internal/adaptivepolicy",
+        "Qualified #173 backend full Go, race detector and randomized package order PASS"
+      ],
       "closureCondition": "Required #70 Wave 5 cohesive production/package decomposition is completed without parallel domain owners or package-local coverage loss.",
       "blocksIssueClosure": true
     },
     {
       "id": "PERMANENT-ROOT-ALLOWLIST",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Root-layout policy / inventory",
-      "implementationPaths": ["governance/root-layout-policy.json", "tools/ci/legacy_test_gate_inventory.py", "tools/ci/repository_migration_gate.py"],
-      "evidenceRequired": ["grandfatherExistingBaselineRootFiles removed/disabled for final state", "Small explicit root allowlist enforced", "Root before/after inventory PASS"],
+      "implementationPaths": [
+        "governance/root-layout-policy.json",
+        "tools/ci/legacy_test_gate_inventory.py",
+        "tools/ci/repository_migration_gate.py",
+        "tools/ci/root_ownership_gate.py"
+      ],
+      "evidenceRequired": [
+        "grandfatherExistingBaselineRootFiles removed/disabled for final state",
+        "Small explicit root allowlist enforced",
+        "Root before/after inventory PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 / run 32626160908 PASS",
+        "Permanent root ownership PASS: baseline 374 -> current 281, reduction 93",
+        "blanket baseline grandfathering DISABLED; new root recurrence restricted to canonical/explicit final evidence/registered migration owners",
+        "temporary root aliases/symlinks PROHIBITED"
+      ],
       "closureCondition": "CI rejects arbitrary/version-stacked root recurrence and all remaining root owners are canonical or explicitly justified final owners.",
       "blocksIssueClosure": true
     },
     {
       "id": "ASSET-REGISTRY-OWNERSHIP",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Governance/assets ownership",
-      "implementationPaths": ["source_retained_assets.json", "De-Pulse-approved-v13.2.7-master.png", "assets/", "governance/"],
-      "evidenceRequired": ["Retained branding asset and registry moved to stable owners", "Packaging/renderer consumers updated atomically", "Icon/branding regressions PASS"],
+      "implementationPaths": [
+        "assets/branding/De-Pulse-approved-v13.2.7-master.png",
+        "governance/retained-assets.json",
+        "governance/repository-migrations.json"
+      ],
+      "evidenceRequired": [
+        "Retained branding asset and registry moved to stable owners",
+        "Packaging/renderer consumers updated atomically",
+        "Icon/branding regressions PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 retained branding/assets stable ownership PASS",
+        "Repository migration safety PASS with registered asset/registry moves and stale active-reference scan clean",
+        "Qualified #173 macOS and Windows packaged native rehearsals PASS"
+      ],
       "closureCondition": "Approved branding is retained under canonical stable asset ownership; root-relative legacy ownership is removed without deleting the approved source asset.",
       "blocksIssueClosure": true
     },
     {
       "id": "RELEASE-IDENTITY-FANOUT",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Canonical release identity",
-      "implementationPaths": ["release_identity.py", "release_identity.json", "renderer/"],
-      "evidenceRequired": ["Version-only transition no longer rewrites unnecessary product assets", "Cache busting uses stable/content-derived ownership", "Release identity/renderer regressions PASS"],
+      "implementationPaths": [
+        "release_identity.py",
+        "release_identity.json",
+        "renderer/",
+        "tools/ci/release_state_coherence.py"
+      ],
+      "evidenceRequired": [
+        "Version-only transition no longer rewrites unnecessary product assets",
+        "Cache busting uses stable/content-derived ownership",
+        "Release identity/renderer regressions PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 Release State Coherence PASS with release-coupled renderer cache identity CONTENT_DERIVED",
+        "Fast #740 release identity verification PASS",
+        "Qualified #173 renderer contracts, Chrome and WebKit PASS"
+      ],
       "closureCondition": "Release identity is centralized enough that public-version changes do not require broad unrelated product-source edits or version-named overlay sprawl.",
       "blocksIssueClosure": true
     },
     {
       "id": "SEMVER-RELEASE-CUTOVER",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Versioning policy / Release G11-G16",
-      "implementationPaths": ["governance/versioning-policy.json", "tools/release/release_identity_contract.py", ".github/workflows/release.yml"],
-      "evidenceRequired": ["Release derives Stable/predecessor tags from canonical prospective SemVer policy", "Historical <=18.9.1 -stable tags remain immutable", "Release-state self-tests PASS"],
+      "implementationPaths": [
+        "governance/versioning-policy.json",
+        "tools/release/release_identity_contract.py",
+        ".github/workflows/release.yml"
+      ],
+      "evidenceRequired": [
+        "Release derives Stable/predecessor tags from canonical prospective SemVer policy",
+        "Historical <=18.9.1 -stable tags remain immutable",
+        "Release-state self-tests PASS"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 release identity contract: prospective public versioning Semantic Versioning 2.0.0",
+        "Fast #740 CI hardening: prospective SemVer + monotonic platform build contract PASS",
+        "Fast #740 Release State Coherence self-test and pre-merge release rehearsal PASS",
+        "Historical current Stable v18.9.1-stable remains immutable compatibility state"
+      ],
       "closureCondition": "Future Stable publication follows vX.Y.Z and prerelease vX.Y.Z-rc.N semantics prospectively; Release contains no unconditional legacy -stable construction for future versions.",
       "blocksIssueClosure": true
     },
@@ -103,44 +246,115 @@
       "id": "MAIN-PROTECTION-RULESET",
       "status": "BLOCKED_EXTERNAL",
       "owner": "GitHub repository administration",
-      "implementationPaths": ["main repository ruleset/branch settings", "governance/current-state.json"],
-      "evidenceRequired": ["Actual GitHub ruleset/protection snapshot for main", "PR-only trustworthy required checks", "No force-push/deletion and controlled bypass evidence"],
+      "implementationPaths": [
+        "main repository ruleset/branch settings",
+        "governance/current-state.json"
+      ],
+      "evidenceRequired": [
+        "Actual GitHub ruleset/protection snapshot for main",
+        "PR-only trustworthy required checks",
+        "No force-push/deletion and controlled bypass evidence"
+      ],
+      "evidence": [
+        "Live GitHub branch snapshot on 2026-08-23: main protected=false; protection.enabled=false; required status checks enforcement=off",
+        "Connected GitHub actions expose no branch-protection/ruleset administration write operation"
+      ],
       "closureCondition": "Actual main protection/ruleset is enabled and recorded; source documentation cannot substitute for repository settings evidence.",
       "blocksIssueClosure": true
     },
     {
       "id": "ARTIFACT-ATTESTATION-SBOM",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Release supply-chain provenance",
-      "implementationPaths": [".github/workflows/release.yml", "tools/release/"],
-      "evidenceRequired": ["Final runnable macOS/Windows artifact provenance/attestation", "SBOM evidence", "Least-privilege attestation permissions", "No routine-test attestation"],
+      "implementationPaths": [
+        ".github/workflows/release.yml",
+        "tools/release/generate_sbom.py"
+      ],
+      "evidenceRequired": [
+        "Final runnable macOS/Windows artifact provenance/attestation",
+        "SBOM evidence",
+        "Least-privilege attestation permissions",
+        "No routine-test attestation"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 reproducibility contract PASS including publish-scoped provenance permission exception",
+        "Release publish job generates SPDX SBOM from exact certified macOS/Windows Stable ZIPs",
+        "Release publish job uses pinned actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 with id-token/attestations permissions scoped to publish",
+        "Routine Fast/Qualified test artifacts are not attested"
+      ],
       "closureCondition": "Final runnable Stable artifacts receive modern provenance/attestation and SBOM evidence without broadening routine CI permissions.",
       "blocksIssueClosure": true
     },
     {
       "id": "CURRENT-STATE-OVERLAY-CONVERGENCE",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Machine current-state + Adaptive/handoff projections",
-      "implementationPaths": ["governance/current-state.json", "handoff/CURRENT.md", "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md"],
-      "evidenceRequired": ["Executable current-state projection/convergence gate PASS", "All five human-readable current surfaces reflect Stable v18.9.1 and active #70/PR #71"],
+      "implementationPaths": [
+        "governance/current-state.json",
+        "handoff/CURRENT.md",
+        "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md",
+        "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md",
+        "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md",
+        "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md"
+      ],
+      "evidenceRequired": [
+        "Executable current-state projection/convergence gate PASS",
+        "All five human-readable current surfaces reflect Stable v18.9.1 and active #70/PR #71"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 current-state projection convergence PASS",
+        "canonical Stable v18.9.1-stable @ e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+        "active work slice #70 / ADAPT-CI-CONVERGENCE-001 / adapt-ci-convergence-001",
+        "projected current surfaces 6/6; human projection drift guard PASS"
+      ],
       "closureCondition": "Machine current-state is canonical and all current Adaptive/handoff projections agree with it; stale #64/#69/v18.9.0 current-state claims are absent.",
       "blocksIssueClosure": true
     },
     {
       "id": "G16-ROOT-CI-EFFICIENCY",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "G16 adaptive delivery evidence",
-      "implementationPaths": [".github/workflows/release.yml", "tools/ci/legacy_test_gate_inventory.py", "tools/ci/ci_telemetry.py"],
-      "evidenceRequired": ["Root before/after counts and moved/renamed/removed totals", "Remaining intentional root owners", "Runner minutes/reruns avoided/evidence reuse", "No-quality-evidence-removed result"],
+      "implementationPaths": [
+        ".github/workflows/release.yml",
+        "tools/ci/legacy_test_gate_inventory.py",
+        "tools/ci/ci_telemetry.py",
+        "tools/release/g16_delivery_evidence.py"
+      ],
+      "evidenceRequired": [
+        "Root before/after counts and moved/renamed/removed totals",
+        "Remaining intentional root owners",
+        "Runner minutes/reruns avoided/evidence reuse",
+        "No-quality-evidence-removed result"
+      ],
+      "evidence": [
+        "commit c5f78af3150e78535e43a9ca981a5639f0408e2f",
+        "Fast #740 G16 delivery evidence self-test PASS",
+        "root before/after + migration path accounting PASS; remaining intentional root-owner accounting PASS",
+        "measured runner-minute accounting PASS; observed rerun + no fabricated avoided-rerun contract PASS",
+        "evidence reuse + no-quality-removal contract PASS; Release G16 wiring PASS"
+      ],
       "closureCondition": "G16 emits machine-readable #70 repository and CI-efficiency closure evidence, not only release-publication status.",
       "blocksIssueClosure": true
     },
     {
       "id": "FINAL-QUALIFIED",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED",
       "owner": "Qualified exact-head evidence",
-      "implementationPaths": [".github/workflows/ci-qualified.yml"],
-      "evidenceRequired": ["Final exact-head DE.PULSE/fast-head PASS", "Final exact-head DE.PULSE/qualified-head PASS", "Applicable backend/race/randomized/Chrome/WebKit/macOS-native/Windows-native evidence PASS"],
+      "implementationPaths": [
+        ".github/workflows/ci-qualified.yml"
+      ],
+      "evidenceRequired": [
+        "Final exact-head DE.PULSE/fast-head PASS",
+        "Final exact-head DE.PULSE/qualified-head PASS",
+        "Applicable backend/race/randomized/Chrome/WebKit/macOS-native/Windows-native evidence PASS"
+      ],
+      "evidence": [
+        "Pre-ledger-refresh checkpoint c5f78af3150e78535e43a9ca981a5639f0408e2f: Fast #740 / run 32626160908 PASS",
+        "Pre-ledger-refresh checkpoint c5f78af3150e78535e43a9ca981a5639f0408e2f: Qualified #173 / run 32626232817 PASS including backend/race/randomized/Chrome/WebKit/macOS-native/Windows-native",
+        "Must be rerun on the ledger-refresh head before final closure; prior exact-head evidence cannot certify a newer metadata head"
+      ],
       "closureCondition": "The complete #70 candidate head earns applicable full Qualified evidence after all implementation gaps are closed; earlier intermediate green runs cannot substitute.",
       "blocksIssueClosure": true
     }
