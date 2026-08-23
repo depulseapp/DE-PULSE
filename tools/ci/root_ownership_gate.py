@@ -2,6 +2,7 @@
 """Permanent #70 repository-root ownership guard."""
 from __future__ import annotations
 
+import argparse
 from collections import Counter
 import json
 from pathlib import Path
@@ -12,6 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 POLICY = ROOT / "governance" / "root-layout-policy.json"
 MIGRATIONS = ROOT / "governance" / "repository-migrations.json"
+SCHEMA = "DE.PULSE-ROOT-OWNERSHIP-1"
 
 
 def git(*args: str) -> str:
@@ -27,7 +29,14 @@ def root_paths(paths: set[str]) -> set[str]:
     return {path for path in paths if "/" not in path}
 
 
+def parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(description="Verify permanent DE.PULSE repository-root ownership")
+    p.add_argument("--json-out", help="Optional machine-readable evidence output path")
+    return p
+
+
 def main() -> int:
+    args = parser().parse_args()
     errors: list[str] = []
     if not POLICY.is_file() or not MIGRATIONS.is_file():
         print("DE.PULSE permanent root ownership: FAIL", file=sys.stderr)
@@ -127,11 +136,42 @@ def main() -> int:
     if aliases:
         errors.append("temporaryAliases must be empty at #70 final root ownership")
 
+    root_symlinks: list[str] = []
     for line in git("ls-files", "-s").splitlines():
         meta, path = line.split("\t", 1)
         mode = meta.split()[0]
         if "/" not in path and mode == "120000":
+            root_symlinks.append(path)
             errors.append(f"root compatibility symlink is prohibited at closure: {path}")
+
+    temporary_alias_paths = []
+    for alias in aliases if isinstance(aliases, list) else []:
+        if isinstance(alias, dict):
+            value = str(alias.get("path", "")).strip()
+            if value:
+                temporary_alias_paths.append(value)
+        elif str(alias).strip():
+            temporary_alias_paths.append(str(alias).strip())
+
+    report = {
+        "schema": SCHEMA,
+        "status": "FAIL" if errors else "PASS",
+        "baselineCommit": baseline,
+        "baselineRootFiles": len(baseline_root),
+        "currentRootFiles": len(current),
+        "rootReduction": len(baseline_root) - len(current),
+        "newRootPaths": sorted(new_root),
+        "explicitFinalRootEvidenceOwners": len(final_evidence),
+        "ownershipCounts": dict(sorted(ownership.items())),
+        "blanketBaselineGrandfathering": bool(policy.get("grandfatherExistingBaselineRootFiles")),
+        "newRootRecurrence": "CANONICAL_OR_EXPLICIT_FINAL_EVIDENCE_OR_REGISTERED_MIGRATION_ONLY",
+        "temporaryRootAliasesOrSymlinks": sorted(set(temporary_alias_paths + root_symlinks)),
+        "errors": errors,
+    }
+    if args.json_out:
+        output = Path(args.json_out)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     print("DE.PULSE permanent root ownership")
     print(f"baseline root files: {len(baseline_root)}")
