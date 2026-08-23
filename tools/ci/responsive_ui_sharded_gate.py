@@ -17,7 +17,7 @@ env.pop('DEPULSE_VIEWPORT_SLICE', None)
 started=time.time()
 try:
     p=subprocess.run(
-        [sys.executable,'responsive_ui_test.py'],
+        [sys.executable,'tests/renderer/responsive_ui_test.py'],
         cwd=R, env=env, text=True, capture_output=True, timeout=240,
     )
     out=(p.stdout or '')+(p.stderr or '')

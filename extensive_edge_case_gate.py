@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent
 errors=[]
 commands=[
  ['go','test','-count=1','-run','TestV160(2|3)Edge','./...'],
- ['node','professional_expert_runtime_test.js'],
+ ['node','tests/acceptance/professional_expert_runtime_test.js'],
  [sys.executable,'edge_case_hardening_test.py'],
 ]
 for cmd in commands:

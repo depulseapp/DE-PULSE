@@ -6,9 +6,9 @@ ROOT=Path(__file__).resolve().parent
 errors=[]
 commands=[
  ['go','test','-count=1','-run','TestV160(2|3)Professional','./...'],
- ['node','professional_expert_runtime_test.js'],
- ['node','trader_acceptance_test.js'],
- ['node','deterministic_equivalence_test.js'],
+ ['node','tests/acceptance/professional_expert_runtime_test.js'],
+ ['node','tests/acceptance/trader_acceptance_test.js'],
+ ['node','tools/ci/deterministic_equivalence_test.js'],
 ]
 for cmd in commands:
  p=subprocess.run(cmd,cwd=ROOT,text=True,capture_output=True)
