@@ -118,7 +118,9 @@ jobs:
           fp="$(python3 source_fingerprint.py --mode git --commit "$sha")"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
-          echo "qualification SHA=$sha fingerprint=$fp base=$(python3 -c \"import json; print(json.load(open('ci-qualified-impact-plan.json'))['baseSha'])\") target=$target mode=$requested selected=$(python3 -c \"import json; print(','.join(json.load(open('ci-qualified-impact-plan.json'))['selectedJobs']))\")"
+          plan_base="$(python3 -c 'import json; print(json.load(open("ci-qualified-impact-plan.json"))["baseSha"])')"
+          plan_jobs="$(python3 -c 'import json; print(",".join(json.load(open("ci-qualified-impact-plan.json"))["selectedJobs"]))')"
+          echo "qualification SHA=$sha fingerprint=$fp base=$plan_base target=$target mode=$requested selected=$plan_jobs"
 
   ci-harness:
     name: CI/harness contract
