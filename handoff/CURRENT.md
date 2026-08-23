@@ -10,6 +10,7 @@
 **Certified Stable fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Certified release run:** `32546555659`  
+**Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Active work:** #70 / `ADAPT-CI-CONVERGENCE-001`  
 **Active branch / PR:** `adapt-ci-convergence-001` / Draft PR #71  
 **Public product version consumed by #70:** none.
@@ -21,6 +22,10 @@
 3. Inspect commits since the v18.9.1 Stable baseline so implemented work is never duplicated.
 4. Continue actual executable closure from the exact current state; GitHub objects and CI evidence outrank chat memory.
 5. Do not merge/promote/close #70 unless every closure-ledger criterion is truthfully satisfied. In particular, a file-level substitute does not satisfy actual GitHub `main` protection/ruleset evidence.
+
+## Exactly one next action
+
+Finish the remaining #70 closure-ledger gaps from the live branch head, then obtain final exact-head Fast + Qualified evidence; do not begin the next product capability while #70 remains open.
 
 ## Current implementation checkpoint
 
