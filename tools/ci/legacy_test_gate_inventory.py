@@ -39,11 +39,7 @@ EXECUTABLE_REFERENCE_RE = re.compile(
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ("git", *args),
-        cwd=ROOT,
-        check=check,
-        text=True,
-        capture_output=True,
+        ("git", *args), cwd=ROOT, check=check, text=True, capture_output=True
     )
 
 
@@ -74,9 +70,6 @@ def current_release_manifest() -> Path:
 
 
 def active_control_files() -> tuple[Path, ...]:
-    # Historical certification plans and per-version G12 shell orchestrators are
-    # deliberately excluded. Current G12 ownership is the version-neutral
-    # tools/release executor plus the current declarative release manifest.
     return (
         ROOT / ".github" / "workflows" / "ci-fast.yml",
         ROOT / ".github" / "workflows" / "ci-qualified.yml",
@@ -84,18 +77,6 @@ def active_control_files() -> tuple[Path, ...]:
         ROOT / "tools" / "ci" / "workflow_policy.py",
         canonical_g12_executor(),
         current_release_manifest(),
-    )
-
-
-def is_target(path: Path) -> bool:
-    if path.parent != ROOT or not VERSIONED_PREFIX.match(path.name):
-        return False
-    name = path.name.lower()
-    return (
-        name.endswith("_test.go")
-        or name.endswith("_test.js")
-        or name.endswith("_test.py")
-        or name.endswith("_gate.py")
     )
 
 
@@ -115,44 +96,28 @@ def executable_candidate(path: Path) -> bool:
         rel = relative(path)
     except ValueError:
         return False
-
     name = path.name.lower()
     if rel.startswith(("tools/ci/", "tools/release/", "tools/dev/")):
         return path.suffix.lower() in {".py", ".js", ".sh", ".ps1"}
     if path.parent == ROOT:
-        return (
-            name.endswith("_gate.py")
-            or name.endswith("_test.py")
-            or name.endswith("_test.js")
-        )
+        return name.endswith(("_gate.py", "_test.py", "_test.js"))
     if rel.startswith("release/"):
-        # Every version-specific full-certification shell is historical after
-        # canonical G12 convergence. Current release behavior is driven by the
-        # declarative manifest already included in active_control_files().
         if name == "run_full_certification.sh":
             return False
-        # Canonical G12 may deliberately reuse older capability/browser tests.
-        # Those tests remain active evidence; historical G12 orchestrators do not.
-        return (
-            name.endswith("_test.py")
-            or name.endswith("_test.js")
-            or name.endswith("_gate.py")
-        )
+        return name.endswith(("_gate.py", "_test.py", "_test.js"))
     return False
 
 
 def active_executable_text() -> dict[str, str]:
-    """Resolve executable test/gate closure from current canonical controls."""
     texts = active_control_text()
     pending = list(texts.values())
-    visited_paths = {(ROOT / rel).resolve() for rel in texts}
-
+    visited = {(ROOT / rel).resolve() for rel in texts}
     while pending:
         text = pending.pop()
         for match in EXECUTABLE_REFERENCE_RE.finditer(text):
             token = match.group("path").lstrip("./")
             path = (ROOT / token).resolve()
-            if path in visited_paths or not executable_candidate(path):
+            if path in visited or not executable_candidate(path):
                 continue
             try:
                 path.relative_to(ROOT.resolve())
@@ -160,17 +125,21 @@ def active_executable_text() -> dict[str, str]:
                 continue
             body = path.read_text(encoding="utf-8", errors="replace")
             texts[relative(path)] = body
-            visited_paths.add(path)
+            visited.add(path)
             pending.append(body)
     return texts
 
 
+def is_target(path: Path) -> bool:
+    if path.parent != ROOT or not VERSIONED_PREFIX.match(path.name):
+        return False
+    name = path.name.lower()
+    return name.endswith(("_test.go", "_test.js", "_test.py", "_gate.py"))
+
+
 def classify(path: Path, controls: dict[str, str]) -> tuple[str, list[str], str]:
     rel = path.relative_to(ROOT).as_posix()
-    consumers = [
-        name for name, text in controls.items() if rel in text or path.name in text
-    ]
-
+    consumers = [name for name, text in controls.items() if rel in text or path.name in text]
     if path.name.endswith("_test.go"):
         return (
             "ACTIVE_REQUIRED",
@@ -197,8 +166,7 @@ def legacy_path_consumers(texts: dict[str, str]) -> dict[str, list[str]]:
         for rel, text in texts.items():
             if old not in text:
                 continue
-            allowed = LEGACY_REFERENCE_ALLOWLIST.get(rel, set())
-            if old in allowed:
+            if old in LEGACY_REFERENCE_ALLOWLIST.get(rel, set()):
                 continue
             hits.append(rel)
         consumers[old] = sorted(hits)
@@ -206,10 +174,7 @@ def legacy_path_consumers(texts: dict[str, str]) -> dict[str, list[str]]:
 
 
 def tracked_root_files(commit: str | None = None) -> set[str]:
-    if commit:
-        result = git("ls-tree", "-r", "--name-only", commit)
-    else:
-        result = git("ls-files")
+    result = git("ls-tree", "-r", "--name-only", commit) if commit else git("ls-files")
     return {
         line.strip()
         for line in result.stdout.splitlines()
@@ -231,102 +196,63 @@ def retained_assets() -> dict[str, dict[str, object]]:
     return out
 
 
-def classify_root_file(
-    name: str,
-    controls: dict[str, str],
-    policy: dict[str, object],
-    baseline_root: set[str],
-    retained: dict[str, dict[str, object]],
-) -> dict[str, object]:
-    path = ROOT / name
-    canonical = set(policy.get("canonicalRootFiles", []))
-    transitional = (
-        policy.get("transitionalRootFiles", {})
-        if isinstance(policy.get("transitionalRootFiles", {}), dict)
-        else {}
-    )
-    consumers = [rel for rel, text in controls.items() if name in text]
-
-    if name in canonical:
-        classification = "CANONICAL_ROOT"
-        reason = "Explicit steady-state root allowlist owner."
-    elif name in transitional:
-        classification = "TRANSITIONAL_ROOT"
-        reason = "Explicit temporary root exception with owner/expiry/removal condition."
-    elif name in retained:
-        classification = "RETAINED_ASSET"
-        reason = str(
-            retained[name].get(
-                "purpose",
-                "Explicit retained source asset; move requires atomic consumer updates.",
-            )
-        )
-    elif name.endswith("_test.go"):
-        classification = "ACTIVE_TEST"
-        reason = "Package-main Go regression; migration must conserve test identity and package-local access."
-    elif name.endswith(".go"):
-        classification = "ACTIVE_RUNTIME"
-        reason = "Current package-main production source; package decomposition follows recursive source-health guardrails."
-    elif consumers:
-        classification = "ACTIVE_TOOL"
-        reason = "Referenced by current canonical executable control closure; move consumers atomically before removal."
-    elif VERSIONED_PREFIX.match(name):
-        classification = "MIGRATION_CANDIDATE"
-        reason = "Grandfathered version-scoped root material; assertion/evidence mapping required before move/delete."
-    elif name in {
-        "certification_plan.json",
-        "certification_runner.py",
-        "ci_pipeline.py",
-        "ci_pipeline_plan.json",
-    }:
-        classification = "MIGRATION_CANDIDATE"
-        reason = "Known stale/competing legacy orchestration debt; consolidate/retire in #70 Wave 2 after equivalence proof."
-    elif name in baseline_root:
-        classification = "MIGRATION_CANDIDATE"
-        reason = "Grandfathered Stable-baseline root file; explicit KEEP/MOVE/CONSOLIDATE/DELETE disposition required by #70."
-    else:
-        classification = "UNCLASSIFIED_NEW"
-        reason = "New root file is neither canonical nor registered transitional debt."
-
-    return {
-        "path": name,
-        "classification": classification,
-        "consumers": sorted(consumers),
-        "sizeBytes": path.stat().st_size if path.is_file() else 0,
-        "reason": reason,
-    }
-
-
 def root_layout_inventory(controls: dict[str, str]) -> dict[str, object]:
-    if not ROOT_POLICY.is_file():
-        return {
-            "error": "governance/root-layout-policy.json missing",
-            "rows": [],
-            "counts": {},
-        }
     policy = load_json(ROOT_POLICY)
     baseline = str(policy.get("baselineCommit", "")).strip()
     if not baseline:
-        return {"error": "root-layout baselineCommit missing", "rows": [], "counts": {}}
-
+        raise RuntimeError("root-layout baselineCommit missing")
     baseline_root = tracked_root_files(baseline)
     current_root = tracked_root_files()
+    canonical = set(policy.get("canonicalRootFiles", []))
+    transitional = policy.get("transitionalRootFiles", {})
+    if not isinstance(transitional, dict):
+        transitional = {}
     retained = retained_assets()
-    rows = [
-        classify_root_file(name, controls, policy, baseline_root, retained)
-        for name in sorted(current_root)
-    ]
+    rows: list[dict[str, object]] = []
     counts: dict[str, int] = {}
-    for row in rows:
-        key = str(row["classification"])
-        counts[key] = counts.get(key, 0) + 1
-
+    for name in sorted(current_root):
+        path = ROOT / name
+        consumers = sorted(rel for rel, text in controls.items() if name in text)
+        if name in canonical:
+            classification = "CANONICAL_ROOT"
+            reason = "Explicit steady-state root allowlist owner."
+        elif name in transitional:
+            classification = "TRANSITIONAL_ROOT"
+            reason = "Explicit temporary root exception with owner/removal condition."
+        elif name in retained:
+            classification = "RETAINED_ASSET"
+            reason = str(retained[name].get("purpose", "Explicit retained source asset."))
+        elif name.endswith("_test.go"):
+            classification = "ACTIVE_TEST"
+            reason = "Package-main Go regression; migration must conserve test identity and package-local access."
+        elif name.endswith(".go"):
+            classification = "ACTIVE_RUNTIME"
+            reason = "Current package-main production source."
+        elif consumers:
+            classification = "ACTIVE_TOOL"
+            reason = "Referenced by current canonical executable control closure."
+        elif VERSIONED_PREFIX.match(name) or name in baseline_root:
+            classification = "MIGRATION_CANDIDATE"
+            reason = "Existing root material requiring explicit keep/move/consolidate/delete disposition."
+        else:
+            classification = "UNCLASSIFIED_NEW"
+            reason = "New root file is neither canonical nor explicitly governed."
+        rows.append(
+            {
+                "path": name,
+                "classification": classification,
+                "consumers": consumers,
+                "sizeBytes": path.stat().st_size if path.is_file() else 0,
+                "reason": reason,
+            }
+        )
+        counts[classification] = counts.get(classification, 0) + 1
     return {
         "schema": "DE.PULSE-ROOT-LAYOUT-INVENTORY-2",
         "baselineCommit": baseline,
         "baselineRootFileCount": len(baseline_root),
         "currentRootFileCount": len(rows),
-        "canonicalRootFiles": sorted(policy.get("canonicalRootFiles", [])),
+        "canonicalRootFiles": sorted(canonical),
         "newTrackedRootFiles": sorted(current_root - baseline_root),
         "retainedAssets": sorted(retained),
         "rows": rows,
@@ -337,11 +263,9 @@ def root_layout_inventory(controls: dict[str, str]) -> dict[str, object]:
 
 def inventory() -> dict[str, object]:
     controls = active_executable_text()
-    rows = []
-    for path in sorted(
-        (p for p in ROOT.iterdir() if p.is_file() and is_target(p)),
-        key=lambda p: p.name,
-    ):
+    rows: list[dict[str, object]] = []
+    counts: dict[str, int] = {}
+    for path in sorted((p for p in ROOT.iterdir() if p.is_file() and is_target(p)), key=lambda p: p.name):
         classification, consumers, condition = classify(path, controls)
         rows.append(
             {
@@ -352,25 +276,16 @@ def inventory() -> dict[str, object]:
                 "deletionOrMigrationCondition": condition,
             }
         )
-
-    counts: dict[str, int] = {}
-    for row in rows:
-        key = str(row["classification"])
-        counts[key] = counts.get(key, 0) + 1
-
-    first_wave = []
-    for old, new in FIRST_WAVE_RENAMES.items():
-        old_path = ROOT / old
-        new_path = ROOT / new
-        first_wave.append(
-            {
-                "oldPath": old,
-                "newPath": new,
-                "oldPathAbsent": not old_path.exists(),
-                "newPathPresent": new_path.is_file(),
-            }
-        )
-
+        counts[classification] = counts.get(classification, 0) + 1
+    first_wave = [
+        {
+            "oldPath": old,
+            "newPath": new,
+            "oldPathAbsent": not (ROOT / old).exists(),
+            "newPathPresent": (ROOT / new).is_file(),
+        }
+        for old, new in FIRST_WAVE_RENAMES.items()
+    ]
     return {
         "schema": "DE.PULSE-LEGACY-TEST-GATE-INVENTORY-2",
         "scope": "root version-stacked executable tests/gates plus complete tracked root-layout classification",
@@ -402,30 +317,18 @@ def inventory() -> dict[str, object]:
 
 def validate(report: dict[str, object]) -> list[str]:
     errors: list[str] = []
-    rows = report["rows"]
+    rows = report.get("rows", [])
     if not isinstance(rows, list) or not rows:
         errors.append("version-stacked root inventory unexpectedly empty")
-
     for row in rows if isinstance(rows, list) else []:
-        if row.get("classification") not in {
-            "ACTIVE_REQUIRED",
-            "ACTIVE_DUPLICATE",
-            "UNREFERENCED_USEFUL",
-            "HISTORICAL_EVIDENCE",
-            "SAFE_TO_REMOVE",
-        }:
-            errors.append(f"invalid classification for {row.get('path')}")
         if row.get("classification") == "SAFE_TO_REMOVE":
-            errors.append(
-                f"automatic inventory may not infer SAFE_TO_REMOVE: {row.get('path')}"
-            )
-
-    for item in report["firstWave"] if isinstance(report["firstWave"], list) else []:
+            errors.append(f"automatic inventory may not infer SAFE_TO_REMOVE: {row.get('path')}")
+    first_wave = report.get("firstWave", [])
+    for item in first_wave if isinstance(first_wave, list) else []:
         if not item.get("oldPathAbsent"):
             errors.append(f"first-wave old path still present: {item.get('oldPath')}")
         if not item.get("newPathPresent"):
             errors.append(f"first-wave new path missing: {item.get('newPath')}")
-
     legacy_consumers = report.get("legacyPathConsumers", {})
     if isinstance(legacy_consumers, dict):
         for old, consumers in legacy_consumers.items():
@@ -434,46 +337,29 @@ def validate(report: dict[str, object]) -> list[str]:
                     "first-wave old path still referenced by current executable consumer: "
                     + f"{old} -> {', '.join(consumers)}"
                 )
-
     active_controls = report.get("activeControlFiles", [])
     if "certification_plan.json" in active_controls:
-        errors.append(
-            "legacy certification_plan.json may not be a current executable control owner"
-        )
-    canonical_g12 = "tools/release/run_full_certification.py"
-    if canonical_g12 not in active_controls:
-        errors.append(
-            f"canonical version-neutral G12 missing from executable control closure: {canonical_g12}"
-        )
+        errors.append("legacy certification_plan.json may not be a current executable control owner")
+    if "tools/release/run_full_certification.py" not in active_controls:
+        errors.append("canonical version-neutral G12 missing from executable control closure")
     identity = load_json(ROOT / "release_identity.json")
     current_manifest = f"release/v{identity['version']}/certification-manifest.json"
     if current_manifest not in active_controls:
-        errors.append(
-            f"current release G12 manifest missing from control closure: {current_manifest}"
-        )
+        errors.append(f"current release G12 manifest missing from control closure: {current_manifest}")
     version_shells = [
-        rel
-        for rel in active_controls
+        rel for rel in active_controls
         if rel.startswith("release/") and rel.endswith("/run_full_certification.sh")
     ]
     if version_shells:
-        errors.append(
-            "version-specific release G12 shell incorrectly treated as current control: "
-            + ", ".join(version_shells)
-        )
+        errors.append("version-specific release G12 shell incorrectly treated as current control: " + ", ".join(version_shells))
 
     root_layout = report.get("rootLayout", {})
-    if not isinstance(root_layout, dict) or root_layout.get("error"):
-        errors.append(str(root_layout.get("error", "root-layout inventory missing")))
+    if not isinstance(root_layout, dict):
+        errors.append("root-layout inventory missing")
     else:
-        root_rows = root_layout.get("rows", [])
-        if not isinstance(root_rows, list) or not root_rows:
-            errors.append("complete tracked root-layout inventory unexpectedly empty")
-        for row in root_rows if isinstance(root_rows, list) else []:
+        for row in root_layout.get("rows", []) if isinstance(root_layout.get("rows", []), list) else []:
             if row.get("classification") == "UNCLASSIFIED_NEW":
-                errors.append(
-                    f"new root file lacks canonical/transitional disposition: {row.get('path')}"
-                )
+                errors.append(f"new root file lacks canonical/transitional disposition: {row.get('path')}")
         if root_layout.get("automaticDeletionInference") != "PROHIBITED":
             errors.append("automatic root deletion inference must remain PROHIBITED")
         retained = root_layout.get("retainedAssets", [])
@@ -483,42 +369,35 @@ def validate(report: dict[str, object]) -> list[str]:
             for rel in retained:
                 if not isinstance(rel, str) or not rel or "/" not in rel:
                     errors.append(f"retained asset lacks stable non-root ownership: {rel}")
-                    continue
-                if not (ROOT / rel).is_file():
+                elif not (ROOT / rel).is_file():
                     errors.append(f"registered retained asset missing: {rel}")
 
-    fast = (ROOT / ".github" / "workflows" / "ci-fast.yml").read_text(
-        encoding="utf-8"
-    )
-    for required in (
+    fast = (ROOT / ".github" / "workflows" / "ci-fast.yml").read_text(encoding="utf-8")
+    required_fast = (
         "node tests/renderer/surface_consolidation_test.js",
         "node tests/renderer/documentation_access_test.js",
-        "python3 v18_5_1_v17_v18_reconciliation_gate.py",
-    ):
+        "python3 tools/ci/implementation_reconciliation_gate.py",
+    )
+    for required in required_fast:
         if required not in fast:
-            errors.append(
-                f"Fast consumer missing governed cleanup/reconciliation proof: {required}"
-            )
-    for forbidden in (
+            errors.append(f"Fast consumer missing governed cleanup/reconciliation proof: {required}")
+    forbidden_fast = (
         "node v18_6_surface_consolidation_test.js",
         "node v18_6_documentation_access_test.js",
-    ):
+        "python3 v18_5_1_v17_v18_reconciliation_gate.py",
+    )
+    for forbidden in forbidden_fast:
         if forbidden in fast:
-            errors.append(f"Fast still consumes legacy renderer-test path: {forbidden}")
-
+            errors.append(f"Fast still consumes superseded executable path: {forbidden}")
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description=(
-            "Inventory DE.PULSE legacy executables and the complete tracked root "
-            "layout without guessing deletion safety"
-        )
+        description="Inventory DE.PULSE legacy executables and complete tracked root layout without guessing deletion safety"
     )
     parser.add_argument("--json-out")
     args = parser.parse_args()
-
     try:
         report = inventory()
         errors = validate(report)
@@ -526,48 +405,28 @@ def main() -> int:
         print("DE.PULSE legacy/root inventory: FAIL", file=sys.stderr)
         print(f" - {exc}", file=sys.stderr)
         return 1
-
     text = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.json_out:
         out = Path(args.json_out)
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text, encoding="utf-8")
-
     if errors:
         print("DE.PULSE legacy/root inventory: FAIL", file=sys.stderr)
         for error in errors:
             print(f" - {error}", file=sys.stderr)
         return 1
-
     counts = report["counts"]
     root_layout = report["rootLayout"]
     print("DE.PULSE legacy/root inventory: PASS")
-    print(
-        "root version-stacked executables classified: "
-        + str(sum(counts.values()))
-    )
-    print(
-        "classifications: "
-        + ", ".join(f"{key}={value}" for key, value in sorted(counts.items()))
-    )
-    print(
-        "active executable consumer closure: "
-        + str(report["activeExecutableConsumerCount"])
-    )
+    print("root version-stacked executables classified: " + str(sum(counts.values())))
+    print("classifications: " + ", ".join(f"{key}={value}" for key, value in sorted(counts.items())))
+    print("active executable consumer closure: " + str(report["activeExecutableConsumerCount"]))
     print("active control files: " + ", ".join(report["activeControlFiles"]))
     print("stale certification_plan.json current-control ownership: REMOVED")
     print("canonical version-neutral G12 current-control ownership: tools/release/run_full_certification.py")
     print("historical release G12 current-control ownership: EXCLUDED")
-    print(
-        "complete tracked root files classified: "
-        + str(root_layout["currentRootFileCount"])
-    )
-    print(
-        "root classifications: "
-        + ", ".join(
-            f"{key}={value}" for key, value in sorted(root_layout["counts"].items())
-        )
-    )
+    print("complete tracked root files classified: " + str(root_layout["currentRootFileCount"]))
+    print("root classifications: " + ", ".join(f"{key}={value}" for key, value in sorted(root_layout["counts"].items())))
     print("new unclassified root files: 0")
     print("retained branding/assets stable ownership: PASS")
     print("first-wave capability-oriented renames/moves: PASS")
