@@ -2,10 +2,11 @@
 """Compose permanent and work-slice repository migration ledgers.
 
 The permanent registry remains the durable baseline. Individual architecture/process
-work slices may retain their exact old->new relocation evidence beside their own
-scope/closure metadata. The canonical migration gates consume the composed view, so
-splitting evidence by work slice never weakens stale-reference, test-identity, mode,
-or root-ownership validation.
+work slices retain exact old->new relocation evidence beside their own scope/closure
+metadata. A work slice may use one top-level `repository-migrations.json` plus
+wave-scoped `migrations/*.json` ledgers. The canonical migration gates consume the
+composed view, so splitting evidence never weakens stale-reference, test-identity,
+mode, or root-ownership validation.
 """
 from __future__ import annotations
 
@@ -37,7 +38,19 @@ def _load_object(path: Path) -> dict[str, Any]:
 def work_slice_ledgers() -> list[Path]:
     if not WORK_SLICE_ROOT.is_dir():
         return []
-    return sorted(path for path in WORK_SLICE_ROOT.glob("*/repository-migrations.json") if path.is_file())
+    direct = [path for path in WORK_SLICE_ROOT.glob("*/repository-migrations.json") if path.is_file()]
+    wave_scoped = [path for path in WORK_SLICE_ROOT.glob("*/migrations/*.json") if path.is_file()]
+    return sorted({*direct, *wave_scoped})
+
+
+def work_slice_id_for_path(path: Path) -> str:
+    try:
+        relative = path.relative_to(WORK_SLICE_ROOT)
+    except ValueError as exc:
+        raise MigrationRegistryError(f"work-slice ledger outside governance/work-slices: {path}") from exc
+    if not relative.parts:
+        raise MigrationRegistryError(f"invalid work-slice ledger path: {path.relative_to(ROOT)}")
+    return relative.parts[0]
 
 
 def _expanded_work_slice_moves(path: Path, ledger: dict[str, Any]) -> list[dict[str, Any]]:
@@ -46,7 +59,8 @@ def _expanded_work_slice_moves(path: Path, ledger: dict[str, Any]) -> list[dict[
             f"unsupported work-slice migration schema in {path.relative_to(ROOT)}: {ledger.get('schema')!r}"
         )
     work_slice_id = str(ledger.get("workSliceId", "")).strip()
-    if not work_slice_id or path.parent.name != work_slice_id:
+    owning_directory = work_slice_id_for_path(path)
+    if not work_slice_id or owning_directory != work_slice_id:
         raise MigrationRegistryError(f"work-slice migration identity/path mismatch: {path.relative_to(ROOT)}")
 
     defaults = ledger.get("moveDefaults", {})
