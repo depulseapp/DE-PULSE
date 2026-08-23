@@ -4,6 +4,7 @@
 
 **GitHub source of truth:** `depulseapp/DE-PULSE`  
 **Canonical machine state:** `governance/current-state.json`  
+**Canonical #70 closure ledger:** `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
