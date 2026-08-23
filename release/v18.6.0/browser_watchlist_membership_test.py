@@ -12,7 +12,7 @@ button handler. It proves:
 - final membership-button removal remains protected and separate;
 - desk, table and AI add surfaces all use canonical /api/desk/membership.
 """
-import json
+import hashlib
 import os
 from pathlib import Path
 
@@ -23,8 +23,13 @@ RENDERER = ROOT / "renderer" / "renderer.js"
 EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
 INDEX = ROOT / "renderer" / "index.html"
 CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
-RELEASE_IDENTITY = ROOT / "release_identity.json"
 DESKS = ("day", "swing", "long")
+
+
+def git_blob_token(path: Path) -> str:
+    data = path.read_bytes()
+    header = f"blob {len(data)}\0".encode("utf-8")
+    return hashlib.sha1(header + data).hexdigest()[:16]
 
 
 def between(text: str, start: str, end: str, label: str) -> str:
@@ -42,7 +47,6 @@ def main() -> None:
     extension = EXTENSION.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
     css = CSS.read_text(encoding="utf-8")
-    release_version = json.loads(RELEASE_IDENTITY.read_text(encoding="utf-8"))["version"]
 
     membership_binding = between(
         renderer,
@@ -51,8 +55,8 @@ def main() -> None:
         "actual membership-button binding",
     )
 
-    assert f"watchlist-v18.5.1.js?v={release_version}" in index
-    assert f"watchlist-v18.5.1.css?v={release_version}" in index
+    assert f"watchlist-v18.5.1.js?v={git_blob_token(EXTENSION)}" in index
+    assert f"watchlist-v18.5.1.css?v={git_blob_token(CSS)}" in index
     assert "/api/master-symbol/remove" in extension
     assert "/api/master-symbol/restore" in extension
     assert "/api/desk/membership" in extension
@@ -269,7 +273,7 @@ function deskMembershipStrip(){return ''}
 
         browser.close()
 
-    print("PASS: v18.6 membership buttons are canonical pressed-state controls with no CURRENT marker; global remove/Undo/protection remain intact and desk/table/AI adds use canonical membership state.")
+    print("PASS: v18.6 membership buttons are canonical pressed-state controls with no CURRENT marker; global remove/Undo/protection remain intact and desk/table/AI adds use canonical membership state with content-derived extension cache identity.")
 
 
 if __name__ == "__main__":
