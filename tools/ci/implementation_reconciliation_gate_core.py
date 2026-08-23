@@ -232,7 +232,7 @@ def main() -> int:
         if recorded != canonical:
             errors.append(f"release-scope entry drift: {path}")
 
-    remediation = load(ROOT / "functionality_utility_remediation.json")
+    remediation = load(ROOT / "governance" / "registries" / "functionality_utility_remediation.json")
     carry = ledger.get("functionalityUtilityCarryForward", {})
     carry_rows = carry.get("items", [])
     expected_carry = remediation.get("items", [])
