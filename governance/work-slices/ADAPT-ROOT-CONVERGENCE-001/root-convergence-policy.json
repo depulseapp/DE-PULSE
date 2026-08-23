@@ -1,3 +1,36 @@
 {
-  "schema":"DE.PULSE-ROOT-CONVERGENCE-POLICY-1","workSliceId":"ADAPT-ROOT-CONVERGENCE-001","issue":73,"baselineMainSha":"9336f7e5a5c1ba3ecaf0827a586b68d52f7c5982","phase":"INVENTORY","allowedDispositions":["KEEP","MOVE","CONSOLIDATE","DELETE"],"historicalVersionedNonGoRule":"MOVE_FROM_CURRENT_ROOT_TO_GOVERNED_RELEASE_HISTORY","rootToolingRule":"MOVE_REUSABLE_TO_TOOLS_OR_TEST_OWNER_CONSOLIDATE_DUPLICATES_DELETE_ONLY_WITH_REFERENCE_AND_EVIDENCE_PROOF","packageMainRule":"DO_NOT_MOVE_FOR_APPEARANCE; EXTRACT_ONLY_AS_COHESIVE_CAPABILITY_WITH_TESTS_AND_DEPENDENCIES","remainingVersionedGo":["ai_hardening_v18_6.go","developer_commands_v18_9.go","tradeinsight_admission_v18_9.go","tradeinsight_congress_probe_v18_9.go","tradeinsight_congress_v18_9.go","tradeinsight_v18_9.go","v18_test_profile.go"],"currentReleaseLegacyRootDirectory":"release/v18.9.1/legacy-root","historicalRootDirectoryPattern":"release/history/<version-or-major>/root-evidence","stableEvidenceRule":"v18.9.1 Stable tags, release assets, certified source identity and published evidence are immutable and are never rewritten by this work slice.","closureRule":"At closure no unresolved MOVE disposition may remain and no avoidable version-named Go owner may remain. KEEP is limited to canonical/project/package-main necessity; DELETE requires reference/evidence proof."
+  "schema": "DE.PULSE-ROOT-CONVERGENCE-POLICY-2",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "baselineMainSha": "9336f7e5a5c1ba3ecaf0827a586b68d52f7c5982",
+  "phase": "ARCHITECTURE_REAUDIT",
+  "architectureTarget": "governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/repository-architecture-target.json",
+  "allowedDispositions": ["KEEP", "MOVE", "CONSOLIDATE", "DELETE"],
+  "historicalVersionedNonGoRule": "MOVE_FROM_CURRENT_ROOT_TO_GOVERNED_RELEASE_HISTORY_AND_REGISTER_EXACT_OLD_TO_NEW_PATH",
+  "rootToolingRule": "MOVE_REUSABLE_TO_SEMANTIC_TOOL_OR_TEST_OWNER; DO_NOT_CREATE_ANOTHER_FLAT_DUMPING_GROUND; CONSOLIDATE_DUPLICATES; DELETE_ONLY_WITH_REFERENCE_AND_EVIDENCE_PROOF",
+  "governanceRule": "MACHINE_POLICIES_TO_GOVERNANCE_POLICIES; REGISTRIES_AND_REMEDIATION_DATA_TO_GOVERNANCE_REGISTRIES; ADAPTIVE_GOVERNANCE_REMAINS_DISTINCT_SEMANTIC_OWNER",
+  "rendererRule": "ACTIVE_RUNTIME_ASSETS_USE_CAPABILITY_ORIENTED_VERSION_NEUTRAL_NAMES; HISTORICAL_COMPATIBILITY_ASSETS_MOVE_TO_RELEASE_HISTORY_OR_TEST_FIXTURES_AFTER_REFERENCE_PROOF",
+  "packageMainRule": "DO_NOT_MOVE_WHOLE_PACKAGE_FOR_APPEARANCE; RENAME_AVOIDABLE_VERSION_OWNERS_IN_PLACE; EXTRACT_ONLY_AS_COHESIVE_CAPABILITY_WITH_TESTS_DEPENDENCIES_AND_EQUIVALENCE",
+  "remainingVersionedGo": [
+    "ai_hardening_v18_6.go",
+    "developer_commands_v18_9.go",
+    "tradeinsight_admission_v18_9.go",
+    "tradeinsight_congress_probe_v18_9.go",
+    "tradeinsight_congress_v18_9.go",
+    "tradeinsight_v18_9.go",
+    "v18_test_profile.go"
+  ],
+  "versionedGoTargets": {
+    "ai_hardening_v18_6.go": "ai_hardening.go",
+    "developer_commands_v18_9.go": "developer_commands.go",
+    "tradeinsight_admission_v18_9.go": "tradeinsight_admission.go",
+    "tradeinsight_congress_probe_v18_9.go": "tradeinsight_congress_probe.go",
+    "tradeinsight_congress_v18_9.go": "tradeinsight_congress.go",
+    "tradeinsight_v18_9.go": "tradeinsight.go",
+    "v18_test_profile.go": "test_profile.go"
+  },
+  "currentReleaseLegacyRootDirectory": "release/v18.9.1/legacy-root",
+  "historicalRootDirectoryPattern": "release/history/<version-or-major>/root-evidence",
+  "stableEvidenceRule": "v18.9.1 Stable tags, release assets, certified source identity and published evidence are immutable and are never rewritten by this work slice.",
+  "closureRule": "No unresolved MOVE disposition; no avoidable version-named Go owner; no historical/version-named renderer runtime owner without explicit compatibility justification; policies/registries have canonical governance ownership; KEEP is limited to canonical/project/package-main necessity; DELETE requires reference/evidence proof."
 }
