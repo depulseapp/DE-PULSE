@@ -14,6 +14,7 @@ import root_ownership_gate
 
 ROOT = Path(__file__).resolve().parents[2]
 POLICY_PATH = ROOT / "governance" / "root-layout-policy.json"
+EPHEMERAL_DIR = ROOT / ".depulse-certification"
 
 
 def synthesized_migration_policy(migrations: dict[str, object]) -> dict[str, object]:
@@ -65,8 +66,9 @@ def main() -> int:
     original_root_migrations = root_ownership_gate.MIGRATIONS
     original_impl_policy = repository_migration_gate_impl.POLICY_PATH
     original_impl_migrations = repository_migration_gate_impl.MIGRATIONS_PATH
+    EPHEMERAL_DIR.mkdir(parents=True, exist_ok=True)
 
-    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".json", delete=True) as migration_tmp, tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".json", delete=True) as policy_tmp:
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".json", prefix="composed-migrations-", dir=EPHEMERAL_DIR, delete=True) as migration_tmp, tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".json", prefix="composed-root-policy-", dir=EPHEMERAL_DIR, delete=True) as policy_tmp:
         json.dump(migrations, migration_tmp, indent=2, sort_keys=True)
         migration_tmp.write("\n")
         migration_tmp.flush()
