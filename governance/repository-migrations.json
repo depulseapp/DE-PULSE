@@ -1,5 +1,5 @@
 {
-  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-3",
+  "schema": "DE.PULSE-REPOSITORY-MIGRATIONS-4",
   "baselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
   "rootVersionRetention": {
     "scope": "CURRENT_REPOSITORY_ROOT_ONLY",
@@ -66,7 +66,9 @@
     {"oldPath":"v18_5_2_display_name_test.go","newPath":"account_display_name_regression_test.go","owner":"ADAPT-CI-CONVERGENCE-001 / account display-name evidence","reason":"Byte-identical active-test migration to a version-neutral capability owner.","removalCondition":"Old path absent; package, test identities and assertions preserved.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
     {"oldPath":"v18_8_1_universe_hardening_test.go","newPath":"universe_hardening_regression_test.go","owner":"ADAPT-CI-CONVERGENCE-001 / universe hardening evidence","reason":"Byte-identical active-test migration to a version-neutral capability owner.","removalCondition":"Old path absent; package, test identities and assertions preserved.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
     {"oldPath":"v18_test_profile_identity_test.go","newPath":"test_profile_identity_regression_test.go","owner":"ADAPT-CI-CONVERGENCE-001 / test profile identity evidence","reason":"Byte-identical active-test migration to a version-neutral capability owner.","removalCondition":"Old path absent; package, test identities and assertions preserved.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
-    {"oldPath":"identity_v18_test.go","newPath":"identity_regression_test.go","owner":"ADAPT-CI-CONVERGENCE-001 / identity evidence","reason":"Byte-identical active-test migration to a version-neutral capability owner.","removalCondition":"Old path absent; package, test identities and assertions preserved.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]}
+    {"oldPath":"identity_v18_test.go","newPath":"identity_regression_test.go","owner":"ADAPT-CI-CONVERGENCE-001 / identity evidence","reason":"Byte-identical active-test migration to a version-neutral capability owner.","removalCondition":"Old path absent; package, test identities and assertions preserved.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
+    {"oldPath":"source_retained_assets.json","newPath":"governance/retained-assets.json","owner":"ADAPT-CI-CONVERGENCE-001 / retained-asset governance","reason":"Move the mutable/current retained-asset manifest out of repository root into its durable governance owner.","removalCondition":"Old root path absent; governed registry owns current retained source-asset metadata.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]},
+    {"oldPath":"De-Pulse-approved-v13.2.7-master.png","newPath":"assets/branding/De-Pulse-approved-v13.2.7-master.png","owner":"ADAPT-CI-CONVERGENCE-001 / branding asset ownership","reason":"Move the approved retained branding source under a stable asset owner while reusing the exact Git blob bytes.","removalCondition":"Old root path absent; exact source blob is reused and active consumers reference the stable asset path.","referenceScope":"ACTIVE_RUNTIME_AND_CONTROL","allowedReferenceFiles":[]}
   ],
   "retiredExecutablePaths": [],
   "removedGoTestIdentities": [],
