@@ -28,7 +28,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_cross_platform_persistence_gate.py",
-        "v17_0_sqlite_backend_test.go"
+        "native_sqlite_persistence_regression_test.go"
       ]
     },
     {
