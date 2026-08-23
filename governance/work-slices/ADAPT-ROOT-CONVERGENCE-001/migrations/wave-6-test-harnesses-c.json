@@ -1,0 +1,22 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_6_TEST_HARNESS_OWNERSHIP_C",
+  "moves": [
+    {
+      "oldPath": "http_workflow_test.py",
+      "newPath": "tests/integration/http_workflow_test.py",
+      "owner": "Integration test harness / local HTTP workflow qualification",
+      "reason": "The local HTTP workflow is cross-module non-Go integration evidence and belongs under tests/integration rather than repository root.",
+      "removalCondition": "Old root path absent, relocated harness resolves repository root correctly, and migration safety confirms no stale active consumer.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

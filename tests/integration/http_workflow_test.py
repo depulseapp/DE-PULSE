@@ -2,7 +2,7 @@
 import json, os, re, subprocess, sys, tempfile, time, urllib.request, urllib.error, http.cookiejar, http.client
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 VERSION_TEXT=(ROOT/'VERSION.txt').read_text()
 EXPECTED_VERSION=re.search(r'^DE\.PULSE v([^\s]+)$', VERSION_TEXT, re.M).group(1)
 EXPECTED_BUILD_ID=re.search(r'^Build:\s*(.+)$', VERSION_TEXT, re.M).group(1).strip()
