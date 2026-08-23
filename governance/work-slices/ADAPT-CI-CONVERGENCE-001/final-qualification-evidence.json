@@ -1,0 +1,46 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-1",
+  "status": "VERIFIED",
+  "workSliceId": "ADAPT-CI-CONVERGENCE-001",
+  "issue": 70,
+  "gapId": "FINAL-QUALIFIED",
+  "candidateSha": "ffeb1640174a744cf85578e26bbed7abd828cee1",
+  "mergeCommitSha": "6ba8c0c2b486bdbbebac4611f440741d0588c65f",
+  "fast": {
+    "context": "DE.PULSE/fast-head",
+    "runNumber": 742,
+    "runId": 32656818767,
+    "conclusion": "success",
+    "candidateSha": "ffeb1640174a744cf85578e26bbed7abd828cee1"
+  },
+  "qualified": {
+    "context": "DE.PULSE/qualified-head",
+    "runNumber": 175,
+    "runId": 32656912135,
+    "conclusion": "success",
+    "candidateSha": "ffeb1640174a744cf85578e26bbed7abd828cee1",
+    "evidenceOwners": [
+      "CI_HARNESS",
+      "BACKEND_FULL_GO",
+      "RACE_DETECTOR",
+      "RANDOMIZED_PACKAGE_ORDER",
+      "PERSISTENCE_DB",
+      "SECURITY_DATA_RIGHTS",
+      "RENDERER",
+      "CHROME",
+      "WEBKIT",
+      "NATIVE_MACOS_PACKAGED_LIFECYCLE",
+      "NATIVE_WINDOWS_PACKAGED_RUNTIME"
+    ]
+  },
+  "merge": {
+    "pullRequest": 71,
+    "merged": true,
+    "expectedHeadSha": "ffeb1640174a744cf85578e26bbed7abd828cee1",
+    "mergeCommitSha": "6ba8c0c2b486bdbbebac4611f440741d0588c65f",
+    "base": "main"
+  },
+  "evidenceInterpretation": "The implementation candidate earned both exact-head statuses before merge. This post-merge machine binding records immutable GitHub runtime evidence without creating a recursive source-change/requalification loop.",
+  "noProductBehaviorChange": true,
+  "stableReleaseEvidenceUnchanged": true
+}

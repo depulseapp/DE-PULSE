@@ -2,13 +2,14 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Active work slice:** #70 / `ADAPT-CI-CONVERGENCE-001`  
-**Active branch / PR:** `adapt-ci-convergence-001` / Draft PR #71.
+**Completed work slice:** #70 / `ADAPT-CI-CONVERGENCE-001`  
+**Implementation branch:** `adapt-ci-convergence-001`  
+**State:** COMPLETE.
 
 ## Current delivery truth
 
-#70 is a process/release-engineering packet and consumes no public product version. Delivery remains exact-head Fast → exact-head Qualified → immutable release candidate → one canonical G11–G16 release lifecycle. Stable publication must never rebuild certified artifacts or overwrite differing Stable bytes. Prospective tag/version semantics come from `governance/versioning-policy.json`; historical Stable tags remain immutable.
+#70 consumed no public product version. Its exact implementation candidate `ffeb1640174a744cf85578e26bbed7abd828cee1` passed Fast #742 and Qualified #175 and merged through PR #71 as `6ba8c0c2b486bdbbebac4611f440741d0588c65f`.
 
-Do not promote/merge this packet until the closure ledger is satisfied with executable evidence, including actual GitHub `main` protection/ruleset evidence.
+Future product delivery remains: work slice → commits → Fast → deliberate Qualified checkpoint → immutable candidate SHA/fingerprint → coherent public release grouping → one canonical G11-G16 publication. Stable publication never rebuilds certified artifacts or overwrites differing Stable bytes. Prospective public versions follow `governance/versioning-policy.json`.
 
-Evergreen delivery rules remain in `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`.
+`WAIVER-GITHUB-MAIN-PROTECTION-001` remains the bounded current-plan exception; it does not claim technical enforcement. Evergreen delivery rules remain in `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`.

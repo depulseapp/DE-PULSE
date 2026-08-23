@@ -1,22 +1,19 @@
 # DE.PULSE — Current Adaptive CI / Versioning Convergence
 
 **Program:** #70 / `ADAPT-CI-CONVERGENCE-001`  
-**Status:** FINAL QUALIFICATION PENDING  
+**Status:** COMPLETE  
 **Certified Stable:** `v18.9.1-stable`  
-**Active branch / PR:** `adapt-ci-convergence-001` / Draft PR #71  
+**Implementation branch:** `adapt-ci-convergence-001`  
+**Merged PR / commit:** #71 / `6ba8c0c2b486bdbbebac4611f440741d0588c65f`  
 **Canonical machine state:** `governance/current-state.json`  
 **Closure ledger:** `governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json`
 
-#70 implementation is materially complete. Repository convergence includes the three-workflow control plane, Planner v3, trustworthy base binding, targeted native rehearsals, canonical version-neutral G12, release identity/toolchain contracts, immutable publication checks, legacy CI retirement/history ownership, recursive source health, migration/equivalence gates, active version-named test-owner migration, cohesive production package decomposition, stable retained-asset ownership, prospective SemVer, G16 CI-efficiency evidence, and final-binary SPDX SBOM/provenance integration.
+#70 executable convergence is complete: three-workflow control plane, Planner v3, trustworthy base binding, targeted native rehearsals, version-neutral G12, release identity/toolchain contracts, immutable publication checks, legacy CI retirement/history ownership, recursive source health, migration/equivalence gates, capability-oriented active tests, package decomposition, stable retained assets, prospective SemVer, G16 CI-efficiency evidence and final-binary SBOM/provenance are retained.
 
-## GitHub main-protection external-control waiver
+Final exact-head evidence is `governance/work-slices/ADAPT-CI-CONVERGENCE-001/final-qualification-evidence.json`: Fast #742 / `32656818767` and Qualified #175 / `32656912135` passed candidate `ffeb1640174a744cf85578e26bbed7abd828cee1`, then expected-head PR #71 merged it as `6ba8c0c2b486bdbbebac4611f440741d0588c65f`.
 
-GitHub `main` remains factually unprotected because the configured private-repository ruleset cannot be enforced on the current organization plan without upgrading to GitHub Team. The owner declined that upgrade. This is not treated as a technical PASS.
+## GitHub main-protection exception
 
-The single gap `MAIN-PROTECTION-RULESET` is governed by `WAIVER-GITHUB-MAIN-PROTECTION-001` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json`. `tools/ci/work_slice_closure_gate.py` validates the waiver fail-closed, restricts it to this exact #70 control, requires explicit residual-risk acceptance, and requires the PR-first/exact-head Fast/exact-head Qualified/no-direct-main/no-force-push/G11-G16/provenance compensating controls. The waiver must be retired when technical enforcement becomes available or its revalidation triggers fire.
+`MAIN-PROTECTION-RULESET` remains factually `BLOCKED_EXTERNAL`. `WAIVER-GITHUB-MAIN-PROTECTION-001` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json` is the only bounded exception. Actual `main` protection remains false; the waiver is validated fail-closed and retains mandatory compensating controls/revalidation triggers.
 
-## Closure rule
-
-Documentation alone still cannot close #70. Every non-waived blocking gap must be `VERIFIED`; the factual `BLOCKED_EXTERNAL` protection gap is closure-satisfying only while the machine-readable waiver above validates. Final exact-head `DE.PULSE/fast-head` and full `DE.PULSE/qualified-head` are still required on the current waiver/governance head before merge/closure.
-
-The durable full acceptance contract remains issue #70 plus `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`; this CURRENT file is the live projection from `governance/current-state.json`.
+The product capability gate is now unblocked. The next reserved capability is TradeInsight Settings/API-key UX, which must begin as a new governed work slice rather than extending #70.

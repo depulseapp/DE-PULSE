@@ -4,16 +4,20 @@
   "issue": 70,
   "title": "Adaptive CI convergence, versioning and repository hygiene",
   "type": "PROCESS_RELEASE_ENGINEERING",
-  "status": "FINAL_QUALIFICATION",
+  "status": "COMPLETE",
   "publicProductVersion": null,
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
   "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
   "baselineBuildId": "v18.9.1-stable-20260821",
   "branch": "adapt-ci-convergence-001",
+  "closureBranch": "adapt-ci-convergence-001-closure",
+  "mergedPullRequest": 71,
+  "mergedCommitSha": "6ba8c0c2b486bdbbebac4611f440741d0588c65f",
   "productBehaviorChange": false,
-  "blocksNextProductCapability": true,
+  "blocksNextProductCapability": false,
   "closureLedger": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/closure.json",
+  "finalQualificationEvidence": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/final-qualification-evidence.json",
   "externalControlWaivers": {
     "MAIN-PROTECTION-RULESET": "governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json"
   },
@@ -29,9 +33,9 @@
   ],
   "closureRequires": [
     "EXECUTABLE_IMPLEMENTATION",
-    "CLOSURE_LEDGER_ALL_VERIFIED_OR_VALIDATED_EXTERNAL_WAIVER",
-    "FAST_PASS",
-    "QUALIFIED_PASS",
+    "CLOSURE_LEDGER_VERIFIED_OR_VALIDATED_SPECIAL_BINDING",
+    "EXACT_HEAD_FAST_PASS",
+    "EXACT_HEAD_QUALIFIED_PASS",
     "ROOT_BEFORE_AFTER_EVIDENCE",
     "NO_QUALITY_EVIDENCE_REMOVED",
     "SOURCE_HEALTH_DEBT_ZERO_OR_JUSTIFIED_INTERFACE_ONLY",
@@ -41,6 +45,6 @@
     "G16_CI_EFFICIENCY_EVIDENCE",
     "CURRENT_STATE_ADAPTIVE_OVERLAY_CONVERGENCE",
     "VERSION_RELEASE_REBASELINE",
-    "FINAL_EXACT_HEAD_REQUALIFICATION"
+    "POST_MERGE_FINAL_QUALIFICATION_BINDING"
   ]
 }
