@@ -16,11 +16,11 @@ PROVIDER_CAPABILITIES = ROOT / "provider_capabilities.go"
 errors = []
 
 for path, label in (
-    (REGISTRY, "functionality_utility_registry.json"),
-    (REMEDIATION, "functionality_utility_remediation.json"),
+    (REGISTRY, "governance/registries/functionality_utility_registry.json"),
+    (REMEDIATION, "governance/registries/functionality_utility_remediation.json"),
     (CONTRACT, "FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md"),
-    (DATA_REGISTRY, "data_utility_registry.json"),
-    (PROVIDER_MODE_REGISTRY, "provider_market_mode_integration_registry.json"),
+    (DATA_REGISTRY, "governance/registries/data_utility_registry.json"),
+    (PROVIDER_MODE_REGISTRY, "governance/registries/provider_market_mode_integration_registry.json"),
     (PROVIDER_ROUTER, "provider_router.go"),
     (PROVIDER_CAPABILITIES, "provider_capabilities.go"),
 ):
