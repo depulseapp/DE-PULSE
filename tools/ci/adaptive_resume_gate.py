@@ -14,6 +14,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 errors: list[str] = []
+CLOSED_PROCESS_STATES = {"COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
 
 
 def need(ok: bool, msg: str) -> None:
@@ -101,13 +102,20 @@ try:
     need(stable.get("publication") == "PASS_NO_REBUILD", "current-state Stable publication must remain PASS_NO_REBUILD")
 
     work_slice_id = str(active.get("workSliceId", "")).strip()
+    active_status = str(active.get("status", "")).strip().upper()
+    completed_process = active_status in CLOSED_PROCESS_STATES
     need(bool(work_slice_id), "current-state active work slice missing")
     need(active.get("publicProductVersion") is None, "process work slice must not consume a public product version")
     need(active.get("productBehaviorChange") is False, "#70 process work slice must remain product-behavior neutral")
-    need(gate.get("blocked") is True and gate.get("blockedByIssue") == 70, "next product capability must remain blocked by issue #70")
+    if completed_process:
+        need(gate.get("blocked") is False and gate.get("blockedByIssue") is None, "completed process work slice must unblock the next product capability")
+        need(gate.get("unblockedByCompletedWorkSlice") == work_slice_id, "completed process work slice must be named as the capability-gate unblock owner")
+    else:
+        need(gate.get("blocked") is True and gate.get("blockedByIssue") == active.get("issue"), "next product capability must remain blocked by the active process issue")
 
     work_slice_path = ROOT / "governance" / "work-slices" / work_slice_id / "work-slice.json"
     work_slice = json.loads(work_slice_path.read_text())
+    work_status = str(work_slice.get("status", "")).strip().upper()
     need(work_slice.get("workSliceId") == work_slice_id, "current-state/work-slice ID mismatch")
     need(work_slice.get("issue") == active.get("issue"), "current-state/work-slice issue mismatch")
     need(work_slice.get("branch") == active.get("branch"), "current-state/work-slice branch mismatch")
@@ -116,7 +124,16 @@ try:
     need(work_slice.get("baselineCandidateSha") == stable.get("candidateSha"), "work-slice baseline candidate / Stable candidate drift")
     need(work_slice.get("baselineSourceFingerprint") == stable.get("sourceFingerprint"), "work-slice baseline fingerprint / Stable fingerprint drift")
     need(work_slice.get("baselineBuildId") == stable.get("buildId"), "work-slice baseline build / Stable build drift")
-    need(work_slice.get("blocksNextProductCapability") is True, "work slice must block next product capability until closure")
+    need(work_status == active_status, "current-state/work-slice status mismatch")
+    if completed_process:
+        need(work_slice.get("blocksNextProductCapability") is False, "completed work slice must unblock next product capability")
+        need(bool(active.get("closureBranch")) and active.get("closureBranch") == work_slice.get("closureBranch"), "completed process work slice closure-branch binding missing or drifted")
+        final_evidence = str(work_slice.get("finalQualificationEvidence", "")).strip()
+        need(bool(final_evidence) and (ROOT / final_evidence).is_file(), "completed process work slice final qualification evidence missing")
+        need(active.get("finalQualificationEvidence") == final_evidence, "current-state/work-slice final qualification evidence drift")
+        need(active.get("mergedCommitSha") == work_slice.get("mergedCommitSha"), "current-state/work-slice merged commit drift")
+    else:
+        need(work_slice.get("blocksNextProductCapability") is True, "work slice must block next product capability until closure")
 
     workflow_dir = ROOT / ".github" / "workflows"
     routine = sorted(path.name for path in workflow_dir.glob("*.yml"))
