@@ -5,6 +5,11 @@
 current repository root. The conserved inventory core still verifies every other
 legacy/root invariant. A zero current-root version stack is accepted only when
 byte-preserved historical versioned evidence exists under governed release history.
+
+This entrypoint intentionally re-exports the core executable-closure helper because
+repository migration safety imports the canonical inventory entrypoint rather than
+the implementation module. Keeping that API explicit avoids a hidden dependency on
+the temporary wrapper/core split.
 """
 from __future__ import annotations
 
@@ -14,6 +19,9 @@ import importlib
 ROOT = Path(__file__).resolve().parents[2]
 CORE = importlib.import_module("legacy_test_gate_inventory_core")
 _ORIGINAL_VALIDATE = CORE.validate
+
+# Canonical helper API consumed by repository_migration_gate_impl.py.
+active_executable_text = CORE.active_executable_text
 
 
 def _archived_versioned_evidence() -> list[Path]:
