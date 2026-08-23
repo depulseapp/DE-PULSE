@@ -124,7 +124,7 @@
       "blocker": "Release assurance is incomplete when the required security command is unavailable or not executed.",
       "userAction": "No normal user action; release engineering provisions govulncheck for release certification.",
       "rightsEntitlement": "NOT_APPLICABLE",
-      "evidence": ["governance/policies/release_environment_policy.json", "release_environment_gate.py"]
+      "evidence": ["governance/policies/release_environment_policy.json", "tools/release/release_environment_gate.py"]
     },
     {
       "id": "DEP-CONFIG-LIVE-EQUITY",
