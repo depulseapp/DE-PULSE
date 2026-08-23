@@ -37,6 +37,23 @@ def synthesized_migration_policy() -> dict[str, object]:
             "expiry": "REGISTERED_MIGRATION_TARGET",
             "removalCondition": removal,
         }
+
+    final_evidence = policy.get("finalRootEvidenceFiles", {})
+    if isinstance(final_evidence, dict):
+        for path, meta in final_evidence.items():
+            if not isinstance(meta, dict) or "/" in str(path):
+                continue
+            owner = str(meta.get("owner", "")).strip()
+            reason = str(meta.get("reason", "")).strip()
+            if not owner or not reason:
+                continue
+            transitional[str(path)] = {
+                "owner": owner,
+                "reason": reason,
+                "expiry": "FINAL_PACKAGE_MAIN_EVIDENCE",
+                "removalCondition": "MOVE_WITH_CAPABILITY_ONLY_WHEN_PRIVATE_PACKAGE_MAIN_ACCESS_CAN_BE_PRESERVED_WITHOUT_TEST_ONLY_PRODUCTION_EXPORTS",
+            }
+
     compatibility = dict(policy)
     compatibility["transitionalRootFiles"] = transitional
     return compatibility
