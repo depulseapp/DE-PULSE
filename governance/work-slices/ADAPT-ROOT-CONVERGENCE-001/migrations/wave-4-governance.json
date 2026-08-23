@@ -1,0 +1,103 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_4_GOVERNANCE_OWNERSHIP",
+  "moves": [
+    {
+      "oldPath": "community_source_policy.json",
+      "newPath": "governance/policies/community_source_policy.json",
+      "owner": "Governance / community source policy",
+      "reason": "Source-rights and retention policy belongs to canonical governance policy ownership.",
+      "removalCondition": "Old root path absent and all active consumers use governance/policies.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "release_environment_policy.json",
+      "newPath": "governance/policies/release_environment_policy.json",
+      "owner": "Governance / release environment policy",
+      "reason": "Release toolchain/environment requirements belong to canonical governance policy ownership.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use governance/policies.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "canonical_naming_registry.json",
+      "newPath": "governance/registries/canonical_naming_registry.json",
+      "owner": "Governance / canonical naming registry",
+      "reason": "Canonical vocabulary and identity metadata is a machine governance registry.",
+      "removalCondition": "Old root path absent and naming governance consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "dependency_readiness_registry.json",
+      "newPath": "governance/registries/dependency_readiness_registry.json",
+      "owner": "Governance / dependency readiness registry",
+      "reason": "Dependency readiness evidence is a machine governance registry.",
+      "removalCondition": "Old root path absent and dependency readiness consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "functionality_utility_registry.json",
+      "newPath": "governance/registries/functionality_utility_registry.json",
+      "owner": "Governance / functionality utility registry",
+      "reason": "Functionality ownership/utility decisions are machine governance evidence.",
+      "removalCondition": "Old root path absent and functionality utility consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "functionality_utility_remediation.json",
+      "newPath": "governance/registries/functionality_utility_remediation.json",
+      "owner": "Governance / functionality remediation registry",
+      "reason": "Durable remediation dispositions belong beside the functionality utility registry.",
+      "removalCondition": "Old root path absent and remediation consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "provider_market_mode_integration_registry.json",
+      "newPath": "governance/registries/provider_market_mode_integration_registry.json",
+      "owner": "Governance / provider Market Mode integration registry",
+      "reason": "Provider-to-Market-Mode admission evidence is a machine governance registry.",
+      "removalCondition": "Old root path absent and provider integration consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "release_learning_registry.json",
+      "newPath": "governance/registries/release_learning_registry.json",
+      "owner": "Governance / release learning registry",
+      "reason": "Cross-release learning evidence is machine governance state, not a root owner.",
+      "removalCondition": "Old root path absent and adaptive/release consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "shadow_experiments.json",
+      "newPath": "governance/registries/shadow_experiments.json",
+      "owner": "Governance / shadow experiment registry",
+      "reason": "Shadow experiment lifecycle/configuration is governed machine state.",
+      "removalCondition": "Old root path absent and shadow experiment consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "user_action_required_registry.json",
+      "newPath": "governance/registries/user_action_required_registry.json",
+      "owner": "Governance / user action required registry",
+      "reason": "Durable operator/user dependency actions are machine governance evidence.",
+      "removalCondition": "Old root path absent and dependency/user-action consumers use governance/registries.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}
