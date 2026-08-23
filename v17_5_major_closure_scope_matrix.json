@@ -15,7 +15,7 @@
       ],
       "fresh_executable_evidence": [
         "v17_0_scope_gate.py",
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     },
     {
@@ -52,7 +52,7 @@
         "persistence_backend_windows.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     },
     {
@@ -64,7 +64,7 @@
         "persistence_repository.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go",
+        "canonical_persistence_regression_test.go",
         "runtime_performance_slo_regression_test.go"
       ]
     },
@@ -131,7 +131,7 @@
         "canonical_pipeline.go"
       ],
       "fresh_executable_evidence": [
-        "v17_0_persistence_test.go",
+        "canonical_persistence_regression_test.go",
         "canonical_pipeline_regression_test.go"
       ]
     },
@@ -265,7 +265,7 @@
       ],
       "fresh_executable_evidence": [
         "main_test.go",
-        "v17_0_persistence_test.go"
+        "canonical_persistence_regression_test.go"
       ]
     }
   ],
