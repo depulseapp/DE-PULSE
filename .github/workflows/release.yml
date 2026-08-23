@@ -37,6 +37,7 @@ jobs:
       build_id: ${{ steps.identity.outputs.build_id }}
       certification_manifest: ${{ steps.identity.outputs.certification_manifest }}
       publication_state: ${{ steps.identity.outputs.publication_state }}
+      target_tag: ${{ steps.identity.outputs.target_tag }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -61,6 +62,7 @@ jobs:
           test "$(git rev-parse refs/remotes/origin/pr-source)" = "$source_head_sha"
 
           python3 release_identity.py --verify
+          python3 tools/release/release_identity_contract.py --verify
           python3 tools/ci/workflow_policy.py
           readarray -t identity < <(python3 - <<'PY'
           import json
@@ -69,13 +71,11 @@ jobs:
           print(r['version'])
           print(r['build_id'])
           print(f"release/v{r['version']}/certification-manifest.json")
-          print(r['previous_stable'])
           PY
           )
           version="${identity[0]}"
           build_id="${identity[1]}"
           manifest="${identity[2]}"
-          previous_stable="${identity[3]}"
           test -f "$manifest"
           test -f tools/release/run_full_certification.py
 
@@ -99,14 +99,14 @@ jobs:
           require_status 'DE.PULSE/fast-head'
           require_status 'DE.PULSE/qualified-head'
 
-          previous_tag="${previous_stable}-stable"
+          previous_tag="$(python3 tools/release/release_identity_contract.py --previous-stable-tag)"
           previous_ref="$(git ls-remote --refs origin "refs/tags/$previous_tag" | awk 'NR==1{print $1}')"
           if [ -z "$previous_ref" ]; then
             echo "ERROR: declared previous Stable tag $previous_tag does not exist" >&2
             exit 2
           fi
 
-          tag="v${version}-stable"
+          tag="$(python3 tools/release/release_identity_contract.py --stable-tag "$version")"
           existing_ref="$(git ls-remote --refs origin "refs/tags/$tag" | awk 'NR==1{print $1}')"
           if [ -n "$existing_ref" ] && [ "$existing_ref" != "$candidate_sha" ]; then
             echo "ERROR: immutable Stable tag conflict: $tag -> $existing_ref, candidate=$candidate_sha" >&2
@@ -129,6 +129,7 @@ jobs:
           echo "build_id=$build_id" >> "$GITHUB_OUTPUT"
           echo "certification_manifest=$manifest" >> "$GITHUB_OUTPUT"
           echo "publication_state=$publication_state" >> "$GITHUB_OUTPUT"
+          echo "target_tag=$tag" >> "$GITHUB_OUTPUT"
           {
             echo '## G11 immutable merged candidate'
             echo "- source PR: #$source_pr"
@@ -136,6 +137,7 @@ jobs:
             echo "- merged candidate: \`$candidate_sha\`"
             echo "- fingerprint: \`$candidate_fp\`"
             echo "- canonical G12 manifest: \`$manifest\`"
+            echo "- policy-derived Stable tag: \`$tag\`"
             echo "- publication feasibility: \`$publication_state\`"
             echo '- exact-head DE.PULSE/fast-head status: PASS'
             echo '- exact-head DE.PULSE/qualified-head status: PASS'
@@ -301,11 +303,17 @@ jobs:
     permissions:
       contents: write
       actions: read
+      id-token: write
+      attestations: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ needs.g11.outputs.candidate_sha }}
           fetch-depth: 0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: De-Pulse-v${{ needs.g11.outputs.version }}-G13-G14-macOS-Apple-Silicon
@@ -333,6 +341,19 @@ jobs:
             --source-fingerprint '${{ needs.g11.outputs.fingerprint }}' \
             --certified-run-head '${{ needs.g11.outputs.candidate_sha }}' \
             --out promotion-verification.json
+      - name: Generate SPDX SBOM for certified runnable artifacts
+        run: |
+          python3 tools/release/generate_sbom.py \
+            --version '${{ needs.g11.outputs.version }}' \
+            --artifact release-assets/macos/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-macOS-Apple-Silicon.zip \
+            --artifact release-assets/windows/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-Windows-x64.zip \
+            --out release-assets/De-Pulse-v${{ needs.g11.outputs.version }}-SBOM.spdx.json
+      - name: Attest exact certified runnable artifacts
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            release-assets/macos/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-macOS-Apple-Silicon.zip
+            release-assets/windows/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-Windows-x64.zip
       - name: Publish Stable release without rebuild or overwrite
         env:
           GH_TOKEN: ${{ github.token }}
@@ -340,16 +361,18 @@ jobs:
           BUILD_ID: ${{ needs.g11.outputs.build_id }}
           CANDIDATE_SHA: ${{ needs.g11.outputs.candidate_sha }}
           SOURCE_FP: ${{ needs.g11.outputs.fingerprint }}
+          TARGET_TAG: ${{ needs.g11.outputs.target_tag }}
         shell: bash
         run: |
           set -euo pipefail
-          tag="v${VERSION}-stable"
+          tag="$TARGET_TAG"
+          test -n "$tag"
           existing_ref="$(git ls-remote --refs origin "refs/tags/$tag" | awk 'NR==1{print $1}')"
           if [ -n "$existing_ref" ] && [ "$existing_ref" != "$CANDIDATE_SHA" ]; then
             echo "ERROR: $tag already points to $existing_ref, expected $CANDIDATE_SHA" >&2
             exit 2
           fi
-          VERSION="$VERSION" BUILD_ID="$BUILD_ID" CANDIDATE_SHA="$CANDIDATE_SHA" SOURCE_FP="$SOURCE_FP" python3 - <<'PY'
+          VERSION="$VERSION" BUILD_ID="$BUILD_ID" CANDIDATE_SHA="$CANDIDATE_SHA" SOURCE_FP="$SOURCE_FP" TARGET_TAG="$TARGET_TAG" python3 - <<'PY'
           import os
           from pathlib import Path
           Path('release-notes.md').write_text(
@@ -358,10 +381,13 @@ jobs:
               "- macOS Apple Silicon G13/G14: PASS\n"
               "- Windows x64 G13/G14: PASS\n"
               "- G15 Release Assurance: PASS\n"
+              "- Runnable artifact provenance attestation: PASS\n"
+              "- SPDX 2.3 SBOM: ATTACHED\n"
               "- No Execution Boundary: PRESERVED\n"
               f"- Certified source: {os.environ['CANDIDATE_SHA']}\n"
               f"- Canonical source fingerprint: {os.environ['SOURCE_FP']}\n"
               f"- Build ID: {os.environ['BUILD_ID']}\n"
+              f"- Stable tag: {os.environ['TARGET_TAG']}\n"
               "- Publication uploads the exact artifacts produced and certified in this same workflow run; no rebuild occurs.\n"
               "- Existing Stable assets are reused only when byte-identical; differing bytes are never overwritten.\n"
           )
@@ -373,6 +399,7 @@ jobs:
           assets=(
             "release-assets/macos/De-Pulse-v${VERSION}-Stable-macOS-Apple-Silicon.zip"
             "release-assets/windows/De-Pulse-v${VERSION}-Stable-Windows-x64.zip"
+            "release-assets/De-Pulse-v${VERSION}-SBOM.spdx.json"
             "release-assets/macos/G13-G14-macOS-Apple-Silicon.json"
             "release-assets/windows/G13-G14-Windows-x64.json"
             "release-assets/g15/G15-Release-Assurance.json"
@@ -418,16 +445,19 @@ jobs:
             native_state=REUSED_ALREADY_CERTIFIED_STABLE
             assurance_state=REUSED_ALREADY_CERTIFIED_STABLE
             publication_result=IDEMPOTENT_NOOP
+            evidence_reuse=true
           else
             certification_state=PASS
             native_state=PASS
             assurance_state=PASS
             publication_result=PASS
+            evidence_reuse=false
           fi
           cat > g16/G16-CI-DELIVERY-SUMMARY.json <<EOF
           {
-            "schema": "DE.PULSE-G16-CI-DELIVERY-4",
+            "schema": "DE.PULSE-G16-CI-DELIVERY-5",
             "version": "v${{ needs.g11.outputs.version }}",
+            "stableTag": "${{ needs.g11.outputs.target_tag }}",
             "sourcePr": "${{ needs.g11.outputs.source_pr }}",
             "qualifiedSourceHead": "${{ needs.g11.outputs.source_head_sha }}",
             "candidateSha": "${{ needs.g11.outputs.candidate_sha }}",
@@ -446,7 +476,11 @@ jobs:
             "canonicalG12Executor": "tools/release/run_full_certification.py",
             "canonicalWorkflows": ["ci-fast.yml", "ci-qualified.yml", "release.yml"],
             "stableAssetsDifferingBytesOverwrite": false,
-            "noRebuildPublication": true
+            "noRebuildPublication": true,
+            "runnableArtifactAttestation": true,
+            "sbom": "SPDX-2.3",
+            "evidenceReuse": $evidence_reuse,
+            "qualityRequirementsRemoved": false
           }
           EOF
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
