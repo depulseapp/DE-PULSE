@@ -1,0 +1,156 @@
+{
+  "schema": "DE.PULSE-REPOSITORY-ARCHITECTURE-TARGET-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "auditBaselineMainSha": "9336f7e5a5c1ba3ecaf0827a586b68d52f7c5982",
+  "auditBranchHeadSha": "f95160e1018b84785b9c7c364625a3307e3571a4",
+  "stableAuthority": "v18.9.1-stable",
+  "productBehaviorChange": false,
+  "auditFindings": {
+    "currentRootFiles": 198,
+    "historicalV17V18NonGoAtRoot": 0,
+    "rootMoveCandidates": 41,
+    "versionNamedGoOwners": 7,
+    "productionGoFilesObservedByG2": 104,
+    "productionGoPackageDirectoriesObservedByG2": 4,
+    "rootPackageMainRemainsDominant": true,
+    "testsTopLevelIsRendererOnly": true,
+    "toolsCiIsFlatAndAlreadyLarge": true,
+    "rendererStillContainsVersionNamedRuntimeOrCompatibilityAssets": true,
+    "governanceAndAdaptiveGovernanceHaveDistinctPurposesButNeedExplicitOwnership": true
+  },
+  "targetTopLevelOwners": {
+    ".github": "Exactly three canonical workflow entrypoints and GitHub metadata.",
+    "adaptive-governance": "Permanent adaptive product/build/delivery operating model and CURRENT projections. Retained as a distinct semantic owner; do not merge mechanically into operational governance.",
+    "governance": "Machine policy, registries, contracts, decisions, work-slice state and repository architecture rules.",
+    "handoff": "Single portable human resume entrypoint; projection of canonical machine state.",
+    "internal": "Cohesive production Go capability packages only. Extraction requires dependency boundary, behavior equivalence and package-aware tests.",
+    "release": "Current release manifests plus immutable version/history evidence. Historical shipped evidence never becomes current control.",
+    "renderer": "Current runtime UI assets with capability-oriented, version-neutral names; historical compatibility assets move to release/history or test fixtures.",
+    "tests": "Non-Go renderer/integration/acceptance/fixture evidence and tests that do not require private package-main access.",
+    "tools": "Reusable CI, release and developer tooling. No product runtime behavior owner."
+  },
+  "governanceSubowners": {
+    "governance/policies": "Durable machine-readable policy files.",
+    "governance/registries": "Durable capability/provider/data/utility/action registries.",
+    "governance/contracts": "Long-lived human-readable operating and assurance contracts when moved in a later evidence-preserving wave.",
+    "governance/decisions": "Point-in-time architecture/release decisions when moved in a later evidence-preserving wave.",
+    "governance/work-slices": "Per-work-slice executable state, scope and closure evidence."
+  },
+  "toolsSubowners": {
+    "tools/ci": "Canonical CI entrypoints and shared CI libraries; existing active paths may remain flat during this slice to avoid path churn.",
+    "tools/ci/gates": "Preferred destination for newly migrated standalone root gates when no import/path compatibility requires the flat owner.",
+    "tools/ci/tests": "Preferred destination for CI harness self-tests that are not product acceptance tests.",
+    "tools/release": "Version-neutral release identity, qualification, certification and publication tooling.",
+    "tools/dev": "Explicit manual/developer diagnostics only; never an automatic product runtime dependency."
+  },
+  "testsSubowners": {
+    "tests/renderer": "Renderer source-contract and DOM/browser-neutral evidence.",
+    "tests/integration": "Cross-module or HTTP integration harnesses outside Go package-private tests.",
+    "tests/acceptance": "Professional/trader/authorization acceptance harnesses.",
+    "tests/fixtures": "Stable non-secret fixtures shared by test harnesses."
+  },
+  "immediateRootDisposition": {
+    "policiesToGovernancePolicies": [
+      "ai_eval_policy.json",
+      "community_source_policy.json",
+      "data_health_policy.json",
+      "release_environment_policy.json"
+    ],
+    "registriesToGovernanceRegistries": [
+      "canonical_naming_registry.json",
+      "data_utility_registry.json",
+      "dependency_readiness_registry.json",
+      "functionality_utility_registry.json",
+      "functionality_utility_remediation.json",
+      "provider_dataset_ai_rights_registry.json",
+      "provider_market_mode_integration_registry.json",
+      "release_learning_registry.json",
+      "shadow_experiments.json",
+      "user_action_required_registry.json"
+    ],
+    "releaseTools": [
+      "release_identity.py",
+      "source_fingerprint.py",
+      "release_environment_gate.py",
+      "stable_promotion_gate.py",
+      "version_consistency_test.py"
+    ],
+    "ciGates": [
+      "approved_scope_gate.py",
+      "bounded_race_gate.py",
+      "canonical_naming_gate.py",
+      "code_quality_performance_gate.py",
+      "coverage_gate.py",
+      "edge_case_hardening_test.py",
+      "extensive_edge_case_gate.py",
+      "extreme_30_gate.py",
+      "fault_injection_gate.py",
+      "independent_adversarial_authorization_gate.py",
+      "next_build_audit_gate.py",
+      "previous_build_audit_gate.py",
+      "professional_build_authorization_gate.py",
+      "professional_expert_gate.py",
+      "randomized_order_gate.py",
+      "role_aware_ui_composition_gate.py"
+    ],
+    "testHarnesses": [
+      "documentation_ui_owner_test.js",
+      "http_workflow_test.py",
+      "professional_expert_runtime_test.js",
+      "renderer_logic_test.js",
+      "responsive_ui_test.py",
+      "trader_acceptance_test.js"
+    ]
+  },
+  "versionNamedGoConvergence": {
+    "rule": "Rename in place to capability-oriented package-main names when the file is still a valid package-main owner. Extract to internal/<capability> only as a cohesive refactor; never create test-only production exports.",
+    "owners": {
+      "ai_hardening_v18_6.go": "ai_hardening.go",
+      "developer_commands_v18_9.go": "developer_commands.go",
+      "tradeinsight_admission_v18_9.go": "tradeinsight_admission.go",
+      "tradeinsight_congress_probe_v18_9.go": "tradeinsight_congress_probe.go",
+      "tradeinsight_congress_v18_9.go": "tradeinsight_congress.go",
+      "tradeinsight_v18_9.go": "tradeinsight.go",
+      "v18_test_profile.go": "test_profile.go"
+    }
+  },
+  "rendererConvergence": {
+    "rule": "Active runtime owners use capability-oriented names. Historical/version compatibility assets are not runtime owners and move to release/history or test fixtures after reference proof.",
+    "knownCandidates": [
+      "renderer/admin-v18.2.css",
+      "renderer/admin-v18.2.js",
+      "renderer/documentation-access-v18.6.js",
+      "renderer/header-v18.5.1.js"
+    ]
+  },
+  "packageExtractionRule": {
+    "cosmeticWholePackageMove": "PROHIBITED",
+    "cohesiveCapabilityExtraction": "ALLOWED_WITH_EQUIVALENCE",
+    "preferredFutureCapabilities": [
+      "auth",
+      "persistence",
+      "providerrouter",
+      "marketdata",
+      "research",
+      "tradeinsight",
+      "runtimehealth"
+    ],
+    "requiredProof": [
+      "package-aware source health",
+      "go test ./...",
+      "no lost test identities",
+      "no test-only production exports",
+      "exact-head Fast",
+      "Qualified when slice closure is requested"
+    ]
+  },
+  "closureTarget": {
+    "unclassifiedPaths": 0,
+    "rootMoveDispositions": 0,
+    "avoidableVersionNamedGoOwners": 0,
+    "historicalVersionNamedRendererRuntimeOwners": 0,
+    "newArbitraryRootTooling": 0,
+    "stableEvidenceMutation": 0
+  }
+}
