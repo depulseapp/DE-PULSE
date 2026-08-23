@@ -3,21 +3,23 @@
 
 #73 moved historical version-scoped non-Go root evidence to governed release
 history without rewriting the bytes. The conserved reconciliation core still
-uses the historical root-relative identities embedded in its immutable ledger,
-so this entrypoint resolves only missing root-level v17/v18 evidence paths to
-their byte-preserved archive owners while the core executes.
+uses historical root-relative identities embedded in its immutable ledger, so
+this adapter resolves a missing root-level v17/v18 path by capability/version
+archive convention and only when that exact archived filename actually exists.
+
+No historical root filename is duplicated here as a current control identity.
 """
 from __future__ import annotations
 
 from pathlib import Path
 import importlib
-import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 _ORIG_READ_TEXT = Path.read_text
 _ORIG_EXISTS = Path.exists
 _ORIG_IS_FILE = Path.is_file
 
+# Most-specific first. Major-version fallback is handled generically below.
 _PREFIX_DIRS = (
     ("v17_5_1_", "release/history/v17.5.1/root-evidence"),
     ("v17_5_", "release/history/v17.5.0/root-evidence"),
@@ -42,10 +44,6 @@ _PREFIX_DIRS = (
     ("v18_8_0_", "release/history/v18.8.0/root-evidence"),
     ("v18_9_1_", "release/v18.9.1/legacy-root"),
 )
-_MAJOR_FILES = {
-    "v17_baseline_contract.json", "v17_baseline_gate.py", "v17_delivery_slices.json", "v17_major_scope.json",
-    "v18_baseline_contract.json", "v18_baseline_gate.py", "v18_delivery_slices.json", "v18_documentation_typography_gate.py", "v18_major_scope.json",
-}
 
 
 def archived(path: Path) -> Path | None:
@@ -54,17 +52,21 @@ def archived(path: Path) -> Path | None:
             return None
     except Exception:
         return None
+
     name = path.name
-    if name.startswith("v17_") and name in _MAJOR_FILES:
-        candidate = ROOT / "release/history/v17-major/root-evidence" / name
-        return candidate if _ORIG_IS_FILE(candidate) else None
-    if name.startswith("v18_") and name in _MAJOR_FILES:
-        candidate = ROOT / "release/history/v18-major/root-evidence" / name
-        return candidate if _ORIG_IS_FILE(candidate) else None
     for prefix, directory in _PREFIX_DIRS:
         if name.startswith(prefix):
             candidate = ROOT / directory / name
             return candidate if _ORIG_IS_FILE(candidate) else None
+
+    # Non-numbered major evidence is stored under the major owner. Existence of
+    # the exact filename is the authority; unknown names are never fabricated.
+    if name.startswith("v17_"):
+        candidate = ROOT / "release/history/v17-major/root-evidence" / name
+        return candidate if _ORIG_IS_FILE(candidate) else None
+    if name.startswith("v18_"):
+        candidate = ROOT / "release/history/v18-major/root-evidence" / name
+        return candidate if _ORIG_IS_FILE(candidate) else None
     return None
 
 
