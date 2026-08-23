@@ -4,12 +4,12 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REGISTRY = ROOT / "functionality_utility_registry.json"
-REMEDIATION = ROOT / "functionality_utility_remediation.json"
+REGISTRY = ROOT / "governance/registries/functionality_utility_registry.json"
+REMEDIATION = ROOT / "governance/registries/functionality_utility_remediation.json"
 INDEX = ROOT / "renderer" / "index.html"
 CONTRACT = ROOT / "adaptive-governance" / "FUNCTIONALITY_UTILITY_INTEGRATION_CHECKPOINT.md"
-DATA_REGISTRY = ROOT / "data_utility_registry.json"
-PROVIDER_MODE_REGISTRY = ROOT / "provider_market_mode_integration_registry.json"
+DATA_REGISTRY = ROOT / "governance/registries/data_utility_registry.json"
+PROVIDER_MODE_REGISTRY = ROOT / "governance/registries/provider_market_mode_integration_registry.json"
 PROVIDER_ROUTER = ROOT / "provider_router.go"
 PROVIDER_CAPABILITIES = ROOT / "provider_capabilities.go"
 
@@ -352,4 +352,3 @@ print(
     f"{len(remediation_by_name)} durable remediation plans · {len(required_data)} v18.2 identity/admin data classes governed · "
     f"{len(assessments)} provider/Market Mode assessments across {len(assessed_providers)} providers"
 )
-
