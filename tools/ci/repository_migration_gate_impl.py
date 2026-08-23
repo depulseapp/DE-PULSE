@@ -27,6 +27,7 @@ TEXT_SUFFIXES = {
 }
 GO_TEST_RE = re.compile(r"(?m)^func\s+(Test[A-Za-z0-9_]+|Benchmark[A-Za-z0-9_]+|Fuzz[A-Za-z0-9_]+)\s*\(")
 VERSIONED_ROOT_RE = re.compile(r"^v(?P<major>[0-9]+)(?:[_\.-]|$)", re.IGNORECASE)
+SEMANTIC_TEST_PREFIXES = ("tests/renderer/", "tests/integration/", "tests/acceptance/")
 
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -81,8 +82,8 @@ def go_test_identities_by_path(paths: list[str], commit: str | None = None) -> d
 def executable_candidate(path: str) -> bool:
     p = Path(path)
     name = p.name.lower()
-    if path.startswith(("tools/ci/", "tools/release/", "tools/dev/")):
-        return p.suffix.lower() in {".py", ".js", ".sh", ".ps1"}
+    if path.startswith(("tools/ci/", "tools/release/", "tools/dev/", *SEMANTIC_TEST_PREFIXES)):
+        return p.suffix.lower() in {".py", ".js", ".mjs", ".cjs", ".sh", ".ps1"}
     if path.startswith("release/"):
         return name.endswith(("_test.py", "_test.js", "_gate.py", ".sh", ".ps1"))
     if "/" not in path:
@@ -153,6 +154,9 @@ def current_active_reference_texts(current_paths: list[str]) -> dict[str, str]:
         if path.startswith("renderer/") and not path.startswith(("renderer/qa/", "renderer/docs/")):
             if p.suffix.lower() in {".js", ".html", ".css"}:
                 texts[path] = p.read_text(encoding="utf-8", errors="replace")
+                continue
+        if path.startswith(SEMANTIC_TEST_PREFIXES) and p.suffix.lower() in {".py", ".js", ".mjs", ".cjs", ".sh", ".ps1"}:
+            texts[path] = active_reference_text(path, p.read_text(encoding="utf-8", errors="replace"))
     return texts
 
 
