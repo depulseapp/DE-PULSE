@@ -698,7 +698,7 @@ func TestExtreme30_22UIFunctionalIntegritySourceContracts(t *testing.T) {
 }
 
 func TestExtreme30_23ScreenResolutionResponsiveContracts(t *testing.T) {
-	b, err := os.ReadFile("responsive_ui_test.py")
+	b, err := os.ReadFile("tests/renderer/responsive_ui_test.py")
 	if err != nil {
 		t.Fatal(err)
 	}
