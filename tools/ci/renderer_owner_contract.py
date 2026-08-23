@@ -13,7 +13,7 @@ ACCESS=ROOT/'renderer'/'documentation-access-v18.6.js'
 HEADER=ROOT/'renderer'/'market-header-ui.js'
 LEGACY_HEADER=ROOT/'renderer'/'header-v18.5.1.js'
 QUALIFIED=ROOT/'.github'/'workflows'/'ci-qualified.yml'
-NODE_TEST=ROOT/'documentation_ui_owner_test.js'
+NODE_TEST=ROOT/'tests'/'renderer'/'documentation_ui_owner_test.js'
 HEADER_NODE_TEST=ROOT/'tests'/'renderer'/'market_header_owner_test.js'
 BROWSER_TEST=ROOT/'tools'/'ci'/'documentation_owner_browser_test.py'
 HIERARCHY_TEST=ROOT/'release'/'v18.5.1'/'browser_ui_hierarchy_test.py'
@@ -106,7 +106,7 @@ def main()->int:
         errors.append('role-access decorator must wrap the active render owner')
 
     evidence_tokens=(
-        'run: node documentation_ui_owner_test.js',
+        'run: node tests/renderer/documentation_ui_owner_test.js',
         'run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome',
         'run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit',
     )
@@ -114,7 +114,7 @@ def main()->int:
         if token not in qualified: errors.append(f'primary owner evidence missing from Qualified: {token}')
     if 'Documentation capability owner regression PASS' not in node_test:
         errors.append('Node Documentation owner regression proof missing')
-    if "require('./tests/renderer/market_header_owner_test.js')" not in node_test:
+    if "require('./market_header_owner_test.js')" not in node_test:
         errors.append('Qualified renderer owner regression must transitively execute canonical Market Header owner test')
     if not HEADER_NODE_TEST.is_file():
         errors.append('canonical Market Header behavior test is missing: tests/renderer/market_header_owner_test.js')
