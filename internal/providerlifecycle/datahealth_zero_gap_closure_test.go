@@ -1,7 +1,6 @@
 package providerlifecycle
 
 import (
-	"encoding/json"
 	"io/fs"
 	"os"
 	"path/filepath"
