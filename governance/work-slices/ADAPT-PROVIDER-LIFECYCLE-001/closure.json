@@ -1,0 +1,95 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-PROVIDER-LIFECYCLE-001",
+  "issue": 83,
+  "branch": "adapt-provider-lifecycle-001",
+  "closurePolicy": "#83 closes only when the common provider-capability lifecycle/readiness framework is executable, all #80 capability rows have explicit lifecycle/authority/evidence status, lifecycle promotion is proven explicit-only, runtime suppression/recovery remains Router v2 owned, TradeInsight consumes the common framework, diagnostics are non-secret, and exact-head Fast + impact-selected Qualified pass. Documentation-only closure is prohibited.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "COMMON-LIFECYCLE-READINESS-EVALUATOR",
+      "status": "VERIFIED",
+      "owner": "canonical provider capability + Smart Provider Router v2 evidence owners",
+      "implementationPaths": ["internal/providerlifecycle/lifecycle.go", "internal/providerlifecycle/lifecycle_test.go", "smart_router_v2.go", "runtime_observability.go"],
+      "evidenceRequired": ["SHADOW/VALIDATED/APPROVED/PRODUCTION vocabulary", "deterministic thresholds", "observation/success/auth/freshness/schema/latency/quota/fallback/corroboration/provenance/utility/truth-boundary dimensions where measurable", "insufficient evidence cannot become READY_FOR_PROMOTION"],
+      "evidence": [
+        "internal/providerlifecycle/lifecycle.go defines the shared four-state lifecycle vocabulary, non-secret Policy/Evidence/Diagnostic schema, deterministic Evaluate readiness checks, and TradeInsightPolicy thresholds without adding a parallel runtime health/telemetry owner.",
+        "internal/providerlifecycle/lifecycle_test.go proves complete evidence can become READY_FOR_PROMOTION while shallow observations remain INSUFFICIENT_EVIDENCE and auth/rate-limit/disagreement failures block readiness.",
+        "Fast #911 / run 32777636690 PASS on source candidate 7a3d221d1556e9d32df11fce4e178c22bc600d93, including recursive package-aware source health, gofmt, go vet and full Go suite."
+      ],
+      "closureCondition": "One reusable evaluator computes readiness from canonical evidence without creating a parallel telemetry or health engine.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXPLICIT-PROMOTION-RUNTIME-SUPPRESSION-SEPARATION",
+      "status": "VERIFIED",
+      "owner": "governed lifecycle metadata plus existing Router v2 circuit/capability state",
+      "implementationPaths": ["internal/providerlifecycle/lifecycle.go", "internal/providerlifecycle/lifecycle_test.go", "smart_router_v2.go", "provider_router.go"],
+      "evidenceRequired": ["READY_FOR_PROMOTION never mutates lifecycle", "automatic rate-limit/outage suppression remains runtime-only", "cooldown/probe/recovery can occur without promotion or rollback", "direct authorities are not rank-promoted"],
+      "evidence": [
+        "Evaluate accepts Policy by value and returns advisory readiness only; TestReadyNeverAutoPromotes asserts SHADOW remains SHADOW even when readiness is READY_FOR_PROMOTION.",
+        "TestRuntimePressureEvidenceCannotChangeGovernedLifecycle proves runtime pressure evidence cannot alter governed lifecycle; existing smart_router_v2.go/provider_router.go retain circuit suppression, cooldown, probe and recovery ownership.",
+        "TestDirectAuthorityIsNotRankPromoted proves explicit direct authority remains PRODUCTION but lifecycle-rank readiness is N/A.",
+        "Fast #911 PASS validates the separation with existing Router v2 regressions in the full Go suite."
+      ],
+      "closureCondition": "Governance controls lifecycle transitions while runtime reliability remains automatically adaptive within the approved state.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXHAUSTIVE-26-CAPABILITY-CLASSIFICATION",
+      "status": "VERIFIED",
+      "owner": "#80 provider capability baseline + #83 lifecycle registry",
+      "implementationPaths": ["governance/data-health/provider-capability-matrix.json", "governance/data-health/provider-lifecycle-readiness.json", "internal/providerlifecycle/lifecycle_test.go"],
+      "evidenceRequired": ["26/26 #80 rows represented exactly once", "lifecycle vocabulary valid", "authority non-empty", "evidence status non-empty", "readiness status explicit or direct-authority/N/A"],
+      "evidence": [
+        "provider-lifecycle-readiness.json binds the immutable #80 matrix as its source and classifies all 26 capabilities with lifecycle, authority, evidence status and readiness/N/A.",
+        "TestRegistryExhaustsBaselineCapabilityMatrix dynamically loads both JSON owners and fails on any missing, duplicate or unowned row, invalid lifecycle, blank authority/evidence/readiness, or TradeInsight SHADOW drift.",
+        "Fast #911 PASS includes the 26/26 registry regression and #80 Data Health recurrence gate."
+      ],
+      "closureCondition": "No #80 provider/capability row is missing or ambiguously governed for lifecycle/readiness.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "TRADEINSIGHT-COMMON-FRAMEWORK-ADOPTION",
+      "status": "VERIFIED",
+      "owner": "shared lifecycle evaluator + existing TradeInsight admission contract",
+      "implementationPaths": ["internal/providerlifecycle/lifecycle.go", "tradeinsight_admission.go", "internal/providerlifecycle/lifecycle_test.go"],
+      "evidenceRequired": ["TradeInsight production candidates enter at SHADOW", "same common readiness evaluator used", "no TradeInsight-specific lifecycle health engine", "#78 remains the explicit validation/promotion adoption packet"],
+      "evidence": [
+        "tradeinsight_admission.go imports depulse/internal/providerlifecycle, uses shared lifecycle constants for admitted candidates, and delegates readinessPolicy to providerlifecycle.TradeInsightPolicy.",
+        "TradeInsight candidate admission remains SHADOW; gated/non-production capabilities remain NOT_IMPLEMENTED and #78 remains the explicit validation/promotion packet.",
+        "The shared package contains the lifecycle evaluator; no TradeInsight-specific lifecycle or health engine was added.",
+        "Fast #911 PASS compiles and executes the TradeInsight admission and lifecycle regressions together."
+      ],
+      "closureCondition": "TradeInsight is a consumer of the common lifecycle contract and cannot self-promote.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "NONSECRET-DIAGNOSTICS-GOVERNANCE-PROPAGATION",
+      "status": "VERIFIED",
+      "owner": "provider lifecycle diagnostics + CURRENT Adaptive/handoff projections",
+      "implementationPaths": ["internal/providerlifecycle/lifecycle.go", "internal/providerlifecycle/lifecycle_test.go", "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md", "handoff/CURRENT.md", "governance/current-state.json"],
+      "evidenceRequired": ["diagnostics contain lifecycle/readiness/authority/reasons but no credential fields", "#82 immutable completion visible", "#83 active ownership visible", "remaining order #83 -> #78 -> #84 retained"],
+      "evidence": [
+        "Diagnostic exposes provider/capability/dataset/lifecycle/readiness/promotionMode/authorityClass/reasons only; TestDiagnosticCannotExposeCredentialFields forbids api_key/apikey/authorization/secret/token shaped output.",
+        "governance/current-state.json retains completed #73 process-unblock authority, records #82 as the completed product capability, and reserves #83 as the active product slice.",
+        "CURRENT Roadmap/Build Plan/Build Process/Delivery Process and handoff/CURRENT.md project retained #73 authority plus #82 completion, #83 active ownership and #83 -> #78 -> #84 remaining order.",
+        "Fast #911 PASS includes repository migration/projection convergence, adaptive resume portability and post-Stable continuity contracts."
+      ],
+      "closureCondition": "Machine and portable human state agree and lifecycle evidence is diagnosis-ready without secrets.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #83"],
+      "evidence": [
+        "Implementation candidate 7a3d221d1556e9d32df11fce4e178c22bc600d93 earned Fast #911 / run 32777636690 PASS; this closure-evidence commit creates a new candidate and must earn its own exact-head Fast before Qualified."
+      ],
+      "closureCondition": "Final #83 candidate has exact-head Fast and Qualified success before merge.",
+      "blocksIssueClosure": true
+    }
+  ]
+}
