@@ -271,18 +271,19 @@ func parseRFC3339Unix(v string) int64 {
 }
 func (a *Application) handleSettingsSave(w http.ResponseWriter, r *http.Request) {
 	var in struct {
-		Settings      Settings `json:"settings"`
-		FinnhubKey    string   `json:"finnhubKey"`
-		AlpacaKey     string   `json:"alpacaKey"`
-		AlpacaSecret  string   `json:"alpacaSecret"`
-		GroqKey       string   `json:"groqKey"`
-		OpenRouterKey string   `json:"openRouterKey"`
-		GeminiKey     string   `json:"geminiKey"`
-		FREDKey       string   `json:"fredKey"`
-		BLSKey        string   `json:"blsKey"`
-		EIAKey        string   `json:"eiaKey"`
-		TwelveDataKey string   `json:"twelveDataKey"`
-		MarketauxKey  string   `json:"marketauxKey"`
+		Settings        Settings `json:"settings"`
+		FinnhubKey      string   `json:"finnhubKey"`
+		TradeInsightKey string   `json:"tradeInsightKey"`
+		AlpacaKey       string   `json:"alpacaKey"`
+		AlpacaSecret    string   `json:"alpacaSecret"`
+		GroqKey         string   `json:"groqKey"`
+		OpenRouterKey   string   `json:"openRouterKey"`
+		GeminiKey       string   `json:"geminiKey"`
+		FREDKey         string   `json:"fredKey"`
+		BLSKey          string   `json:"blsKey"`
+		EIAKey          string   `json:"eiaKey"`
+		TwelveDataKey   string   `json:"twelveDataKey"`
+		MarketauxKey    string   `json:"marketauxKey"`
 	}
 	if decodeJSON(r, &in) != nil {
 		writeError(w, 400, "Invalid settings")
@@ -362,6 +363,9 @@ func (a *Application) handleSettingsSave(w http.ResponseWriter, r *http.Request)
 	ensureDedicatedDeskWatchlists(&a.state, defaultState())
 	if v := cleanCredential(in.FinnhubKey); v != "" {
 		a.secrets.Finnhub = v
+	}
+	if v := cleanCredential(in.TradeInsightKey); v != "" {
+		a.secrets.TradeInsight = v
 	}
 	if v := cleanCredential(in.AlpacaKey); v != "" {
 		a.secrets.AlpacaKey = v
@@ -450,6 +454,8 @@ func (a *Application) handleClearSecret(w http.ResponseWriter, r *http.Request) 
 	switch in.Name {
 	case "finnhub":
 		a.secrets.Finnhub = ""
+	case "tradeinsight":
+		a.secrets.TradeInsight = ""
 	case "alpaca":
 		a.secrets.AlpacaKey = ""
 		a.secrets.AlpacaSecret = ""
@@ -478,18 +484,19 @@ func (a *Application) handleClearSecret(w http.ResponseWriter, r *http.Request) 
 }
 func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request) {
 	var in struct {
-		Provider      string `json:"provider"`
-		FinnhubKey    string `json:"finnhubKey"`
-		AlpacaKey     string `json:"alpacaKey"`
-		AlpacaSecret  string `json:"alpacaSecret"`
-		GroqKey       string `json:"groqKey"`
-		OpenRouterKey string `json:"openRouterKey"`
-		GeminiKey     string `json:"geminiKey"`
-		FREDKey       string `json:"fredKey"`
-		BLSKey        string `json:"blsKey"`
-		EIAKey        string `json:"eiaKey"`
-		TwelveDataKey string `json:"twelveDataKey"`
-		MarketauxKey  string `json:"marketauxKey"`
+		Provider        string `json:"provider"`
+		FinnhubKey      string `json:"finnhubKey"`
+		TradeInsightKey string `json:"tradeInsightKey"`
+		AlpacaKey       string `json:"alpacaKey"`
+		AlpacaSecret    string `json:"alpacaSecret"`
+		GroqKey         string `json:"groqKey"`
+		OpenRouterKey   string `json:"openRouterKey"`
+		GeminiKey       string `json:"geminiKey"`
+		FREDKey         string `json:"fredKey"`
+		BLSKey          string `json:"blsKey"`
+		EIAKey          string `json:"eiaKey"`
+		TwelveDataKey   string `json:"twelveDataKey"`
+		MarketauxKey    string `json:"marketauxKey"`
 	}
 	if decodeJSON(r, &in) != nil {
 		writeError(w, 400, "Invalid provider-test request")
@@ -497,6 +504,7 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	}
 	a.mu.RLock()
 	fk := a.secrets.Finnhub
+	ti := a.secrets.TradeInsight
 	ak := a.secrets.AlpacaKey
 	as := a.secrets.AlpacaSecret
 	gk := a.secrets.Groq
@@ -511,6 +519,9 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	a.mu.RUnlock()
 	if v := cleanCredential(in.FinnhubKey); v != "" {
 		fk = v
+	}
+	if v := cleanCredential(in.TradeInsightKey); v != "" {
+		ti = v
 	}
 	if v := cleanCredential(in.AlpacaKey); v != "" {
 		ak = v
@@ -547,6 +558,8 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	provider := strings.ToLower(strings.TrimSpace(in.Provider))
 	var result ProviderTestResult
 	switch provider {
+	case "tradeinsight":
+		result = testTradeInsight(ctx, ti)
 	case "alpaca":
 		result = testAlpaca(ctx, ak, as)
 	case "groq":
@@ -605,6 +618,34 @@ func testFinnhub(ctx context.Context, key string) ProviderTestResult {
 	r.Details = []string{"SPY quote authenticated", "WebSocket will be verified when the runtime starts"}
 	return r
 }
+func testTradeInsight(ctx context.Context, key string) ProviderTestResult {
+	r := ProviderTestResult{Provider: "tradeinsight", CheckedAt: time.Now().UTC().Format(time.RFC3339)}
+	key = cleanCredential(key)
+	if key == "" {
+		r.Status = "missing"
+		r.Message = "Enter a TradeInsight API key."
+		return r
+	}
+	end := time.Now().UTC()
+	params := url.Values{
+		"ticker":        []string{"SPY"},
+		"start":         []string{end.AddDate(0, 0, -10).Format("2006-01-02")},
+		"end":           []string{end.AddDate(0, 0, 1).Format("2006-01-02")},
+		"adjust_volume": []string{"true"},
+	}
+	rows, err := tradeInsightFetchRowsAt(ctx, &http.Client{Timeout: 12 * time.Second}, tradeInsightRESTBaseURL, key, "/ohlc", params)
+	if err != nil {
+		r.Status = "failed"
+		r.Message = err.Error()
+		return r
+	}
+	r.OK = true
+	r.Status = "connected"
+	r.Message = "TradeInsight historical-data access is working."
+	r.Details = []string{fmt.Sprintf("%d SPY OHLC rows returned", len(rows)), "Shadow-first capability admission remains enforced"}
+	return r
+}
+
 func testAlpaca(ctx context.Context, key, secret string) ProviderTestResult {
 	r := ProviderTestResult{Provider: "alpaca", CheckedAt: time.Now().UTC().Format(time.RFC3339)}
 	if key == "" || secret == "" {

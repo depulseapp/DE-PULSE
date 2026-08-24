@@ -38,14 +38,21 @@ type tradeInsightHistoryRow struct {
 	SplitRatio float64
 }
 
-func tradeInsightAPIKey() string {
+func tradeInsightAPIKey(configured ...string) string {
+	if len(configured) > 0 {
+		if key := strings.TrimSpace(configured[0]); key != "" {
+			return key
+		}
+	}
 	if key := strings.TrimSpace(os.Getenv("TIDATA_API_KEY")); key != "" {
 		return key
 	}
 	return strings.TrimSpace(os.Getenv("TRADEINSIGHT_API_KEY"))
 }
 
-func tradeInsightConfigured() bool { return tradeInsightAPIKey() != "" }
+func tradeInsightConfigured(configured ...string) bool {
+	return tradeInsightAPIKey(configured...) != ""
+}
 
 func tradeInsightSafeError(body []byte, key string) string {
 	msg := strings.TrimSpace(string(body))
@@ -160,12 +167,26 @@ func tradeInsightFetchRows(ctx context.Context, path string, params url.Values) 
 	return tradeInsightFetchRowsAt(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), path, params)
 }
 
+func (e *Engine) tradeInsightResolvedAPIKey() string {
+	if e != nil && e.app != nil {
+		e.app.mu.RLock()
+		configured := e.app.secrets.TradeInsight
+		e.app.mu.RUnlock()
+		return tradeInsightAPIKey(configured)
+	}
+	return tradeInsightAPIKey()
+}
+
+func (e *Engine) tradeInsightConfigured() bool {
+	return e.tradeInsightResolvedAPIKey() != ""
+}
+
 func (e *Engine) tradeInsightFetchRows(ctx context.Context, path string, params url.Values) ([]map[string]any, error) {
 	var begin func() func(error)
 	if e != nil && e.providerTelemetry != nil {
 		begin = func() func(error) { return e.providerTelemetry.begin(tradeInsightProviderName) }
 	}
-	return tradeInsightFetchRowsAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), path, params, begin)
+	return tradeInsightFetchRowsAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, e.tradeInsightResolvedAPIKey(), path, params, begin)
 }
 
 func tradeInsightHistoryRows(rows []map[string]any) []tradeInsightHistoryRow {
@@ -333,7 +354,7 @@ func (e *Engine) refreshTradeInsightHistoryMode(ctx context.Context, only []stri
 	if !dailyRegistered || !dailyAdmission.runtimeAdmitted() || !adjustedRegistered || !adjustedAdmission.runtimeAdmitted() {
 		return 0
 	}
-	if !tradeInsightConfigured() || !e.providerAllowed(tradeInsightProviderName) {
+	if !e.tradeInsightConfigured() || !e.providerAllowed(tradeInsightProviderName) {
 		return 0
 	}
 	corporateActionAdmission, corporateActionRegistered := tradeInsightCapabilityAdmissionLookup("corporate-actions")
