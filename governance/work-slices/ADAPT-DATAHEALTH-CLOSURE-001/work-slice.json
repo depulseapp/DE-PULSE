@@ -14,7 +14,7 @@
   "baselineMainSha": "c7cf3e8f6606d6e9650589090f2428aec97d90f3",
   "branch": "adapt-datahealth-closure-001",
   "productBehaviorChange": true,
-  "blocksNextProductCapability": false,
+  "blocksNextProductCapability": true,
   "scopeId": "ADAPT-DATAHEALTH-CLOSURE-001",
   "parentProgramIssue": 79,
   "parentProgramScopeId": "ADAPT-PROVIDER-PRODUCTION-001",
