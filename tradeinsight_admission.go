@@ -1,5 +1,7 @@
 package main
 
+import "depulse/internal/providerlifecycle"
+
 // tradeInsightCapabilityAdmission is the durable v18.9 admission contract for
 // TradeInsight capabilities. It is metadata only: it does not create routes,
 // fetch data, or bypass Smart Provider Router v2.
@@ -21,11 +23,35 @@ func (a tradeInsightCapabilityAdmission) runtimeAdmitted() bool {
 		return false
 	}
 	switch a.Lifecycle {
-	case "SHADOW", "VALIDATED", "APPROVED", "PRODUCTION":
+	case providerlifecycle.Shadow, providerlifecycle.Validated, providerlifecycle.Approved, providerlifecycle.Production:
 		return true
 	default:
 		return false
 	}
+}
+
+// readinessPolicy deliberately delegates lifecycle/readiness semantics to the
+// common provider-capability framework. #78 supplies validation evidence and any
+// explicit governed promotion record; TradeInsight does not own a parallel
+// lifecycle or health engine.
+func (a tradeInsightCapabilityAdmission) readinessPolicy() (providerlifecycle.Policy, bool) {
+	if a.Lifecycle != providerlifecycle.Shadow || !a.RuntimeEnabled || !a.SchemaVerified {
+		return providerlifecycle.Policy{}, false
+	}
+	dataset := "specialized capability"
+	switch a.ID {
+	case "daily-history", "adjusted-history", "bulk-history":
+		dataset = canonicalHistoricalBarsDataset
+	case "corporate-actions":
+		dataset = canonicalUSCorporateActionsDataset
+	case "congressional-trades":
+		dataset = "Research / Congressional Trading Intelligence"
+	default:
+		return providerlifecycle.Policy{}, false
+	}
+	policy := providerlifecycle.TradeInsightPolicy(a.ID, dataset)
+	policy.AuthorityClass = a.Authority
+	return policy, true
 }
 
 func tradeInsightCapabilityAdmissionLookup(id string) (tradeInsightCapabilityAdmission, bool) {
@@ -56,28 +82,28 @@ func tradeInsightCapabilityAdmissionRegistry() []tradeInsightCapabilityAdmission
 		{
 			ID: "daily-history", Capability: "Daily historical OHLCV", Disposition: "FALLBACK + STORE_FOR_HISTORY",
 			Consumer: "Historical Bars; history backfill; outcome studies", Authority: "Smart Provider Router v2 is the sole routing authority; daily-only semantics and raw/adjusted provenance are retained.",
-			EndpointEvidence: "/trading-data/v1/ohlc", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			EndpointEvidence: "/trading-data/v1/ohlc", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: providerlifecycle.Shadow,
 		},
 		{
 			ID: "adjusted-history", Capability: "Adjusted daily OHLCV", Disposition: "USE",
 			Consumer: "Historical analytics; outcome evaluation", Authority: "Uses the canonical Historical Bars owner; adjusted and raw series must never be mixed silently.",
-			EndpointEvidence: "/trading-data/v1/ohlc adjusted semantics", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			EndpointEvidence: "/trading-data/v1/ohlc adjusted semantics", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: providerlifecycle.Shadow,
 		},
 		{
 			ID: "corporate-actions", Capability: "Dividends and stock splits", Disposition: "USE + CORROBORATE",
 			Consumer: "Canonical corporate-action ledger; historical normalization; Research", Authority: "Supplemental evidence only; canonical corporate-action truth and provenance rules remain authoritative.",
-			EndpointEvidence: "/trading-data/v1/ohlc corporate-action fields", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			EndpointEvidence: "/trading-data/v1/ohlc corporate-action fields", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: providerlifecycle.Shadow,
 		},
 		{
 			ID: "bulk-history", Capability: "Bounded multi-ticker history", Disposition: "USE SELECTIVELY",
 			Consumer: "Bounded history backfill and outcome-analysis jobs", Authority: "Reuse canonical history ownership; cache-first, budgeted and backpressure-aware; never continuous broad refetch.",
-			EndpointEvidence: "Official tidata SDK performs client-side bounded fan-out over per-ticker daily history; no server-side bulk endpoint is assumed.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			EndpointEvidence: "Official tidata SDK performs client-side bounded fan-out over per-ticker daily history; no server-side bulk endpoint is assumed.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: providerlifecycle.Shadow,
 			GateReason: "Canonical Historical Bars route now provides deduplicated, sequential client-side fan-out capped at 50 symbols over the verified per-ticker daily endpoint; SHADOW-only pending validation evidence and explicit promotion approval.",
 		},
 		{
 			ID: "congressional-trades", Capability: "Congressional trades/disclosures", Disposition: "USE",
 			Consumer: "Congressional Trading Intelligence; Research; catalyst/context correlation", Authority: "Alternative evidence only; disclosure lag remains explicit and it never becomes deterministic trade truth.",
-			EndpointEvidence: "Official TradeInsight data-api/docs/insight-data.mdx: GET /trading-data/v1/congress/v1/trades with ticker/limit/offset, data/total/limit/offset envelope, and typed disclosure fields.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: "SHADOW",
+			EndpointEvidence: "Official TradeInsight data-api/docs/insight-data.mdx: GET /trading-data/v1/congress/v1/trades with ticker/limit/offset, data/total/limit/offset envelope, and typed disclosure fields.", SchemaVerified: true, RuntimeEnabled: true, Lifecycle: providerlifecycle.Shadow,
 			GateReason: "Official upstream REST schema verified; admitted SHADOW-only pending validation evidence and explicit promotion approval.",
 		},
 		{
