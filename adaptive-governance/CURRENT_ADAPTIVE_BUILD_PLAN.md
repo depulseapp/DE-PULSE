@@ -16,6 +16,9 @@
 7. Keep TradeInsight `symbol-search` gated/non-executable; the same-response Alpaca path is canonical for #92.
 8. Regression-protect same-request/zero-extra-fetch capture, normalization/filtering, persistence round-trip, restart reuse, monotonic stale-overwrite rejection and registry isolation.
 9. Preserve Smart Provider Router v2, direct SEC authority, GLD/SLV/USO actionable exceptions, U.S. equities and No Execution.
-10. Maintain Roadmap, Build Plan, Build Process, Delivery Process, current-state, work-slice and handoff alignment.
+10. Maintain Adaptive Roadmap, Build Plan, Build Process, Delivery Process, current-state, work-slice and handoff alignment.
+
+## Retained Adaptive Data Health build owners
+The completed #79 program remains executable build input. `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json` remain canonical machine-readable provider coverage/freshness/fetch ownership inputs and must not drift while #92 adds identity. #92 layers on top of those owners; it does not replace their Router v2, lifecycle/readiness, failure-recovery, truthful-degradation, or telemetry contracts.
 
 Delivery remains one branch/one PR, canonical Fast on the exact final candidate followed by impact-selected Qualified on the identical head, then expected-head merge only if live `main` is unchanged. No Stable/public SemVer release is created solely for #92.
