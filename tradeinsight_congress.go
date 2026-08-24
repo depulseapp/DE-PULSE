@@ -272,14 +272,15 @@ func (e *Engine) refreshTradeInsightCongressResearchSymbol(ctx context.Context, 
 	if !registered || !admission.runtimeAdmitted() {
 		return 0
 	}
-	if !tradeInsightConfigured() || !e.providerAllowed(tradeInsightProviderName) {
+	key := e.tradeInsightResolvedAPIKey()
+	if key == "" || !e.providerAllowed(tradeInsightProviderName) {
 		return 0
 	}
 	var begin func() func(error)
 	if e.providerTelemetry != nil {
 		begin = func() func(error) { return e.providerTelemetry.begin(tradeInsightProviderName) }
 	}
-	result, err := tradeInsightFetchCongressAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), symbol, begin)
+	result, err := tradeInsightFetchCongressAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, key, symbol, begin)
 	if err != nil {
 		e.recordProviderFailure(tradeInsightProviderName, err)
 		e.setHealth("research-congress:"+symbol, "optional degraded · TradeInsight SHADOW")
