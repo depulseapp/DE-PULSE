@@ -1,0 +1,58 @@
+name: DE.PULSE PR77 | HTTP Responsibility Split
+
+on:
+  push:
+    branches: [v18.9.2-tradeinsight-settings]
+    paths:
+      - .github/workflows/pr77-http-responsibility-split.yml
+
+permissions:
+  contents: write
+
+jobs:
+  split-http-watchlist-owner:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: v18.9.2-tradeinsight-settings
+          fetch-depth: 1
+      - name: Split watchlist HTTP responsibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          src = Path('http_api.go')
+          text = src.read_text()
+          marker = 'func (a *Application) handleWatchlistCreate(w http.ResponseWriter, r *http.Request) {'
+          idx = text.find(marker)
+          if idx < 0:
+              raise SystemExit('watchlist handler boundary not found')
+
+          watchlists = text[idx:].lstrip()
+          if 'func (a *Application) handleRemoveSymbol' not in watchlists:
+              raise SystemExit('expected complete watchlist handler block not found')
+
+          src.write_text(text[:idx].rstrip() + '\n')
+          Path('http_watchlists.go').write_text(
+              'package main\n\nimport (\n\t"net/http"\n\t"strings"\n)\n\n' + watchlists
+          )
+          PY
+          gofmt -w http_api.go http_watchlists.go
+          test "$(wc -l < http_api.go)" -le 1200
+          git diff --check
+          go test ./...
+          git diff -- http_api.go http_watchlists.go
+      - name: Commit split and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/pr77-http-responsibility-split.yml
+          git config user.name "depulseapp"
+          git config user.email "de.pulse.app@gmail.com"
+          git add -- http_api.go http_watchlists.go .github/workflows/pr77-http-responsibility-split.yml
+          git diff --cached --check
+          git commit -m "refactor: split watchlist HTTP responsibility"
+          git push origin HEAD:v18.9.2-tradeinsight-settings
