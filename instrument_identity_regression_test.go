@@ -8,6 +8,18 @@ import (
 	"time"
 )
 
+func testInstrumentIdentity(e *Engine, symbol string) (InstrumentIdentityRecord, bool) {
+	if e == nil {
+		return InstrumentIdentityRecord{}, false
+	}
+	e.warmInstrumentIdentities()
+	symbol = normalizeSymbol(symbol)
+	e.mu.RLock()
+	defer e.mu.RUnlock()
+	record, ok := e.instrumentIdentities[symbol]
+	return record, ok
+}
+
 func TestADAPTInstrumentIdentityCaptureUsesExistingRoutedUniverseFetch(t *testing.T) {
 	e := newV1801Engine(t)
 	configureAdaptProviderUniverseAlpaca(e)
@@ -28,17 +40,17 @@ func TestADAPTInstrumentIdentityCaptureUsesExistingRoutedUniverseFetch(t *testin
 	if calls != 1 {
 		t.Fatalf("identity capture must not add provider requests; got %d HTTP calls", calls)
 	}
-	identity, found := e.instrumentIdentityForSymbol("aapl")
+	identity, found := testInstrumentIdentity(e, "aapl")
 	if !found {
 		t.Fatal("expected canonical AAPL identity from the same /v2/assets response")
 	}
 	if identity.Name != "Apple Inc." || identity.Exchange != "NASDAQ" || identity.AssetClass != "us_equity" || identity.ProviderAssetID != "asset-aapl" || identity.Source != "alpaca-assets" {
 		t.Fatalf("unexpected canonical identity: %+v", identity)
 	}
-	if _, found := e.instrumentIdentityForSymbol("OTCX"); found {
+	if _, found := testInstrumentIdentity(e, "OTCX"); found {
 		t.Fatal("unsupported-exchange asset must not enter canonical identity")
 	}
-	if _, found := e.instrumentIdentityForSymbol("BRK.B"); found {
+	if _, found := testInstrumentIdentity(e, "BRK.B"); found {
 		t.Fatal("symbol outside canonical U.S. universe boundary must not enter identity")
 	}
 }
@@ -94,7 +106,7 @@ func TestADAPTInstrumentIdentityWarmReuseAcrossRestart(t *testing.T) {
 	p2 := NewPersistenceManager(dir)
 	defer p2.Close()
 	e := &Engine{app: &Application{persistence: p2}, health: map[string]string{}}
-	identity, found := e.instrumentIdentityForSymbol("nvda")
+	identity, found := testInstrumentIdentity(e, "nvda")
 	if !found {
 		t.Fatal("persisted identity was not warm-reused after restart")
 	}
