@@ -3,6 +3,8 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
+**Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
+**Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed product slice:** #76 / `ADAPT-TRADEINSIGHT-SETTINGS-001` / PR #77 / merge `a171ce2258632bd4bd6aa737176f2d6dffb44689`  
