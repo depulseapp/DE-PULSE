@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-TRADEINSIGHT-PRODUCTION-READINESS-1",
+  "scopeId": "ADAPT-TRADEINSIGHT-PRODUCTION-001",
+  "issue": 78,
+  "parentProgram": "ADAPT-PROVIDER-PRODUCTION-001",
+  "commonLifecycleOwner": "internal/providerlifecycle",
+  "runtimeRoutingOwner": "Smart Provider Router v2",
+  "qualificationKind": "DETERMINISTIC_REGRESSION_FIXTURE",
+  "liveProviderSmoke": "MANUAL_EXPLICIT_ONLY_NOT_REQUIRED_FOR_NORMAL_CI",
+  "promotionRule": "Threshold-passing evidence may advance a capability to APPROVED only through this explicit governed record. PRODUCTION remains reserved for #84 native zero-gap closure and may never be inferred from runtime health.",
+  "approval": {
+    "status": "EXPLICIT_GOVERNED_APPROVAL",
+    "targetLifecycle": "APPROVED",
+    "approvalRef": "#78/ADAPT-TRADEINSIGHT-PRODUCTION-001",
+    "productionGate": "#84/ADAPT-DATAHEALTH-CLOSURE-001"
+  },
+  "fixtureEvidence": {
+    "observations": 40,
+    "successes": 40,
+    "errors": 0,
+    "authFailures": 0,
+    "rateLimited": 0,
+    "serverFailures": 0,
+    "p95LatencyMs": 900,
+    "freshnessState": "FRESH",
+    "schemaIntegrity": true,
+    "fallbackVerified": true,
+    "corroborationSamples": 12,
+    "disagreementPct": 1,
+    "independentProvenance": true,
+    "consumerUtilityProven": true,
+    "truthBoundaryVerified": true
+  },
+  "candidates": [
+    {"id":"daily-history","qualification":"READY_FOR_PROMOTION","approvedLifecycle":"APPROVED","consumer":"Historical Bars / backfill / outcome studies","authority":"ROUTED_FALLBACK","regressionIds":["TestV189HistoryRouterUsesOneCanonicalDataset","TestV189TradeInsightPaginationAuthAndEnvelope","TestV189TradeInsightErrorsAreRouterClassifiableAndRedacted","TestV189TradeInsightDateOrdering"]},
+    {"id":"adjusted-history","qualification":"READY_FOR_PROMOTION","approvedLifecycle":"APPROVED","consumer":"Historical analytics / outcome evaluation","authority":"ROUTED_PROVIDER","regressionIds":["TestV189TradeInsightAdjustedRowsAndDerivedWeekly","TestV189TradeInsightObservedFetchReportsEveryPage","TestV189TradeInsightObservedFetchReportsRateLimit"]},
+    {"id":"corporate-actions","qualification":"READY_FOR_PROMOTION","approvedLifecycle":"APPROVED","consumer":"Corporate-action corroboration / Research","authority":"SUPPLEMENTAL_ONLY","regressionIds":["TestV189TradeInsightAdjustedRowsAndDerivedWeekly","TestV189TradeInsightDoesNotInventUnverifiedRESTEndpoints"]},
+    {"id":"bulk-history","qualification":"READY_FOR_PROMOTION","approvedLifecycle":"APPROVED","consumer":"Bounded history backfill / outcome jobs","authority":"ROUTED_BOUNDED_ONLY","regressionIds":["TestV189TradeInsightHistoryFanoutObeysBulkAdmissionAndCap","TestV189TradeInsightBulkHistoryUsesOnlyBoundedCanonicalFanout"]},
+    {"id":"congressional-trades","qualification":"READY_FOR_PROMOTION","approvedLifecycle":"APPROVED","consumer":"Research / Congressional Trading Intelligence","authority":"SPECIALIZED_SECONDARY_NON_DETERMINISTIC","regressionIds":["TestV189TradeInsightCongressOfficialSchemaIsShadowAdmitted","TestTradeInsightCongressUsesPersistedEngineCredential"]}
+  ],
+  "hardGated": [
+    {"id":"sec-form4","reason":"Exact configured-key REST endpoint/schema remains unverified; direct SEC/EDGAR is authoritative."},
+    {"id":"top-movers","reason":"Only MCP capability is verified; no production REST path/schema. Existing scanner/ranker remains canonical."},
+    {"id":"symbol-search","reason":"Only MCP capability is verified; no production REST path/schema. Canonical U.S.-equity validation remains final."}
+  ],
+  "nonProductionDependencies": ["mcp-interface","python-sdk"],
+  "faultCoverage": ["missing credential","401/403","429/cooldown","5xx","timeout","stale","malformed/partial","schema drift","router fallback/recovery","optional-provider isolation"],
+  "boundaries": ["US_EQUITIES_PROCESSING","GLD_SLV_USO_ACTIONABLE_EXCEPTIONS","NO_EXECUTION","DIRECT_SEC_EDGAR_FORM4_AUTHORITY","NO_AUTOMATIC_PRODUCTION_PROMOTION","NO_PARALLEL_TRADEINSIGHT_ROUTER_OR_LIFECYCLE_ENGINE"]
+}
