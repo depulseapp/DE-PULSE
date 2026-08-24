@@ -1,12 +1,13 @@
-# DE.PULSE — Current Adaptive Delivery Process
+# CURRENT Adaptive Delivery Process
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Implementation branch:** `adapt-root-convergence-001`  
-**Closure branch:** `adapt-root-convergence-001-closure`  
-**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Active product work:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / `adapt-datahealth-baseline-001`  
+**Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
-#73 consumed no public product version and introduced no intended product behavior change. Its exact implementation candidate passed Fast #819 and Qualified #179 and merged through PR #74. Published Stable tags/releases/evidence remain immutable.
+Delivery remains PR-first and exact-head governed. #80 does not consume or publish a public Stable version merely because its baseline artifacts are implemented. Required evidence is: executable matrix/SLO/bypass/recurrence contracts → canonical Fast exact-head PASS → deliberate impact-selected Qualified exact-head PASS → expected-head merge only after required evidence.
 
-Future delivery remains: governed work slice → commits → exact-head Fast → deliberate Qualified → exact candidate → coherent release grouping → public Stable version only when warranted → G11–G16. TradeInsight Settings/API-key UX is the next reserved product capability; starting it does not itself consume SemVer.
+Later #83/#78 lifecycle promotion requires observed common production-readiness evidence; reachability/API-key presence alone never promotes authority. #84 owns final all-provider zero-gap hardening and the governed macOS Apple Silicon / Windows x64 release-quality proof required before any eventual Stable publication.
+
+Release/rollback evidence must preserve truthful provider provenance, scoped degradation, fallback/recovery behavior, direct SEC/EDGAR Form 4 authority, No Execution, and immutable prior Stable evidence. No release is performed by the #76→#80 transition.

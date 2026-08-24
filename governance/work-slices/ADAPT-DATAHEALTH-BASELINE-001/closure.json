@@ -1,0 +1,70 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "issue": 80,
+  "branch": "adapt-datahealth-baseline-001",
+  "closurePolicy": "#80 closes only when the provider/capability inventory, Data Health SLO contract, runtime bypass audit, recurrence gate, Adaptive governance propagation, and exact-head qualification are executable and VERIFIED. Documentation-only completion is prohibited.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "PROVIDER-CAPABILITY-MATRIX",
+      "status": "OPEN",
+      "owner": "canonical provider capability/data-health governance",
+      "implementationPaths": ["governance/data-health/provider-capability-matrix.json", "provider_capabilities.go", "provider_router.go"],
+      "evidenceRequired": ["all active providers and authoritative sources enumerated", "every capability has authority/freshness/cache/fallback/consumer/materiality ownership", "no unclassified provider/capability rows"],
+      "evidence": [],
+      "closureCondition": "Machine-readable matrix is exhaustive against current runtime/provider owners and passes the Data Health classification gate.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "DATA-HEALTH-SLO-CONTRACT",
+      "status": "OPEN",
+      "owner": "canonical freshness/provider health policy",
+      "implementationPaths": ["governance/data-health/data-health-slo.json", "provider_router.go", "freshness.go"],
+      "evidenceRequired": ["healthy coverage and freshness SLOs", "fallback/recovery/quota/degradation metrics", "scoped truthful PARTIAL COVERAGE/DATA DEGRADED reasons and recovery conditions"],
+      "evidence": [],
+      "closureCondition": "SLO and degradation semantics are machine-readable, owned, scoped and regression-protected.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "RUNTIME-BYPASS-AUDIT",
+      "status": "OPEN",
+      "owner": "Smart Provider Router v2 / explicit direct-authority owners",
+      "implementationPaths": ["governance/data-health/provider-fetch-paths.json", "provider_router.go", "global_market_providers.go", "sec.go"],
+      "evidenceRequired": ["every production external fetch/runtime provider path classified MIGRATE, DIRECT_AUTHORITY or N/A", "general market-data bypasses assigned to #81 remediation", "direct-authority paths explicitly justified"],
+      "evidence": [],
+      "closureCondition": "No runtime external provider path is missing or ambiguously owned.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "UNCLASSIFIED-PROVIDER-RECURRENCE-GATE",
+      "status": "OPEN",
+      "owner": "existing canonical CI/source-health control plane",
+      "implementationPaths": ["tools/ci/data_health_provider_gate.py", ".github/workflows/ci-fast.yml"],
+      "evidenceRequired": ["new providers/capabilities fail closed unless classified", "new production external fetch hosts/paths fail closed unless registered", "no new permanent workflow family"],
+      "evidence": [],
+      "closureCondition": "Canonical Fast rejects provider/capability/fetch-path classification drift.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ADAPTIVE-GOVERNANCE-PROPAGATION",
+      "status": "OPEN",
+      "owner": "Adaptive Roadmap/Build Plan/Build Process/Delivery Process",
+      "implementationPaths": ["adaptive-governance/ADAPTIVE_ROADMAP.md", "adaptive-governance/ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md"],
+      "evidenceRequired": ["all four durable Adaptive contracts reference executable Data Health owners/gates/evidence", "current projections identify #79/#80 and dependency order"],
+      "evidence": [],
+      "closureCondition": "Runtime implementation and all four Adaptive contracts agree; neither documentation-only nor runtime-only completion is accepted.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "no Stable publication merely to close #80"],
+      "evidence": [],
+      "closureCondition": "Final #80 candidate has exact-head Fast and Qualified success with immutable evidence binding.",
+      "blocksIssueClosure": true
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-1",
+  "workSliceId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "issue": 80,
+  "title": "Data Health Baseline, SLOs & Provider/Capability Coverage Matrix",
+  "type": "PRODUCT_CAPABILITY",
+  "subtype": "PROVIDER_DATA_HEALTH_BASELINE",
+  "status": "IN_PROGRESS",
+  "publicProductVersion": null,
+  "stableProductVersionAtStart": "18.9.1",
+  "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "baselineBuildId": "v18.9.1-stable-20260821",
+  "baselineMainSha": "a171ce2258632bd4bd6aa737176f2d6dffb44689",
+  "branch": "adapt-datahealth-baseline-001",
+  "productBehaviorChange": true,
+  "blocksNextProductCapability": true,
+  "scopeId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "parentProgramIssue": 79,
+  "parentProgramScopeId": "ADAPT-PROVIDER-PRODUCTION-001",
+  "dependencies": [76, 79],
+  "closureLedger": "governance/work-slices/ADAPT-DATAHEALTH-BASELINE-001/closure.json",
+  "requiredOutputs": [
+    "machine-readable provider/capability adoption matrix",
+    "machine-readable data-health SLO/coverage contract",
+    "runtime provider-fetch bypass audit with MIGRATE/DIRECT_AUTHORITY/N/A dispositions",
+    "regression gate preventing unclassified providers/capabilities/runtime external fetches",
+    "all four Adaptive governance surfaces rebound to the executable Data Health program"
+  ],
+  "architectureBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_TELEMETRY_STATE_OWNERS",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "TRADEINSIGHT_SHADOW_FIRST_WHERE_GOVERNED",
+    "NO_PARALLEL_PROVIDER_SPECIFIC_DATA_HEALTH_SUBSYSTEMS"
+  ],
+  "authorizedSequence": [80, 81, 82, 83, 78, 84]
+}

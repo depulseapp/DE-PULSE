@@ -1,12 +1,19 @@
-# DE.PULSE — Current Adaptive Build Process
+# CURRENT Adaptive Build Process
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Implementation branch:** `adapt-root-convergence-001`  
-**Closure branch:** `adapt-root-convergence-001-closure`  
-**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Active product work:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / `adapt-datahealth-baseline-001`  
+**Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
-#73 followed the existing three-workflow, fail-closed process and is COMPLETE. Exact candidate `d42c47bf4c83dcb520388d588f0817c64257cc2e` passed Fast #819 and Qualified #179 before expected-head PR #74 merge. Stable `v18.9.1-stable` evidence and the #70 GitHub-plan waiver remain unchanged.
+For #80 and all child Data Health slices, implementation must be executable-first and canonical-owner-first:
+- source-audit every provider/capability/external fetch path before claiming coverage;
+- reuse Smart Provider Router v2 for general market-data routing/admission;
+- classify legitimate direct-authority/public paths explicitly rather than forcing rank-based substitution;
+- reuse canonical freshness, cache, persistence, telemetry, state and validation owners;
+- fail closed on unclassified new providers/capabilities/runtime external-fetch paths;
+- keep degradation scoped to affected capability/consumer and never suppress a genuine evidence gap merely to appear healthy;
+- use local/static/focused evidence before canonical Fast, then deliberate impact-selected Qualified;
+- do not add temporary/permanent workflow families or weaken G0–G16/source-health/architecture gates.
 
-The next product capability must start in a new governed work slice/branch/PR from live `main`. Keep work-slice identity separate from public SemVer. Apply normal dependency review, exact-head Fast, deliberate Qualified, and canonical-owner reuse; no direct-main development and no duplicate provider-specific subsystems.
+Every known gap discovered during #80 must be either resolved in #80 acceptance or assigned an executable disposition to #81/#82/#83/#78/#84. Documentation alone never verifies a closure gap.
