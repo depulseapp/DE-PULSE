@@ -14,10 +14,29 @@ import sys
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-POLICY_PATH = ROOT / "governance" / "policies" / "data_health_policy.json"
-MATRIX_PATH = ROOT / "governance" / "data-health" / "provider-capability-matrix.json"
-SLO_PATH = ROOT / "governance" / "data-health" / "data-health-slo.json"
-FETCH_PATH = ROOT / "governance" / "data-health" / "provider-fetch-paths.json"
+POLICY_PATH = ROOT / "governance/policies/data_health_policy.json"
+MATRIX_PATH = ROOT / "governance/data-health/provider-capability-matrix.json"
+SLO_PATH = ROOT / "governance/data-health/data-health-slo.json"
+FETCH_PATH = ROOT / "governance/data-health/provider-fetch-paths.json"
+ADAPTIVE_CURRENT_CONTRACTS = {
+    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md": (
+        "#80", "#81", "#82", "#83", "#78", "#84",
+        "Smart Provider Router v2", "PARTIAL COVERAGE", "DATA DEGRADED",
+    ),
+    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md": (
+        "provider-capability-matrix.json", "data-health-slo.json",
+        "provider-fetch-paths.json", "Adaptive Roadmap", "Build Plan",
+        "Build Process", "Delivery Process",
+    ),
+    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md": (
+        "Smart Provider Router v2", "fail closed", "canonical freshness",
+        "#81/#82/#83/#78/#84",
+    ),
+    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md": (
+        "canonical Fast exact-head PASS", "Qualified exact-head PASS",
+        "Direct SEC/EDGAR", "No Execution",
+    ),
+}
 
 EXPECTED_SCHEMAS = {
     MATRIX_PATH: "DE.PULSE-DATA-HEALTH-PROVIDER-CAPABILITY-MATRIX-1",
@@ -264,9 +283,23 @@ def validate_existing_policy(errors: list[str]) -> None:
         errors.append("live priority source lost SPY/QQQ")
 
 
+def validate_adaptive_current_contracts(errors: list[str]) -> None:
+    for path, tokens in ADAPTIVE_CURRENT_CONTRACTS.items():
+        if not path.is_file():
+            errors.append(f"missing CURRENT Adaptive Data Health contract: {path.relative_to(ROOT)}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        for token in tokens:
+            if token not in text:
+                errors.append(
+                    f"CURRENT Adaptive Data Health contract drift in {path.relative_to(ROOT)}: missing {token!r}"
+                )
+
+
 def main() -> int:
     errors: list[str] = []
     validate_existing_policy(errors)
+    validate_adaptive_current_contracts(errors)
     matrix = load_json(MATRIX_PATH, errors)
     slo = load_json(SLO_PATH, errors)
     fetch = load_json(FETCH_PATH, errors)
@@ -303,6 +336,7 @@ def main() -> int:
         return 2
     print("provider/capability classification: PASS")
     print("Data Health SLO/degradation/recovery contract: PASS")
+    print("CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process: PASS")
     print("runtime external-host recurrence protection: PASS")
     print("DE.PULSE Adaptive Data Health: PASS")
     return 0
