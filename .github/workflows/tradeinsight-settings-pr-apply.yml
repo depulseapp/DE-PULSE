@@ -30,7 +30,7 @@ jobs:
           p = Path('app_model.go')
           text = p.read_text()
           old = '\tHasFinnhubKey      bool                          `json:"hasFinnhubKey"`\n'
-          new = '\tHasFinnhubKey     bool                          `json:"hasFinnhubKey"`\n'
+          new = '\tHasFinnhubKey     bool `json:"hasFinnhubKey"`\n'
           if text.count(old) != 1:
               raise SystemExit(f'app_model.go convergence anchor count={text.count(old)}')
           p.write_text(text.replace(old, new, 1))
