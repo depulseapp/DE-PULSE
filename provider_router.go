@@ -104,6 +104,7 @@ func routeChains() map[string][]string {
 	return map[string][]string{
 		"US Live Equities":              {"Alpaca", "Finnhub", "Twelve Data"},
 		canonicalUSAssetUniverseDataset: {"Alpaca"},
+		canonicalUSMarketCalendarDataset: {"Alpaca"},
 		"VIX / Indices":                 {"Twelve Data", "yfinance", "CBOE"},
 		canonicalHistoricalBarsDataset:  {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
 		"News":                          {"Finnhub", "Marketaux"},
@@ -531,7 +532,6 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 				if h.Configured && h.Recovery != "SUPPRESSED" && h.Circuit != "OPEN" && h.Circuit != "RATE LIMITED" {
 					active = h.Provider
 					break
-				}
 			}
 		}
 
