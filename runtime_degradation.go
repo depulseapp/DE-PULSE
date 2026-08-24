@@ -18,6 +18,11 @@ type RuntimeDegradationState struct {
 	Abstain           bool     `json:"abstain,omitempty"`
 	Affected          []string `json:"affected,omitempty"`
 	AffectedConsumers []string `json:"affectedConsumers,omitempty"`
+	FallbackActive    bool     `json:"fallbackActive,omitempty"`
+	PreferredProvider string   `json:"preferredProvider,omitempty"`
+	ServingProvider   string   `json:"servingProvider,omitempty"`
+	FallbackStatus    string   `json:"fallbackStatus,omitempty"`
+	FallbackDetail    string   `json:"fallbackDetail,omitempty"`
 }
 
 func criticalDecisionDataUsable(freshness []FreshnessDiagnostic, session string) bool {
@@ -174,11 +179,14 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		return finalizeRuntimeDegradation(out)
 	}
 	if feed.FeedState == "finnhub-fallback" {
-		out.Code = "PROVIDER DEGRADED"
-		out.ReasonCode = "PROVIDER_DOWN"
-		out.Detail = "Primary Alpaca feed is unavailable or quiet; Finnhub fallback is carrying live equity updates"
-		out.Affected = []string{"primary live-equity route"}
-		return finalizeRuntimeDegradation(out)
+		// A functioning fallback is routing context, not by itself a data-health
+		// failure. Keep preferred/serving provenance visible and let canonical
+		// freshness/route checks below decide whether evidence is actually degraded.
+		out.FallbackActive = true
+		out.PreferredProvider = "Alpaca"
+		out.ServingProvider = "Finnhub"
+		out.FallbackStatus = "ACTIVE"
+		out.FallbackDetail = "Primary Alpaca live feed is unavailable or quiet; Finnhub fallback is carrying live equity updates"
 	}
 
 	bad := []string{}
@@ -224,7 +232,7 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		return finalizeRuntimeDegradation(out)
 	}
 
-	if status == "degraded" {
+	if status == "degraded" && !out.FallbackActive {
 		out.Code = "PROVIDER DEGRADED"
 		out.ReasonCode = "UNKNOWN"
 		out.Detail = "Runtime health is degraded; inspect Provider Router and Data Freshness for the active cause"

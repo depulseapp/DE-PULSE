@@ -86,6 +86,34 @@ func TestV1870HealthyStateHasNoFalseAbstain(t *testing.T) {
 	}
 }
 
+func TestADAPTDataHealthHealthyFallbackDoesNotFalseDegrade(t *testing.T) {
+	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "LIVE"}, {Dataset: "VIX", State: "FRESH"}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "finnhub-fallback"}, fresh, ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
+	if got.Code != "" || got.ReasonCode != "" || got.PressureState != "HEALTHY" || got.Abstain || !got.CriticalUsable {
+		t.Fatalf("healthy eligible fallback must not manufacture a degradation state: %+v", got)
+	}
+	if !got.FallbackActive || got.FallbackStatus != "ACTIVE" || got.PreferredProvider != "Alpaca" || got.ServingProvider != "Finnhub" {
+		t.Fatalf("healthy fallback must remain explicit in non-secret provider telemetry: %+v", got)
+	}
+	if got.FallbackDetail == "" {
+		t.Fatalf("fallback diagnostics must explain why the serving provider differs: %+v", got)
+	}
+}
+
+func TestADAPTDataHealthFallbackCannotMaskCriticalFreshnessLoss(t *testing.T) {
+	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "STALE"}, {Dataset: "VIX", State: "FRESH"}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "finnhub-fallback"}, fresh, ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
+	if got.Code != "PARTIAL COVERAGE" || got.ReasonCode != "LOW_COVERAGE" || got.PressureState != "DEGRADED" || !got.Abstain || got.CriticalUsable {
+		t.Fatalf("fallback transport must not mask stale required quote evidence: %+v", got)
+	}
+	if !got.FallbackActive || got.PreferredProvider != "Alpaca" || got.ServingProvider != "Finnhub" {
+		t.Fatalf("degraded evidence must retain fallback provenance for diagnosis: %+v", got)
+	}
+	if !containsStringV1870(got.Affected, "Quotes") || !containsStringV1870(got.AffectedConsumers, "Day") {
+		t.Fatalf("critical freshness loss must remain scoped to quote consumers: %+v", got)
+	}
+}
+
 func TestV1870RecoveryHysteresisRejectsTransientHealthySample(t *testing.T) {
 	tracker := NewRuntimeSLOTracker()
 	t0 := time.Unix(1_800_000_000, 0)
