@@ -12,25 +12,61 @@ import (
 	"time"
 )
 
+const canonicalUSMarketCalendarDataset = "US Market Calendar"
+
 func (e *Engine) refreshAlpacaMarketCalendar(ctx context.Context, key, secret string) {
+	if !e.refreshAlpacaMarketCalendarWithClient(ctx, key, secret, &http.Client{Timeout: 12 * time.Second}) {
+		e.setHealth("market-calendar", "degraded · using built-in U.S. calendar fallback")
+	}
+}
+
+// refreshAlpacaMarketCalendarWithClient routes only Alpaca provider acquisition
+// through Smart Provider Router v2. The Engine remains the canonical calendar
+// state/fallback owner, so a failed refresh never clears prior calendar evidence.
+func (e *Engine) refreshAlpacaMarketCalendarWithClient(ctx context.Context, key, secret string, client *http.Client) bool {
 	start := time.Now().In(easternLocation()).AddDate(0, 0, -2).Format("2006-01-02")
 	end := time.Now().In(easternLocation()).AddDate(0, 2, 0).Format("2006-01-02")
 	raw := strings.TrimRight(alpacaTradingBaseURL, "/") + "/v2/calendar?start=" + url.QueryEscape(start) + "&end=" + url.QueryEscape(end)
+	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
 	var rows []AlpacaCalendarDay
-	err := getJSON(ctx, &http.Client{Timeout: 12 * time.Second}, raw, map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}, &rows)
-	if err != nil {
-		e.setHealth("market-calendar", "degraded · using built-in U.S. calendar fallback")
-		return
+	attempts := map[string]providerRouteAttempt{
+		"Alpaca": func(routeCtx context.Context) bool {
+			rows = nil
+			err := e.providerGetJSONTier(routeCtx, "Alpaca", WorkTierUserActionable, client, raw, headers, &rows)
+			if err == nil && len(rows) > 0 {
+				e.recordProviderSuccess("Alpaca")
+				return true
+			}
+			if err == nil {
+				err = fmt.Errorf("Alpaca market calendar returned an empty payload")
+			}
+			if providerRequestFailureIsLocalNeutral(routeCtx, err) {
+				return false
+			}
+			reportProviderRouteFailure(routeCtx, err)
+			return false
+		},
 	}
+	if _, loaded := e.executeProviderRoute(ctx, canonicalUSMarketCalendarDataset, attempts); !loaded {
+		return false
+	}
+
 	cal := map[string]AlpacaCalendarDay{}
 	for _, r := range rows {
-		cal[r.Date] = r
+		if strings.TrimSpace(r.Date) != "" {
+			cal[r.Date] = r
+		}
 	}
+	if len(cal) == 0 {
+		return false
+	}
+	now := time.Now().UnixMilli()
 	e.mu.Lock()
 	e.alpacaCalendar = cal
-	e.lastUpdated["market-calendar"] = time.Now().UnixMilli()
-	e.health["market-calendar"] = fmt.Sprintf("healthy · Alpaca calendar · %d sessions", len(rows))
+	e.lastUpdated["market-calendar"] = now
+	e.health["market-calendar"] = fmt.Sprintf("healthy · Alpaca calendar · %d sessions", len(cal))
 	e.mu.Unlock()
+	return true
 }
 
 func parseMoverRows(v any) []MarketMover {
