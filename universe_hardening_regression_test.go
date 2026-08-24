@@ -395,3 +395,111 @@ func TestADAPTProviderRequestLocalNeutralClassification(t *testing.T) {
 		t.Fatal("genuine provider HTTP failure must not be local-neutral")
 	}
 }
+
+func TestADAPTProviderMarketCalendarProductionUsesRouterV2(t *testing.T) {
+	e := newV1801Engine(t)
+	configureAdaptProviderUniverseAlpaca(e)
+	calls := 0
+	client := adaptProviderUniverseClient(func(r *http.Request) (*http.Response, error) {
+		calls++
+		if r.URL.Path != "/v2/calendar" || r.URL.Query().Get("start") == "" || r.URL.Query().Get("end") == "" {
+			t.Fatalf("unexpected calendar request: %s", r.URL.String())
+		}
+		if r.Header.Get("APCA-API-KEY-ID") != "test-key" || r.Header.Get("APCA-API-SECRET-KEY") != "test-secret" {
+			t.Fatalf("Alpaca calendar auth headers missing")
+		}
+		return adaptProviderUniverseResponse(http.StatusOK, `[{"date":"2026-08-24","open":"09:30","close":"16:00"}]`), nil
+	})
+
+	e.mu.RLock()
+	beforeDecisions := e.smartRouterScorecard.RouteDecisions
+	e.mu.RUnlock()
+	if !e.refreshAlpacaMarketCalendarWithClient(context.Background(), "test-key", "test-secret", client) {
+		t.Fatal("production calendar route failed")
+	}
+	if calls != 1 {
+		t.Fatalf("calendar provider acquisition expected one request, calls=%d", calls)
+	}
+
+	e.mu.RLock()
+	row, exists := e.alpacaCalendar["2026-08-24"]
+	updatedAt := e.lastUpdated["market-calendar"]
+	health := e.health["market-calendar"]
+	capability := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", canonicalUSMarketCalendarDataset)]
+	afterDecisions := e.smartRouterScorecard.RouteDecisions
+	e.mu.RUnlock()
+	if !exists || row.Open == "" || row.Close == "" || updatedAt == 0 || !strings.Contains(health, "healthy · Alpaca calendar") {
+		t.Fatalf("calendar canonical state not updated: exists=%v row=%+v updatedAt=%d health=%q", exists, row, updatedAt, health)
+	}
+	if capability.LastSuccess == 0 || afterDecisions != beforeDecisions+1 {
+		t.Fatalf("calendar Router success evidence missing: capability=%+v decisions=%d->%d", capability, beforeDecisions, afterDecisions)
+	}
+}
+
+func TestADAPTProviderMarketCalendarCancellationPreservesStateAndHealthCircuits(t *testing.T) {
+	e := newV1801Engine(t)
+	configureAdaptProviderUniverseAlpaca(e)
+	const staleAt int64 = 123456789
+	e.mu.Lock()
+	e.alpacaCalendar = map[string]AlpacaCalendarDay{"2026-08-24": {Date: "2026-08-24", Open: "09:30", Close: "16:00"}}
+	e.lastUpdated["market-calendar"] = staleAt
+	e.mu.Unlock()
+	client := adaptProviderUniverseClient(func(r *http.Request) (*http.Response, error) {
+		return nil, context.Canceled
+	})
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if e.refreshAlpacaMarketCalendarWithClient(ctx, "test-key", "test-secret", client) {
+		t.Fatal("canceled calendar refresh unexpectedly succeeded")
+	}
+
+	e.mu.RLock()
+	row, exists := e.alpacaCalendar["2026-08-24"]
+	updatedAt := e.lastUpdated["market-calendar"]
+	global := e.providerCircuits[providerKey("Alpaca")]
+	calendarCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", canonicalUSMarketCalendarDataset)]
+	e.mu.RUnlock()
+	if !exists || row.Open != "09:30" || updatedAt != staleAt {
+		t.Fatalf("canceled calendar refresh corrupted cached state: exists=%v row=%+v updatedAt=%d", exists, row, updatedAt)
+	}
+	if global.Failures != 0 || global.LastFailure != 0 || calendarCircuit.Failures != 0 || calendarCircuit.LastFailure != 0 {
+		t.Fatalf("caller cancellation poisoned calendar/provider health: global=%+v calendar=%+v", global, calendarCircuit)
+	}
+}
+
+func TestADAPTProviderMarketCalendarFailureIsCapabilityScopedAndPreservesState(t *testing.T) {
+	e := newV1801Engine(t)
+	configureAdaptProviderUniverseAlpaca(e)
+	const staleAt int64 = 987654321
+	e.mu.Lock()
+	e.alpacaCalendar = map[string]AlpacaCalendarDay{"2026-08-24": {Date: "2026-08-24", Open: "09:30", Close: "16:00"}}
+	e.lastUpdated["market-calendar"] = staleAt
+	e.mu.Unlock()
+	client := adaptProviderUniverseClient(func(r *http.Request) (*http.Response, error) {
+		return adaptProviderUniverseResponse(http.StatusInternalServerError, `{"message":"calendar unavailable"}`), nil
+	})
+	if e.refreshAlpacaMarketCalendarWithClient(context.Background(), "test-key", "test-secret", client) {
+		t.Fatal("terminal calendar provider failure unexpectedly succeeded")
+	}
+
+	e.mu.RLock()
+	row, exists := e.alpacaCalendar["2026-08-24"]
+	updatedAt := e.lastUpdated["market-calendar"]
+	global := e.providerCircuits[providerKey("Alpaca")]
+	calendarCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", canonicalUSMarketCalendarDataset)]
+	universeCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", canonicalUSAssetUniverseDataset)]
+	liveCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", "US Live Equities")]
+	e.mu.RUnlock()
+	if !exists || row.Close != "16:00" || updatedAt != staleAt {
+		t.Fatalf("failed calendar refresh corrupted cached state: exists=%v row=%+v updatedAt=%d", exists, row, updatedAt)
+	}
+	if global.Failures != 0 || global.LastFailure != 0 {
+		t.Fatalf("calendar failure leaked into global Alpaca circuit: %+v", global)
+	}
+	if calendarCircuit.Failures != 1 || calendarCircuit.LastFailure == 0 {
+		t.Fatalf("calendar capability failure not recorded: %+v", calendarCircuit)
+	}
+	if universeCircuit.Failures != 0 || liveCircuit.Failures != 0 || !e.providerAllowedFor(canonicalUSAssetUniverseDataset, "Alpaca") || !e.providerAllowedFor("US Live Equities", "Alpaca") {
+		t.Fatalf("calendar failure suppressed unrelated Alpaca capabilities: universe=%+v live=%+v", universeCircuit, liveCircuit)
+	}
+}
