@@ -24,6 +24,25 @@ jobs:
             echo 'Source patch already applied.'
             exit 0
           fi
+          python3 <<'PY'
+          from pathlib import Path
+
+          p = Path('app_model.go')
+          text = p.read_text()
+          old = '\tHasFinnhubKey      bool                          `json:"hasFinnhubKey"`\n'
+          new = '\tHasFinnhubKey     bool                          `json:"hasFinnhubKey"`\n'
+          if text.count(old) != 1:
+              raise SystemExit(f'app_model.go convergence anchor count={text.count(old)}')
+          p.write_text(text.replace(old, new, 1))
+
+          p = Path('app_state.go')
+          text = p.read_text()
+          old = 'Settings: view.Settings, HasFinnhubKey: strings.TrimSpace(a.secrets.Finnhub) != "", HasAlpacaKey:'
+          new = 'Settings: view.Settings,\n\t\tHasFinnhubKey:      strings.TrimSpace(a.secrets.Finnhub) != "",\n\t\tHasAlpacaKey:'
+          if text.count(old) != 1:
+              raise SystemExit(f'app_state.go convergence anchor count={text.count(old)}')
+          p.write_text(text.replace(old, new, 1))
+          PY
           sed -n "/python3 <<'PY'/,/^          PY$/p" .github/workflows/tradeinsight-settings-patch.yml | sed '1d;$d;s/^          //' > /tmp/apply_tradeinsight_settings.py
           python3 /tmp/apply_tradeinsight_settings.py
           gofmt -w app_model.go app_state.go provider_router.go tradeinsight.go http_api.go tradeinsight_settings_regression_test.go
