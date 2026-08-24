@@ -146,18 +146,6 @@ func (e *Engine) warmInstrumentIdentities() int {
 	return count
 }
 
-func (e *Engine) instrumentIdentityForSymbol(symbol string) (InstrumentIdentityRecord, bool) {
-	if e == nil {
-		return InstrumentIdentityRecord{}, false
-	}
-	e.warmInstrumentIdentities()
-	symbol = normalizeSymbol(symbol)
-	e.mu.RLock()
-	record, ok := e.instrumentIdentities[symbol]
-	e.mu.RUnlock()
-	return record, ok
-}
-
 // acceptInstrumentIdentities updates canonical in-memory identity and persists
 // the same normalized records through the existing persistence owner. It never
 // changes SymbolRegistryRecord active/selected state and persistence failure is
