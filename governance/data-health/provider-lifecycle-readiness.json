@@ -44,9 +44,9 @@
     {"provider":"Alpaca","capability":"SIP movers/most-active discovery seed","lifecycle":"PRODUCTION","authority":"ENTITLEMENT_OPTIONAL","evidenceStatus":"PRODUCTION_WHEN_ENTITLED","readiness":"PRODUCTION_APPROVED_WHEN_ENTITLED"},
     {"provider":"Alpaca","capability":"U.S. asset universe and market calendar","lifecycle":"PRODUCTION","authority":"ROUTED_PROVIDER","evidenceStatus":"ROUTER_V2_ADOPTED_BY_ISSUE_81","readiness":"PRODUCTION_APPROVED"},
 
-    {"provider":"TradeInsight","capability":"adjusted daily OHLCV","lifecycle":"SHADOW","authority":"ROUTED_SHADOW_FIRST","evidenceStatus":"COMMON_READINESS_REQUIRED","readiness":"INSUFFICIENT_EVIDENCE_UNTIL_78"},
-    {"provider":"TradeInsight","capability":"corporate-action corroboration","lifecycle":"SHADOW","authority":"SUPPLEMENTAL","evidenceStatus":"COMMON_READINESS_REQUIRED","readiness":"INSUFFICIENT_EVIDENCE_UNTIL_78"},
-    {"provider":"TradeInsight","capability":"congressional trading intelligence","lifecycle":"SHADOW","authority":"SPECIALIZED_SECONDARY","evidenceStatus":"COMMON_READINESS_REQUIRED","readiness":"INSUFFICIENT_EVIDENCE_UNTIL_78"},
+    {"provider":"TradeInsight","capability":"adjusted daily OHLCV","lifecycle":"PRODUCTION","authority":"ROUTED_SHADOW_FIRST","evidenceStatus":"ISSUE_78_APPROVED_ISSUE_84_PRODUCTION","readiness":"PRODUCTION_APPROVED"},
+    {"provider":"TradeInsight","capability":"corporate-action corroboration","lifecycle":"PRODUCTION","authority":"SUPPLEMENTAL","evidenceStatus":"ISSUE_78_APPROVED_ISSUE_84_PRODUCTION","readiness":"PRODUCTION_APPROVED"},
+    {"provider":"TradeInsight","capability":"congressional trading intelligence","lifecycle":"PRODUCTION","authority":"SPECIALIZED_SECONDARY","evidenceStatus":"ISSUE_78_APPROVED_ISSUE_84_PRODUCTION","readiness":"PRODUCTION_APPROVED"},
 
     {"provider":"FRED","capability":"rates/credit/conditions/USD macro series","lifecycle":"PRODUCTION","authority":"ROUTED_MACRO_PROVIDER","evidenceStatus":"INHERITED_PRODUCTION_BASELINE","readiness":"PRODUCTION_APPROVED"},
     {"provider":"BLS","capability":"inflation/labor/wages/PPI actuals","lifecycle":"PRODUCTION","authority":"DIRECT_AUTHORITY","evidenceStatus":"DIRECT_AUTHORITY","readiness":"N/A_DIRECT_AUTHORITY"},
