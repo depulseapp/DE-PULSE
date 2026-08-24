@@ -9,10 +9,10 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-REGISTRY_PATH = ROOT / "dependency_readiness_registry.json"
-ACTION_PATH = ROOT / "user_action_required_registry.json"
+REGISTRY_PATH = ROOT / "governance/registries/dependency_readiness_registry.json"
+ACTION_PATH = ROOT / "governance/registries/user_action_required_registry.json"
 DOC_IMPACT_PATH = ROOT / "release" / "v18.6.0" / "DOCUMENTATION-IMPACT.md"
-ENV_POLICY_PATH = ROOT / "release_environment_policy.json"
+ENV_POLICY_PATH = ROOT / "governance/policies/release_environment_policy.json"
 FAST_PATH = ROOT / ".github" / "workflows" / "ci-fast.yml"
 QUALIFIED_PATH = ROOT / ".github" / "workflows" / "ci-qualified.yml"
 WORKFLOW_POLICY_PATH = ROOT / "tools" / "ci" / "workflow_policy.py"
@@ -32,7 +32,7 @@ REQUIRED_EVIDENCE = {
     "provider_data_rights.go",
     "persistence_backend_select.go",
     "persistence_backend_postgres.go",
-    "release_environment_policy.json",
+    "governance/policies/release_environment_policy.json",
     "app_model.go",
 }
 MARKET_PROVIDER_OWNER = "Smart Provider Router"

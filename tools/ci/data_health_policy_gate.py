@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 R=Path(__file__).resolve().parents[2]
-p=json.loads((R/'data_health_policy.json').read_text())
+p=json.loads((R/'governance'/'policies'/'data_health_policy.json').read_text())
 errs=[]
 policy=p.get('policy',{})
 for k in ('session_aware','provider_vs_cache_timestamps','stale_while_revalidate','fallback_recovery','material_change_priority','selected_symbol_priority','adaptive_policy_changes_require_shadow_validation'):

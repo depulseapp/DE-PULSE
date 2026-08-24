@@ -9,11 +9,11 @@ ROOT=Path(__file__).resolve().parents[2]
 INDEX=ROOT/'renderer'/'index.html'
 MONOLITH=ROOT/'renderer'/'renderer.js'
 OWNER=ROOT/'renderer'/'documentation-ui.js'
-ACCESS=ROOT/'renderer'/'documentation-access-v18.6.js'
+ACCESS=ROOT/'renderer'/'documentation-access.js'
 HEADER=ROOT/'renderer'/'market-header-ui.js'
-LEGACY_HEADER=ROOT/'renderer'/'header-v18.5.1.js'
+LEGACY_HEADER=ROOT/'release'/'history'/'v18.5.1'/'renderer'/'header-v18.5.1.js'
 QUALIFIED=ROOT/'.github'/'workflows'/'ci-qualified.yml'
-NODE_TEST=ROOT/'documentation_ui_owner_test.js'
+NODE_TEST=ROOT/'tests/renderer/documentation_ui_owner_test.js'
 HEADER_NODE_TEST=ROOT/'tests'/'renderer'/'market_header_owner_test.js'
 BROWSER_TEST=ROOT/'tools'/'ci'/'documentation_owner_browser_test.py'
 HIERARCHY_TEST=ROOT/'release'/'v18.5.1'/'browser_ui_hierarchy_test.py'
@@ -40,14 +40,14 @@ def main()->int:
 
     scripts=re.findall(r'<script\s+src="([^"]+)"',index)
     names=[x.split('?',1)[0] for x in scripts]
-    required=['renderer.js','documentation-ui.js','market-header-ui.js','documentation-access-v18.6.js']
+    required=['renderer.js','documentation-ui.js','market-header-ui.js','documentation-access.js']
     for name in required:
         if names.count(name)!=1: errors.append(f'{name} must load exactly once; got {names.count(name)}')
     if 'header-v18.5.1.js' in names:
         errors.append('version-stacked header-v18.5.1.js must not remain an active runtime owner')
-    if all(name in names for name in ('renderer.js','documentation-ui.js','documentation-access-v18.6.js')):
-        if not (names.index('renderer.js')<names.index('documentation-ui.js')<names.index('documentation-access-v18.6.js')):
-            errors.append('load order must be renderer.js -> documentation-ui.js -> documentation-access-v18.6.js')
+    if all(name in names for name in ('renderer.js','documentation-ui.js','documentation-access.js')):
+        if not (names.index('renderer.js')<names.index('documentation-ui.js')<names.index('documentation-access.js')):
+            errors.append('load order must be renderer.js -> documentation-ui.js -> documentation-access.js')
     if all(name in names for name in ('renderer.js','market-header-ui.js')):
         if not names.index('renderer.js')<names.index('market-header-ui.js'):
             errors.append('market-header-ui.js must load after renderer.js so it decorates the canonical chrome owner')
@@ -81,14 +81,15 @@ def main()->int:
         'registry.marketHeader',
         "compatibilityAliases:['__v1851HeaderContracts']",
         'globalThis.__v1851HeaderContracts=api',
+        "legacyCompatibilityFile:'release/history/v18.5.1/renderer/header-v18.5.1.js'",
         "'market-pulse-ribbon'",
         "'market-clocks'",
         "'data-runtime-control'",
     )
     for token in required_header:
         if token not in header: errors.append(f'Market Header owner contract missing: {token}')
-    if LEGACY_HEADER.is_file() and 'legacyCompatibilityFile' not in header:
-        errors.append('legacy header compatibility file must be explicitly classified by the active owner')
+    if not LEGACY_HEADER.is_file():
+        errors.append('archived Market Header compatibility evidence is missing: release/history/v18.5.1/renderer/header-v18.5.1.js')
     if 'header-v18.5.1.js' not in hierarchy_test or 'ensureSecondaryMarketStatus' not in hierarchy_test:
         errors.append('historical header hierarchy regression fixture unexpectedly lost')
 
@@ -106,7 +107,7 @@ def main()->int:
         errors.append('role-access decorator must wrap the active render owner')
 
     evidence_tokens=(
-        'run: node documentation_ui_owner_test.js',
+        'run: node tests/renderer/documentation_ui_owner_test.js',
         'run: python3 tools/ci/documentation_owner_browser_test.py --engine chrome',
         'run: python3 tools/ci/documentation_owner_browser_test.py --engine webkit',
     )
@@ -114,7 +115,7 @@ def main()->int:
         if token not in qualified: errors.append(f'primary owner evidence missing from Qualified: {token}')
     if 'Documentation capability owner regression PASS' not in node_test:
         errors.append('Node Documentation owner regression proof missing')
-    if "require('./tests/renderer/market_header_owner_test.js')" not in node_test:
+    if "require('./market_header_owner_test.js')" not in node_test:
         errors.append('Qualified renderer owner regression must transitively execute canonical Market Header owner test')
     if not HEADER_NODE_TEST.is_file():
         errors.append('canonical Market Header behavior test is missing: tests/renderer/market_header_owner_test.js')
@@ -125,7 +126,7 @@ def main()->int:
         "updateChrome('SPY')",
         'wrapper must not multiply base update calls',
         'ensure must be idempotent',
-        'header-v18.5.1.js',
+        'release/history/v18.5.1/renderer/header-v18.5.1.js',
     )
     for token in header_test_tokens:
         if token not in header_node_test: errors.append(f'Market Header behavior regression proof missing: {token}')
@@ -137,7 +138,7 @@ def main()->int:
     print('Documentation capability-oriented runtime owner: renderer/documentation-ui.js')
     print('Market Header capability-oriented runtime owner: renderer/market-header-ui.js')
     print('Market Header canonical behavior regression is transitively bound to Qualified renderer owner evidence: PASS')
-    print('Market Header legacy v18.5.1 file retained only as historical compatibility evidence, not loaded by runtime: PASS')
+    print('Market Header v18.5.1 compatibility source archived under release/history and not loaded by runtime: PASS')
     print('Market Header compatibility alias __v1851HeaderContracts preserved: PASS')
     print('load order owner before role-access decorator: PASS')
     print('Node Documentation + Market Header owner evidence binding: PASS')

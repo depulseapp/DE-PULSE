@@ -26,7 +26,7 @@
     {"id":"ADAPT-DATA-002","state":"CLOSED","disposition":"IMPLEMENTED","owner":"evidence_time.go","evidence":["evidence_time_truth_regression_test.go"]},
     {"id":"ADAPT-ARCH-001","state":"CLOSED","disposition":"CLOSED_BY_FRESH_EVIDENCE","owner":"symbol_universe.go","evidence":["universe_hardening_regression_test.go","broad_snapshot_broker_test.go"]},
     {"id":"ADAPT-UI-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"renderer/market-header-ui.js","evidence":["tests/renderer/market_header_owner_test.js","tools/ci/renderer_owner_contract.py"]},
-    {"id":"ADAPT-QA-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tests/renderer/market_header_owner_test.js","evidence":["documentation_ui_owner_test.js","tools/ci/legacy_test_gate_inventory.py"]},
+    {"id":"ADAPT-QA-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tests/renderer/market_header_owner_test.js","evidence":["tests/renderer/documentation_ui_owner_test.js","tools/ci/legacy_test_gate_inventory.py"]},
     {"id":"ADAPT-GOV-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"release/v18.5.1/HISTORICAL-RECONCILIATION-IDENTITY.json","evidence":["tools/ci/historical_reconciliation_identity.py","tools/ci/implementation_reconciliation_gate.py"]},
     {"id":"ADAPT-COST-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"tools/ci/ci_telemetry.py","evidence":["tools/ci/ci_telemetry_self_test.py"]},
     {"id":"ADAPT-RECON-001","state":"CLOSED","disposition":"IMPLEMENTED","owner":"adaptive-governance/V18.8.1-ZERO-MISS-RECONCILIATION.json","evidence":["tools/ci/v18_8_1_zero_miss_reconciliation_gate.py"]},

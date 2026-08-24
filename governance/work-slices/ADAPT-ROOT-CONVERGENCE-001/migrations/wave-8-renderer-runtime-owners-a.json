@@ -1,0 +1,103 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_8_RENDERER_RUNTIME_OWNERS_A",
+  "moves": [
+    {
+      "oldPath": "renderer/admin-v18.2.css",
+      "newPath": "renderer/administration.css",
+      "owner": "Renderer / Administration presentation",
+      "reason": "Active Administration styling is a long-lived capability owner and must not use release-stacked naming.",
+      "removalCondition": "Runtime loads the stable capability path and no active control references the versioned path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/admin-v18.2.js",
+      "newPath": "renderer/administration-ui.js",
+      "owner": "Renderer / Administration behavior",
+      "reason": "Active Administration behavior is a long-lived capability owner and must not use release-stacked naming.",
+      "removalCondition": "Runtime loads the stable capability path and behavior remains byte-equivalent.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/documentation-access-v18.6.js",
+      "newPath": "renderer/documentation-access.js",
+      "owner": "Renderer / Documentation access decorator",
+      "reason": "Role-aware Documentation access is an active capability decorator, not v18.6-only runtime behavior.",
+      "removalCondition": "Documentation owner metadata, runtime load order and renderer-owner evidence use the stable path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/watchlist-v18.5.1.css",
+      "newPath": "renderer/watchlist-desk.css",
+      "owner": "Renderer / Watchlist and desk membership presentation",
+      "reason": "Active watchlist/desk membership styling is capability-owned and release-neutral.",
+      "removalCondition": "Runtime loads the stable path with unchanged bytes and no active consumer uses the old path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/watchlist-v18.5.1.js",
+      "newPath": "renderer/watchlist-ui.js",
+      "owner": "Renderer / Watchlist and desk membership behavior",
+      "reason": "Active watchlist/desk membership behavior is capability-owned and release-neutral.",
+      "removalCondition": "Runtime loads the stable path with unchanged behavior and no active consumer uses the old path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/watchlist-desk-contract-v18.6.1.js",
+      "newPath": "renderer/watchlist-desk-contract.js",
+      "owner": "Renderer / Watchlist desk release-overlay contract",
+      "reason": "The reusable desk contract remains the canonical patch/overlay owner and should not require a new filename for each product version.",
+      "removalCondition": "Release identity sync/verify and runtime load use the stable contract filename.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/surface-consolidation-v18.6.css",
+      "newPath": "renderer/surface-consolidation.css",
+      "owner": "Renderer / Surface consolidation presentation",
+      "reason": "Active surface-consolidation styling is a durable presentation owner rather than release-specific evidence.",
+      "removalCondition": "Runtime preserves load order and unchanged stylesheet bytes at the stable path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/surface-consolidation-v18.6.js",
+      "newPath": "renderer/surface-consolidation.js",
+      "owner": "Renderer / Surface consolidation behavior",
+      "reason": "Active surface-consolidation behavior is a durable capability owner rather than release-specific evidence.",
+      "removalCondition": "Runtime preserves load order and unchanged behavior at the stable path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/ui-v18.5.1.css",
+      "newPath": "renderer/ui-layout-contracts.css",
+      "owner": "Renderer / UI layout and hierarchy contracts",
+      "reason": "The active cross-surface layout recovery layer remains current runtime ownership and needs a semantic stable filename.",
+      "removalCondition": "Runtime preserves stylesheet order and exact bytes at the stable path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/ui-v18.6.1.css",
+      "newPath": "renderer/header-notification.css",
+      "owner": "Renderer / Header notification presentation",
+      "reason": "The active header-notification alignment layer has a specific durable responsibility and should not remain version-stacked.",
+      "removalCondition": "Runtime preserves stylesheet order and exact bytes at the stable path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

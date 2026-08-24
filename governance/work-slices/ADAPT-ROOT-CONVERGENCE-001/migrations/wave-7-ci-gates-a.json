@@ -1,0 +1,58 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_7_CI_GATE_OWNERSHIP_A",
+  "moves": [
+    {
+      "oldPath": "bounded_race_gate.py",
+      "newPath": "tools/ci/gates/bounded_race_gate.py",
+      "owner": "CI gate / bounded race sharding",
+      "reason": "Standalone CI execution gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves repository root, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "coverage_gate.py",
+      "newPath": "tools/ci/gates/coverage_gate.py",
+      "owner": "CI gate / statement coverage",
+      "reason": "Standalone CI execution gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate preserves coverage output semantics, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "randomized_order_gate.py",
+      "newPath": "tools/ci/gates/randomized_order_gate.py",
+      "owner": "CI gate / randomized Go test order",
+      "reason": "Standalone CI execution gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves repository root, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "extreme_30_gate.py",
+      "newPath": "tools/ci/gates/extreme_30_gate.py",
+      "owner": "CI gate / Extreme Production 30-category matrix",
+      "reason": "Standalone CI execution gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate still binds the canonical Extreme-30 Go matrix, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "fault_injection_gate.py",
+      "newPath": "tools/ci/gates/fault_injection_gate.py",
+      "owner": "CI gate / professional truth fault injection",
+      "reason": "Standalone CI execution gate belongs under the governed tools/ci/gates owner.",
+      "removalCondition": "Old root path absent, relocated gate resolves repository root, and active consumers use the registered target.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

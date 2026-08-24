@@ -15,9 +15,9 @@ from typing import Callable
 ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parts[-3:-1] == ('tools','ci') else Path.cwd()
 RELEASE_COUPLED_ASSETS = (
     'renderer.js', 'documentation-ui.js', 'live-dom-reconcile.js',
-    'watchlist-v18.5.1.js', 'watchlist-v18.5.1.css', 'market-header-ui.js',
-    'ui-v18.5.1.css', 'surface-consolidation-v18.6.js',
-    'surface-consolidation-v18.6.css', 'documentation-access-v18.6.js',
+    'watchlist-ui.js', 'watchlist-desk.css', 'market-header-ui.js',
+    'ui-layout-contracts.css', 'surface-consolidation.js',
+    'surface-consolidation.css', 'documentation-access.js',
 )
 
 @dataclass
@@ -162,17 +162,31 @@ def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Calla
     contract: dict = {}
     contract_path = root / 'release' / f'v{current_version}' / 'release_contract.json'
     if current_version and contract_path.exists(): contract = read_json(contract_path, errors, 'RELEASE_CONTRACT_UNREADABLE')
-    identity_asset = str(contract.get('identity_asset', '')).strip() if contract else ''
+    historical_identity_asset = str(contract.get('identity_asset', '')).strip() if contract else ''
+    runtime_identity_asset = str(identity.get('renderer_identity_asset', '')).strip()
+    identity_asset = runtime_identity_asset or historical_identity_asset
+    if runtime_identity_asset and re.search(r'(?:^|[-_])v\d+(?:[._-]\d+)+', runtime_identity_asset, re.I):
+        errors.append(f'CURRENT_RENDERER_IDENTITY_ASSET_VERSIONED: {runtime_identity_asset!r}')
     if identity_asset:
         if '/' in identity_asset or '\\' in identity_asset or identity_asset.startswith('.'):
             errors.append(f'IDENTITY_ASSET_INVALID: {identity_asset!r}')
         else:
-            overlay = read_text(root / 'renderer' / identity_asset, errors, 'IDENTITY_OVERLAY_UNREADABLE')
+            overlay_path = root / 'renderer' / identity_asset
+            overlay = read_text(overlay_path, errors, 'IDENTITY_OVERLAY_UNREADABLE')
             if overlay and f"DEPULSE_RELEASE_VERSION = '{current_version}'" not in overlay: errors.append('RENDERER_VERSION_MISMATCH: identity overlay version mismatch')
             if overlay and f"DEPULSE_RELEASE_BUILD_ID = '{current_build}'" not in overlay: errors.append('RENDERER_BUILD_ID_MISMATCH: identity overlay build mismatch')
             if index and not cache_identity_ok(root, index, identity_asset): errors.append('IDENTITY_OVERLAY_CACHE_IDENTITY_MISMATCH: identity overlay cache key is not content-derived')
+            if runtime_identity_asset and historical_identity_asset and runtime_identity_asset != historical_identity_asset:
+                if '/' in historical_identity_asset or '\\' in historical_identity_asset or historical_identity_asset.startswith('.'):
+                    errors.append(f'HISTORICAL_IDENTITY_ASSET_INVALID: {historical_identity_asset!r}')
+                else:
+                    archived = root / 'release' / 'history' / f'v{current_version}' / 'renderer' / historical_identity_asset
+                    if not archived.is_file():
+                        errors.append(f'HISTORICAL_IDENTITY_ARCHIVE_MISSING: {archived.relative_to(root).as_posix()}')
+                    elif overlay_path.is_file() and archived.read_bytes() != overlay_path.read_bytes():
+                        errors.append('HISTORICAL_IDENTITY_ARCHIVE_MISMATCH: archived certified overlay differs from current neutral runtime owner')
     else:
-        renderer = read_text(root / 'renderer/renderer.js', errors, 'RENDERER_UNREADABLE')
+        renderer = read_text(root / 'renderer' / 'renderer.js', errors, 'RENDERER_UNREADABLE')
         if renderer and f"const EXPECTED_RELEASE_VERSION='{current_version}';" not in renderer: errors.append('RENDERER_VERSION_MISMATCH: renderer.js release version mismatch')
         if renderer and f"const EXPECTED_BUILD_ID='{current_build}';" not in renderer: errors.append('RENDERER_BUILD_ID_MISMATCH: renderer.js build id mismatch')
 

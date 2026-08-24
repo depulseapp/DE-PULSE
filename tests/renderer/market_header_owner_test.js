@@ -119,7 +119,7 @@ assert.strictEqual(owner.registry().state,'ACTIVE_OWNER_WITH_COMPAT_ALIAS');
 assert(owner.registry().responsibilities.includes('market-pulse-ribbon'));
 assert(owner.registry().responsibilities.includes('market-clocks'));
 assert(owner.registry().responsibilities.includes('data-runtime-control'));
-assert.strictEqual(owner.registry().legacyCompatibilityFile,'renderer/header-v18.5.1.js');
+assert.strictEqual(owner.registry().legacyCompatibilityFile,'release/history/v18.5.1/renderer/header-v18.5.1.js');
 assert.strictEqual(vm.runInContext('__v1851HeaderContracts===__DE_PULSE_MARKET_HEADER_UI__',context),true);
 
 const bar=document.getElementById('market-status-bar');

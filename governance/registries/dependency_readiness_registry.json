@@ -1,0 +1,163 @@
+{
+  "schema": "DE.PULSE-DEPENDENCY-READINESS-1",
+  "policyVersion": "v18.6.0",
+  "scopeRequirement": "IMPL-17-DEPS-001 / CONVO-V17-004",
+  "statusModel": ["READY", "READY_NO_CREDENTIAL", "RUNTIME_EVALUATED", "CONDITIONAL", "CI_ENFORCED", "RELEASE_ENFORCED"],
+  "gateBindings": ["G2", "G3", "G7", "G10", "G13", "G14", "G15", "G16"],
+  "dependencies": [
+    {
+      "id": "DEP-PROV-LIVE-EQUITY",
+      "category": "PROVIDER",
+      "owner": "Smart Provider Router",
+      "capability": "Primary U.S. equity quotes, snapshots, liquidity, earnings/peers and broad-discovery acquisition through Finnhub and Alpaca",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "Primary live capability is degraded when required credentials are absent, provider health is poor, rate limits apply, or an endpoint is plan-limited.",
+      "userAction": "Configure Finnhub and both Alpaca credentials only when primary live capability is required; verify operational endpoint entitlement and preserve approved fallbacks.",
+      "rightsEntitlement": "FAIL_CLOSED_REVIEW_REQUIRED",
+      "evidence": ["provider_capabilities.go", "provider_router.go", "provider_data_rights.go", "app_model.go", "broad_snapshot_broker.go"]
+    },
+    {
+      "id": "DEP-PROV-MACRO-OFFICIAL",
+      "category": "PROVIDER",
+      "owner": "Smart Provider Router",
+      "capability": "Rates, credit, inflation, labor, wages, PPI and energy context through FRED, BLS and EIA",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "Direct FRED/EIA capability depends on configured credentials and upstream health; BLS baseline can operate without a credential but remains subject to upstream availability.",
+      "userAction": "Configure FRED/EIA only when their direct capabilities are required; investigate BLS only when runtime health reports the official source unavailable.",
+      "rightsEntitlement": "FAIL_CLOSED_REVIEW_REQUIRED",
+      "evidence": ["provider_capabilities.go", "provider_data_rights.go", "app_model.go", "macro_events.go"]
+    },
+    {
+      "id": "DEP-PROV-MARKET-CONTEXT",
+      "category": "PROVIDER",
+      "owner": "Smart Provider Router",
+      "capability": "VIX, indices, FX/global context and historical recovery through Twelve Data, yfinance and CBOE",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "Twelve Data requires a credential and can be plan-limited; public recovery/official fallback evidence can be unavailable, stale or delayed and must remain truthfully labeled.",
+      "userAction": "Configure Twelve Data only for enabled direct capabilities; preserve yfinance as recovery-only and CBOE as VIX validation/fallback rather than primary stock data.",
+      "rightsEntitlement": "FAIL_CLOSED_REVIEW_REQUIRED",
+      "evidence": ["provider_capabilities.go", "provider_router.go", "provider_data_rights.go", "fallback_providers.go"]
+    },
+    {
+      "id": "DEP-PROV-NEWS-FALLBACK",
+      "category": "PROVIDER",
+      "owner": "Smart Provider Router",
+      "capability": "Supplemental/fallback company news through Marketaux",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "The supplemental news capability is unavailable when its credential is absent; it is not required for deterministic scoring.",
+      "userAction": "Configure Marketaux only when supplemental news fallback is desired.",
+      "rightsEntitlement": "FAIL_CLOSED_REVIEW_REQUIRED",
+      "evidence": ["provider_capabilities.go", "provider_data_rights.go", "app_model.go"]
+    },
+    {
+      "id": "DEP-PROV-AI-MODELS",
+      "category": "PROVIDER",
+      "owner": "AI Routing",
+      "capability": "Optional research generation through Groq, OpenRouter or Gemini",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "The selected AI model provider is unavailable without its corresponding credential; model API entitlement does not grant rights to send provider-derived source evidence.",
+      "userAction": "Configure only the selected AI-provider credential and keep source-data AI-use permission as a separate fail-closed decision.",
+      "rightsEntitlement": "MODEL_API_ENTITLEMENT_SEPARATE_FROM_SOURCE_DATA_RIGHTS",
+      "evidence": ["app_model.go", "ai_clients.go", "provider_data_rights.go"]
+    },
+    {
+      "id": "DEP-DB-SQLITE",
+      "category": "DATABASE",
+      "owner": "Persistence Manager",
+      "capability": "Required desktop-local durable state",
+      "status": "READY",
+      "blocker": "Desktop persistence is blocked if the local SQLite backend cannot initialize or pass integrity/write checks.",
+      "userAction": "No normal setup action; investigate local filesystem and persistence diagnostics only if health checks fail.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["persistence_backend_select.go", "persistence_backend_sqlite.go", "native_sqlite_persistence_regression_test.go"]
+    },
+    {
+      "id": "DEP-DB-POSTGRES",
+      "category": "DATABASE",
+      "owner": "Persistence Manager",
+      "capability": "Required hosted shared-state persistence",
+      "status": "CONDITIONAL",
+      "blocker": "Hosted PostgreSQL requires a postgres-tagged binary and DEPULSE_DATABASE_URL; without the build tag the backend fails closed as unavailable.",
+      "userAction": "For hosted deployment, build with -tags postgres, set DEPULSE_PERSISTENCE_BACKEND=postgres and provide DEPULSE_DATABASE_URL through the deployment secret store.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["persistence_backend_select.go", "persistence_backend_postgres.go", "persistence_backend_postgres_stub.go", "go.mod"]
+    },
+    {
+      "id": "DEP-RUNTIME-GO",
+      "category": "PACKAGE_RUNTIME",
+      "owner": "Release Engineering",
+      "capability": "Compile, test and package the Go backend",
+      "status": "CI_ENFORCED",
+      "blocker": "Qualification is invalid outside an approved Go minor line or when workflow pins and release policy drift.",
+      "userAction": "No normal user action; release engineering updates the approved runtime policy and workflows together.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["go.mod", "governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+    },
+    {
+      "id": "DEP-RUNTIME-JS-BROWSER",
+      "category": "PACKAGE_RUNTIME",
+      "owner": "Release Engineering",
+      "capability": "Node renderer contracts and Chromium browser-behavior proof",
+      "status": "CI_ENFORCED",
+      "blocker": "Renderer/browser qualification cannot complete without the policy-required JavaScript runtime and Chromium-compatible browser.",
+      "userAction": "No normal user action; qualification runners provision the pinned Node runtime and browser prerequisite.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+    },
+    {
+      "id": "DEP-RUNTIME-PYTHON",
+      "category": "PACKAGE_RUNTIME",
+      "owner": "Release Engineering",
+      "capability": "Governance, certification and browser harnesses",
+      "status": "CI_ENFORCED",
+      "blocker": "Governance and certification evidence cannot be generated without the required Python runtime.",
+      "userAction": "No normal user action; CI provisions the pinned Python runtime.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["governance/policies/release_environment_policy.json", ".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"]
+    },
+    {
+      "id": "DEP-RUNTIME-GOVULNCHECK",
+      "category": "PACKAGE_RUNTIME",
+      "owner": "Release Engineering",
+      "capability": "Go dependency vulnerability release assurance",
+      "status": "RELEASE_ENFORCED",
+      "blocker": "Release assurance is incomplete when the required security command is unavailable or not executed.",
+      "userAction": "No normal user action; release engineering provisions govulncheck for release certification.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["governance/policies/release_environment_policy.json", "tools/release/release_environment_gate.py"]
+    },
+    {
+      "id": "DEP-CONFIG-LIVE-EQUITY",
+      "category": "CREDENTIAL_CONFIG",
+      "owner": "SUPER_OWNER / OWNER",
+      "capability": "Enable direct primary live U.S. equity evidence",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "Live primary routes are degraded when required provider credentials are absent; credentials must never be committed to source.",
+      "userAction": "Store Finnhub and Alpaca credentials through Settings/secret storage when live primary equity data is enabled.",
+      "rightsEntitlement": "OPERATIONAL_CREDENTIAL_DOES_NOT_GRANT_DATA_RIGHTS",
+      "evidence": ["app_model.go", "http_api.go", "provider_data_rights.go"]
+    },
+    {
+      "id": "DEP-CONFIG-AI",
+      "category": "CREDENTIAL_CONFIG",
+      "owner": "SUPER_OWNER / OWNER",
+      "capability": "Enable the selected optional AI research provider",
+      "status": "RUNTIME_EVALUATED",
+      "blocker": "The selected AI provider cannot run without its corresponding credential; source-data AI-use rights remain independent.",
+      "userAction": "Store only the credential for the selected AI provider through Settings/secret storage; do not commit credentials.",
+      "rightsEntitlement": "MODEL_CREDENTIAL_DOES_NOT_GRANT_SOURCE_DATA_AI_RIGHTS",
+      "evidence": ["app_model.go", "http_api.go", "ai_clients.go", "provider_data_rights.go"]
+    },
+    {
+      "id": "DEP-CONFIG-HOSTED",
+      "category": "CREDENTIAL_CONFIG",
+      "owner": "Release Engineering / SUPER_OWNER",
+      "capability": "Hosted runtime origin, proxy and PostgreSQL deployment configuration",
+      "status": "CONDITIONAL",
+      "blocker": "Hosted deployment is not production-ready until runtime mode, public origin/proxy trust and PostgreSQL configuration match the deployment topology.",
+      "userAction": "Set DEPULSE_RUNTIME_MODE=hosted and explicitly configure listen/origin/proxy and PostgreSQL environment values for the target deployment; keep secrets in the deployment secret store.",
+      "rightsEntitlement": "NOT_APPLICABLE",
+      "evidence": ["runtime_environment.go", "persistence_backend_select.go", "http_security.go"]
+    }
+  ]
+}

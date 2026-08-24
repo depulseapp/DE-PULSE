@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE_CSS = (ROOT / "renderer" / "styles.css").read_text(encoding="utf-8")
-UI_CSS = (ROOT / "renderer" / "ui-v18.5.1.css").read_text(encoding="utf-8")
+UI_CSS = (ROOT / "renderer" / "ui-layout-contracts.css").read_text(encoding="utf-8")
 
 FIXTURE = """
 <header class="topbar"><strong>DE.PULSE</strong></header>

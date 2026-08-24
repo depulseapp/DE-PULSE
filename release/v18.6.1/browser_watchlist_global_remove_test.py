@@ -5,18 +5,18 @@ import os
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTRACT = (ROOT / 'renderer/watchlist-desk-contract-v18.6.1.js').read_text(encoding='utf-8')
-EXT = (ROOT / 'renderer/watchlist-v18.5.1.js').read_text(encoding='utf-8')
-CSS = (ROOT / 'renderer/ui-v18.6.1.css').read_text(encoding='utf-8')
+CONTRACT = (ROOT / 'renderer/watchlist-desk-contract.js').read_text(encoding='utf-8')
+EXT = (ROOT / 'renderer/watchlist-ui.js').read_text(encoding='utf-8')
+CSS = (ROOT / 'renderer/header-notification.css').read_text(encoding='utf-8')
 INDEX = (ROOT / 'renderer/index.html').read_text(encoding='utf-8')
 
 assert "var DESKS = Object.freeze(['day', 'swing', 'long'])" in CONTRACT
 assert 'CURRENT' not in EXT
 assert 'aria-current' not in EXT
 assert 'aria-pressed' in EXT
-assert 'watchlist-desk-contract-v18.6.1.js?v=18.6.1' in INDEX
-assert INDEX.index('watchlist-desk-contract-v18.6.1.js') < INDEX.index('watchlist-v18.5.1.js')
-assert 'ui-v18.6.1.css?v=18.6.1' in INDEX
+assert 'watchlist-desk-contract.js?v=18.6.1' in INDEX
+assert INDEX.index('watchlist-desk-contract.js') < INDEX.index('watchlist-ui.js')
+assert 'header-notification.css?v=18.6.1' in INDEX
 assert 'justify-self:stretch!important' in CSS
 assert 'width:100%!important' in CSS
 assert 'text-align:center!important' in CSS

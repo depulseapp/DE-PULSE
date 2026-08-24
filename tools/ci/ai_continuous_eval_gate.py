@@ -9,9 +9,9 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-POLICY = ROOT / "ai_eval_policy.json"
-RIGHTS = ROOT / "provider_dataset_ai_rights_registry.json"
-HARDENING = ROOT / "ai_hardening_v18_6.go"
+POLICY = ROOT / "governance/policies/ai_eval_policy.json"
+RIGHTS = ROOT / "governance/registries/provider_dataset_ai_rights_registry.json"
+HARDENING = ROOT / "ai_hardening.go"
 CLIENTS = ROOT / "ai_clients.go"
 TESTS = ROOT / "ai_hardening_test.go"
 DOC_IMPACT = ROOT / "release" / "v18.6.0" / "DOCUMENTATION-IMPACT.md"

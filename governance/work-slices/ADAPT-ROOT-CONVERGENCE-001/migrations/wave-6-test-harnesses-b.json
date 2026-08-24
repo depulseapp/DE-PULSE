@@ -1,0 +1,31 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_6_TEST_HARNESS_OWNERSHIP_B",
+  "moves": [
+    {
+      "oldPath": "documentation_ui_owner_test.js",
+      "newPath": "tests/renderer/documentation_ui_owner_test.js",
+      "owner": "Renderer test harness / documentation capability owner",
+      "reason": "Documentation capability-owner regression is non-production renderer evidence and belongs under tests/renderer.",
+      "removalCondition": "Old root path absent and Qualified/G12 consumers invoke tests/renderer/documentation_ui_owner_test.js.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer_logic_test.js",
+      "newPath": "tests/renderer/renderer_logic_test.js",
+      "owner": "Renderer test harness / renderer logic regression",
+      "reason": "Renderer logic regression is non-production renderer evidence and belongs under tests/renderer.",
+      "removalCondition": "Old root path absent and Qualified/G12 consumers invoke tests/renderer/renderer_logic_test.js.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

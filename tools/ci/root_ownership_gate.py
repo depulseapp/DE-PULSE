@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Permanent #70 repository-root ownership guard."""
+"""Permanent repository-root ownership guard."""
 from __future__ import annotations
 
 import argparse
@@ -10,10 +10,11 @@ import re
 import subprocess
 import sys
 
+from repository_migration_registry import MigrationRegistryError, load_repository_migrations
+
 ROOT = Path(__file__).resolve().parents[2]
 POLICY = ROOT / "governance" / "root-layout-policy.json"
-MIGRATIONS = ROOT / "governance" / "repository-migrations.json"
-SCHEMA = "DE.PULSE-ROOT-OWNERSHIP-1"
+SCHEMA = "DE.PULSE-ROOT-OWNERSHIP-2"
 
 
 def git(*args: str) -> str:
@@ -38,13 +39,19 @@ def parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = parser().parse_args()
     errors: list[str] = []
-    if not POLICY.is_file() or not MIGRATIONS.is_file():
+    if not POLICY.is_file():
         print("DE.PULSE permanent root ownership: FAIL", file=sys.stderr)
-        print(" - missing root policy or repository migration registry", file=sys.stderr)
+        print(" - missing root layout policy", file=sys.stderr)
         return 1
 
     policy = json.loads(POLICY.read_text(encoding="utf-8"))
-    migrations = json.loads(MIGRATIONS.read_text(encoding="utf-8"))
+    try:
+        migrations = load_repository_migrations()
+    except MigrationRegistryError as exc:
+        print("DE.PULSE permanent root ownership: FAIL", file=sys.stderr)
+        print(f" - cannot compose repository migration ownership: {exc}", file=sys.stderr)
+        return 1
+
     baseline = str(policy.get("baselineCommit", "")).strip()
     if not baseline:
         errors.append("baselineCommit missing")
@@ -134,7 +141,7 @@ def main() -> int:
 
     aliases = migrations.get("temporaryAliases", [])
     if aliases:
-        errors.append("temporaryAliases must be empty at #70 final root ownership")
+        errors.append("temporaryAliases must be empty at final root ownership")
 
     root_symlinks: list[str] = []
     for line in git("ls-files", "-s").splitlines():
@@ -162,6 +169,8 @@ def main() -> int:
         "rootReduction": len(baseline_root) - len(current),
         "newRootPaths": sorted(new_root),
         "explicitFinalRootEvidenceOwners": len(final_evidence),
+        "registeredRootMigrationTargets": len(migration_targets),
+        "composedWorkSliceLedgers": list(migrations.get("composedWorkSliceLedgers", [])),
         "ownershipCounts": dict(sorted(ownership.items())),
         "blanketBaselineGrandfathering": bool(policy.get("grandfatherExistingBaselineRootFiles")),
         "newRootRecurrence": "CANONICAL_OR_EXPLICIT_FINAL_EVIDENCE_OR_REGISTERED_MIGRATION_ONLY",
@@ -179,6 +188,8 @@ def main() -> int:
     print(f"root reduction: {len(baseline_root) - len(current)}")
     print(f"new root paths: {len(new_root)}")
     print(f"explicit final root evidence owners: {len(final_evidence)}")
+    print(f"registered root migration targets: {len(migration_targets)}")
+    print(f"composed work-slice migration ledgers: {len(migrations.get('composedWorkSliceLedgers', []))}")
     for key in sorted(ownership):
         print(f"owner[{key}]: {ownership[key]}")
     print("blanket baseline grandfathering: DISABLED")

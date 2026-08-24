@@ -17,7 +17,7 @@ PROCESS_ONLY_PREFIXES = (
     ".depulse-certification/resume/",
 )
 PROCESS_ONLY_EXACT = {
-    "source_fingerprint.py",
+    "tools/release/source_fingerprint.py",
     "README.md",
     "AGENTS.md",
     "CLAUDE.md",
@@ -70,8 +70,8 @@ SHARED_NATIVE_RELEASE_FILES = {
     ".github/workflows/release.yml",
     ".github/workflows/ci-qualified.yml",
     "release_identity.json",
-    "release_identity.py",
-    "source_fingerprint.py",
+    "tools/release/release_identity.py",
+    "tools/release/source_fingerprint.py",
     "tools/release/g15_assurance.py",
     "tools/release/verify_promotion_evidence.py",
 }
@@ -130,9 +130,9 @@ def explicit_classes(path: str) -> set[str]:
         path.startswith("tools/release/")
         or path == ".github/workflows/release.yml"
         or path.startswith("release/")
-        or path == "release_identity.py"
+        or path == "tools/release/release_identity.py"
         or path == "release_identity.json"
-        or path == "version_consistency_test.py"
+        or path == "tools/release/version_consistency_test.py"
     ):
         classes.add("RELEASE_TOOLING")
     if path.startswith(("adaptive-governance/", "governance/", "handoff/", ".depulse-certification/")):

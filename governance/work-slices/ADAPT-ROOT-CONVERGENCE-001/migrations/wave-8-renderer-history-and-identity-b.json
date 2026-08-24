@@ -1,0 +1,84 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_8_RENDERER_HISTORY_AND_IDENTITY_B",
+  "moves": [
+    {
+      "oldPath": "renderer/header-v18.5.1.js",
+      "newPath": "release/history/v18.5.1/renderer/header-v18.5.1.js",
+      "owner": "Renderer history / Market Header v18.5.1 compatibility evidence",
+      "reason": "The v18.5.1 header source is no longer loaded by current runtime; retain the exact blob only as historical compatibility evidence while renderer/market-header-ui.js remains canonical.",
+      "removalCondition": "Versioned renderer path absent; exact blob archived; current Market Header owner and tests point to the archive only as compatibility evidence.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.7.0.js",
+      "newPath": "release/history/v18.7.0/renderer/release-identity-v18.7.0.js",
+      "owner": "Renderer history / v18.7.0 release identity",
+      "reason": "Inactive release-specific overlay belongs to immutable release history, not current renderer ownership.",
+      "removalCondition": "Old renderer path absent and exact blob retained under release history.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.8.0.js",
+      "newPath": "release/history/v18.8.0/renderer/release-identity-v18.8.0.js",
+      "owner": "Renderer history / v18.8.0 release identity",
+      "reason": "Inactive release-specific overlay belongs to immutable release history, not current renderer ownership.",
+      "removalCondition": "Old renderer path absent and exact blob retained under release history.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.8.1.js",
+      "newPath": "release/history/v18.8.1/renderer/release-identity-v18.8.1.js",
+      "owner": "Renderer history / v18.8.1 release identity",
+      "reason": "Inactive release-specific overlay belongs to immutable release history, not current renderer ownership.",
+      "removalCondition": "Old renderer path absent and exact blob retained under release history.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.8.2.js",
+      "newPath": "release/history/v18.8.2/renderer/release-identity-v18.8.2.js",
+      "owner": "Renderer history / v18.8.2 release identity",
+      "reason": "Inactive release-specific overlay belongs to immutable release history, not current renderer ownership.",
+      "removalCondition": "Old renderer path absent and exact blob retained under release history.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.9.0.js",
+      "newPath": "release/history/v18.9.0/renderer/release-identity-v18.9.0.js",
+      "owner": "Renderer history / v18.9.0 release identity",
+      "reason": "Inactive release-specific overlay belongs to immutable release history, not current renderer ownership.",
+      "removalCondition": "Old renderer path absent and exact blob retained under release history.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "renderer/release-identity-v18.9.1.js",
+      "newPath": "renderer/release-identity.js",
+      "owner": "Renderer / current release identity overlay",
+      "reason": "Current identity behavior remains active but its runtime owner must be capability-oriented and version-neutral; the exact certified v18.9.1 blob is also archived under release/history/v18.9.1/renderer.",
+      "removalCondition": "Versioned renderer path absent; renderer/release-identity.js reuses the exact blob; current release identity points to the neutral owner; certified original blob remains archived.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "historicalEvidenceCopies": [
+    {
+      "sourcePath": "renderer/release-identity-v18.9.1.js",
+      "archivePath": "release/history/v18.9.1/renderer/release-identity-v18.9.1.js",
+      "blobSha": "3e38697ae8e4fdc2133ec363d01de59b631f26e5",
+      "purpose": "Preserve certified v18.9.1 overlay bytes while current runtime uses the same blob through a neutral filename."
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

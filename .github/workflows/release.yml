@@ -61,7 +61,7 @@ jobs:
           git fetch origin "pull/${source_pr}/head:refs/remotes/origin/pr-source"
           test "$(git rev-parse refs/remotes/origin/pr-source)" = "$source_head_sha"
 
-          python3 release_identity.py --verify
+          python3 tools/release/release_identity.py --verify
           python3 tools/release/release_identity_contract.py --verify
           python3 tools/ci/workflow_policy.py
           readarray -t identity < <(python3 - <<'PY'
@@ -79,8 +79,8 @@ jobs:
           test -f "$manifest"
           test -f tools/release/run_full_certification.py
 
-          source_fp="$(python3 source_fingerprint.py --mode git --commit "$source_head_sha")"
-          candidate_fp="$(python3 source_fingerprint.py --mode git --commit "$candidate_sha")"
+          source_fp="$(python3 tools/release/source_fingerprint.py --mode git --commit "$source_head_sha")"
+          candidate_fp="$(python3 tools/release/source_fingerprint.py --mode git --commit "$candidate_sha")"
           test "$source_fp" = "$candidate_fp"
 
           statuses="$(gh api "repos/$GITHUB_REPOSITORY/commits/$source_head_sha/statuses?per_page=100")"
@@ -175,7 +175,7 @@ jobs:
       - name: Verify canonical CI and provenance
         run: |
           python3 tools/ci/workflow_policy.py
-          test "$(python3 source_fingerprint.py --mode git --commit '${{ needs.g11.outputs.candidate_sha }}')" = "${{ needs.g11.outputs.fingerprint }}"
+          test "$(python3 tools/release/source_fingerprint.py --mode git --commit '${{ needs.g11.outputs.candidate_sha }}')" = "${{ needs.g11.outputs.fingerprint }}"
       - name: Authoritative version-neutral full certification
         env:
           DEPULSE_EXPECTED_SHA: ${{ needs.g11.outputs.candidate_sha }}

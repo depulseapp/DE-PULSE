@@ -78,7 +78,7 @@
     responsibilities:['market-pulse-ribbon','session-context','market-data-health','market-clocks','data-runtime-control'],
     dependencies:['shared-chrome-update','header-data-health','existing-header-dom'],
     compatibilityAliases:['__v1851HeaderContracts'],
-    legacyCompatibilityFile:'renderer/header-v18.5.1.js'
+    legacyCompatibilityFile:'release/history/v18.5.1/renderer/header-v18.5.1.js'
   };
 
   const api=Object.freeze({

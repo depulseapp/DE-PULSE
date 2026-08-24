@@ -1,0 +1,40 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_6_TEST_HARNESS_OWNERSHIP_A",
+  "moves": [
+    {
+      "oldPath": "responsive_ui_test.py",
+      "newPath": "tests/renderer/responsive_ui_test.py",
+      "owner": "Renderer test harness / responsive layout acceptance",
+      "reason": "The Playwright responsive matrix is non-production renderer acceptance evidence and belongs under tests/renderer rather than repository root.",
+      "removalCondition": "Old root path absent and the canonical responsive sharded gate invokes tests/renderer/responsive_ui_test.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "professional_expert_runtime_test.js",
+      "newPath": "tests/acceptance/professional_expert_runtime_test.js",
+      "owner": "Acceptance test harness / professional expert runtime",
+      "reason": "Professional expert runtime acceptance is non-production acceptance evidence and belongs under tests/acceptance.",
+      "removalCondition": "Old root path absent and active acceptance/gate consumers invoke tests/acceptance/professional_expert_runtime_test.js.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "trader_acceptance_test.js",
+      "newPath": "tests/acceptance/trader_acceptance_test.js",
+      "owner": "Acceptance test harness / professional trader acceptance",
+      "reason": "Professional trader acceptance is non-production acceptance evidence and belongs under tests/acceptance.",
+      "removalCondition": "Old root path absent and active acceptance/gate consumers invoke tests/acceptance/trader_acceptance_test.js.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

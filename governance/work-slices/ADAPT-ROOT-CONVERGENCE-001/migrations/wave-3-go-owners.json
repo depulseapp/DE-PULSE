@@ -1,0 +1,76 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_3_VERSION_NEUTRAL_GO_OWNERS",
+  "moves": [
+    {
+      "oldPath": "ai_hardening_v18_6.go",
+      "newPath": "ai_hardening.go",
+      "owner": "AI hardening / rights-aware inference runtime",
+      "reason": "Current production owner must use a stable capability-oriented filename; embedded rights evidence is rebound to canonical governance ownership.",
+      "removalCondition": "Version-stamped owner absent; ai_hardening.go is the sole current production owner; exact source behavior is preserved except canonical embed path.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "developer_commands_v18_9.go",
+      "newPath": "developer_commands.go",
+      "owner": "Developer command runtime",
+      "reason": "Current production owner must be version-neutral and capability-oriented.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to developer_commands.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "tradeinsight_admission_v18_9.go",
+      "newPath": "tradeinsight_admission.go",
+      "owner": "TradeInsight capability admission",
+      "reason": "Current production admission owner must be version-neutral and reusable across later product versions.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to tradeinsight_admission.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "tradeinsight_congress_probe_v18_9.go",
+      "newPath": "tradeinsight_congress_probe.go",
+      "owner": "TradeInsight congressional probe",
+      "reason": "Current production probe owner must be version-neutral and reusable across later product versions.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to tradeinsight_congress_probe.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "tradeinsight_congress_v18_9.go",
+      "newPath": "tradeinsight_congress.go",
+      "owner": "TradeInsight congressional intelligence",
+      "reason": "Current production capability owner must be version-neutral and reusable across later product versions.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to tradeinsight_congress.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "tradeinsight_v18_9.go",
+      "newPath": "tradeinsight.go",
+      "owner": "TradeInsight provider integration",
+      "reason": "Current production provider owner must be version-neutral and reusable across later product versions.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to tradeinsight.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "v18_test_profile.go",
+      "newPath": "test_profile.go",
+      "owner": "Test profile runtime support",
+      "reason": "Current test-profile production support owner must not carry a product-version filename.",
+      "removalCondition": "Version-stamped owner absent and all active consumers/evidence point to test_profile.go.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

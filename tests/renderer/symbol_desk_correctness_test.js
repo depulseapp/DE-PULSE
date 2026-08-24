@@ -2,7 +2,7 @@
 const fs=require('fs');
 const assert=require('assert');
 const backend=fs.readFileSync('desk_membership.go','utf8');
-const watchlist=fs.readFileSync('renderer/watchlist-v18.5.1.js','utf8');
+const watchlist=fs.readFileSync('renderer/watchlist-ui.js','utf8');
 const renderer=fs.readFileSync('renderer/renderer.js','utf8');
 
 const backendRequired=[

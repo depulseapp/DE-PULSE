@@ -4,8 +4,9 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+RELEASE_TOOLS = ROOT / "tools" / "release"
+if str(RELEASE_TOOLS) not in sys.path:
+    sys.path.insert(0, str(RELEASE_TOOLS))
 from source_fingerprint import canonical_rel_key, canonical_source_fingerprint
 
 def need(ok, msg):

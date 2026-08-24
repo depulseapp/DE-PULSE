@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
 OWNER=(ROOT/'renderer'/'documentation-ui.js').read_text(encoding='utf-8')
-ACCESS=(ROOT/'renderer'/'documentation-access-v18.6.js').read_text(encoding='utf-8')
+ACCESS=(ROOT/'renderer'/'documentation-access.js').read_text(encoding='utf-8')
 
 HARNESS=r"""
 let authPrincipal={role:'USER'};

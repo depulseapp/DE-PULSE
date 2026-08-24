@@ -1,0 +1,58 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-ROOT-CONVERGENCE-001",
+  "issue": 73,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "wave": "WAVE_5_RELEASE_TOOL_OWNERSHIP",
+  "moves": [
+    {
+      "oldPath": "release_identity.py",
+      "newPath": "tools/release/release_identity.py",
+      "owner": "Release tooling / release identity",
+      "reason": "Release identity validation is active release-control tooling and belongs under the canonical tools/release owner.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use tools/release/release_identity.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "source_fingerprint.py",
+      "newPath": "tools/release/source_fingerprint.py",
+      "owner": "Release tooling / source fingerprint",
+      "reason": "Source fingerprint generation is release-control tooling and belongs under the canonical tools/release owner.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use tools/release/source_fingerprint.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "stable_promotion_gate.py",
+      "newPath": "tools/release/stable_promotion_gate.py",
+      "owner": "Release tooling / Stable promotion gate",
+      "reason": "Stable promotion verification is release-control tooling and belongs under the canonical tools/release owner.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use tools/release/stable_promotion_gate.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "release_environment_gate.py",
+      "newPath": "tools/release/release_environment_gate.py",
+      "owner": "Release tooling / environment gate",
+      "reason": "Release environment validation is release-control tooling and belongs under the canonical tools/release owner.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use tools/release/release_environment_gate.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "version_consistency_test.py",
+      "newPath": "tools/release/version_consistency_test.py",
+      "owner": "Release tooling / version consistency evidence",
+      "reason": "Version consistency verification is release-control evidence and belongs under the canonical tools/release owner.",
+      "removalCondition": "Old root path absent and all active release/CI consumers use tools/release/version_consistency_test.py.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}
