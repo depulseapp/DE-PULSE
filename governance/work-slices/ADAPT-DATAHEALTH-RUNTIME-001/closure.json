@@ -99,12 +99,15 @@
     },
     {
       "id": "EXACT-HEAD-FAST-QUALIFIED",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical Fast/Qualified evidence",
       "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
       "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #82"],
       "evidence": [
-        "Fast #892 / run 32772508616 PASSED on implementation checkpoint afc4213b6762739d9b8bad510c950fa8f4d36b60 before closure reconciliation; this is retained as checkpoint evidence only and does not satisfy the final exact-head gate after this ledger commit."
+        "Candidate da5801adf49e889f6408411947d46fbe19542ae2 passed exact-head Fast #893 / run 32774483579.",
+        "The same candidate passed impact-selected Qualified #186 / run 32774628113. Planner v3 selected ci-harness + backend from the full merge-base delta against main 1870dd3881dbe7f6463f242e35fdc19e70d9ae15; CI/harness, gofmt, go vet, full Go suite, race detector and randomized package order all passed.",
+        "PR #88 remains the expected-head merge vehicle to main and no Stable/public SemVer release is part of #82 closure.",
+        "Because this evidence-binding ledger commit creates a new PR head, exact-head Fast + impact-selected Qualified must pass again on the resulting final head before merge; GitHub CI objects are authoritative for that final pre-merge binding."
       ],
       "closureCondition": "Final #82 candidate has exact-head Fast and Qualified success before merge.",
       "blocksIssueClosure": true
