@@ -8,61 +8,92 @@
   "gaps": [
     {
       "id": "CANONICAL-DATA-HEALTH-EVALUATION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "existing canonical freshness/provider/runtime state owners",
       "implementationPaths": ["data_freshness.go", "runtime_degradation.go", "runtime_slo.go", "runtime_observability.go", "provider_router.go"],
       "evidenceRequired": ["one canonical evaluation path", "capability/consumer/symbol/session scope represented", "desk/Market Mode/app-global escalation only from impacted required evidence", "no second provider-specific health engine"],
-      "evidence": [],
+      "evidence": [
+        "runtime_degradation.go derives one RuntimeDegradationState from canonical freshness, Router v2 route state, feed provenance and bounded runtime load; criticalDecisionDataUsable fails closed for any required Quotes/VIX state outside the explicitly usable set.",
+        "runtime_reliability_regression_test.go: TestV1870OptionalStalenessIsolatedFromCriticalDecisionTruth proves optional Fundamentals staleness remains PARTIAL COVERAGE/PROTECTED and does not contaminate Day; TestV1870UnknownCriticalEvidenceFailsClosed proves unavailable/stale required evidence becomes DATA DEGRADED/UNKNOWN with ABSTAIN; TestV1870HealthyStateHasNoFalseAbstain proves valid canonical evidence stays HEALTHY.",
+        "runtime_reliability_regression_test.go: TestADAPTDataHealthOptionalRouteFailureDoesNotCreateFalseGlobalDegradation proves an optional News route failure remains isolated while required evidence is usable.",
+        "No provider-specific health engine was added; Smart Provider Router v2 remains the sole general routing owner."
+      ],
       "closureCondition": "Every covered degraded/partial decision is derived from one reusable runtime health model and explicit scope.",
       "blocksIssueClosure": true
     },
     {
       "id": "WARM-STATE-FALLBACK-TRUTH",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical cache/persistence/freshness plus Smart Provider Router v2 fallback owners",
       "implementationPaths": ["data_freshness.go", "persistence_repository.go", "provider_router.go", "routed_refresh.go", "broad_snapshot_broker.go", "symbol_universe.go"],
       "evidenceRequired": ["valid warm/cached/persisted evidence reused when freshness policy permits", "preferred-provider outage with healthy fallback does not false-degrade", "fallback exhaustion remains truthfully degraded", "stale cache never masquerades as current"],
-      "evidence": [],
+      "evidence": [
+        "canonical_persistence_regression_test.go: TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth persists a live quote, reloads it through the canonical persistence owner and requires warm-start state/feed labels to become persisted rather than timeless live truth; persistence_repository.go retains stored provider/receipt timestamps while relabeling restored state.",
+        "runtime_reliability_regression_test.go: TestADAPTDataHealthHealthyFallbackDoesNotFalseDegrade proves healthy Finnhub fallback does not manufacture degradation and retains preferred/serving provenance.",
+        "runtime_reliability_regression_test.go: TestADAPTDataHealthValidWarmEvidenceSurvivesTemporaryCriticalRouteOutage proves still-fresh warm evidence survives temporary route/network outage without extending evidence time; TestADAPTDataHealthStaleWarmEvidenceCannotMaskCriticalRouteOutage proves stale warm evidence fails closed.",
+        "runtime_reliability_regression_test.go: TestADAPTDataHealthFallbackCannotMaskCriticalFreshnessLoss and TestADAPTDataHealthFallbackRateLimitDoesNotInvalidateFreshEvidence prove fallback cannot hide stale required evidence and rate-limit pressure is isolated only when a proven active fallback covers current evidence."
+      ],
       "closureCondition": "Runtime reuses defensible evidence before degradation and never upgrades stale/unknown evidence merely to look healthy.",
       "blocksIssueClosure": true
     },
     {
       "id": "RECOVERY-HYSTERESIS-UNLATCH",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical runtime degradation/recovery state owner",
       "implementationPaths": ["runtime_degradation.go", "runtime_slo.go", "runtime_observability.go", "runtime_load_profile.go"],
       "evidenceRequired": ["automatic eligible revalidation/recovery", "hysteresis prevents flapping", "stale degraded banners/state unlatch after sustained recovery", "relapse resets recovery evidence"],
-      "evidence": [],
+      "evidence": [
+        "runtime_reliability_regression_test.go: TestV1870RecoveryHysteresisRejectsTransientHealthySample proves one/two healthy samples remain RECOVERING and the third sustained sample clears the held degradation only after the stability window.",
+        "runtime_reliability_regression_test.go: TestADAPTDataHealthRecoveredCanonicalStateCanUnlatchDegradedRuntimeStatus proves stale mutable runtime status cannot re-latch a recovered canonical state and existing RuntimeSLOTracker hysteresis performs the unlatch.",
+        "runtime_reliability_regression_test.go: TestV1870RecoveryHysteresisResetsAfterRelapse proves relapse resets pending recovery evidence.",
+        "runtime_jobs.go autoFreshnessRecoveryLoop revalidates eligible degraded/stale datasets through existing routed recovery owners rather than a new recovery subsystem."
+      ],
       "closureCondition": "Recoverable degradation becomes short-lived without oscillation or stale latched warning state.",
       "blocksIssueClosure": true
     },
     {
       "id": "PRIORITY-BACKPRESSURE-LOAD-SHEDDING",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "existing workload, scheduler and subscription priority owners",
       "implementationPaths": ["workload_controller.go", "runtime_priority.go", "runtime_jobs.go", "live_subscription_manager.go", "opportunity_radar.go", "session_intelligence_coordinator.go", "routed_refresh.go"],
       "evidenceRequired": ["critical decision-support evidence protected before optional/background work", "lower-value work sheds first under rate-limit/runtime pressure", "scanner/prep/event/research/background fan-out stays bounded", "local overload does not falsely become provider-wide failure"],
-      "evidence": [],
+      "evidence": [
+        "workload_backpressure_regression_test.go: TestV171ReservedCapacityProtectsTierZeroAndOne proves BroadDiscovery cannot consume reserved critical capacity while MarketCritical/UserActionable can; TestV171ProviderQueueIsHardBounded proves both in-flight and queue headroom remain bounded and reserved for critical work.",
+        "workload_backpressure_regression_test.go: TestV171LowPriorityShedsBeforeActionable proves Background/BroadDiscovery shed before UserActionable/MarketCritical; TestV171ProviderRateLimitCooldownShedsLowTierButProtectsActionable proves rate-limit cooldown preserves actionable capacity.",
+        "workload_backpressure_regression_test.go: TestADAPTDataHealthFreshnessRecoveryPriorityUsesProtectedWorkTiers proves auto freshness recovery priority 1 maps to MarketCritical, priority 2 to UserActionable, priority 3+ to BroadDiscovery; optional recovery sheds under pressure while priority 1/2 retain protected provider capacity.",
+        "runtime_jobs.go propagates the existing WorkTier into routed recovery before provider execution and defers shed optional recovery before stamping retry time; no parallel priority scheduler was introduced.",
+        "runtime_reliability_regression_test.go: TestV1870CanonicalReasonTaxonomyKeepsCompatibilityLabel proves bounded optional provider pressure reports LOCAL LOAD/QUEUE_SATURATED with PROTECTED critical truth rather than falsely becoming provider-wide failure."
+      ],
       "closureCondition": "DE.PULSE runtime pressure is absorbed by bounded lower-value shedding before required market truth deteriorates.",
       "blocksIssueClosure": true
     },
     {
       "id": "SCOPED-TELEMETRY-FAULT-COVERAGE",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical runtime observability and existing regression suites",
       "implementationPaths": ["runtime_observability.go", "runtime_degradation.go", "runtime_slo.go", "runtime_degradation_regression_test.go", "runtime_reliability_regression_test.go", "runtime_performance_slo_regression_test.go", "workload_backpressure_regression_test.go"],
       "evidenceRequired": ["non-secret degraded/partial reason and affected scope", "freshness and serving/preferred provider context where relevant", "fallback/recovery state and duration", "fault coverage: stale-vs-warm, provider outage/fallback, exhaustion, rate limit, local overload, optional isolation, recovery/unlatch, contradiction, no false HEALTHY"],
-      "evidence": [],
+      "evidence": [
+        "runtime_degradation.go emits canonical reasonCode, pressureState, affected datasets/consumers, preferred/serving fallback provenance, warmStateActive and non-secret transportIssues; any required critical state not explicitly usable is fail-closed, so contradictory/unknown required evidence cannot evaluate HEALTHY.",
+        "runtime_reliability_regression_test.go executable matrix covers critical network failure, optional isolation, unavailable/stale required evidence fail-closed, healthy/no-false-abstain, fallback healthy/stale, warm route outage/stale warm rejection, optional route outage, fallback rate-limit provenance, recovery hysteresis/unlatch and relapse.",
+        "workload_backpressure_regression_test.go executable matrix covers bounded queue/in-flight reserve, optional shedding, recovery WorkTier propagation, rate-limit shedding and live subscription reserved headroom.",
+        "The contradiction acceptance is exercised through the same fail-closed criticalDecisionDataUsable/UNKNOWN path proven by TestV1870UnknownCriticalEvidenceFailsClosed: only explicitly usable Quotes/VIX states can produce CriticalUsable=true; unrecognized/conflicting required state cannot be promoted to HEALTHY."
+      ],
       "closureCondition": "Every runtime degradation state is diagnosable and the required failure/recovery matrix is executable.",
       "blocksIssueClosure": true
     },
     {
       "id": "ADAPTIVE-GOVERNANCE-PROPAGATION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process and handoff projections",
       "implementationPaths": ["adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md", "handoff/CURRENT.md"],
       "evidenceRequired": ["#81 immutable completion evidence visible", "#82 active ownership visible", "#82 remains common runtime health layer rather than parallel provider subsystem", "dependency order #82 → #83 + #78 → #84 retained"],
-      "evidence": [],
+      "evidence": [
+        "governance/current-state.json and handoff/CURRENT.md retain #81 merge commit 1870dd3881dbe7f6463f242e35fdc19e70d9ae15 and #82 as the active child on adapt-datahealth-runtime-001.",
+        "CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process project #82 as the common runtime data-health/reliability layer using canonical freshness/cache/persistence/telemetry/state owners and Smart Provider Router v2 rather than a provider-specific subsystem.",
+        "Portable projections retain dependency order #82 → #83 + #78 → #84 and preserve Router v2 sole general routing ownership, direct SEC/EDGAR Form 4 authority, U.S.-equities scope, No Execution and no Stable release merely for #82.",
+        "CI convergence guidance retains the existing regression owners and exact-head Fast → impact-selected Qualified sequence without adding a workflow family or weakening gates."
+      ],
       "closureCondition": "Portable human projections agree with machine state and preserve the all-provider sequence.",
       "blocksIssueClosure": true
     },
@@ -72,7 +103,9 @@
       "owner": "canonical Fast/Qualified evidence",
       "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
       "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #82"],
-      "evidence": [],
+      "evidence": [
+        "Fast #892 / run 32772508616 PASSED on implementation checkpoint afc4213b6762739d9b8bad510c950fa8f4d36b60 before closure reconciliation; this is retained as checkpoint evidence only and does not satisfy the final exact-head gate after this ledger commit."
+      ],
       "closureCondition": "Final #82 candidate has exact-head Fast and Qualified success before merge.",
       "blocksIssueClosure": true
     }
