@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// Watchlist HTTP mutation handlers are kept in this owner so http_api.go
+// remains focused on shared API/runtime responsibilities and within budget.
 func (a *Application) handleWatchlistCreate(w http.ResponseWriter, r *http.Request) {
 	var in struct {
 		Name string `json:"name"`
