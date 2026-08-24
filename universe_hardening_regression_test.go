@@ -342,6 +342,43 @@ func TestADAPTProviderUniverseFailedProductionRefreshPreservesStaleTimestamp(t *
 	}
 }
 
+func TestADAPTProviderUniverseFailureIsCapabilityScoped(t *testing.T) {
+	e := newV1801Engine(t)
+	configureAdaptProviderUniverseAlpaca(e)
+	calls := 0
+	client := adaptProviderUniverseClient(func(r *http.Request) (*http.Response, error) {
+		calls++
+		return adaptProviderUniverseResponse(http.StatusInternalServerError, `{"message":"assets unavailable"}`), nil
+	})
+	if rows, ok := e.loadUSSymbolUniverseWithClient(context.Background(), "test-key", "test-secret", client); ok || rows != nil {
+		t.Fatalf("terminal provider failure unexpectedly succeeded: ok=%v rows=%v", ok, rows)
+	}
+	if calls != 2 {
+		t.Fatalf("terminal provider failure must exhaust same-provider endpoints, calls=%d", calls)
+	}
+
+	e.mu.RLock()
+	global := e.providerCircuits[providerKey("Alpaca")]
+	universeCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", canonicalUSAssetUniverseDataset)]
+	liveCircuit := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Alpaca", "US Live Equities")]
+	failureCount := int64(0)
+	for _, state := range e.providerCapabilityStates {
+		if state.Provider == "Alpaca" && state.Dataset == canonicalUSAssetUniverseDataset {
+			failureCount += state.FailureCount
+		}
+	}
+	e.mu.RUnlock()
+	if global.Failures != 0 || global.LastFailure != 0 {
+		t.Fatalf("universe endpoint failure leaked into global Alpaca circuit: %+v", global)
+	}
+	if universeCircuit.Failures != 1 || universeCircuit.LastFailure == 0 || failureCount != 1 {
+		t.Fatalf("universe capability failure not recorded canonically: circuit=%+v stateFailures=%d", universeCircuit, failureCount)
+	}
+	if liveCircuit.Failures != 0 || liveCircuit.LastFailure != 0 || !e.providerAllowedFor("US Live Equities", "Alpaca") {
+		t.Fatalf("universe failure suppressed unrelated Alpaca live-equities capability: %+v", liveCircuit)
+	}
+}
+
 func TestADAPTProviderRequestLocalNeutralClassification(t *testing.T) {
 	if !providerRequestFailureIsLocalNeutral(context.Background(), fmt.Errorf("BROAD_DISCOVERY deferred: provider request budget exhausted")) {
 		t.Fatal("telemetry budget deferral must be local-neutral")
