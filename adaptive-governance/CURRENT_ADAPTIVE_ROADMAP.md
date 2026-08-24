@@ -2,6 +2,7 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` / closure `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / PR #86  
 **Completed Router production adoption:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
 **Completed runtime Data Health:** #82 / `ADAPT-DATAHEALTH-RUNTIME-001` / Fast #894 / Qualified #187 / PR #88 / merge `4882b6d53c0c34463239faae752b86de377fb19a`  
