@@ -256,6 +256,35 @@ func TestTradeInsightCongressUsesPersistedEngineCredential(t *testing.T) {
 	}
 }
 
+func TestTradeInsightCapabilityRegistryUsesPersistedSettingsCredential(t *testing.T) {
+	t.Setenv("TIDATA_API_KEY", "")
+	t.Setenv("TRADEINSIGHT_API_KEY", "")
+	rows := buildProviderCapabilityRegistry(Settings{}, Secrets{TradeInsight: "persisted-settings"}, map[string]string{}, nil, nil)
+	for _, row := range rows {
+		if row.Provider == tradeInsightProviderName && row.Capability == "Adjusted daily OHLCV / corporate-action corroboration" {
+			if row.Status != "SHADOW" {
+				t.Fatalf("persisted Settings credential must configure TradeInsight capability registry, got status %q", row.Status)
+			}
+			return
+		}
+	}
+	t.Fatal("TradeInsight capability registry row missing")
+}
+
+func TestTradeInsightCongressProbeUsesPersistedEngineCredential(t *testing.T) {
+	raw, err := os.ReadFile("tradeinsight_congress_probe.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	src := string(raw)
+	if !strings.Contains(src, "tradeInsightRESTBaseURL, e.tradeInsightResolvedAPIKey(), begin") {
+		t.Fatal("Congress schema probe must use persisted Settings-aware Engine credential resolver")
+	}
+	if strings.Contains(src, "tradeInsightRESTBaseURL, tradeInsightAPIKey(), begin") {
+		t.Fatal("Congress schema probe regressed to env-only credential resolution")
+	}
+}
+
 func TestTradeInsightPublicStateRedactsPersistedSecret(t *testing.T) {
 	const secret = "tradeinsight-super-secret"
 	app := &Application{state: defaultState(), secrets: Secrets{TradeInsight: secret}}

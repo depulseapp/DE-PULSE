@@ -207,5 +207,5 @@ func (e *Engine) probeTradeInsightCongressSchema(ctx context.Context) (tradeInsi
 	if e != nil && e.providerTelemetry != nil {
 		begin = func() func(error) { return e.providerTelemetry.begin(tradeInsightProviderName) }
 	}
-	return tradeInsightCongressSchemaProbeAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, tradeInsightAPIKey(), begin)
+	return tradeInsightCongressSchemaProbeAtObserved(ctx, &http.Client{Timeout: 18 * time.Second}, tradeInsightRESTBaseURL, e.tradeInsightResolvedAPIKey(), begin)
 }
