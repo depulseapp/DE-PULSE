@@ -496,6 +496,7 @@ func (e *Engine) refreshFinnhubIntelligence(ctx context.Context, key string) {
 						break
 					}
 				}
+			}
 		} else {
 			notes = append(notes, "Fund ownership endpoint plan-limited/unavailable")
 		}
