@@ -1,10 +1,13 @@
 # DE.PULSE Current Handoff
 
+**SUPERSEDES ALL PRIOR CHAT HANDOFFS**
+
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
+**Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed product slice:** #76 / `ADAPT-TRADEINSIGHT-SETTINGS-001` / PR #77 / merge `a171ce2258632bd4bd6aa737176f2d6dffb44689`  
@@ -27,6 +30,9 @@ Smart Provider Router v2 remains the sole **general** routing/admission authorit
 - GLD, SLV and USO remain actionable live-priority exceptions.
 - TradeInsight remains shadow-first where governed; direct SEC/EDGAR remains authoritative for Form 4.
 - GitHub executable evidence outranks chat memory.
+
+## Exactly one next action
+Complete issue #80 on `adapt-datahealth-baseline-001`: implement and regression-protect the exhaustive provider/capability matrix, Data Health SLO contract, runtime fetch-path dispositions, recurrence gate, and all four durable Adaptive governance updates; then obtain exact-head Fast and Qualified before merge. Do not start #81/#82 until #80 closes.
 
 ## Resume rule
 1. Fetch live `main` and the live head of `adapt-datahealth-baseline-001` first; another session may have advanced them.
