@@ -35,6 +35,35 @@ type canonicalUSUniverseTiming struct {
 	EvidenceTimeState string
 }
 
+// canonicalUSUniverseAsset decodes the useful identity fields already present
+// in Alpaca /v2/assets. It does not introduce a company-profile request or a
+// second provider path.
+type canonicalUSUniverseAsset struct {
+	ID       string `json:"id"`
+	Class    string `json:"class"`
+	Exchange string `json:"exchange"`
+	Symbol   string `json:"symbol"`
+	Name     string `json:"name"`
+	Status   string `json:"status"`
+	Tradable bool   `json:"tradable"`
+}
+
+func (a canonicalUSUniverseAsset) eligibilityAsset() alpacaAsset {
+	return alpacaAsset{Symbol: a.Symbol, Status: a.Status, Tradable: a.Tradable, Exchange: a.Exchange}
+}
+
+func (a canonicalUSUniverseAsset) identityRecord(observedAt int64) InstrumentIdentityRecord {
+	return InstrumentIdentityRecord{
+		Symbol:          a.Symbol,
+		Name:            a.Name,
+		Exchange:        a.Exchange,
+		AssetClass:      a.Class,
+		ProviderAssetID: a.ID,
+		Source:          "alpaca-assets",
+		ObservedAt:      observedAt,
+	}
+}
+
 // canonicalUSUniverseTimingSnapshot separates transport/cache time from source
 // evidence time. Alpaca's /v2/assets payload does not carry an authoritative
 // market/evidence timestamp, so EvidenceAtMS must remain 0/UNKNOWN rather than
@@ -88,7 +117,7 @@ func (e *Engine) loadUSSymbolUniverse(ctx context.Context, key, secret string) (
 func (e *Engine) loadUSSymbolUniverseWithClient(ctx context.Context, key, secret string, client *http.Client) ([]string, bool) {
 	out := append([]string{}, discoverySeedUniverse...)
 	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
-	var assets []alpacaAsset
+	var assets []canonicalUSUniverseAsset
 	attempts := map[string]providerRouteAttempt{
 		"Alpaca": func(routeCtx context.Context) bool {
 			var terminalErr error
@@ -117,12 +146,19 @@ func (e *Engine) loadUSSymbolUniverseWithClient(ctx context.Context, key, secret
 		return nil, false
 	}
 
+	observedAt := time.Now().UnixMilli()
 	eligible := make([]string, 0, len(assets))
+	identities := make([]InstrumentIdentityRecord, 0, len(assets))
 	for _, a := range assets {
-		if canonicalUSUniverseAssetEligible(a) {
+		if canonicalUSUniverseAssetEligible(a.eligibilityAsset()) {
 			eligible = append(eligible, normalizeSymbol(a.Symbol))
+			identities = append(identities, a.identityRecord(observedAt))
 		}
 	}
+	// Identity is captured from this exact routed response. Persistence failure
+	// is scoped to the slow-changing identity capability and never converts a
+	// successful universe acquisition into provider failure.
+	e.acceptInstrumentIdentities(identities)
 	sort.Strings(eligible)
 
 	// Preserve the established deterministic cross-section and provider-work cap.
@@ -216,6 +252,9 @@ func (e *Engine) refreshCanonicalUSSymbolUniverse(ctx context.Context, key, secr
 // owns only universe freshness/coalescing; BroadSnapshotBroker and Smart
 // Provider Router v2 remain the existing snapshot and provider-route owners.
 func (e *Engine) canonicalUSSymbolUniverse(ctx context.Context, key, secret string, now time.Time) []string {
+	// Slow-changing identity is persistence-first and available even when this
+	// universe call is served from cache or a later provider refresh fails.
+	e.warmInstrumentIdentities()
 	nowms := now.UnixMilli()
 	ttlms := int64(opportunityUniverseTTL / time.Millisecond)
 
