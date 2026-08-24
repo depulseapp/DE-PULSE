@@ -1,0 +1,32 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-COMPANY-INSTRUMENT-IDENTITY-001",
+  "issue": 92,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "workSliceBaselineMainSha": "733d90ca125a4fe5abd38a2ea40de0623703dfd4",
+  "moveDefaults": {
+    "owner": "ADAPT-COMPANY-INSTRUMENT-IDENTITY-001 / package-main canonical instrument identity",
+    "reason": "Preventive direct-to-version-neutral registration: the v18.9.4 planning reservation would historically have produced a version-stacked root owner, but post-#70 root convergence prohibits introducing that predecessor. The canonical package-main target is tracked directly so private persistence/backend ownership is preserved without a test-only or production-only export layer.",
+    "removalCondition": "Version-scoped predecessor remains absent; version-neutral root target remains package-main only until a cohesive capability extraction can preserve current private ownership without parallel persistence/router/cache APIs.",
+    "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+    "allowedReferenceFiles": []
+  },
+  "moves": [
+    {"oldPath":"v18_9_4_instrument_identity.go","newPath":"instrument_identity.go"},
+    {"oldPath":"v18_9_4_persistence_instrument_identity_sqlite.go","newPath":"persistence_instrument_identity_sqlite.go"},
+    {"oldPath":"v18_9_4_persistence_instrument_identity_windows.go","newPath":"persistence_instrument_identity_windows.go"},
+    {"oldPath":"v18_9_4_persistence_instrument_identity_postgres.go","newPath":"persistence_instrument_identity_postgres.go"},
+    {"oldPath":"v18_9_4_persistence_instrument_identity_fallback.go","newPath":"persistence_instrument_identity_fallback.go"},
+    {
+      "oldPath":"v18_9_4_instrument_identity_test.go",
+      "newPath":"instrument_identity_regression_test.go",
+      "owner":"ADAPT-COMPANY-INSTRUMENT-IDENTITY-001 / package-main regression evidence",
+      "reason":"Prevent version-stacked test recurrence while retaining private package-main integration access for same-request capture, persistence restart and trading-registry isolation proof.",
+      "removalCondition":"Version-scoped predecessor remains absent; regression owner moves only with a cohesive capability extraction that preserves exact Go test identities or records governed identity renames."
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

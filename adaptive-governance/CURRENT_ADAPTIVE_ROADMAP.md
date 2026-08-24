@@ -2,19 +2,24 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` / closure `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
-**Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / PR #86  
-**Completed Router production adoption:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
-**Completed runtime Data Health:** #82 / `ADAPT-DATAHEALTH-RUNTIME-001` / Fast #894 / Qualified #187 / PR #88 / merge `4882b6d53c0c34463239faae752b86de377fb19a`  
-**Active product work:** #83 / `ADAPT-PROVIDER-LIFECYCLE-001` / `adapt-provider-lifecycle-001`  
-**Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Completed provider/data-health program:** #79 with #80, #81, #82, #83, #78 and #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
+**Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-The all-provider Data Health direction remains healthy, complete, fresh and decision-usable evidence by default. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states for genuine evidence gaps rather than avoidable routing/cache/fallback/quota/load/recovery defects.
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; it is not reopened. The separate product capability reservation advances under #92.
 
-Program sequence remains **#80 baseline → #81 Smart Provider Router v2 production adoption → #82 common runtime health/recovery/load shedding → #83 common provider-capability lifecycle/readiness → #78 TradeInsight governed adoption → #84 zero-gap production closure**. #80, #81 and #82 are complete; #83 is active.
+The current v18.9.x direction advances from completed provider production/data-health closure into canonical slow-changing company/instrument identity. #92 must strengthen the existing symbol/universe and persistence owners rather than create a company-profile subsystem.
 
-#83 owns one common `SHADOW → VALIDATED → APPROVED → PRODUCTION` capability lifecycle and deterministic readiness evidence. Existing Router v2 capability state, ProviderTelemetry, canonical freshness and validation evidence are reused. Runtime may automatically suppress, cool down, probe and recover capabilities, but may only compute `READY_FOR_PROMOTION`; lifecycle promotion itself is explicit governed-only. Every #80 provider/capability row must have lifecycle, authority and evidence/readiness status or direct-authority/N/A.
+The canonical identity path is persistence-first and reuse-first: existing in-memory identity -> persisted canonical identity -> validate the slow-changing record -> acquire only missing/expired evidence. When acquisition is needed, identity is captured from the **same Smart Provider Router v2 Alpaca `/v2/assets` U.S. Asset Universe response** already used for canonical universe discovery. No additional company-profile fetch is introduced.
 
-#78 follows #83 and must consume this framework for TradeInsight rather than creating provider-specific lifecycle/health machinery. #84 follows #78 and owns the final cross-provider fault/native/professional zero-gap closure.
+Identity includes only useful canonical fields already present in that response: normalized symbol, display/company name, exchange, asset class, stable provider asset ID when supplied, source and observation time. The observation time is slow-changing identity provenance, not live quote/market evidence time. Existing universe eligibility remains authoritative.
 
-Permanent boundaries remain U.S. equities processing, No Execution, direct SEC/EDGAR Form 4 authority, GLD/SLV/USO actionable exceptions, canonical state/freshness/cache/persistence/telemetry ownership, and shadow-first TradeInsight where governed.
+`SymbolRegistryRecord` remains the complete trading-registry snapshot owner. Partial identity must never be written through it because full registry persistence intentionally resets `active/selected` state outside the supplied snapshot. #92 therefore uses dedicated instrument-identity storage behind the existing `PersistenceManager`/backend abstraction, with native macOS SQLite, Windows system SQLite and PostgreSQL logical parity.
+
+## Retained Adaptive Data Health contract
+The completed #79/#84 provider program remains an active invariant, not superseded prose. Provider/capability coverage continues to use truthful states including **PARTIAL COVERAGE** and **DATA DEGRADED** whenever current evidence is incomplete, stale, unavailable, suppressed, or fallback-constrained. Healthy-looking UI must never be synthesized from missing evidence. Smart Provider Router v2, canonical freshness, cache/persistence, telemetry, lifecycle/readiness, fault-recovery and zero-gap closure evidence remain the production data-health foundation beneath #92 and every later #65 child.
+
+TradeInsight `symbol-search` remains hard-gated/non-executable. Smart Provider Router v2 remains the sole general routing authority. U.S. equities processing, direct SEC/EDGAR Form 4 authority, GLD/SLV/USO actionable exceptions, canonical freshness/cache/persistence/telemetry/state ownership and No Execution remain permanent boundaries.
+
+After #92 closes through exact-head Fast -> impact-selected Qualified -> expected-head merge, #65 continues in dependency order; no Stable/public SemVer release is required merely for this capability child.

@@ -2,17 +2,23 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` / closure `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
-**Completed foundation:** #80 / Fast #859 / Qualified #182 / PR #86  
-**Completed Router adoption:** #81 / Fast #878 / Qualified #184 / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
-**Completed runtime Data Health:** #82 / candidate `421acd4a0845a2c0c4190e964597877bc3a93c1c` / canonical Fast exact-head PASS #894 / Qualified exact-head PASS #187 / PR #88 / merge `4882b6d53c0c34463239faae752b86de377fb19a`  
-**Active product work:** #83 / `ADAPT-PROVIDER-LIFECYCLE-001` / `adapt-provider-lifecycle-001`  
-**Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Completed provider/data-health program:** #79 with #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
+**Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-Delivery remains PR-first and exact-head governed. #83 progresses from deterministic lifecycle/readiness regressions and exhaustive #80-row classification to canonical Fast exact-head PASS, then impact-selected Qualified exact-head PASS, then expected-head merge only if live `main` and PR head still match the qualified evidence. No Stable/public SemVer release is performed merely to close #83.
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`. #92 delivery is governed separately through the active product capability reservation and does not reopen #73.
 
-#83 delivery evidence must prove deterministic readiness thresholds, insufficient-evidence fail-closed behavior, explicit-only promotion, automatic Router v2 suppression/recovery without lifecycle mutation, direct-authority N/A behavior, exhaustive 26/26 baseline coverage, TradeInsight common-framework adoption and non-secret diagnostics.
+Delivery remains PR-first and exact-head governed. #92 advances from deterministic identity/persistence regressions to canonical Fast exact-head PASS, then impact-selected Qualified exact-head PASS on the identical candidate, then expected-head merge only if live `main` and the PR head still match the qualified evidence. No Stable/public SemVer release is performed merely to close #92.
 
-Smart Provider Router v2 remains sole general routing authority. Direct SEC/EDGAR Form 4 and explicit official-source authority remain unchanged. No Execution remains permanent.
+#92 delivery evidence must prove:
+- identity is captured from the same Router-v2 Alpaca `/v2/assets` universe response with no additional provider request;
+- only existing canonical eligible U.S. assets enter identity;
+- normalized slow-changing identity survives persistence/restart and stale observations cannot overwrite newer records;
+- identity writes cannot deactivate/clear active or selected trading-registry symbols;
+- supported native persistence contracts remain aligned for macOS SQLite and Windows system SQLite, with PostgreSQL logical compatibility where impact selection exercises it;
+- persistence failure stays scoped and does not become false provider degradation;
+- TradeInsight `symbol-search` remains gated/non-executable;
+- Smart Provider Router v2, direct SEC/EDGAR authority, GLD/SLV/USO, U.S. equities and No Execution remain unchanged.
 
-#78 follows #83 and may compute `READY_FOR_PROMOTION` through the same common evidence contract, but any TradeInsight lifecycle transition remains an explicit governed record. #84 then owns final fault-injection, long-running/restart, professional acceptance and supported macOS Apple Silicon / Windows x64 native proof before the all-provider program can close.
+The closure ledger may bind source/test evidence before final qualification, but GitHub Actions run IDs, job conclusions and merge SHA are immutable post-commit evidence and must be recorded on #92/PR metadata rather than fabricated into a pre-run source candidate. Any source change after qualification creates a new candidate and invalidates earlier exact-head evidence.

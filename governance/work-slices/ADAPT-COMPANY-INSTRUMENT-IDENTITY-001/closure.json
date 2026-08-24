@@ -1,0 +1,50 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-COMPANY-INSTRUMENT-IDENTITY-001",
+  "issue": 92,
+  "branch": "adapt-company-instrument-identity-001",
+  "closurePolicy": "#92 closes only after the exact final candidate proves same-request Router-v2 identity capture, canonical persistence/restart reuse, trading-registry isolation and required platform/backend parity through canonical exact-head Fast plus impact-selected Qualified. GitHub run/job/merge objects are the immutable post-commit authority; no Stable/public SemVer release is required solely for this child.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "SAME-REQUEST-IDENTITY-CAPTURE",
+      "status": "PENDING",
+      "owner": "canonical U.S. symbol universe + Smart Provider Router v2",
+      "implementationPaths": ["symbol_universe.go", "instrument_identity.go", "instrument_identity_regression_test.go"],
+      "evidence": ["Identity must come from the same Alpaca /v2/assets response used by the existing routed universe acquisition.", "No company-profile or TradeInsight symbol-search request may be introduced."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PERSISTENCE-FIRST-IDENTITY",
+      "status": "PENDING",
+      "owner": "canonical PersistenceManager/backend owners",
+      "implementationPaths": ["instrument_identity.go", "persistence_instrument_identity_sqlite.go", "persistence_instrument_identity_windows.go", "persistence_instrument_identity_postgres.go", "persistence_instrument_identity_fallback.go"],
+      "evidence": ["Slow-changing canonical identity survives restart and is warm-reused without being represented as live quote/current market truth.", "Native SQLite/Windows and PostgreSQL share the same logical identity schema and monotonic observation semantics."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "TRADING-REGISTRY-ISOLATION",
+      "status": "PENDING",
+      "owner": "canonical symbol registry + identity persistence",
+      "implementationPaths": ["persistence_repository.go", "instrument_identity.go", "instrument_identity_regression_test.go"],
+      "evidence": ["Identity persistence never calls partial SymbolRegistryRecord snapshot writes and cannot deactivate or clear selected trading symbols."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "BOUNDARY-AND-GATE-PRESERVATION",
+      "status": "PENDING",
+      "owner": "canonical symbol eligibility + existing TradeInsight admission",
+      "implementationPaths": ["symbol_universe.go", "tradeinsight_admission.go", "instrument_identity_regression_test.go"],
+      "evidence": ["Only existing canonical eligible U.S. assets enter identity; GLD/SLV/USO rules remain unchanged.", "TradeInsight symbol-search remains hard-gated/non-executable and No Execution remains unchanged."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-DELIVERY",
+      "status": "PENDING",
+      "owner": "canonical Fast/Qualified + expected-head merge",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml", "handoff/CURRENT.md", "governance/current-state.json"],
+      "evidence": ["Final candidate must have exact-head Fast PASS followed by impact-selected Qualified PASS before guarded merge.", "Actual run IDs, job conclusions and merge SHA are recorded only after GitHub produces them."],
+      "blocksIssueClosure": true
+    }
+  ]
+}
