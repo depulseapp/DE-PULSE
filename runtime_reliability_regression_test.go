@@ -14,6 +14,13 @@ func containsStringV1870(values []string, want string) bool {
 	return false
 }
 
+func adaptFreshCritical() []FreshnessDiagnostic {
+	return []FreshnessDiagnostic{
+		{Dataset: "Quotes", State: "LIVE"},
+		{Dataset: "VIX", State: "FRESH"},
+	}
+}
+
 func TestV1870CanonicalReasonTaxonomyKeepsCompatibilityLabel(t *testing.T) {
 	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "LIVE"}, {Dataset: "VIX", State: "FRESH"}}
 	load := RuntimeLoadDiagnostics{Workload: []WorkClassDiagnostics{{Class: "provider-rest", Queued: 8, MaxQueue: 8, OldestQueueAgeMs: 0}}}
@@ -114,6 +121,55 @@ func TestADAPTDataHealthFallbackCannotMaskCriticalFreshnessLoss(t *testing.T) {
 	}
 }
 
+func TestADAPTDataHealthValidWarmEvidenceSurvivesTemporaryCriticalRouteOutage(t *testing.T) {
+	router := ProviderRouterSnapshot{Routes: []ProviderRouteState{{Dataset: "US Live Equities", State: "UNAVAILABLE"}}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "reconnecting"}, adaptFreshCritical(), router, RuntimeLoadDiagnostics{})
+	if got.Code != "" || got.ReasonCode != "" || got.PressureState != "HEALTHY" || got.Abstain || !got.CriticalUsable {
+		t.Fatalf("valid warm evidence must remain usable until canonical freshness expires: %+v", got)
+	}
+	if !got.WarmStateActive || len(got.TransportIssues) == 0 {
+		t.Fatalf("temporary route outage must expose warm-state diagnostics without extending evidence time: %+v", got)
+	}
+}
+
+func TestADAPTDataHealthStaleWarmEvidenceCannotMaskCriticalRouteOutage(t *testing.T) {
+	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "STALE"}, {Dataset: "VIX", State: "FRESH"}}
+	router := ProviderRouterSnapshot{Routes: []ProviderRouteState{{Dataset: "US Live Equities", State: "UNAVAILABLE"}}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "connected-idle"}, fresh, router, RuntimeLoadDiagnostics{})
+	if got.Code != "PARTIAL COVERAGE" || got.ReasonCode != "LOW_COVERAGE" || got.PressureState != "DEGRADED" || !got.Abstain || got.CriticalUsable {
+		t.Fatalf("stale required quote evidence must remain truthfully degraded: %+v", got)
+	}
+	if !containsStringV1870(got.Affected, "Quotes") {
+		t.Fatalf("critical degradation must identify the stale dataset: %+v", got)
+	}
+}
+
+func TestADAPTDataHealthOptionalRouteFailureDoesNotCreateFalseGlobalDegradation(t *testing.T) {
+	router := ProviderRouterSnapshot{Routes: []ProviderRouteState{{Dataset: "News", State: "UNAVAILABLE"}}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "connected-idle"}, adaptFreshCritical(), router, RuntimeLoadDiagnostics{})
+	if got.Code != "" || got.ReasonCode != "" || got.PressureState != "HEALTHY" || got.Abstain {
+		t.Fatalf("optional route failure must remain isolated while required canonical evidence is usable: %+v", got)
+	}
+	if !got.WarmStateActive || len(got.TransportIssues) == 0 {
+		t.Fatalf("isolated optional route failure must remain diagnosable without creating a global degraded state: %+v", got)
+	}
+}
+
+func TestADAPTDataHealthFallbackRateLimitDoesNotInvalidateFreshEvidence(t *testing.T) {
+	router := ProviderRouterSnapshot{Routes: []ProviderRouteState{{
+		Dataset: "US Live Equities",
+		State:   "DEGRADED",
+		Route:   []ProviderRouteHop{{Provider: "Alpaca", RateLimit: "RATE LIMITED"}, {Provider: "Finnhub", Circuit: "CLOSED"}},
+	}}}
+	got := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "finnhub-fallback"}, adaptFreshCritical(), router, RuntimeLoadDiagnostics{})
+	if got.Code != "" || got.PressureState != "HEALTHY" || got.Abstain || !got.CriticalUsable {
+		t.Fatalf("rate-limit pressure with healthy serving fallback must not manufacture degradation: %+v", got)
+	}
+	if !got.FallbackActive || !got.WarmStateActive || len(got.TransportIssues) == 0 {
+		t.Fatalf("fallback/rate-limit provenance must remain visible for diagnosis: %+v", got)
+	}
+}
+
 func TestV1870RecoveryHysteresisRejectsTransientHealthySample(t *testing.T) {
 	tracker := NewRuntimeSLOTracker()
 	t0 := time.Unix(1_800_000_000, 0)
@@ -147,6 +203,37 @@ func TestV1870RecoveryHysteresisRejectsTransientHealthySample(t *testing.T) {
 	d3 := tracker.Observe(nil, third, t0.Add(6*time.Second))
 	if d3.DegradationRecoveryPending || d3.DegradationRecoveryEvents != 1 || d3.LastDegradationRecoveryMs < 6000 {
 		t.Fatalf("confirmed recovery should be recorded exactly once: %+v", d3)
+	}
+}
+
+func TestADAPTDataHealthRecoveredCanonicalStateCanUnlatchDegradedRuntimeStatus(t *testing.T) {
+	tracker := NewRuntimeSLOTracker()
+	t0 := time.Unix(1_800_000_000, 0)
+	badFreshness := []FreshnessDiagnostic{{Dataset: "Quotes", State: "STALE"}, {Dataset: "VIX", State: "FRESH"}}
+	degraded := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "connected-idle"}, badFreshness, ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
+	if degraded.Code == "" {
+		t.Fatalf("fixture must begin degraded: %+v", degraded)
+	}
+	if got := tracker.StabilizeDegradation(degraded, t0); got.Code == "" {
+		t.Fatalf("real degradation must become visible immediately: %+v", got)
+	}
+
+	healthyRaw := deriveRuntimeDegradation("degraded", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "connected-idle"}, adaptFreshCritical(), ProviderRouterSnapshot{}, RuntimeLoadDiagnostics{})
+	if healthyRaw.Code != "" {
+		t.Fatalf("mutable runtime status alone must not re-latch a degradation after canonical evidence recovers: %+v", healthyRaw)
+	}
+
+	got := tracker.StabilizeDegradation(healthyRaw, t0.Add(time.Second))
+	if got.Code == "" || got.PressureState != "RECOVERING" {
+		t.Fatalf("first healthy sample must enter hysteresis recovery instead of unlatching immediately: %+v", got)
+	}
+	got = tracker.StabilizeDegradation(healthyRaw, t0.Add(3*time.Second))
+	if got.Code == "" || got.PressureState != "RECOVERING" {
+		t.Fatalf("second healthy sample must remain held during the stability window: %+v", got)
+	}
+	got = tracker.StabilizeDegradation(healthyRaw, t0.Add(6*time.Second))
+	if got.Code != "" || got.PressureState != "HEALTHY" {
+		t.Fatalf("sustained recovery must unlatch the stale degraded state: %+v", got)
 	}
 }
 
