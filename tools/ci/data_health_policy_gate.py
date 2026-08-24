@@ -32,9 +32,16 @@ REQUIRED_METRICS = {
 }
 EXCLUDED_SOURCE_PREFIXES = (
     "release/", "tools/", "tests/", "governance/", "adaptive-governance/",
-    "handoff/", ".github/", "assets/", "docs/",
+    "handoff/", ".github/", "assets/", "docs/", "internal/vendorcrypto/",
 )
+# Browser CSP allowlists describe destinations the renderer may contact; they are
+# not backend provider transports and must not create false provider-bypass debt.
+NON_BACKEND_NETWORK_LITERAL_FILES = {"http_security.go"}
 LOCAL_OR_EXAMPLE_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "example.com"}
+# Router v2 historically names the SEC capability member "SEC" while the durable
+# provider identity and direct authority is "SEC EDGAR". Normalize the alias
+# rather than creating a false duplicate provider row.
+ROUTER_PROVIDER_ALIASES = {"SEC": "SEC EDGAR"}
 
 
 def load_json(path: Path, errors: list[str]) -> dict:
@@ -76,7 +83,7 @@ def routed_providers() -> set[str]:
         providers.update(re.findall(r'"([^"]+)"', match.group(1)))
         if "tradeInsightProviderName" in match.group(1):
             providers.add("TradeInsight")
-    return providers
+    return {ROUTER_PROVIDER_ALIASES.get(provider, provider) for provider in providers}
 
 
 def production_go_files() -> list[Path]:
@@ -94,6 +101,8 @@ def production_hosts() -> dict[str, set[str]]:
     rx = re.compile(r'(?P<url>(?:https?|wss?)://[A-Za-z0-9._:-]+)')
     for path in production_go_files():
         rel = path.relative_to(ROOT).as_posix()
+        if rel in NON_BACKEND_NETWORK_LITERAL_FILES:
+            continue
         text = path.read_text(encoding="utf-8", errors="replace")
         for match in rx.finditer(text):
             raw = match.group("url")

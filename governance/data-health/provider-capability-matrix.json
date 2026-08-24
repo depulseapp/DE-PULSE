@@ -29,7 +29,8 @@
       "capabilities": [
         {"capability":"IEX live quotes/snapshots/liquidity","canonicalOwner":"live subscription manager + US Live Equities route","consumers":["Day","Market Open Prep","Trade Readiness","Decision Queue"],"authorityClass":"ROUTED_PRIMARY_OR_FALLBACK","freshnessPolicy":"live/session-aware","cachePersistenceOwner":"canonical quote state","fallbackCandidates":["Finnhub","Twelve Data"],"materiality":"CRITICAL","degradedImpact":"affected symbols/live-equity consumers","routerDataset":"US Live Equities","lifecycle":"PRODUCTION"},
         {"capability":"historical OHLCV","canonicalOwner":"Historical Bars route","consumers":["Day","Swing","Long","Research","Adaptive Intelligence"],"authorityClass":"ROUTED_PRIMARY","freshnessPolicy":"intraday/daily cadence aware","cachePersistenceOwner":"canonical bars state","fallbackCandidates":["TradeInsight","Twelve Data","yfinance"],"materiality":"HIGH","degradedImpact":"history-dependent consumers only","routerDataset":"Historical Bars","lifecycle":"PRODUCTION"},
-        {"capability":"SIP movers/most-active discovery seed","canonicalOwner":"market activity/discovery owner","consumers":["Discovery","Dashboard"],"authorityClass":"ENTITLEMENT_OPTIONAL","freshnessPolicy":"market-session current","cachePersistenceOwner":"canonical discovery state","fallbackCandidates":[],"materiality":"OPTIONAL","degradedImpact":"Discovery seed only; must not globally degrade app","routerDataset":"specialized entitlement path","lifecycle":"PRODUCTION_WHEN_ENTITLED"}
+        {"capability":"SIP movers/most-active discovery seed","canonicalOwner":"market activity/discovery owner","consumers":["Discovery","Dashboard"],"authorityClass":"ENTITLEMENT_OPTIONAL","freshnessPolicy":"market-session current","cachePersistenceOwner":"canonical discovery state","fallbackCandidates":[],"materiality":"OPTIONAL","degradedImpact":"Discovery seed only; must not globally degrade app","routerDataset":"specialized entitlement path","lifecycle":"PRODUCTION_WHEN_ENTITLED"},
+        {"capability":"U.S. asset universe and market calendar","canonicalOwner":"symbol universe + market activity/calendar owners","consumers":["Processing Universe","Market Calendar","Pre-Market Prep","Market Open Prep"],"authorityClass":"GENERAL_DIRECT_PATH_PENDING_ROUTER_ADOPTION","freshnessPolicy":"asset eligibility refresh plus current/forward U.S. session calendar","cachePersistenceOwner":"canonical universe/calendar state","fallbackCandidates":["built-in U.S. market calendar where appropriate"],"materiality":"HIGH","degradedImpact":"universe/calendar-dependent consumers only; unrelated market evidence remains healthy","routerDataset":"MIGRATE in #81","lifecycle":"PRODUCTION"}
       ]
     },
     {
@@ -49,7 +50,8 @@
     },
     {
       "id":"bls","provider":"BLS","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
-        {"capability":"inflation/labor/wages/PPI actuals","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Swing","Long","Research"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official release observation period/time","cachePersistenceOwner":"canonical macro state","fallbackCandidates":[],"materiality":"HIGH","degradedImpact":"only BLS-dependent macro evidence","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+        {"capability":"inflation/labor/wages/PPI actuals","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Swing","Long","Research"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official release observation period/time","cachePersistenceOwner":"canonical macro state","fallbackCandidates":[],"materiality":"HIGH","degradedImpact":"only BLS-dependent macro evidence","routerDataset":"direct authority","lifecycle":"PRODUCTION"},
+        {"capability":"official U.S. labor/inflation release calendar","canonicalOwner":"macro_events.go","consumers":["Macro Events","Market Regime","Research","Trade Readiness"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official scheduled release time/publication","cachePersistenceOwner":"canonical macro event state","fallbackCandidates":[],"materiality":"HIGH","degradedImpact":"BLS event-timing evidence only","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
       ]
     },
     {
@@ -99,18 +101,23 @@
       ]
     },
     {
+      "id":"official-macro-calendars","provider":"Official Macro Calendars","class":"DIRECT_OFFICIAL_AUTHORITY_SET","capabilities":[
+        {"capability":"official policy/economic release calendars","canonicalOwner":"macro_events.go","consumers":["Macro Events","Market Regime","Research","Trade Readiness","Pre-Market Prep","Market Open Prep"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"first-party scheduled release/policy time and source publication","cachePersistenceOwner":"canonical macro event state","fallbackCandidates":[],"materiality":"HIGH","degradedImpact":"affected scheduled macro-event timing only; unrelated market evidence remains healthy","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
       "id":"groq","provider":"Groq","class":"AI_INFERENCE","capabilities":[
         {"capability":"manual/automatic AI second-opinion inference","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["OpenRouter","Google Gemini"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only; deterministic decisions remain intact","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
       ]
     },
     {
       "id":"openrouter","provider":"OpenRouter","class":"AI_INFERENCE","capabilities":[
-        {"capability":"AI model routing/second opinion","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","Google Gemini"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
+        {"capability":"AI model routing/second opinion","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","Google Gemini"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only; deterministic decisions remain intact","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
       ]
     },
     {
       "id":"google-gemini","provider":"Google Gemini","class":"AI_INFERENCE","capabilities":[
-        {"capability":"AI second-opinion inference","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","OpenRouter"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
+        {"capability":"AI second-opinion inference","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","OpenRouter"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only; deterministic decisions remain intact","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
       ]
     }
   ]
