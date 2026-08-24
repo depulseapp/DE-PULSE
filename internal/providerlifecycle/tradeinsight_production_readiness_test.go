@@ -55,10 +55,10 @@ func TestTradeInsight78QualificationUsesCommonLifecycleThresholds(t *testing.T) 
 	}
 
 	expected := map[string]bool{
-		"daily-history": true,
-		"adjusted-history": true,
-		"corporate-actions": true,
-		"bulk-history": true,
+		"daily-history":        true,
+		"adjusted-history":     true,
+		"corporate-actions":    true,
+		"bulk-history":         true,
 		"congressional-trades": true,
 	}
 	if len(artifact.Candidates) != len(expected) {
