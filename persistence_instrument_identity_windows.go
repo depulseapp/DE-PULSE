@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"runtime"
 	"syscall"
@@ -18,6 +19,11 @@ var (
 )
 
 func (b *sqlitePersistenceBackend) ensureInstrumentIdentitySchemaLocked() error {
+	// Windows owns a uintptr SQLite handle through winsqlite3.dll. Keep this
+	// platform check explicit rather than duplicating the cgo initializer body.
+	if b == nil || b.db == 0 {
+		return errors.New("windows sqlite database is not open")
+	}
 	applied, err := b.migrationApplied(instrumentIdentitySchemaVersion)
 	if err != nil {
 		return err
@@ -28,9 +34,9 @@ func (b *sqlitePersistenceBackend) ensureInstrumentIdentitySchemaLocked() error 
 	if err := b.exec("BEGIN IMMEDIATE"); err != nil {
 		return err
 	}
-	ok := false
+	committed := false
 	defer func() {
-		if !ok {
+		if !committed {
 			_ = b.exec("ROLLBACK")
 		}
 	}()
@@ -52,7 +58,7 @@ CREATE INDEX IF NOT EXISTS idx_instrument_identities_observed ON instrument_iden
 	if err := b.exec("COMMIT"); err != nil {
 		return err
 	}
-	ok = true
+	committed = true
 	return nil
 }
 
