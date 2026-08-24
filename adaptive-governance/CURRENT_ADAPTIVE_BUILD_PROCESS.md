@@ -20,4 +20,7 @@ For #92, implementation is executable-first, reuse-first and canonical-owner-fir
 - use canonical Fast exact-head PASS, then deliberate impact-selected Qualified exact-head PASS; fix real findings without weakening gates;
 - do not add workflow families, parallel caches/databases/services or weaken G0-G16/source-health/architecture gates.
 
+## Retained Adaptive Data Health build-process invariants
+The completed sequence **#81/#82/#83/#78/#84** remains authoritative beneath #92. Every later provider/intelligence child must **fail closed** when critical evidence cannot be proven, preserve **canonical freshness** and source/provenance semantics, reuse Smart Provider Router v2/lifecycle/readiness/fault-recovery owners, and surface truthful partial/degraded state instead of synthesizing readiness. Existing Data Health gates remain executable acceptance criteria, not optional documentation.
+
 Documentation alone never verifies #92. Actual GitHub run/job/merge evidence remains the post-commit authority.
