@@ -74,7 +74,7 @@ func TestV171ReservedCapacityProtectsTierZeroAndOne(t *testing.T) {
 	}
 }
 
-func TestV171ProviderQueueIsHardBoundedAndReservesCriticalHeadroom(t *testing.T) {
+func TestV171ProviderQueueIsHardBounded(t *testing.T) {
 	w := NewWorkloadController()
 	d := providerWorkDiag(w)
 	if d.ReservedCriticalQueue < 1 || d.ReservedCriticalQueue >= d.MaxQueue {
