@@ -1,0 +1,35 @@
+name: Temporary TradeInsight Settings PR Apply
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ github.event.pull_request.head.ref == 'v18.9.2-tradeinsight-settings' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: v18.9.2-tradeinsight-settings
+          fetch-depth: 0
+      - name: Apply once
+        shell: bash
+        run: |
+          if git log -1 --pretty=%s | grep -q '^feat: add TradeInsight settings credential UX$'; then
+            echo 'Source patch already applied.'
+            exit 0
+          fi
+          sed -n "/python3 <<'PY'/,/^          PY$/p" .github/workflows/tradeinsight-settings-patch.yml | sed '1d;$d;s/^          //' > /tmp/apply_tradeinsight_settings.py
+          python3 /tmp/apply_tradeinsight_settings.py
+          gofmt -w app_model.go app_state.go provider_router.go tradeinsight.go http_api.go tradeinsight_settings_regression_test.go
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app_model.go app_state.go provider_router.go tradeinsight.go http_api.go renderer/renderer.js tradeinsight_settings_regression_test.go
+          git commit -m 'feat: add TradeInsight settings credential UX'
+          git push origin HEAD:v18.9.2-tradeinsight-settings
