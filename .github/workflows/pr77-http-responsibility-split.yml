@@ -56,3 +56,5 @@ jobs:
           git diff --cached --check
           git commit -m "refactor: split watchlist HTTP responsibility"
           git push origin HEAD:v18.9.2-tradeinsight-settings
+
+# one-shot trigger
