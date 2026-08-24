@@ -1,12 +1,15 @@
-# DE.PULSE — Current Adaptive Delivery Process
+# CURRENT Adaptive Delivery Process
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Implementation branch:** `adapt-root-convergence-001`  
-**Closure branch:** `adapt-root-convergence-001-closure`  
-**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
+**Completed process foundation:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`
 
-#73 consumed no public product version and introduced no intended product behavior change. Its exact implementation candidate passed Fast #819 and Qualified #179 and merged through PR #74. Published Stable tags/releases/evidence remain immutable.
+TradeInsight Settings/API-key UX (#76 / `ADAPT-TRADEINSIGHT-SETTINGS-001`) earned exact-head Fast #848 and Qualified #181 before PR #77 expected-head merge `a171ce2258632bd4bd6aa737176f2d6dffb44689`. The implementation is complete, but this delivery checkpoint does **not** publish a new Stable version; existing `v18.9.1-stable` evidence remains immutable.
 
-Future delivery remains: governed work slice → commits → exact-head Fast → deliberate Qualified → exact candidate → coherent release grouping → public Stable version only when warranted → G11–G16. TradeInsight Settings/API-key UX is the next reserved product capability; starting it does not itself consume SemVer.
+## Delivery rule for the provider-production program
+
+Parent #79 / `ADAPT-PROVIDER-PRODUCTION-001` proceeds through #80 → #81/#82 → #83 + #78 → #84. Each child must deliver executable capability evidence before lifecycle/promotion claims. Provider reachability or a configured key is not production admission.
+
+For each governed merge: reconcile with current `main`; exact-head Fast must pass; deliberate Qualified must pass the Planner-selected evidence owners; merge with expected-head protection; then bind immutable candidate/CI/merge evidence into source-of-truth closure where required. Multi-platform/native release evidence is required when the release planner or Stable publication path selects it, not invented for an unrelated slice.
+
+Public Stable publication remains a separate G11–G16 decision. #80–#84 must preserve rollback/degradation truth, authority boundaries, provider lifecycle evidence, scoped recovery proof, and no-secret-leakage. No release is allowed merely because implementation work has merged.

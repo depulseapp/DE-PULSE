@@ -1,12 +1,17 @@
-# DE.PULSE — Current Adaptive Roadmap
+# CURRENT Adaptive Roadmap
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Implementation branch:** `adapt-root-convergence-001`  
-**Closure branch:** `adapt-root-convergence-001-closure`  
-**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
+**Completed process foundation:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`
 
-#73 repository architecture convergence is COMPLETE. Root inventory, historical v17/v18 non-Go relocation, active root tooling consolidation, versioned Go owner convergence, final root-policy tightening, and exact-head Fast/Qualified are all verified. No public product version was consumed and Stable `v18.9.1-stable` remains immutable.
+#76 / `ADAPT-TRADEINSIGHT-SETTINGS-001` is implementation-complete and exact-head qualified: Fast #848 + Qualified #181, merged by PR #77 as `a171ce2258632bd4bd6aa737176f2d6dffb44689`. The source-of-truth evidence is `governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/final-qualification-evidence.json`. Stable remains `v18.9.1-stable`; implementation completion does not itself consume public SemVer.
 
-The product capability gate is unblocked. The next reserved capability is **TradeInsight Settings/API-key UX**, to begin as a new governed work slice after re-checking the live provider/master-program dependency order. Do not create parallel routing/cache/state owners; Smart Provider Router v2 and canonical Settings/security/state owners remain authoritative.
+## Next roadmap program
+
+Parent #79 / `ADAPT-PROVIDER-PRODUCTION-001` makes healthy, complete, fresh and decision-usable data a permanent cross-provider Adaptive Intelligence capability. The first child is #80 / `ADAPT-DATAHEALTH-BASELINE-001` on `adapt-datahealth-baseline-001`.
+
+Roadmap dependency order: **#80 → #81/#82 → #83 + #78 → #84**.
+
+#80 establishes executable ownership, coverage, SLO, bypass and degradation truth for every active provider/authoritative source. #81 extends the existing Smart Provider Router v2 common production contract; #82 adopts providers/capabilities through that contract without provider-specific parallel systems; #83 makes degradation/recovery attributable and observable; #78 applies the shared contract to TradeInsight readiness without weakening direct SEC/EDGAR authority; #84 durably closes only what executable evidence proves.
+
+Permanent boundaries remain US-equities processing, no execution, Smart Provider Router v2 as sole general routing/admission owner, direct SEC/EDGAR Form 4 authority, and GLD/SLV/USO actionable exceptions.

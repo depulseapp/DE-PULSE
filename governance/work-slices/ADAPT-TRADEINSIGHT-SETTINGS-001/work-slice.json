@@ -5,21 +5,25 @@
   "title": "TradeInsight Settings / API-key UX",
   "type": "PRODUCT_CAPABILITY",
   "subtype": "PROVIDER_CREDENTIAL_SETTINGS",
-  "status": "IN_PROGRESS",
+  "status": "COMPLETE",
   "publicProductVersion": null,
+  "intendedTargetVersion": "18.9.2",
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
   "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
   "baselineBuildId": "v18.9.1-stable-20260821",
   "baselineMainSha": "0b6c89cdfff51dd32d718741f64fb4110d4a8728",
   "branch": "v18.9.2-tradeinsight-settings",
+  "closureBranch": "adapt-tradeinsight-settings-001-closure",
+  "mergedPullRequest": 77,
+  "mergedCommitSha": "a171ce2258632bd4bd6aa737176f2d6dffb44689",
+  "implementationCandidateSha": "32629994207aa525aba23b7562506bb2538276c5",
   "productBehaviorChange": true,
-  "blocksNextProductCapability": true,
+  "blocksNextProductCapability": false,
   "scopeId": "ADAPT-TRADEINSIGHT-SETTINGS-001",
-  "dependencies": [
-    61,
-    73
-  ],
+  "closureLedger": "governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/closure.json",
+  "finalQualificationEvidence": "governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/final-qualification-evidence.json",
+  "dependencies": [61, 73],
   "architectureBoundaries": [
     "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
     "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
@@ -27,5 +31,6 @@
     "TRADEINSIGHT_SHADOW_FIRST_WHERE_GOVERNED",
     "NO_EXECUTION",
     "US_EQUITIES_PROCESSING"
-  ]
+  ],
+  "releaseBoundary": "Implementation is complete and qualified, but no Stable/public SemVer release is claimed by this work-slice closure."
 }
