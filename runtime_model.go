@@ -170,6 +170,8 @@ type Engine struct {
 	canonicalUSUniverseRetryAt int64
 	canonicalUSUniverseRefresh chan struct{}
 	canonicalUSUniverseLoader  func(context.Context, string, string) ([]string, bool)
+	instrumentIdentities       map[string]InstrumentIdentityRecord
+	instrumentIdentitiesLoaded bool
 	radarCursor                int
 	runtimeLoad                RuntimeLoadDiagnostics
 	runtimeSLOTracker          *RuntimeSLOTracker
