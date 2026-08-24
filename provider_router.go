@@ -102,16 +102,17 @@ type providerCircuit struct {
 
 func routeChains() map[string][]string {
 	return map[string][]string{
-		"US Live Equities":               {"Alpaca", "Finnhub", "Twelve Data"},
-		canonicalUSAssetUniverseDataset:  {"Alpaca"},
-		canonicalUSMarketCalendarDataset: {"Alpaca"},
-		"VIX / Indices":                  {"Twelve Data", "yfinance", "CBOE"},
-		canonicalHistoricalBarsDataset:   {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
-		"News":                           {"Finnhub", "Marketaux"},
-		"Earnings":                       {"Finnhub", "yfinance"},
-		"Fundamentals":                   {"Finnhub", "SEC", "yfinance"},
-		"SEC":                            {"SEC EDGAR"},
-		"Macro":                          {"FRED"},
+		"US Live Equities":                 {"Alpaca", "Finnhub", "Twelve Data"},
+		canonicalUSAssetUniverseDataset:    {"Alpaca"},
+		canonicalUSMarketCalendarDataset:   {"Alpaca"},
+		canonicalUSCorporateActionsDataset: {"Alpaca"},
+		"VIX / Indices":                    {"Twelve Data", "yfinance", "CBOE"},
+		canonicalHistoricalBarsDataset:     {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
+		"News":                             {"Finnhub", "Marketaux"},
+		"Earnings":                         {"Finnhub", "yfinance"},
+		"Fundamentals":                     {"Finnhub", "SEC", "yfinance"},
+		"SEC":                              {"SEC EDGAR"},
+		"Macro":                            {"FRED"},
 	}
 }
 
