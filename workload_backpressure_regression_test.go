@@ -183,6 +183,64 @@ func TestV171LowPriorityShedsBeforeActionable(t *testing.T) {
 	}
 }
 
+func TestADAPTDataHealthFreshnessRecoveryPriorityUsesProtectedWorkTiers(t *testing.T) {
+	w := NewWorkloadController()
+	for priority, want := range map[int]WorkTier{
+		1: WorkTierMarketCritical,
+		2: WorkTierUserActionable,
+		3: WorkTierBroadDiscovery,
+		4: WorkTierBroadDiscovery,
+	} {
+		ctx, tier := freshnessRecoveryWorkContext(context.Background(), priority)
+		if tier != want || workTierFromContext(ctx, WorkTierBackground) != want {
+			t.Fatalf("freshness recovery priority %d mapped to %v, want %v", priority, tier, want)
+		}
+	}
+
+	d := providerWorkDiag(w)
+	holds := make([]func(), 0, d.Capacity-d.ReservedCritical)
+	for i := 0; i < d.Capacity-d.ReservedCritical; i++ {
+		release, ok := w.TryAcquireTier("provider-rest", WorkTierBroadDiscovery)
+		if !ok {
+			t.Fatalf("could not establish optional provider pressure at slot %d: %+v", i, providerWorkDiag(w))
+		}
+		holds = append(holds, release)
+	}
+	defer func() {
+		for _, release := range holds {
+			release()
+		}
+	}()
+
+	optionalCtx, optionalTier := freshnessRecoveryWorkContext(context.Background(), 3)
+	if workTierFromContext(optionalCtx, WorkTierBackground) != WorkTierBroadDiscovery || optionalTier != WorkTierBroadDiscovery {
+		t.Fatalf("optional recovery lost canonical broad-discovery tier: %v", optionalTier)
+	}
+	if !w.ShouldShed(optionalTier) {
+		t.Fatal("optional stale-data recovery must shed while normal provider capacity is pressured")
+	}
+
+	protected := []struct {
+		priority int
+		want     WorkTier
+	}{{1, WorkTierMarketCritical}, {2, WorkTierUserActionable}}
+	protectedReleases := make([]func(), 0, len(protected))
+	for _, tc := range protected {
+		ctx, tier := freshnessRecoveryWorkContext(context.Background(), tc.priority)
+		if tier != tc.want || w.ShouldShed(tier) {
+			t.Fatalf("priority %d recovery must remain protected under local pressure: tier=%v", tc.priority, tier)
+		}
+		release, ok := w.TryAcquireTier("provider-rest", workTierFromContext(ctx, WorkTierBackground))
+		if !ok {
+			t.Fatalf("priority %d recovery could not use protected provider capacity: %+v", tc.priority, providerWorkDiag(w))
+		}
+		protectedReleases = append(protectedReleases, release)
+	}
+	for _, release := range protectedReleases {
+		release()
+	}
+}
+
 func TestV171LiveSubscriptionBudgetsExposeReservedHeadroom(t *testing.T) {
 	alpaca := liveSubscriptionBudget("Alpaca IEX", 30, 25, 27, true)
 	if alpaca.ReservedCapacity != 5 || alpaca.ReserveUsed != 2 || alpaca.Available != 3 || alpaca.Saturated {

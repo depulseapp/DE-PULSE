@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 func symbolInWatchlist(st AppState, id, symbol string) bool {
 	wl, ok := watchlistValueByID(st.Watchlists, id)
@@ -102,6 +105,22 @@ func (e *Engine) workTierForSymbols(symbols []string) WorkTier {
 		}
 	}
 	return best
+}
+
+// freshnessRecoveryWorkContext maps the existing freshness-recovery ordering
+// into the canonical WorkTier contract consumed by workload admission and Smart
+// Provider Router v2. It adds no second priority owner: priority 1 is protected
+// market truth, priority 2 is actionable recovery, and optional recovery uses
+// the existing broad-discovery pressure budget.
+func freshnessRecoveryWorkContext(ctx context.Context, priority int) (context.Context, WorkTier) {
+	tier := WorkTierBroadDiscovery
+	switch {
+	case priority <= 1:
+		tier = WorkTierMarketCritical
+	case priority == 2:
+		tier = WorkTierUserActionable
+	}
+	return withWorkTier(ctx, tier), tier
 }
 
 func workTierLabel(t WorkTier) string {
