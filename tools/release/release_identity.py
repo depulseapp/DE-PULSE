@@ -36,6 +36,9 @@ def load():
     ):
         if not str(x.get(key, "")).strip():
             raise SystemExit(f"release identity missing {key}")
+    asset = str(x.get("renderer_identity_asset", "")).strip()
+    if asset and ("/" in asset or "\\" in asset or asset.startswith(".")):
+        raise SystemExit("release identity renderer asset must be a renderer-local filename")
     return x
 
 
@@ -59,15 +62,20 @@ def release_contract(x):
     return data
 
 
-def overlay_asset_path(contract):
-    if not contract:
-        return None
-    asset = str(contract.get("identity_asset", "")).strip()
+def renderer_identity_asset_name(x, contract):
+    asset = str(x.get("renderer_identity_asset", "")).strip()
+    if not asset and contract:
+        asset = str(contract.get("identity_asset", "")).strip()
     if not asset:
-        return None
+        return ""
     if "/" in asset or "\\" in asset or asset.startswith("."):
         raise SystemExit("release identity asset must be a renderer-local filename")
-    return ROOT / "renderer" / asset
+    return asset
+
+
+def overlay_asset_path(x, contract):
+    asset = renderer_identity_asset_name(x, contract)
+    return ROOT / "renderer" / asset if asset else None
 
 
 def clean_head_blob_bytes(relative_path: str) -> bytes | None:
@@ -171,7 +179,7 @@ def sync(x):
 
     patch = patch_contract(x)
     contract = release_contract(x)
-    overlay = overlay_asset_path(contract)
+    overlay = overlay_asset_path(x, contract)
     if patch:
         path = ROOT / "renderer" / "watchlist-desk-contract.js"
         if not path.exists():
@@ -232,7 +240,7 @@ def verify(x):
     index = (ROOT / "renderer" / "index.html").read_text()
     patch = patch_contract(x)
     contract = release_contract(x)
-    overlay = overlay_asset_path(contract)
+    overlay = overlay_asset_path(x, contract)
     legacy_cert, legacy_ci = legacy_registry_versions(x, patch, contract)
     cert = json.loads(legacy_registry_path("certification", legacy_cert or x["version"]).read_text())
     ci = json.loads(legacy_registry_path("ci_pipeline", legacy_ci or x["version"]).read_text())

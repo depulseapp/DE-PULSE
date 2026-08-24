@@ -9,5 +9,6 @@
   "scope": "macOS native-window runtime reliability corrective: remove the failing formal NSApplicationDelegate JXA protocol registration while preserving NSObject delegate selectors and app.delegate assignment; harden canonical package identity and actual packaged fresh/warm JXA/Cocoa/WKWebView lifecycle evidence with SQLite profile reuse and deterministic cleanup; shared product behavior unchanged; permanent No Execution boundary preserved",
   "bundle_version": "18901",
   "runtime_config": "PersonalMarketTerminal",
-  "application_bundle": "De-Pulse.app"
+  "application_bundle": "De-Pulse.app",
+  "renderer_identity_asset": "release-identity.js"
 }
