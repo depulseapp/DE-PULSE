@@ -1,0 +1,19 @@
+{
+  "schema": "DE.PULSE-DATAHEALTH-NATIVE-PROOF-1",
+  "scopeId": "ADAPT-DATAHEALTH-CLOSURE-001",
+  "issue": 84,
+  "platform": "macOS Apple Silicon",
+  "qualifiedJob": "Qualified macOS native lifecycle rehearsal",
+  "evidenceOwner": "tools/release/native_macos.sh",
+  "requiredChecks": [
+    "exact candidate SHA and Git-object source fingerprint",
+    "arm64 native build and package extraction",
+    "actual packaged backend launch",
+    "health/readiness/root surface",
+    "SQLite integrity and migrations",
+    "actual Cocoa/WKWebView native window lifecycle",
+    "fresh and warm relaunch"
+  ],
+  "binding": "EXACT_HEAD_QUALIFIED_PASS_REQUIRED",
+  "secrets": "NOT_REQUIRED"
+}
