@@ -2,8 +2,11 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Active work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Active branch:** `adapt-root-convergence-001`  
+**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
+**Implementation branch:** `adapt-root-convergence-001`  
+**Closure branch:** `adapt-root-convergence-001-closure`  
 **Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
 
-Execute #73 in dependency order: full root inventory → historical v17/v18 non-Go relocation → active root tooling consolidation → versioned Go owner convergence → final root-policy tightening → exact-head Fast + Qualified. Do not cosmetically move package-main Go source and do not begin TradeInsight product implementation until this slice closes.
+#73 is COMPLETE with all ordinary gaps VERIFIED and immutable final qualification evidence retained. No further repository-convergence implementation is pending.
+
+Next build action: create a fresh governed product work slice for **TradeInsight Settings/API-key UX** from live `main`. Before implementation, re-read the current provider/master-program dependency contracts. Reuse canonical Settings/security/persistence owners and Smart Provider Router v2; do not introduce TradeInsight-specific parallel routing, cache, scanner, or canonical state subsystems. Public SemVer remains separate from work-slice identity and is not consumed automatically.
