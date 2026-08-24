@@ -1,0 +1,25 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-EVIDENCE-1",
+  "workSliceId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "issue": 80,
+  "candidateSha": "1d8638acb06c7ce90719fc3b959d37f188eb8b40",
+  "candidateFingerprint": "4cc485f95b9b0222744495e6166412c4f992511910199ada060a1f69d57c73ee",
+  "baseMainSha": "a171ce2258632bd4bd6aa737176f2d6dffb44689",
+  "fast": {
+    "workflow": "DE.PULSE | CI Fast",
+    "runId": 32744759472,
+    "runNumber": 859,
+    "conclusion": "success"
+  },
+  "qualified": {
+    "workflow": "DE.PULSE | CI Qualified",
+    "runId": 32744913769,
+    "runNumber": 182,
+    "conclusion": "success"
+  },
+  "pullRequest": 86,
+  "mergeTarget": "main",
+  "mergeCommitSha": "c75a5f1467920f57fa23c3dbc400e51edc5275c8",
+  "releaseAction": "NONE",
+  "evidenceTruth": "Fast and impact-selected Qualified both passed on the exact implementation candidate before expected-head merge. No Stable/public SemVer release was performed."
+}

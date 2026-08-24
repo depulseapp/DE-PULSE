@@ -1,0 +1,70 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-PROVIDER-ROUTER-PRODUCTION-001",
+  "issue": 81,
+  "branch": "adapt-provider-router-production-001",
+  "closurePolicy": "#81 closes only when every #80 MIGRATE general provider path is executed through Smart Provider Router v2, routing efficiency/eligibility/authority behavior is regression-protected, CURRENT Adaptive governance agrees, and exact-head Fast + impact-selected Qualified evidence is VERIFIED. Documentation-only closure is prohibited.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "MIGRATE-PATH-ADOPTION",
+      "status": "OPEN",
+      "owner": "Smart Provider Router v2 and existing provider-specific loaders",
+      "implementationPaths": ["provider_router.go", "routed_refresh.go", "symbol_universe.go", "preparation_types_liquidity.go", "market_activity_corporate.go", "global_market_providers.go", "governance/data-health/provider-fetch-paths.json"],
+      "evidenceRequired": ["Alpaca U.S. market calendar admitted by Router v2", "Alpaca canonical U.S. asset universe admitted by Router v2 with same-provider live/paper endpoint fallback bounded inside its attempt", "Alpaca corporate actions admitted by Router v2", "Twelve Data direct global/futures acquisition admitted by Router v2", "no #80 MIGRATE general path remains a routing bypass"],
+      "evidence": [],
+      "closureCondition": "Every applicable #80 MIGRATE row is implemented or reclassified only with executable evidence and explicit authority justification.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ROUTER-SELECTION-EFFICIENCY",
+      "status": "OPEN",
+      "owner": "Smart Provider Router v2 scoring/admission owner",
+      "implementationPaths": ["provider_router.go", "smart_router_v2.go", "provider_telemetry.go", "provider_workload.go"],
+      "evidenceRequired": ["capability + entitlement + health + circuit + latency + quota/backpressure participate in eligibility/ranking", "bounded fallback without blind fan-out", "lower-value work respects budget pressure", "non-secret selection reason telemetry remains visible", "authority boundaries cannot be score-overridden"],
+      "evidence": [],
+      "closureCondition": "Provider selection remains intelligent, bounded, diagnosable and authority-safe under healthy and pressured conditions.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "CACHE-COALESCING-REUSE",
+      "status": "OPEN",
+      "owner": "existing canonical dataset cache/single-flight/acquisition owners",
+      "implementationPaths": ["symbol_universe.go", "broad_snapshot_broker.go", "provider_workload.go", "provider_router.go"],
+      "evidenceRequired": ["canonical caches/single-flight are preserved rather than bypassed by routing", "no equivalent provider fan-out is introduced", "same-provider endpoint fallback remains bounded where needed", "provider calls avoided/reuse evidence stays observable"],
+      "evidence": [],
+      "closureCondition": "Router adoption reduces avoidable work and reuses existing acquisition state rather than duplicating it.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ROUTER-REGRESSION-AUTHORITY",
+      "status": "OPEN",
+      "owner": "existing Smart Router regression and Data Health recurrence gates",
+      "implementationPaths": ["smart_router_rapid_regression_test.go", "tools/ci/data_health_policy_gate.py", "governance/data-health/provider-fetch-paths.json"],
+      "evidenceRequired": ["provider bypass regression", "eligibility/authority ordering", "rate-limit/quota pressure", "bounded fallback and circuit isolation", "no secret leakage", "direct SEC/EDGAR and official-authority paths remain unchanged"],
+      "evidence": [],
+      "closureCondition": "The executable test/control plane prevents general routing bypass recurrence and deterministic authority override.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ADAPTIVE-GOVERNANCE-PROPAGATION",
+      "status": "OPEN",
+      "owner": "CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process projections",
+      "implementationPaths": ["adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md", "handoff/CURRENT.md"],
+      "evidenceRequired": ["#80 completion and #81 active ownership visible", "#81/#82 separation remains explicit", "dependency order #81/#82 → #83 + #78 → #84 retained"],
+      "evidence": [],
+      "closureCondition": "Live governance/handoff surfaces agree with executable #81 ownership and do not lose the all-provider program sequence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #81"],
+      "evidence": [],
+      "closureCondition": "Final #81 candidate has exact-head Fast and Qualified success before merge.",
+      "blocksIssueClosure": true
+    }
+  ]
+}

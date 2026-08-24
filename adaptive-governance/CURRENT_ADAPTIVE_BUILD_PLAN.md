@@ -3,16 +3,20 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Active product work:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / `adapt-datahealth-baseline-001`  
+**Completed foundation:** #80 / `ADAPT-DATAHEALTH-BASELINE-001`  
+**Active product work:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / `adapt-provider-router-production-001`  
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
-#80 is the current build foundation. Required executable outputs are:
-1. `governance/data-health/provider-capability-matrix.json` — exhaustive provider/authoritative-source and capability/dataset ownership.
-2. `governance/data-health/data-health-slo.json` — healthy coverage, freshness, fallback, degradation, recovery, quota and consumer-impact contracts.
-3. `governance/data-health/provider-fetch-paths.json` — every production external fetch/runtime path classified `MIGRATE`, `DIRECT_AUTHORITY` or justified `N/A`.
-4. A canonical CI/source-health recurrence check rejecting new unclassified providers/capabilities/fetch paths.
-5. Explicit propagation into Adaptive Roadmap, Build Plan, Build Process and Delivery Process.
+#80 produced the executable foundation: `provider-capability-matrix.json`, `data-health-slo.json`, `provider-fetch-paths.json`, and recurrence protection. Those artifacts remain authoritative inputs to #81/#82/#83/#78/#84.
 
-Inventory must cover all currently active providers and authoritative/public sources, including the U.S.-equities stack, macro/reference sources, AI providers where they consume external provider capability, direct SEC/EDGAR authority, CBOE VIX reference/history, U.S. Treasury/BEA/BLS/EIA official macro sources, TWSE official close, and any additional runtime source found by executable source audit.
+#81 required build outputs are:
+1. Migrate every `MIGRATE` general provider path from `provider-fetch-paths.json` into Smart Provider Router v2.
+2. Preserve provider-specific loaders and canonical cache/persistence/coalescing owners; Router v2 owns only admission/selection/fallback ordering.
+3. Preserve explicit direct authorities, including SEC/EDGAR Form 4 and official public macro/reference sources.
+4. Keep provider selection capability-aware and bounded using entitlement/configuration, health/circuits, freshness/usefulness evidence, latency, quota/headroom, backpressure, work tier and cost/materiality where applicable.
+5. Extend existing Smart Router/Data Health regression owners for bypass recurrence, eligibility/authority ordering, rate-limit/quota pressure, bounded fallback, anti-flapping and non-secret route reasons.
+6. Maintain CURRENT Adaptive Roadmap, Build Plan, Build Process and Delivery Process alignment.
 
-#80 records remediation disposition; #81 performs general Router v2 adoption fixes and #82 common health/recovery/load-shedding behavior. Do not prematurely implement a parallel router or provider-specific health stack in #80.
+Known #80 migration debt begins with Alpaca U.S. market calendar, canonical U.S. asset universe/corporate actions and Twelve Data direct global/futures acquisition. Same-provider endpoint fallback may remain inside a provider attempt when bounded; general provider choice must not bypass Router v2.
+
+#82 follows for common scoped degradation/recovery/load shedding. Do not fold #82 into a parallel #81 health subsystem.

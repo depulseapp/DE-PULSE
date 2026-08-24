@@ -9,35 +9,42 @@
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
-**Completed product slice:** #76 / `ADAPT-TRADEINSIGHT-SETTINGS-001` / PR #77 / merge `a171ce2258632bd4bd6aa737176f2d6dffb44689`  
-**Active product slice:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / `adapt-datahealth-baseline-001`  
+**Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / candidate `1d8638acb06c7ce90719fc3b959d37f188eb8b40` / Fast #859 / Qualified #182 / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
+**Active product slice:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / `adapt-provider-router-production-001`  
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
 ## Current authority
-Issue #79 is the cross-session authority for the all-provider Adaptive Data Health program. Issue #80 is the current executable foundation slice. The required dependency order remains **#80 → #81/#82 → #83 + #78 → #84**.
+Issue #79 is the cross-session authority for the all-provider Adaptive Data Health program. #80 is complete and its machine-readable provider/capability/SLO/fetch-path baseline remains authoritative. Current dependency order is **#81/#82 → #83 + #78 → #84**.
 
-PR #77 is landed and issue #76 is complete. Its immutable implementation evidence is retained at `governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/final-qualification-evidence.json`; no public Stable release was created by that product merge.
+## #81 objective
+Make Smart Provider Router v2 the real executable production authority for every routable provider capability identified as `MIGRATE` by #80. Preserve provider-specific HTTP/normalization loaders, canonical cache/single-flight/coalescing, direct authority boundaries, bounded fallback, provider workload/backpressure controls, capability-scoped circuit truth and non-secret decision reasons. Do not create a second router.
 
-## #80 objective
-Build an executable, exhaustive provider/capability/data-source baseline for the whole application: provider/capability matrix, authority/freshness/cache/fallback/consumer/materiality ownership, Data Health SLOs, runtime fetch-path bypass dispositions, scoped truthful degradation/recovery rules, and a recurrence gate that rejects unclassified providers/capabilities/external fetch paths.
+Known #80 migration debt begins with:
+- Alpaca read-only U.S. market calendar;
+- Alpaca canonical U.S. asset universe, with bounded live/paper same-provider endpoint fallback inside the Alpaca attempt;
+- Alpaca corporate-actions announcements;
+- Twelve Data direct global indices/futures acquisition.
 
-Smart Provider Router v2 remains the sole **general** routing/admission authority. Direct SEC/EDGAR retains Form 4 authority. Legitimate direct-authority/public sources must be classified explicitly rather than rank-swapped through the general router. Reuse canonical freshness, cache, persistence, telemetry, state and validation owners; do not create parallel provider-specific Data Health subsystems.
+The exact runtime owners include `provider_router.go`, `smart_router_v2.go`, `routed_refresh.go`, `symbol_universe.go`, `preparation_types_liquidity.go`, `market_activity_corporate.go`, and `global_market_providers.go`. Official public/authority fetches are not to be rank-swapped merely to eliminate a direct call.
 
 ## Permanent boundaries
 - U.S. equities processing only.
-- No execution/order routing.
+- No Execution/order routing.
+- Smart Provider Router v2 is the sole general routing/admission authority.
+- Direct SEC/EDGAR remains authoritative for Form 4.
 - GLD, SLV and USO remain actionable live-priority exceptions.
-- TradeInsight remains shadow-first where governed; direct SEC/EDGAR remains authoritative for Form 4.
+- TradeInsight remains shadow-first where governed.
+- Reuse canonical freshness/cache/persistence/telemetry/state/validation owners.
 - GitHub executable evidence outranks chat memory.
 
 ## Exactly one next action
-Complete issue #80 on `adapt-datahealth-baseline-001`: implement and regression-protect the exhaustive provider/capability matrix, Data Health SLO contract, runtime fetch-path dispositions, recurrence gate, and all four durable Adaptive governance updates; then obtain exact-head Fast and Qualified before merge. Do not start #81/#82 until #80 closes.
+On `adapt-provider-router-production-001`, implement the #81 Router v2 migration for the #80 `MIGRATE` paths using existing owners, extend existing Smart Router/Data Health regression protection, update the fetch-path ledger only after the bypass is actually removed, then obtain exact-head Fast and Qualified before merge. Keep #82 health/recovery/load shedding separate.
 
 ## Resume rule
-1. Fetch live `main` and the live head of `adapt-datahealth-baseline-001` first; another session may have advanced them.
-2. Read this file, `governance/current-state.json`, issue #79 latest comments, issue #80 and its comments, and the #80 work-slice/closure ledger.
-3. Inspect commits since `a171ce2258632bd4bd6aa737176f2d6dffb44689` before changing code so implemented work is never duplicated.
-4. Continue actual #80 implementation from the exact current head. Do not restart planning from scratch.
-5. Use only canonical Fast, Qualified and Release workflows for qualification. No temporary workflow family and no gate weakening.
-6. Do not start #81/#82 until #80 executable acceptance and exact-head evidence are complete.
+1. Fetch live `main` and live `adapt-provider-router-production-001` first; another session may have advanced them.
+2. Read this file, `governance/current-state.json`, issue #79 latest comments, issue #81 and its comments, the #81 work-slice/closure ledger, and #80 final qualification evidence.
+3. Inspect commits since `c75a5f1467920f57fa23c3dbc400e51edc5275c8` before changing code so implemented work is never duplicated.
+4. Continue actual #81 implementation from the exact current head; do not restart planning.
+5. Preserve Smart Provider Router v2, direct SEC/EDGAR, canonical freshness/cache/persistence/telemetry/state owners, No Execution and U.S.-equities boundaries.
+6. Use only canonical Fast, Qualified and Release workflows for qualification. No temporary workflow family and no gate weakening.
+7. Do not merge #81 without exact-head Fast + impact-selected Qualified; do not start #83/#78 before required #81/#82 closure.
