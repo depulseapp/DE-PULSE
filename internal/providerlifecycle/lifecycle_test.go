@@ -53,7 +53,10 @@ func TestAuthRateLimitAndDisagreementBlockReadiness(t *testing.T) {
 }
 
 func TestDirectAuthorityIsNotRankPromoted(t *testing.T) {
-	policy := DirectAuthorityPolicy("SEC EDGAR", "Form 4", "SEC")
+	policy := Policy{
+		Provider: "SEC EDGAR", Capability: "Form 4", Dataset: "SEC", Lifecycle: Production,
+		AuthorityClass: "DIRECT_AUTHORITY", PromotionMode: "EXPLICIT_GOVERNED_ONLY", DirectAuthority: true,
+	}
 	got := Evaluate(policy, Evidence{})
 	if got.Readiness != ReadinessNotApplicable || got.Lifecycle != Production || !policy.DirectAuthority {
 		t.Fatalf("direct authority must be production but rank-promotion N/A: policy=%+v diagnostic=%+v", policy, got)
