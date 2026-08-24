@@ -1,0 +1,80 @@
+name: DE.PULSE PR77 | Provider Test Owner Refactor
+
+on:
+  push:
+    branches: [v18.9.2-tradeinsight-settings]
+    paths:
+      - .github/workflows/pr77-provider-test-owner-split.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refactor-provider-test-owner:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: v18.9.2-tradeinsight-settings
+          fetch-depth: 1
+      - name: Reconcile HTTP and provider capability owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          http = Path('http_api.go')
+          watch = Path('http_watchlists.go')
+          caps = Path('provider_capabilities.go')
+
+          http_text = http.read_text()
+          watch_text = watch.read_text()
+          caps_text = caps.read_text()
+
+          watch_marker = 'func (a *Application) handleWatchlistCreate(w http.ResponseWriter, r *http.Request) {'
+          watch_idx = watch_text.find(watch_marker)
+          if watch_idx < 0:
+              raise SystemExit('watchlist handler boundary missing')
+          watch_block = watch_text[watch_idx:].strip() + '\n'
+
+          helper_start_marker = 'func testFinnhub(ctx context.Context, key string) ProviderTestResult {'
+          helper_end_marker = 'func (a *Application) handleCacheClear(w http.ResponseWriter, r *http.Request) {'
+          helper_start = http_text.find(helper_start_marker)
+          helper_end = http_text.find(helper_end_marker)
+          if helper_start < 0 or helper_end < 0 or helper_end <= helper_start:
+              raise SystemExit('provider test helper boundary missing')
+          helper_block = http_text[helper_start:helper_end].strip() + '\n'
+
+          http_text = http_text[:helper_start].rstrip() + '\n\n' + http_text[helper_end:].rstrip() + '\n\n' + watch_block
+          http_text = http_text.replace('\t"net/url"\n', '')
+
+          old_imports = 'import (\n\t"math"\n\t"strings"\n\t"time"\n)'
+          new_imports = 'import (\n\t"context"\n\t"errors"\n\t"fmt"\n\t"math"\n\t"net/http"\n\t"net/url"\n\t"strings"\n\t"time"\n)'
+          if old_imports not in caps_text:
+              raise SystemExit('provider_capabilities import block changed unexpectedly')
+          caps_text = caps_text.replace(old_imports, new_imports, 1).rstrip() + '\n\n' + helper_block
+
+          http.write_text(http_text)
+          caps.write_text(caps_text)
+          watch.unlink()
+          PY
+
+          gofmt -w http_api.go provider_capabilities.go
+          test "$(wc -l < http_api.go)" -le 1200
+          test "$(wc -l < provider_capabilities.go)" -le 1200
+          test ! -e http_watchlists.go
+          git diff --check
+          python3 tools/ci/root_ownership_gate.py
+          go test ./...
+      - name: Commit compliant owner refactor and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/pr77-provider-test-owner-split.yml
+          git config user.name "depulseapp"
+          git config user.email "de.pulse.app@gmail.com"
+          git add -- http_api.go provider_capabilities.go http_watchlists.go .github/workflows/pr77-provider-test-owner-split.yml
+          git diff --cached --check
+          git commit -m "refactor: move provider tests to capability owner"
+          git push origin HEAD:v18.9.2-tradeinsight-settings
