@@ -58,7 +58,7 @@ def validate_registered_process_slice() -> dict:
 
 def run_data_health_gate() -> None:
     try:
-        runpy.run_path(str(ROOT / "tools" / "ci" / "data_health_policy_gate.py"), run_name="__main__")
+        runpy.run_path(str(ROOT / "tools/ci/data_health_policy_gate.py"), run_name="__main__")
     except SystemExit as exc:
         if exc.code not in (None, 0):
             raise
