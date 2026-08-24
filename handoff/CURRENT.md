@@ -7,6 +7,7 @@
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
+**Retained active process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` / closure `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed Data Health baseline:** #80 / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
 **Completed Router production adoption:** #81 / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
 **Completed runtime Data Health:** #82 / PR #88 / merge `4882b6d53c0c34463239faae752b86de377fb19a`  
@@ -16,7 +17,7 @@
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
 ## Current authority
-Actual GitHub objects and executable evidence outrank this handoff. #80–#83 are complete. The remaining governed order is **#78 → #84**. #78 consumes the common #83 provider lifecycle/readiness owner and qualifies TradeInsight without creating provider-specific routing, health, cache, freshness, telemetry or lifecycle machinery. #84 performs final app-wide fault-injection, native supported-platform and professional zero-gap closure.
+Actual GitHub objects and executable evidence outrank this handoff. The retained #73 process authority remains the canonical repository/process work slice recorded by `governance/current-state.json`; that coexists with the active #78 product reservation. #80–#83 are complete. The remaining governed product order is **#78 → #84**. #78 consumes the common #83 provider lifecycle/readiness owner and qualifies TradeInsight without creating provider-specific routing, health, cache, freshness, telemetry or lifecycle machinery. #84 performs final app-wide fault-injection, native supported-platform and professional zero-gap closure.
 
 ## #78 active contract
 Five verified TradeInsight capabilities are production candidates: daily history, adjusted history, corporate-action corroboration, bounded history fan-out and congressional trading intelligence. Deterministic normal-CI qualification may prove `READY_FOR_PROMOTION`; promotion is explicit governed-only. #78 records `APPROVED`, while `PRODUCTION` is reserved for #84 native zero-gap closure.
