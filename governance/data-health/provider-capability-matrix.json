@@ -1,0 +1,117 @@
+{
+  "schema": "DE.PULSE-DATA-HEALTH-PROVIDER-CAPABILITY-MATRIX-1",
+  "scopeId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "parentProgram": "ADAPT-PROVIDER-PRODUCTION-001",
+  "issue": 80,
+  "generalRoutingAuthority": "Smart Provider Router v2",
+  "canonicalOwners": {
+    "routing": "provider_router.go",
+    "capabilityRegistry": "provider_capabilities.go",
+    "freshness": "data_freshness.go",
+    "cachePersistence": "canonical engine/cache/persistence owners",
+    "telemetry": "ProviderTelemetry / provider router telemetry",
+    "state": "canonical Engine/AppState owners"
+  },
+  "providers": [
+    {
+      "id": "finnhub",
+      "provider": "Finnhub",
+      "class": "GENERAL_MARKET_DATA",
+      "capabilities": [
+        {"capability":"U.S. equity live/REST quotes","canonicalOwner":"US Live Equities route","consumers":["Day","Swing","Long","Market Regime","Discovery","Trade Readiness"],"authorityClass":"ROUTED_PRIMARY_OR_FALLBACK","freshnessPolicy":"session-aware live/snapshot freshness","cachePersistenceOwner":"canonical quote state","fallbackCandidates":["Alpaca","Twelve Data"],"materiality":"CRITICAL","degradedImpact":"symbol/live-equity capability only unless broader evidence is genuinely unavailable","routerDataset":"US Live Equities","lifecycle":"PRODUCTION"},
+        {"capability":"earnings/peers/news/fundamental context","canonicalOwner":"routed research/news/earnings owners","consumers":["Research","Catalyst Watch","Swing","Long"],"authorityClass":"ROUTED_PROVIDER","freshnessPolicy":"capability cadence/event aware","cachePersistenceOwner":"canonical research/news state","fallbackCandidates":["Marketaux","yfinance","SEC EDGAR where authoritative"],"materiality":"HIGH","degradedImpact":"affected research/catalyst capability","routerDataset":"News/Earnings/Fundamentals","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id": "alpaca",
+      "provider": "Alpaca",
+      "class": "GENERAL_MARKET_DATA",
+      "capabilities": [
+        {"capability":"IEX live quotes/snapshots/liquidity","canonicalOwner":"live subscription manager + US Live Equities route","consumers":["Day","Market Open Prep","Trade Readiness","Decision Queue"],"authorityClass":"ROUTED_PRIMARY_OR_FALLBACK","freshnessPolicy":"live/session-aware","cachePersistenceOwner":"canonical quote state","fallbackCandidates":["Finnhub","Twelve Data"],"materiality":"CRITICAL","degradedImpact":"affected symbols/live-equity consumers","routerDataset":"US Live Equities","lifecycle":"PRODUCTION"},
+        {"capability":"historical OHLCV","canonicalOwner":"Historical Bars route","consumers":["Day","Swing","Long","Research","Adaptive Intelligence"],"authorityClass":"ROUTED_PRIMARY","freshnessPolicy":"intraday/daily cadence aware","cachePersistenceOwner":"canonical bars state","fallbackCandidates":["TradeInsight","Twelve Data","yfinance"],"materiality":"HIGH","degradedImpact":"history-dependent consumers only","routerDataset":"Historical Bars","lifecycle":"PRODUCTION"},
+        {"capability":"SIP movers/most-active discovery seed","canonicalOwner":"market activity/discovery owner","consumers":["Discovery","Dashboard"],"authorityClass":"ENTITLEMENT_OPTIONAL","freshnessPolicy":"market-session current","cachePersistenceOwner":"canonical discovery state","fallbackCandidates":[],"materiality":"OPTIONAL","degradedImpact":"Discovery seed only; must not globally degrade app","routerDataset":"specialized entitlement path","lifecycle":"PRODUCTION_WHEN_ENTITLED"}
+      ]
+    },
+    {
+      "id": "tradeinsight",
+      "provider": "TradeInsight",
+      "class": "GENERAL_AND_SPECIALIZED_MARKET_DATA",
+      "capabilities": [
+        {"capability":"adjusted daily OHLCV","canonicalOwner":"Historical Bars route","consumers":["Historical Bars","Research","Adaptive Intelligence"],"authorityClass":"ROUTED_SHADOW_FIRST","freshnessPolicy":"daily observation date","cachePersistenceOwner":"canonical bars state","fallbackCandidates":["Alpaca","Twelve Data","yfinance"],"materiality":"MEDIUM","degradedImpact":"no global degradation while production alternatives remain healthy","routerDataset":"Historical Bars","lifecycle":"SHADOW_FIRST"},
+        {"capability":"corporate-action corroboration","canonicalOwner":"canonical corporate-action ledger","consumers":["Research","Corporate Actions"],"authorityClass":"SUPPLEMENTAL","freshnessPolicy":"event/date aware","cachePersistenceOwner":"canonical corporate-action ledger","fallbackCandidates":["authoritative issuer/SEC evidence"],"materiality":"MEDIUM","degradedImpact":"supplemental only","routerDataset":"specialized supplemental capability","lifecycle":"SHADOW_FIRST"},
+        {"capability":"congressional trading intelligence","canonicalOwner":"TradeInsight admission + canonical research evidence","consumers":["Research","Adaptive Intelligence"],"authorityClass":"SPECIALIZED_SECONDARY","freshnessPolicy":"provider event observation time","cachePersistenceOwner":"canonical research/admission state","fallbackCandidates":[],"materiality":"OPTIONAL","degradedImpact":"research enrichment only","routerDataset":"specialized capability","lifecycle":"SHADOW_FIRST"}
+      ]
+    },
+    {
+      "id": "fred","provider":"FRED","class":"GENERAL_MACRO_DATA","capabilities":[
+        {"capability":"rates/credit/conditions/USD macro series","canonicalOwner":"Macro route + macro state","consumers":["Market Regime","Swing","Long","Research","Trade Readiness"],"authorityClass":"ROUTED_MACRO_PROVIDER","freshnessPolicy":"series/cadence aware slow macro","cachePersistenceOwner":"canonical macro state/cache","fallbackCandidates":["official Treasury/BLS/BEA/EIA where equivalent evidence exists"],"materiality":"HIGH","degradedImpact":"affected macro evidence only","routerDataset":"Macro","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"bls","provider":"BLS","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"inflation/labor/wages/PPI actuals","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Swing","Long","Research"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official release observation period/time","cachePersistenceOwner":"canonical macro state","fallbackCandidates":[],"materiality":"HIGH","degradedImpact":"only BLS-dependent macro evidence","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"eia","provider":"EIA","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"petroleum/natural-gas/energy actuals","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Research","Swing","Long"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official release observation period/time","cachePersistenceOwner":"canonical macro state","fallbackCandidates":[],"materiality":"MEDIUM","degradedImpact":"energy macro evidence only","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"twelve-data","provider":"Twelve Data","class":"GENERAL_MARKET_DATA","capabilities":[
+        {"capability":"VIX/index quote and historical recovery","canonicalOwner":"VIX / Indices and Historical Bars routes","consumers":["Market Regime","Dashboard","Day","Swing","Long"],"authorityClass":"ROUTED_PROVIDER","freshnessPolicy":"provider observation time; unknown remains unknown","cachePersistenceOwner":"canonical quote/bars state","fallbackCandidates":["yfinance","CBOE","Alpaca"],"materiality":"HIGH","degradedImpact":"VIX/history consumers only","routerDataset":"VIX / Indices + Historical Bars","lifecycle":"PRODUCTION"},
+        {"capability":"direct global/FX/futures context","canonicalOwner":"global market context","consumers":["Market Regime","Dashboard","Research"],"authorityClass":"GENERAL_DIRECT_PATH_PENDING_ROUTER_ADOPTION","freshnessPolicy":"provider observation time/session aware","cachePersistenceOwner":"canonical global context","fallbackCandidates":["official completed-session sources","proxy/cache"],"materiality":"MEDIUM","degradedImpact":"global-context rows only","routerDataset":"MIGRATE in #81","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"yfinance","provider":"yfinance","class":"RECOVERY_MARKET_DATA","capabilities":[
+        {"capability":"VIX/history/earnings/fundamentals recovery","canonicalOwner":"VIX / Indices, Historical Bars and research fallback routes","consumers":["Data Freshness","Research","Recovery","Market Regime"],"authorityClass":"ROUTED_RECOVERY_ONLY","freshnessPolicy":"provider observation time; delayed/recovery labeling required","cachePersistenceOwner":"canonical quote/bars/research state","fallbackCandidates":["primary routed providers"],"materiality":"RECOVERY","degradedImpact":"must not globally degrade when primary evidence remains healthy","routerDataset":"VIX / Indices + Historical Bars + research fallbacks","lifecycle":"PRODUCTION_FALLBACK"}
+      ]
+    },
+    {
+      "id":"cboe","provider":"CBOE","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"official VIX validation/history/close","canonicalOwner":"VIX owner","consumers":["VIX","Market Regime","Data Freshness"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official completed-session observation date","cachePersistenceOwner":"canonical VIX quote/bars state","fallbackCandidates":["Twelve Data","yfinance"],"materiality":"HIGH","degradedImpact":"VIX validation/close only","routerDataset":"VIX / Indices authority member","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"marketaux","provider":"Marketaux","class":"GENERAL_NEWS_DATA","capabilities":[
+        {"capability":"stock news fallback","canonicalOwner":"News route","consumers":["News","Dashboard","Research","Catalyst Watch"],"authorityClass":"ROUTED_FALLBACK","freshnessPolicy":"article/provider publication time","cachePersistenceOwner":"canonical news state","fallbackCandidates":["Finnhub"],"materiality":"MEDIUM","degradedImpact":"news enrichment only if other evidence healthy","routerDataset":"News","lifecycle":"PRODUCTION_FALLBACK"}
+      ]
+    },
+    {
+      "id":"sec-edgar","provider":"SEC EDGAR","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"filings/Form 4/issuer evidence","canonicalOwner":"SEC truth owner","consumers":["Research","SEC/Ownership","Catalyst Watch","Corporate Actions"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"filing acceptance/observation time","cachePersistenceOwner":"canonical SEC/research state","fallbackCandidates":[],"materiality":"CRITICAL_WHEN_APPLICABLE","degradedImpact":"SEC-dependent evidence only; Form 4 authority may not be rank-swapped","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"us-treasury","provider":"U.S. Treasury","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"nominal and real Treasury yields","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Research","Swing","Long"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official daily observation","cachePersistenceOwner":"canonical macro state","fallbackCandidates":["FRED equivalent series"],"materiality":"HIGH","degradedImpact":"rates evidence only","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"bea","provider":"BEA","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"GDP/PCE official releases","canonicalOwner":"official macro actuals owner","consumers":["Market Regime","Research","Swing","Long"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"official release observation period/time","cachePersistenceOwner":"canonical macro state","fallbackCandidates":["FRED equivalent series"],"materiality":"HIGH","degradedImpact":"BEA-dependent macro evidence only","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"twse","provider":"TWSE","class":"DIRECT_OFFICIAL_AUTHORITY","capabilities":[
+        {"capability":"TAIEX completed-session official close","canonicalOwner":"global market context","consumers":["Market Regime","Dashboard","Research"],"authorityClass":"DIRECT_AUTHORITY","freshnessPolicy":"local completed-session close time","cachePersistenceOwner":"canonical global context","fallbackCandidates":["Twelve Data global context","proxy/cache"],"materiality":"CONTEXT","degradedImpact":"Taiwan/global context only","routerDataset":"direct authority","lifecycle":"PRODUCTION"}
+      ]
+    },
+    {
+      "id":"groq","provider":"Groq","class":"AI_INFERENCE","capabilities":[
+        {"capability":"manual/automatic AI second-opinion inference","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["OpenRouter","Google Gemini"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only; deterministic decisions remain intact","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
+      ]
+    },
+    {
+      "id":"openrouter","provider":"OpenRouter","class":"AI_INFERENCE","capabilities":[
+        {"capability":"AI model routing/second opinion","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","Google Gemini"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
+      ]
+    },
+    {
+      "id":"google-gemini","provider":"Google Gemini","class":"AI_INFERENCE","capabilities":[
+        {"capability":"AI second-opinion inference","canonicalOwner":"AI routing + rights-filtered research package","consumers":["Research AI"],"authorityClass":"NON_MARKET_DATA_INFERENCE","freshnessPolicy":"bounded evidence snapshot identity","cachePersistenceOwner":"AI inference cache","fallbackCandidates":["Groq","OpenRouter"],"materiality":"OPTIONAL","degradedImpact":"AI second opinion only","routerDataset":"N/A - AI inference routing","lifecycle":"PRODUCTION_WHEN_CONFIGURED"}
+      ]
+    }
+  ]
+}
