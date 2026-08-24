@@ -182,13 +182,15 @@ func TestV189TradeInsightCongressProbeCannotPromoteBeyondShadow(t *testing.T) {
 	if !ok {
 		t.Fatal("Congressional admission row missing")
 	}
-	if !before.SchemaVerified || !before.RuntimeEnabled || !before.runtimeAdmitted() || tradeInsightCapabilityLifecycleTruth(before.ID) != "SHADOW" {
-		t.Fatalf("Congress must enter probe diagnostics already SHADOW-admitted: %+v lifecycle=%s", before, tradeInsightCapabilityLifecycleTruth(before.ID))
+	beforeLifecycle := tradeInsightCapabilityLifecycleTruth(before.ID)
+	if !before.SchemaVerified || !before.RuntimeEnabled || !before.runtimeAdmitted() || beforeLifecycle != "PRODUCTION" {
+		t.Fatalf("Congress must enter probe diagnostics already governed PRODUCTION after #84 promotion: %+v lifecycle=%s", before, beforeLifecycle)
 	}
 	_ = tradeInsightSchemaFingerprint{Container: "data", RowsObserved: 1}
 	after, _ := tradeInsightCapabilityAdmissionLookup("congressional-trades")
-	if after != before || tradeInsightCapabilityLifecycleTruth(after.ID) != "SHADOW" {
-		t.Fatalf("schema probe must not mutate or auto-promote Congress: before=%+v after=%+v lifecycle=%s", before, after, tradeInsightCapabilityLifecycleTruth(after.ID))
+	afterLifecycle := tradeInsightCapabilityLifecycleTruth(after.ID)
+	if after != before || afterLifecycle != beforeLifecycle {
+		t.Fatalf("schema probe must not mutate or auto-promote/demote Congress: before=%+v after=%+v lifecycle before=%s after=%s", before, after, beforeLifecycle, afterLifecycle)
 	}
 }
 
