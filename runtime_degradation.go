@@ -109,6 +109,22 @@ func appendUniqueRuntimeIssue(values []string, value string) []string {
 	return append(values, value)
 }
 
+func rateLimitCoveredByActiveFallback(provider string, feed FeedDiagnostics) bool {
+	provider = strings.ToLower(strings.TrimSpace(provider))
+	return strings.EqualFold(feed.FeedState, "finnhub-fallback") && strings.Contains(provider, "alpaca")
+}
+
+func providerQueueSaturated(class WorkClassDiagnostics) bool {
+	if class.MaxQueue <= 0 {
+		return false
+	}
+	if class.Queued >= class.MaxQueue {
+		return true
+	}
+	optionalLimit := class.MaxQueue - class.ReservedCriticalQueue
+	return class.ReservedCriticalQueue > 0 && class.Shed > 0 && optionalLimit >= 0 && class.Queued >= optionalLimit
+}
+
 func finalizeRuntimeDegradation(out RuntimeDegradationState) RuntimeDegradationState {
 	if strings.TrimSpace(out.Code) == "" {
 		out.PressureState = "HEALTHY"
@@ -142,7 +158,7 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		if class.Class != "provider-rest" || class.Queued <= 0 {
 			continue
 		}
-		queueSaturated := class.MaxQueue > 0 && class.Queued >= class.MaxQueue
+		queueSaturated := providerQueueSaturated(class)
 		if queueSaturated || class.OldestQueueAgeMs >= 2000 {
 			out.Code = "LOCAL LOAD"
 			out.ReasonCode = "LOCAL_OVERLOAD"
@@ -171,7 +187,7 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		}
 		issue := provider.Provider + " request budget is rate limited"
 		out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, issue)
-		if critical {
+		if critical && rateLimitCoveredByActiveFallback(provider.Provider, feed) {
 			out.WarmStateActive = true
 			continue
 		}
@@ -196,7 +212,7 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 			}
 			issue := route.Dataset + " · " + hop.Provider + " rate limited"
 			out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, issue)
-			if critical {
+			if critical && rateLimitCoveredByActiveFallback(hop.Provider, feed) {
 				out.WarmStateActive = true
 				continue
 			}
