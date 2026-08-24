@@ -1,0 +1,41 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-1",
+  "workSliceId": "ADAPT-PROVIDER-ROUTER-PRODUCTION-001",
+  "issue": 81,
+  "title": "Smart Provider Router v2 — All-Provider Production Adoption & Efficiency",
+  "type": "PRODUCT_CAPABILITY",
+  "subtype": "PROVIDER_ROUTER_PRODUCTION_ADOPTION",
+  "status": "IN_PROGRESS",
+  "publicProductVersion": null,
+  "stableProductVersionAtStart": "18.9.1",
+  "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "baselineBuildId": "v18.9.1-stable-20260821",
+  "baselineMainSha": "c75a5f1467920f57fa23c3dbc400e51edc5275c8",
+  "branch": "adapt-provider-router-production-001",
+  "productBehaviorChange": true,
+  "blocksNextProductCapability": true,
+  "scopeId": "ADAPT-PROVIDER-ROUTER-PRODUCTION-001",
+  "parentProgramIssue": 79,
+  "parentProgramScopeId": "ADAPT-PROVIDER-PRODUCTION-001",
+  "dependencies": [79, 80],
+  "closureLedger": "governance/work-slices/ADAPT-PROVIDER-ROUTER-PRODUCTION-001/closure.json",
+  "requiredOutputs": [
+    "all #80 MIGRATE general provider paths admitted through Smart Provider Router v2",
+    "capability-aware efficient provider selection with bounded fallback and truthful decision reasons",
+    "cache-first/coalesced acquisition preserved through canonical owners without blind provider fan-out",
+    "regression protection for bypass, eligibility, quota/rate-limit pressure, fallback, anti-flapping and authority boundaries",
+    "all CURRENT Adaptive governance projections rebound to #81 and the #79 Data Health sequence"
+  ],
+  "architectureBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_TELEMETRY_STATE_OWNERS",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "TRADEINSIGHT_SHADOW_FIRST_WHERE_GOVERNED",
+    "NO_PARALLEL_PROVIDER_SPECIFIC_ROUTER_OR_HEALTH_SUBSYSTEMS"
+  ],
+  "authorizedSequence": [81, 82, 83, 78, 84]
+}

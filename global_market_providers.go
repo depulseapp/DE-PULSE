@@ -17,6 +17,8 @@ import (
 // v14.0.3 compliance layer. These providers feed canonical shared context only;
 // they never mutate deterministic Day/Swing/Long score/action formulas.
 
+const canonicalGlobalMarketContextDataset = "Global Market Context"
+
 type DirectGlobalProvider interface {
 	Name() string
 	Refresh(ctx context.Context) (map[string]GlobalDriver, error)
@@ -53,9 +55,23 @@ func (p alpacaOptionsProvider) Snapshot(ctx context.Context, symbol, mode string
 	return fetchOptionsContext(ctx, p.key, p.secret, symbol, mode, underlying)
 }
 
-type twelveDataProvider struct{ apiKey string }
+type tdJSONFetcher func(context.Context, *http.Client, string, any) error
+
+type twelveDataProvider struct {
+	apiKey    string
+	fetchJSON tdJSONFetcher
+}
 
 func (p twelveDataProvider) Name() string { return "Twelve Data" }
+func defaultTDJSONFetcher(ctx context.Context, client *http.Client, raw string, out any) error {
+	return getJSON(ctx, client, raw, nil, out)
+}
+func (p twelveDataProvider) jsonFetcher() tdJSONFetcher {
+	if p.fetchJSON != nil {
+		return p.fetchJSON
+	}
+	return defaultTDJSONFetcher
+}
 
 var twelveDataBaseURL = "https://api.twelvedata.com"
 var tdSymbolCache sync.Map // key: base URL + future flag + query; value: symbol|exchange
@@ -104,7 +120,7 @@ type tdQuoteResponse struct {
 	Message       string `json:"message"`
 }
 
-func tdPickSymbol(ctx context.Context, key, query string, future bool) (string, string, error) {
+func tdPickSymbolWithFetcher(ctx context.Context, key, query string, future bool, fetch tdJSONFetcher) (string, string, error) {
 	cacheKey := fmt.Sprintf("%s|%t|%s", twelveDataBaseURL, future, strings.ToLower(strings.TrimSpace(query)))
 	if v, ok := tdSymbolCache.Load(cacheKey); ok {
 		parts := strings.SplitN(v.(string), "|", 2)
@@ -114,7 +130,7 @@ func tdPickSymbol(ctx context.Context, key, query string, future bool) (string, 
 	}
 	var sr tdSearchResponse
 	raw := twelveDataBaseURL + "/symbol_search?symbol=" + url.QueryEscape(query) + "&apikey=" + url.QueryEscape(key) + "&outputsize=20"
-	if err := getJSON(ctx, &http.Client{Timeout: 12 * time.Second}, raw, nil, &sr); err != nil {
+	if err := fetch(ctx, &http.Client{Timeout: 12 * time.Second}, raw, &sr); err != nil {
 		return "", "", err
 	}
 	if strings.EqualFold(sr.Status, "error") {
@@ -139,16 +155,19 @@ func tdPickSymbol(ctx context.Context, key, query string, future bool) (string, 
 	}
 	return "", "", fmt.Errorf("no matching instrument for %s", query)
 }
-func tdQuote(ctx context.Context, key, symbol string) (tdQuoteResponse, error) {
+func tdQuoteWithFetcher(ctx context.Context, key, symbol string, fetch tdJSONFetcher) (tdQuoteResponse, error) {
 	var q tdQuoteResponse
 	raw := twelveDataBaseURL + "/quote?symbol=" + url.QueryEscape(symbol) + "&apikey=" + url.QueryEscape(key)
-	if err := getJSON(ctx, &http.Client{Timeout: 12 * time.Second}, raw, nil, &q); err != nil {
+	if err := fetch(ctx, &http.Client{Timeout: 12 * time.Second}, raw, &q); err != nil {
 		return q, err
 	}
 	if strings.EqualFold(q.Status, "error") {
 		return q, fmt.Errorf("Twelve Data: %s", q.Message)
 	}
 	return q, nil
+}
+func tdQuote(ctx context.Context, key, symbol string) (tdQuoteResponse, error) {
+	return tdQuoteWithFetcher(ctx, key, symbol, defaultTDJSONFetcher)
 }
 
 // tdVIXQuote resolves only a canonical Cboe VIX index result. It deliberately
@@ -246,12 +265,12 @@ func fetchCboeVIXHistory(ctx context.Context) ([]Bar, error) {
 	}
 	return parseCboeVIXHistory(raw)
 }
-func tdDriver(ctx context.Context, key, k, label, query string, future bool) (GlobalDriver, error) {
-	sym, ex, err := tdPickSymbol(ctx, key, query, future)
+func tdDriverWithFetcher(ctx context.Context, key, k, label, query string, future bool, fetch tdJSONFetcher) (GlobalDriver, error) {
+	sym, ex, err := tdPickSymbolWithFetcher(ctx, key, query, future, fetch)
 	if err != nil {
 		return GlobalDriver{}, err
 	}
-	q, err := tdQuote(ctx, key, sym)
+	q, err := tdQuoteWithFetcher(ctx, key, sym, fetch)
 	if err != nil {
 		return GlobalDriver{}, err
 	}
@@ -282,8 +301,11 @@ func (p twelveDataProvider) Refresh(ctx context.Context) (map[string]GlobalDrive
 	sort.Strings(keys)
 	for _, k := range keys {
 		s := twelveGlobalSearch[k]
-		d, err := tdDriver(ctx, p.apiKey, k, s.Label, s.Query, false)
+		d, err := tdDriverWithFetcher(ctx, p.apiKey, k, s.Label, s.Query, false, p.jsonFetcher())
 		if err != nil {
+			if !providerRequestFailureIsLocalNeutral(ctx, err) {
+				reportProviderRouteFailure(ctx, err)
+			}
 			errs = append(errs, k+": "+err.Error())
 			continue
 		}
@@ -307,8 +329,11 @@ func (p twelveDataProvider) RefreshFutures(ctx context.Context) (map[string]Glob
 	sort.Strings(keys)
 	for _, k := range keys {
 		s := twelveFutureSearch[k]
-		d, err := tdDriver(ctx, p.apiKey, k, s.Label, s.Query, true)
+		d, err := tdDriverWithFetcher(ctx, p.apiKey, k, s.Label, s.Query, true, p.jsonFetcher())
 		if err != nil {
+			if !providerRequestFailureIsLocalNeutral(ctx, err) {
+				reportProviderRouteFailure(ctx, err)
+			}
 			errs = append(errs, k+": "+err.Error())
 			continue
 		}
@@ -326,20 +351,31 @@ func (e *Engine) refreshDirectGlobal(ctx context.Context, key string) {
 		e.setHealth("global-direct", "not configured · proxy/official fallback active")
 		return
 	}
-	p := twelveDataProvider{apiKey: key}
-	direct, err := p.Refresh(ctx)
-	if direct == nil {
-		direct = map[string]GlobalDriver{}
-	}
-	futures, ferr := p.RefreshFutures(ctx)
-	for k, v := range futures {
-		direct[k] = v
-	}
-	if err != nil && ferr != nil {
-		e.setHealth("global-direct", "degraded · direct unavailable; real fallback active")
-		return
-	}
-	if len(direct) == 0 {
+	e.mu.RLock()
+	before := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Twelve Data", canonicalGlobalMarketContextDataset)]
+	e.mu.RUnlock()
+	direct := map[string]GlobalDriver{}
+	p := twelveDataProvider{apiKey: key, fetchJSON: func(fetchCtx context.Context, client *http.Client, raw string, out any) error {
+		return e.providerGetJSONTier(fetchCtx, "Twelve Data", workTierFromContext(fetchCtx, WorkTierUserActionable), client, raw, nil, out)
+	}}
+	_, loaded := e.executeProviderRoute(ctx, canonicalGlobalMarketContextDataset, map[string]providerRouteAttempt{"Twelve Data": func(routeCtx context.Context) bool {
+		globals, _ := p.Refresh(routeCtx)
+		futures, _ := p.RefreshFutures(routeCtx)
+		for k, v := range globals {
+			direct[k] = v
+		}
+		for k, v := range futures {
+			direct[k] = v
+		}
+		return len(direct) > 0
+	}})
+	if !loaded {
+		e.mu.RLock()
+		after := e.providerCapabilityCircuits[providerCapabilityCircuitKey("Twelve Data", canonicalGlobalMarketContextDataset)]
+		e.mu.RUnlock()
+		if after.Failures > before.Failures || after.LastFailure > before.LastFailure || (after.LastError != "" && after.LastError != before.LastError) {
+			e.setHealth("global-direct", "degraded · direct unavailable; real fallback active")
+		}
 		return
 	}
 	e.mu.Lock()

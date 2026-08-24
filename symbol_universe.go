@@ -12,6 +12,7 @@ import (
 
 const canonicalUSSymbolUniverseRetryTTL = 5 * time.Minute
 const canonicalUSSymbolUniverseProviderQuery = "status=active&asset_class=us_equity"
+const canonicalUSAssetUniverseDataset = "US Asset Universe"
 
 // Keep the established health-map key for compatibility with existing
 // consumers, but all emitted diagnostics identify the neutral shared owner.
@@ -77,19 +78,42 @@ func canonicalUSSymbolUniverseAssetURLs() []string {
 // canonicalUSSymbolUniverse so Scanner and Opportunity Radar cannot create
 // competing universe caches.
 func (e *Engine) loadUSSymbolUniverse(ctx context.Context, key, secret string) ([]string, bool) {
+	return e.loadUSSymbolUniverseWithClient(ctx, key, secret, &http.Client{Timeout: 15 * time.Second})
+}
+
+// loadUSSymbolUniverseWithClient is the production Router v2 acquisition path
+// with an explicit client seam for deterministic transport regression tests.
+// Paper/live URLs are same-provider endpoint fallback inside one Alpaca
+// capability attempt; they are never ranked as separate providers.
+func (e *Engine) loadUSSymbolUniverseWithClient(ctx context.Context, key, secret string, client *http.Client) ([]string, bool) {
 	out := append([]string{}, discoverySeedUniverse...)
-	client := &http.Client{Timeout: 15 * time.Second}
 	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
 	var assets []alpacaAsset
-	loaded := false
-	for _, raw := range canonicalUSSymbolUniverseAssetURLs() {
-		assets = nil
-		if err := e.providerGetJSONTier(ctx, "Alpaca", WorkTierBroadDiscovery, client, raw, headers, &assets); err == nil && len(assets) > 0 {
-			loaded = true
-			break
-		}
+	attempts := map[string]providerRouteAttempt{
+		"Alpaca": func(routeCtx context.Context) bool {
+			var terminalErr error
+			for _, raw := range canonicalUSSymbolUniverseAssetURLs() {
+				assets = nil
+				err := e.providerGetJSONTier(routeCtx, "Alpaca", WorkTierBroadDiscovery, client, raw, headers, &assets)
+				if err == nil && len(assets) > 0 {
+					e.recordProviderSuccess("Alpaca")
+					return true
+				}
+				if err == nil {
+					err = fmt.Errorf("Alpaca assets returned an empty payload")
+				}
+				if providerRequestFailureIsLocalNeutral(routeCtx, err) {
+					return false
+				}
+				terminalErr = err
+			}
+			if terminalErr != nil {
+				reportProviderRouteFailure(routeCtx, terminalErr)
+			}
+			return false
+		},
 	}
-	if !loaded {
+	if _, loaded := e.executeProviderRoute(ctx, canonicalUSAssetUniverseDataset, attempts); !loaded {
 		return nil, false
 	}
 

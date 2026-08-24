@@ -12,25 +12,62 @@ import (
 	"time"
 )
 
+const canonicalUSMarketCalendarDataset = "US Market Calendar"
+const canonicalUSCorporateActionsDataset = "US Corporate Actions"
+
 func (e *Engine) refreshAlpacaMarketCalendar(ctx context.Context, key, secret string) {
+	if !e.refreshAlpacaMarketCalendarWithClient(ctx, key, secret, &http.Client{Timeout: 12 * time.Second}) {
+		e.setHealth("market-calendar", "degraded · using built-in U.S. calendar fallback")
+	}
+}
+
+// refreshAlpacaMarketCalendarWithClient routes only Alpaca provider acquisition
+// through Smart Provider Router v2. The Engine remains the canonical calendar
+// state/fallback owner, so a failed refresh never clears prior calendar evidence.
+func (e *Engine) refreshAlpacaMarketCalendarWithClient(ctx context.Context, key, secret string, client *http.Client) bool {
 	start := time.Now().In(easternLocation()).AddDate(0, 0, -2).Format("2006-01-02")
 	end := time.Now().In(easternLocation()).AddDate(0, 2, 0).Format("2006-01-02")
 	raw := strings.TrimRight(alpacaTradingBaseURL, "/") + "/v2/calendar?start=" + url.QueryEscape(start) + "&end=" + url.QueryEscape(end)
+	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
 	var rows []AlpacaCalendarDay
-	err := getJSON(ctx, &http.Client{Timeout: 12 * time.Second}, raw, map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}, &rows)
-	if err != nil {
-		e.setHealth("market-calendar", "degraded · using built-in U.S. calendar fallback")
-		return
+	attempts := map[string]providerRouteAttempt{
+		"Alpaca": func(routeCtx context.Context) bool {
+			rows = nil
+			err := e.providerGetJSONTier(routeCtx, "Alpaca", WorkTierUserActionable, client, raw, headers, &rows)
+			if err == nil && len(rows) > 0 {
+				e.recordProviderSuccess("Alpaca")
+				return true
+			}
+			if err == nil {
+				err = fmt.Errorf("Alpaca market calendar returned an empty payload")
+			}
+			if providerRequestFailureIsLocalNeutral(routeCtx, err) {
+				return false
+			}
+			reportProviderRouteFailure(routeCtx, err)
+			return false
+		},
 	}
+	if _, loaded := e.executeProviderRoute(ctx, canonicalUSMarketCalendarDataset, attempts); !loaded {
+		return false
+	}
+
 	cal := map[string]AlpacaCalendarDay{}
 	for _, r := range rows {
-		cal[r.Date] = r
+		if strings.TrimSpace(r.Date) != "" {
+			cal[r.Date] = r
+		}
 	}
+	if len(cal) == 0 {
+		return false
+	}
+	now := time.Now().UnixMilli()
 	e.mu.Lock()
 	e.alpacaCalendar = cal
-	e.lastUpdated["market-calendar"] = time.Now().UnixMilli()
-	e.health["market-calendar"] = fmt.Sprintf("healthy · Alpaca calendar · %d sessions", len(rows))
+	e.lastUpdated["market-calendar"] = now
+	e.health["market-calendar"] = fmt.Sprintf("healthy · Alpaca calendar · %d sessions", len(cal))
 	e.mu.Unlock()
+	return true
 }
 
 func parseMoverRows(v any) []MarketMover {
@@ -206,6 +243,15 @@ func parseAlpacaCorporateActionResponse(payload map[string]any, tracked map[stri
 }
 
 func (e *Engine) refreshAlpacaCorporateActions(ctx context.Context, key, secret string) {
+	_ = e.refreshAlpacaCorporateActionsWithClient(ctx, key, secret, &http.Client{Timeout: 18 * time.Second})
+}
+
+// refreshAlpacaCorporateActionsWithClient keeps the existing canonical ledger
+// and backfill ownership intact while moving provider admission, workload
+// budgeting, telemetry, and capability health under Smart Provider Router v2.
+// One logical corporate-action refresh is one Router capability attempt; batch
+// and pagination requests remain same-provider work inside that attempt.
+func (e *Engine) refreshAlpacaCorporateActionsWithClient(ctx context.Context, key, secret string, client *http.Client) bool {
 	now := time.Now()
 	endDate := now.AddDate(0, 3, 0).Format("2006-01-02")
 	headers := map[string]string{"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
@@ -219,105 +265,128 @@ func (e *Engine) refreshAlpacaCorporateActions(ctx context.Context, key, secret 
 		syms = append(syms, s)
 	}
 	if len(syms) == 0 {
-		return
+		return false
 	}
 	sort.Strings(syms)
-	client := &http.Client{Timeout: 18 * time.Second}
+
 	fresh := []CorporateAction{}
 	truncated := false
 	anyFailure := false
 	entitlementFailure := false
+	localNeutral := false
 	backfilled := []string{}
-	for i := 0; i < len(syms); i += 50 {
-		j := i + 50
-		if j > len(syms) {
-			j = len(syms)
-		}
-		batch := syms[i:j]
-		startDate := now.AddDate(0, 0, -30).Format("2006-01-02")
-		needsBackfill := false
-		e.mu.RLock()
-		for _, sym := range batch {
-			if e.lastUpdated["corporate-actions-backfill:"+sym] == 0 {
-				needsBackfill = true
-				break
-			}
-		}
-		e.mu.RUnlock()
-		if needsBackfill {
-			startDate = now.AddDate(-15, 0, 0).Format("2006-01-02")
-		}
-		pageToken := ""
-		seenTokens := map[string]bool{}
-		success := true
-		batchComplete := false
-		batchTruncated := false
-		for page := 0; ; page++ {
-			if page >= 100 {
-				truncated = true
-				batchTruncated = true
-				break
-			}
-			q := url.Values{}
-			q.Set("symbols", strings.Join(batch, ","))
-			q.Set("start", startDate)
-			q.Set("end", endDate)
-			q.Set("limit", "1000")
-			q.Set("sort", "asc")
-			if pageToken != "" {
-				q.Set("page_token", pageToken)
-			}
-			raw := strings.TrimRight(alpacaDataBaseURL, "/") + "/v1/corporate-actions?" + q.Encode()
-			var payload map[string]any
-			if err := getJSON(ctx, client, raw, headers, &payload); err != nil {
-				success = false
-				anyFailure = true
-				msg := strings.ToLower(err.Error())
-				if strings.Contains(msg, "403") || strings.Contains(msg, "401") {
-					entitlementFailure = true
+	attempts := map[string]providerRouteAttempt{
+		"Alpaca": func(routeCtx context.Context) bool {
+			for i := 0; i < len(syms); i += 50 {
+				j := i + 50
+				if j > len(syms) {
+					j = len(syms)
 				}
-				break
+				batch := syms[i:j]
+				startDate := now.AddDate(0, 0, -30).Format("2006-01-02")
+				needsBackfill := false
+				e.mu.RLock()
+				for _, sym := range batch {
+					if e.lastUpdated["corporate-actions-backfill:"+sym] == 0 {
+						needsBackfill = true
+						break
+					}
+				}
+				e.mu.RUnlock()
+				if needsBackfill {
+					startDate = now.AddDate(-15, 0, 0).Format("2006-01-02")
+				}
+
+				pageToken := ""
+				seenTokens := map[string]bool{}
+				batchComplete := false
+				for page := 0; ; page++ {
+					if page >= 100 {
+						truncated = true
+						err := fmt.Errorf("Alpaca corporate actions pagination exceeded safety limit")
+						reportProviderRouteFailure(routeCtx, err)
+						return false
+					}
+					q := url.Values{}
+					q.Set("symbols", strings.Join(batch, ","))
+					q.Set("start", startDate)
+					q.Set("end", endDate)
+					q.Set("limit", "1000")
+					q.Set("sort", "asc")
+					if pageToken != "" {
+						q.Set("page_token", pageToken)
+					}
+					raw := strings.TrimRight(alpacaDataBaseURL, "/") + "/v1/corporate-actions?" + q.Encode()
+					var payload map[string]any
+					err := e.providerGetJSONTier(routeCtx, "Alpaca", e.workTierForSymbols(batch), client, raw, headers, &payload)
+					if err != nil {
+						if providerRequestFailureIsLocalNeutral(routeCtx, err) {
+							localNeutral = true
+							return false
+						}
+						anyFailure = true
+						msg := strings.ToLower(err.Error())
+						if strings.Contains(msg, "403") || strings.Contains(msg, "401") {
+							entitlementFailure = true
+						}
+						reportProviderRouteFailure(routeCtx, err)
+						return false
+					}
+					fresh = append(fresh, parseAlpacaCorporateActionResponse(payload, tracked)...)
+					next := strings.TrimSpace(fmt.Sprint(payload["next_page_token"]))
+					if next == "" || next == "<nil>" {
+						batchComplete = true
+						break
+					}
+					if seenTokens[next] {
+						truncated = true
+						err := fmt.Errorf("Alpaca corporate actions repeated pagination token")
+						reportProviderRouteFailure(routeCtx, err)
+						return false
+					}
+					seenTokens[next] = true
+					pageToken = next
+				}
+				if batchComplete && needsBackfill {
+					backfilled = append(backfilled, batch...)
+				}
 			}
-			fresh = append(fresh, parseAlpacaCorporateActionResponse(payload, tracked)...)
-			next := strings.TrimSpace(fmt.Sprint(payload["next_page_token"]))
-			if next == "" || next == "<nil>" {
-				batchComplete = true
-				break
-			}
-			if seenTokens[next] {
-				truncated = true
-				batchTruncated = true
-				break
-			}
-			seenTokens[next] = true
-			pageToken = next
-		}
-		if success && batchComplete && !batchTruncated && needsBackfill {
-			backfilled = append(backfilled, batch...)
-		}
+			e.recordProviderSuccess("Alpaca")
+			return true
+		},
 	}
+	_, loaded := e.executeProviderRoute(ctx, canonicalUSCorporateActionsDataset, attempts)
+
 	nowMs := time.Now().UnixMilli()
 	e.mu.Lock()
 	merged := mergeCorporateActionLedger(e.corporateActions, fresh, nowMs)
 	e.corporateActions = merged
-	e.lastUpdated["corporate-actions"] = nowMs
-	for _, sym := range backfilled {
-		e.lastUpdated["corporate-actions-backfill:"+sym] = nowMs
+	if localNeutral {
+		e.mu.Unlock()
+		return false
 	}
-	if entitlementFailure {
+	if loaded {
+		e.lastUpdated["corporate-actions"] = nowMs
+		for _, sym := range backfilled {
+			e.lastUpdated["corporate-actions-backfill:"+sym] = nowMs
+		}
+		e.health["corporate-actions"] = fmt.Sprintf("healthy · persistent ledger · %d total actions · %d refreshed", len(merged), len(fresh))
+	} else if entitlementFailure {
 		e.health["corporate-actions"] = fmt.Sprintf("plan limited or not entitled · persistent ledger retained · %d total actions", len(merged))
 	} else if anyFailure {
 		e.health["corporate-actions"] = fmt.Sprintf("partial · persistent ledger retained · %d total actions · latest provider refresh incomplete", len(merged))
 	} else if truncated {
 		e.health["corporate-actions"] = fmt.Sprintf("partial · persistent ledger · %d total actions · pagination safety stop", len(merged))
-	} else {
-		e.health["corporate-actions"] = fmt.Sprintf("healthy · persistent ledger · %d total actions · %d refreshed", len(merged), len(fresh))
 	}
 	e.mu.Unlock()
 
-	if len(merged) > 0 {
+	// An incomplete or locally deferred provider attempt must not amplify load by
+	// immediately launching raw-history reconciliation. Keep that follow-on work
+	// bound to a completed corporate-action provider check.
+	if loaded && len(merged) > 0 {
 		_ = e.refreshAlpacaRawHistoryForCorporateActions(ctx, key, secret, merged)
 	}
+	return loaded
 }
 
 func (e *Engine) refreshFinnhubIntelligence(ctx context.Context, key string) {

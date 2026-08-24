@@ -102,14 +102,18 @@ type providerCircuit struct {
 
 func routeChains() map[string][]string {
 	return map[string][]string{
-		"US Live Equities":             {"Alpaca", "Finnhub", "Twelve Data"},
-		"VIX / Indices":                {"Twelve Data", "yfinance", "CBOE"},
-		canonicalHistoricalBarsDataset: {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
-		"News":                         {"Finnhub", "Marketaux"},
-		"Earnings":                     {"Finnhub", "yfinance"},
-		"Fundamentals":                 {"Finnhub", "SEC", "yfinance"},
-		"SEC":                          {"SEC EDGAR"},
-		"Macro":                        {"FRED"},
+		"US Live Equities":                  {"Alpaca", "Finnhub", "Twelve Data"},
+		canonicalUSAssetUniverseDataset:     {"Alpaca"},
+		canonicalUSMarketCalendarDataset:    {"Alpaca"},
+		canonicalUSCorporateActionsDataset:  {"Alpaca"},
+		canonicalGlobalMarketContextDataset: {"Twelve Data"},
+		"VIX / Indices":                     {"Twelve Data", "yfinance", "CBOE"},
+		canonicalHistoricalBarsDataset:      {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
+		"News":                              {"Finnhub", "Marketaux"},
+		"Earnings":                          {"Finnhub", "yfinance"},
+		"Fundamentals":                      {"Finnhub", "SEC", "yfinance"},
+		"SEC":                               {"SEC EDGAR"},
+		"Macro":                             {"FRED"},
 	}
 }
 
@@ -291,6 +295,45 @@ func sourceProvider(source string) string {
 
 type providerRouteAttempt func(context.Context) bool
 
+type providerRouteAttemptReportKey struct{}
+
+type providerRouteAttemptReport struct {
+	failure error
+}
+
+// providerRequestFailureIsLocalNeutral identifies outcomes caused by the caller
+// or DE.PULSE admission/backpressure controls rather than provider health.
+// Router migrations must leave these outcomes neutral to provider/capability
+// health and allow a later live caller to retry normally.
+func providerRequestFailureIsLocalNeutral(ctx context.Context, err error) bool {
+	if err == nil {
+		return false
+	}
+	if ctx != nil && ctx.Err() != nil {
+		return true
+	}
+	low := strings.ToLower(strings.TrimSpace(err.Error()))
+	return strings.Contains(low, "request deferred") ||
+		strings.Contains(low, "deferred: provider ") ||
+		strings.Contains(low, "provider request rejected by bounded workload budget") ||
+		strings.Contains(low, "bounded provider capacity")
+}
+
+// reportProviderRouteFailure lets a provider loader return terminal provider
+// evidence to the existing executeProviderRoute authority without mutating the
+// global provider circuit. This is how distinct Router v2 datasets preserve
+// capability isolation while legacy routes continue to use the global-circuit
+// compatibility contract until migrated.
+func reportProviderRouteFailure(ctx context.Context, err error) {
+	if ctx == nil || err == nil {
+		return
+	}
+	report, _ := ctx.Value(providerRouteAttemptReportKey{}).(*providerRouteAttemptReport)
+	if report != nil && report.failure == nil {
+		report.failure = err
+	}
+}
+
 // executeProviderRoute is the single executable routing authority. Provider-
 // specific loaders know how to fetch/normalize one source; only this function
 // decides which provider is attempted and in what order.
@@ -314,8 +357,10 @@ func (e *Engine) executeProviderRoute(ctx context.Context, dataset string, attem
 		e.mu.RLock()
 		before := e.providerCircuits[providerKey(provider)]
 		e.mu.RUnlock()
+		report := &providerRouteAttemptReport{}
+		attemptCtx := context.WithValue(ctx, providerRouteAttemptReportKey{}, report)
 		started := time.Now()
-		ok := attempt(ctx)
+		ok := attempt(attemptCtx)
 		e.recordProviderLatency(provider, started)
 		e.recordProviderCapabilityLatency(dataset, provider, started)
 		if ok {
@@ -328,6 +373,10 @@ func (e *Engine) executeProviderRoute(ctx context.Context, dataset string, attem
 			}
 			e.mu.Unlock()
 			return provider, true
+		}
+		if report.failure != nil {
+			e.recordProviderCapabilityCircuitFailure(dataset, provider, report.failure)
+			continue
 		}
 		e.mu.RLock()
 		after := e.providerCircuits[providerKey(provider)]
@@ -363,6 +412,12 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 			active = sourceProvider(quotes["VIX"].Source)
 			lastSuccess = quotes["VIX"].UpdatedAt
 			detail = quotes["VIX"].Source
+		case canonicalGlobalMarketContextDataset:
+			lastSuccess = last["global-direct"]
+			detail = e.health["global-direct"]
+			if lastSuccess > 0 {
+				active = "Twelve Data"
+			}
 		case canonicalHistoricalBarsDataset:
 			lastSuccess = last["history"]
 			active = sourceProvider(e.health["history"])
