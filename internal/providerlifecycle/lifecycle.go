@@ -196,10 +196,3 @@ func TradeInsightPolicy(capability, dataset string) Policy {
 		RequireIndependentProvenance: true, RequireConsumerUtility: true, RequireTruthBoundary: true,
 	}
 }
-
-func DirectAuthorityPolicy(provider, capability, dataset string) Policy {
-	return Policy{
-		Provider: provider, Capability: capability, Dataset: dataset, Lifecycle: Production,
-		AuthorityClass: "DIRECT_AUTHORITY", PromotionMode: "EXPLICIT_GOVERNED_ONLY", DirectAuthority: true,
-	}
-}
