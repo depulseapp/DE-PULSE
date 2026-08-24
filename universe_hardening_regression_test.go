@@ -239,14 +239,18 @@ func TestADAPTProviderUniverseSyntheticLoaderRemainsRouterIsolated(t *testing.T)
 func TestADAPTProviderUniverseCancellationDoesNotPoisonRouterCircuit(t *testing.T) {
 	e := newV1801Engine(t)
 	configureAdaptProviderUniverseAlpaca(e)
+	calls := 0
 	client := adaptProviderUniverseClient(func(r *http.Request) (*http.Response, error) {
-		t.Fatal("canceled provider request should not reach transport")
+		calls++
 		return nil, context.Canceled
 	})
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 	if rows, ok := e.loadUSSymbolUniverseWithClient(ctx, "test-key", "test-secret", client); ok || rows != nil {
 		t.Fatalf("canceled production load unexpectedly succeeded: ok=%v rows=%v", ok, rows)
+	}
+	if calls > 1 {
+		t.Fatalf("caller cancellation must stop same-provider fallback after first observed cancellation, calls=%d", calls)
 	}
 
 	e.mu.RLock()
