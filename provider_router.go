@@ -126,7 +126,7 @@ func (e *Engine) providerConfigured(provider string, secrets Secrets, settings S
 	case "finnhub":
 		return strings.TrimSpace(secrets.Finnhub) != ""
 	case "tradeinsight":
-		return tradeInsightConfigured()
+		return tradeInsightConfigured(secrets.TradeInsight)
 	case "twelve data":
 		return strings.TrimSpace(secrets.TwelveData) != ""
 	case "marketaux":

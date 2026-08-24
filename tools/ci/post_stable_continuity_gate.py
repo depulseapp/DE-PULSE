@@ -9,6 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 CLOSED_PROCESS_STATES = {"COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
+ACTIVE_PRODUCT_STATES = {"ACTIVE", "IN_PROGRESS"}
 
 
 def load_json(path: Path) -> dict:
@@ -240,6 +241,173 @@ def process_work_slice_errors(
     return errors
 
 
+def product_work_slice_errors(
+    *,
+    identity: dict,
+    identity_version: str,
+    checkpoint_version: str,
+    branch: str,
+) -> list[str]:
+    errors: list[str] = []
+    state = load_json(ROOT / "governance" / "current-state.json")
+    stable = state.get("stable", {}) if isinstance(state.get("stable"), dict) else {}
+    active = (
+        state.get("activeWorkSlice", {})
+        if isinstance(state.get("activeWorkSlice"), dict)
+        else {}
+    )
+    capability_gate = (
+        state.get("productCapabilityGate", {})
+        if isinstance(state.get("productCapabilityGate"), dict)
+        else {}
+    )
+
+    reserved_id = str(capability_gate.get("reservedWorkSliceId", "")).strip()
+    reserved_branch = str(capability_gate.get("reservedBranch", "")).strip()
+    reserved_status = str(capability_gate.get("reservationStatus", "")).strip().upper()
+    reserved_issue = capability_gate.get("reservedIssue")
+    work_slice_rel = str(capability_gate.get("workSlicePath", "")).strip()
+    expected_rel = (
+        f"governance/work-slices/{reserved_id}/work-slice.json"
+        if reserved_id
+        else ""
+    )
+    work_slice_path = ROOT / work_slice_rel if work_slice_rel else ROOT / "<missing>"
+    work_slice = load_json(work_slice_path) if work_slice_rel else {}
+
+    stable_tag = str(stable.get("tag", "")).strip()
+    stable_candidate = str(stable.get("candidateSha", "")).strip()
+    stable_fingerprint = str(stable.get("sourceFingerprint", "")).strip()
+    expected_tag = f"v{identity_version}-stable"
+    previous_stable = clean_version(identity.get("previous_stable"))
+    completed_process_id = str(active.get("workSliceId", "")).strip()
+    completed_process_path = (
+        ROOT / "governance" / "work-slices" / completed_process_id / "work-slice.json"
+        if completed_process_id
+        else ROOT / "<missing>"
+    )
+    completed_process = load_json(completed_process_path) if completed_process_id else {}
+
+    if identity.get("channel") != "STABLE":
+        errors.append("product work slice requires unchanged STABLE release identity")
+    if clean_version(stable.get("productVersion")) != identity_version:
+        errors.append("current-state Stable productVersion / release identity drift")
+    if stable_tag != expected_tag:
+        errors.append(f"current-state Stable tag mismatch: {stable_tag or '<missing>'} != {expected_tag}")
+    if str(stable.get("buildId", "")) != str(identity.get("build_id", "")):
+        errors.append("current-state Stable buildId / release identity drift")
+    if str(stable.get("platformBuildNumber", "")) != str(identity.get("bundle_version", "")):
+        errors.append("current-state platform build number / release identity drift")
+    if stable.get("publication") != "PASS_NO_REBUILD":
+        errors.append("current-state Stable publication must remain PASS_NO_REBUILD")
+    if not stable_candidate or not stable_fingerprint:
+        errors.append("current-state Stable candidate/fingerprint missing")
+    if not str(stable.get("qualifiedSourceSha", "")).strip():
+        errors.append("current-state Stable qualified source SHA missing")
+    try:
+        if int(stable.get("releaseRunId", 0)) <= 0:
+            errors.append("current-state Stable release run id missing")
+    except Exception:
+        errors.append("current-state Stable release run id invalid")
+
+    if capability_gate.get("blocked") is not False:
+        errors.append("registered product work requires an unblocked product capability gate")
+    if capability_gate.get("blockedByIssue") is not None:
+        errors.append("registered product work must not retain a process capability blocker")
+    if not str(capability_gate.get("nextReservedCapability", "")).strip():
+        errors.append("registered product capability name missing")
+    if not reserved_id:
+        errors.append("registered product workSliceId missing")
+    if not isinstance(reserved_issue, int) or reserved_issue <= 0:
+        errors.append("registered product issue missing or invalid")
+    if not reserved_branch:
+        errors.append("registered product branch missing")
+    elif reserved_branch != branch:
+        errors.append("registered product branch / current branch drift")
+    if reserved_status not in ACTIVE_PRODUCT_STATES:
+        errors.append("registered product reservationStatus must be ACTIVE or IN_PROGRESS")
+    if work_slice_rel != expected_rel:
+        errors.append(
+            f"registered product workSlicePath mismatch: {work_slice_rel or '<missing>'} != {expected_rel or '<missing>'}"
+        )
+    if not work_slice:
+        errors.append(
+            f"registered product work-slice metadata missing: {work_slice_rel or '<missing>'}"
+        )
+    else:
+        if work_slice.get("schema") != "DE.PULSE-WORK-SLICE-1":
+            errors.append("registered product work-slice schema mismatch")
+        if str(work_slice.get("workSliceId", "")).strip() != reserved_id:
+            errors.append("product capability/work-slice id drift")
+        if work_slice.get("issue") != reserved_issue:
+            errors.append("product capability/work-slice issue drift")
+        if work_slice.get("type") != "PRODUCT_CAPABILITY":
+            errors.append("registered product work slice is not PRODUCT_CAPABILITY")
+        if str(work_slice.get("status", "")).strip().upper() not in ACTIVE_PRODUCT_STATES:
+            errors.append("registered product work-slice status is not active")
+        if str(work_slice.get("branch", "")).strip() != reserved_branch:
+            errors.append("product capability/work-slice branch drift")
+        if work_slice.get("publicProductVersion") is not None:
+            errors.append("product work-slice identity must remain separate from public SemVer")
+        if work_slice.get("productBehaviorChange") is not True:
+            errors.append("product capability work slice must declare productBehaviorChange=true")
+        if work_slice.get("blocksNextProductCapability") is not True:
+            errors.append("active product capability must block starting the next product capability")
+        if clean_version(work_slice.get("stableProductVersionAtStart")) != identity_version:
+            errors.append("product work-slice Stable-at-start version / release identity drift")
+        if str(work_slice.get("baselineCandidateSha", "")).strip() != stable_candidate:
+            errors.append("product work-slice baseline candidate / current Stable candidate drift")
+        if str(work_slice.get("baselineSourceFingerprint", "")).strip() != stable_fingerprint:
+            errors.append("product work-slice baseline fingerprint / current Stable fingerprint drift")
+        if str(work_slice.get("baselineBuildId", "")).strip() != str(identity.get("build_id", "")):
+            errors.append("product work-slice baseline build / release identity drift")
+
+    if not completed_process:
+        errors.append("completed process work-slice metadata missing while product work is active")
+    else:
+        if active.get("type") != "PROCESS_RELEASE_ENGINEERING":
+            errors.append("product work requires retained completed process-work authority")
+        if str(active.get("status", "")).strip().upper() not in CLOSED_PROCESS_STATES:
+            errors.append("product work requires the retained process work slice to be complete")
+        if str(completed_process.get("status", "")).strip().upper() not in CLOSED_PROCESS_STATES:
+            errors.append("retained process work-slice metadata is not complete")
+        if completed_process.get("blocksNextProductCapability") is not False:
+            errors.append("retained completed process work slice has not unblocked product work")
+        if capability_gate.get("unblockedByCompletedWorkSlice") != completed_process_id:
+            errors.append("product capability gate / completed process unblock binding drift")
+        final_evidence = str(completed_process.get("finalQualificationEvidence", "")).strip()
+        if not final_evidence or not (ROOT / final_evidence).is_file():
+            errors.append("retained completed process work slice lacks final qualification evidence")
+
+    # Immutable resume checkpoints may lag by exactly one Stable while a new
+    # version-independent product work slice starts from the current Stable.
+    if checkpoint_version != identity_version and checkpoint_version != previous_stable:
+        errors.append(
+            "product work-slice checkpoint may only equal the current Stable or its immediate predecessor: "
+            f"checkpoint=v{checkpoint_version}, current=v{identity_version}, predecessor=v{previous_stable or '<missing>'}"
+        )
+
+    if stable_tag and stable_candidate:
+        tag = git("rev-parse", "--verify", f"refs/tags/{stable_tag}^{{commit}}")
+        if tag.returncode != 0:
+            errors.append(f"registered Stable tag is not available in Git history: {stable_tag}")
+        elif tag.stdout.strip() != stable_candidate:
+            errors.append(
+                f"registered Stable tag/candidate mismatch: {stable_tag} -> {tag.stdout.strip()} != {stable_candidate}"
+            )
+
+    if stable_candidate:
+        head = git("rev-parse", "HEAD")
+        if head.returncode != 0:
+            errors.append("cannot resolve current HEAD for product-work ancestry check")
+        else:
+            ancestry = git("merge-base", "--is-ancestor", stable_candidate, head.stdout.strip())
+            if ancestry.returncode != 0:
+                errors.append("product work branch does not descend from the recorded Stable candidate")
+
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
     identity = load_json(ROOT / "release_identity.json")
@@ -276,12 +444,23 @@ def main() -> int:
         expected_candidate_branch = f"v{identity_version}-development"
         state = load_json(ROOT / "governance" / "current-state.json")
         active = state.get("activeWorkSlice", {}) if isinstance(state.get("activeWorkSlice"), dict) else {}
+        capability_gate = (
+            state.get("productCapabilityGate", {})
+            if isinstance(state.get("productCapabilityGate"), dict)
+            else {}
+        )
         registered_process_branch = str(active.get("branch", "")).strip()
         registered_closure_branch = str(active.get("closureBranch", "")).strip()
+        registered_product_branch = str(capability_gate.get("reservedBranch", "")).strip()
         is_registered_process = (
             branch in {registered_process_branch, registered_closure_branch}
             and bool(branch)
             and active.get("type") == "PROCESS_RELEASE_ENGINEERING"
+        )
+        is_registered_product = (
+            bool(branch)
+            and branch == registered_product_branch
+            and capability_gate.get("blocked") is False
         )
 
         if branch in {"main", "master"}:
@@ -300,10 +479,22 @@ def main() -> int:
                     branch=branch,
                 )
             )
+        elif is_registered_product:
+            mode = "PRODUCT_WORK_SLICE"
+            errors.extend(
+                product_work_slice_errors(
+                    identity=identity,
+                    identity_version=identity_version,
+                    checkpoint_version=checkpoint_version,
+                    branch=branch,
+                )
+            )
         else:
             errors.append(
-                "identity/checkpoint differ outside an allowed product candidate or registered process work slice: "
-                f"candidate={expected_candidate_branch}, process={registered_process_branch or '<none>'}, closure={registered_closure_branch or '<none>'}, current={branch or '<detached>'}"
+                "identity/checkpoint differ outside an allowed product candidate, registered product work slice, or registered process work slice: "
+                f"candidate={expected_candidate_branch}, product={registered_product_branch or '<none>'}, "
+                f"process={registered_process_branch or '<none>'}, closure={registered_closure_branch or '<none>'}, "
+                f"current={branch or '<detached>'}"
             )
 
     if errors:
@@ -315,6 +506,9 @@ def main() -> int:
     )
     if mode.startswith("PROCESS_WORK_SLICE"):
         print("registered process/closure branch / Stable tag / ancestry / no-product-version invariants: PASS")
+        print("prior-Stable immutable resume checkpoint exception: BOUNDED_TO_IMMEDIATE_PREDECESSOR")
+    if mode == "PRODUCT_WORK_SLICE":
+        print("registered product work-slice / Stable tag / ancestry / SemVer-separation invariants: PASS")
         print("prior-Stable immutable resume checkpoint exception: BOUNDED_TO_IMMEDIATE_PREDECESSOR")
     return 0
 

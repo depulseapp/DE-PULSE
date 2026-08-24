@@ -29,6 +29,7 @@ type Settings struct {
 
 type Secrets struct {
 	Finnhub      string `json:"finnhub"`
+	TradeInsight string `json:"tradeInsight,omitempty"`
 	AlpacaKey    string `json:"alpacaKey"`
 	AlpacaSecret string `json:"alpacaSecret"`
 	Groq         string `json:"groq"`
@@ -84,6 +85,7 @@ type PublicState struct {
 	BuildID            string                        `json:"buildId"`
 	Settings           Settings                      `json:"settings"`
 	HasFinnhubKey      bool                          `json:"hasFinnhubKey"`
+	HasTradeInsightKey bool                          `json:"hasTradeInsightKey"`
 	HasAlpacaKey       bool                          `json:"hasAlpacaKey"`
 	HasAlpacaSecret    bool                          `json:"hasAlpacaSecret"`
 	HasGroqKey         bool                          `json:"hasGroqKey"`

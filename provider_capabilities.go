@@ -68,7 +68,7 @@ func buildProviderCapabilityRegistry(settings Settings, secrets Secrets, health 
 			return "PLAN LIMITED"
 		}(), Detail: "Discovery seed only when account entitlement permits.", UpdatedAt: now, Uses: []string{"Discovery", "Dashboard"}},
 		{Provider: tradeInsightProviderName, Capability: "Adjusted daily OHLCV / corporate-action corroboration", Status: func() string {
-			if !tradeInsightConfigured() {
+			if !tradeInsightConfigured(secrets.TradeInsight) {
 				return "NOT ENTITLED"
 			}
 			history := strings.ToLower(strings.TrimSpace(health["history"]))

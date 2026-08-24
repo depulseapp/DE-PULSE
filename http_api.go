@@ -271,18 +271,19 @@ func parseRFC3339Unix(v string) int64 {
 }
 func (a *Application) handleSettingsSave(w http.ResponseWriter, r *http.Request) {
 	var in struct {
-		Settings      Settings `json:"settings"`
-		FinnhubKey    string   `json:"finnhubKey"`
-		AlpacaKey     string   `json:"alpacaKey"`
-		AlpacaSecret  string   `json:"alpacaSecret"`
-		GroqKey       string   `json:"groqKey"`
-		OpenRouterKey string   `json:"openRouterKey"`
-		GeminiKey     string   `json:"geminiKey"`
-		FREDKey       string   `json:"fredKey"`
-		BLSKey        string   `json:"blsKey"`
-		EIAKey        string   `json:"eiaKey"`
-		TwelveDataKey string   `json:"twelveDataKey"`
-		MarketauxKey  string   `json:"marketauxKey"`
+		Settings        Settings `json:"settings"`
+		FinnhubKey      string   `json:"finnhubKey"`
+		TradeInsightKey string   `json:"tradeInsightKey"`
+		AlpacaKey       string   `json:"alpacaKey"`
+		AlpacaSecret    string   `json:"alpacaSecret"`
+		GroqKey         string   `json:"groqKey"`
+		OpenRouterKey   string   `json:"openRouterKey"`
+		GeminiKey       string   `json:"geminiKey"`
+		FREDKey         string   `json:"fredKey"`
+		BLSKey          string   `json:"blsKey"`
+		EIAKey          string   `json:"eiaKey"`
+		TwelveDataKey   string   `json:"twelveDataKey"`
+		MarketauxKey    string   `json:"marketauxKey"`
 	}
 	if decodeJSON(r, &in) != nil {
 		writeError(w, 400, "Invalid settings")
@@ -362,6 +363,9 @@ func (a *Application) handleSettingsSave(w http.ResponseWriter, r *http.Request)
 	ensureDedicatedDeskWatchlists(&a.state, defaultState())
 	if v := cleanCredential(in.FinnhubKey); v != "" {
 		a.secrets.Finnhub = v
+	}
+	if v := cleanCredential(in.TradeInsightKey); v != "" {
+		a.secrets.TradeInsight = v
 	}
 	if v := cleanCredential(in.AlpacaKey); v != "" {
 		a.secrets.AlpacaKey = v
@@ -450,6 +454,8 @@ func (a *Application) handleClearSecret(w http.ResponseWriter, r *http.Request) 
 	switch in.Name {
 	case "finnhub":
 		a.secrets.Finnhub = ""
+	case "tradeinsight":
+		a.secrets.TradeInsight = ""
 	case "alpaca":
 		a.secrets.AlpacaKey = ""
 		a.secrets.AlpacaSecret = ""
@@ -478,18 +484,19 @@ func (a *Application) handleClearSecret(w http.ResponseWriter, r *http.Request) 
 }
 func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request) {
 	var in struct {
-		Provider      string `json:"provider"`
-		FinnhubKey    string `json:"finnhubKey"`
-		AlpacaKey     string `json:"alpacaKey"`
-		AlpacaSecret  string `json:"alpacaSecret"`
-		GroqKey       string `json:"groqKey"`
-		OpenRouterKey string `json:"openRouterKey"`
-		GeminiKey     string `json:"geminiKey"`
-		FREDKey       string `json:"fredKey"`
-		BLSKey        string `json:"blsKey"`
-		EIAKey        string `json:"eiaKey"`
-		TwelveDataKey string `json:"twelveDataKey"`
-		MarketauxKey  string `json:"marketauxKey"`
+		Provider        string `json:"provider"`
+		FinnhubKey      string `json:"finnhubKey"`
+		TradeInsightKey string `json:"tradeInsightKey"`
+		AlpacaKey       string `json:"alpacaKey"`
+		AlpacaSecret    string `json:"alpacaSecret"`
+		GroqKey         string `json:"groqKey"`
+		OpenRouterKey   string `json:"openRouterKey"`
+		GeminiKey       string `json:"geminiKey"`
+		FREDKey         string `json:"fredKey"`
+		BLSKey          string `json:"blsKey"`
+		EIAKey          string `json:"eiaKey"`
+		TwelveDataKey   string `json:"twelveDataKey"`
+		MarketauxKey    string `json:"marketauxKey"`
 	}
 	if decodeJSON(r, &in) != nil {
 		writeError(w, 400, "Invalid provider-test request")
@@ -497,6 +504,7 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	}
 	a.mu.RLock()
 	fk := a.secrets.Finnhub
+	ti := a.secrets.TradeInsight
 	ak := a.secrets.AlpacaKey
 	as := a.secrets.AlpacaSecret
 	gk := a.secrets.Groq
@@ -511,6 +519,9 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	a.mu.RUnlock()
 	if v := cleanCredential(in.FinnhubKey); v != "" {
 		fk = v
+	}
+	if v := cleanCredential(in.TradeInsightKey); v != "" {
+		ti = v
 	}
 	if v := cleanCredential(in.AlpacaKey); v != "" {
 		ak = v
@@ -547,6 +558,8 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	provider := strings.ToLower(strings.TrimSpace(in.Provider))
 	var result ProviderTestResult
 	switch provider {
+	case "tradeinsight":
+		result = testTradeInsight(ctx, ti)
 	case "alpaca":
 		result = testAlpaca(ctx, ak, as)
 	case "groq":
@@ -605,6 +618,34 @@ func testFinnhub(ctx context.Context, key string) ProviderTestResult {
 	r.Details = []string{"SPY quote authenticated", "WebSocket will be verified when the runtime starts"}
 	return r
 }
+func testTradeInsight(ctx context.Context, key string) ProviderTestResult {
+	r := ProviderTestResult{Provider: "tradeinsight", CheckedAt: time.Now().UTC().Format(time.RFC3339)}
+	key = cleanCredential(key)
+	if key == "" {
+		r.Status = "missing"
+		r.Message = "Enter a TradeInsight API key."
+		return r
+	}
+	end := time.Now().UTC()
+	params := url.Values{
+		"ticker":        []string{"SPY"},
+		"start":         []string{end.AddDate(0, 0, -10).Format("2006-01-02")},
+		"end":           []string{end.AddDate(0, 0, 1).Format("2006-01-02")},
+		"adjust_volume": []string{"true"},
+	}
+	rows, err := tradeInsightFetchRowsAt(ctx, &http.Client{Timeout: 12 * time.Second}, tradeInsightRESTBaseURL, key, "/ohlc", params)
+	if err != nil {
+		r.Status = "failed"
+		r.Message = err.Error()
+		return r
+	}
+	r.OK = true
+	r.Status = "connected"
+	r.Message = "TradeInsight historical-data access is working."
+	r.Details = []string{fmt.Sprintf("%d SPY OHLC rows returned", len(rows)), "Shadow-first capability admission remains enforced"}
+	return r
+}
+
 func testAlpaca(ctx context.Context, key, secret string) ProviderTestResult {
 	r := ProviderTestResult{Provider: "alpaca", CheckedAt: time.Now().UTC().Format(time.RFC3339)}
 	if key == "" || secret == "" {
@@ -992,208 +1033,4 @@ func (a *Application) handleTicker(w http.ResponseWriter, r *http.Request) {
 	}
 	a.broadcastStateForUser(userID)
 	writeJSON(w, 200, state)
-}
-func (a *Application) handleWatchlistCreate(w http.ResponseWriter, r *http.Request) {
-	var in struct {
-		Name string `json:"name"`
-	}
-	if decodeJSON(r, &in) != nil {
-		writeError(w, 400, "Invalid watchlist request")
-		return
-	}
-	name := strings.TrimSpace(in.Name)
-	if name == "" {
-		name = "New Watchlist"
-	}
-	wl := Watchlist{ID: randomID("watchlist"), Name: truncate(name, 60), Symbols: []string{}}
-	userID := requestUserID(r.Context())
-	a.mu.Lock()
-	workspaceState := a.workspaceStateLocked(userID)
-	workspaceState.Watchlists = append(workspaceState.Watchlists, wl)
-	workspaceState.UI.WatchlistID = wl.ID
-	workspaceState.UI.ScopeType = "watchlist"
-	if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-		a.mu.Unlock()
-		writeError(w, 500, err.Error())
-		return
-	}
-	a.mu.Unlock()
-	a.broadcastStateForUser(userID)
-	writeJSON(w, 200, wl)
-}
-func (a *Application) handleWatchlistRename(w http.ResponseWriter, r *http.Request) {
-	var in struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}
-	if decodeJSON(r, &in) != nil {
-		writeError(w, 400, "Invalid watchlist request")
-		return
-	}
-	userID := requestUserID(r.Context())
-	a.mu.Lock()
-	workspaceState := a.workspaceStateLocked(userID)
-	wl := findWatchlistInState(&workspaceState, in.ID)
-	if wl == nil {
-		a.mu.Unlock()
-		writeError(w, 404, "Watchlist not found")
-		return
-	}
-	if strings.TrimSpace(in.Name) != "" {
-		wl.Name = truncate(strings.TrimSpace(in.Name), 60)
-	}
-	out := *wl
-	if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-		a.mu.Unlock()
-		writeError(w, 500, err.Error())
-		return
-	}
-	a.mu.Unlock()
-	a.broadcastStateForUser(userID)
-	writeJSON(w, 200, out)
-}
-func (a *Application) handleWatchlistDelete(w http.ResponseWriter, r *http.Request) {
-	var in struct {
-		ID string `json:"id"`
-	}
-	if decodeJSON(r, &in) != nil {
-		writeError(w, 400, "Invalid watchlist request")
-		return
-	}
-	userID := requestUserID(r.Context())
-	a.mu.Lock()
-	workspaceState := a.workspaceStateLocked(userID)
-	if in.ID == "swing" || in.ID == "day" || in.ID == "long" || in.ID == "discovery" {
-		a.mu.Unlock()
-		writeError(w, 400, "Desk watchlists are permanent and are managed inside their trading desk")
-		return
-	}
-	if len(workspaceState.Watchlists) <= 4 {
-		a.mu.Unlock()
-		writeError(w, 400, "Keep at least one watchlist")
-		return
-	}
-	out := make([]Watchlist, 0, len(workspaceState.Watchlists)-1)
-	for _, wl := range workspaceState.Watchlists {
-		if wl.ID != in.ID {
-			out = append(out, wl)
-		}
-	}
-	workspaceState.Watchlists = out
-	if findWatchlistInState(&workspaceState, workspaceState.UI.WatchlistID) == nil {
-		workspaceState.UI.WatchlistID = workspaceState.Watchlists[0].ID
-	}
-	if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-		a.mu.Unlock()
-		writeError(w, 500, err.Error())
-		return
-	}
-	state := a.publicStateLockedForUser(userID)
-	a.mu.Unlock()
-	a.broadcastStateForUser(userID)
-	writeJSON(w, 200, state)
-}
-func (a *Application) handleAddSymbol(w http.ResponseWriter, r *http.Request) {
-	var in struct {
-		WatchlistID string `json:"watchlistId"`
-		Symbol      string `json:"symbol"`
-	}
-	if decodeJSON(r, &in) != nil {
-		writeError(w, 400, "Invalid watchlist request")
-		return
-	}
-	symbol, validSymbol := parseUserTicker(in.Symbol)
-	if !validSymbol {
-		writeError(w, 400, "Enter a valid ticker symbol")
-		return
-	}
-	userID := requestUserID(r.Context())
-	a.mu.Lock()
-	workspaceState := a.workspaceStateLocked(userID)
-	wl := findWatchlistInState(&workspaceState, in.WatchlistID)
-	if wl == nil {
-		a.mu.Unlock()
-		writeError(w, 404, "Watchlist not found")
-		return
-	}
-	alreadyPresent := contains(wl.Symbols, symbol)
-	if in.WatchlistID == "day" || in.WatchlistID == "swing" || in.WatchlistID == "long" {
-		_, _, _ = applyDeskMembershipLocked(&workspaceState, in.WatchlistID, symbol, true)
-		wl = findWatchlistInState(&workspaceState, in.WatchlistID)
-	} else {
-		wl.Symbols = uniqueSymbols(append(wl.Symbols, symbol))
-	}
-	workspaceState.UI.SelectedTicker = symbol
-	out := *wl
-	if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-		a.mu.Unlock()
-		writeError(w, 500, err.Error())
-		return
-	}
-	a.mu.Unlock()
-	a.broadcastStateForUser(userID)
-	if !alreadyPresent && a.engine != nil {
-		a.engine.onSymbolSetChanged(symbol)
-	}
-	writeJSON(w, 200, out)
-}
-func (a *Application) handleRemoveSymbol(w http.ResponseWriter, r *http.Request) {
-	var in struct {
-		WatchlistID string `json:"watchlistId"`
-		Symbol      string `json:"symbol"`
-	}
-	if decodeJSON(r, &in) != nil {
-		writeError(w, 400, "Invalid watchlist request")
-		return
-	}
-	symbol, validSymbol := parseUserTicker(in.Symbol)
-	if !validSymbol {
-		writeError(w, 400, "Enter a valid ticker symbol")
-		return
-	}
-	userID := requestUserID(r.Context())
-	a.mu.Lock()
-	workspaceState := a.workspaceStateLocked(userID)
-	wl := findWatchlistInState(&workspaceState, in.WatchlistID)
-	if wl == nil {
-		a.mu.Unlock()
-		writeError(w, 404, "Watchlist not found")
-		return
-	}
-	if in.WatchlistID == "day" || in.WatchlistID == "swing" || in.WatchlistID == "long" {
-		changed, protected, membership := applyDeskMembershipLocked(&workspaceState, in.WatchlistID, symbol, false)
-		wl = findWatchlistInState(&workspaceState, in.WatchlistID)
-		out := *wl
-		if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-			a.mu.Unlock()
-			writeError(w, 500, err.Error())
-			return
-		}
-		a.mu.Unlock()
-		a.broadcastStateForUser(userID)
-		if changed && a.engine != nil {
-			a.engine.onSymbolSetChanged(symbol)
-		}
-		writeJSON(w, 200, map[string]any{"watchlist": out, "protected": protected, "changed": changed, "membership": membership})
-		return
-	}
-	syms := make([]string, 0, len(wl.Symbols))
-	for _, candidate := range wl.Symbols {
-		if candidate != symbol {
-			syms = append(syms, candidate)
-		}
-	}
-	wl.Symbols = syms
-	out := *wl
-	if err := a.saveWorkspaceStateLocked(userID, workspaceState); err != nil {
-		a.mu.Unlock()
-		writeError(w, 500, err.Error())
-		return
-	}
-	a.mu.Unlock()
-	a.broadcastStateForUser(userID)
-	if a.engine != nil {
-		a.engine.onSymbolSetChanged(symbol)
-	}
-	writeJSON(w, 200, out)
 }
