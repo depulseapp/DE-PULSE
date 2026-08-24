@@ -6,7 +6,7 @@ const assert=require('assert');
 const crypto=require('crypto');
 
 const ownerPath='renderer/documentation-ui.js';
-const accessPath='renderer/documentation-access-v18.6.js';
+const accessPath='renderer/documentation-access.js';
 const ownerSource=fs.readFileSync(ownerPath,'utf8');
 const accessSource=fs.readFileSync(accessPath,'utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
@@ -42,7 +42,7 @@ assert.strictEqual(owner.owner,'renderer/documentation-ui.js');
 assert.strictEqual(owner.registry().state,'ACTIVE_OWNER_WITH_LEGACY_FALLBACK');
 assert(vm.runInContext('renderDocumentation()',context).includes('data-render-owner="documentation-ui"'));
 
-vm.runInContext(accessSource,context,{filename:'documentation-access-v18.6.js'});
+vm.runInContext(accessSource,context,{filename:'documentation-access.js'});
 
 const userHTML=vm.runInContext('renderDocumentation()',context);
 assert(!userHTML.includes('data-doc-tab="developer"'),'USER must not receive developer tab');
@@ -66,7 +66,7 @@ vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert.strictEqual(vm.runInContext('documentationTab',context),'user','hydrate must not fetch forbidden developer docs');
   assert.strictEqual(vm.runInContext('docCache.user',context),'/docs/user.md','normalized owner hydrate must fetch user docs');
   const ownerTag=`<script src="documentation-ui.js?v=${gitBlobToken(ownerPath)}"></script>`;
-  const accessTag=`<script src="documentation-access-v18.6.js?v=${gitBlobToken(accessPath)}"></script>`;
+  const accessTag=`<script src="documentation-access.js?v=${gitBlobToken(accessPath)}"></script>`;
   assert(index.includes(ownerTag),'index must load capability-oriented Documentation owner with content-derived cache identity');
   assert(index.includes(accessTag),'index must load documentation access extension with content-derived cache identity');
   assert(index.indexOf(ownerTag)<index.indexOf(accessTag),'owner must load before access decorator');

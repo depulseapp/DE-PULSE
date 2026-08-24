@@ -8,7 +8,7 @@ require('./market_header_owner_test.js');
 require('./v18_8_1_trust_closure_test.js');
 
 const ownerBytes=fs.readFileSync('renderer/documentation-ui.js');
-const accessBytes=fs.readFileSync('renderer/documentation-access-v18.6.js');
+const accessBytes=fs.readFileSync('renderer/documentation-access.js');
 const ownerSource=ownerBytes.toString('utf8');
 const accessSource=accessBytes.toString('utf8');
 const index=fs.readFileSync('renderer/index.html','utf8');
@@ -62,7 +62,7 @@ assert(markdown.includes('<h2>Heading</h2>'));
 assert(markdown.includes('<li>One</li>'));
 assert(markdown.includes('data-legacy-diagram="overall"'));
 
-vm.runInContext(accessSource,context,{filename:'documentation-access-v18.6.js'});
+vm.runInContext(accessSource,context,{filename:'documentation-access.js'});
 vm.runInContext("authPrincipal={role:'USER'};documentationTab='developer'",context);
 const restricted=vm.runInContext('renderDocumentation()',context);
 assert(!restricted.includes('data-doc-tab="developer"'),'USER must not receive developer tab after owner extraction');
@@ -78,7 +78,7 @@ vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert.deepStrictEqual(Array.from(vm.runInContext('fetchCalls',context)),['/docs/limitations.md']);
   assert.strictEqual(vm.runInContext('renderCalls',context),1);
   const ownerTag=`<script src="documentation-ui.js?v=${gitBlobToken(ownerBytes)}"></script>`;
-  const accessTag=`<script src="documentation-access-v18.6.js?v=${gitBlobToken(accessBytes)}"></script>`;
+  const accessTag=`<script src="documentation-access.js?v=${gitBlobToken(accessBytes)}"></script>`;
   assert(index.includes(ownerTag),'index must load capability-oriented Documentation owner with canonical cache identity');
   assert(index.includes(accessTag),'index must retain role-access decorator');
   assert(index.indexOf(ownerTag)<index.indexOf(accessTag),'Documentation owner must load before role-access decorator');

@@ -4,8 +4,8 @@ const fs = require('fs');
 const vm = require('vm');
 const marketTruth = require('../../renderer/market-intelligence-truth.js');
 
-const extension = fs.readFileSync('renderer/surface-consolidation-v18.6.js', 'utf8');
-const css = fs.readFileSync('renderer/surface-consolidation-v18.6.css', 'utf8');
+const extension = fs.readFileSync('renderer/surface-consolidation.js', 'utf8');
+const css = fs.readFileSync('renderer/surface-consolidation.css', 'utf8');
 const index = fs.readFileSync('renderer/index.html', 'utf8');
 const renderer = fs.readFileSync('renderer/renderer.js', 'utf8');
 const marketTruthSource = fs.readFileSync('renderer/market-intelligence-truth.js', 'utf8');
@@ -14,8 +14,8 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-assert(index.includes('surface-consolidation-v18.6.js'), 'v18.6 consolidation script is not loaded');
-assert(index.includes('surface-consolidation-v18.6.css'), 'v18.6 consolidation CSS is not loaded');
+assert(index.includes('surface-consolidation.js'), 'surface consolidation script is not loaded');
+assert(index.includes('surface-consolidation.css'), 'surface consolidation CSS is not loaded');
 assert(extension.includes('discovery-supporting-input'), 'supporting Market Activity drilldown missing');
 assert(extension.includes("legacyEvidencePages = new Set(['news', 'earnings', 'filings'])"), 'legacy route set missing');
 assert(extension.includes("baseSetPage('market-intelligence')"), 'legacy market-wide redirect missing');
@@ -66,7 +66,7 @@ const sandbox = {
   pctSigned: value => `${Number(value) >= 0 ? '+' : ''}${Number(value).toFixed(2)}%`
 };
 vm.createContext(sandbox);
-vm.runInContext(extension, sandbox, { filename: 'surface-consolidation-v18.6.js' });
+vm.runInContext(extension, sandbox, { filename: 'surface-consolidation.js' });
 
 const discovery = sandbox.renderDiscovery();
 assert(!discovery.includes('discovery-market-activity full-width'), 'prominent Market Activity card survived v18.6 rendering');

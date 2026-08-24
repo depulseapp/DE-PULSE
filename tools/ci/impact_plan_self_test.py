@@ -14,7 +14,7 @@ def main() -> int:
     require("CI_HARNESS" in release_classes, "release workflow must be CI_HARNESS")
     require("RELEASE_TOOLING" in release_classes, "release workflow must be RELEASE_TOOLING")
 
-    renderer = analyze_changed_paths(["renderer/watchlist-v18.5.1.js"])
+    renderer = analyze_changed_paths(["renderer/watchlist-ui.js"])
     require(renderer["qualifiedLane"] == "renderer", "renderer change should use renderer adaptive lane")
     require(renderer["rendererRequired"] is True, "renderer contract job missing")
     require(renderer["chromeRequired"] is True, "renderer change must require Chrome")
