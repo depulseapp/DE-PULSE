@@ -10,18 +10,18 @@ import (
 )
 
 type zeroGapClosure struct {
-	Schema                        string `json:"schema"`
-	ScopeID                       string `json:"scopeId"`
-	Issue                         int    `json:"issue"`
-	GeneralRoutingAuthority       string `json:"generalRoutingAuthority"`
-	NoExecutionBoundary           string `json:"noExecutionBoundary"`
-	DirectSECEDGARForm4Authority  string `json:"directSECEDGARForm4Authority"`
+	Schema                          string `json:"schema"`
+	ScopeID                         string `json:"scopeId"`
+	Issue                           int    `json:"issue"`
+	GeneralRoutingAuthority         string `json:"generalRoutingAuthority"`
+	NoExecutionBoundary             string `json:"noExecutionBoundary"`
+	DirectSECEDGARForm4Authority    string `json:"directSECEDGARForm4Authority"`
 	TradeInsightProductionPromotion struct {
-		ApprovedByIssue              int      `json:"approvedByIssue"`
-		ProductionGateIssue          int      `json:"productionGateIssue"`
-		PromotedCapabilities         []string `json:"promotedCapabilities"`
-		HardGated                    []string `json:"hardGated"`
-		PromotionMode                string   `json:"promotionMode"`
+		ApprovedByIssue               int      `json:"approvedByIssue"`
+		ProductionGateIssue           int      `json:"productionGateIssue"`
+		PromotedCapabilities          []string `json:"promotedCapabilities"`
+		HardGated                     []string `json:"hardGated"`
+		PromotionMode                 string   `json:"promotionMode"`
 		ProductionActivationCondition string   `json:"productionActivationCondition"`
 	} `json:"tradeInsightProductionPromotion"`
 	EvidenceBundles map[string]struct {
@@ -58,14 +58,14 @@ type zeroGapBaseline struct {
 }
 
 type nativeProofContract struct {
-	Schema        string   `json:"schema"`
-	ScopeID       string   `json:"scopeId"`
-	Issue         int      `json:"issue"`
-	Platform      string   `json:"platform"`
-	QualifiedJob  string   `json:"qualifiedJob"`
-	EvidenceOwner string   `json:"evidenceOwner"`
+	Schema         string   `json:"schema"`
+	ScopeID        string   `json:"scopeId"`
+	Issue          int      `json:"issue"`
+	Platform       string   `json:"platform"`
+	QualifiedJob   string   `json:"qualifiedJob"`
+	EvidenceOwner  string   `json:"evidenceOwner"`
 	RequiredChecks []string `json:"requiredChecks"`
-	Binding       string   `json:"binding"`
+	Binding        string   `json:"binding"`
 }
 
 func loadZeroGapClosure(t *testing.T) zeroGapClosure {
@@ -182,21 +182,21 @@ func TestDataHealth84FaultRecoveryMatrixIsExecutableAndComplete(t *testing.T) {
 	closure := loadZeroGapClosure(t)
 	regressionSource := currentRegressionSource(t)
 	required := map[string]bool{
-		"missing_invalid_credential":                 true,
-		"auth_401_403":                              true,
-		"rate_limit_429_quota":                      true,
-		"server_5xx":                                true,
-		"timeout_unreachable_offline":               true,
-		"malformed_partial_schema_drift":            true,
-		"stale_temporally_invalid":                  true,
-		"preferred_failure_healthy_fallback":        true,
-		"fallback_exhaustion":                       true,
-		"contradictory_independent_providers":       true,
-		"cache_miss_hit_expired_warm_recovery":      true,
-		"local_pressure":                            true,
-		"restart_recovery":                          true,
-		"optional_provider_failure_isolation":       true,
-		"provider_recovery_hysteresis_no_flapping":  true,
+		"missing_invalid_credential":               true,
+		"auth_401_403":                             true,
+		"rate_limit_429_quota":                     true,
+		"server_5xx":                               true,
+		"timeout_unreachable_offline":              true,
+		"malformed_partial_schema_drift":           true,
+		"stale_temporally_invalid":                 true,
+		"preferred_failure_healthy_fallback":       true,
+		"fallback_exhaustion":                      true,
+		"contradictory_independent_providers":      true,
+		"cache_miss_hit_expired_warm_recovery":     true,
+		"local_pressure":                           true,
+		"restart_recovery":                         true,
+		"optional_provider_failure_isolation":      true,
+		"provider_recovery_hysteresis_no_flapping": true,
 	}
 	if len(closure.FaultRecoveryMatrix) != len(required) {
 		t.Fatalf("fault/recovery matrix=%d want=%d", len(closure.FaultRecoveryMatrix), len(required))
