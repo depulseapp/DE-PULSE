@@ -21,7 +21,7 @@ func tradeInsightCanonicalOwnerDependencies() []tradeInsightCanonicalOwnerDepend
 			Concern:        "congressional-trading",
 			CanonicalOwner: "Research/Event alternative-evidence boundary",
 			Dependencies:   []string{"research_truth.go", "event_intelligence.go", "evidence_alternative.go", "EvidenceRecord"},
-			Contract:       "Disclosure lag and provenance remain explicit; Event Intelligence stays fetch-free; Congressional evidence is SHADOW-only until promotion and never deterministic trade truth.",
+			Contract:       "Disclosure lag and provenance remain explicit; Event Intelligence stays fetch-free; Congressional evidence is governed production alternative evidence after #78 approval/#84 closure and never deterministic trade truth.",
 		},
 		{
 			Concern:        "sec-form4-enrichment",
@@ -120,8 +120,8 @@ func TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted(t *test
 
 func TestV189TradeInsightLifecycleTruthNeverAdvertisesGatedCapability(t *testing.T) {
 	for _, id := range []string{"daily-history", "adjusted-history", "corporate-actions", "bulk-history", "congressional-trades"} {
-		if got := tradeInsightCapabilityLifecycleTruth(id); got != "SHADOW" {
-			t.Fatalf("lifecycle truth for %s = %q, want SHADOW", id, got)
+		if got := tradeInsightCapabilityLifecycleTruth(id); got != "PRODUCTION" {
+			t.Fatalf("lifecycle truth for %s = %q, want PRODUCTION after #78 approval/#84 closure candidate", id, got)
 		}
 	}
 	for _, id := range []string{"sec-form4", "top-movers", "symbol-search", "generic-market-price", "mcp-interface", "python-sdk", "vendor-derived-scores", "unknown-capability"} {
@@ -191,11 +191,11 @@ func TestV189TradeInsightCongressOfficialSchemaIsShadowAdmitted(t *testing.T) {
 	if !strings.Contains(row.EndpointEvidence, "/trading-data/v1/congress/v1/trades") || !strings.Contains(row.EndpointEvidence, "insight-data.mdx") {
 		t.Fatalf("congress endpoint/schema evidence = %q", row.EndpointEvidence)
 	}
-	if !row.SchemaVerified || !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "SHADOW" {
-		t.Fatalf("Congress official schema must be admitted SHADOW-only: %+v", row)
+	if !row.SchemaVerified || !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "PRODUCTION" {
+		t.Fatalf("Congress verified schema must be governed PRODUCTION after #78 approval/#84 closure candidate: %+v", row)
 	}
-	if !strings.Contains(strings.ToLower(row.GateReason), "explicit promotion approval") {
-		t.Fatalf("Congress SHADOW gate must prohibit automatic promotion: %q", row.GateReason)
+	if !strings.Contains(strings.ToLower(row.GateReason), "#84") || !strings.Contains(strings.ToLower(row.Authority), "never becomes deterministic") {
+		t.Fatalf("Congress production admission must retain #84 gate provenance and non-deterministic authority: %+v", row)
 	}
 }
 
@@ -229,11 +229,11 @@ func TestV189TradeInsightBulkHistoryUsesOnlyBoundedCanonicalFanout(t *testing.T)
 	if !strings.Contains(evidence, "client-side") || !strings.Contains(evidence, "no server-side bulk endpoint") {
 		t.Fatalf("bulk semantics must record official SDK fan-out truth: %q", row.EndpointEvidence)
 	}
-	if !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "SHADOW" {
-		t.Fatalf("bounded canonical bulk history must be admitted SHADOW-only: %+v", row)
+	if !row.RuntimeEnabled || !row.runtimeAdmitted() || row.Lifecycle != "PRODUCTION" {
+		t.Fatalf("bounded canonical bulk history must be governed PRODUCTION after #78 approval/#84 closure candidate: %+v", row)
 	}
 	reason := strings.ToLower(row.GateReason)
-	for _, required := range []string{"canonical historical bars", "deduplicated", "sequential", "50 symbols", "explicit promotion approval"} {
+	for _, required := range []string{"canonical historical bars", "deduplicated", "sequential", "50 symbols", "#78 approval", "#84"} {
 		if !strings.Contains(reason, required) {
 			t.Fatalf("bulk history admission must document %q: %q", required, row.GateReason)
 		}
