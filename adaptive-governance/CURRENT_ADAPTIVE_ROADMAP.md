@@ -2,9 +2,12 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Completed provider/data-health program:** #79 with #80, #81, #82, #83, #78 and #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
 **Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; it is not reopened. The separate product capability reservation advances under #92.
 
 The current v18.9.x direction advances from completed provider production/data-health closure into canonical slow-changing company/instrument identity. #92 must strengthen the existing symbol/universe and persistence owners rather than create a company-profile subsystem.
 
