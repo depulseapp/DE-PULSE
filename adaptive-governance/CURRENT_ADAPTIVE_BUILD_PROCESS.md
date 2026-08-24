@@ -2,9 +2,12 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
 **Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; it is not active implementation work. #92 remains the separate active product reservation.
 
 For #92, implementation is executable-first, reuse-first and canonical-owner-first:
 - reuse Smart Provider Router v2 and the existing `US Asset Universe` acquisition; a company/instrument identity implementation that adds a second provider request or bypasses Router v2 fails architecture review;
