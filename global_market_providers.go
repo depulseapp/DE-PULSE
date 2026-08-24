@@ -155,9 +155,6 @@ func tdPickSymbolWithFetcher(ctx context.Context, key, query string, future bool
 	}
 	return "", "", fmt.Errorf("no matching instrument for %s", query)
 }
-func tdPickSymbol(ctx context.Context, key, query string, future bool) (string, string, error) {
-	return tdPickSymbolWithFetcher(ctx, key, query, future, defaultTDJSONFetcher)
-}
 func tdQuoteWithFetcher(ctx context.Context, key, symbol string, fetch tdJSONFetcher) (tdQuoteResponse, error) {
 	var q tdQuoteResponse
 	raw := twelveDataBaseURL + "/quote?symbol=" + url.QueryEscape(symbol) + "&apikey=" + url.QueryEscape(key)
@@ -290,9 +287,6 @@ func tdDriverWithFetcher(ctx context.Context, key, k, label, query string, futur
 		session = "FUTURES"
 	}
 	return GlobalDriver{Key: k, Label: label, State: driverState(ch, false), Value: px, ChangePercent: ch, Source: "Twelve Data", Provenance: "DIRECT PROVIDER", UpdatedAt: ts, Confidence: 86, Detail: strings.TrimSpace(sym + " · " + ex), Session: session, ProviderSymbol: sym, IsProxy: false}, nil
-}
-func tdDriver(ctx context.Context, key, k, label, query string, future bool) (GlobalDriver, error) {
-	return tdDriverWithFetcher(ctx, key, k, label, query, future, defaultTDJSONFetcher)
 }
 func (p twelveDataProvider) Refresh(ctx context.Context) (map[string]GlobalDriver, error) {
 	if strings.TrimSpace(p.apiKey) == "" {
