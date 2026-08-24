@@ -5,7 +5,7 @@
   "title": "Smart Provider Router v2 — All-Provider Production Adoption & Efficiency",
   "type": "PRODUCT_CAPABILITY",
   "subtype": "PROVIDER_ROUTER_PRODUCTION_ADOPTION",
-  "status": "IN_PROGRESS",
+  "status": "COMPLETE",
   "publicProductVersion": null,
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
@@ -14,12 +14,13 @@
   "baselineMainSha": "c75a5f1467920f57fa23c3dbc400e51edc5275c8",
   "branch": "adapt-provider-router-production-001",
   "productBehaviorChange": true,
-  "blocksNextProductCapability": true,
+  "blocksNextProductCapability": false,
   "scopeId": "ADAPT-PROVIDER-ROUTER-PRODUCTION-001",
   "parentProgramIssue": 79,
   "parentProgramScopeId": "ADAPT-PROVIDER-PRODUCTION-001",
   "dependencies": [79, 80],
   "closureLedger": "governance/work-slices/ADAPT-PROVIDER-ROUTER-PRODUCTION-001/closure.json",
+  "finalQualificationEvidence": "governance/work-slices/ADAPT-PROVIDER-ROUTER-PRODUCTION-001/final-qualification-evidence.json",
   "requiredOutputs": [
     "all #80 MIGRATE general provider paths admitted through Smart Provider Router v2",
     "capability-aware efficient provider selection with bounded fallback and truthful decision reasons",
@@ -37,5 +38,7 @@
     "TRADEINSIGHT_SHADOW_FIRST_WHERE_GOVERNED",
     "NO_PARALLEL_PROVIDER_SPECIFIC_ROUTER_OR_HEALTH_SUBSYSTEMS"
   ],
-  "authorizedSequence": [81, 82, 83, 78, 84]
+  "authorizedSequence": [81, 82, 83, 78, 84],
+  "mergedPullRequest": 87,
+  "mergedCommitSha": "1870dd3881dbe7f6463f242e35fdc19e70d9ae15"
 }

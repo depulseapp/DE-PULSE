@@ -1,0 +1,29 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-EVIDENCE-1",
+  "workSliceId": "ADAPT-PROVIDER-ROUTER-PRODUCTION-001",
+  "issue": 81,
+  "candidateSha": "60d63bb862525edea5a5ea8be7469778f44afc54",
+  "candidateFingerprint": "c9eac2718f8f2115082ada159064be72b7eec4cd406eb3919ffa0ec4e9429afc",
+  "baseMainSha": "c75a5f1467920f57fa23c3dbc400e51edc5275c8",
+  "fast": {
+    "workflow": "DE.PULSE | CI Fast",
+    "runId": 32762168661,
+    "runNumber": 878,
+    "conclusion": "success"
+  },
+  "qualified": {
+    "workflow": "DE.PULSE | CI Qualified",
+    "runId": 32762311448,
+    "runNumber": 184,
+    "conclusion": "success",
+    "selectedJobs": [
+      "ci-harness",
+      "backend"
+    ]
+  },
+  "pullRequest": 87,
+  "mergeTarget": "main",
+  "mergeCommitSha": "1870dd3881dbe7f6463f242e35fdc19e70d9ae15",
+  "releaseAction": "NONE",
+  "evidenceTruth": "Fast and impact-selected Qualified both passed on the exact implementation candidate before expected-head merge. Qualified selected CI/harness + backend, including full Go, race detector and randomized package order. No Stable/public SemVer release was performed."
+}

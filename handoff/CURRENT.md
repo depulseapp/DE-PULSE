@@ -10,23 +10,36 @@
 **Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Canonical retained process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
-**Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / candidate `1d8638acb06c7ce90719fc3b959d37f188eb8b40` / Fast #859 / Qualified #182 / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
-**Active product slice:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / `adapt-provider-router-production-001`  
+**Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
+**Completed Router production adoption:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / candidate `60d63bb862525edea5a5ea8be7469778f44afc54` / Fast #878 / Qualified #184 / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
+**Active product slice:** #82 / `ADAPT-DATAHEALTH-RUNTIME-001` / `adapt-datahealth-runtime-001`  
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
 ## Current authority
-Issue #79 is the cross-session authority for the all-provider Adaptive Data Health program. #80 is complete and its machine-readable provider/capability/SLO/fetch-path baseline remains authoritative. Current dependency order is **#81/#82 → #83 + #78 → #84**.
+Issue #79 is the cross-session authority for the all-provider Adaptive Data Health program. #80 and #81 are complete. Their machine-readable provider/capability/SLO/fetch-path baseline, Router v2 adoption, regression evidence and immutable qualification evidence remain authoritative inputs to #82. Current dependency order is **#82 → #83 + #78 → #84**.
 
-## #81 objective
-Make Smart Provider Router v2 the real executable production authority for every routable provider capability identified as `MIGRATE` by #80. Preserve provider-specific HTTP/normalization loaders, canonical cache/single-flight/coalescing, direct authority boundaries, bounded fallback, provider workload/backpressure controls, capability-scoped circuit truth and non-secret decision reasons. Do not create a second router.
-
-Known #80 migration debt begins with:
-- Alpaca read-only U.S. market calendar;
+## #81 completed outcome
+Smart Provider Router v2 is now the executable general routing/admission authority for the former #80 `MIGRATE` paths:
 - Alpaca canonical U.S. asset universe, with bounded live/paper same-provider endpoint fallback inside the Alpaca attempt;
+- Alpaca read-only U.S. market calendar;
 - Alpaca corporate-actions announcements;
-- Twelve Data direct global indices/futures acquisition.
+- Twelve Data global indices/futures context.
 
-The exact runtime owners include `provider_router.go`, `smart_router_v2.go`, `routed_refresh.go`, `symbol_universe.go`, `preparation_types_liquidity.go`, `market_activity_corporate.go`, and `global_market_providers.go`. Official public/authority fetches are not to be rank-swapped merely to eliminate a direct call.
+Capability-scoped failure/cancellation isolation is regression-protected, existing cache/single-flight/coalescing and provider workload owners remain in place, and the fetch-path ledger contains no surviving #80 general-routing `MIGRATE` bypass. Direct SEC/EDGAR Form 4 and other explicit official-authority paths remain unchanged.
+
+## #82 objective
+Make `PARTIAL COVERAGE` / `DATA DEGRADED` truthful, capability-scoped and short-lived when recoverable. Reuse the existing canonical freshness/provider/cache/persistence/telemetry/state owners and Smart Provider Router v2; do not create a parallel health subsystem.
+
+Required runtime outcomes:
+- one canonical data-health evaluation path scoped by capability/consumer/symbol/session before wider escalation;
+- reuse defensible warm/cached/persisted evidence when freshness policy permits;
+- automatic eligible fallback, revalidation and hysteresis-protected recovery/unlatch;
+- critical decision-support work protected before optional/background work;
+- bounded scanner/prep/event/research/background fan-out under provider/runtime pressure;
+- lower-value load shedding before core data health deteriorates;
+- no optional provider/capability failure causing false app-global degradation;
+- truthful degraded state when required evidence is stale, missing, contradictory or below quality;
+- non-secret telemetry for reason, scope, freshness, serving/preferred provider context, fallback/recovery state and duration.
 
 ## Permanent boundaries
 - U.S. equities processing only.
@@ -39,13 +52,13 @@ The exact runtime owners include `provider_router.go`, `smart_router_v2.go`, `ro
 - GitHub executable evidence outranks chat memory.
 
 ## Exactly one next action
-On `adapt-provider-router-production-001`, implement the #81 Router v2 migration for the #80 `MIGRATE` paths using existing owners, extend existing Smart Router/Data Health regression protection, update the fetch-path ledger only after the bypass is actually removed, then obtain exact-head Fast and Qualified before merge. Keep #82 health/recovery/load shedding separate.
+On `adapt-datahealth-runtime-001`, inspect the existing runtime degradation/reliability/workload owners and implement #82 by consolidation/reuse: first bind one canonical scoped data-health evaluation and fault matrix, then close warm-state/fallback/recovery/hysteresis and pressure/load-shedding gaps without changing Router v2 authority. Obtain exact-head Fast and impact-selected Qualified before merge. Do not start #83/#78 until #82 closes.
 
 ## Resume rule
-1. Fetch live `main` and live `adapt-provider-router-production-001` first; another session may have advanced them.
-2. Read this file, `governance/current-state.json`, issue #79 latest comments, issue #81 and its comments, the #81 work-slice/closure ledger, and #80 final qualification evidence.
-3. Inspect commits since `c75a5f1467920f57fa23c3dbc400e51edc5275c8` before changing code so implemented work is never duplicated.
-4. Continue actual #81 implementation from the exact current head; do not restart planning.
+1. Fetch live `main` and live `adapt-datahealth-runtime-001` first; another session may have advanced them.
+2. Read this file, `governance/current-state.json`, issue #79 latest comments, issue #82 and its comments, the #82 work-slice/closure ledger, and #81 final qualification evidence.
+3. Inspect commits since `1870dd3881dbe7f6463f242e35fdc19e70d9ae15` before changing code so implemented work is never duplicated.
+4. Continue actual #82 implementation from the exact current head; do not restart planning.
 5. Preserve Smart Provider Router v2, direct SEC/EDGAR, canonical freshness/cache/persistence/telemetry/state owners, No Execution and U.S.-equities boundaries.
 6. Use only canonical Fast, Qualified and Release workflows for qualification. No temporary workflow family and no gate weakening.
-7. Do not merge #81 without exact-head Fast + impact-selected Qualified; do not start #83/#78 before required #81/#82 closure.
+7. Do not merge #82 without exact-head Fast + impact-selected Qualified; do not start #83/#78 before required #82 closure.

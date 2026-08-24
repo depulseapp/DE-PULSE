@@ -8,61 +8,61 @@
   "gaps": [
     {
       "id": "MIGRATE-PATH-ADOPTION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Smart Provider Router v2 and existing provider-specific loaders",
       "implementationPaths": ["provider_router.go", "routed_refresh.go", "symbol_universe.go", "preparation_types_liquidity.go", "market_activity_corporate.go", "global_market_providers.go", "governance/data-health/provider-fetch-paths.json"],
       "evidenceRequired": ["Alpaca U.S. market calendar admitted by Router v2", "Alpaca canonical U.S. asset universe admitted by Router v2 with same-provider live/paper endpoint fallback bounded inside its attempt", "Alpaca corporate actions admitted by Router v2", "Twelve Data direct global/futures acquisition admitted by Router v2", "no #80 MIGRATE general path remains a routing bypass"],
-      "evidence": [],
+      "evidence": ["implementation candidate 60d63bb862525edea5a5ea8be7469778f44afc54", "Alpaca U.S. asset universe, market calendar and corporate actions execute through distinct Router v2 dataset capabilities with capability-scoped failure reporting", "Twelve Data global indices/futures context executes through Router v2 using the shared transport", "provider-fetch-paths.json contains no remaining #80 MIGRATE general-routing bypass rows", "Fast #878 PASS", "Qualified #184 PASS"],
       "closureCondition": "Every applicable #80 MIGRATE row is implemented or reclassified only with executable evidence and explicit authority justification.",
       "blocksIssueClosure": true
     },
     {
       "id": "ROUTER-SELECTION-EFFICIENCY",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "Smart Provider Router v2 scoring/admission owner",
       "implementationPaths": ["provider_router.go", "smart_router_v2.go", "provider_telemetry.go", "provider_workload.go"],
       "evidenceRequired": ["capability + entitlement + health + circuit + latency + quota/backpressure participate in eligibility/ranking", "bounded fallback without blind fan-out", "lower-value work respects budget pressure", "non-secret selection reason telemetry remains visible", "authority boundaries cannot be score-overridden"],
-      "evidence": [],
+      "evidence": ["existing Smart Router eligibility/scoring remains capability/configuration/health/circuit/latency/quota/backpressure aware", "TestV1801SmartRouterCapabilityCircuitIsolation, TestV1801SmartRouterDynamicPreferredLiveProvider and workload_backpressure_regression_test.go PASS", "same-provider Alpaca endpoint fallback remains bounded inside one provider attempt", "Fast #878 and Qualified #184 backend PASS"],
       "closureCondition": "Provider selection remains intelligent, bounded, diagnosable and authority-safe under healthy and pressured conditions.",
       "blocksIssueClosure": true
     },
     {
       "id": "CACHE-COALESCING-REUSE",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "existing canonical dataset cache/single-flight/acquisition owners",
       "implementationPaths": ["symbol_universe.go", "broad_snapshot_broker.go", "provider_workload.go", "provider_router.go"],
       "evidenceRequired": ["canonical caches/single-flight are preserved rather than bypassed by routing", "no equivalent provider fan-out is introduced", "same-provider endpoint fallback remains bounded where needed", "provider calls avoided/reuse evidence stays observable"],
-      "evidence": [],
+      "evidence": ["canonical symbol-universe single-flight/warm-state owner remains intact around routed acquisition", "broad snapshot broker and provider workload owners remain unchanged and regression-protected", "TestV188ConcurrentScannerRadarMissCoalesces and shared universe reuse regressions PASS", "Fast #878 and Qualified #184 backend PASS"],
       "closureCondition": "Router adoption reduces avoidable work and reuses existing acquisition state rather than duplicating it.",
       "blocksIssueClosure": true
     },
     {
       "id": "ROUTER-REGRESSION-AUTHORITY",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "existing Smart Router regression and Data Health recurrence gates",
-      "implementationPaths": ["smart_router_rapid_regression_test.go", "tools/ci/data_health_policy_gate.py", "governance/data-health/provider-fetch-paths.json"],
+      "implementationPaths": ["smart_router_rapid_regression_test.go", "router_shock_hardening_regression_test.go", "universe_hardening_regression_test.go", "tradeinsight_corporate_regression_test.go", "tools/ci/data_health_policy_gate.py", "governance/data-health/provider-fetch-paths.json"],
       "evidenceRequired": ["provider bypass regression", "eligibility/authority ordering", "rate-limit/quota pressure", "bounded fallback and circuit isolation", "no secret leakage", "direct SEC/EDGAR and official-authority paths remain unchanged"],
-      "evidence": [],
+      "evidence": ["new ADAPT provider regressions prove Router v2 production use for universe/calendar/corporate actions and Twelve Data global context", "capability cancellation/failure isolation regressions PASS without poisoning unrelated provider circuits", "Data Health source-health classification gate reports 31/31 production external hosts registered", "direct SEC/EDGAR Form 4 and official-authority dispositions remain DIRECT_AUTHORITY and unchanged", "Fast #878 source-health PASS", "Qualified #184 backend PASS"],
       "closureCondition": "The executable test/control plane prevents general routing bypass recurrence and deterministic authority override.",
       "blocksIssueClosure": true
     },
     {
       "id": "ADAPTIVE-GOVERNANCE-PROPAGATION",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process projections",
       "implementationPaths": ["adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md", "handoff/CURRENT.md"],
       "evidenceRequired": ["#80 completion and #81 active ownership visible", "#81/#82 separation remains explicit", "dependency order #81/#82 → #83 + #78 → #84 retained"],
-      "evidence": [],
+      "evidence": ["all four CURRENT Adaptive projections and handoff bound #81 to the #79 program while keeping #82 separate", "tools/ci/data_health_policy_gate.py CURRENT Adaptive contract PASS in Fast #878", "handoff/CURRENT.md preserved GitHub-only resume rule and dependency order"],
       "closureCondition": "Live governance/handoff surfaces agree with executable #81 ownership and do not lose the all-provider program sequence.",
       "blocksIssueClosure": true
     },
     {
       "id": "EXACT-HEAD-FAST-QUALIFIED",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical Fast/Qualified evidence",
-      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml", "governance/work-slices/ADAPT-PROVIDER-ROUTER-PRODUCTION-001/final-qualification-evidence.json"],
       "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #81"],
-      "evidence": [],
+      "evidence": ["Fast #878 / run 32762168661 PASS on 60d63bb862525edea5a5ea8be7469778f44afc54", "Qualified #184 / run 32762311448 PASS on same exact head with ci-harness + backend selected", "PR #87 expected-head merge 1870dd3881dbe7f6463f242e35fdc19e70d9ae15", "releaseAction NONE"],
       "closureCondition": "Final #81 candidate has exact-head Fast and Qualified success before merge.",
       "blocksIssueClosure": true
     }

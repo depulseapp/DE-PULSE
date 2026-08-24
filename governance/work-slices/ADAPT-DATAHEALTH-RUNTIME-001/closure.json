@@ -1,0 +1,80 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-DATAHEALTH-RUNTIME-001",
+  "issue": 82,
+  "branch": "adapt-datahealth-runtime-001",
+  "closurePolicy": "#82 closes only when runtime PARTIAL COVERAGE / DATA DEGRADED truth is canonical, scoped and recoverable; avoidable degradation from cache/fallback/scheduling/load/recovery defects is eliminated for covered capabilities; genuine evidence gaps remain visible; regression/fault coverage and exact-head Fast + impact-selected Qualified evidence are VERIFIED. Documentation-only closure is prohibited.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "CANONICAL-DATA-HEALTH-EVALUATION",
+      "status": "OPEN",
+      "owner": "existing canonical freshness/provider/runtime state owners",
+      "implementationPaths": ["data_freshness.go", "runtime_degradation.go", "runtime_reliability.go", "provider_router.go", "provider_telemetry.go"],
+      "evidenceRequired": ["one canonical evaluation path", "capability/consumer/symbol/session scope represented", "desk/Market Mode/app-global escalation only from impacted required evidence", "no second provider-specific health engine"],
+      "evidence": [],
+      "closureCondition": "Every covered degraded/partial decision is derived from one reusable runtime health model and explicit scope.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "WARM-STATE-FALLBACK-TRUTH",
+      "status": "OPEN",
+      "owner": "canonical cache/persistence/freshness plus Smart Provider Router v2 fallback owners",
+      "implementationPaths": ["data_freshness.go", "canonical_persistence.go", "provider_router.go", "routed_refresh.go", "broad_snapshot_broker.go", "symbol_universe.go"],
+      "evidenceRequired": ["valid warm/cached/persisted evidence reused when freshness policy permits", "preferred-provider outage with healthy fallback does not false-degrade", "fallback exhaustion remains truthfully degraded", "stale cache never masquerades as current"],
+      "evidence": [],
+      "closureCondition": "Runtime reuses defensible evidence before degradation and never upgrades stale/unknown evidence merely to look healthy.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "RECOVERY-HYSTERESIS-UNLATCH",
+      "status": "OPEN",
+      "owner": "canonical runtime degradation/recovery state owner",
+      "implementationPaths": ["runtime_degradation.go", "runtime_reliability.go", "runtime_performance_slo.go", "provider_telemetry.go"],
+      "evidenceRequired": ["automatic eligible revalidation/recovery", "hysteresis prevents flapping", "stale degraded banners/state unlatch after sustained recovery", "relapse resets recovery evidence"],
+      "evidence": [],
+      "closureCondition": "Recoverable degradation becomes short-lived without oscillation or stale latched warning state.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PRIORITY-BACKPRESSURE-LOAD-SHEDDING",
+      "status": "OPEN",
+      "owner": "existing provider workload, scheduler and subscription priority owners",
+      "implementationPaths": ["provider_workload.go", "live_subscription_manager.go", "opportunity_radar.go", "session_intelligence_coordinator.go", "routed_refresh.go"],
+      "evidenceRequired": ["critical decision-support evidence protected before optional/background work", "lower-value work sheds first under rate-limit/runtime pressure", "scanner/prep/event/research/background fan-out stays bounded", "local overload does not falsely become provider-wide failure"],
+      "evidence": [],
+      "closureCondition": "DE.PULSE runtime pressure is absorbed by bounded lower-value shedding before required market truth deteriorates.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "SCOPED-TELEMETRY-FAULT-COVERAGE",
+      "status": "OPEN",
+      "owner": "canonical provider/runtime telemetry and existing regression suites",
+      "implementationPaths": ["provider_telemetry.go", "runtime_degradation_regression_test.go", "runtime_reliability_regression_test.go", "runtime_performance_slo_regression_test.go", "workload_backpressure_regression_test.go"],
+      "evidenceRequired": ["non-secret degraded/partial reason and affected scope", "freshness and serving/preferred provider context where relevant", "fallback/recovery state and duration", "fault coverage: stale-vs-warm, provider outage/fallback, exhaustion, rate limit, local overload, optional isolation, recovery/unlatch, contradiction, no false HEALTHY"],
+      "evidence": [],
+      "closureCondition": "Every runtime degradation state is diagnosable and the required failure/recovery matrix is executable.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ADAPTIVE-GOVERNANCE-PROPAGATION",
+      "status": "OPEN",
+      "owner": "CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process and handoff projections",
+      "implementationPaths": ["adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md", "handoff/CURRENT.md"],
+      "evidenceRequired": ["#81 immutable completion evidence visible", "#82 active ownership visible", "#82 remains common runtime health layer rather than parallel provider subsystem", "dependency order #82 → #83 + #78 → #84 retained"],
+      "evidence": [],
+      "closureCondition": "Portable human projections agree with machine state and preserve the all-provider sequence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS", "expected-head merge binding", "no Stable publication merely to close #82"],
+      "evidence": [],
+      "closureCondition": "Final #82 candidate has exact-head Fast and Qualified success before merge.",
+      "blocksIssueClosure": true
+    }
+  ]
+}
