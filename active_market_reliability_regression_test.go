@@ -93,7 +93,7 @@ func TestV1870ActiveMarketProviderPressureIsBoundedAndTruthful(t *testing.T) {
 			break
 		}
 	}
-	if provider.Capacity <= 0 || provider.MaxQueue <= 0 || provider.ReservedCritical <= 0 {
+	if provider.Capacity <= 0 || provider.MaxQueue <= 0 || provider.ReservedCritical <= 0 || provider.ReservedCriticalQueue <= 0 {
 		t.Fatalf("provider pressure contract unavailable: %+v", provider)
 	}
 
@@ -118,26 +118,40 @@ func TestV1870ActiveMarketProviderPressureIsBoundedAndTruthful(t *testing.T) {
 			done <- struct{}{}
 		}()
 	}
-	pressure := waitV1870ProviderQueue(t, w, provider.MaxQueue)
-	if pressure.Queued != pressure.MaxQueue {
-		t.Fatalf("provider queue must stop exactly at its hard bound: %+v", pressure)
+	optionalQueueLimit := provider.MaxQueue - provider.ReservedCriticalQueue
+	pressure := waitV1870ProviderQueue(t, w, optionalQueueLimit)
+	if pressure.Queued != optionalQueueLimit || pressure.Queued >= pressure.MaxQueue {
+		t.Fatalf("background queue must stop before protected critical headroom: %+v", pressure)
+	}
+	deadline := time.Now().Add(time.Second)
+	for pressure.Shed == 0 && time.Now().Before(deadline) {
+		time.Sleep(5 * time.Millisecond)
+		for _, row := range w.Diagnostics() {
+			if row.Class == "provider-rest" {
+				pressure = row
+				break
+			}
+		}
+	}
+	if pressure.Shed == 0 || pressure.RejectedByTier[WorkTierBackground] == 0 {
+		t.Fatalf("background pressure must shed before consuming critical queue reserve: %+v", pressure)
 	}
 
 	fresh := []FreshnessDiagnostic{{Dataset: "Quotes", State: "LIVE"}, {Dataset: "VIX", State: "FRESH"}}
 	load := RuntimeLoadDiagnostics{Workload: w.Diagnostics()}
 	degraded := deriveRuntimeDegradation("running", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "streaming"}, fresh, ProviderRouterSnapshot{}, load)
 	if degraded.ReasonCode != "QUEUE_SATURATED" || degraded.PressureState != "PROTECTED" || degraded.Abstain || !degraded.CriticalUsable {
-		t.Fatalf("bounded local overload must be explicit without falsely invalidating current critical evidence: %+v", degraded)
+		t.Fatalf("bounded optional overload must be explicit without falsely invalidating current critical evidence: %+v", degraded)
 	}
 
 	slo := buildRuntimeSLOAssessmentWithContext("running", "live", FeedDiagnostics{MarketSession: "regular", FeedState: "streaming"}, fresh, load, ScannerState{}, AppState{}, nil, time.Now())
-	if slo.Status != "BLOCK" {
-		t.Fatalf("full provider queue must fail active-market capacity SLO even while critical evidence remains usable: %+v", slo)
+	if slo.Status != "WARN" {
+		t.Fatalf("protected critical queue headroom should warn, not block, while current critical evidence remains usable: %+v", slo)
 	}
 
 	if release, ok := w.TryAcquireTier("provider-rest", WorkTierBackground); ok {
 		release()
-		t.Fatal("work beyond saturated provider capacity/queue must not be admitted immediately")
+		t.Fatal("background work beyond its bounded queue share must not be admitted immediately")
 	}
 
 	cancel()
