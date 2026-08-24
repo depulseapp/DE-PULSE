@@ -19,12 +19,12 @@ import tempfile
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTRACT = (ROOT / "renderer" / "watchlist-desk-contract-v18.6.1.js").read_text(encoding="utf-8")
-EXT = (ROOT / "renderer" / "watchlist-v18.5.1.js").read_text(encoding="utf-8")
+CONTRACT = (ROOT / "renderer" / "watchlist-desk-contract.js").read_text(encoding="utf-8")
+EXT = (ROOT / "renderer" / "watchlist-ui.js").read_text(encoding="utf-8")
 INDEX = (ROOT / "renderer" / "index.html").read_text(encoding="utf-8")
 BASE_CSS = (ROOT / "renderer" / "styles.css").read_text(encoding="utf-8")
-SETTINGS_CSS = (ROOT / "renderer" / "ui-v18.5.1.css").read_text(encoding="utf-8")
-PATCH_CSS = (ROOT / "renderer" / "ui-v18.6.1.css").read_text(encoding="utf-8")
+SETTINGS_CSS = (ROOT / "renderer" / "ui-layout-contracts.css").read_text(encoding="utf-8")
+PATCH_CSS = (ROOT / "renderer" / "header-notification.css").read_text(encoding="utf-8")
 
 WATCHLIST_HARNESS = r"""
 let state={},runtime={quotes:{}},selected={day:'NVDA',swing:'NVDA',long:'NVDA'},watchlistDraft={day:'',swing:'',long:''};

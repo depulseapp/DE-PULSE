@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Behavior-first Chromium proof for v18.6 watchlist membership and add recovery.
 
-The harness loads the production watchlist-v18.5.1.js compatibility extension
-used by renderer/index.html while retaining the actual renderer.js membership
-button handler. It proves:
+The harness loads the production watchlist-ui.js capability owner used by
+renderer/index.html while retaining the actual renderer.js membership button
+handler. It proves:
 - Day/Swing/Long pressed state is the only desk-membership indicator;
 - the deprecated CURRENT/current-desk concept is absent;
 - desk row × uses canonical global tracked-symbol removal;
@@ -20,9 +20,9 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 RENDERER = ROOT / "renderer" / "renderer.js"
-EXTENSION = ROOT / "renderer" / "watchlist-v18.5.1.js"
+EXTENSION = ROOT / "renderer" / "watchlist-ui.js"
 INDEX = ROOT / "renderer" / "index.html"
-CSS = ROOT / "renderer" / "watchlist-v18.5.1.css"
+CSS = ROOT / "renderer" / "watchlist-desk.css"
 DESKS = ("day", "swing", "long")
 
 
@@ -55,8 +55,8 @@ def main() -> None:
         "actual membership-button binding",
     )
 
-    assert f"watchlist-v18.5.1.js?v={git_blob_token(EXTENSION)}" in index
-    assert f"watchlist-v18.5.1.css?v={git_blob_token(CSS)}" in index
+    assert f"watchlist-ui.js?v={git_blob_token(EXTENSION)}" in index
+    assert f"watchlist-desk.css?v={git_blob_token(CSS)}" in index
     assert "/api/master-symbol/remove" in extension
     assert "/api/master-symbol/restore" in extension
     assert "/api/desk/membership" in extension
