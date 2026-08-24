@@ -75,8 +75,8 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysShadow(t *test
 		t.Fatal(err)
 	}
 	before := tradeInsightCapabilityLifecycleTruth("congressional-trades")
-	if before != "SHADOW" {
-		t.Fatalf("precondition lifecycle=%q, want SHADOW", before)
+	if before != "PRODUCTION" {
+		t.Fatalf("precondition lifecycle=%q, want governed PRODUCTION after #84 promotion", before)
 	}
 
 	called := 0
@@ -110,7 +110,7 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysShadow(t *test
 			t.Fatalf("developer command leaked provider value %q in %s", forbidden, output)
 		}
 	}
-	for _, required := range []string{"field_alpha", "field_beta", "congressional-trades", "SHADOW"} {
+	for _, required := range []string{"field_alpha", "field_beta", "congressional-trades", "PRODUCTION"} {
 		if !strings.Contains(output, required) {
 			t.Fatalf("developer command output missing %q: %s", required, output)
 		}
@@ -123,8 +123,8 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysShadow(t *test
 	if report.Capability != "congressional-trades" {
 		t.Fatalf("capability=%q", report.Capability)
 	}
-	if report.Lifecycle != "SHADOW" {
-		t.Fatalf("lifecycle=%q, want SHADOW", report.Lifecycle)
+	if report.Lifecycle != "PRODUCTION" {
+		t.Fatalf("lifecycle=%q, want governed PRODUCTION", report.Lifecycle)
 	}
 	if report.Fingerprint.RowsObserved != 2 {
 		t.Fatalf("rows observed=%d, want 2", report.Fingerprint.RowsObserved)
@@ -135,6 +135,10 @@ func TestV189DeveloperCommandPrintsOnlyRedactedFingerprintAndStaysShadow(t *test
 }
 
 func TestV189DeveloperCommandFailsClosedOnProbeError(t *testing.T) {
+	before := tradeInsightCapabilityLifecycleTruth("congressional-trades")
+	if before != "PRODUCTION" {
+		t.Fatalf("precondition lifecycle=%q, want governed PRODUCTION", before)
+	}
 	probe := func(context.Context) (tradeInsightSchemaFingerprint, error) {
 		return tradeInsightSchemaFingerprint{}, errors.New("synthetic admission failure")
 	}
@@ -154,8 +158,8 @@ func TestV189DeveloperCommandFailsClosedOnProbeError(t *testing.T) {
 	if !strings.Contains(stderr.String(), "synthetic admission failure") {
 		t.Fatalf("unexpected stderr: %q", stderr.String())
 	}
-	if lifecycle := tradeInsightCapabilityLifecycleTruth("congressional-trades"); lifecycle != "SHADOW" {
-		t.Fatalf("failed diagnostic changed lifecycle to %q", lifecycle)
+	if lifecycle := tradeInsightCapabilityLifecycleTruth("congressional-trades"); lifecycle != before {
+		t.Fatalf("failed diagnostic changed lifecycle from %q to %q", before, lifecycle)
 	}
 }
 

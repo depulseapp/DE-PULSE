@@ -1,0 +1,169 @@
+{
+  "schema": "DE.PULSE-DATAHEALTH-ZERO-GAP-CLOSURE-1",
+  "scopeId": "ADAPT-DATAHEALTH-CLOSURE-001",
+  "issue": 84,
+  "parentProgram": "ADAPT-PROVIDER-PRODUCTION-001",
+  "baselineMatrix": "governance/data-health/provider-capability-matrix.json",
+  "lifecycleRegistry": "governance/data-health/provider-lifecycle-readiness.json",
+  "generalRoutingAuthority": "Smart Provider Router v2",
+  "closureRule": "All 26 baseline provider/capability rows must resolve exactly once, all 15 fault/recovery scenarios must bind to current executable regressions, native macOS Apple Silicon and Windows x64 Qualified jobs must PASS on the exact candidate, and no unexplained provider/data-health gap may remain.",
+  "noExecutionBoundary": "PRESERVED",
+  "directSECEDGARForm4Authority": "PRESERVED",
+  "tradeInsightProductionPromotion": {
+    "approvedByIssue": 78,
+    "productionGateIssue": 84,
+    "promotedCapabilities": [
+      "daily-history",
+      "adjusted-history",
+      "corporate-actions",
+      "bulk-history",
+      "congressional-trades"
+    ],
+    "hardGated": [
+      "sec-form4",
+      "top-movers",
+      "symbol-search"
+    ],
+    "promotionMode": "EXPLICIT_GOVERNED_ONLY",
+    "productionActivationCondition": "Merge only after exact-head Fast + Qualified, including required native macOS/Windows jobs, pass."
+  },
+  "evidenceBundles": {
+    "ROUTED_CORE": {
+      "regressionIds": [
+        "TestV1801SmartRouterDynamicPreferredLiveProvider",
+        "TestV1801SmartRouterCapabilityCircuitIsolation",
+        "TestADAPTDataHealthHealthyFallbackDoesNotFalseDegrade",
+        "TestADAPTDataHealthFallbackCannotMaskCriticalFreshnessLoss",
+        "TestV170ProviderTelemetryAndAdaptiveDegradationReasonCodes"
+      ],
+      "runtimeEvidence": "Full Go suite plus canonical Router v2/freshness/telemetry behavior; race/randomized package order are required by Qualified backend when selected.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    },
+    "ROUTED_UNIVERSE": {
+      "regressionIds": [
+        "TestADAPTProviderUniverseProductionUsesRouterV2",
+        "TestADAPTProviderMarketCalendarProductionUsesRouterV2",
+        "TestADAPTProviderUniverseCancellationDoesNotPoisonRouterCircuit",
+        "TestADAPTProviderUniverseFailedProductionRefreshPreservesStaleTimestamp"
+      ],
+      "runtimeEvidence": "Universe/calendar production routing uses Router v2, preserves stale timestamps on failure and isolates cancellation/circuit state.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    },
+    "TRADEINSIGHT_PRODUCTION": {
+      "regressionIds": [
+        "TestTradeInsight78QualificationUsesCommonLifecycleThresholds",
+        "TestTradeInsight78HardGatesRemainExplicit",
+        "TestV189TradeInsightOnlyVerifiedWiredCapabilitiesAreRuntimeAdmitted",
+        "TestADAPTProviderCorporateActionsProductionUsesRouterV2",
+        "TestV189TradeInsightCongressEvidenceRecordsAreShadowAlternativeEvidence"
+      ],
+      "runtimeEvidence": "#78 governed APPROVED qualification is consumed by #84; production routing/admission still reuses Router v2 and canonical history/corporate/research evidence owners.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    },
+    "RECOVERY_FALLBACK": {
+      "regressionIds": [
+        "TestADAPTDataHealthValidWarmEvidenceSurvivesTemporaryCriticalRouteOutage",
+        "TestADAPTDataHealthStaleWarmEvidenceCannotMaskCriticalRouteOutage",
+        "TestADAPTDataHealthRecoveredCanonicalStateCanUnlatchDegradedRuntimeStatus"
+      ],
+      "runtimeEvidence": "Fresh warm/fallback evidence may preserve covered consumers, stale evidence cannot mask a real gap, and recovered canonical state unlatches degradation.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    },
+    "DIRECT_AUTHORITY": {
+      "regressionIds": [
+        "TestDirectAuthorityIsNotRankPromoted",
+        "TestV1436Form4ClassifiesBuySellAndOtherWithoutFalseBullishLabel",
+        "TestExtreme30_21BLSProviderUsesDeterministicLocalEndpoint"
+      ],
+      "runtimeEvidence": "Direct-authority sources retain source authority and are not rank-swapped by generic provider lifecycle promotion.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    },
+    "OPTIONAL_ISOLATION": {
+      "regressionIds": [
+        "TestADAPTDataHealthOptionalRouteFailureDoesNotCreateFalseGlobalDegradation",
+        "TestV1870OptionalStalenessIsolatedFromCriticalDecisionTruth",
+        "TestV171LowPriorityShedsBeforeActionable",
+        "TestV186AIRightsApprovedDeniedFixtures"
+      ],
+      "runtimeEvidence": "Optional-provider failure/staleness remains scoped, lower-value work sheds before actionable evidence, and optional AI rights/failure cannot become deterministic market truth.",
+      "supportedPlatformEvidence": [
+        "Qualified macOS native lifecycle rehearsal",
+        "Qualified Windows native runtime rehearsal"
+      ]
+    }
+  },
+  "rowDispositions": [
+    {"provider":"Finnhub","capability":"U.S. equity live/REST quotes","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"Finnhub","capability":"earnings/peers/news/fundamental context","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"Alpaca","capability":"IEX live quotes/snapshots/liquidity","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"Alpaca","capability":"historical OHLCV","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"Alpaca","capability":"SIP movers/most-active discovery seed","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"OPTIONAL_ISOLATION"},
+    {"provider":"Alpaca","capability":"U.S. asset universe and market calendar","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_UNIVERSE"},
+    {"provider":"TradeInsight","capability":"adjusted daily OHLCV","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"TRADEINSIGHT_PRODUCTION"},
+    {"provider":"TradeInsight","capability":"corporate-action corroboration","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"TRADEINSIGHT_PRODUCTION"},
+    {"provider":"TradeInsight","capability":"congressional trading intelligence","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"TRADEINSIGHT_PRODUCTION"},
+    {"provider":"FRED","capability":"rates/credit/conditions/USD macro series","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"BLS","capability":"inflation/labor/wages/PPI actuals","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"BLS","capability":"official U.S. labor/inflation release calendar","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"EIA","capability":"petroleum/natural-gas/energy actuals","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"Twelve Data","capability":"VIX/index quote and historical recovery","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"Twelve Data","capability":"direct global/FX/futures context","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"ROUTED_CORE"},
+    {"provider":"yfinance","capability":"VIX/history/earnings/fundamentals recovery","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"RECOVERY_FALLBACK"},
+    {"provider":"CBOE","capability":"official VIX validation/history/close","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"Marketaux","capability":"stock news fallback","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"RECOVERY_FALLBACK"},
+    {"provider":"SEC EDGAR","capability":"filings/Form 4/issuer evidence","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"U.S. Treasury","capability":"nominal and real Treasury yields","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"BEA","capability":"GDP/PCE official releases","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"TWSE","capability":"TAIEX completed-session official close","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"Official Macro Calendars","capability":"official policy/economic release calendars","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"DIRECT_AUTHORITY"},
+    {"provider":"Groq","capability":"manual/automatic AI second-opinion inference","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"OPTIONAL_ISOLATION"},
+    {"provider":"OpenRouter","capability":"AI model routing/second opinion","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"OPTIONAL_ISOLATION"},
+    {"provider":"Google Gemini","capability":"AI second-opinion inference","finalDisposition":"PRODUCTION_SUPPORTED","evidenceBundle":"OPTIONAL_ISOLATION"}
+  ],
+  "faultRecoveryMatrix": [
+    {"id":"missing_invalid_credential","regressionIds":["TestV189TradeInsightCongressSchemaProbeMissingKeyIsGracefulAndDoesNotCallProvider","TestExtreme30_28AuthenticatedProvidersHaveTruthfulMissingCredentialStates"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"auth_401_403","regressionIds":["TestV1801SmartRouterClassifiesAndSuppressesNotEntitled","TestV189TradeInsightErrorsAreRouterClassifiableAndRedacted"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"rate_limit_429_quota","regressionIds":["TestV189TradeInsightCongressRateLimitRedactsKeyAndPreservesRetryAfter","TestV171ProviderRateLimitCooldownShedsLowTierButProtectsActionable"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"server_5xx","regressionIds":["TestV189TradeInsightErrorsAreRouterClassifiableAndRedacted","TestExtreme30_04ProviderRouterChaos"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"timeout_unreachable_offline","regressionIds":["TestV1870CriticalNetworkFailureRequiresAbstain","TestExtreme30_04ProviderRouterChaos"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"malformed_partial_schema_drift","regressionIds":["TestV189TradeInsightCongressSchemaFingerprintRejectsMalformedOrUnverifiedContainers","TestV189TradeInsightCongressMalformedPartialRowsAreSkipped"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"stale_temporally_invalid","regressionIds":["TestADAPTDataHealthFallbackCannotMaskCriticalFreshnessLoss","TestV1882TradeabilityRejectsStaleCoreEvidence"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"preferred_failure_healthy_fallback","regressionIds":["TestADAPTDataHealthHealthyFallbackDoesNotFalseDegrade","TestV15AlpacaRegularSnapshotRestoresPreferredSource"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"fallback_exhaustion","regressionIds":["TestV1870CriticalNetworkFailureRequiresAbstain","TestV170CriticalDecisionUsabilityRequiresActualCriticalRows"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"contradictory_independent_providers","regressionIds":["TestV1806ProviderRouterScorecardSurfacesCanonicalSourceDisagreement","TestV1801RapidMoveExcludesLaggingProviderFromConflict"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"cache_miss_hit_expired_warm_recovery","regressionIds":["TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth","TestADAPTDataHealthValidWarmEvidenceSurvivesTemporaryCriticalRouteOutage","TestV188CanonicalUniverseTTLAndExpiry"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"local_pressure","regressionIds":["TestV171LowPriorityShedsBeforeActionable","TestADAPTDataHealthFreshnessRecoveryPriorityUsesProtectedWorkTiers","TestV173ActiveMarketPressureProtectsCriticalWork"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"restart_recovery","regressionIds":["TestV170PersistentCanonicalQuoteWarmStartIsNeverTimelessLiveTruth","TestV183PersistenceOutageReadinessRecoversWithBoundedHysteresis"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"optional_provider_failure_isolation","regressionIds":["TestADAPTDataHealthOptionalRouteFailureDoesNotCreateFalseGlobalDegradation","TestV1870OptionalStalenessIsolatedFromCriticalDecisionTruth"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"},
+    {"id":"provider_recovery_hysteresis_no_flapping","regressionIds":["TestV1870RecoveryHysteresisRejectsTransientHealthySample","TestADAPTDataHealthRecoveredCanonicalStateCanUnlatchDegradedRuntimeStatus","TestV1870RecoveryHysteresisResetsAfterRelapse"],"expectedDisposition":"TRUTHFUL_SCOPED_RECOVERY_OR_FAIL_CLOSED"}
+  ],
+  "realisticWorkloadEvidence": [
+    "TestV1870ActiveMarketDuplicateSnapshotBurstCoalesces",
+    "TestV1870ActiveMarketProviderPressureIsBoundedAndTruthful",
+    "TestV173ActiveMarketPressureProtectsCriticalWork",
+    "TestPerformanceOpportunityRadar500CandidatesBounded",
+    "TestPerformanceRadarPromotionStateBoundedAcrossLongRun",
+    "TestExtreme30_20PerformanceLongRunNoUnboundedGoroutineGrowth"
+  ],
+  "nativeEvidenceContracts": [
+    "governance/data-health/macos-native-proof-contract.json",
+    "governance/data-health/windows-native-proof-contract.json"
+  ],
+  "exactHeadEvidencePolicy": "GitHub Actions run/job objects are the immutable post-commit authority for Fast, Qualified, native job conclusions and expected-head merge. The source contract requires those objects to PASS but does not fabricate run IDs before execution.",
+  "residualsPolicy": "Only explicitly hard-gated, unverified capabilities may remain non-production; they must be non-executable and attributable. Zero unexplained applicable gaps are allowed."
+}

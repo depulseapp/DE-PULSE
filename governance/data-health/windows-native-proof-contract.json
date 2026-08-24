@@ -1,0 +1,17 @@
+{
+  "schema": "DE.PULSE-DATAHEALTH-NATIVE-PROOF-1",
+  "scopeId": "ADAPT-DATAHEALTH-CLOSURE-001",
+  "issue": 84,
+  "platform": "Windows x64",
+  "qualifiedJob": "Qualified Windows native runtime rehearsal",
+  "evidenceOwner": "tools/release/native_windows.ps1",
+  "requiredChecks": [
+    "exact candidate SHA and Git-object source fingerprint",
+    "PE x64 native build and clean extraction",
+    "actual packaged application launch",
+    "health/readiness/root surface",
+    "SQLite integrity and migrations"
+  ],
+  "binding": "EXACT_HEAD_QUALIFIED_PASS_REQUIRED",
+  "secrets": "NOT_REQUIRED"
+}

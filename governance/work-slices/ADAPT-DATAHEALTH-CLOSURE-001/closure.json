@@ -1,0 +1,66 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-DATAHEALTH-CLOSURE-001",
+  "issue": 84,
+  "branch": "adapt-datahealth-closure-001",
+  "closurePolicy": "#84 closes only after the executable 26-row capability matrix, 15-scenario fault/recovery matrix, realistic workload evidence and governed TradeInsight production promotion are reconciled with exact-head Fast + Qualified, including both required native supported-platform jobs. GitHub Actions run/job objects are the immutable post-commit evidence authority; documentation or a healthy banner alone cannot close this scope.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "EXHAUSTIVE-PROVIDER-CAPABILITY-CLOSURE",
+      "status": "VERIFIED",
+      "owner": "#80 provider capability baseline + #84 zero-gap closure matrix",
+      "implementationPaths": ["governance/data-health/provider-capability-matrix.json", "governance/data-health/datahealth-zero-gap-closure.json", "internal/providerlifecycle/datahealth_zero_gap_closure_test.go"],
+      "evidence": ["26/26 canonical baseline rows resolve exactly once to a final production-supported evidence bundle.", "Each baseline row retains its exact canonical source owner and consumer set from the #80 matrix; the #84 test fails on any missing/duplicate/out-of-baseline row or incomplete runtime/platform evidence bundle."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "FAULT-RECOVERY-MATRIX",
+      "status": "VERIFIED",
+      "owner": "existing Router v2, Data Health, persistence, workload and provider regressions",
+      "implementationPaths": ["governance/data-health/datahealth-zero-gap-closure.json", "internal/providerlifecycle/datahealth_zero_gap_closure_test.go", "runtime_reliability_regression_test.go", "workload_backpressure_regression_test.go", "canonical_persistence_regression_test.go"],
+      "evidence": ["15/15 required #84 failure/recovery scenarios are explicit.", "Every referenced regression ID must exist in current non-historical Go test source or CI fails.", "Expected disposition is truthful scoped recovery or fail-closed; no scenario may cosmetically force HEALTHY."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "TRADEINSIGHT-GOVERNED-PRODUCTION",
+      "status": "VERIFIED",
+      "owner": "#78 approved promotion + common #83 lifecycle registry + TradeInsight admission metadata",
+      "implementationPaths": ["tradeinsight_admission.go", "tradeinsight_admission_regression_test.go", "governance/data-health/provider-lifecycle-readiness.json", "internal/providerlifecycle/lifecycle_test.go", "governance/data-health/tradeinsight-production-readiness.json"],
+      "evidence": ["Five verified #78-approved capabilities are PRODUCTION on the #84 candidate while continuing to reuse canonical Router v2/history/corporate/research owners.", "sec-form4, top-movers and symbol-search remain GATED/non-executable; direct SEC/EDGAR Form 4 authority is unchanged.", "Congress remains disclosure-lagged alternative evidence and never deterministic trade truth; bulk history remains sequential/cache-first/capped at 50."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "DATA-HEALTH-LOAD-RECOVERY-ACCEPTANCE",
+      "status": "VERIFIED",
+      "owner": "canonical runtime degradation, SLO, workload and persistence owners",
+      "implementationPaths": ["runtime_degradation.go", "runtime_reliability_regression_test.go", "runtime_performance_slo_regression_test.go", "active_market_reliability_regression_test.go", "performance_regression_test.go", "governance/data-health/data-health-slo.json"],
+      "evidence": ["Healthy fallback does not false-degrade; stale/fallback exhaustion remains fail-closed.", "Critical work is protected under local pressure and optional work sheds first.", "Optional provider failures cannot create an app-global degradation cascade.", "Recovery hysteresis can unlatch recovered state without flapping."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "REALISTIC-WORKLOAD-NONUNIT-PROOF",
+      "status": "VERIFIED",
+      "owner": "active-market/performance regressions plus packaged native runtime rehearsals",
+      "implementationPaths": ["active_market_reliability_regression_test.go", "performance_regression_test.go", "extreme_30_matrix_test.go", "tools/release/native_macos.sh", "tools/release/native_windows.ps1"],
+      "evidence": ["#84 zero-gap artifact binds active-market duplicate/pressure, 500-candidate bounded performance and long-run no-unbounded-goroutine regressions.", "Closure is additionally conditioned on real packaged application runtime proofs on both supported native platforms, so unit tests alone are insufficient."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "SUPPORTED-NATIVE-PLATFORMS",
+      "status": "VERIFIED",
+      "owner": "canonical Qualified macOS/Windows native jobs",
+      "implementationPaths": ["governance/data-health/macos-native-proof-contract.json", "governance/data-health/windows-native-proof-contract.json", ".github/workflows/ci-qualified.yml", "tools/release/native_macos.sh", "tools/release/native_windows.ps1"],
+      "evidence": ["The #84 delta contains explicit macOS and Windows native proof contracts; Planner v3 therefore selects both existing Qualified native rehearsal jobs.", "macOS proof requires arm64 package, backend health/readiness/root, SQLite integrity/migrations and fresh+warm real Cocoa/WKWebView lifecycle.", "Windows proof requires x64 package, actual packaged runtime health/readiness/root and SQLite integrity/migrations.", "Actual PASS run/job IDs must be recorded on the immutable GitHub #84/PR closure objects before issue closure."],
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-DELIVERY-AND-BOUNDARIES",
+      "status": "VERIFIED",
+      "owner": "canonical Fast/Qualified + expected-head merge + GitHub closure evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml", "handoff/CURRENT.md", "governance/current-state.json", "governance/data-health/datahealth-zero-gap-closure.json"],
+      "evidence": ["Merge is prohibited until the final #84 source head has exact-head Fast success and impact-selected Qualified success including both native jobs.", "Actual run IDs/conclusions and merge SHA are post-commit GitHub evidence and must not be fabricated in source before execution.", "No Stable/public SemVer release is required merely to close #84; No Execution, U.S.-equities and no-secret boundaries remain preserved."],
+      "blocksIssueClosure": true
+    }
+  ]
+}

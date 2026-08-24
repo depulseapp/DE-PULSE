@@ -160,8 +160,8 @@ func TestRegistryExhaustsBaselineCapabilityMatrix(t *testing.T) {
 		}
 		if row.Provider == "TradeInsight" {
 			tradeInsightRows++
-			if row.Lifecycle != Shadow || row.EvidenceStatus != "COMMON_READINESS_REQUIRED" {
-				t.Fatalf("TradeInsight must remain common SHADOW-first before #78: %+v", row)
+			if row.Lifecycle != Production || row.EvidenceStatus != "ISSUE_78_APPROVED_ISSUE_84_PRODUCTION" || row.Readiness != "PRODUCTION_APPROVED" {
+				t.Fatalf("TradeInsight #78 approval must become #84 governed production only through the common lifecycle registry: %+v", row)
 			}
 		}
 	}
