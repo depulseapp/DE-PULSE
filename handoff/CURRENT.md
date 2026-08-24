@@ -9,6 +9,7 @@
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Canonical retained process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed Data Health baseline:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / candidate `1d8638acb06c7ce90719fc3b959d37f188eb8b40` / Fast #859 / Qualified #182 / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
 **Active product slice:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / `adapt-provider-router-production-001`  
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
