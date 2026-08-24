@@ -532,6 +532,7 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 				if h.Configured && h.Recovery != "SUPPRESSED" && h.Circuit != "OPEN" && h.Circuit != "RATE LIMITED" {
 					active = h.Provider
 					break
+				}
 			}
 		}
 
