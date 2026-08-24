@@ -1,0 +1,64 @@
+{
+  "schema": "DE.PULSE-DATA-HEALTH-SLO-1",
+  "scopeId": "ADAPT-DATAHEALTH-BASELINE-001",
+  "issue": 80,
+  "objective": "Healthy, complete, fresh and decision-usable evidence by default; PARTIAL COVERAGE and DATA DEGRADED are exceptional, attributable and scoped states for genuine unresolved evidence gaps.",
+  "timeSemantics": {
+    "authoritativeEvidenceTime": "provider observation/event/publication/filing time",
+    "retrievalAndCacheTime": "bookkeeping only; never substitute for missing observation time",
+    "unknownObservationTime": "remain UNKNOWN; do not manufacture freshness from receipt/cache time",
+    "sharedConsumers": ["Scanner","Opportunity Radar","Market Modes","Research","Trade Readiness"]
+  },
+  "healthyCoverage": {
+    "criticalRequiredEvidence": "100% decision-required capabilities have fresh or policy-valid warm/cached evidence, or a truthful scoped degradation is raised",
+    "optionalEvidence": "optional provider failure does not contaminate unrelated symbol/desk/mode/app status",
+    "cacheFirst": true,
+    "fallbackBeforeDegrade": true
+  },
+  "metrics": {
+    "healthyCoverage":{"unit":"percent","target":"100 for critical required evidence after eligible cache/fallback recovery"},
+    "freshnessCompliance":{"unit":"percent","target":"100 for decision-required observations within dataset/session policy"},
+    "fallbackSuccess":{"unit":"percent","target":"maximize; eligible fallback attempted before avoidable degradation"},
+    "degradationFrequency":{"unit":"events/window","target":"avoid self-inflicted events from routing/cache/quota/scheduling/load defects"},
+    "degradationDuration":{"unit":"milliseconds","target":"bounded by automatic retry/cooldown/recovery policy"},
+    "recoveryTime":{"unit":"milliseconds","target":"automatic recovery after healthy evidence becomes available with hysteresis"},
+    "quotaPressure":{"unit":"ratio/state","target":"protect headroom for critical work before optional/background work"},
+    "consumerImpact":{"unit":"scoped affected consumers","target":"smallest truthful scope"},
+    "providerCallsAvoided":{"unit":"count","target":"increase through valid cache reuse/coalescing/selection without freshness loss"}
+  },
+  "priority": [
+    {"tier":"CRITICAL","examples":["SPY/QQQ market context","actionable live symbols including GLD/SLV/USO","decision-required quote/liquidity/freshness","material SEC/event evidence"],"shed":"last"},
+    {"tier":"HIGH","examples":["mode-required history","material news/earnings/macro","Market Open Prep evidence"],"shed":"after optional/background"},
+    {"tier":"OPTIONAL","examples":["supplemental enrichment","shadow validation","non-material discovery expansion","AI second opinion"],"shed":"first"}
+  ],
+  "degradation": {
+    "scopeOrder":["provider-route-attempt","capability/dataset","symbol","consumer","desk/mode","application only if genuinely cross-cutting"],
+    "partialCoverageReasons":["some required capability evidence unavailable after eligible cache/fallback","required evidence below quality/independence threshold","required provider entitlement prevents full capability coverage"],
+    "dataDegradedReasons":["decision-required evidence unavailable","decision-required evidence stale beyond policy","material contradictory evidence unresolved","fallback exhausted or authority rule prevents substitution"],
+    "prohibitedReasons":["optional provider unavailable while required evidence healthy","preferred provider unavailable when eligible fallback/cache restores required evidence","retrieval timestamp is recent but provider observation time is unknown/stale"],
+    "requiredTelemetry":["affected capability","affected consumer/symbol scope","preferred provider","serving provider","freshness state","fallback status","recovery status","attributable reason"]
+  },
+  "recovery": {
+    "automatic": true,
+    "hysteresisRequired": true,
+    "clearStaleBannerWhenRecovered": true,
+    "preserveAuthorityRules": true,
+    "doNotPromoteLifecycleFromReachability": true
+  },
+  "loadProtection": {
+    "boundedFallbackDepth": true,
+    "quotaAndRateLimitAware": true,
+    "cooldownAware": true,
+    "backpressureAware": true,
+    "avoidBlindFanout": true,
+    "reuseWarmState": true,
+    "shedOptionalBeforeCritical": true
+  },
+  "truthRules": [
+    "Never hide a genuine data problem merely to appear healthy.",
+    "Direct-authority evidence is not rank-swapped by a secondary source.",
+    "Provider reachability or API-key presence does not promote lifecycle/authority.",
+    "Unknown observation time remains unknown.",
+    "Recovery clears degraded/partial state only when required evidence is actually healthy under policy."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-TRADEINSIGHT-SETTINGS-001",
+  "issue": 76,
+  "branch": "v18.9.2-tradeinsight-settings",
+  "closurePolicy": "#76 is complete only when the credential UX uses canonical Settings/secrets/state owners, TradeInsight routing/admission/SEC authority boundaries remain intact, and exact-head Fast + Qualified evidence is bound to the merged implementation candidate. This closure records evidence; it does not publish a Stable release.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "CREDENTIAL-PERSISTENCE-REDACTION",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Canonical Settings / Secrets / PublicState owners",
+      "implementationPaths": ["app_model.go", "app_state.go", "http_api.go", "tradeinsight.go"],
+      "evidenceRequired": ["Persisted credential uses canonical secrets owner", "Public state exposes configuration truth without secret value", "Blank save preserves stored key"],
+      "evidence": ["implementation candidate 32629994207aa525aba23b7562506bb2538276c5", "tradeinsight_regression_test.go credential precedence/redaction/save coverage", "Fast #848 PASS", "Qualified #181 backend PASS"],
+      "closureCondition": "TradeInsight credential persistence/redaction semantics are executable and regression-protected with no parallel secret store."
+    },
+    {
+      "id": "PRECEDENCE-FALLBACK-CLEAR",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Canonical TradeInsight credential resolution + generic clear-secret path",
+      "implementationPaths": ["tradeinsight.go", "http_api.go", "renderer/renderer.js"],
+      "evidenceRequired": ["Persisted key takes precedence", "TIDATA_API_KEY fallback retained", "legacy TRADEINSIGHT_API_KEY compatibility retained", "Explicit clear works"],
+      "evidence": ["implementation candidate 32629994207aa525aba23b7562506bb2538276c5", "Fast #848 PASS", "Qualified #181 backend/renderer/Chrome/WebKit PASS"],
+      "closureCondition": "Credential precedence, compatibility fallback and explicit clear behavior are verified without exposing the credential."
+    },
+    {
+      "id": "PROVIDER-TEST-UX",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Existing /api/provider/test + Data Providers Settings UI",
+      "implementationPaths": ["http_api.go", "renderer/index.html", "renderer/renderer.js", "tradeinsight_regression_test.go"],
+      "evidenceRequired": ["Save/Test/Clear controls use existing provider path", "Connectivity test does not persist or expose test credentials"],
+      "evidence": ["Qualified #181 renderer contracts PASS", "Qualified #181 Chrome PASS", "Qualified #181 WebKit PASS"],
+      "closureCondition": "TradeInsight is configured/tested through existing Settings/provider-test UX rather than a provider-specific subsystem."
+    },
+    {
+      "id": "ROUTER-ADMISSION-AUTHORITY",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Smart Provider Router v2 / TradeInsight admission / direct SEC authority",
+      "implementationPaths": ["provider_router.go", "provider_capabilities.go", "tradeinsight.go", "tradeinsight_congress.go", "tradeinsight_congress_probe.go"],
+      "evidenceRequired": ["Persisted credential is recognized by router configuration truth", "TradeInsight remains shadow-first where governed", "Direct SEC/EDGAR remains authoritative for Form 4", "No execution capability"],
+      "evidence": ["Qualified #181 backend full/race/randomized PASS", "Fast #848 source architecture and continuity PASS"],
+      "closureCondition": "Settings work does not create or promote a parallel TradeInsight routing/admission/authority subsystem."
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Canonical Fast / Qualified workflows",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml", "governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/final-qualification-evidence.json"],
+      "evidenceRequired": ["Fast success on exact implementation candidate", "Qualified success on exact implementation candidate", "Expected-head merge binding"],
+      "evidence": ["Fast #848 / run 32698831073 PASS", "Qualified #181 / run 32704611056 PASS", "PR #77 expected-head merge a171ce2258632bd4bd6aa737176f2d6dffb44689"],
+      "closureCondition": "Immutable candidate, qualification and merge evidence are bound before source-of-truth closure."
+    }
+  ]
+}

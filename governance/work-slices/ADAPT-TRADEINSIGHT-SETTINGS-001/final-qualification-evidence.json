@@ -1,0 +1,45 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-1",
+  "status": "VERIFIED",
+  "workSliceId": "ADAPT-TRADEINSIGHT-SETTINGS-001",
+  "issue": 76,
+  "gapId": "EXACT-HEAD-FAST-QUALIFIED",
+  "candidateSha": "32629994207aa525aba23b7562506bb2538276c5",
+  "candidateFingerprint": "108da1e029aab9565231ae67413c1e89ae3816c83e08a4070175cb9aef62c826",
+  "mergeCommitSha": "a171ce2258632bd4bd6aa737176f2d6dffb44689",
+  "fast": {
+    "context": "DE.PULSE/fast-head",
+    "runNumber": 848,
+    "runId": 32698831073,
+    "conclusion": "success",
+    "candidateSha": "32629994207aa525aba23b7562506bb2538276c5"
+  },
+  "qualified": {
+    "context": "DE.PULSE/qualified-head",
+    "runNumber": 181,
+    "runId": 32704611056,
+    "conclusion": "success",
+    "candidateSha": "32629994207aa525aba23b7562506bb2538276c5",
+    "lane": "full",
+    "evidenceOwners": [
+      "CI_HARNESS",
+      "BACKEND_FULL_GO",
+      "RACE_DETECTOR",
+      "RANDOMIZED_PACKAGE_ORDER",
+      "RENDERER",
+      "CHROME",
+      "WEBKIT"
+    ]
+  },
+  "merge": {
+    "pullRequest": 77,
+    "merged": true,
+    "expectedHeadSha": "32629994207aa525aba23b7562506bb2538276c5",
+    "mergeCommitSha": "a171ce2258632bd4bd6aa737176f2d6dffb44689",
+    "base": "main"
+  },
+  "evidenceInterpretation": "The #76 implementation candidate earned exact-head Fast and Qualified status before the expected-head merge. This post-merge binding records immutable product-capability evidence while preserving the existing Stable release identity.",
+  "productBehaviorChange": true,
+  "stableReleaseEvidenceUnchanged": true,
+  "stableReleasePublishedByThisSlice": false
+}

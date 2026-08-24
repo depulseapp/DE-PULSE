@@ -6,6 +6,10 @@ The conserved G2 core predates generic process work slices and contains one
 canonical active process slice first, then normalizes only that legacy identity
 field while the unchanged G2 core executes. All source/orphan/duplicate and
 architecture checks remain owned by the core.
+
+The pre-existing Adaptive Data Health policy gate is executed after the conserved
+G2 core. This keeps #80 provider/capability/fetch-path recurrence protection in
+G2/source-health ownership without creating a new permanent workflow/gate family.
 """
 from __future__ import annotations
 
@@ -52,6 +56,14 @@ def validate_registered_process_slice() -> dict:
     return state
 
 
+def run_data_health_gate() -> None:
+    try:
+        runpy.run_path(str(ROOT / "tools/ci/data_health_policy_gate.py"), run_name="__main__")
+    except SystemExit as exc:
+        if exc.code not in (None, 0):
+            raise
+
+
 def main() -> int:
     state = validate_registered_process_slice()
     normalized = json.loads(json.dumps(state))
@@ -71,6 +83,8 @@ def main() -> int:
         runpy.run_path(str(ROOT / "tools" / "ci" / "source_health_architecture_gate_core.py"), run_name="__main__")
     finally:
         Path.read_text = _ORIGINAL_READ_TEXT
+
+    run_data_health_gate()
     return 0
 
 

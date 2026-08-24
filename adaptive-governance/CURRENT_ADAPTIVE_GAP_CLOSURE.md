@@ -1,12 +1,13 @@
-# DE.PULSE — Current Adaptive Gap Closure
+# CURRENT Adaptive Gap Closure
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed work slice:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Implementation branch:** `adapt-root-convergence-001`  
-**Closure branch:** `adapt-root-convergence-001-closure`  
-**Closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
+**Active product work:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / `adapt-datahealth-baseline-001`
 
-All six #73 ordinary closure gaps are VERIFIED: deterministic full-root disposition inventory; historical v17/v18 non-Go relocation; active root tooling consolidation; versioned Go owner convergence; final root-policy tightening; exact-head Fast/Qualified. Final evidence is retained at `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/final-qualification-evidence.json` and binds Fast #819 / Qualified #179 to candidate `d42c47bf4c83dcb520388d588f0817c64257cc2e` and PR #74 merge commit `5ad6d127534c7042f7eabcb5345fb2c17e50337e`.
+#76 is complete: TradeInsight Settings/API-key UX candidate `32629994207aa525aba23b7562506bb2538276c5` passed Fast #848 and Qualified #181 and merged through PR #77 as `a171ce2258632bd4bd6aa737176f2d6dffb44689`. Its durable evidence is retained under `governance/work-slices/ADAPT-TRADEINSIGHT-SETTINGS-001/`.
 
-The completed #70 `WAIVER-GITHUB-MAIN-PROTECTION-001` remains retained only for `MAIN-PROTECTION-RULESET` at `governance/work-slices/ADAPT-CI-CONVERGENCE-001/main-protection-waiver.json`. It does not satisfy or weaken any #73 implementation gap. The product capability gate is now unblocked for the next governed TradeInsight Settings/API-key UX work slice.
+#80 closure is fail-closed on six ordinary gaps in `governance/work-slices/ADAPT-DATAHEALTH-BASELINE-001/closure.json`: provider/capability matrix; Data Health SLO contract; runtime bypass audit; unclassified-provider recurrence protection; Adaptive governance propagation; exact-head Fast/Qualified. Every gap blocks closure until VERIFIED by executable evidence. No documentation-only waiver is permitted.
+
+Known remediation found by #80 must flow to #81/#82 rather than being hidden: general provider routing adoption gaps go to #81; health/recovery/quota/backpressure/load-shedding/scoped-degradation gaps go to #82; lifecycle/promotion evidence goes to #83 with TradeInsight #78 adoption; final zero-gap closure goes to #84.
