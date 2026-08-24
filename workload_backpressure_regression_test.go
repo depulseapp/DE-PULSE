@@ -74,9 +74,12 @@ func TestV171ReservedCapacityProtectsTierZeroAndOne(t *testing.T) {
 	}
 }
 
-func TestV171ProviderQueueIsHardBounded(t *testing.T) {
+func TestV171ProviderQueueIsHardBoundedAndReservesCriticalHeadroom(t *testing.T) {
 	w := NewWorkloadController()
 	d := providerWorkDiag(w)
+	if d.ReservedCriticalQueue < 1 || d.ReservedCriticalQueue >= d.MaxQueue {
+		t.Fatalf("provider critical queue reserve not configured: %+v", d)
+	}
 	holds := make([]func(), 0, d.Capacity)
 	for i := 0; i < d.Capacity; i++ {
 		release, ok := w.TryAcquireTier("provider-rest", WorkTierMarketCritical)
@@ -89,7 +92,8 @@ func TestV171ProviderQueueIsHardBounded(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	done := make(chan struct{}, d.MaxQueue)
-	for i := 0; i < d.MaxQueue; i++ {
+	lowQueueLimit := d.MaxQueue - d.ReservedCriticalQueue
+	for i := 0; i < lowQueueLimit; i++ {
 		go func() {
 			release, ok := w.AcquireTier(ctx, "provider-rest", WorkTierBackground)
 			if ok {
@@ -98,19 +102,44 @@ func TestV171ProviderQueueIsHardBounded(t *testing.T) {
 			done <- struct{}{}
 		}()
 	}
-	d = waitProviderQueue(t, w, d.MaxQueue)
-	if d.Queued != d.MaxQueue {
-		t.Fatalf("queue exceeded or missed bound: %+v", d)
+	d = waitProviderQueue(t, w, lowQueueLimit)
+	if d.Queued != lowQueueLimit {
+		t.Fatalf("optional queue exceeded its bounded non-critical share: %+v", d)
 	}
 
 	rejectCtx, rejectCancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer rejectCancel()
 	if release, ok := w.AcquireTier(rejectCtx, "provider-rest", WorkTierBackground); ok {
 		release()
-		t.Fatal("work beyond max queue was admitted")
+		t.Fatal("optional work consumed queue headroom reserved for critical recovery")
+	}
+	afterLowReject := providerWorkDiag(w)
+	if afterLowReject.Queued != lowQueueLimit || afterLowReject.RejectedByTier[WorkTierBackground] < 1 || afterLowReject.Shed < 1 {
+		t.Fatalf("optional queue shedding not observable: %+v", afterLowReject)
+	}
+
+	for i := 0; i < d.ReservedCriticalQueue; i++ {
+		go func() {
+			release, ok := w.AcquireTier(ctx, "provider-rest", WorkTierMarketCritical)
+			if ok {
+				release()
+			}
+			done <- struct{}{}
+		}()
+	}
+	full := waitProviderQueue(t, w, d.MaxQueue)
+	if full.Queued != full.MaxQueue || full.QueuedByTier[WorkTierMarketCritical] != full.ReservedCriticalQueue {
+		t.Fatalf("critical work could not use protected queue headroom: %+v", full)
+	}
+
+	extraCriticalCtx, extraCriticalCancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer extraCriticalCancel()
+	if release, ok := w.AcquireTier(extraCriticalCtx, "provider-rest", WorkTierMarketCritical); ok {
+		release()
+		t.Fatal("total provider queue exceeded hard maxQueue bound")
 	}
 	after := providerWorkDiag(w)
-	if after.Queued > after.MaxQueue || after.Rejected < 1 || after.RejectedByTier[WorkTierBackground] < 1 {
+	if after.Queued > after.MaxQueue || after.Rejected < 2 {
 		t.Fatalf("bounded queue rejection not observable: %+v", after)
 	}
 
