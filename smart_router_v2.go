@@ -66,6 +66,8 @@ func providerInstrumentClass(dataset string) string {
 	switch dataset {
 	case "VIX / Indices":
 		return "INDEX"
+	case canonicalGlobalMarketContextDataset:
+		return "GLOBAL_MARKET"
 	case "Macro":
 		return "MACRO"
 	case "SEC":

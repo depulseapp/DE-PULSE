@@ -102,17 +102,18 @@ type providerCircuit struct {
 
 func routeChains() map[string][]string {
 	return map[string][]string{
-		"US Live Equities":                 {"Alpaca", "Finnhub", "Twelve Data"},
-		canonicalUSAssetUniverseDataset:    {"Alpaca"},
-		canonicalUSMarketCalendarDataset:   {"Alpaca"},
-		canonicalUSCorporateActionsDataset: {"Alpaca"},
-		"VIX / Indices":                    {"Twelve Data", "yfinance", "CBOE"},
-		canonicalHistoricalBarsDataset:     {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
-		"News":                             {"Finnhub", "Marketaux"},
-		"Earnings":                         {"Finnhub", "yfinance"},
-		"Fundamentals":                     {"Finnhub", "SEC", "yfinance"},
-		"SEC":                              {"SEC EDGAR"},
-		"Macro":                            {"FRED"},
+		"US Live Equities":                  {"Alpaca", "Finnhub", "Twelve Data"},
+		canonicalUSAssetUniverseDataset:     {"Alpaca"},
+		canonicalUSMarketCalendarDataset:    {"Alpaca"},
+		canonicalUSCorporateActionsDataset:  {"Alpaca"},
+		canonicalGlobalMarketContextDataset: {"Twelve Data"},
+		"VIX / Indices":                     {"Twelve Data", "yfinance", "CBOE"},
+		canonicalHistoricalBarsDataset:      {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
+		"News":                              {"Finnhub", "Marketaux"},
+		"Earnings":                          {"Finnhub", "yfinance"},
+		"Fundamentals":                      {"Finnhub", "SEC", "yfinance"},
+		"SEC":                               {"SEC EDGAR"},
+		"Macro":                             {"FRED"},
 	}
 }
 
@@ -411,6 +412,12 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 			active = sourceProvider(quotes["VIX"].Source)
 			lastSuccess = quotes["VIX"].UpdatedAt
 			detail = quotes["VIX"].Source
+		case canonicalGlobalMarketContextDataset:
+			lastSuccess = last["global-direct"]
+			detail = e.health["global-direct"]
+			if lastSuccess > 0 {
+				active = "Twelve Data"
+			}
 		case canonicalHistoricalBarsDataset:
 			lastSuccess = last["history"]
 			active = sourceProvider(e.health["history"])
