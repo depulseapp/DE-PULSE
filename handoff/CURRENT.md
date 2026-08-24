@@ -8,6 +8,7 @@
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` / closure `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
 **Completed Data Health baseline:** #80 / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
 **Completed Router production adoption:** #81 / Fast #878 / Qualified #184 / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
 **Completed runtime Data Health:** #82 / candidate `421acd4a0845a2c0c4190e964597877bc3a93c1c` / Fast #894 / Qualified #187 / PR #88 / merge `4882b6d53c0c34463239faae752b86de377fb19a`  
@@ -15,7 +16,7 @@
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
 ## Current authority
-Actual GitHub objects and executable evidence outrank this handoff. #80, #81 and #82 are complete. Remaining governed order is **#83 → #78 → #84**. #83 establishes the common provider-capability lifecycle/readiness contract; #78 adopts and validates TradeInsight through that shared contract; #84 performs final all-provider fault/native/professional zero-gap closure.
+Actual GitHub objects and executable evidence outrank this handoff. The completed #73 process slice remains the canonical repository/process unblock authority recorded by `governance/current-state.json`; that retained authority coexists with the active product reservation. #80, #81 and #82 are complete. Remaining governed product order is **#83 → #78 → #84**. #83 establishes the common provider-capability lifecycle/readiness contract; #78 adopts and validates TradeInsight through that shared contract; #84 performs final all-provider fault/native/professional zero-gap closure.
 
 ## #82 immutable completion checkpoint
 - Final qualified source: `421acd4a0845a2c0c4190e964597877bc3a93c1c`.
