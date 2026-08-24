@@ -18,6 +18,19 @@ type RuntimeDegradationState struct {
 	Abstain           bool     `json:"abstain,omitempty"`
 	Affected          []string `json:"affected,omitempty"`
 	AffectedConsumers []string `json:"affectedConsumers,omitempty"`
+	FallbackActive    bool     `json:"fallbackActive,omitempty"`
+	PreferredProvider string   `json:"preferredProvider,omitempty"`
+	ServingProvider   string   `json:"servingProvider,omitempty"`
+	FallbackStatus    string   `json:"fallbackStatus,omitempty"`
+	FallbackDetail    string   `json:"fallbackDetail,omitempty"`
+	// WarmStateActive means current canonical evidence is still within freshness
+	// policy even though a provider/transport route is temporarily unavailable.
+	// It is diagnostic context only and must never extend an evidence timestamp.
+	WarmStateActive bool `json:"warmStateActive,omitempty"`
+	// TransportIssues records non-secret provider/network context that has not
+	// yet invalidated current canonical evidence. These issues become a data
+	// health degradation only when required evidence is no longer usable.
+	TransportIssues []string `json:"transportIssues,omitempty"`
 }
 
 func criticalDecisionDataUsable(freshness []FreshnessDiagnostic, session string) bool {
@@ -83,10 +96,43 @@ func reliabilityConsumersFor(affected []string) []string {
 	return out
 }
 
+func appendUniqueRuntimeIssue(values []string, value string) []string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return values
+	}
+	for _, existing := range values {
+		if strings.EqualFold(strings.TrimSpace(existing), value) {
+			return values
+		}
+	}
+	return append(values, value)
+}
+
+func rateLimitCoveredByActiveFallback(provider string, feed FeedDiagnostics) bool {
+	provider = strings.ToLower(strings.TrimSpace(provider))
+	return strings.EqualFold(feed.FeedState, "finnhub-fallback") && strings.Contains(provider, "alpaca")
+}
+
+func providerQueueSaturated(class WorkClassDiagnostics) bool {
+	if class.MaxQueue <= 0 {
+		return false
+	}
+	if class.Queued >= class.MaxQueue {
+		return true
+	}
+	optionalLimit := class.MaxQueue - class.ReservedCriticalQueue
+	return class.ReservedCriticalQueue > 0 && class.Shed > 0 && optionalLimit >= 0 && class.Queued >= optionalLimit
+}
+
 func finalizeRuntimeDegradation(out RuntimeDegradationState) RuntimeDegradationState {
 	if strings.TrimSpace(out.Code) == "" {
 		out.PressureState = "HEALTHY"
-		out.DecisionImpact = "No active decision-relevant degradation is detected."
+		if out.WarmStateActive || out.FallbackActive || len(out.TransportIssues) > 0 {
+			out.DecisionImpact = "Current canonical evidence remains usable within freshness policy; provider/transport pressure is isolated while fallback or warm evidence remains valid."
+		} else {
+			out.DecisionImpact = "No active decision-relevant degradation is detected."
+		}
 		return out
 	}
 	out.AffectedConsumers = reliabilityConsumersFor(out.Affected)
@@ -112,7 +158,7 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		if class.Class != "provider-rest" || class.Queued <= 0 {
 			continue
 		}
-		queueSaturated := class.MaxQueue > 0 && class.Queued >= class.MaxQueue
+		queueSaturated := providerQueueSaturated(class)
 		if queueSaturated || class.OldestQueueAgeMs >= 2000 {
 			out.Code = "LOCAL LOAD"
 			out.ReasonCode = "LOCAL_OVERLOAD"
@@ -125,26 +171,31 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		}
 	}
 
-	if strings.EqualFold(status, "degraded") {
-		for _, sub := range load.LiveSubscriptions {
-			if sub.Saturated {
-				out.Code = "LIVE CAPACITY SATURATED"
-				out.ReasonCode = "LOCAL_OVERLOAD"
-				out.Detail = sub.Provider + " live subscription capacity is fully allocated; reserved headroom is exhausted"
-				out.Affected = []string{"live subscription promotions/failover"}
-				return finalizeRuntimeDegradation(out)
-			}
+	for _, sub := range load.LiveSubscriptions {
+		if sub.Saturated {
+			out.Code = "LIVE CAPACITY SATURATED"
+			out.ReasonCode = "LOCAL_OVERLOAD"
+			out.Detail = sub.Provider + " live subscription capacity is fully allocated; reserved headroom is exhausted"
+			out.Affected = []string{"live subscription promotions/failover"}
+			return finalizeRuntimeDegradation(out)
 		}
 	}
 
 	for _, provider := range load.ProviderRequests {
-		if provider.RateLimited > 0 && provider.RequestsLastMin > 0 {
-			out.Code = "RATE LIMITED"
-			out.ReasonCode = "RATE_LIMITED"
-			out.Detail = provider.Provider + " returned rate-limit pressure in the current request window"
-			out.Affected = []string{"provider request budget"}
-			return finalizeRuntimeDegradation(out)
+		if provider.RateLimited <= 0 || provider.RequestsLastMin <= 0 {
+			continue
 		}
+		issue := provider.Provider + " request budget is rate limited"
+		out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, issue)
+		if critical && rateLimitCoveredByActiveFallback(provider.Provider, feed) {
+			out.WarmStateActive = true
+			continue
+		}
+		out.Code = "RATE LIMITED"
+		out.ReasonCode = "RATE_LIMITED"
+		out.Detail = provider.Provider + " returned rate-limit pressure in the current request window"
+		out.Affected = []string{"provider request budget"}
+		return finalizeRuntimeDegradation(out)
 	}
 	if load.Goroutines > 600 || load.HeapAllocBytes > 768*1024*1024 {
 		out.Code = "LOCAL LOAD"
@@ -156,29 +207,44 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 
 	for _, route := range router.Routes {
 		for _, hop := range route.Route {
-			if strings.EqualFold(hop.RateLimit, "RATE LIMITED") || strings.EqualFold(hop.Circuit, "RATE LIMITED") {
-				out.Code = "RATE LIMITED"
-				out.ReasonCode = "RATE_LIMITED"
-				out.Detail = hop.Provider + " request budget is temporarily rate limited"
-				out.Affected = append(out.Affected, route.Dataset)
-				return finalizeRuntimeDegradation(out)
+			if !strings.EqualFold(hop.RateLimit, "RATE LIMITED") && !strings.EqualFold(hop.Circuit, "RATE LIMITED") {
+				continue
 			}
+			issue := route.Dataset + " · " + hop.Provider + " rate limited"
+			out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, issue)
+			if critical && rateLimitCoveredByActiveFallback(hop.Provider, feed) {
+				out.WarmStateActive = true
+				continue
+			}
+			out.Code = "RATE LIMITED"
+			out.ReasonCode = "RATE_LIMITED"
+			out.Detail = hop.Provider + " request budget is temporarily rate limited"
+			out.Affected = append(out.Affected, route.Dataset)
+			return finalizeRuntimeDegradation(out)
 		}
 	}
 
 	if feed.FeedState == "reconnecting" {
-		out.Code = "NETWORK"
-		out.ReasonCode = "NETWORK_FAILURE"
-		out.Detail = "Primary and fallback live feeds are reconnecting"
-		out.Affected = []string{"live equities"}
-		return finalizeRuntimeDegradation(out)
+		out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, "Primary and fallback live feeds are reconnecting")
+		if critical {
+			out.WarmStateActive = true
+		} else {
+			out.Code = "NETWORK"
+			out.ReasonCode = "NETWORK_FAILURE"
+			out.Detail = "Primary and fallback live feeds are reconnecting"
+			out.Affected = []string{"live equities"}
+			return finalizeRuntimeDegradation(out)
+		}
 	}
 	if feed.FeedState == "finnhub-fallback" {
-		out.Code = "PROVIDER DEGRADED"
-		out.ReasonCode = "PROVIDER_DOWN"
-		out.Detail = "Primary Alpaca feed is unavailable or quiet; Finnhub fallback is carrying live equity updates"
-		out.Affected = []string{"primary live-equity route"}
-		return finalizeRuntimeDegradation(out)
+		// A functioning fallback is routing context, not by itself a data-health
+		// failure. Keep preferred/serving provenance visible and let canonical
+		// freshness/route checks below decide whether evidence is actually degraded.
+		out.FallbackActive = true
+		out.PreferredProvider = "Alpaca"
+		out.ServingProvider = "Finnhub"
+		out.FallbackStatus = "ACTIVE"
+		out.FallbackDetail = "Primary Alpaca live feed is unavailable or quiet; Finnhub fallback is carrying live equity updates"
 	}
 
 	bad := []string{}
@@ -200,12 +266,24 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		return finalizeRuntimeDegradation(out)
 	}
 
+	unavailableRoutes := []string{}
 	for _, route := range router.Routes {
-		if strings.EqualFold(route.State, "UNAVAILABLE") {
+		if !strings.EqualFold(route.State, "UNAVAILABLE") {
+			continue
+		}
+		unavailableRoutes = appendUniqueRuntimeIssue(unavailableRoutes, route.Dataset)
+		out.TransportIssues = appendUniqueRuntimeIssue(out.TransportIssues, route.Dataset+" provider route unavailable")
+	}
+	if len(unavailableRoutes) > 0 {
+		if critical {
+			// Do not stamp or extend evidence time here. Freshness remains the sole
+			// authority for how long the already-valid warm state can be reused.
+			out.WarmStateActive = true
+		} else {
 			out.Code = "PROVIDER DEGRADED"
 			out.ReasonCode = "PROVIDER_DOWN"
-			out.Detail = route.Dataset + " provider route is unavailable"
-			out.Affected = []string{route.Dataset}
+			out.Detail = strings.Join(unavailableRoutes, ", ") + " provider route(s) are unavailable and required canonical evidence is no longer usable"
+			out.Affected = unavailableRoutes
 			return finalizeRuntimeDegradation(out)
 		}
 	}
@@ -224,10 +302,9 @@ func deriveRuntimeDegradation(status, mode string, feed FeedDiagnostics, freshne
 		return finalizeRuntimeDegradation(out)
 	}
 
-	if status == "degraded" {
-		out.Code = "PROVIDER DEGRADED"
-		out.ReasonCode = "UNKNOWN"
-		out.Detail = "Runtime health is degraded; inspect Provider Router and Data Freshness for the active cause"
-	}
+	// Do not re-create degradation from the mutable runtime status alone. The
+	// canonical evidence/router/load evaluation above owns current truth, while
+	// RuntimeSLOTracker.StabilizeDegradation owns hysteresis. This is what allows
+	// a previously degraded runtime to enter RECOVERING and ultimately unlatch.
 	return finalizeRuntimeDegradation(out)
 }

@@ -45,20 +45,21 @@ func normalizeWorkTier(t WorkTier) WorkTier {
 }
 
 type WorkClassDiagnostics struct {
-	Class            string   `json:"class"`
-	Capacity         int      `json:"capacity"`
-	MaxQueue         int      `json:"maxQueue"`
-	ReservedCritical int      `json:"reservedCritical"`
-	InFlight         int      `json:"inFlight"`
-	Queued           int      `json:"queued"`
-	OldestQueueAgeMs int64    `json:"oldestQueueAgeMs,omitempty"`
-	Completed        int64    `json:"completed"`
-	Canceled         int64    `json:"canceled"`
-	Rejected         int64    `json:"rejected"`
-	Shed             int64    `json:"shed"`
-	QueuedByTier     [5]int   `json:"queuedByTier"`
-	InFlightByTier   [5]int   `json:"inFlightByTier"`
-	RejectedByTier   [5]int64 `json:"rejectedByTier"`
+	Class                 string   `json:"class"`
+	Capacity              int      `json:"capacity"`
+	MaxQueue              int      `json:"maxQueue"`
+	ReservedCritical      int      `json:"reservedCritical"`
+	ReservedCriticalQueue int      `json:"reservedCriticalQueue,omitempty"`
+	InFlight              int      `json:"inFlight"`
+	Queued                int      `json:"queued"`
+	OldestQueueAgeMs      int64    `json:"oldestQueueAgeMs,omitempty"`
+	Completed             int64    `json:"completed"`
+	Canceled              int64    `json:"canceled"`
+	Rejected              int64    `json:"rejected"`
+	Shed                  int64    `json:"shed"`
+	QueuedByTier          [5]int   `json:"queuedByTier"`
+	InFlightByTier        [5]int   `json:"inFlightByTier"`
+	RejectedByTier        [5]int64 `json:"rejectedByTier"`
 }
 
 type workClassState struct {
@@ -125,6 +126,30 @@ func totalQueued(st *workClassState) int {
 	return n
 }
 
+func reservedCriticalQueue(st *workClassState) int {
+	if st == nil || st.maxQueue <= 0 || st.reservedCritical <= 0 {
+		return 0
+	}
+	if st.reservedCritical > st.maxQueue {
+		return st.maxQueue
+	}
+	return st.reservedCritical
+}
+
+// queueLimitForTier prevents optional/radar work from consuming the entire
+// bounded queue. The queue remains globally capped at maxQueue, but a small
+// portion stays available for MarketCritical/UserActionable recovery work.
+func queueLimitForTier(st *workClassState, tier WorkTier) int {
+	limit := st.maxQueue
+	if tier >= WorkTierRadarPromoted {
+		limit -= reservedCriticalQueue(st)
+	}
+	if limit < 0 {
+		return 0
+	}
+	return limit
+}
+
 func canAdmit(st *workClassState, tier WorkTier) bool {
 	if st.inFlight >= st.capacity {
 		return false
@@ -185,10 +210,11 @@ func (w *WorkloadController) AcquireTier(ctx context.Context, class string, tier
 			}, true
 		}
 		if !registered {
-			if totalQueued(st) >= st.maxQueue {
+			queueLimit := queueLimitForTier(st, tier)
+			if totalQueued(st) >= queueLimit {
 				st.rejected++
 				st.rejectedByTier[tier]++
-				if tier >= WorkTierBroadDiscovery {
+				if tier >= WorkTierRadarPromoted {
 					st.shed++
 				}
 				w.mu.Unlock()
@@ -294,7 +320,7 @@ func (w *WorkloadController) Diagnostics() []WorkClassDiagnostics {
 			return
 		}
 		seen[st.name] = true
-		d := WorkClassDiagnostics{Class: st.name, Capacity: st.capacity, MaxQueue: st.maxQueue, ReservedCritical: st.reservedCritical, InFlight: st.inFlight, Queued: totalQueued(st), Completed: st.completed, Canceled: st.canceled, Rejected: st.rejected, Shed: st.shed, QueuedByTier: st.queued, InFlightByTier: st.inFlightByTier, RejectedByTier: st.rejectedByTier}
+		d := WorkClassDiagnostics{Class: st.name, Capacity: st.capacity, MaxQueue: st.maxQueue, ReservedCritical: st.reservedCritical, ReservedCriticalQueue: reservedCriticalQueue(st), InFlight: st.inFlight, Queued: totalQueued(st), Completed: st.completed, Canceled: st.canceled, Rejected: st.rejected, Shed: st.shed, QueuedByTier: st.queued, InFlightByTier: st.inFlightByTier, RejectedByTier: st.rejectedByTier}
 		oldest := time.Time{}
 		for _, at := range st.oldestQueue {
 			if !at.IsZero() && (oldest.IsZero() || at.Before(oldest)) {

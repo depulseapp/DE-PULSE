@@ -4,19 +4,21 @@
 **Certified Stable:** `v18.9.1-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Completed foundation:** #80 / `ADAPT-DATAHEALTH-BASELINE-001`  
-**Active product work:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / `adapt-provider-router-production-001`  
+**Completed Router adoption:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
+**Active product work:** #82 / `ADAPT-DATAHEALTH-RUNTIME-001` / `adapt-datahealth-runtime-001`  
 **Parent program:** #79 / `ADAPT-PROVIDER-PRODUCTION-001`
 
-For #81 and all child Data Health slices, implementation remains executable-first and canonical-owner-first:
-- use the #80 provider/capability/fetch-path inventory as the migration ledger; do not re-invent provider scope;
-- reuse Smart Provider Router v2 as the sole general market-data routing/admission owner;
-- keep provider-specific HTTP/normalization inside existing loaders while Router v2 selects/adopts attempts;
+For #82 and all remaining Data Health slices, implementation remains executable-first and canonical-owner-first:
+- reuse Smart Provider Router v2 as the sole general market-data routing/admission owner; #82 must not re-route around it;
+- reuse canonical freshness, cache, persistence, telemetry, state, provider workload and validation owners before adding anything;
+- REUSE/CONSOLIDATE/REFACTOR before ADD, and fail closed on a new parallel provider-specific health subsystem;
+- derive degradation from affected required evidence and scope it by capability/consumer/symbol/session before wider escalation;
+- reuse valid warm state only when canonical freshness policy allows; stale/unknown evidence must never be relabeled healthy;
+- make eligible fallback/revalidation/recovery automatic and hysteresis-protected;
+- protect critical decision-support evidence before optional/background work; shed lower-value work before core truth;
+- bound scanner/prep/event/research/background fan-out and distinguish local overload from provider/capability failure;
 - preserve explicit direct-authority/public paths rather than score-overriding deterministic truth boundaries;
-- reuse canonical freshness, cache, persistence, telemetry, state and validation owners;
-- preserve existing cache/single-flight/coalescing before adding fetches; no blind provider fan-out;
-- fail closed on unclassified new providers/capabilities/runtime external-fetch paths and on new general bypasses;
-- keep degradation/recovery/load shedding scoped to #82 rather than building a parallel #81 health stack;
-- use local/static/focused evidence before canonical Fast exact-head PASS, then deliberate impact-selected Qualified exact-head PASS;
+- use focused fault/regression evidence before canonical Fast exact-head PASS, then deliberate impact-selected Qualified exact-head PASS;
 - do not add temporary/permanent workflow families or weaken G0–G16/source-health/architecture gates.
 
-Every #80 `MIGRATE` row must either be executable through Router v2 in #81 or receive a new evidence-backed authority classification. The remaining sequence is #81/#82/#83/#78/#84; documentation alone never verifies closure.
+The governed program sequence token remains `#81/#82/#83/#78/#84`; #81 is complete, so current execution is #82 → #83 + #78 → #84. Documentation alone never verifies closure.

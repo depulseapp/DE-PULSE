@@ -428,18 +428,25 @@ func (e *Engine) autoFreshnessRecoveryLoop(ctx context.Context) {
 				if !e.refreshDue(key, minGap, time.Now()) {
 					continue
 				}
+				recoveryCtx, tier := freshnessRecoveryWorkContext(ctx, priority)
+				if e.workload.ShouldShed(tier) {
+					e.mu.Lock()
+					e.health["auto-recovery"] = "deferred · LOCAL LOAD · " + row.Dataset + " · " + workTierLabel(tier)
+					e.mu.Unlock()
+					continue
+				}
 				e.mu.Lock()
 				e.lastUpdated[key] = time.Now().UnixMilli()
-				e.health["auto-recovery"] = "refreshing · " + row.Dataset
+				e.health["auto-recovery"] = "refreshing · " + row.Dataset + " · " + workTierLabel(tier)
 				e.mu.Unlock()
-				rctx, cancel := context.WithTimeout(ctx, 40*time.Second)
+				rctx, cancel := context.WithTimeout(recoveryCtx, 40*time.Second)
 				ok := e.refreshDatasetRouted(rctx, row.Action, sec)
 				cancel()
 				e.mu.Lock()
 				if ok {
-					e.health["auto-recovery"] = "recovered · " + row.Dataset
+					e.health["auto-recovery"] = "recovered · " + row.Dataset + " · " + workTierLabel(tier)
 				} else {
-					e.health["auto-recovery"] = "stale · recovery failed · " + row.Dataset
+					e.health["auto-recovery"] = "stale · recovery failed · " + row.Dataset + " · " + workTierLabel(tier)
 				}
 				e.mu.Unlock()
 				if priority <= 2 {
