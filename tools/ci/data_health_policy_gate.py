@@ -34,7 +34,7 @@ ADAPTIVE_CURRENT_CONTRACTS = {
     ),
     ROOT / "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md": (
         "canonical Fast exact-head PASS", "Qualified exact-head PASS",
-        "Direct SEC/EDGAR", "No Execution",
+        "SEC/EDGAR", "No Execution",
     ),
 }
 
