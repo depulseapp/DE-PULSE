@@ -2,9 +2,12 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
 **Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; #92 is independently reserved under `productCapabilityGate`.
 
 #92 required build outputs are:
 1. Extend the existing Alpaca asset-universe decoder only with useful identity fields already returned by `/v2/assets`; do not add a provider call.
