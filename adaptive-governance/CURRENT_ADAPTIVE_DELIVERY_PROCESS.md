@@ -2,9 +2,12 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
 **Completed provider/data-health program:** #79 with #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
 **Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+
+#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`. #92 delivery is governed separately through the active product capability reservation and does not reopen #73.
 
 Delivery remains PR-first and exact-head governed. #92 advances from deterministic identity/persistence regressions to canonical Fast exact-head PASS, then impact-selected Qualified exact-head PASS on the identical candidate, then expected-head merge only if live `main` and the PR head still match the qualified evidence. No Stable/public SemVer release is performed merely to close #92.
 
