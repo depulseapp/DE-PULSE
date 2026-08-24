@@ -39,6 +39,38 @@ func TestTradeInsightEngineResolverAndRouterUsePersistedSettings(t *testing.T) {
 	}
 }
 
+func TestTradeInsightCongressUsesPersistedEngineCredential(t *testing.T) {
+	t.Setenv("TIDATA_API_KEY", "")
+	t.Setenv("TRADEINSIGHT_API_KEY", "")
+	app := &Application{secrets: Secrets{TradeInsight: "persisted-congress-key"}}
+	e := &Engine{app: app}
+	if got := e.tradeInsightResolvedAPIKey(); got != "persisted-congress-key" {
+		t.Fatalf("Congress runtime must be able to resolve persisted Settings key, got %q", got)
+	}
+
+	raw, err := os.ReadFile("tradeinsight_congress.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	src := string(raw)
+	for _, needle := range []string{
+		"key := e.tradeInsightResolvedAPIKey()",
+		"tradeInsightRESTBaseURL, key, symbol, begin",
+	} {
+		if !strings.Contains(src, needle) {
+			t.Fatalf("Congress runtime missing persisted credential wiring %q", needle)
+		}
+	}
+	for _, forbidden := range []string{
+		"!tradeInsightConfigured()",
+		"tradeInsightAPIKey(), symbol, begin",
+	} {
+		if strings.Contains(src, forbidden) {
+			t.Fatalf("Congress runtime regressed to env-only credential path %q", forbidden)
+		}
+	}
+}
+
 func TestTradeInsightPublicStateRedactsPersistedSecret(t *testing.T) {
 	const secret = "tradeinsight-super-secret"
 	app := &Application{state: defaultState(), secrets: Secrets{TradeInsight: secret}}
