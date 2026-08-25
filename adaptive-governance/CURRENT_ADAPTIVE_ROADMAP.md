@@ -2,27 +2,28 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider-intelligence program:** #65 with Professional Closure #107  
-**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
-**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — planned but product implementation remains unreserved/unstarted.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Program branch:** `adapt-v18-final-closure-10-10-001`  
+**Next child:** #114 / T1 exhaustive feature traceability  
+**Future hosted umbrella:** #66 — BLOCKED until v18.10.0 closure and post-closure audit.
 
 ## Current roadmap state
 
-The v18 provider-intelligence program is complete by executable evidence. #110 rebaselines the unstarted v19/v20 future train into small dependency-ordered reservations. It does **not** start a v19 product slice.
+The completed #65/#107 provider-intelligence closure remains valid, but final v18 release certification is now explicitly required before v19. `v18.10.0` is one public release split into ten assurance tracks #114–#123: traceability; unit/contracts; functional/E2E; edge/failure/data truth; persistence/recovery; security/roles/rights; UI/UX/IA/content/accessibility; performance/load/soak/concurrency; packaged macOS/Windows + browser/provenance; and future-proof zero-gap final certification.
 
-Canonical future detail:
+The final claim **10/10 Future-Proof Final v18 Closure** is prohibited until all ten tracks are VERIFIED and the same release candidate completes G0–G16 publication. Any genuine implementation miss discovered by the closure train becomes an explicit corrective under #113 and must be fixed/re-qualified rather than hidden.
+
+Canonical detail:
 - `governance/ROADMAP.md`
-- `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`
-- `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`
+- `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/V18_10_FINAL_CLOSURE_PLAN.md`
+- `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`
+- `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`
 
-Every v19 patch has one primary implementation responsibility, must perform a fresh source-overlap classification before G1, and is bound to named conservation rows. Each v19 dependency band ends with a no-feature zero-gap closure; the next band cannot start with an applicable `UNASSIGNED`, unexplained, unevidenced or silently carried-forward requirement.
+The inherited executable provider/data-health sequence **#80 baseline -> #81 Smart Provider Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure** remains authority. Operator truth retains `PARTIAL COVERAGE` and `DATA DEGRADED`; final v18 testing must prove those states remain truthful under edge/failure/recovery conditions.
 
-The retained executable provider/data-health sequence **#80 baseline -> #81 Smart Provider Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure** remains authority. Operator truth retains `PARTIAL COVERAGE` and `DATA DEGRADED`; future hosted work may not cosmetically suppress those states.
+Permanent boundaries remain Smart Provider Router v2 sole routing/admission owner, direct SEC/EDGAR filing/Form 4 authority, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle ownership, U.S. equities with GLD/SLV/USO actionable exceptions, No Execution and governed SHADOW -> VALIDATED -> APPROVED -> PRODUCTION lifecycle promotion.
 
-Permanent boundaries remain Smart Provider Router v2 sole routing/admission owner, direct SEC/EDGAR filing/Form 4 authority, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle ownership, U.S. equities with GLD/SLV/USO actionable exceptions, No Execution, governed lifecycle promotion and Mac + Windows + Web lockstep for shared capabilities.
+## Exactly one next action
 
-## Next program-selection rule
-
-After the #110 planning slice is merged/closed, fetch live `main` and choose **only the first real residual** after source overlap. The expected first reservation is in the `v19.0.x` rights/control foundation, but documentation does not pre-authorize implementation and #66 must not be broadly started from labels alone.
+Finish/qualify/merge the #113 program-registration governance packet. Then execute **#114 / T1 only** from fresh `main`: discover every shipped v18 feature/requirement/owner/test row before T2–T10 or any v19 product implementation begins.
