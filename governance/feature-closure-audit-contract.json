@@ -8,6 +8,20 @@
     "claimOfPerfection": false,
     "rule": "Every applicable dimension must pass or be explicitly not applicable with rationale; serious gaps cannot be averaged away."
   },
+  "normalizedRepresentation": {
+    "allowed": true,
+    "purpose": "Permit a canonical high-level feature ledger plus source-driven responsibility scans and a quality overlay without duplicating shared ownership/test/profile text hundreds of times.",
+    "requirements": [
+      "A deterministic executable gate must resolve one effective audit row for every shipped responsibility.",
+      "Every imported responsibility must name exactly one canonical parent or provide a complete explicit row.",
+      "Direct scan source owners and tests must remain evidence and may not be erased by inheritance.",
+      "Profile/default inheritance may fill only declared shared dimensions; feature/responsibility overrides must win deterministically.",
+      "Every effective responsibility must resolve all required audit dimensions and downstream T2-T9 assurance expectations.",
+      "Missing parent, unknown profile/category, duplicate responsibility ID, conflicting parent, unresolved override or excluded scope without explicit provenance must fail closed.",
+      "Future-program source carried in the repository may be excluded from shipped inventory only with explicit source/build/runtime evidence and a named future program; exclusion never authorizes implementation of that future program.",
+      "The normalized representation is a storage form only; it may not weaken per-responsibility closure semantics."
+    ]
+  },
   "requiredAuditDimensions": [
     "REALITY_TRACEABILITY",
     "PRODUCT_UTILITY",
@@ -91,11 +105,11 @@
     "blockingStates"
   ],
   "conditionalFeatureFields": {
-    "dataTruthAssessment": "Required for provider, market-data, evidence, freshness, authority, fallback and derived-intelligence responsibilities.",
-    "securityRightsAssessment": "Required for role, session, secret, provider-rights, identity, export/import, privileged control and external egress responsibilities.",
-    "persistenceLifecycleAssessment": "Required for durable state, cache/checkpoint, profile, identity/session, workspace, migration, install, restart and packaged lifecycle responsibilities.",
-    "performanceEfficiencyAssessment": "Required for runtime loops, provider calls, fan-out, background jobs, rendering at scale, queues, concurrency and expensive workflows.",
-    "observabilityAssessment": "Required when failures/degradation/health/entitlement/load/rights states must be distinguishable.",
+    "dataTruthAssessment": "Required for provider, market-data, evidence, freshness, authority, fallback and derived-intelligence responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "securityRightsAssessment": "Required for role, session, secret, provider-rights, identity, export/import, privileged control and external egress responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "persistenceLifecycleAssessment": "Required for durable state, cache/checkpoint, profile, identity/session, workspace, migration, install, restart and packaged lifecycle responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "performanceEfficiencyAssessment": "Required for runtime loops, provider calls, fan-out, background jobs, rendering at scale, queues, concurrency and expensive workflows; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "observabilityAssessment": "Required when failures/degradation/health/entitlement/load/rights states must be distinguishable; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
     "correctiveIssue": "Required when closureDecision requires blocking remediation.",
     "deferredImprovementOwner": "Required when closureDecision is DEFER_NON_BLOCKING_IMPROVEMENT."
   },
