@@ -27,6 +27,9 @@ SCAN1 = PROGRAM / "T1_INDEPENDENT_OMISSION_SCAN.json"
 SCAN2 = PROGRAM / "T1_INDEPENDENT_OMISSION_SCAN_2.json"
 RECONCILIATION = PROGRAM / "T1_FINAL_RECONCILIATION.json"
 T2 = PROGRAM / "T2_UNIT_CONTRACT_ASSURANCE.json"
+CURRENT_STATE = ROOT / "governance" / "current-state.json"
+CLOSURE = ROOT / "governance" / "work-slices" / "ADAPT-V18-FINAL-CLOSURE-10-10-001" / "closure.json"
+CI_FAST = ROOT / ".github" / "workflows" / "ci-fast.yml"
 
 T2_CLASSES = {
     "GO_UNIT_PACKAGE",
@@ -175,7 +178,31 @@ def main() -> int:
     scan2 = load(SCAN2)
     reconciliation = load(RECONCILIATION)
     t2 = load(T2)
+    current_state = load(CURRENT_STATE)
+    closure = load(CLOSURE)
     errors: list[str] = []
+
+    product = current_state.get("productCapabilityGate") or {}
+    governed = product.get("nextGovernedTracks") or []
+    t2_state = next((str(item.get("status") or "") for item in governed if isinstance(item, dict) and item.get("track") == "T2"), "")
+    t3_state = next((str(item.get("status") or "") for item in governed if isinstance(item, dict) and item.get("track") == "T3"), "")
+    if product.get("nextChildIssue") != 115 or product.get("nextChildTrack") != "T2" or t2_state != "IN_PROGRESS":
+        errors.append("current-state must identify T2/#115 as the active IN_PROGRESS child")
+    if t3_state != "NOT_STARTED":
+        errors.append("T2 audit must not silently start T3/#116")
+
+    gaps = closure.get("gaps") or []
+    t1_gap = next((item for item in gaps if isinstance(item, dict) and item.get("id") == "T1-FEATURE-TRACEABILITY"), None)
+    t2_gap = next((item for item in gaps if isinstance(item, dict) and item.get("id") == "T2-UNIT-CONTRACT-PROPERTY"), None)
+    if not isinstance(t1_gap, dict) or t1_gap.get("status") != "VERIFIED":
+        errors.append("T2 requires parent closure ledger T1-FEATURE-TRACEABILITY=VERIFIED")
+    if not isinstance(t2_gap, dict) or t2_gap.get("status") not in {"IMPLEMENTED_UNVERIFIED", "VERIFIED"}:
+        errors.append("parent closure ledger must record active T2 as IMPLEMENTED_UNVERIFIED or VERIFIED")
+
+    ci_fast = CI_FAST.read_text(encoding="utf-8")
+    ci_token = "python3 tools/ci/v18_t2_unit_contract_assurance_gate.py"
+    if ci_token not in ci_fast:
+        errors.append("T2 assurance gate is not bound into canonical CI Fast")
 
     if freeze.get("state") != "FROZEN_T1":
         errors.append("T2 requires frozen T1 manifest state FROZEN_T1")
