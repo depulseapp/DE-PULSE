@@ -49,12 +49,80 @@
     "denied/expired/revoked security state where applicable",
     "divergent/stale/missing release evidence where applicable"
   ],
-  "gapDeclarationState": "PENDING_FIRST_EXECUTION",
+  "gapDeclarationState": "CURRENT",
   "knownCoverageGaps": [],
-  "uncoveredResponsibilityCount": null,
-  "firstExecutableCensus": null,
+  "uncoveredResponsibilityCount": 0,
+  "firstExecutableCensus": {
+    "headSha": "8cbb9443e2ec2cc6e8175ec324b0dae1da6daa48",
+    "fastRunNumber": 1032,
+    "fastRunId": 32868427871,
+    "conclusion": "PASS_WITH_DECLARATION_PENDING",
+    "effectiveResponsibilities": 180,
+    "coveredResponsibilities": 171,
+    "uncoveredResponsibilities": 9,
+    "uncoveredIds": [
+      "RELEASE-DEVELOPER-SCHEMA-PROBE",
+      "RELEASE-FAST",
+      "RELEASE-IDENTITY-PROVENANCE",
+      "RELEASE-MACOS-APPLE-SILICON",
+      "RELEASE-NO-REBUILD",
+      "RELEASE-QUALIFIED",
+      "RELEASE-RENDERER-CHROME-WEBKIT",
+      "RELEASE-TEST-PROFILE-MIGRATION",
+      "RELEASE-WINDOWS-X64"
+    ],
+    "finding": "All first-pass uncovered rows were RELEASE-profile responsibilities; no market-data/provider/runtime responsibility lacked a qualifying adverse owner."
+  },
   "closureCensus": null,
-  "evidenceSupplements": {},
+  "gapResolutions": {
+    "RELEASE-FAST": "Canonical release rehearsal and Stable evidence gates fail closed on missing/stale Fast binding, identity drift and release invariant loss.",
+    "RELEASE-QUALIFIED": "Canonical release rehearsal and Stable evidence gates fail closed on missing/stale Qualified binding and release invariant loss.",
+    "RELEASE-NO-REBUILD": "Canonical release rehearsal rejects publish-job rebuild patterns, clobber behavior and mismatched immutable Stable tags.",
+    "RELEASE-MACOS-APPLE-SILICON": "Stable evidence gate rejects missing/mismatched native macOS artifact IDs/digests; browser/native routing gate requires independent macOS native qualification ownership.",
+    "RELEASE-WINDOWS-X64": "Stable evidence gate rejects missing/mismatched Windows artifact IDs/digests; browser/native routing gate requires independent Windows native qualification ownership.",
+    "RELEASE-IDENTITY-PROVENANCE": "Release-state coherence self-test injects stale handoff, source-fingerprint, cache-identity and immutable-tag conflicts and requires all to be detected.",
+    "RELEASE-RENDERER-CHROME-WEBKIT": "Browser risk-routing gate fails closed when Chrome/WebKit/native lane routing or required WebKit/browser-owner contracts disappear.",
+    "RELEASE-TEST-PROFILE-MIGRATION": "Exact scan-discovered Go owner proves isolated migration, Stable source immutability, transient-file exclusion and repeat-launch reuse; T4 admits GO_ADVERSE only for this exact conservatively RELEASE-profiled row.",
+    "RELEASE-DEVELOPER-SCHEMA-PROBE": "Exact scan-discovered Go owner proves explicit opt-in, invalid-argument rejection, redaction, failure/unavailable fail-closed behavior and no provider lifecycle mutation; T4 admits GO_ADVERSE only for this exact conservatively RELEASE-profiled row."
+  },
+  "evidenceSupplements": {
+    "RELEASE-FAST": {
+      "owners": ["tools/ci/release_rehearsal.py", "tools/ci/stable_evidence_gate.py"],
+      "rationale": "Current CI/release owners require exact Fast status/run binding and fail on missing/stale/divergent release evidence."
+    },
+    "RELEASE-QUALIFIED": {
+      "owners": ["tools/ci/release_rehearsal.py", "tools/ci/stable_evidence_gate.py"],
+      "rationale": "Current CI/release owners require identical-head Qualified status/run binding and fail on missing/stale/divergent release evidence."
+    },
+    "RELEASE-NO-REBUILD": {
+      "owners": ["tools/ci/release_rehearsal.py", "tools/ci/stable_evidence_gate.py"],
+      "rationale": "Publication owner explicitly rejects rebuild/clobber/tag divergence and Stable evidence owner rejects provenance drift."
+    },
+    "RELEASE-MACOS-APPLE-SILICON": {
+      "owners": ["tools/ci/stable_evidence_gate.py", "tools/ci/browser_risk_routing_gate.py"],
+      "rationale": "Missing/mismatched macOS native artifact ID/digest fails Stable evidence and loss of native qualification ownership fails browser/native routing policy."
+    },
+    "RELEASE-WINDOWS-X64": {
+      "owners": ["tools/ci/stable_evidence_gate.py", "tools/ci/browser_risk_routing_gate.py"],
+      "rationale": "Missing/mismatched Windows native artifact ID/digest fails Stable evidence and loss of native qualification ownership fails browser/native routing policy."
+    },
+    "RELEASE-IDENTITY-PROVENANCE": {
+      "owners": ["tools/ci/release_state_coherence_self_test.py", "tools/ci/stable_evidence_gate.py"],
+      "rationale": "Executable coherence fixtures require detection of stale handoff, fingerprint/cache identity drift, missing G12 evidence and immutable-tag conflicts."
+    },
+    "RELEASE-RENDERER-CHROME-WEBKIT": {
+      "owners": ["tools/ci/browser_risk_routing_gate.py"],
+      "rationale": "Executable browser policy rejects missing Chrome/WebKit/native routing ownership and prevents Fast from silently substituting browser evidence."
+    },
+    "RELEASE-TEST-PROFILE-MIGRATION": {
+      "owners": ["test_profile_identity_regression_test.go"],
+      "rationale": "Behavior is Go-owned despite conservative RELEASE profile assignment; exact negative owner protects Stable source immutability, transient-file exclusion and repeat migration semantics."
+    },
+    "RELEASE-DEVELOPER-SCHEMA-PROBE": {
+      "owners": ["developer_commands_regression_test.go"],
+      "rationale": "Behavior is Go-owned despite conservative RELEASE profile assignment; exact negative owner rejects invalid/unavailable probe paths, prevents lifecycle mutation and protects redaction/explicit opt-in."
+    }
+  },
   "exactHeadQualificationRequired": true,
   "completionCondition": "All 180 effective shipped-v18 responsibilities resolve their T4 expectation and have at least one current executable adverse/edge/failure owner whose assertions prove truthful degraded/failure behavior; all declared gaps are closed; exact-head Fast and identical-head Qualified pass.",
   "t5CompanionIssue": 118,
