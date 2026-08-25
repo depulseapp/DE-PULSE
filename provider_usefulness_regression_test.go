@@ -134,13 +134,23 @@ type providerUsefulnessFakeBackend struct {
 func newProviderUsefulnessFakeBackend() *providerUsefulnessFakeBackend {
 	return &providerUsefulnessFakeBackend{features: map[string]DerivedFeatureRecord{}}
 }
-func (b *providerUsefulnessFakeBackend) Name() string { return "provider-usefulness-test" }
+func (b *providerUsefulnessFakeBackend) Name() string           { return "provider-usefulness-test" }
 func (b *providerUsefulnessFakeBackend) Capabilities() []string { return []string{"intelligence"} }
-func (b *providerUsefulnessFakeBackend) Init(context.Context) error { return nil }
-func (b *providerUsefulnessFakeBackend) UpsertSymbols(context.Context, []SymbolRegistryRecord) (int, error) { return 0, nil }
-func (b *providerUsefulnessFakeBackend) LoadSymbols(context.Context) ([]SymbolRegistryRecord, error) { return nil, nil }
-func (b *providerUsefulnessFakeBackend) SaveQuotes(context.Context, map[string]Quote) (int, error) { return 0, nil }
-func (b *providerUsefulnessFakeBackend) LoadQuotes(context.Context) (map[string]Quote, error) { return nil, nil }
+func (b *providerUsefulnessFakeBackend) Init(context.Context) error {
+	return nil
+}
+func (b *providerUsefulnessFakeBackend) UpsertSymbols(context.Context, []SymbolRegistryRecord) (int, error) {
+	return 0, nil
+}
+func (b *providerUsefulnessFakeBackend) LoadSymbols(context.Context) ([]SymbolRegistryRecord, error) {
+	return nil, nil
+}
+func (b *providerUsefulnessFakeBackend) SaveQuotes(context.Context, map[string]Quote) (int, error) {
+	return 0, nil
+}
+func (b *providerUsefulnessFakeBackend) LoadQuotes(context.Context) (map[string]Quote, error) {
+	return nil, nil
+}
 func (b *providerUsefulnessFakeBackend) SaveIntelligence(_ context.Context, batch PersistenceIntelligenceBatch) (int, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -150,11 +160,21 @@ func (b *providerUsefulnessFakeBackend) SaveIntelligence(_ context.Context, batc
 	}
 	return batch.Len(), nil
 }
-func (b *providerUsefulnessFakeBackend) LoadIdentityState(context.Context) (IdentityPersistentState, error) { return IdentityPersistentState{}, nil }
-func (b *providerUsefulnessFakeBackend) SaveIdentityState(context.Context, IdentityPersistentState) error { return nil }
-func (b *providerUsefulnessFakeBackend) LoadUserWorkspaces(context.Context) ([]UserWorkspace, error) { return nil, nil }
-func (b *providerUsefulnessFakeBackend) SaveUserWorkspace(context.Context, UserWorkspace) error { return nil }
-func (b *providerUsefulnessFakeBackend) Stats(context.Context) (PersistenceStoreStats, error) { return PersistenceStoreStats{}, nil }
+func (b *providerUsefulnessFakeBackend) LoadIdentityState(context.Context) (IdentityPersistentState, error) {
+	return IdentityPersistentState{}, nil
+}
+func (b *providerUsefulnessFakeBackend) SaveIdentityState(context.Context, IdentityPersistentState) error {
+	return nil
+}
+func (b *providerUsefulnessFakeBackend) LoadUserWorkspaces(context.Context) ([]UserWorkspace, error) {
+	return nil, nil
+}
+func (b *providerUsefulnessFakeBackend) SaveUserWorkspace(context.Context, UserWorkspace) error {
+	return nil
+}
+func (b *providerUsefulnessFakeBackend) Stats(context.Context) (PersistenceStoreStats, error) {
+	return PersistenceStoreStats{}, nil
+}
 func (b *providerUsefulnessFakeBackend) Close() error { return nil }
 func (b *providerUsefulnessFakeBackend) ExportPersistenceArchive(context.Context) (PersistenceArchive, error) {
 	b.mu.Lock()
@@ -165,7 +185,9 @@ func (b *providerUsefulnessFakeBackend) ExportPersistenceArchive(context.Context
 	}
 	return archive, nil
 }
-func (b *providerUsefulnessFakeBackend) RestorePersistenceArchive(context.Context, PersistenceArchive, string) error { return nil }
+func (b *providerUsefulnessFakeBackend) RestorePersistenceArchive(context.Context, PersistenceArchive, string) error {
+	return nil
+}
 
 func TestProviderUsefulnessPersistsBoundedAggregateAndDedupState(t *testing.T) {
 	backend := newProviderUsefulnessFakeBackend()

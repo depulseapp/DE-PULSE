@@ -20,35 +20,35 @@ const (
 )
 
 type ProviderUsefulnessDiagnostic struct {
-	Provider             string   `json:"provider"`
-	State                string   `json:"state"` // INSUFFICIENT or OBSERVING
-	EligibleSamples      int64    `json:"eligibleSamples"`
-	CrossSourceSamples   int64    `json:"crossSourceSamples"`
-	AgreementSamples     int64    `json:"agreementSamples"`
-	ConflictSamples      int64    `json:"conflictSamples"`
-	SingleSourceSamples  int64    `json:"singleSourceSamples"`
+	Provider            string   `json:"provider"`
+	State               string   `json:"state"` // INSUFFICIENT or OBSERVING
+	EligibleSamples     int64    `json:"eligibleSamples"`
+	CrossSourceSamples  int64    `json:"crossSourceSamples"`
+	AgreementSamples    int64    `json:"agreementSamples"`
+	ConflictSamples     int64    `json:"conflictSamples"`
+	SingleSourceSamples int64    `json:"singleSourceSamples"`
 	CanonicalSelections int64    `json:"canonicalSelections"`
-	ExcludedSamples      int64    `json:"excludedSamples"`
-	AgreementPct         *float64 `json:"agreementPct,omitempty"`
-	RoutingImpact        string   `json:"routingImpact"`
-	LastObservedAt       int64    `json:"lastObservedAt,omitempty"`
+	ExcludedSamples     int64    `json:"excludedSamples"`
+	AgreementPct        *float64 `json:"agreementPct,omitempty"`
+	RoutingImpact       string   `json:"routingImpact"`
+	LastObservedAt      int64    `json:"lastObservedAt,omitempty"`
 }
 
 type providerUsefulnessAggregate struct {
-	EligibleSamples      int64 `json:"eligibleSamples"`
-	CrossSourceSamples   int64 `json:"crossSourceSamples"`
-	AgreementSamples     int64 `json:"agreementSamples"`
-	ConflictSamples      int64 `json:"conflictSamples"`
-	SingleSourceSamples  int64 `json:"singleSourceSamples"`
+	EligibleSamples     int64 `json:"eligibleSamples"`
+	CrossSourceSamples  int64 `json:"crossSourceSamples"`
+	AgreementSamples    int64 `json:"agreementSamples"`
+	ConflictSamples     int64 `json:"conflictSamples"`
+	SingleSourceSamples int64 `json:"singleSourceSamples"`
 	CanonicalSelections int64 `json:"canonicalSelections"`
-	ExcludedSamples      int64 `json:"excludedSamples"`
-	LastObservedAt       int64 `json:"lastObservedAt,omitempty"`
+	ExcludedSamples     int64 `json:"excludedSamples"`
+	LastObservedAt      int64 `json:"lastObservedAt,omitempty"`
 }
 
 type providerUsefulnessPersistedState struct {
 	Providers map[string]providerUsefulnessAggregate `json:"providers"`
-	SeenOrder []string                                `json:"seenOrder,omitempty"`
-	UpdatedAt int64                                   `json:"updatedAt,omitempty"`
+	SeenOrder []string                               `json:"seenOrder,omitempty"`
+	UpdatedAt int64                                  `json:"updatedAt,omitempty"`
 }
 
 type providerUsefulnessTracker struct {
