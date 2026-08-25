@@ -12,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[2]
 ARCHITECTURE=(ROOT/'renderer'/'documentation-architecture.js').read_text(encoding='utf-8')
 OWNER=(ROOT/'renderer'/'documentation-ui.js').read_text(encoding='utf-8')
 ACCESS=(ROOT/'renderer'/'documentation-access.js').read_text(encoding='utf-8')
-RESPONSIVE_GATE=ROOT/'tools'/'ci'/'responsive_ui_sharded_gate.py'
+RESPONSIVE_TEST=ROOT/'tests'/'renderer'/'responsive_ui_test.py'
 
 HARNESS=r"""
 let authPrincipal={role:'USER'};
@@ -100,7 +100,12 @@ def run_t7_responsive_matrix(engine:str)->None:
         subprocess.run(['sudo','ln','-sf',str(chrome),str(chromium)],check=True)
     if not chromium.exists():
         raise RuntimeError('unable to bind Qualified Chrome executable at /usr/bin/chromium for responsive matrix')
-    subprocess.run([sys.executable,str(RESPONSIVE_GATE)],cwd=ROOT,env=os.environ.copy(),check=True)
+    env=os.environ.copy()
+    env.pop('DEPULSE_VIEWPORT_SLICE',None)
+    try:
+        subprocess.run([sys.executable,str(RESPONSIVE_TEST)],cwd=ROOT,env=env,check=True,timeout=240)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError('T7 responsive full matrix exceeded 240-second bound') from exc
     print('PASS: T7 canonical 15-viewport responsive matrix via Qualified Chrome owner')
 
 
