@@ -21,6 +21,8 @@ Semantic usefulness remains `ADVISORY_ONLY`. Sparse or single-source evidence st
 
 The inherited sequence **#80 baseline -> #81 Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 onboarding/adaptation** remains executable authority. Smart Provider Router v2 remains the sole general routing/admission owner; direct SEC/EDGAR remains Form 4 authority; canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners remain unchanged; U.S. equities only, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
 
+`PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional Data Health states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited. #94 does not redefine those states.
+
 ## Delivery boundary
 
 #94 must earn exact-head Fast and impact-selected Qualified on one unchanged candidate before expected-head merge. No Stable/public SemVer release belongs to #94 alone. #66 remains future-blocked.

@@ -21,6 +21,10 @@ The fresh #65 LOOKUP -> COMPARE -> CLASSIFY -> DECIDE audit completed after #102
 - Keep every closure gap fail-closed until executable evidence verifies it.
 - Use one branch/one PR, canonical exact-head Fast, impact-selected Qualified on the identical candidate, fresh-main expected-head merge, and no Release workflow for #94-only delivery.
 
+## Retained Adaptive Data Health process contract
+
+The completed sequence **#81/#82/#83/#78/#84** remains inherited executable history. Smart Provider Router v2 retains its existing **fail closed** behavior and **canonical freshness** contract; #94 adds advisory observability only and does not alter Data Health, routing, lifecycle or recovery ownership.
+
 ## Permanent boundaries
 
 Smart Provider Router v2 remains sole general routing/admission authority; direct SEC/EDGAR remains Form 4 authority; canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners remain unchanged; U.S. equities, GLD/SLV/USO actionable exceptions and No Execution remain permanent. #66 stays blocked.

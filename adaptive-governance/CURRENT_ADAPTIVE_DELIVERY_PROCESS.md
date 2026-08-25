@@ -14,7 +14,7 @@
 1. Complete the narrow provider telemetry implementation and executable regressions on `adapt-provider-telemetry-001` without changing Router ordering/admission/lifecycle.
 2. Keep all closure-ledger behavioral gaps `IMPLEMENTED_UNVERIFIED` until the final exact candidate is tested.
 3. Open one Draft PR only when the source/governance packet is coherent; canonical Fast must pass on that exact head.
-4. Fix only evidence-backed failures. Once Fast is green, make the same PR Ready to trigger Planner v3 impact-selected Qualified on the identical head.
+4. Fix only evidence-backed failures. Once Fast is green, require **canonical Fast exact-head PASS**, then make the same PR Ready to trigger Planner v3 impact-selected Qualified and require **Qualified exact-head PASS** on the identical head.
 5. Do not mutate source after Qualified PASS. Record immutable candidate/Fast/Qualified evidence, re-fetch live `main`, and merge only with expected-head protection.
 6. Confirm main branch hygiene and continuity remain green and no Release workflow was triggered.
 7. Update final closure evidence truthfully; no Stable/public SemVer release belongs to #94 alone.

@@ -22,6 +22,10 @@
 6. Prove transport projection, semantic aggregation, evidence eligibility, bounded restart safety, privileged role projection and routing invariance with executable regressions.
 7. Run canonical Fast on the final exact head, then impact-selected Qualified on that identical head, then expected-head merge after fresh main re-fetch. Do not trigger Release.
 
+## Retained Data Health build inputs
+
+The canonical Data Health governance inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. They continue to bind the Adaptive Roadmap, Adaptive Build Plan, Build Process and Delivery Process to the inherited provider capability, freshness/SLO, degradation/recovery and fetch-path owners.
+
 ## Retained owners
 
 Completed #79/#84, #92, #95 and #102 remain inherited. Smart Provider Router v2, Data Health, freshness/degradation, persistence, transport telemetry, reconciliation, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution boundaries remain unchanged.
