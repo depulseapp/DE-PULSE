@@ -8,45 +8,60 @@
 **Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
-**Live planning baseline:** `6aef3806d5684cc75daec0a2274bbf51fe135201`  
-**Completed provider/data-health program:** #79/#84  
-**Completed provider-intelligence program:** #65 with Professional Closure #107  
-**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001`  
-**Zero-miss planning slice:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
-**Planning branch:** `adapt-v19-zero-miss-plan-001`
+**Live program baseline:** `5bda4fa96612423e79087f1738728670fa002834`  
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Program branch:** `adapt-v18-final-closure-10-10-001`  
+**Canonical program plan:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/V18_10_FINAL_CLOSURE_PLAN.md`  
+**Machine feature ledger:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`  
+**Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
+**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — BLOCKED until v18.10.0 final closure and post-closure audit.
 
 ## Current authority
 
-v18 is closed by executable GitHub evidence. #66 remains an unstarted hosted-program umbrella; no v19 product work slice is reserved merely by this planning update. `governance/current-state.json` intentionally continues to project the completed #107 work slice until a future product slice is explicitly selected; #110 is a planning/governance change, not a replacement product authority.
+The previous v18 provider-intelligence program (#65/#107) is complete, but before v19 the owner requires one final exhaustive v18 release. Therefore `v18.10.0` is now the mandatory next product release. It is not a feature expansion; it is a full-product audit/certification allowed to fix any genuine implementation/test/data-truth/UI/UX/security/persistence/performance/platform gap it discovers.
 
-The future build plan is being rebaselined to prevent implementation misses:
-- canonical sequence: `governance/ROADMAP.md`
-- detailed v19 zero-miss plan: `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`
-- machine requirement ledger: `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`
+The release may be called **10/10 Future-Proof Final v18 Closure** only after all ten assurance tracks are VERIFIED and one immutable candidate completes G0–G16 publication. Documentation alone cannot close a gap.
 
-Every v19 patch has one primary implementation responsibility, begins with current-source overlap classification, binds named #66 requirements, has explicit dependencies/closure evidence, and ends with zero unexplained carry-forward. Each v19 dependency band has a no-feature closure checkpoint. Shared capabilities are Mac + Windows + Web lockstep.
+## Ten assurance tracks
+
+1. #114 / T1 — complete feature / requirement / owner / test traceability.
+2. #115 / T2 — exhaustive unit / contract / static / property assurance.
+3. #116 / T3 — full functional / integration / end-to-end feature matrix.
+4. #117 / T4 — edge / adversarial / failure / data-truth matrix.
+5. #118 / T5 — persistence / restart / migration / install / upgrade / recovery.
+6. #119 / T6 — security / roles / secrets / rights / negative authorization.
+7. #120 / T7 — UI / UX / information architecture / content / accessibility. Every visible item receives KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition; technical functionality alone is insufficient.
+8. #121 / T8 — performance / load / soak / concurrency / resource safety.
+9. #122 / T9 — macOS Apple Silicon + Windows x64 packaged runtime/release/provenance certification plus Chrome/WebKit renderer truth.
+10. #123 / T10 — durable regression ownership, executable v19 requirement conservation, GitHub-only portability, zero-gap final certification and v18.10.0 publication.
+
+## 10/10 zero-miss rule
+
+Every shipped v18 feature must ultimately have: requirement provenance; canonical owner; positive functional evidence; applicable unit/contract evidence; edge/negative/failure evidence; persistence/restart evidence where applicable; role/security/provider-right evidence where applicable; UI/UX/IA/content evidence if visible; required platform evidence; durable regression ownership.
+
+The T1 machine ledger starts `DISCOVERY_PENDING`. Do not populate it from memory. Audit current `main`, renderer/navigation, GitHub issues/comments/PRs, Stable/release evidence and canonical contracts. Any `UNOWNED`, `UNTESTED`, `UNKNOWN`, duplicate owner, closed-issue-without-executable-evidence or unexplained carry-forward is a blocker. A genuine implementation miss becomes an explicit corrective under #113 and is fixed/re-qualified before closure.
 
 ## Retained architecture
 
-Smart Provider Router v2 is the sole general routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains observational `ADVISORY_ONLY`. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
+Smart Provider Router v2 is sole routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains `ADVISORY_ONLY`. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. No parallel subsystem may be created just to satisfy closure testing.
 
-Known reusable v19 starting owners already exist for provider rights/registration, Router v2, live subscriptions, identity/session/auth, SQLite/PostgreSQL persistence, hosted security and quota observability. Future v19 work must extend/reuse them rather than assume greenfield implementation.
+## Future-proof requirement
+
+Before first v19 product G1, the 72-row #66 requirement-conservation ledger must be mechanically enforced in existing CI. After v18.10.0, future changes must fail closed if a conserved requirement or durable regression owner disappears.
 
 ## Exactly one next action
 
-Finish and qualify #110 as a governance-only planning change. Do **not** start Provider Gateway, sync, PostgreSQL, KMS or another v19 product slice in #110. After #110 is merged, fetch live GitHub state and perform the G0/G1 source-overlap audit for the first real `v19.0.x` residual before reserving it.
+After the #113 program-registration governance PR is Fast/Qualified and merged, fetch fresh `main` and execute **#114 / T1 only**: exhaustive shipped-feature/requirement/owner/test discovery and machine-ledger population. Do not start T2–T10 or v19 product work before T1 inventory is frozen and its discovered corrective gaps are explicitly dispositioned.
 
 ## Resume rule
 
-1. Fetch live `main` first.
-2. Read this file, `governance/current-state.json`, `governance/ROADMAP.md`, the v19 zero-miss plan/ledger, #66 and #110.
+1. Fetch live `main` and active/open PRs/issues first.
+2. Read this file, `governance/current-state.json`, `governance/ROADMAP.md`, the v18.10 plan/feature ledger, #113 and child issues #114–#123.
 3. GitHub objects/executable evidence outrank roadmap prose and chat memory.
-4. Never reimplement an existing owner because a future version label exists.
-5. Never advance with an applicable unassigned/unevidenced conservation row.
-6. Preserve Mac + Windows + Web lockstep for shared capabilities.
-7. Preserve Smart Provider Router v2, Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-8. Use G0-G16 only: exact-head Fast -> same-head impact-selected Qualified -> expected-head merge.
-9. Another ChatGPT account, Codex or Claude must resume from GitHub source-of-truth, not chat memory.
+4. If program registration is not yet merged, finish that exact-head governance delivery first; otherwise resume the current T1–T10 child named by machine state.
+5. Never infer a feature is covered because an old issue is closed; require executable evidence.
+6. Never hide a newly discovered implementation miss inside a closure-only track.
+7. Preserve Smart Provider Router v2, Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle, identity/session, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+8. Use G0–G16 only: canonical Fast exact-head PASS -> identical-head Qualified PASS -> expected-head merge; final public v18.10.0 publication only after T1–T10 VERIFIED.
+9. A new ChatGPT account, Codex or Claude must resume from GitHub source-of-truth. No old chat handoff upload is required.
