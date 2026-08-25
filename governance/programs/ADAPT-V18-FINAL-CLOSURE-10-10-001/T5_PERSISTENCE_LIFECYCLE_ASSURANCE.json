@@ -34,15 +34,38 @@
   ],
   "alwaysApplicableProfiles": ["VISIBLE_STATEFUL","SECURITY_STATEFUL","RUNTIME_STATEFUL","PERSISTENCE"],
   "conditionalProfiles": ["VISIBLE_READONLY","DATA_PATH","BACKGROUND_JOB","BOUNDARY","RELEASE"],
-  "applicabilityOverrides": {},
+  "applicabilityOverrides": {
+    "SURF-DASHBOARD": {
+      "state": "NOT_APPLICABLE",
+      "rationale": "Dashboard is a VISIBLE_READONLY projection of canonical market/decision state. Its frozen owner set is renderer/acceptance presentation evidence and it owns no durable state. T5 persistence belongs to the canonical state owners it renders; adding dashboard persistence would create a prohibited parallel owner."
+    },
+    "LEGACY-EVIDENCE-ROUTES": {
+      "state": "NOT_APPLICABLE",
+      "rationale": "Legacy standalone evidence routes are a VISIBLE_READONLY navigation/consolidation contract whose shipped responsibility is redirect/removal of duplicate evidence homes. They own no durable state; restart retention belongs to Research/Market Intelligence canonical owners."
+    },
+    "RELEASE-RENDERER-CHROME-WEBKIT": {
+      "state": "NOT_APPLICABLE",
+      "rationale": "This scan responsibility certifies Chrome/WebKit renderer portability and owns no application/profile state. Native packaged install/upgrade/restart lifecycle is explicitly reserved to T9; assigning T5 persistence here would duplicate release/platform ownership."
+    }
+  },
   "evidenceSupplements": {},
-  "gapDeclarationState": "PENDING_FIRST_EXECUTION",
+  "gapDeclarationState": "CURRENT",
   "knownCoverageGaps": [],
-  "applicableResponsibilityCount": null,
-  "coveredApplicableResponsibilityCount": null,
-  "uncoveredResponsibilityCount": null,
-  "nonApplicableResponsibilityCount": null,
-  "firstExecutableCensus": null,
+  "applicableResponsibilityCount": 177,
+  "coveredApplicableResponsibilityCount": 177,
+  "uncoveredResponsibilityCount": 0,
+  "nonApplicableResponsibilityCount": 3,
+  "firstExecutableCensus": {
+    "headSha": "cf217428fd064830999716df740e5dd31be7127e",
+    "fastRunNumber": 1043,
+    "fastRunId": 32873069713,
+    "effectiveResponsibilities": 180,
+    "initiallyApplicableResponsibilities": 180,
+    "coveredResponsibilities": 177,
+    "uncoveredResponsibilities": 3,
+    "uncoveredIds": ["LEGACY-EVIDENCE-ROUTES","RELEASE-RENDERER-CHROME-WEBKIT","SURF-DASHBOARD"],
+    "finding": "The three first-pass uncovered responsibilities own no durable state. Frozen source/provenance review classifies them T5 NOT_APPLICABLE rather than creating parallel persistence owners."
+  },
   "closureCensus": null,
   "completionCondition": "Every effective T1 responsibility has a T5 expectation and explicit applicability result; every applicable persistence-bearing responsibility has current executable restart/migration/recovery evidence through canonical owners; all declared gaps are closed; exact-head Fast and identical-head Qualified pass.",
   "t6CompanionIssue": 119,
