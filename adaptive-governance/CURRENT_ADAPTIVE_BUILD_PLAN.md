@@ -5,28 +5,23 @@
 **Completed provider/data-health program:** #79 with final #84 / PR #91  
 **Completed canonical identity:** #92 / PR #93  
 **Completed provider onboarding:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / PR #101  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001` / PR #103 / merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`  
-**Closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**Known separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started/reserved  
+**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / PR #103 + closure PR #104  
+**Active product work:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / `adapt-provider-telemetry-001`  
+**Work-slice:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/work-slice.json`  
+**Closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Future hosted program:** #66 remains blocked/not started.
 
-#102 is delivered and no longer blocks selecting the next product capability. Its durable evidence is Fast #967 / `32803346202`, Qualified #194 / `32803373245`, PR #103 merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`, and main Fast #968 / `32803734938` with the unchanged Post-Stable continuity sentinel PASS.
+## Active build packet
 
-## Retained Adaptive Data Health build owners
+1. Reuse `ProviderRequestDiagnostics` as the transport reliability authority; expose completed requests, success/failure ratio, success percentage, P50/median, P95 and average latency only in privileged Maintenance.
+2. Reuse `buildProviderReconciliation` as semantic evidence truth. Aggregate only canonical reconciliation observations; do not create another reconciliation algorithm.
+3. Keep sparse/single-source evidence `INSUFFICIENT`; use an evidence floor before emitting an agreement percentage. Stale, invalid and non-contemporaneous evidence is excluded and provider attribution is never guessed.
+4. Persist one bounded aggregate/dedup derived feature through the existing `PersistenceManager`; no schema or parallel persistence/cache owner.
+5. Keep all usefulness diagnostics `ADVISORY_ONLY`; do not feed Smart Provider Router v2 ranking, admission, lifecycle or promotion.
+6. Prove transport projection, semantic aggregation, evidence eligibility, bounded restart safety, privileged role projection and routing invariance with executable regressions.
+7. Run canonical Fast on the final exact head, then impact-selected Qualified on that identical head, then expected-head merge after fresh main re-fetch. Do not trigger Release.
 
-The completed #80 Data Health artifacts remain executable inputs: `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. These continue to bind the Adaptive Roadmap, Build Plan, Build Process, and Delivery Process to canonical provider classification, freshness/SLO and fetch-path owners.
+## Retained owners
 
-The completed #79/#84 program remains executable input: canonical provider capability, Data Health SLO, fetch-path classification, Smart Provider Router v2, lifecycle/readiness, freshness, persistence, telemetry and degradation owners cannot be replaced. #95 remains completed executable product architecture through `provider_registration.go`, `provider_entitlement_refresh.go`, Smart Provider Router v2 and provider capability diagnostics.
-
-## Next build-selection packet
-
-Before any new product source mutation, perform a fresh #65 semantic-overlap audit:
-1. fetch live `main` and current issue/comment state;
-2. inspect completed #79/#84, #92, #95 and current source owners;
-3. compare every remaining #65 reservation/open residual against executable behavior;
-4. classify each as already delivered, genuine residual, blocked, or future;
-5. reserve exactly one dependency-ordered next product work slice only after the residual is re-proven;
-6. update machine current state, work-slice ledger, handoff and CURRENT projections before implementation.
-
-#94 is a known provider observability/usefulness residual candidate but remains unreserved until the audit confirms it. #66 remains future-blocked.
+Completed #79/#84, #92, #95 and #102 remain inherited. Smart Provider Router v2, Data Health, freshness/degradation, persistence, transport telemetry, reconciliation, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution boundaries remain unchanged.
