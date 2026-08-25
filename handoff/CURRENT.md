@@ -9,39 +9,40 @@
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91  
+**Completed TradeInsight Settings/API-key UX:** #76 / PR #77  
 **Completed canonical identity:** #92 / PR #93  
-**Completed provider onboarding:** #95 / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
-**Completed provider observability/usefulness:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / PR #105 / merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`  
-**Completed continuity process authority:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / implementation PR #103 / merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`  
-**Retained process branch identity:** `adapt-post-stable-continuity-001`  
-**Retained process closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**#94 closure reconciliation branch:** `adapt-provider-telemetry-001-closure` / PR #106  
-**#94 closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
+**Completed provider onboarding:** #95 / PR #101  
+**Completed provider observability/usefulness:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / PR #105 + closure PR #106 / main `d7b46d5d0ea50a47ad47e2f8974b6488e84b7536`  
+**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001`  
+**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Active branch:** `adapt-provider-professional-closure-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Next product capability:** unreserved pending fresh #65 semantic-overlap audit.  
 **Future hosted program:** #66 remains blocked/not started.
 
 ## Current authority
 
-GitHub objects and executable evidence outrank this handoff. #79/#84, #92, #95, #102 and #94 are completed foundations and must not be resumed as implementation work unless new executable evidence proves a real regression.
+GitHub objects and executable evidence outrank this handoff. The last trustworthy PASS on `main` is Fast #981 / `32809656631` after #94 durable closure merge `d7b46d5d0ea50a47ad47e2f8974b6488e84b7536`; branch hygiene and Post-Stable continuity were green. The immutable v18.9.1 Stable tag/candidate/source fingerprint/build/release evidence remains authoritative and is not redefined by #107.
 
-#94 completed on exact candidate `ae669a9a39604908086f36f75a78a9c1c1f93ae8`: Fast #976 / `32807961635` PASS and Qualified #196 / `32808052157` PASS on the identical head. Planner v3 selected ci-harness + backend + renderer + Chrome + WebKit + persistence/DB integration; backend full suite, race detector and randomized package order passed. PR #105 expected-head merged as `249ce52d3af513b763ac46ac22a1b28ce01bd346`; GitHub auto-closed #94 completed. Main Fast #977 / `32808395855` then passed branch hygiene and the Post-Stable continuity sentinel. Closure-validation candidate `09b1d2e2cc160cd2652b1acf59d88e7e98f4b8b8` passed Fast #978 / `32808710702` while #94 was still the projected active reservation, proving its closed 7/7 VERIFIED ledger. No Stable/public SemVer release was created solely for #94.
+The fresh post-#94 #65 semantic-overlap audit is durably recorded in parent comment `5405370494`. It found no remaining implementable v18 provider-intelligence product leaf. Historical reservations are dispositioned as follows: v18.9.2 TradeInsight Settings/API-key UX DELIVERED by #76/PR #77; v18.9.3 Router core DELIVERED/INHERITED by #79/#81/#84; v18.9.4 canonical identity DELIVERED by #92/PR #93; v18.9.5 Market Data Modes/capability diagnostics INHERITED/SUPERSEDED by canonical provider/Data Health/session owners; v18.9.6 observability/usefulness DELIVERED by #94; v18.9.7 SEC Form 4 enrichment, v18.9.8 search, and v18.9.9 movers/ranking remain VENDOR-CONTRACT GATED; v18.9.10 remaining useful capability admission is DELIVERED/GOVERNED and fail-closed for unverified endpoints; v18.9.11 session-aware readiness is INHERITED/SUPERSEDED by #79/#82/#83/#84; v18.9.12 is #107 Professional Closure.
 
-## Retained product architecture
+## Active #107 process contract
 
-Smart Provider Router v2 remains the sole general provider routing/admission authority. Provider semantic usefulness is observational `ADVISORY_ONLY` evidence and has no Router v2 ordering/admission/lifecycle dependency. Existing `ProviderRequestDiagnostics` remains transport reliability authority; canonical `ProviderReconciliationDecision` remains semantic comparison truth; `PersistenceManager` remains the persistence owner. Direct SEC/EDGAR remains Form 4 authority. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. Canonical freshness, degradation, Data Health, cache, persistence, telemetry, reconciliation, subscription and lifecycle owners remain unchanged.
+#107 is PROCESS / PROFESSIONAL CLOSURE only. `productBehaviorChange=false`; no product capability is reserved while it is open. Every gap in `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json` remains fail-closed until immutable evidence verifies it. Smart Provider Router v2 remains the sole general routing/admission authority; direct SEC/EDGAR remains Form 4 authority; canonical Data Health, freshness, degradation, cache, persistence, telemetry, reconciliation and lifecycle owners remain unchanged. Unverified TradeInsight REST/schema capabilities must remain fail closed. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
+
+#107 must use the canonical three-workflow control plane and G0–G16 governance. No direct-main patch, temporary workflow, gate waiver, retry branch, Stable/public SemVer release, or v19/#66 implementation belongs to this slice.
 
 ## Exactly one next action
 
-After PR #106 closure reconciliation completes, perform a **fresh #65 live-source semantic-overlap audit** against the resulting `main` before reserving any next product slice. Re-read issue #65 and latest comments, inspect open residuals and executable source/commits, classify each planned leaf as already delivered, genuine residual, blocked or future, and reserve exactly one dependency-ordered residual only after it is re-proven. Do not infer that an old historical v18.9.x label is still missing. Do not start #66.
+Complete **#107 Professional Closure** from branch `adapt-provider-professional-closure-001`: publish the coherent governance/checkpoint packet, earn canonical exact-head Fast, earn impact-selected Qualified on the identical candidate, re-fetch live `main`, merge with expected-head protection, verify the post-merge main branch-hygiene/Post-Stable-continuity sentinel, bind final closure evidence, then close #107 and parent #65. Do not start #66.
 
 ## Resume rule
 
-1. Fetch live `main` first; GitHub may have advanced after this projection.
-2. Read this file, `governance/current-state.json`, `AGENTS.md`, portability/CI-efficiency contracts, issue #65 and latest comments, completed #94/#102 evidence, and current open issues.
-3. Verify PR #106/closure state from GitHub objects; repository projections record #94 as completed and product selection as unreserved.
-4. Run a fresh #65 semantic overlap audit against current executable source before creating or reserving another product work slice.
-5. Do not reopen #79/#84, #92, #95, #102 or #94 unless new executable evidence proves a real regression in their owned scope.
-6. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-7. #66 remains future-blocked.
-8. Continue using canonical exact-head Fast -> impact-selected Qualified -> expected-head merge; no gate weakening or extra workflow family.
+1. Fetch live `main` first because GitHub may have advanced.
+2. Read this file, `governance/current-state.json`, `AGENTS.md`, `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, CI-efficiency governance, issue #107, parent #65 and their latest comments.
+3. Verify the active #107 branch/head and `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json` before mutation.
+4. Treat #76/#77, #79/#84, #92, #95, #102 and #94 as completed foundations unless new executable evidence proves a regression.
+5. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+6. Continue canonical exact-head Fast -> impact-selected Qualified -> expected-head merge. Release workflow is not used for #107.
+7. #66 remains future-blocked and requires a separate future decision after #65 closure.
+8. Another ChatGPT account, Codex or Claude must resume from GitHub source-of-truth rather than chat memory.

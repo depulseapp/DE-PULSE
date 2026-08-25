@@ -3,29 +3,27 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Completed provider onboarding:** #95 / PR #101  
-**Completed provider observability/usefulness:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / PR #105 / merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001` / PR #103  
-**Retained process closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**#94 completed closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
-**#94 closure reconciliation:** `adapt-provider-telemetry-001-closure` / PR #106  
+**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
+**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Active branch:** `adapt-provider-professional-closure-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Future hosted program:** #66 remains blocked/not started.
 
-## #94 gap status
+## #107 fail-closed gap status
 
-All seven blocking #94 gaps are VERIFIED in the canonical ledger:
-1. TRANSPORT-DIAGNOSTIC-PROJECTION — VERIFIED.
-2. SEMANTIC-USEFULNESS-AGGREGATION — VERIFIED.
-3. EVIDENCE-ELIGIBILITY-TRUTH — VERIFIED.
-4. BOUNDED-RESTART-SAFE-PERSISTENCE — VERIFIED.
-5. PRIVILEGED-ROLE-PROJECTION — VERIFIED.
-6. ROUTING-INVARIANCE — VERIFIED.
-7. EXACT-HEAD-QUALIFICATION — VERIFIED.
+All six Professional Closure gaps are blocking and remain unresolved until executable/GitHub evidence verifies them:
+1. `HISTORICAL-LEAF-DISPOSITION` — OPEN.
+2. `NO-ACTIONABLE-V18-PRODUCT-GAP` — OPEN.
+3. `TRADEINSIGHT-CONTRACT-BOUNDARIES` — OPEN.
+4. `CURRENT-PROJECTION-CONVERGENCE` — OPEN.
+5. `FUTURE-PROGRAM-SEPARATION` — OPEN.
+6. `EXACT-HEAD-DELIVERY` — OPEN.
 
-Immutable evidence: candidate `ae669a9a39604908086f36f75a78a9c1c1f93ae8`, Fast #976 / `32807961635`, Qualified #196 / `32808052157`, expected-head PR #105 merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`, issue #94 closed completed, main Fast #977 / `32808395855`, and closure-validation candidate `09b1d2e2cc160cd2652b1acf59d88e7e98f4b8b8` with Fast #978 / `32808710702` proving the closed ledger while #94 remained the projected active reservation.
+The fresh #65 audit comment `5405370494` is the factual starting evidence, not documentation-only closure. It classified v18.9.2 Settings as delivered by #76/PR #77; v18.9.3 Router as delivered/inherited by #79/#81/#84; v18.9.4 identity as delivered by #92; v18.9.5 and v18.9.11 as inherited/superseded; v18.9.6 as delivered by #94; v18.9.7-v18.9.9 as vendor-contract gated; v18.9.10 as delivered/governed with unverified capabilities fail closed; and v18.9.12 as this #107 process slice.
 
-No #94 behavioral gap remains open. PR #106 exists only to make current-state/handoff/CURRENT projections durable and portable after product merge; documentation-only closure remains prohibited, and the executable closure proof already exists.
+## Closure rule
 
-## Next gap-selection rule
+Do not mark a gap VERIFIED merely because the projection text exists. Require canonical Fast exact-head PASS, Qualified exact-head PASS on the same candidate, expected-head merge and post-merge main continuity before finalizing the ledger. Immutable v18.9.1 Stable evidence remains unchanged. Smart Provider Router v2, canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain unchanged.
 
-After PR #106 completes, no product residual is preselected. Re-run the #65 live-source semantic-overlap audit and reserve exactly one genuine dependency-ordered residual only if executable evidence proves it remains. Completed #79/#84, #92, #95, #102 and #94 are inherited foundations. Smart Provider Router v2, canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain unchanged. #66 stays blocked.
+#66 stays future-blocked and is not started by #107 or by closing parent #65.
