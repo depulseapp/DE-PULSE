@@ -26,35 +26,10 @@ func entitlementConfigurationState(state string) bool {
 	return state == providerCapabilityNotEntitled || state == providerCapabilityNotConfigured
 }
 
-// refreshProviderConfigurationEntitlements makes credential/configuration
-// changes visible to Smart Provider Router v2 without polling. It is called at
-// canonical route-decision time before ranking. Only stale entitlement/config
-// suppression is reopened; SUPPORTED, NOT_SUPPORTED and transient health states
-// are retained because they represent different evidence.
-//
-// On the first route decision after process start, resettable persisted records
-// are reopened once. This safely handles an offline credential change between
-// runs while bounding the extra provider work to at most one fresh probe per
-// affected capability after restart.
-func (e *Engine) refreshProviderConfigurationEntitlements(settings Settings, secrets Secrets) []string {
-	if e == nil {
+func (e *Engine) reopenProviderEntitlementStates(changed map[string]bool, reason string) []string {
+	if e == nil || len(changed) == 0 {
 		return nil
 	}
-	current := providerConfigurationSnapshot(settings, secrets)
-	previousAny, loaded := providerConfigurationObservations.Load(e)
-	previous, _ := previousAny.(map[string][32]byte)
-	providerConfigurationObservations.Store(e, current)
-
-	changed := map[string]bool{}
-	for provider, fingerprint := range current {
-		if !loaded || previous[provider] != fingerprint {
-			changed[providerKey(provider)] = true
-		}
-	}
-	if len(changed) == 0 {
-		return nil
-	}
-
 	now := time.Now().UnixMilli()
 	persist := make([]ProviderCapabilityStateRecord, 0)
 	changedProviders := make([]string, 0, len(changed))
@@ -65,7 +40,7 @@ func (e *Engine) refreshProviderConfigurationEntitlements(settings Settings, sec
 			continue
 		}
 		record.State = providerCapabilityUnknown
-		record.Reason = "provider configuration changed; entitlement requires fresh evidence"
+		record.Reason = reason
 		record.LastObservedAt = now
 		record.RevalidateAt = 0
 		record.PolicyVersion = smartRouterPolicyVersion
@@ -106,6 +81,52 @@ func (e *Engine) refreshProviderConfigurationEntitlements(settings Settings, sec
 		e.persistProviderCapabilityState(record)
 	}
 	return changedProviders
+}
+
+// refreshProviderConfigurationEntitlements makes credential/configuration
+// changes visible to Smart Provider Router v2 without polling. It is called at
+// canonical route-decision time before ranking. Only stale entitlement/config
+// suppression is reopened; SUPPORTED, NOT_SUPPORTED and transient health states
+// are retained because they represent different evidence.
+//
+// On the first route decision after process start, resettable persisted records
+// are reopened once. This safely handles an offline credential change between
+// runs while bounding the extra provider work to at most one fresh probe per
+// affected capability after restart.
+func (e *Engine) refreshProviderConfigurationEntitlements(settings Settings, secrets Secrets) []string {
+	if e == nil {
+		return nil
+	}
+	current := providerConfigurationSnapshot(settings, secrets)
+	previousAny, loaded := providerConfigurationObservations.Load(e)
+	previous, _ := previousAny.(map[string][32]byte)
+	providerConfigurationObservations.Store(e, current)
+
+	changed := map[string]bool{}
+	for provider, fingerprint := range current {
+		if !loaded || previous[provider] != fingerprint {
+			changed[providerKey(provider)] = true
+		}
+	}
+	return e.reopenProviderEntitlementStates(changed, "provider configuration changed; entitlement requires fresh evidence")
+}
+
+// forceProviderEntitlementRevalidation is the bounded same-key plan-upgrade
+// path used by the explicit capability recheck action. It does not poll and it
+// does not erase health evidence: only configured providers with resettable
+// NOT_ENTITLED/NOT_CONFIGURED state are reopened for one fresh canonical probe.
+func (e *Engine) forceProviderEntitlementRevalidation(settings Settings, secrets Secrets) []string {
+	if e == nil {
+		return nil
+	}
+	providerConfigurationObservations.Store(e, providerConfigurationSnapshot(settings, secrets))
+	changed := map[string]bool{}
+	for _, reg := range providerRegistrations() {
+		if reg.Configured != nil && reg.Configured(settings, secrets) {
+			changed[providerKey(reg.Name)] = true
+		}
+	}
+	return e.reopenProviderEntitlementStates(changed, "manual capability recheck requested; entitlement requires fresh evidence")
 }
 
 type providerConfigurationError struct{ message string }
