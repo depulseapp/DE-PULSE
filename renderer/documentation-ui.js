@@ -62,12 +62,12 @@
   registry.documentation={
     owner:OWNER,
     version:OWNER_VERSION,
-    state:'ACTIVE_CANONICAL_OWNER_WITH_LEGACY_RENDER_FALLBACK',
+    state:'ACTIVE_OWNER_WITH_LEGACY_FALLBACK',
     responsibilities:['markdown','documentation-hydration','documentation-view'],
-    dependencies:['shared-ui-state','shared-escaping-branding','documentation-architecture'],
+    dependencies:['shared-ui-state','shared-escaping-branding','documentation-architecture','legacy-architecture-diagram'],
     architectureOwner,
     legacyFallbackPresent:legacyFallback,
-    deletionGate:'Remove legacy monolith Documentation render/hydration implementations only after direct source extraction/equivalence evidence proves no fallback consumer remains.'
+    deletionGate:'Remove legacy monolith Documentation render/hydration/architecture implementations only after direct source extraction/equivalence evidence proves no fallback consumer remains.'
   };
   globalThis.__DE_PULSE_DOCUMENTATION_UI__={
     owner:OWNER,
