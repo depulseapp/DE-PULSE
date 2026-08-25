@@ -41,8 +41,15 @@
   ],
   "completedTracks": [
     {"track":"T1","issue":114,"mergedCommitSha":"b434886751fde1804a4906c9cac41dcce4584834"},
-    {"track":"T2","issue":115,"mergedCommitSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6"}
+    {"track":"T2","issue":115,"mergedCommitSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6"},
+    {"track":"T3","issue":116,"mergedCommitSha":"cf0cc9aa877188775d5c36cb805e6c8935d776bb"},
+    {"track":"T4","issue":117,"mergedCommitSha":"fadd9247f63779195138f8d79cbaa0f304b16e61"},
+    {"track":"T5","issue":118,"mergedCommitSha":"81137e4481cdf4a351e45c599efa0777ef93460a"},
+    {"track":"T6","issue":119,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714"},
+    {"track":"T7","issue":120,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5"},
+    {"track":"T8","issue":121,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97"}
   ],
-  "nextTrack": {"track":"T3","issue":116},
+  "nextTrack": {"track":"T9","issue":122},
+  "nextCompanionTrack": {"track":"T10","issue":123,"status":"BLOCKED_UNTIL_T9_VERIFIED"},
   "v19BlockedUntil": "v18.10.0 Stable published, T10 complete, post-closure residual/source-overlap audit PASS"
 }
