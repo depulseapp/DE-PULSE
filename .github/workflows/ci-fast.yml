@@ -72,6 +72,8 @@ jobs:
         run: python3 tools/ci/v18_t4_edge_failure_data_truth_assurance_gate.py
       - name: V18 T5 persistence / lifecycle / restart assurance
         run: python3 tools/ci/v18_t5_persistence_lifecycle_assurance_gate.py
+      - name: V18 T6 security / roles / secrets / rights assurance
+        run: python3 tools/ci/v18_t6_security_roles_rights_assurance_gate.py
       - name: Platform-neutral source provenance regression
         run: python3 tools/ci/source_provenance_test.py
       - name: Release identity
@@ -159,6 +161,7 @@ jobs:
             echo '- v18 T3 functional/integration/end-to-end census: PASS'
             echo '- v18 T4 edge/adversarial/failure/data-truth census: PASS'
             echo '- v18 T5 persistence/lifecycle/restart census: PASS'
+            echo '- v18 T6 security/roles/secrets/rights census: PASS'
             echo '- Git-object provenance: PASS'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
