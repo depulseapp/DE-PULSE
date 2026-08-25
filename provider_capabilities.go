@@ -35,19 +35,19 @@ func capabilityStatusFromHealth(configured bool, h string) string {
 func providerCapabilityLegacyDisplayOrder(provider, capability string) int {
 	key := providerKey(provider) + "|" + strings.ToLower(strings.TrimSpace(capability))
 	return map[string]int{
-		providerKey("Finnhub") + "|primary u.s. equity + earnings/peers":                 1,
-		providerKey("Finnhub") + "|analyst / insider premium context":                 2,
-		providerKey("Alpaca") + "|iex quotes / snapshots / liquidity":                 3,
-		providerKey("Alpaca") + "|sip movers / most active":                           4,
+		providerKey("Finnhub") + "|primary u.s. equity + earnings/peers":                                 1,
+		providerKey("Finnhub") + "|analyst / insider premium context":                                    2,
+		providerKey("Alpaca") + "|iex quotes / snapshots / liquidity":                                    3,
+		providerKey("Alpaca") + "|sip movers / most active":                                              4,
 		providerKey(tradeInsightProviderName) + "|adjusted daily ohlcv / corporate-action corroboration": 5,
-		providerKey("FRED") + "|rates / credit / conditions / usd":                    6,
-		providerKey("BLS") + "|inflation / labor / wages / ppi":                       7,
-		providerKey("EIA") + "|petroleum / natural gas / energy state":                8,
-		providerKey("Twelve Data") + "|fx / direct global context":                    9,
-		providerKey("Twelve Data") + "|vix / indices / historical recovery":          10,
-		providerKey("yfinance") + "|recovery-only public market context":             11,
-		providerKey("CBOE") + "|official vix validation / delayed close":             12,
-		providerKey("Marketaux") + "|stock news fallback":                            13,
+		providerKey("FRED") + "|rates / credit / conditions / usd":                                       6,
+		providerKey("BLS") + "|inflation / labor / wages / ppi":                                          7,
+		providerKey("EIA") + "|petroleum / natural gas / energy state":                                   8,
+		providerKey("Twelve Data") + "|fx / direct global context":                                       9,
+		providerKey("Twelve Data") + "|vix / indices / historical recovery":                              10,
+		providerKey("yfinance") + "|recovery-only public market context":                                 11,
+		providerKey("CBOE") + "|official vix validation / delayed close":                                 12,
+		providerKey("Marketaux") + "|stock news fallback":                                                13,
 	}[key]
 }
 
