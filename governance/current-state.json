@@ -36,7 +36,7 @@
   "productCapabilityGate": {
     "blocked": false,
     "blockedByIssue": null,
-    "unblockedByCompletedWorkSlice": "ADAPT-PROVIDER-TELEMETRY-001",
+    "unblockedByCompletedWorkSlice": "ADAPT-POST-STABLE-CONTINUITY-001",
     "completedCapability": "Provider observability & production usefulness telemetry residual",
     "completedWorkSliceId": "ADAPT-PROVIDER-TELEMETRY-001",
     "completedIssue": 94,
