@@ -2,13 +2,16 @@
 
 (function establishDocumentationOwner(){
   const OWNER='renderer/documentation-ui.js';
-  const OWNER_VERSION=1;
+  const OWNER_VERSION=2;
   const legacyFallback={
     renderMarkdown:typeof renderMarkdown==='function',
     hydrateDocumentation:typeof hydrateDocumentation==='function',
-    renderDocumentation:typeof renderDocumentation==='function',
-    architectureDiagram:typeof architectureDiagram==='function'
+    renderDocumentation:typeof renderDocumentation==='function'
   };
+  const architectureOwner=globalThis.__DE_PULSE_DOCUMENTATION_ARCHITECTURE__?.owner||'';
+  if(!architectureOwner||typeof architectureDiagram!=='function'){
+    throw new Error('Canonical documentation architecture owner is required before Documentation UI initialization.');
+  }
 
   function documentationMarkdown(md){
     const lines=String(md||'').split(/\r?\n/),out=[];
@@ -48,7 +51,7 @@
   function documentationRender(){
     const content=docCache[documentationTab];
     const head=`<header class="page-head no-regime"><div class="page-head-copy"><h1>Documentation</h1><p>User, developer, and current data-capability references bundled with this ${DOC_BRAND} build.</p></div></header>`;
-    return `<div class="page documentation-page" data-render-owner="documentation-ui"><section class="documentation-owner-marker" hidden data-documentation-owner="${OWNER}"></section>${head}<section class="card documentation-shell"><div class="doc-tabs" role="tablist"><button class="btn ${documentationTab==='user'?'primary':''}" data-doc-tab="user" role="tab">User Documentation</button><button class="btn ${documentationTab==='developer'?'primary':''}" data-doc-tab="developer" role="tab">Developer Documentation</button><button class="btn ${documentationTab==='limitations'?'primary':''}" data-doc-tab="limitations" role="tab">Capabilities &amp; Limitations</button></div><article id="doc-content" class="doc-content">${content?documentationMarkdown(content):'<div class="empty">Loading documentation…</div>'}</article></section></div>`;
+    return `<div class="page documentation-page" data-render-owner="documentation-ui"><section class="documentation-owner-marker" hidden data-documentation-owner="${OWNER}" data-architecture-owner="${architectureOwner}"></section>${head}<section class="card documentation-shell"><div class="doc-tabs" role="tablist"><button class="btn ${documentationTab==='user'?'primary':''}" data-doc-tab="user" role="tab">User Documentation</button><button class="btn ${documentationTab==='developer'?'primary':''}" data-doc-tab="developer" role="tab">Developer Documentation</button><button class="btn ${documentationTab==='limitations'?'primary':''}" data-doc-tab="limitations" role="tab">Capabilities &amp; Limitations</button></div><article id="doc-content" class="doc-content">${content?documentationMarkdown(content):'<div class="empty">Loading documentation…</div>'}</article></section></div>`;
   }
 
   renderMarkdown=documentationMarkdown;
@@ -61,9 +64,10 @@
     version:OWNER_VERSION,
     state:'ACTIVE_OWNER_WITH_LEGACY_FALLBACK',
     responsibilities:['markdown','documentation-hydration','documentation-view'],
-    dependencies:['shared-ui-state','shared-escaping-branding','legacy-architecture-diagram'],
+    dependencies:['shared-ui-state','shared-escaping-branding','documentation-architecture','legacy-architecture-diagram'],
+    architectureOwner,
     legacyFallbackPresent:legacyFallback,
-    deletionGate:'Remove legacy monolith Documentation implementations only after direct source extraction/equivalence evidence proves no fallback consumer remains.'
+    deletionGate:'Remove legacy monolith Documentation render/hydration/architecture implementations only after direct source extraction/equivalence evidence proves no fallback consumer remains.'
   };
   globalThis.__DE_PULSE_DOCUMENTATION_UI__={
     owner:OWNER,

@@ -1,0 +1,144 @@
+{
+  "schema": "DE.PULSE-FEATURE-CLOSURE-AUDIT-CONTRACT-1",
+  "status": "PERMANENT",
+  "appliesTo": ["MAJOR_CLOSURE", "FINAL_VERSION_CLOSURE", "PROGRAM_ZERO_GAP_CLOSURE"],
+  "purpose": "Require every shipped feature/responsibility to be audited for reality, utility, correctness, canonical ownership, intelligence fit, stale/duplicate code, maintainability, cleanup/rewrite need, assurance ownership and closure readiness.",
+  "tenOutOfTenSemantics": {
+    "arithmeticAverageAllowed": false,
+    "claimOfPerfection": false,
+    "rule": "Every applicable dimension must pass or be explicitly not applicable with rationale; serious gaps cannot be averaged away."
+  },
+  "normalizedRepresentation": {
+    "allowed": true,
+    "purpose": "Permit a canonical high-level feature ledger plus source-driven responsibility scans and a quality overlay without duplicating shared ownership/test/profile text hundreds of times.",
+    "requirements": [
+      "A deterministic executable gate must resolve one effective audit row for every shipped responsibility.",
+      "Every imported responsibility must name exactly one canonical parent or provide a complete explicit row.",
+      "Direct scan source owners and tests must remain evidence and may not be erased by inheritance.",
+      "Profile/default inheritance may fill only declared shared dimensions; feature/responsibility overrides must win deterministically.",
+      "Every effective responsibility must resolve all required audit dimensions and downstream T2-T9 assurance expectations.",
+      "Missing parent, unknown profile/category, duplicate responsibility ID, conflicting parent, unresolved override or excluded scope without explicit provenance must fail closed.",
+      "Future-program source carried in the repository may be excluded from shipped inventory only with explicit source/build/runtime evidence and a named future program; exclusion never authorizes implementation of that future program.",
+      "The normalized representation is a storage form only; it may not weaken per-responsibility closure semantics."
+    ]
+  },
+  "requiredAuditDimensions": [
+    "REALITY_TRACEABILITY",
+    "PRODUCT_UTILITY",
+    "CORRECTNESS",
+    "DATA_TRUTH_WHERE_APPLICABLE",
+    "CANONICAL_ARCHITECTURE_AND_REUSE",
+    "INTELLIGENCE_ADAPTIVE_FIT",
+    "MAINTAINABILITY",
+    "STALE_DUPLICATE_CODE",
+    "SOURCE_DISPOSITION",
+    "UI_UX_IA_WHERE_VISIBLE",
+    "SECURITY_RIGHTS_PRIVACY_WHERE_APPLICABLE",
+    "PERSISTENCE_RESTART_LIFECYCLE_WHERE_APPLICABLE",
+    "PERFORMANCE_EFFICIENCY_WHERE_APPLICABLE",
+    "OBSERVABILITY_DIAGNOSABILITY_WHERE_APPLICABLE",
+    "IMPROVEMENT_DECISION",
+    "DOWNSTREAM_ASSURANCE_OWNERSHIP",
+    "DURABLE_REGRESSION_OWNERSHIP"
+  ],
+  "intelligenceExpectationValues": [
+    "DETERMINISTIC_REQUIRED",
+    "CONTEXT_AWARE",
+    "ADAPTIVE_POLICY",
+    "EVIDENCE_LEARNING",
+    "NOT_APPLICABLE"
+  ],
+  "intelligenceFitValues": [
+    "FIT",
+    "UNDER_INTELLIGENT",
+    "OVER_ENGINEERED",
+    "UNBOUNDED_OR_UNEXPLAINED",
+    "UNKNOWN"
+  ],
+  "sourceDispositionValues": [
+    "KEEP",
+    "CLEANUP",
+    "REFACTOR",
+    "MERGE",
+    "REMOVE",
+    "REWRITE"
+  ],
+  "uiDispositionValues": [
+    "KEEP",
+    "MOVE",
+    "MERGE",
+    "REMOVE",
+    "RENAME",
+    "REDESIGN",
+    "NOT_USER_VISIBLE"
+  ],
+  "closureDecisionValues": [
+    "READY_10_10",
+    "IMPROVE_BEFORE_CLOSURE",
+    "REFACTOR_BEFORE_CLOSURE",
+    "REWRITE_BEFORE_CLOSURE",
+    "MERGE_OR_REMOVE_BEFORE_CLOSURE",
+    "DEFER_NON_BLOCKING_IMPROVEMENT",
+    "EXTERNAL_BLOCKED_WITH_EVIDENCE"
+  ],
+  "requiredFeatureFields": [
+    "id",
+    "name",
+    "category",
+    "requirementProvenance",
+    "canonicalSourceOwners",
+    "consumers",
+    "existingRegressionOwners",
+    "positiveFunctionalEvidenceExpectation",
+    "productUtilityAssessment",
+    "correctnessAssessment",
+    "architectureAssessment",
+    "intelligenceAssessment",
+    "maintainabilityAssessment",
+    "staleCodeAssessment",
+    "sourceDisposition",
+    "uiDisposition",
+    "improvementOpportunities",
+    "closureDecision",
+    "durableRegressionOwner",
+    "currentAssuranceState",
+    "blockingStates"
+  ],
+  "conditionalFeatureFields": {
+    "dataTruthAssessment": "Required for provider, market-data, evidence, freshness, authority, fallback and derived-intelligence responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "securityRightsAssessment": "Required for role, session, secret, provider-rights, identity, export/import, privileged control and external egress responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "persistenceLifecycleAssessment": "Required for durable state, cache/checkpoint, profile, identity/session, workspace, migration, install, restart and packaged lifecycle responsibilities; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "performanceEfficiencyAssessment": "Required for runtime loops, provider calls, fan-out, background jobs, rendering at scale, queues, concurrency and expensive workflows; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "observabilityAssessment": "Required when failures/degradation/health/entitlement/load/rights states must be distinguishable; explicit NOT_APPLICABLE with rationale is allowed otherwise.",
+    "correctiveIssue": "Required when closureDecision requires blocking remediation.",
+    "deferredImprovementOwner": "Required when closureDecision is DEFER_NON_BLOCKING_IMPROVEMENT."
+  },
+  "blockingConditions": [
+    "UNOWNED",
+    "UNTESTED",
+    "UNKNOWN",
+    "DUPLICATE_OWNER",
+    "ISSUE_CLOSED_WITHOUT_EXECUTABLE_EVIDENCE",
+    "UNEXPLAINED_CARRY_FORWARD",
+    "UNEXPLAINED_STALE_CODE",
+    "UNEXPLAINED_DUPLICATE_CODE",
+    "INTELLIGENCE_FIT_UNKNOWN",
+    "CLOSURE_DECISION_MISSING",
+    "BLOCKING_IMPROVEMENT_WITHOUT_CORRECTIVE"
+  ],
+  "requiredDiscoveryDirections": [
+    "FEATURE_REQUIREMENT_TO_SOURCE_TESTS",
+    "SOURCE_RUNTIME_TO_FEATURE_LEDGER",
+    "TEST_EVIDENCE_TO_CURRENT_OWNER",
+    "INDEPENDENT_DUPLICATE_STALE_OMISSION_SCAN",
+    "PER_FEATURE_IMPROVEMENT_AND_INTELLIGENCE_SCAN"
+  ],
+  "permanentBoundaries": {
+    "noMaximalIntelligenceBias": "Deterministic responsibilities must not be made adaptive merely to appear smarter.",
+    "noStyleOnlyRewrite": "REWRITE requires a concrete correctness, ownership, safety, maintainability, performance or evolution reason and executable equivalence protection.",
+    "noAgeOnlyDeletion": "Old-looking code cannot be removed without current consumer/reachability/equivalence evidence.",
+    "noDocumentationOnlyClosure": true,
+    "laterEvidenceCanReopenFeatureDecision": true,
+    "githubAndExecutableEvidenceOutrankChat": true
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "DE.PULSE-V18-T1-INDEPENDENT-OMISSION-SCAN-2",
+  "programIssue": 113,
+  "trackIssue": 114,
+  "state": "IN_PROGRESS",
+  "basis": [
+    "http_api.go complete route census",
+    "maintenance_io.go operational/profile lifecycle",
+    "global_market_providers.go direct official-close audit",
+    "runtime_observability.go HTTP/provider observability audit",
+    "renderer/browser portability evidence"
+  ],
+  "omissionsFound": [
+    {"id":"TRANSPORT-SSE-USER-EVENTS","category":"AUTHENTICATED_DATA_TRANSPORT","owners":["http_api.go","app_model.go"],"tests":["session_security_regression_test.go","workspace_isolation_regression_test.go"],"reason":"Authenticated per-user server-sent events deliver bootstrap/runtime/state updates and must terminate with request/session lifecycle."},
+    {"id":"CORE-WATCHLIST-CRUD","category":"USER_STATE","owners":["user_workspace.go","http_api.go","app_state.go"],"tests":["workspace_isolation_regression_test.go","tracked_symbol_regression_test.go","tests/renderer/symbol_desk_correctness_test.js"],"reason":"Create/rename/delete/add/remove are independent authenticated user-workspace mutations, separate from canonical desk-membership invariants."},
+    {"id":"CORE-UI-SCOPE-SELECTION","category":"USER_STATE","owners":["user_workspace.go","http_api.go","renderer/index.html"],"tests":["workspace_isolation_regression_test.go","tests/renderer/renderer_logic_test.js"],"reason":"Selected scope/watchlist/ticker is persisted per user and must not leak between users."},
+    {"id":"CORE-LIVE-PRIORITY-SELECTION","category":"USER_STATE_RUNTIME_HINT","owners":["http_api.go","live_subscription_manager.go","user_workspace.go"],"tests":["smart_router_rapid_regression_test.go","workspace_isolation_regression_test.go"],"reason":"Authenticated live-priority hints can influence allocation priority but cannot bypass the canonical subscription manager or permanent GLD/SLV/USO pins."},
+    {"id":"CAP-PROFILE-EXPORT-IMPORT","category":"PORTABILITY_SECURITY","owners":["maintenance_io.go","user_workspace.go","app_state.go"],"tests":["workspace_isolation_regression_test.go","hosted_security_regression_test.go","canonical_persistence_regression_test.go"],"reason":"Export excludes API keys, forces Demo/autostart-off; import restores only the authenticated workspace and preserves current Data Mode."},
+    {"id":"CAP-OPEN-EXTERNAL-URL","category":"DESKTOP_SECURITY","owners":["maintenance_io.go"],"tests":["hosted_security_regression_test.go","commercial_readiness_regression_test.go"],"reason":"Desktop external-link action accepts only valid http/https URLs and dispatches via platform-specific safe launcher."},
+    {"id":"CAP-APP-QUIT","category":"DESKTOP_LIFECYCLE","owners":["maintenance_io.go","runtime_lifecycle.go","desktop_lifecycle.go"],"tests":["desktop_lifecycle_regression_test.go","commercial_readiness_regression_test.go"],"reason":"Privileged quit stops engine, terminates the app window, closes the server and exits in a bounded sequence."},
+    {"id":"CAP-PROVIDER-TEST","category":"OPERATOR_ACTION","owners":["http_api.go","provider_registration.go","provider_router.go"],"tests":["provider_registration_regression_test.go","provider_onboarding_adaptive_regression_test.go","provider_rights_regression_test.go"],"reason":"Privileged provider-test action must use configured/persisted credentials without leaking or changing admission/routing authority."},
+    {"id":"CAP-CACHE-CONTROLS","category":"OPERATOR_ACTION","owners":["http_api.go","app_state.go","routed_refresh.go"],"tests":["canonical_persistence_regression_test.go","runtime_reliability_regression_test.go"],"reason":"Clear/refresh actions have different authority and must not bypass canonical persistence/freshness/recovery behavior."},
+    {"id":"CAP-DATA-ENGINE-MANUAL-REFRESH","category":"OPERATOR_ACTION","owners":["http_api.go","data_engine_handlers.go","routed_refresh.go"],"tests":["provider_capability_projection_regression_test.go","runtime_reliability_regression_test.go"],"reason":"Targeted VIX/global/capability/stream/data-engine refresh actions are user/admin triggers into existing canonical owners, not alternative acquisition logic."},
+    {"id":"CAP-MAINTENANCE-INTEGRITY","category":"OPERATOR_ACTION","owners":["maintenance_io.go","runtime_jobs.go","http_api.go"],"tests":["canonical_persistence_regression_test.go","runtime_reliability_regression_test.go","commercial_readiness_regression_test.go"],"reason":"Manual maintenance/integrity reports validate profile/watchlist/cache/runtime/feed/build state without destructive repair or hidden resets."},
+    {"id":"CAP-DATA-MODE-ENGINE-TOGGLE","category":"RUNTIME_CONTROL","owners":["http_api.go","app_model.go","runtime_lifecycle.go"],"tests":["runtime_reliability_regression_test.go","commercial_readiness_regression_test.go"],"reason":"Privileged engine/Data Mode control is distinct from start/stop and must preserve Demo/Live boundaries and credentials."},
+    {"id":"CAP-COMMUNITY-EVIDENCE-INGEST","category":"USER_DATA_PATH","owners":["community_intelligence_api.go","community_evidence_fusion.go","http_api.go"],"tests":["alternative_intelligence_regression_test.go","signal_intelligence_regression_test.go"],"reason":"Authenticated community evidence ingestion is contextual/corroborative only and must retain provenance/materiality boundaries."},
+    {"id":"PROVIDER-TWSE-TAIEX-OFFICIAL-CLOSE","category":"DIRECT_OFFICIAL_AUTHORITY","owners":["global_market_providers.go"],"tests":["active_market_reliability_regression_test.go","signal_intelligence_regression_test.go"],"reason":"Official completed-session TAIEX close is distinct from Twelve Data live/direct state and ETF proxy fallback."},
+    {"id":"RUNTIME-REQUEST-OBSERVABILITY","category":"RUNTIME_OBSERVABILITY","owners":["runtime_observability.go","http_api.go"],"tests":["performance_regression_test.go","runtime_performance_slo_regression_test.go","hosted_quota_observability_regression_test.go"],"reason":"HTTP latency/in-flight/slow-interactive and hosted quota counters are runtime diagnostics, not product intelligence."},
+    {"id":"RELEASE-RENDERER-CHROME-WEBKIT","category":"SUPPORTED_RENDERER","owners":["renderer","tests/renderer","tools/ci"],"tests":["tools/ci/documentation_owner_browser_test.py","tools/ci/webkit_browser_test.py","tests/renderer/responsive_ui_test.py"],"reason":"Current v18 portability contract requires renderer behavior across Chrome and WebKit in addition to packaged macOS/Windows runtime proof; the canonical Qualified workflow binds Chrome behavior, WebKit compatibility and documentation-owner browser evidence to this responsibility."}
+  ],
+  "implementationMisses": [],
+  "notes": [
+    "Do not interpret runtimeMode hosted foundation or hosted request telemetry as v19 hosted-product activation; v19 remains blocked by #113.",
+    "Manual refresh/operator actions must delegate to existing canonical owners and are audited for direct-route role parity in T6."
+  ]
+}

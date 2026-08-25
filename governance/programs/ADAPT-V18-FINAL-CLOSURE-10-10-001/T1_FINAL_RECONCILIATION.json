@@ -1,0 +1,137 @@
+{
+  "schema": "DE.PULSE-V18-T1-FINAL-RECONCILIATION-1",
+  "programIssue": 113,
+  "trackIssue": 114,
+  "targetVersion": "v18.10.0",
+  "state": "COMPLETE",
+  "purpose": "Reconcile the canonical high-level feature ledger with both independent source/runtime omission scans without duplicating canonical ownership or losing scan granularity.",
+  "completionAuthority": "This file is the final reconciliation authority for the two immutable discovery checkpoints. The populated feature-assurance ledger and base quality audit remain immutable pre-freeze checkpoints; feature-assurance-ledger-freeze.json plus T1_QUALITY_RESOLUTION.json record final T1 closure. Completion requires this file, those final overlays, and the executable feature-assurance gate to agree.",
+  "sourceCheckpoints": [
+    {
+      "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_INDEPENDENT_OMISSION_SCAN.json",
+      "role": "independent source/provider/job pass",
+      "checkpointStateIsHistorical": true
+    },
+    {
+      "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_INDEPENDENT_OMISSION_SCAN_2.json",
+      "role": "independent HTTP/maintenance/observability/renderer pass",
+      "checkpointStateIsHistorical": true
+    }
+  ],
+  "effectiveInventoryRules": {
+    "canonicalHighLevelRowsComeFromFeatureAssuranceLedger": true,
+    "everyOmissionScanResponsibilityMustResolveToAnEffectiveRow": true,
+    "scanResponsibilitiesInheritOnlyFromNamedCanonicalParent": true,
+    "scanOwnersAndTestsRemainDirectEvidence": true,
+    "oneResponsibilityMayNotResolveToMultipleParents": true,
+    "excludedFutureSourceCarryForwardIsNotShippedV18": true,
+    "qualityAuditMustResolveEveryEffectiveResponsibility": true,
+    "laterT2ToT9EvidenceMayReopenAnyT1Decision": true
+  },
+  "scanParentByCategory": {
+    "RUNTIME_DATA_TRANSPORT": "CORE-LIVE-SUBSCRIPTIONS",
+    "RUNTIME_CONTRACT": "RUNTIME-LIFECYCLE",
+    "RELEASE_PERSISTENCE": "RELEASE-IDENTITY-PROVENANCE",
+    "PERSISTENCE": "PERSIST-CANONICAL-BACKEND",
+    "RUNTIME_FOUNDATION": "RUNTIME-LIFECYCLE",
+    "ASSURANCE_TOOLING": "RELEASE-QUALIFIED",
+    "PROVIDER_CAPABILITY": "CORE-PROVIDER-CAPABILITY-REGISTRY",
+    "DIRECT_OFFICIAL_OR_ROUTED_CAPABILITY": "CORE-PROVIDER-ROUTER",
+    "DIRECT_OFFICIAL_AUTHORITY": "CORE-DATA-FRESHNESS",
+    "RECOVERY_CAPABILITY": "CORE-ROUTED-REFRESH",
+    "PROVIDER_CAPABILITY_PRODUCTION": "CORE-PROVIDER-CAPABILITY-REGISTRY",
+    "PROVIDER_CAPABILITY_PRODUCTION_SHADOW_EVIDENCE_ROLE": "CORE-PROVIDER-LIFECYCLE",
+    "GATED_CAPABILITY": "CORE-PROVIDER-LIFECYCLE",
+    "AI_EGRESS_CAPABILITY": "CORE-PROVIDER-DATA-RIGHTS",
+    "BACKGROUND_JOB": "RUNTIME-JOB-SCHEDULER",
+    "AUTHENTICATED_DATA_TRANSPORT": "SECURITY-AUTH-SESSIONS",
+    "USER_STATE": "CORE-USER-WORKSPACE-ISOLATION",
+    "USER_STATE_RUNTIME_HINT": "CORE-LIVE-SUBSCRIPTIONS",
+    "PORTABILITY_SECURITY": "CORE-USER-WORKSPACE-ISOLATION",
+    "DESKTOP_SECURITY": "SECURITY-HTTP",
+    "DESKTOP_LIFECYCLE": "RUNTIME-LIFECYCLE",
+    "OPERATOR_ACTION": "SURF-MAINTENANCE",
+    "RUNTIME_CONTROL": "SHELL-RUNTIME-CONTROL",
+    "USER_DATA_PATH": "CORE-ALTERNATIVE-COMMUNITY-INTELLIGENCE",
+    "RUNTIME_OBSERVABILITY": "RUNTIME-WORKLOAD-BACKPRESSURE",
+    "SUPPORTED_RENDERER": "RELEASE-IDENTITY-PROVENANCE"
+  },
+  "scanParentOverrides": {
+    "PROVIDER-FRED-MACRO": "CORE-MACRO-ACTUALS",
+    "PROVIDER-TREASURY-YIELDS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-BLS-ACTUALS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-BEA-ACTUALS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-EIA-ENERGY": "CORE-MACRO-ACTUALS",
+    "PROVIDER-OFFICIAL-MACRO-CALENDARS": "CORE-MACRO-EVENTS",
+    "PROVIDER-CBOE-VIX": "CORE-VIX-INDICES",
+    "PROVIDER-SEC-FUNDAMENTALS": "CORE-NEWS-EARNINGS-FUNDAMENTALS",
+    "PROVIDER-SEC-EDGAR-FILINGS-FORM4": "CORE-SEC-EDGAR",
+    "PROVIDER-TRADEINSIGHT-DAILY-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-ADJUSTED-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-BOUNDED-BULK-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-CORPORATE-ACTIONS": "CORE-CORPORATE-ACTION-TRUTH",
+    "BOUNDARY-TRADEINSIGHT-SEC-FORM4-GATED": "BOUNDARY-DIRECT-SEC-AUTHORITY",
+    "PROVIDER-TWSE-TAIEX-OFFICIAL-CLOSE": "CORE-GLOBAL-CONTEXT",
+    "CAP-COMMUNITY-EVIDENCE-INGEST": "CORE-ALTERNATIVE-COMMUNITY-INTELLIGENCE",
+    "RELEASE-RENDERER-CHROME-WEBKIT": "RELEASE-IDENTITY-PROVENANCE"
+  },
+  "excludedFutureSourceCarryForward": [
+    {
+      "id": "PERSIST-POSTGRES-FOUNDATION",
+      "disposition": "EXCLUDED_FROM_SHIPPED_V18_INVENTORY_KEEP_SOURCE_FOR_FUTURE_PROGRAM",
+      "canonicalSourceOwners": ["persistence_backend_postgres.go", "persistence_backend_postgres_stub.go"],
+      "provenance": ["issue:#66", "source:postgres build tag", "source:!postgres unavailable stub"],
+      "reason": "The PostgreSQL implementation is source-carried behind the postgres build tag. Normal v18 binaries compile an explicit unavailable stub, and #66 classifies hosted PostgreSQL/sync as a blocked v19 program. It is therefore not a shipped v18 capability and must not inflate the v18 feature inventory. Keeping the source is intentional future-program carry-forward, not dead code."
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "id": "TRADEINSIGHT-CONGRESS-PRODUCTION-VS-SHADOW-EVIDENCE",
+      "disposition": "EXPLAINED_DISTINCT_DIMENSIONS",
+      "reason": "Congressional Trading provider capability is governed PRODUCTION while persisted Research records remain SHADOW alternative evidence. Provider lifecycle and decision-evidence authority are distinct dimensions."
+    },
+    {
+      "id": "ADMINISTRATION-CONDITIONAL-SURFACE-VS-SETTINGS-EMBED",
+      "disposition": "CORRECTIVE_126_QUALIFIED",
+      "reason": "The capability-scoped Administration IA contract is implemented using the existing identity/session owners and passed exact-head Fast #1005 plus identical-head Qualified #204 at 6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9."
+    },
+    {
+      "id": "DOCUMENTATION-LEGACY-PROVIDER-FLOW",
+      "disposition": "CORRECTIVE_125_QUALIFIED",
+      "reason": "The dedicated Documentation architecture owner and Router v2/multi-feed/provider-authority content passed exact-head Fast #1005 plus Node, Chrome and WebKit qualification in Qualified #204 at 6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9."
+    }
+  ],
+  "correctiveIssues": [
+    {
+      "issue": 125,
+      "featureId": "SURF-DOCUMENTATION",
+      "state": "QUALIFIED",
+      "qualificationEvidence": {
+        "headSha": "6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9",
+        "fastRunId": 32854754246,
+        "qualifiedRunId": 32854819449
+      }
+    },
+    {
+      "issue": 126,
+      "featureId": "SURF-ADMINISTRATION",
+      "state": "QUALIFIED",
+      "qualificationEvidence": {
+        "headSha": "6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9",
+        "fastRunId": 32854754246,
+        "qualifiedRunId": 32854819449
+      }
+    }
+  ],
+  "finalScanAssertions": {
+    "duplicateOwnerChecksExplained": true,
+    "noAdditionalUntrackedImplementationMissConfirmed": true,
+    "allScanResponsibilitiesRequireEffectiveCoverage": true,
+    "allFutureCarryForwardMustBeExplicit": true,
+    "t2ToT10RemainBlocked": true
+  },
+  "effectiveShippedV18ResponsibilityCount": 180,
+  "freezeManifest": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json",
+  "unexplainedGapCount": 0,
+  "updatedAt": "2026-08-25T13:42:37Z"
+}
