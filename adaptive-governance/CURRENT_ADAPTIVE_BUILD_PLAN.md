@@ -4,6 +4,7 @@
 **Certified Stable:** `v18.9.1-stable`  
 **Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Program branch:** `adapt-v18-final-closure-10-10-001`  
 **Next child:** #114 / T1  
 **Future hosted umbrella:** #66 — BLOCKED.
 
