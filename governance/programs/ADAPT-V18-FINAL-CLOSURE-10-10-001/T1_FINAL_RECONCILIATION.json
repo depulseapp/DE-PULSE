@@ -3,9 +3,9 @@
   "programIssue": 113,
   "trackIssue": 114,
   "targetVersion": "v18.10.0",
-  "state": "IN_PROGRESS",
+  "state": "COMPLETE",
   "purpose": "Reconcile the canonical high-level feature ledger with both independent source/runtime omission scans without duplicating canonical ownership or losing scan granularity.",
-  "completionAuthority": "This file is the final reconciliation authority for the two immutable discovery checkpoints. The discovery checkpoint files may retain IN_PROGRESS because they record the state at the time each independent pass was captured; final completion requires this file, the quality audit, and the feature-assurance gate to agree.",
+  "completionAuthority": "This file is the final reconciliation authority for the two immutable discovery checkpoints. The populated feature-assurance ledger and base quality audit remain immutable pre-freeze checkpoints; feature-assurance-ledger-freeze.json plus T1_QUALITY_RESOLUTION.json record final T1 closure. Completion requires this file, those final overlays, and the executable feature-assurance gate to agree.",
   "sourceCheckpoints": [
     {
       "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_INDEPENDENT_OMISSION_SCAN.json",
@@ -92,25 +92,35 @@
     },
     {
       "id": "ADMINISTRATION-CONDITIONAL-SURFACE-VS-SETTINGS-EMBED",
-      "disposition": "CORRECTIVE_126_SUPERSEDES_DISCOVERY_CHECKPOINT",
-      "reason": "Later T1 evidence proved the capability-scoped Administration IA contract was current and unsuperseded. Corrective #126 implements a dedicated authorized destination using the existing identity/session owners; qualification remains required before closure."
+      "disposition": "CORRECTIVE_126_QUALIFIED",
+      "reason": "The capability-scoped Administration IA contract is implemented using the existing identity/session owners and passed exact-head Fast #1005 plus identical-head Qualified #204 at 6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9."
     },
     {
       "id": "DOCUMENTATION-LEGACY-PROVIDER-FLOW",
-      "disposition": "CORRECTIVE_125",
-      "reason": "Stale documentation ownership/provider-flow wording was a genuine user/developer-facing truth defect. Corrective #125 extracts the architecture owner and aligns the diagram with Router v2 plus multi-feed allocation; qualification remains required before closure."
+      "disposition": "CORRECTIVE_125_QUALIFIED",
+      "reason": "The dedicated Documentation architecture owner and Router v2/multi-feed/provider-authority content passed exact-head Fast #1005 plus Node, Chrome and WebKit qualification in Qualified #204 at 6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9."
     }
   ],
   "correctiveIssues": [
     {
       "issue": 125,
       "featureId": "SURF-DOCUMENTATION",
-      "state": "IMPLEMENTED_AWAITING_EXECUTABLE_QUALIFICATION"
+      "state": "QUALIFIED",
+      "qualificationEvidence": {
+        "headSha": "6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9",
+        "fastRunId": 32854754246,
+        "qualifiedRunId": 32854819449
+      }
     },
     {
       "issue": 126,
       "featureId": "SURF-ADMINISTRATION",
-      "state": "IMPLEMENTED_AWAITING_EXECUTABLE_QUALIFICATION"
+      "state": "QUALIFIED",
+      "qualificationEvidence": {
+        "headSha": "6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9",
+        "fastRunId": 32854754246,
+        "qualifiedRunId": 32854819449
+      }
     }
   ],
   "finalScanAssertions": {
@@ -120,6 +130,8 @@
     "allFutureCarryForwardMustBeExplicit": true,
     "t2ToT10RemainBlocked": true
   },
-  "unexplainedGapCount": null,
-  "updatedAt": "2026-08-25T08:11:00Z"
+  "effectiveShippedV18ResponsibilityCount": 180,
+  "freezeManifest": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json",
+  "unexplainedGapCount": 0,
+  "updatedAt": "2026-08-25T13:42:37Z"
 }

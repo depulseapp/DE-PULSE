@@ -1,0 +1,53 @@
+{
+  "schema": "DE.PULSE-V18-T1-FEATURE-ASSURANCE-FREEZE-1",
+  "programIssue": 113,
+  "trackIssue": 114,
+  "targetVersion": "v18.10.0",
+  "state": "FROZEN_T1",
+  "purpose": "Immutable T1 freeze manifest over the populated feature-assurance discovery ledger and both independent omission scans.",
+  "frozenDiscovery": {
+    "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json",
+    "gitBlobSha": "cb352904900a7156197d752ef21c348daa74bd05",
+    "rawRowStateIsHistorical": true,
+    "finalT1Projection": "IMPLEMENTED_UNVERIFIED",
+    "reason": "T1 verified inventory, canonical ownership and executable evidence ownership; it did not execute or certify all T2-T9 assurance classes."
+  },
+  "baseQualityAudit": {
+    "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_QUALITY_AUDIT.json",
+    "gitBlobSha": "51db4aed862adb1d3e7c055ca0b1a241cb3188d0",
+    "finalResolutionPath": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_QUALITY_RESOLUTION.json"
+  },
+  "effectiveInventory": {
+    "highLevelDiscoveryRows": 87,
+    "explicitFutureSourceExclusions": 1,
+    "scan1Responsibilities": 78,
+    "scan2Responsibilities": 16,
+    "effectiveShippedV18Responsibilities": 180
+  },
+  "futureSourceExclusion": "PERSIST-POSTGRES-FOUNDATION/#66",
+  "preFreezeQualificationEvidence": {
+    "headSha": "6714e14fbe2c2e67a7ecb64ca15b09636e7c03c9",
+    "fast": {"runId": 32854754246, "runNumber": 1005, "conclusion": "success"},
+    "qualified": {"runId": 32854819449, "runNumber": 204, "conclusion": "success"}
+  },
+  "correctiveIssues": [125, 126],
+  "unexplainedGapCount": 0,
+  "unresolvedBlockingDecisions": [],
+  "downstreamAssurance": {
+    "assuranceCeiling": "IMPLEMENTED_UNVERIFIED",
+    "T2ToT9Verified": false,
+    "T10Started": false,
+    "nextGovernedTracksAfterDurableT1Merge": ["T2/#115", "T3/#116"]
+  },
+  "preservedBoundaries": [
+    "SMART_PROVIDER_ROUTER_V2",
+    "CANONICAL_DATA_HEALTH_FRESHNESS_CACHE_PERSISTENCE_SUBSCRIPTIONS_TELEMETRY_RECONCILIATION",
+    "GOVERNED_PROVIDER_LIFECYCLE",
+    "DIRECT_SEC_EDGAR_AUTHORITY",
+    "US_EQUITIES_PROCESSING_BOUNDARY",
+    "GLD_SLV_USO_TRADABLE_EXCEPTIONS",
+    "NO_EXECUTION"
+  ],
+  "mergeRule": "The frozen head itself must pass exact-head Fast and identical-head Qualified before expected-head merge. No release is authorized by T1.",
+  "frozenAt": "2026-08-25T13:42:37Z"
+}
