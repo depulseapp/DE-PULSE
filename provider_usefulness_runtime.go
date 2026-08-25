@@ -16,13 +16,16 @@ func (e *Engine) sampleProviderUsefulness(now time.Time) []ProviderUsefulnessDia
 	persistence := e.app.persistence
 	e.app.mu.RUnlock()
 
+	// buildProviderRouterSnapshot is a read-only snapshot builder but, like the
+	// canonical Engine.Snapshot path, expects Engine state to remain read-locked
+	// while it inspects circuit/health/session fields.
 	e.mu.RLock()
 	quotes := clone(e.quotes)
 	lastUpdated := clone(e.lastUpdated)
 	providerQuotes := clone(e.providerQuotes)
+	router := e.buildProviderRouterSnapshot(settings, secrets, quotes, lastUpdated)
 	e.mu.RUnlock()
 
-	router := e.buildProviderRouterSnapshot(settings, secrets, quotes, lastUpdated)
 	decisions := buildProviderReconciliation(router, providerQuotes, quotes, now.UnixMilli())
 	canonicalProviderUsefulness.bindPersistence(persistence)
 	canonicalProviderUsefulness.observe(decisions, now.UnixMilli())
