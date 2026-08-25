@@ -101,5 +101,5 @@ vm.runInContext('hydrateDocumentation()',context).then(()=>{
   assert(index.includes(accessTag),'index must retain role-access decorator');
   assert(index.indexOf(architectureTag)<index.indexOf(ownerTag),'Documentation architecture owner must load before Documentation UI');
   assert(index.indexOf(ownerTag)<index.indexOf(accessTag),'Documentation owner must load before role-access decorator');
-  console.log('Documentation architecture + capability owner regression PASS');
+  console.log('Documentation capability owner regression PASS · canonical architecture owner and current provider truth verified');
 }).catch(err=>{console.error(err);process.exitCode=1});
