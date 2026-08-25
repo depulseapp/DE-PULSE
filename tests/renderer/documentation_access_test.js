@@ -49,9 +49,10 @@ const feedDiagram=vm.runInContext("architectureDiagram('feeds')",context);
 const overallDiagram=vm.runInContext("architectureDiagram('overall')",context);
 assert(feedDiagram.includes('Dynamic Multi-Feed Allocation'),'live-feed documentation must name the canonical multi-feed allocator');
 assert(feedDiagram.includes('Smart Provider Router v2'),'live-feed documentation must preserve Router v2 routing authority');
+assert(feedDiagram.includes('preferred live streaming pool'),'current Alpaca preferred live allocation must be explicit');
+assert(feedDiagram.includes('overflow/secondary live pool'),'current Finnhub overflow/secondary live allocation must be explicit');
 assert(feedDiagram.includes('GLD, SLV and USO'),'actionable GLD/SLV/USO exceptions must remain documented');
-assert(feedDiagram.includes('there is no single global primary/fallback story'),'documentation must reject the stale global Finnhub-primary / Alpaca-fallback model');
-assert(!feedDiagram.includes('primary live trades')&&!feedDiagram.includes('controlled fallback pool'),'stale global primary/fallback wording must not reappear');
+assert(!feedDiagram.includes('Finnhub WebSocket</b><small>primary live trades')&&!feedDiagram.includes('Alpaca IEX</b><small>controlled fallback pool'),'reversed legacy Finnhub-primary / Alpaca-fallback wording must not reappear');
 assert(overallDiagram.includes('direct filings / Form 4 authority'),'direct SEC/EDGAR authority must remain explicit');
 assert(overallDiagram.includes('No Execution'),'permanent No Execution boundary must remain explicit');
 
