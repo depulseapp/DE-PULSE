@@ -293,7 +293,11 @@ def main() -> int:
         "tools/release/run_full_certification.py", "G13/G14 macOS Apple Silicon", "G13/G14 Windows x64",
         "tools/release/native_macos.sh", "tools/release/native_windows.ps1",
         "G15 Release Assurance", "Publish exact same-run certified artifacts",
-        "Stable asset differing-byte overwrite prohibition", "depulse-stable-release",
+        "Publish Stable release without rebuild or overwrite",
+        "immutable Stable asset conflict for $name",
+        "existing Stable asset byte-identical; reuse",
+        "published/reused $tag from this exact certified run without rebuilding or overwriting differing bytes",
+        "depulse-stable-release",
     ):
         if marker not in release:
             errors.append(f"canonical release no-rebuild/provenance contract drifted: {marker}")
