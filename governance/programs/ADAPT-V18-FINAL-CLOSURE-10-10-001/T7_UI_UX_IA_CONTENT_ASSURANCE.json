@@ -1,0 +1,65 @@
+{
+  "schema": "DE.PULSE-V18-T7-UI-UX-IA-CONTENT-ASSURANCE-1",
+  "programIssue": 113,
+  "trackIssue": 120,
+  "targetVersion": "v18.10.0",
+  "state": "IN_PROGRESS",
+  "startedFromMainSha": "ca051884c733118c11e13b0b5ef169c810c39714",
+  "frozenT1GitBlobSha": "cb352904900a7156197d752ef21c348daa74bd05",
+  "effectiveShippedV18ResponsibilityCount": 180,
+  "rules": {
+    "allEffectiveT1ResponsibilitiesRequireT7Expectation": true,
+    "allEffectiveT1ResponsibilitiesRequireVisibilityResolution": true,
+    "visibleResponsibilitiesRequireExplicitDisposition": true,
+    "visibleResponsibilitiesRequireExecutableUiEvidence": true,
+    "scanResponsibilitiesInheritOnlyNamedCanonicalParentDisposition": true,
+    "t1PhysicalDispositionIsDefaultUnlessCurrentSourceProvesOverride": true,
+    "screenshotEvidenceIsSupplementalOnly": true,
+    "uiHidingCannotSubstituteForAuthorization": true,
+    "readOnlyUiCannotCreateParallelDataOrRecoveryOwner": true,
+    "boundedIaContentCorrectionRequiresAffectedRegressionRequalification": true,
+    "t8OrLaterCertificationNotImplied": true
+  },
+  "allowedDispositions": ["KEEP", "MOVE", "MERGE", "REMOVE", "RENAME", "REDESIGN", "NOT_USER_VISIBLE"],
+  "visibilityPolicy": {
+    "physicalRows": "Use frozen T1 uiDisposition unless a T7 override has current source/evidence rationale.",
+    "scanRows": "Inherit the disposition of the single canonical parent from T1_FINAL_RECONCILIATION unless a T7 override proves a distinct user-visible responsibility.",
+    "nonVisibleRows": "NOT_USER_VISIBLE rows receive a T7 expectation but no cosmetic UI ownership or standalone surface requirement."
+  },
+  "requiredScenarioMatrix": [
+    "role-aware navigation and capability-scoped visibility",
+    "information hierarchy and control/task proximity",
+    "duplicate/legacy surface consolidation",
+    "truthful terminology, provenance and degraded/loading/empty content",
+    "typography, spacing, table and long-text stability",
+    "scroll/action context preservation",
+    "focus, keyboard and accessible protected/error states where applicable",
+    "responsive viewport stability",
+    "Chrome and WebKit renderer behavior where applicable",
+    "native-shell presentation where applicable",
+    "documentation/help discoverability and content truth"
+  ],
+  "dispositionOverrides": {
+    "SURF-ADMINISTRATION": {
+      "disposition": "MOVE",
+      "rationale": "T1 corrective #126 resolved the frozen Settings-embed mismatch by moving Administration to one dedicated capability-scoped destination. Current renderer/administration-ui.js has settingsInjection=false, role-scoped navigation and dedicated-page ownership; tests/renderer/administration_surface_test.js proves Settings separation and fail-closed direct renderer access. T7 records the completed MOVE rather than reverting to the older frozen KEEP label."
+    }
+  },
+  "evidenceSupplements": {
+    "SURF-ADMINISTRATION": {
+      "owners": ["tests/renderer/administration_surface_test.js"],
+      "rationale": "This regression was added by qualified corrective #126 after the immutable discovery ledger and is the current canonical renderer evidence for the Administration MOVE."
+    }
+  },
+  "gapDeclarationState": "PENDING_FIRST_EXECUTION",
+  "knownCoverageGaps": [],
+  "visibleResponsibilityCount": null,
+  "coveredVisibleResponsibilityCount": null,
+  "uncoveredResponsibilityCount": null,
+  "nonVisibleResponsibilityCount": null,
+  "firstExecutableCensus": null,
+  "closureCensus": null,
+  "completionCondition": "Every effective T1 responsibility has a T7 expectation and explicit visibility resolution; every visible responsibility has one KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition plus current executable UI/UX/IA/content/accessibility evidence; all material UI debt is corrected or source-proven non-applicable; exact-head Fast and identical-head Qualified pass before expected-head merge.",
+  "t8CompanionIssue": 121,
+  "t8StartedByThisArtifact": false
+}
