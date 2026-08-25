@@ -101,20 +101,7 @@ type providerCircuit struct {
 }
 
 func routeChains() map[string][]string {
-	return map[string][]string{
-		"US Live Equities":                  {"Alpaca", "Finnhub", "Twelve Data"},
-		canonicalUSAssetUniverseDataset:     {"Alpaca"},
-		canonicalUSMarketCalendarDataset:    {"Alpaca"},
-		canonicalUSCorporateActionsDataset:  {"Alpaca"},
-		canonicalGlobalMarketContextDataset: {"Twelve Data"},
-		"VIX / Indices":                     {"Twelve Data", "yfinance", "CBOE"},
-		canonicalHistoricalBarsDataset:      {"Alpaca", tradeInsightProviderName, "Twelve Data", "yfinance"},
-		"News":                              {"Finnhub", "Marketaux"},
-		"Earnings":                          {"Finnhub", "yfinance"},
-		"Fundamentals":                      {"Finnhub", "SEC", "yfinance"},
-		"SEC":                               {"SEC EDGAR"},
-		"Macro":                             {"FRED"},
-	}
+	return routeChainsFromProviderRegistrations(providerRegistrations())
 }
 
 func providerKey(provider string) string {
@@ -124,82 +111,19 @@ func providerKey(provider string) string {
 }
 
 func (e *Engine) providerConfigured(provider string, secrets Secrets, settings Settings) bool {
-	switch strings.ToLower(provider) {
-	case "alpaca":
-		return strings.TrimSpace(secrets.AlpacaKey) != "" && strings.TrimSpace(secrets.AlpacaSecret) != ""
-	case "finnhub":
-		return strings.TrimSpace(secrets.Finnhub) != ""
-	case "tradeinsight":
-		return tradeInsightConfigured(secrets.TradeInsight)
-	case "twelve data":
-		return strings.TrimSpace(secrets.TwelveData) != ""
-	case "marketaux":
-		return strings.TrimSpace(secrets.Marketaux) != ""
-	case "fred":
-		return strings.TrimSpace(secrets.FRED) != ""
-	case "sec", "sec edgar":
-		return strings.TrimSpace(settings.SECEmail) != ""
-	case "yfinance", "cboe":
-		return true
-	}
-	return false
+	return providerConfiguredFromRegistration(provider, settings, secrets)
 }
 
 func providerQuotaLabel(provider string) string {
-	switch provider {
-	case "Alpaca":
-		return "Entitlement / feed dependent"
-	case "Finnhub":
-		return "API plan / endpoint dependent"
-	case tradeInsightProviderName:
-		return "Runtime tier / response headers"
-	case "Twelve Data":
-		return "Credit based"
-	case "Marketaux":
-		return "Request quota"
-	case "FRED":
-		return "Free API key"
-	case "SEC", "SEC EDGAR":
-		return "Fair-access policy"
-	case "yfinance":
-		return "Public recovery · best effort"
-	case "CBOE":
-		return "Public official/delayed"
-	}
-	return "Provider dependent"
+	return providerQuotaFromRegistration(provider)
 }
 
 func providerCostClass(provider string) string {
-	switch provider {
-	case "yfinance", "CBOE", "SEC", "SEC EDGAR":
-		return "Public / no API fee"
-	case tradeInsightProviderName:
-		return "Beta / free tier"
-	case "FRED", "Marketaux", "Twelve Data", "Finnhub":
-		return "Free tier / optional paid upgrade"
-	case "Alpaca":
-		return "Broker/data entitlement"
-	}
-	return "Provider dependent"
+	return providerCostFromRegistration(provider)
 }
 
 func expectedProviderDelay(dataset, provider string) string {
-	if dataset == "VIX / Indices" && provider == "CBOE" {
-		return "Official delayed/close validation"
-	}
-	if provider == "yfinance" {
-		return "Recovery-only; may be delayed"
-	}
-	if dataset == canonicalHistoricalBarsDataset {
-		return "Completed-bar cadence"
-	}
-	if dataset == "SEC" || provider == "SEC EDGAR" {
-		return "Filing dissemination cadence"
-	}
-	if dataset == "Macro" {
-		return "Series release cadence"
-	}
-	return "Near-live when entitled"
+	return providerExpectedDelayFromRegistration(dataset, provider)
 }
 
 func (e *Engine) circuitStatusLocked(provider string, now int64) string {

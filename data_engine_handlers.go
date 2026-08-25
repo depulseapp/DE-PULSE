@@ -183,19 +183,22 @@ func (a *Application) handleCapabilityRecheck(w http.ResponseWriter, r *http.Req
 		return
 	}
 	a.mu.RLock()
-	finnhubKey := strings.TrimSpace(a.secrets.Finnhub)
-	alpacaKey := strings.TrimSpace(a.secrets.AlpacaKey)
-	alpacaSecret := strings.TrimSpace(a.secrets.AlpacaSecret)
-	fredKey := strings.TrimSpace(a.secrets.FRED)
-	eiaKey := strings.TrimSpace(a.secrets.EIA)
-	twelveKey := strings.TrimSpace(a.secrets.TwelveData)
+	settings := clone(a.state.Settings)
+	secrets := clone(a.secrets)
+	finnhubKey := strings.TrimSpace(secrets.Finnhub)
+	alpacaKey := strings.TrimSpace(secrets.AlpacaKey)
+	alpacaSecret := strings.TrimSpace(secrets.AlpacaSecret)
+	fredKey := strings.TrimSpace(secrets.FRED)
+	eiaKey := strings.TrimSpace(secrets.EIA)
+	twelveKey := strings.TrimSpace(secrets.TwelveData)
 	a.mu.RUnlock()
-	a.engine.setManualAction("capability-recheck", "Provider Capabilities", "RUNNING", "Rechecking provider capabilities and entitlements.", false)
+	a.engine.forceProviderEntitlementRevalidation(settings, secrets)
+	a.engine.setManualAction("capability-recheck", "Provider Capabilities", "RUNNING", "Rechecking provider capabilities and entitlements from fresh evidence.", false)
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
 		a.engine.mu.Lock()
-		a.engine.health["provider-capabilities"] = "checking · manual recheck"
+		a.engine.health["provider-capabilities"] = "checking · manual recheck · stale entitlement suppression reopened"
 		a.engine.mu.Unlock()
 		if finnhubKey != "" {
 			a.engine.refreshFinnhubIntelligence(ctx, finnhubKey)
@@ -210,7 +213,6 @@ func (a *Application) handleCapabilityRecheck(w http.ResponseWriter, r *http.Req
 		}
 		a.engine.refreshOfficialMacroActuals(ctx, eiaKey)
 		if twelveKey != "" {
-
 			a.engine.refreshTwelveFX(ctx, twelveKey)
 		}
 		a.engine.mu.Lock()
@@ -220,7 +222,7 @@ func (a *Application) handleCapabilityRecheck(w http.ResponseWriter, r *http.Req
 		a.engine.setManualAction("capability-recheck", "Provider Capabilities", "COMPLETE", "Provider capability evidence rechecked; unavailable entitlements remain truthfully labeled.", true)
 		a.broadcastRuntime()
 	}()
-	writeJSON(w, 202, map[string]any{"ok": true, "message": "Provider capability recheck started. Entitlements remain unavailable until positively verified.", "tone": "info", "refreshAfterMs": 1500})
+	writeJSON(w, 202, map[string]any{"ok": true, "message": "Provider capability recheck started from fresh entitlement evidence. Entitlements remain unavailable until positively verified.", "tone": "info", "refreshAfterMs": 1500})
 }
 
 func (a *Application) handleVIXRefresh(w http.ResponseWriter, r *http.Request) {

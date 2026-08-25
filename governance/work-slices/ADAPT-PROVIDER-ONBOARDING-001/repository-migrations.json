@@ -1,0 +1,43 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-PROVIDER-ONBOARDING-001",
+  "issue": 95,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "workSliceBaselineMainSha": "57d530e58bfb0b38cc108980cd5cd4a041014db8",
+  "moveDefaults": {
+    "owner": "ADAPT-PROVIDER-ONBOARDING-001 / package-main adaptive provider onboarding",
+    "reason": "Preventive direct-to-version-neutral registration: #95 introduces package-main provider onboarding/adaptation owners after root convergence. A version-stacked predecessor is intentionally never created; the canonical root target is registered directly so Smart Provider Router v2, capability-state and private package-main integration ownership remain intact without parallel exported APIs or a second provider subsystem.",
+    "removalCondition": "Version-scoped predecessor remains absent; version-neutral package-main target moves only with a cohesive capability extraction that preserves the existing Smart Provider Router v2, lifecycle, Data Health and private integration contracts without parallel owners.",
+    "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+    "allowedReferenceFiles": []
+  },
+  "moves": [
+    {"oldPath":"v18_9_provider_onboarding_registration.go","newPath":"provider_registration.go"},
+    {"oldPath":"v18_9_provider_entitlement_refresh.go","newPath":"provider_entitlement_refresh.go"},
+    {
+      "oldPath":"v18_9_provider_registration_test.go",
+      "newPath":"provider_registration_regression_test.go",
+      "owner":"ADAPT-PROVIDER-ONBOARDING-001 / package-main provider registration regression evidence",
+      "reason":"Prevent version-stacked test recurrence while retaining private package-main access for route parity, fail-closed lifecycle admission and credential/configuration revalidation proof.",
+      "removalCondition":"Version-scoped predecessor remains absent; regression owner moves only with a cohesive capability extraction that preserves exact Go test identities or records governed identity renames."
+    },
+    {
+      "oldPath":"v18_9_provider_onboarding_adaptive_test.go",
+      "newPath":"provider_onboarding_adaptive_regression_test.go",
+      "owner":"ADAPT-PROVIDER-ONBOARDING-001 / package-main adaptive onboarding regression evidence",
+      "reason":"Retain synthetic-provider projection, specialized diagnostic truth and same-key plan revalidation proof without introducing production-only test seams.",
+      "removalCondition":"Version-scoped predecessor remains absent; regression owner moves only with a cohesive capability extraction that preserves exact Go test identities or records governed identity renames."
+    },
+    {
+      "oldPath":"v18_9_provider_capability_projection_test.go",
+      "newPath":"provider_capability_projection_regression_test.go",
+      "owner":"ADAPT-PROVIDER-ONBOARDING-001 / package-main capability projection compatibility evidence",
+      "reason":"Retain legacy Data Engine capability-order compatibility, future-provider deterministic placement and same-key entitlement isolation proof against private package-main owners.",
+      "removalCondition":"Version-scoped predecessor remains absent; regression owner moves only with a cohesive capability extraction that preserves exact Go test identities or records governed identity renames."
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}

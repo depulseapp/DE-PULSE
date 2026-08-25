@@ -1,0 +1,70 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-PROVIDER-ONBOARDING-001",
+  "issue": 95,
+  "branch": "adapt-provider-onboarding-001",
+  "closurePolicy": "#95 closes only when the canonical registration contract is executable, current-provider behavior is preserved, free/paid entitlement changes are revalidated through real provider evidence, diagnostics remain truthful, CURRENT Adaptive governance/handoff agree, and exact-head Fast plus impact-selected Qualified plus expected-head merge evidence are VERIFIED. Documentation-only closure is prohibited.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "CANONICAL-PROVIDER-REGISTRATION",
+      "status": "OPEN",
+      "owner": "existing Smart Provider Router v2 + provider capability/lifecycle owners",
+      "implementationPaths": ["provider_registration.go", "provider_router.go", "smart_router_v2.go", "provider_capabilities.go"],
+      "evidenceRequired": ["route/configuration/quota/cost/expected-delay/capability diagnostics consume one registration source", "production routes fail closed on incomplete adaptive contracts", "no second router/registry/lifecycle/health owner"],
+      "evidence": ["implementation commits through f083b7cfa92b9f899388566f1fe56ed9c5b5eebe exist on adapt-provider-onboarding-001; qualification still pending"],
+      "closureCondition": "Executable registration/admission regression evidence proves Router v2 and the existing lifecycle/Data Health owners consume one canonical provider registration and reject incomplete production contracts without parallel authority.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ENTITLEMENT-AUTO-ADAPTATION",
+      "status": "OPEN",
+      "owner": "Smart Provider Router v2 capability-state owner",
+      "implementationPaths": ["provider_entitlement_refresh.go", "smart_router_v2.go", "data_engine_handlers.go"],
+      "evidenceRequired": ["config/credential change reopens only affected NOT_ENTITLED/NOT_CONFIGURED suppression", "same-key manual recheck can request fresh bounded provider evidence", "402/403/plan-limited downgrade remains fail-closed and capability-scoped", "no secret/hash leakage to diagnostics/persistence"],
+      "evidence": ["process-local one-way configuration fingerprints and bounded manual entitlement revalidation implemented; exact-head regression/CI proof pending"],
+      "closureCondition": "Executable entitlement/configuration regressions prove affected-capability-only revalidation, same-key bounded recheck, fail-closed downgrade handling, unrelated-capability isolation, and no reusable credential-derived material exposure or persistence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "PROVIDER-ADOPTION-AND-DIAGNOSTIC-PARITY",
+      "status": "OPEN",
+      "owner": "canonical provider capability projection + Data Engine",
+      "implementationPaths": ["provider_capabilities.go", "provider_registration.go", "provider_capability_projection_regression_test.go"],
+      "evidenceRequired": ["synthetic provider appears through registration without unrelated provider switches/maps", "existing special status semantics remain intact", "existing visible diagnostic behavior/order does not change incidentally", "active/serving/plan-limited/unavailable truth remains provenance-safe"],
+      "evidence": ["generic registration-driven diagnostics implemented; visible ordering compatibility still requires final reconciliation and proof"],
+      "closureCondition": "Synthetic-provider and current-provider diagnostic regressions prove registration-driven adoption while preserving specialized truth semantics and the legacy Data Engine provider-capability row order.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "CURRENT-PROVIDER-REGRESSION",
+      "status": "OPEN",
+      "owner": "existing provider/router/Data Health regression owners",
+      "implementationPaths": ["provider_registration_regression_test.go", "provider_capability_projection_regression_test.go", "smart_router_rapid_regression_test.go", "router_shock_hardening_regression_test.go"],
+      "evidenceRequired": ["Finnhub, Alpaca, Twelve Data, TradeInsight, Marketaux, FRED, BLS, EIA, SEC/EDGAR, yfinance and CBOE behavior preserved", "direct SEC/EDGAR Form 4 authority preserved", "U.S.-equities + GLD/SLV/USO + No Execution preserved"],
+      "evidence": [],
+      "closureCondition": "Exact-head regression evidence proves all existing provider routes/diagnostics remain compatible, direct SEC/EDGAR Form 4 authority is unchanged, and the U.S.-equities, GLD/SLV/USO and No Execution boundaries remain enforced.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "ADAPTIVE-PORTABILITY-BINDING",
+      "status": "OPEN",
+      "owner": "governance/current-state.json + handoff/CURRENT.md + CURRENT Adaptive contracts + issue #95",
+      "implementationPaths": ["governance/current-state.json", "handoff/CURRENT.md", "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md", "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md", "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md"],
+      "evidenceRequired": ["#92 recorded complete rather than active", "#95 branch/work-slice is the resumable executable product slice", "new chats/assistants are instructed to fetch live main and #95 branch, read #95/ledger and continue implementation", "#94 remains separate residual and #66 remains future-blocked"],
+      "evidence": ["#95 work-slice and closure ledger created; remaining CURRENT surfaces pending update"],
+      "closureCondition": "Canonical current-state, handoff, portability gate and all CURRENT Adaptive projections agree that #95 is the active resumable product slice, #92/#79/#84 are completed foundations, #94 is separate, and #66 remains future-blocked.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-DELIVERY",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified + expected-head merge",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS", "impact-selected Qualified PASS on identical candidate", "expected-head merge against still-current main", "no Stable/public SemVer release merely for #95"],
+      "evidence": [],
+      "closureCondition": "GitHub records canonical Fast PASS and impact-selected Qualified PASS on the identical final candidate, followed by an expected-head guarded merge against freshly verified main, with no #95-only Stable/public SemVer release.",
+      "blocksIssueClosure": true
+    }
+  ]
+}

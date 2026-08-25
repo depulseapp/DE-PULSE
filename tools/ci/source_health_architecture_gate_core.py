@@ -261,8 +261,28 @@ for token, why in {
 }.items():
     if token in prod_text:
         fail(f"{why} returned: {token}")
-if not re.search(r'"Fundamentals"\s*:\s*\{"Finnhub",\s*"SEC",\s*"yfinance"\}', prod_text):
-    fail("Fundamentals route must remain Finnhub -> SEC -> yfinance")
+
+# Fundamentals routing is now generated from the canonical provider registration
+# rather than a hard-coded route map. Keep the protected authority/fallback order
+# fail-closed by inspecting the registration itself: exactly Finnhub=1, SEC=2,
+# yfinance=3 and no additional production Fundamentals provider declaration.
+registration_text = (ROOT / "provider_registration.go").read_text(errors="ignore")
+fundamental_rows = re.findall(
+    r'inheritedProductionRoute\("([^"]+)",\s*"Fundamentals",\s*"[^"]+",\s*(\d+),',
+    registration_text,
+)
+try:
+    fundamental_rows = sorted(
+        ((provider, int(priority)) for provider, priority in fundamental_rows),
+        key=lambda row: row[1],
+    )
+except Exception:
+    fundamental_rows = []
+if fundamental_rows != [("Finnhub", 1), ("SEC", 2), ("yfinance", 3)]:
+    fail(
+        "Fundamentals registration must remain exactly Finnhub=1 -> SEC=2 -> yfinance=3; "
+        f"observed={fundamental_rows}"
+    )
 if len(re.findall(r"func\s+\(e \*Engine\)\s+executeProviderRoute\s*\(", prod_text)) != 1:
     fail("Provider Router must have exactly one executeProviderRoute authority")
 if len(re.findall(r"var\s+canonicalSymbolClassifications\s*=", prod_text)) != 1:

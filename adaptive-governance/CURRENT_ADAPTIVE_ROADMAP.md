@@ -2,24 +2,32 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Completed provider/data-health program:** #79 with #80, #81, #82, #83, #78 and #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
+**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
+**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
+**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
+**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; it is not reopened. The separate product capability reservation advances under #92.
+The current v18.9.x direction is to make the completed provider/data-health architecture easier to extend **without creating a second provider architecture**. #95 turns provider onboarding itself into a bounded adaptive contract while preserving the already-qualified Smart Provider Router v2, lifecycle/readiness, Data Health, freshness, persistence, telemetry, reconciliation and degradation owners.
 
-The current v18.9.x direction advances from completed provider production/data-health closure into canonical slow-changing company/instrument identity. #92 must strengthen the existing symbol/universe and persistence owners rather than create a company-profile subsystem.
+## Retained Data Health foundation
+The completed provider program sequence remains durable executable history and inherited contract: **#80 baseline → #81 Router v2 adoption + #82 common health/recovery → #83 lifecycle + #78 TradeInsight admission → #84 zero-gap closure**. #95 extends that architecture; it does not replace it. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited, and Smart Provider Router v2 remains the sole general routing authority.
 
-The canonical identity path is persistence-first and reuse-first: existing in-memory identity -> persisted canonical identity -> validate the slow-changing record -> acquire only missing/expired evidence. When acquisition is needed, identity is captured from the **same Smart Provider Router v2 Alpaca `/v2/assets` U.S. Asset Universe response** already used for canonical universe discovery. No additional company-profile fetch is introduced.
+## #95 adaptive destination
+A supported provider/capability should require one real adapter/normalizer plus one canonical provider registration. That registration declares only the metadata/evidence needed by existing owners: canonical datasets/capabilities, route priority, configuration requirements, quota/cost/cadence metadata, capability diagnostics, canonical owner/consumer purpose, adapter/schema/timestamp/freshness/failure/rights contracts, evidence/approval references and invalidation rules.
 
-Identity includes only useful canonical fields already present in that response: normalized symbol, display/company name, exchange, asset class, stable provider asset ID when supplied, source and observation time. The observation time is slow-changing identity provenance, not live quote/market evidence time. Existing universe eligibility remains authoritative.
+The registration is **not a new authority**. Smart Provider Router v2 remains sole general routing/admission authority; lifecycle/readiness remains the promotion authority; Data Health/freshness/degradation remain their canonical owners; provider data-rights evidence remains independently governed. A `PRODUCTION` label cannot make an incomplete provider contract routable.
 
-`SymbolRegistryRecord` remains the complete trading-registry snapshot owner. Partial identity must never be written through it because full registry persistence intentionally resets `active/selected` state outside the supplied snapshot. #92 therefore uses dedicated instrument-identity storage behind the existing `PersistenceManager`/backend abstraction, with native macOS SQLite, Windows system SQLite and PostgreSQL logical parity.
+## Entitlement adaptation
+When credentials or plan-affecting configuration change, only stale entitlement/configuration suppression for the affected provider is reopened before the next canonical Router v2 decision. Real provider evidence remains authoritative; API-key presence never proves a paid plan. If the provider changes entitlement server-side while the same key remains, the existing privileged **Provider Capabilities → Recheck** action may request a bounded fresh entitlement observation instead of waiting for a stale cooldown.
 
-## Retained Adaptive Data Health contract
-The completed #79/#84 provider program remains an active invariant, not superseded prose. Provider/capability coverage continues to use truthful states including **PARTIAL COVERAGE** and **DATA DEGRADED** whenever current evidence is incomplete, stale, unavailable, suppressed, or fallback-constrained. Healthy-looking UI must never be synthesized from missing evidence. Smart Provider Router v2, canonical freshness, cache/persistence, telemetry, lifecycle/readiness, fault-recovery and zero-gap closure evidence remain the production data-health foundation beneath #92 and every later #65 child.
+Upgrade/downgrade observations are capability-scoped. A 402/403/plan-limited response may suppress the affected capability and permit existing fallback, but must not poison unrelated capabilities or become a generic provider outage. Successful evidence restores eligibility through the existing capability state owner; production authority still requires governed lifecycle/rights evidence.
 
-TradeInsight `symbol-search` remains hard-gated/non-executable. Smart Provider Router v2 remains the sole general routing authority. U.S. equities processing, direct SEC/EDGAR Form 4 authority, GLD/SLV/USO actionable exceptions, canonical freshness/cache/persistence/telemetry/state ownership and No Execution remain permanent boundaries.
+## Portability and continuity
+#95 is durable only when executable source, the #95 work-slice/closure ledger, `governance/current-state.json`, `handoff/CURRENT.md`, these four CURRENT Adaptive projections, issue #95 and exact-head CI/merge objects agree. Documentation alone cannot close the slice. A new ChatGPT account, another assistant, or another implementation session must be able to fetch the live branch and continue from those repository objects without chat memory.
 
-After #92 closes through exact-head Fast -> impact-selected Qualified -> expected-head merge, #65 continues in dependency order; no Stable/public SemVer release is required merely for this capability child.
+## Retained boundaries
+The completed #79/#84 Data Health foundation remains an invariant. Smart Provider Router v2 remains sole general routing authority; direct SEC/EDGAR remains Form 4 authority; U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. TradeInsight SEC/search/movers capabilities whose REST contracts are unverified remain fail-closed/gated. #94 stays a separate telemetry/usefulness residual and must not be silently bundled into #95. #66 remains future-blocked/not started.
+
+After #95 closes through exact-head Fast -> impact-selected Qualified -> expected-head merge, #65 resumes fresh semantic-overlap selection of the next genuine residual. v19/v20 inherit this canonical onboarding contract rather than rebuilding a new provider registry/data plane.

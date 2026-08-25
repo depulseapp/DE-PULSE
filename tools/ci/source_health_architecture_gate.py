@@ -8,8 +8,9 @@ field while the unchanged G2 core executes. All source/orphan/duplicate and
 architecture checks remain owned by the core.
 
 The pre-existing Adaptive Data Health policy gate is executed after the conserved
-G2 core. This keeps #80 provider/capability/fetch-path recurrence protection in
-G2/source-health ownership without creating a new permanent workflow/gate family.
+G2 core. #95 also binds the canonical provider registration back to the same #80
+provider-capability matrix through a registration-aware extension, preserving
+fail-closed recurrence without creating a new workflow/gate family.
 """
 from __future__ import annotations
 
@@ -56,12 +57,17 @@ def validate_registered_process_slice() -> dict:
     return state
 
 
-def run_data_health_gate() -> None:
+def run_gate(path: str) -> None:
     try:
-        runpy.run_path(str(ROOT / "tools/ci/data_health_policy_gate.py"), run_name="__main__")
+        runpy.run_path(str(ROOT / path), run_name="__main__")
     except SystemExit as exc:
         if exc.code not in (None, 0):
             raise
+
+
+def run_data_health_gate() -> None:
+    run_gate("tools/ci/data_health_policy_gate.py")
+    run_gate("tools/ci/provider_registration_data_health_gate.py")
 
 
 def main() -> int:

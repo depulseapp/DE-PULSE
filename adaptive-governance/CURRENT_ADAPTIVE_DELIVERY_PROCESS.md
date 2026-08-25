@@ -2,23 +2,39 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Completed provider/data-health program:** #79 with #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
+**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
+**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
+**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
+**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`. #92 delivery is governed separately through the active product capability reservation and does not reopen #73.
+Delivery remains PR-first, exact-head governed and evidence-bound. #95 uses the existing `adapt-provider-onboarding-001` branch; do not create another branch for the same slice. No Stable/public SemVer release is performed merely to close #95.
 
-Delivery remains PR-first and exact-head governed. #92 advances from deterministic identity/persistence regressions to canonical Fast exact-head PASS, then impact-selected Qualified exact-head PASS on the identical candidate, then expected-head merge only if live `main` and the PR head still match the qualified evidence. No Stable/public SemVer release is performed merely to close #92.
+Before qualification, the branch must prove through focused regression that:
+- route/configuration/quota/cost/delay/capability diagnostic metadata are adopted from the canonical provider registration without introducing a second provider router/registry/health/lifecycle owner;
+- incomplete production contracts fail closed even when a lifecycle label says `PRODUCTION`;
+- existing provider route ordering/roles and Data Engine capability semantics/order are preserved unless an intentional separately-scoped change is approved;
+- free-plan/`NOT_ENTITLED` evidence excludes only the affected capability;
+- relevant credential/config change reopens only affected entitlement/configuration suppression and the next canonical Router v2 attempt can establish fresh evidence;
+- same-key server-side plan upgrades can be rechecked through the existing privileged Provider Capabilities action without waiting for the stale entitlement cooldown;
+- downgrade/402/403/plan-limited evidence safely re-suppresses the capability and uses existing fallback/degradation behavior without poisoning unrelated capabilities;
+- current Finnhub, Alpaca, Twelve Data, TradeInsight, Marketaux, FRED, BLS, EIA, SEC/EDGAR, yfinance and CBOE behavior remains compatible;
+- direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO actionable exceptions and No Execution remain unchanged;
+- no credential value or reusable credential-derived material appears in source-visible evidence, diagnostics, persistence, logs or artifacts.
 
-#92 delivery evidence must prove:
-- identity is captured from the same Router-v2 Alpaca `/v2/assets` universe response with no additional provider request;
-- only existing canonical eligible U.S. assets enter identity;
-- normalized slow-changing identity survives persistence/restart and stale observations cannot overwrite newer records;
-- identity writes cannot deactivate/clear active or selected trading-registry symbols;
-- supported native persistence contracts remain aligned for macOS SQLite and Windows system SQLite, with PostgreSQL logical compatibility where impact selection exercises it;
-- persistence failure stays scoped and does not become false provider degradation;
-- TradeInsight `symbol-search` remains gated/non-executable;
-- Smart Provider Router v2, direct SEC/EDGAR authority, GLD/SLV/USO, U.S. equities and No Execution remain unchanged.
+## Retained Data Health delivery contract
+The completed #80–#84 provider/data-health foundation remains delivery authority under #95. The required wording remains explicit because the canonical recurrence gate binds it: **canonical Fast exact-head PASS** must precede **Qualified exact-head PASS** on the identical candidate, while SEC/EDGAR authority and No Execution remain unchanged. #95 adds no waiver or alternate qualification path.
 
-The closure ledger may bind source/test evidence before final qualification, but GitHub Actions run IDs, job conclusions and merge SHA are immutable post-commit evidence and must be recorded on #92/PR metadata rather than fabricated into a pre-run source candidate. Any source change after qualification creates a new candidate and invalidates earlier exact-head evidence.
+## Canonical qualification order
+1. Re-fetch live `main` and live #95 branch; inspect candidate diff and ensure no concurrent work was lost.
+2. Run focused/local/static regression where available and fix genuine findings without weakening gates.
+3. Commit final source/governance candidate.
+4. Run canonical **CI Fast** on that exact head.
+5. If Fast passes, run deliberate impact-selected **CI Qualified** on the identical head. Backend/race/randomized order and any planner-selected renderer/native/DB lanes must pass as selected.
+6. Any source change after either gate creates a new candidate; rerun the required exact-head gates.
+7. Merge only if live `main` still matches the expected merge base and the PR head matches the qualified candidate.
+8. Record immutable run IDs/job conclusions/candidate SHA/merge SHA in #95 and its closure evidence after GitHub produces them. Never fabricate future CI evidence into source.
+
+## Closure boundary
+The #95 closure ledger remains fail-closed until every blocking gap is VERIFIED. Source code plus governance text is insufficient. If CI exposes a real defect, correct the architecture/source and requalify; do not waive or weaken assurance. #94 remains a separate residual and #66 remains future-blocked/not started.

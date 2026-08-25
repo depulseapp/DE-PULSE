@@ -2,26 +2,43 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
+**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Active product work:** #92 / `ADAPT-COMPANY-INSTRUMENT-IDENTITY-001` / `adapt-company-instrument-identity-001`  
+**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
+**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
+**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-#73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001` remains the completed retained repository-architecture process authority in canonical `activeWorkSlice`; #92 is independently reserved under `productCapabilityGate`.
-
-#92 required build outputs are:
-1. Extend the existing Alpaca asset-universe decoder only with useful identity fields already returned by `/v2/assets`; do not add a provider call.
-2. Continue using `canonicalUSUniverseAssetEligible` and existing U.S.-equity/tradability/exchange/symbol boundaries before identity admission.
-3. Store normalized `InstrumentIdentityRecord` values in the Engine canonical symbol/universe owner and expose only bounded canonical lookup to actual consumers.
-4. Reuse `PersistenceManager` and existing persistence backends. Native SQLite/Windows and PostgreSQL use dedicated instrument-identity records with source and observation time; no second database/cache is permitted.
-5. Never use partial `SymbolRegistryRecord` persistence for identity. Regression proof must show identity writes cannot deactivate or clear `active/selected` trading-registry state.
-6. Warm-reuse persisted slow-changing identity on restart before provider refresh when valid; never present its observation time as current market/quote truth.
-7. Keep TradeInsight `symbol-search` gated/non-executable; the same-response Alpaca path is canonical for #92.
-8. Regression-protect same-request/zero-extra-fetch capture, normalization/filtering, persistence round-trip, restart reuse, monotonic stale-overwrite rejection and registry isolation.
-9. Preserve Smart Provider Router v2, direct SEC authority, GLD/SLV/USO actionable exceptions, U.S. equities and No Execution.
-10. Maintain Adaptive Roadmap, Build Plan, Build Process, Delivery Process, current-state, work-slice and handoff alignment.
+#95 required build outputs are:
+1. `provider_registration.go` is the single provider-onboarding descriptor consumed by existing owners for route membership/priority, configuration, quota/cost/expected-delay metadata and capability diagnostics.
+2. Every production-routable dataset declaration carries canonical owner/consumer purpose plus adapter/schema/timestamp/freshness/failure/rights/evidence/approval/invalidation contracts. Incomplete declarations fail closed even if lifecycle text says `PRODUCTION`.
+3. Existing `routeChains()`, configured-provider checks and provider quota/cost/delay helpers project from the canonical registration rather than requiring new provider-specific switches for each integration.
+4. `provider_capabilities.go` projects existing truthful provider capability diagnostics from the same registration without losing special semantics such as TradeInsight SHADOW, Alpaca plan-limited activity, Finnhub premium evidence or Twelve Data direct-FX detection.
+5. `provider_entitlement_refresh.go` owns only configuration-triggered entitlement invalidation. One-way fingerprints remain process-local and never enter logs, diagnostics, governance or persistence.
+6. Smart Provider Router v2 invokes targeted configuration revalidation before ranking, not during snapshot construction, so snapshot locks are not mutated/re-entered.
+7. Existing **Provider Capabilities → Recheck** may force bounded fresh entitlement observation for same-key server-side plan changes; it may not erase genuine outage/rate-limit/NOT_SUPPORTED/healthy evidence.
+8. Regression proof covers synthetic-provider adoption, route parity, fail-closed incomplete contracts, free-plan exclusion, config-change upgrade, same-key manual recheck, successful re-eligibility, downgrade/402/403 fallback and unrelated-capability isolation.
+9. Regression preserves current behavior for Finnhub, Alpaca, Twelve Data, TradeInsight, Marketaux, FRED, BLS, EIA, SEC/EDGAR, yfinance and CBOE, plus direct SEC authority, U.S. equities, GLD/SLV/USO and No Execution.
+10. Preserve existing Data Engine capability-row behavior/order; registration refactoring must not introduce unrelated UI rearrangement.
+11. Keep #94 separate. #95 does not introduce semantic usefulness scoring or alter production provider order from new #94 evidence.
+12. Maintain `governance/current-state.json`, #95 work-slice/closure ledger, all four CURRENT Adaptive projections, `handoff/CURRENT.md` and issue #95 as a cross-session executable resume set.
 
 ## Retained Adaptive Data Health build owners
-The completed #79 program remains executable build input. `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json` remain canonical machine-readable provider coverage/freshness/fetch ownership inputs and must not drift while #92 adds identity. #92 layers on top of those owners; it does not replace their Router v2, lifecycle/readiness, failure-recovery, truthful-degradation, or telemetry contracts.
+#95 inherits rather than replaces the completed #80 Data Health artifacts: `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Those remain executable classification/SLO/fetch-path inputs to Smart Provider Router v2 and source-health recurrence. The live **Adaptive Roadmap**, **Build Plan**, **Build Process**, and **Delivery Process** must retain this foundation while identifying #95 as the active extension.
 
-Delivery remains one branch/one PR, canonical Fast on the exact final candidate followed by impact-selected Qualified on the identical head, then expected-head merge only if live `main` is unchanged. No Stable/public SemVer release is created solely for #92.
+The completed #79 program remains executable input: canonical provider capability, Data Health SLO, fetch-path classification, Router v2, lifecycle/readiness, freshness, persistence, telemetry and degradation owners cannot be replaced by #95. Provider onboarding describes/adopts capabilities into those owners; it does not become a new health/router/lifecycle system.
+
+## Executable owners already introduced on #95 branch
+- `provider_registration.go`
+- `provider_entitlement_refresh.go`
+- `provider_router.go`
+- `smart_router_v2.go`
+- `provider_capabilities.go`
+- `data_engine_handlers.go`
+- `provider_registration_regression_test.go`
+- `provider_onboarding_adaptive_regression_test.go`
+- `provider_capability_projection_regression_test.go`
+
+These source changes are implementation evidence but are **not yet qualification evidence**. The #95 closure ledger remains fail-closed until focused regressions and canonical exact-head CI succeed.
+
+Delivery remains one existing branch/one PR: reconcile source compatibility first, run focused tests, run canonical Fast on the exact final candidate, then impact-selected Qualified on the identical head, then expected-head merge only if live `main` is unchanged. No Stable/public SemVer release is created solely for #95.

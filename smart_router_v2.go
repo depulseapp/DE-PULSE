@@ -320,6 +320,7 @@ func smartRouteScore(provider, dataset string, basePriority int, tier WorkTier, 
 }
 
 func (e *Engine) rankedProviderRoute(dataset string, tier WorkTier, settings Settings, secrets Secrets, now time.Time) []ProviderRouteScore {
+	e.refreshProviderConfigurationEntitlements(settings, secrets)
 	chain := routeChains()[dataset]
 	telemetry := e.providerTelemetry.Diagnostics()
 	session := marketSessionET(now)
