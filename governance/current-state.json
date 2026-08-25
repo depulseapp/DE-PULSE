@@ -47,7 +47,7 @@
     "reservedWorkSliceId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
     "reservedIssue": 113,
     "reservedBranch": "adapt-v18-final-closure-10-10-001",
-    "reservationStatus": "RELEASE_AUTHORIZED",
+    "reservationStatus": "IN_PROGRESS",
     "workSlicePath": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/work-slice.json",
     "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
     "parentProgramIssue": 113,
