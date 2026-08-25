@@ -13,7 +13,8 @@
 **Candidate identity:** `v18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
 **Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
-**Next child:** #123 / T10 — future-proof zero-gap final certification — **NOT_STARTED**  
+**Active child:** #123 / T10 — future-proof zero-gap final certification — **IN_PROGRESS**  
+**T10 executable state:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json`  
 **Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — **BLOCKED**.
 
 ## Completed closure tracks
@@ -41,8 +42,6 @@ T9/#122 is VERIFIED and closed. Its immutable qualified source is `f3d7e1a7f9287
 - Both `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` were success on the same source SHA.
 - Published Stable remains `v18.9.1-stable`; T9 did not publish v18.10.0 Stable and did not start T10.
 
-**Historical T9 transition:** `IN_PROGRESS` → `VERIFIED`; `IN_PROGRESS` is retained here only as transition history and is not the current T9 state.
-
 Canonical T9 evidence owners remain:
 - `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json`
 - `release/v18.10.0/release_contract.json`
@@ -55,15 +54,36 @@ Canonical T9 evidence owners remain:
 - `.github/workflows/ci-qualified.yml`
 - `.github/workflows/release.yml`
 
-## T10 boundary
+## T10 initialization authority
 
-T10/#123 is the only remaining v18.10 closure track and is **NOT_STARTED**. T10 must prove durable regression ownership for every T1 responsibility, mechanically conserve the v19/#66 72-row ledger, verify GitHub-only resume portability, reconcile all T1-T9 evidence to zero unexplained P0/P1 gaps, and earn final exact-head G0-G16 evidence before v18.10.0 may be published Stable.
+T10/#123 is now **IN_PROGRESS**. Initialization started from the T9 post-merge authority at `33d8580d862f64b61ff96ac7d9297dff5d6e2192`. No T1-T9 implementation or evidence was replaced.
 
-T10 may not infer qualification from T9's package evidence alone. It must consume T1-T9 as immutable prerequisite evidence and close its own future-proof/zero-gap requirements. v19/#66 stays blocked until v18.10.0 Stable publication and the required post-closure residual/source-overlap audit explicitly permit it.
+T10 adds two fail-closed owners inside the existing CI/release architecture:
+
+- `tools/ci/requirement_conservation_gate.py` — permanently enforces the #66/v19 conservation ledger as exactly `HOST-001..HOST-072`, preserves explicit canonical owners/planned versions, blocks unassigned/unknown rows, keeps source-overlap-before-G1 and dependency-band zero-gap closure, and keeps Mac + Windows + Web lockstep.
+- `tools/ci/v18_t10_future_proof_zero_gap_certification_gate.py` — binds T1-T9 prerequisite evidence, all 180 effective shipped-v18 regression responsibilities, retired-test equivalence, the 72-row v19 conservation gate, portable GitHub-only resume ownership, canonical workflow/Planner-v3 fail-closed behavior and T10 release-state transitions.
+
+`release/v18.10.0/certification-manifest.json` now includes both gates, so G12 cannot certify a v18.10 candidate that silently loses either T10 or v19 conservation. `.github/workflows/ci-fast.yml` runs both controls on every applicable exact head.
+
+The effective T1 regression inventory remains **180**: 87 high-level rows - 1 explicit PostgreSQL/#66 future-source exclusion + 78 omission-scan responsibilities + 16 second-scan responsibilities. T10 validates executable regression ownership across the entire effective inventory rather than only the high-level rows.
+
+The #66 conservation ledger remains **72** planned/unstarted requirements, exactly `HOST-001..HOST-072`. This enforcement does **not** start or reserve v19; #66 remains blocked.
+
+T10 uses an explicit two-stage publication model to avoid circular assurance:
+
+1. `RELEASE_AUTHORIZED` — non-final pre-publication state, allowed only after T10's exact source passes Fast + identical-head Qualified with zero internal gaps other than canonical G11-G16 publication.
+2. `COMPLETE` — final state only after the exact certified v18.10.0 candidate is published through canonical G11-G16/no-rebuild delivery and durable G16 evidence is reconciled.
+
+Current open T10 evidence is exactly:
+- `T10-EXACT-HEAD-FAST`
+- `T10-IDENTICAL-HEAD-QUALIFIED`
+- `T10-G11-G16-STABLE-PUBLICATION`
+
+There is no 10/10 claim yet and `v18.10.0-stable` has not been published.
 
 ## Exactly one next action
 
-Fetch fresh `main` and `adapt-v18-final-closure-10-10-001`, read this file, `governance/current-state.json`, the parent closure ledger, issue #113 and issue #123, confirm T1-T9 evidence remains intact and T10 is still NOT_STARTED, then initialize and execute T10 only. Do not publish v18.10.0 Stable or begin v19 until T10 itself is VERIFIED and the final release gates permit publication.
+Qualify the current T10 initialization packet on one pull request from `adapt-v18-final-closure-10-10-001` to `main`: require exact-head Fast first, then mark the identical head ready for Qualified. Correct any real gate/test finding on this same branch. Do not mark T10 `RELEASE_AUTHORIZED`, publish v18.10.0 Stable, or begin v19 until that evidence is green.
 
 ## Retained architecture
 
@@ -72,11 +92,11 @@ Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/ED
 ## Resume rule
 
 1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, #113, #123 and current PR/workflow state before modifying anything.
-2. Read this file and `governance/current-state.json` first, then the parent closure ledger, T9 assurance artifact and all T10 executable owners created under #123.
+2. Read this file and `governance/current-state.json` first, then the parent closure ledger, T9 assurance artifact and `T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json` plus its executable gates.
 3. GitHub objects and executable evidence outrank this prose and all chat memory.
 4. Treat T1-T9 as complete only while their durable evidence remains intact; T9 authority is source `f3d7e1a7...`, Fast #1090, Qualified #217 and merge `06f711ae...`.
-5. T10/#123 is NOT_STARTED and v19/#66 is blocked.
-6. Never infer assurance from file existence or issue state. Require exact-head executable positive, negative/failure and platform evidence.
+5. T10/#123 is IN_PROGRESS. Its current open evidence is exact-head Fast, identical-head Qualified and final canonical G11-G16 Stable publication. v19/#66 remains blocked.
+6. Never infer assurance from file existence or issue state. Require exact-head executable positive, negative/failure and platform evidence selected by the canonical Planner v3.
 7. Preserve Smart Provider Router v2, canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-8. Use G0-G16 only. Final public v18.10.0 publication is permitted only after T1-T10 are VERIFIED on the governed candidate and release evidence remains no-rebuild/byte-identical.
-9. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone.
+8. Use G0-G16 only. T10 may enter `RELEASE_AUTHORIZED` only after exact-head Fast/Qualified are green and zero internal gap remains; T10 becomes `COMPLETE` only after no-rebuild Stable publication and G16 evidence are durably reconciled.
+9. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone; no old chat upload is required.
