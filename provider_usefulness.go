@@ -132,8 +132,7 @@ func (t *providerUsefulnessTracker) bindPersistence(p *PersistenceManager) {
 		t.providers = map[string]providerUsefulnessAggregate{}
 		t.seen = map[string]bool{}
 		t.seenOrder = nil
-		trestored := false
-		t.restored = trestored
+		t.restored = false
 		t.dirty = false
 		t.lastPersistAt = 0
 	}
@@ -373,17 +372,4 @@ func (t *providerUsefulnessTracker) persist(p *PersistenceManager, now int64) {
 		Symbol: "", FeatureKey: providerUsefulnessFeatureKey, FeatureVersion: providerUsefulnessFeatureVersion,
 		AsOf: now, SourceHash: hex.EncodeToString(sum[:]), Payload: raw,
 	}}})
-}
-
-func enrichProviderUsefulnessSnapshot(snap RuntimeSnapshot, p *PersistenceManager) RuntimeSnapshot {
-	canonicalProviderUsefulness.bindPersistence(p)
-	now := time.Now().UnixMilli()
-	canonicalProviderUsefulness.observe(snap.ProviderReconciliation, now)
-	canonicalProviderUsefulness.persist(p, now)
-	snap.RuntimeLoad.ProviderUsefulness = canonicalProviderUsefulness.diagnostics()
-	return snap
-}
-
-func resetProviderUsefulnessTrackerForTest() {
-	canonicalProviderUsefulness = newProviderUsefulnessTracker()
 }
