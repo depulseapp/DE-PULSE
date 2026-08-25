@@ -48,8 +48,8 @@
   },
   "evidenceSupplements": {
     "PERSIST-FILE-FALLBACK": {
-      "owners": ["persistence_security_regression_test.go"],
-      "rationale": "The governed persistence regression executes a nested CGO_ENABLED=0 package test so production build constraints select file-fallback. It proves bootstrap-token invalidation, authenticated identity continuity, user-workspace separation, and absence of plaintext password/raw session tokens in the persisted fallback artifact."
+      "owners": ["native_sqlite_persistence_regression_test.go"],
+      "rationale": "The existing registered native persistence regression owner now executes a nested CGO_ENABLED=0 package test in the Qualified DB-integration job, causing production build constraints to select file-fallback. It proves bootstrap-token invalidation, authenticated identity continuity, user-workspace separation, and absence of plaintext password/raw session tokens in the persisted fallback artifact without adding a parallel backend or new root owner."
     },
     "PERSIST-SQLITE-MAC": {
       "owners": ["identity_regression_test.go", "workspace_isolation_regression_test.go"],
