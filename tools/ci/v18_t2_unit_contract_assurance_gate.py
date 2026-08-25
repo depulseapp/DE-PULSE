@@ -67,20 +67,24 @@ def classify_evidence(path_text: str) -> str:
 
     if lower.startswith("tests/acceptance/"):
         return "ACCEPTANCE_E2E"
-    if "browser" in name and (name.endswith(".py") or name.endswith(".js")):
-        return "BROWSER_E2E"
     if lower.startswith("packaging/") or lower.startswith("tools/release/"):
         return "PLATFORM_RELEASE_EVIDENCE"
+    # Static gates/contracts are T2 evidence even when their subject is browser
+    # routing. Executable browser harnesses remain browser evidence below.
+    if lower.startswith("tools/ci/") and (
+        name.endswith("_gate.py")
+        or name.endswith("_contract.py")
+        or name.endswith("_contract.js")
+    ):
+        return "CI_STATIC_CONTRACT"
+    if "browser" in name and (name.endswith(".py") or name.endswith(".js")):
+        return "BROWSER_E2E"
     if name.endswith("_test.go"):
         return "GO_UNIT_PACKAGE"
     if lower.startswith("tests/renderer/") and name.endswith(".js"):
         return "RENDERER_NODE_CONTRACT"
     if lower.startswith("tools/ci/") and (
-        name.endswith("_test.py")
-        or name.endswith("_test.js")
-        or name.endswith("_gate.py")
-        or name.endswith("_contract.py")
-        or name.endswith("_contract.js")
+        name.endswith("_test.py") or name.endswith("_test.js")
     ):
         return "CI_STATIC_CONTRACT"
     return "UNKNOWN_EXECUTABLE"
@@ -224,6 +228,30 @@ def main() -> int:
     if len(effective) != expected_count:
         errors.append(f"effective inventory count mismatch: expected {expected_count}, got {len(effective)}")
 
+    supplements = t2.get("evidenceSupplements") or {}
+    if not isinstance(supplements, dict):
+        errors.append("T2 evidenceSupplements must be an object")
+        supplements = {}
+    for fid, spec in supplements.items():
+        if fid not in effective:
+            errors.append(f"T2 evidence supplement references unknown effective responsibility: {fid}")
+            continue
+        if not isinstance(spec, dict):
+            errors.append(f"T2 evidence supplement {fid} must be an object")
+            continue
+        rationale = str(spec.get("rationale") or "").strip()
+        owners = spec.get("owners")
+        if not rationale:
+            errors.append(f"T2 evidence supplement {fid} requires a material rationale")
+        if not isinstance(owners, list) or not owners or not all(isinstance(x, str) and x.strip() for x in owners):
+            errors.append(f"T2 evidence supplement {fid} requires non-empty owners")
+            continue
+        row_owners = effective[fid].setdefault("existingRegressionOwners", [])
+        for owner in owners:
+            owner_text = owner.strip()
+            if owner_text not in row_owners:
+                row_owners.append(owner_text)
+
     profiles = ledger.get("assuranceProfiles") or {}
     uncovered: list[str] = []
     unknown_paths: list[str] = []
@@ -282,6 +310,11 @@ def main() -> int:
                 errors.append("T2 audit found undeclared coverage gaps: " + ", ".join(undeclared))
             if stale:
                 errors.append("T2 knownCoverageGaps contains stale/resolved ids: " + ", ".join(stale))
+            if t2.get("uncoveredResponsibilityCount") != len(uncovered):
+                errors.append(
+                    "T2 uncoveredResponsibilityCount drift: "
+                    f"declared={t2.get('uncoveredResponsibilityCount')!r} actual={len(uncovered)}"
+                )
     if strict and uncovered:
         errors.append("T2 strict closure has uncovered responsibilities: " + ", ".join(uncovered))
     if t2.get("state") == "COMPLETE":
@@ -295,6 +328,7 @@ def main() -> int:
     print(f"effective responsibilities: {len(effective)}")
     print(f"T2-covered responsibilities: {covered}")
     print(f"T2-uncovered responsibilities: {len(uncovered)}")
+    print(f"T2-specific evidence supplements: {len(supplements)}")
     for cls in sorted(class_counts):
         print(f"{cls}: {class_counts[cls]}")
     if uncovered:

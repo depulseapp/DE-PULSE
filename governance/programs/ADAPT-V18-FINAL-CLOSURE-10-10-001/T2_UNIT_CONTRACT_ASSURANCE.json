@@ -40,10 +40,8 @@
     "laterTracksRemainUnverified": true
   },
   "gapDeclarationState": "CURRENT",
-  "knownCoverageGaps": [
-    "RELEASE-RENDERER-CHROME-WEBKIT"
-  ],
-  "uncoveredResponsibilityCount": 1,
+  "knownCoverageGaps": [],
+  "uncoveredResponsibilityCount": 0,
   "firstExecutableCensus": {
     "headSha": "3f948df8749a4c7bcd2cfdb7dff03f1dae7d96d6",
     "fastRunId": 32858282167,
@@ -63,10 +61,26 @@
       "PLATFORM_RELEASE_EVIDENCE": 0,
       "UNKNOWN_EXECUTABLE": 4
     },
-    "interpretation": "The single uncovered responsibility currently points only to browser-oriented evidence, which is intentionally non-substitutable for T2. The gap must be resolved by a materially relevant unit/contract/static owner, not by reclassifying browser execution."
+    "interpretation": "The single uncovered responsibility initially pointed only to browser-oriented evidence, which is intentionally non-substitutable for T2."
   },
-  "evidenceSupplements": {},
-  "resolvedCoverageGaps": [],
+  "evidenceSupplements": {
+    "RELEASE-RENDERER-CHROME-WEBKIT": {
+      "owners": [
+        "tools/ci/browser_risk_routing_gate.py"
+      ],
+      "rationale": "This existing static contract directly asserts canonical Qualified Chrome/WebKit job ownership, WebKit browser-only proof wiring, separation from macOS/Windows native lifecycle evidence, selected-job summary enforcement, and the prohibition on browser execution in Fast. It therefore covers the T2 static/topology invariant without reclassifying browser execution as unit evidence."
+    }
+  },
+  "resolvedCoverageGaps": [
+    {
+      "id": "RELEASE-RENDERER-CHROME-WEBKIT",
+      "firstObservedHead": "3f948df8749a4c7bcd2cfdb7dff03f1dae7d96d6",
+      "firstObservedFastRunId": 32858282167,
+      "resolution": "REUSE_EXISTING_T2_STATIC_CONTRACT",
+      "evidenceOwner": "tools/ci/browser_risk_routing_gate.py",
+      "reason": "The gap was evidence-class ownership, not missing product behavior. The existing static browser-risk routing gate materially proves the T2 workflow/topology contract while browser execution remains reserved for later functional/UI/platform assurance."
+    }
+  ],
   "exactHeadQualificationRequired": true,
   "completionCondition": "Every one of the 180 effective shipped-v18 responsibilities resolves a non-empty T2 expectation and at least one current executable unit/contract/static evidence owner; all declared T2 gaps are closed and selected exact-head tests pass.",
   "t3CompanionIssue": 116,
