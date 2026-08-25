@@ -23,6 +23,9 @@ Before qualification, the branch must prove through focused regression that:
 - direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO actionable exceptions and No Execution remain unchanged;
 - no credential value or reusable credential-derived material appears in source-visible evidence, diagnostics, persistence, logs or artifacts.
 
+## Retained Data Health delivery contract
+The completed #80–#84 provider/data-health foundation remains delivery authority under #95. The required wording remains explicit because the canonical recurrence gate binds it: **canonical Fast exact-head PASS** must precede **Qualified exact-head PASS** on the identical candidate, while SEC/EDGAR authority and No Execution remain unchanged. #95 adds no waiver or alternate qualification path.
+
 ## Canonical qualification order
 1. Re-fetch live `main` and live #95 branch; inspect candidate diff and ensure no concurrent work was lost.
 2. Run focused/local/static regression where available and fix genuine findings without weakening gates.
