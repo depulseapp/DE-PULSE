@@ -20,6 +20,8 @@
   "fastRunId": 32807961635,
   "qualifiedRunId": 32808052157,
   "mainPostMergeFastRunId": 32808395855,
+  "closureValidationCandidateSha": "09b1d2e2cc160cd2652b1acf59d88e7e98f4b8b8",
+  "closureValidationFastRunId": 32808710702,
   "productBehaviorChange": true,
   "blocksNextProductCapability": false,
   "scopeId": "ADAPT-PROVIDER-TELEMETRY-001",
@@ -64,7 +66,8 @@
     "PR #105 expected-head merge 249ce52d3af513b763ac46ac22a1b28ce01bd346",
     "issue #94 closed completed automatically by PR #105",
     "main Fast #977 / run 32808395855 branch hygiene PASS and Post-Stable continuity sentinel PASS",
+    "closure validation candidate 09b1d2e2cc160cd2652b1acf59d88e7e98f4b8b8 passed Fast #978 / run 32808710702 while #94 remained the projected active reservation, proving the closed 7/7 VERIFIED ledger",
     "no Stable/public SemVer release was created solely for #94"
   ],
-  "releaseBoundary": "No Stable/public SemVer release was created solely for #94. Exact-head Fast #976 plus impact-selected Qualified #196 and expected-head PR #105 merge completed the product slice; main Fast #977 preserved branch hygiene and post-Stable continuity."
+  "releaseBoundary": "No Stable/public SemVer release was created solely for #94. Exact-head Fast #976 plus impact-selected Qualified #196 and expected-head PR #105 merge completed the product slice; main Fast #977 preserved branch hygiene and post-Stable continuity; closure-validation Fast #978 proved all blocking #94 gaps VERIFIED before reservation removal."
 }
