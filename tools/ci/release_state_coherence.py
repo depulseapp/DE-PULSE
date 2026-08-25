@@ -96,6 +96,33 @@ def current_stable(state: dict, errors: list[str]) -> tuple[str, str, str, str, 
     return release, tag, candidate, fingerprint, build_id
 
 
+def active_release_closure(root: Path, state: dict, identity: dict, errors: list[str]) -> tuple[bool, dict]:
+    capability = state.get('productCapabilityGate', {}) if isinstance(state.get('productCapabilityGate'), dict) else {}
+    status = str(capability.get('reservationStatus', '')).strip().upper()
+    work_slice_rel = str(capability.get('workSlicePath', '')).strip()
+    work_slice = read_json(root / work_slice_rel, errors, 'RELEASE_CLOSURE_WORK_SLICE_UNREADABLE') if work_slice_rel else {}
+    if not work_slice or work_slice.get('type') != 'PRODUCT_RELEASE_CLOSURE' or status not in {'ACTIVE', 'IN_PROGRESS'}:
+        return False, work_slice
+
+    current_version = str(identity.get('version', '')).strip().lstrip('v')
+    previous_stable = str(identity.get('previous_stable', '')).strip().lstrip('v')
+    add_mismatch(errors, 'RELEASE_CLOSURE_RESERVED_ID_MISMATCH', str(capability.get('reservedWorkSliceId', '')).strip(), str(work_slice.get('workSliceId', '')).strip())
+    add_mismatch(errors, 'RELEASE_CLOSURE_RESERVED_ISSUE_MISMATCH', capability.get('reservedIssue'), work_slice.get('issue'))
+    add_mismatch(errors, 'RELEASE_CLOSURE_RESERVED_BRANCH_MISMATCH', str(capability.get('reservedBranch', '')).strip(), str(work_slice.get('branch', '')).strip())
+    add_mismatch(errors, 'RELEASE_CLOSURE_PUBLIC_VERSION_MISMATCH', str(work_slice.get('publicProductVersion', '')).strip().lstrip('v'), current_version)
+    add_mismatch(errors, 'RELEASE_CLOSURE_BASELINE_VERSION_MISMATCH', str(work_slice.get('stableProductVersionAtStart', '')).strip().lstrip('v'), previous_stable)
+    add_mismatch(errors, 'RELEASE_CLOSURE_TARGET_STABLE_MISMATCH', str(work_slice.get('targetStable', '')).strip(), f'v{current_version}-stable')
+    if work_slice.get('productBehaviorChange') is not True:
+        errors.append('RELEASE_CLOSURE_PRODUCT_BEHAVIOR_CHANGE_INVALID: must be true')
+    if work_slice.get('blocksNextProductCapability') is not True:
+        errors.append('RELEASE_CLOSURE_NEXT_CAPABILITY_BLOCK_INVALID: must remain true')
+    current_semver = parse_semver(current_version)
+    previous_semver = parse_semver(previous_stable)
+    if not current_semver or not previous_semver or current_semver <= previous_semver:
+        errors.append(f'RELEASE_CLOSURE_VERSION_NOT_MONOTONIC: current={current_version!r} previous={previous_stable!r}')
+    return True, work_slice
+
+
 def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Callable[[Path, str], str] | None = None) -> Result:
     errors: list[str] = []
     tag_lookup = tag_lookup or git_tag_lookup
@@ -104,7 +131,6 @@ def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Calla
     identity = read_json(root / 'release_identity.json', errors, 'RELEASE_IDENTITY_UNREADABLE')
     state = read_json(root / 'governance/current-state.json', errors, 'CURRENT_STATE_UNREADABLE')
 
-    # Resume checkpoints may deliberately remain on the immediate predecessor.
     checkpoint_release = normalize_release(str(evidence.get('release', build.get('release', '')))) if (evidence.get('release') or build.get('release')) else ''
     checkpoint_stable = evidence.get('stable', {}) if isinstance(evidence.get('stable'), dict) else {}
     checkpoint_tag = str(checkpoint_stable.get('tag', '')).strip()
@@ -134,9 +160,29 @@ def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Calla
     current_build = str(identity.get('build_id', '')).strip()
     current_channel = str(identity.get('channel', '')).strip()
     display_version = str(identity.get('display_version', '')).strip()
-    previous_stable = str(identity.get('previous_stable', '')).strip()
-    add_mismatch(errors, 'CURRENT_STATE_IDENTITY_VERSION_MISMATCH', current_version, stable_release.removeprefix('v'))
-    add_mismatch(errors, 'CURRENT_STATE_IDENTITY_BUILD_MISMATCH', current_build, stable_build_id)
+    previous_stable = str(identity.get('previous_stable', '')).strip().lstrip('v')
+    release_closure, release_work_slice = active_release_closure(root, state, identity, errors)
+
+    if release_closure:
+        expected_published_release = f'v{previous_stable}' if previous_stable else ''
+        add_mismatch(errors, 'RELEASE_CLOSURE_STABLE_VERSION_MISMATCH', stable_release, expected_published_release)
+        add_mismatch(errors, 'RELEASE_CLOSURE_CHECKPOINT_VERSION_MISMATCH', checkpoint_release, expected_published_release)
+        add_mismatch(errors, 'RELEASE_CLOSURE_STABLE_TAG_MISMATCH', stable_tag, checkpoint_tag)
+        add_mismatch(errors, 'RELEASE_CLOSURE_STABLE_CANDIDATE_MISMATCH', stable_candidate, checkpoint_candidate)
+        add_mismatch(errors, 'RELEASE_CLOSURE_STABLE_FINGERPRINT_MISMATCH', stable_fingerprint, checkpoint_fp)
+        add_mismatch(errors, 'RELEASE_CLOSURE_STABLE_BUILD_MISMATCH', stable_build_id, checkpoint_build)
+        add_mismatch(errors, 'RELEASE_CLOSURE_BASELINE_CANDIDATE_MISMATCH', str(release_work_slice.get('baselineCandidateSha', '')).strip(), stable_candidate)
+        add_mismatch(errors, 'RELEASE_CLOSURE_BASELINE_FINGERPRINT_MISMATCH', str(release_work_slice.get('baselineSourceFingerprint', '')).strip(), stable_fingerprint)
+        add_mismatch(errors, 'RELEASE_CLOSURE_BASELINE_BUILD_MISMATCH', str(release_work_slice.get('baselineBuildId', '')).strip(), stable_build_id)
+        stable_platform = str((state.get('stable') or {}).get('platformBuildNumber', '')).strip()
+        try:
+            if int(current_build and identity.get('bundle_version', 0)) <= int(stable_platform):
+                errors.append(f'RELEASE_CLOSURE_PLATFORM_BUILD_NOT_MONOTONIC: candidate={identity.get("bundle_version")!r} stable={stable_platform!r}')
+        except Exception:
+            errors.append('RELEASE_CLOSURE_PLATFORM_BUILD_INVALID')
+    else:
+        add_mismatch(errors, 'CURRENT_STATE_IDENTITY_VERSION_MISMATCH', current_version, stable_release.removeprefix('v'))
+        add_mismatch(errors, 'CURRENT_STATE_IDENTITY_BUILD_MISMATCH', current_build, stable_build_id)
     if current_channel != 'STABLE': errors.append(f'IDENTITY_CHANNEL_INVALID: {current_channel!r}')
 
     handoff = read_text(root / 'handoff/CURRENT.md', errors, 'HANDOFF_UNREADABLE')
@@ -205,7 +251,7 @@ def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Calla
             if not isinstance(g12.get('evidenceSchemaVersion'), int): errors.append('G12_MANIFEST_EVIDENCE_SCHEMA_INVALID: evidenceSchemaVersion must be an integer')
     if not (root / 'tools/release/run_full_certification.py').is_file(): errors.append('G12_CANONICAL_EXECUTOR_MISSING: tools/release/run_full_certification.py')
 
-    target_tag = stable_tag if current_version == stable_release.removeprefix('v') else f'v{current_version}'
+    target_tag = stable_tag if current_version == stable_release.removeprefix('v') else (f'v{current_version}-stable' if release_closure else f'v{current_version}')
     target_action = 'NOT_EVALUATED'
     if target_tag:
         existing_target = tag_lookup(root, target_tag)
