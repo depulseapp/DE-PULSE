@@ -11,6 +11,9 @@
 
 The current v18.9.x direction is to make the completed provider/data-health architecture easier to extend **without creating a second provider architecture**. #95 turns provider onboarding itself into a bounded adaptive contract while preserving the already-qualified Smart Provider Router v2, lifecycle/readiness, Data Health, freshness, persistence, telemetry, reconciliation and degradation owners.
 
+## Retained Data Health foundation
+The completed provider program sequence remains durable executable history and inherited contract: **#80 baseline → #81 Router v2 adoption + #82 common health/recovery → #83 lifecycle + #78 TradeInsight admission → #84 zero-gap closure**. #95 extends that architecture; it does not replace it. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited, and Smart Provider Router v2 remains the sole general routing authority.
+
 ## #95 adaptive destination
 A supported provider/capability should require one real adapter/normalizer plus one canonical provider registration. That registration declares only the metadata/evidence needed by existing owners: canonical datasets/capabilities, route priority, configuration requirements, quota/cost/cadence metadata, capability diagnostics, canonical owner/consumer purpose, adapter/schema/timestamp/freshness/failure/rights contracts, evidence/approval references and invalidation rules.
 
