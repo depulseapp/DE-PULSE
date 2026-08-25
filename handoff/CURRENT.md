@@ -11,13 +11,16 @@
 **Live planning baseline:** `6aef3806d5684cc75daec0a2274bbf51fe135201`  
 **Completed provider/data-health program:** #79/#84  
 **Completed provider-intelligence program:** #65 with Professional Closure #107  
+**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
 **Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001`  
 **Zero-miss planning slice:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
 **Planning branch:** `adapt-v19-zero-miss-plan-001`
 
 ## Current authority
 
-v18 is closed by executable GitHub evidence. #66 remains an unstarted hosted-program umbrella; no v19 product work slice is reserved merely by this planning update.
+v18 is closed by executable GitHub evidence. #66 remains an unstarted hosted-program umbrella; no v19 product work slice is reserved merely by this planning update. `governance/current-state.json` intentionally continues to project the completed #107 work slice until a future product slice is explicitly selected; #110 is a planning/governance change, not a replacement product authority.
 
 The future build plan is being rebaselined to prevent implementation misses:
 - canonical sequence: `governance/ROADMAP.md`

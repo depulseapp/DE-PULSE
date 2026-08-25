@@ -3,6 +3,8 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Completed provider-intelligence program:** #65 / #107  
+**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
 **Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
 **Future hosted umbrella:** #66 — no product reservation yet.
 
