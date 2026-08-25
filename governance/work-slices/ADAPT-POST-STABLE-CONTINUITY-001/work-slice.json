@@ -5,7 +5,7 @@
   "title": "Reconcile v18.9.1 durable checkpoints and post-Stable continuity",
   "type": "PROCESS_RELEASE_ENGINEERING",
   "subtype": "POST_STABLE_CONTINUITY",
-  "status": "IN_PROGRESS",
+  "status": "COMPLETE",
   "publicProductVersion": null,
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
@@ -13,9 +13,17 @@
   "baselineBuildId": "v18.9.1-stable-20260821",
   "baselineMainSha": "2eab9bd38b0a75a116de46e531015ed699ed7308",
   "branch": "adapt-post-stable-continuity-001",
+  "closureBranch": "adapt-post-stable-continuity-001-closure",
+  "mergedPullRequest": 103,
+  "mergedCommitSha": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+  "qualifiedCandidateSha": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+  "fastRunId": 32803346202,
+  "qualifiedRunId": 32803373245,
+  "mainContinuityRunId": 32803734938,
   "productBehaviorChange": false,
-  "blocksNextProductCapability": true,
+  "blocksNextProductCapability": false,
   "closureLedger": "governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json",
+  "finalQualificationEvidence": "governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/final-qualification-evidence.json",
   "dependencies": [65, 95],
   "implementationPaths": [
     ".depulse-certification/resume/build-checkpoint.json",
@@ -32,15 +40,24 @@
     "adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md",
     "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md"
   ],
+  "completionEvidence": [
+    "candidate 8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+    "Fast #967 / run 32803346202 PASS",
+    "Qualified #194 / run 32803373245 PASS on identical candidate with ci-harness + portability + backend",
+    "PR #103 expected-head merge 25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+    "main Fast #968 / run 32803734938 branch hygiene PASS and Post-Stable continuity sentinel PASS",
+    "no product behavior change and no Stable/public SemVer rebuild or republish"
+  ],
   "closureRequires": [
     "V18_9_1_DURABLE_CHECKPOINTS_MATCH_IMMUTABLE_RELEASE",
     "V18_9_1_RETROSPECTIVE_STABLE_MANIFEST_BOUND_TO_REAL_ARTIFACTS",
     "PROVIDER_ONBOARDING_95_POST_MERGE_STATE_RECONCILED",
-    "CURRENT_STATE_AND_ALL_CURRENT_PROJECTIONS_CONVERGE_ON_102",
+    "CURRENT_STATE_AND_ALL_CURRENT_PROJECTIONS_CONVERGE",
     "POST_STABLE_CONTINUITY_SENTINEL_PASS",
     "EXACT_HEAD_FAST_PASS",
     "IMPACT_SELECTED_QUALIFIED_PASS",
     "EXPECTED_HEAD_PR_MERGE",
+    "MAIN_POST_MERGE_CONTINUITY_PASS",
     "NO_PRODUCT_BEHAVIOR_CHANGE",
     "NO_RELEASE_REBUILD_OR_REPUBLISH"
   ]

@@ -35,8 +35,14 @@
   "postStableLearning": {
     "continuityIssue": 102,
     "classification": "DURABLE_POST_STABLE_CONTINUITY_RECONCILIATION",
-    "note": "Main CI after #95 exposed stale v18.9.0 resume checkpoints. The corrective is metadata/process-only and must preserve immutable v18.9.1 Stable evidence and binaries."
+    "disposition": "RESOLVED_WITHOUT_STABLE_REBUILD_OR_REPUBLICATION",
+    "candidate": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+    "fastRun": 32803346202,
+    "qualifiedRun": 32803373245,
+    "mergeCommit": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+    "mainContinuityRun": 32803734938,
+    "note": "The stale v18.9.0 resume checkpoints and missing retrospective v18.9.1 Stable manifest were reconciled to immutable release evidence. Main Fast #968 proved the unchanged Post-Stable continuity sentinel and aligned Stable evidence validation green."
   },
-  "nextRequiredEvidence": "Issue #102 exact-head Fast and impact-selected Qualified on adapt-post-stable-continuity-001, expected-head PR merge, and a green next main post-Stable continuity sentinel. #94 remains separate and #66 remains blocked.",
-  "updatedAt": "2026-08-24T19:43:00-07:00"
+  "nextRequiredEvidence": "Fresh #65 live-source semantic-overlap audit before reserving the next product capability. #94 remains separate/unstarted until re-proven; #66 remains blocked.",
+  "updatedAt": "2026-08-24T20:05:00-07:00"
 }
