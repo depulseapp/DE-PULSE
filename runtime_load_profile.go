@@ -34,6 +34,7 @@ type RuntimeLoadDiagnostics struct {
 	Persistence              PersistenceDiagnostics              `json:"persistence"`
 	Workload                 []WorkClassDiagnostics              `json:"workload"`
 	ProviderRequests         []ProviderRequestDiagnostics        `json:"providerRequests,omitempty"`
+	ProviderUsefulness       []ProviderUsefulnessDiagnostic      `json:"providerUsefulness,omitempty"`
 	LiveSubscriptions        []LiveSubscriptionBudgetDiagnostics `json:"liveSubscriptions,omitempty"`
 	BroadSnapshots           BroadSnapshotBrokerDiagnostics      `json:"broadSnapshots"`
 	HTTP                     HTTPRuntimeDiagnostics              `json:"http"`
