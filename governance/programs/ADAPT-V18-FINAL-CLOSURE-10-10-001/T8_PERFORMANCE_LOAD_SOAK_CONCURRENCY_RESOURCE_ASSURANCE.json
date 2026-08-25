@@ -70,7 +70,8 @@
         "duplicate active-market snapshot burst coalesces to one real provider fetch",
         "bounded provider pressure is projected truthfully as protected degradation",
         "queued workers cancel cleanly under active-market pressure",
-        "canonical runtime SLO remains WARN rather than falsely BLOCKING when protected capacity is preserved"
+        "canonical runtime SLO remains WARN rather than falsely BLOCKING when protected capacity is preserved",
+        "canonical runtime SLO PASS/WARN/BLOCK budget thresholds"
       ]
     },
     {
@@ -121,7 +122,7 @@
       "qualification": "PENDING_EXACT_HEAD_FAST_AND_QUALIFIED"
     },
     {
-      "owner": "runtime_slo_budget_regression_test.go",
+      "owner": "active_market_reliability_regression_test.go",
       "test": "TestT8CanonicalRuntimeSLOBudgetsFailClosedAtOwnedThresholds",
       "covers": [
         "interactive API p95 PASS/WARN/BLOCK thresholds",
@@ -153,7 +154,7 @@
         "T5 persistence lifecycle assurance is COMPLETE with 177/177 applicable covered and zero uncovered",
         "Qualified retains the persistence-focused SQLite/Persistence/Migration/Canonical/Cache regression lane",
         "runtime_slo.go measures persistence queue age and DB write-rate pressure with explicit WARN/BLOCK limits",
-        "runtime_slo_budget_regression_test.go fail-closes those limits"
+        "active_market_reliability_regression_test.go fail-closes those limits under the canonical active-market reliability owner"
       ],
       "decision": "Reuse canonical persistence ownership; do not introduce a parallel T8 persistence engine."
     },
@@ -164,7 +165,7 @@
         "runtime_slo.go measures CPU utilization, goroutine count and heap allocation with hard release limits",
         "workload_backpressure_regression_test.go repeatedly proves bounded queues/permits, cancellation convergence and no controller-owned work left queued/in-flight",
         "Qualified full Go race detector and randomized order remain mandatory",
-        "runtime_slo_budget_regression_test.go fail-closes CPU/goroutine/heap limits"
+        "active_market_reliability_regression_test.go fail-closes CPU/goroutine/heap limits"
       ],
       "decision": "Do not invent host-sensitive GC-pause or lock-timing thresholds without a repository-owned SLO; material allocation/GC pressure is bounded by heap/CPU/process envelopes and material race/contention remains governed by race detection, bounded admission and recovery evidence."
     },
@@ -177,7 +178,7 @@
         "persistence queue ≤2000 ms target and >10000 ms BLOCK",
         "startup ≤1000 ms target and >5000 ms BLOCK",
         "Opportunity Radar must complete within configured cadence",
-        "runtime_slo_budget_regression_test.go protects the deterministic fixed thresholds"
+        "active_market_reliability_regression_test.go protects the deterministic fixed thresholds"
       ],
       "decision": "Use the existing canonical runtime SLO contract rather than introducing arbitrary benchmark-only latency numbers."
     }
@@ -186,7 +187,7 @@
     {
       "id": "T8-EXACT-HEAD-QUALIFICATION",
       "status": "OPEN",
-      "required": "Fast and identical-head Qualified must pass with the T8 assurance gate and new canonical SLO-budget regression before verification."
+      "required": "Fast and identical-head Qualified must pass with the T8 assurance gate and canonical SLO-budget regression before verification."
     }
   ],
   "gapDeclarationState": "CURRENT",
