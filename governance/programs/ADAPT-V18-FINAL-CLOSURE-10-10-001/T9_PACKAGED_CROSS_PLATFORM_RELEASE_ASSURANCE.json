@@ -3,11 +3,17 @@
   "programIssue": 113,
   "trackIssue": 122,
   "targetVersion": "v18.10.0",
-  "state": "IN_PROGRESS",
+  "state": "COMPLETE",
   "startedFromMainSha": "a3a82aee21fe8e6822d11ba678afefdd6361ef97",
   "qualifiedT8SourceSha": "e4542890eddf0d6c94e59e991d9d17ae8cc3ca35",
   "t8FastRunId": 32899149506,
   "t8QualifiedRunId": 32899321362,
+  "finalSourceSha": "f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8",
+  "fastRunId": 32904453472,
+  "qualifiedRunId": 32904637110,
+  "mergedPullRequest": 136,
+  "mergedCommitSha": "06f711aed8696535ed1afb9206f5f75b0c9d5b81",
+  "sourceFingerprint": "fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee",
   "previousStable": {
     "productVersion": "18.9.1",
     "tag": "v18.9.1-stable",
@@ -81,28 +87,34 @@
   "implementationFindings": [
     {
       "id": "T9-UPGRADE-MACOS",
-      "status": "IMPLEMENTED_UNVERIFIED",
-      "finding": "Existing macOS package audit covered clean extraction, actual packaged backend launch, native-window fresh launch and warm relaunch but did not exercise a previous v18.9.1 Stable profile before launching v18.10.0.",
+      "status": "VERIFIED",
+      "finding": "macOS Apple Silicon actual packaged current fresh/warm lifecycle and previous v18.9.1 Stable profile upgrade passed on the identical certified source head.",
       "owner": "tools/release/native_macos.sh"
     },
     {
       "id": "T9-UPGRADE-WINDOWS",
-      "status": "IMPLEMENTED_UNVERIFIED",
-      "finding": "Existing Windows package audit covered clean extraction and one actual packaged launch but did not exercise warm relaunch or previous-Stable profile upgrade.",
+      "status": "VERIFIED",
+      "finding": "Windows x64 actual packaged current fresh/warm lifecycle and previous v18.9.1 Stable profile upgrade passed on the identical certified source head.",
       "owner": "tools/release/native_windows.ps1"
     },
     {
       "id": "T9-CROSS-LAYER-CI-ROUTING",
-      "status": "IMPLEMENTED_UNVERIFIED",
-      "finding": "Release/native changes alone did not force renderer, Chrome, WebKit, persistence/DB and security/data-rights Qualified lanes required by #122.",
+      "status": "VERIFIED",
+      "finding": "Planner v3 selected backend/race/randomized, persistence/DB, renderer, Chrome, WebKit, security/data-rights and both required native package lanes on one identical source head.",
       "owner": "tools/ci/impact_plan.py"
     }
   ],
-  "knownCoverageGaps": [
-    {"id":"T9-EXACT-HEAD-FAST","status":"OPEN","required":"Exact final T9 source head must pass canonical Fast including the dedicated T9 gate."},
-    {"id":"T9-IDENTICAL-HEAD-QUALIFIED","status":"OPEN","required":"Identical source head must pass Qualified backend/race/randomized, DB, renderer, Chrome, WebKit, security/data-rights and both native package jobs."},
-    {"id":"T9-NATIVE-EVIDENCE-BINDING","status":"OPEN","required":"macOS and Windows native evidence must report PASS for fresh/warm/previous-Stable upgrade plus artifact digest/source fingerprint on the identical head."}
-  ],
+  "finalQualificationEvidence": {
+    "candidateSha": "f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8",
+    "sourceFingerprint": "fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee",
+    "fast": {"runNumber":1090,"runId":32904453472,"context":"DE.PULSE/fast-head","conclusion":"success"},
+    "qualified": {"runNumber":217,"runId":32904637110,"context":"DE.PULSE/qualified-head","conclusion":"success"},
+    "macOS": {"artifactId":9584360683,"digest":"sha256:11f0886de340d3e20e2c45125a9c3ec5c46b8a0acdbd3b066de9d6631f8dec29","freshWarmNativeLifecycle":"PASS","previousStableUpgrade":"PASS"},
+    "windows": {"artifactId":9584372877,"digest":"sha256:8581e81b6f3d6c6a9de12eafebcc8e8c2a79eb81219ce6ab736af120afd7b6eb","freshWarmPackagedLifecycle":"PASS","previousStableUpgrade":"PASS"},
+    "telemetry": {"artifactId":9584436420,"digest":"sha256:8d9a134eaa76f468f5228b992ef523ed4f2c8d66272697d84bb8bf806f8ee43a"},
+    "merge": {"pullRequest":136,"mergeCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81"}
+  },
+  "knownCoverageGaps": [],
   "completionCondition": "T9 becomes COMPLETE only after exact-head Fast and identical-head Qualified pass on one source head, both required native package jobs produce PASS evidence for clean extraction/current launch/warm relaunch/previous-Stable profile upgrade, browser/renderer/backend/DB/security lanes are green, artifact/source identity is consistent, and T10 remains not started.",
   "t10StartedByThisArtifact": false,
   "stablePublishedByThisArtifact": false

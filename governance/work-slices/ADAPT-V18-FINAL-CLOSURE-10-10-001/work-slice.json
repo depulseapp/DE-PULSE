@@ -47,9 +47,10 @@
     {"track":"T5","issue":118,"mergedCommitSha":"81137e4481cdf4a351e45c599efa0777ef93460a"},
     {"track":"T6","issue":119,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714"},
     {"track":"T7","issue":120,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5"},
-    {"track":"T8","issue":121,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97"}
+    {"track":"T8","issue":121,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97"},
+    {"track":"T9","issue":122,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81"}
   ],
-  "nextTrack": {"track":"T9","issue":122},
-  "nextCompanionTrack": {"track":"T10","issue":123,"status":"BLOCKED_UNTIL_T9_VERIFIED"},
+  "nextTrack": {"track":"T10","issue":123},
+  "nextCompanionTrack": null,
   "v19BlockedUntil": "v18.10.0 Stable published, T10 complete, post-closure residual/source-overlap audit PASS"
 }

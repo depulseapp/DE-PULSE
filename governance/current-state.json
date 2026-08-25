@@ -60,21 +60,22 @@
       {"track":"T5","issue":118,"status":"COMPLETE","frozenHeadSha":"2fd65d7724564db802840db44116bd95a8901281","fastRunId":32873458078,"qualifiedRunId":32873584790,"mergedPullRequest":132,"mergedCommitSha":"81137e4481cdf4a351e45c599efa0777ef93460a","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":177,"nonApplicableResponsibilityCount":3,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json"},
       {"track":"T6","issue":119,"status":"COMPLETE","frozenHeadSha":"0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b","fastRunId":32876475257,"qualifiedRunId":32876753635,"mergedPullRequest":133,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":179,"nonApplicableResponsibilityCount":1,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json"},
       {"track":"T7","issue":120,"status":"COMPLETE","frozenHeadSha":"d5a6028a140599c3dd1c54e4f0fa184b83baccb1","fastRunId":32886292524,"qualifiedRunId":32886516851,"mergedPullRequest":134,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5","effectiveShippedV18ResponsibilityCount":180,"visibleResponsibilityCount":34,"coveredVisibleResponsibilityCount":34,"nonVisibleResponsibilityCount":146,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T7_UI_UX_IA_CONTENT_ASSURANCE.json"},
-      {"track":"T8","issue":121,"status":"COMPLETE","frozenHeadSha":"e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","fastRunId":32899149506,"qualifiedRunId":32899321362,"mergedPullRequest":135,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97","uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T8_PERFORMANCE_LOAD_SOAK_CONCURRENCY_RESOURCE_ASSURANCE.json"}
+      {"track":"T8","issue":121,"status":"COMPLETE","frozenHeadSha":"e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","fastRunId":32899149506,"qualifiedRunId":32899321362,"mergedPullRequest":135,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97","uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T8_PERFORMANCE_LOAD_SOAK_CONCURRENCY_RESOURCE_ASSURANCE.json"},
+      {"track":"T9","issue":122,"status":"COMPLETE","frozenHeadSha":"f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8","fastRunId":32904453472,"qualifiedRunId":32904637110,"mergedPullRequest":136,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81","uncoveredResponsibilityCount":0,"sourceFingerprint":"fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee","macOSArtifactId":9584360683,"windowsArtifactId":9584372877,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"}
     ],
-    "nextChildIssue": 122,
-    "nextChildTrack": "T9",
-    "nextCompanionChildIssue": 123,
-    "nextCompanionChildTrack": "T10",
+    "nextChildIssue": 123,
+    "nextChildTrack": "T10",
+    "nextCompanionChildIssue": null,
+    "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
-      {"track":"T9","issue":122,"status":"IN_PROGRESS"},
       {"track":"T10","issue":123,"status":"NOT_STARTED"}
     ],
     "downstreamAssuranceState": {
-      "T2ToT8Verified": true,
+      "T2ToT9Verified": true,
       "T9Started": true,
+      "T9Verified": true,
       "T10Started": false,
-      "assuranceCeilingAfterT8": "IMPLEMENTED_UNVERIFIED"
+      "assuranceCeilingAfterT9": "IMPLEMENTED_UNVERIFIED"
     },
     "futureProgramBlockerIssue": 113,
     "futureBlockedIssue": 66,
