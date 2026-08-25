@@ -1,0 +1,47 @@
+{
+  "schema": "DE.PULSE-V18.10.0-RELEASE-CONTRACT-1",
+  "release": "18.10.0",
+  "title": "10/10 Future-Proof Final v18 Closure",
+  "certifiedStableBaseline": "v18.9.1-stable",
+  "engineeringBaseline": "a3a82aee21fe8e6822d11ba678afefdd6361ef97",
+  "scope": "GitHub parent #113 / ADAPT-V18-FINAL-CLOSURE-10-10-001; T9 #122 certifies packaged runtime and T10 #123 owns final zero-gap publication authorization",
+  "identity_asset": "release-identity.js",
+  "documentationIdentityRule": "Current package/build/QA identity is owned by release_identity.json, this contract, VERSION.txt/app bootstrap and renderer/release-identity.js. Historical release documentation is immutable and is not rewritten to impersonate current evidence.",
+  "legacy_certification_plan_version": "18.6.0",
+  "legacy_ci_plan_version": "18.6.0",
+  "legacyPlanRule": "Historical certification_plan.json and ci_pipeline_plan.json remain conserved registries only. Current execution authority is canonical Fast, Qualified and Release G11-G16 plus version-neutral tools/release/run_full_certification.py.",
+  "qualificationRule": "The v18.10.0 candidate must earn exact-head Fast and identical-head Qualified after identity preparation. T9 qualification must include backend full/race/randomized, persistence/DB, renderer, Chrome, WebKit, security/data-rights, macOS Apple Silicon native package lifecycle and Windows x64 native package lifecycle on one unchanged source head.",
+  "packagedUpgradeRule": "Both required native platforms must exercise a prior v18.9.1 Stable profile and then launch the exact v18.10.0 candidate package against that same profile, preserving SQLite integrity, migrations, identity state and symbol registry state. The prior Stable tag/candidate is checked against committed immutable Stable evidence.",
+  "releaseRule": "T9 may certify packages but may not publish Stable. T10 is the only track that may authorize the 10/10 release claim after T1-T9 are VERIFIED. Final publication must use the canonical G11-G16 workflow and the exact same-run G13/G14 artifacts without rebuild.",
+  "platformApplicability": {
+    "macOS Apple Silicon": "REQUIRED — actual packaged backend plus Cocoa/WKWebView fresh/warm/upgrade lifecycle",
+    "Windows x64": "REQUIRED — actual packaged backend fresh/warm/upgrade lifecycle",
+    "Chrome": "REQUIRED — primary renderer behavioral qualification",
+    "WebKit": "REQUIRED — primary browser compatibility qualification",
+    "Linux": "CI/test only; not a packaged release target",
+    "Hosted Web GA": "NOT CLAIMED BY V18; remains v19 scope"
+  },
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "DETERMINISTIC_DAY_SWING_LONG",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_ROUTING_OWNER",
+    "CANONICAL_DATA_HEALTH_FRESHNESS_CACHE_PERSISTENCE_SUBSCRIPTION_TELEMETRY_RECONCILIATION_LIFECYCLE_IDENTITY_SESSION_OWNERS",
+    "DIRECT_SEC_EDGAR_AUTHORITATIVE_FOR_FORM4",
+    "GLD_SLV_USO_ACTIONABLE_TRADABLE_EXCEPTIONS",
+    "NO_AUTOMATIC_PROVIDER_LIFECYCLE_PROMOTION",
+    "NO_PARALLEL_SUBSYSTEMS"
+  ],
+  "requiredT9Evidence": [
+    "v18.10.0 release identity/version/build/platform build are synchronized and monotonic from v18.9.1",
+    "exact source SHA and Git-object fingerprint bind both native packages",
+    "macOS Apple Silicon package is clean-extracted, signed/verified, launched and warm-relaunched with SQLite integrity",
+    "Windows x64 package is clean-extracted, PE x64 verified, launched and warm-relaunched with SQLite integrity",
+    "both platforms exercise previous-Stable profile upgrade to the current package without destructive repair",
+    "renderer, Chrome and WebKit qualification pass on the identical source head",
+    "backend full suite, race detector, randomized order and persistence/DB qualification pass on the identical source head",
+    "security/data-rights contracts remain green",
+    "G15/release tooling retains same-candidate artifact binding and Stable publication no-rebuild semantics",
+    "T9 does not publish Stable or start T10"
+  ]
+}

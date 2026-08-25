@@ -60,10 +60,16 @@ CAPABILITY_EVIDENCE_FILES = RENDERER_EVIDENCE_FILES | {
 }
 # Active cross-layer assurance controls are not ordinary process-only files.
 # A change to their ownership/closure semantics must re-qualify the executable
-# backend + renderer evidence graph they certify, without inventing a new lane.
+# evidence graph they certify, without inventing a parallel lane.
 T2_CROSS_LAYER_ASSURANCE_FILES = {
     "tools/ci/v18_t2_unit_contract_assurance_gate.py",
     "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json",
+}
+T9_CROSS_LAYER_ASSURANCE_FILES = {
+    "tools/ci/v18_t9_packaged_cross_platform_release_assurance_gate.py",
+    "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json",
+    "release/v18.10.0/release_contract.json",
+    "release/v18.10.0/certification-manifest.json",
 }
 NATIVE_MACOS_FILES = {
     "tools/release/native_macos.sh",
@@ -120,7 +126,7 @@ def resolve_base(base: str, head: str, target_ref: str) -> tuple[str, str]:
 
 
 def is_process_only(path: str) -> bool:
-    if path in CAPABILITY_EVIDENCE_FILES or path in T2_CROSS_LAYER_ASSURANCE_FILES:
+    if path in CAPABILITY_EVIDENCE_FILES or path in T2_CROSS_LAYER_ASSURANCE_FILES or path in T9_CROSS_LAYER_ASSURANCE_FILES:
         return False
     if STABLE_EVIDENCE_RE.fullmatch(path):
         return True
@@ -157,6 +163,16 @@ def explicit_classes(path: str) -> set[str]:
 
     if path in T2_CROSS_LAYER_ASSURANCE_FILES:
         classes.update({"BACKEND", "RENDERER_UI"})
+    if path in T9_CROSS_LAYER_ASSURANCE_FILES:
+        classes.update({
+            "RELEASE_TOOLING",
+            "CERTIFICATION_GOVERNANCE",
+            "BACKEND",
+            "RENDERER_UI",
+            "AUTH_SECURITY",
+            "DATA_RIGHTS",
+            "PERSISTENCE",
+        })
 
     if any(token in p for token in ("auth", "login", "rbac", "security", "secret", "credential", "permission")):
         classes.add("AUTH_SECURITY")
@@ -196,7 +212,7 @@ def adaptive_requirements(changed: list[str]) -> dict[str, object]:
 
     macos_specific = any(path in NATIVE_MACOS_FILES or "macos" in path.lower() for path in changed)
     windows_specific = any(path in NATIVE_WINDOWS_FILES or "windows" in path.lower() for path in changed)
-    shared_native = any(path in SHARED_NATIVE_RELEASE_FILES for path in changed)
+    shared_native = any(path in SHARED_NATIVE_RELEASE_FILES or path in T9_CROSS_LAYER_ASSURANCE_FILES for path in changed)
     native_macos_required = macos_specific or shared_native
     native_windows_required = windows_specific or shared_native
     release_rehearsal_required = native_macos_required or native_windows_required

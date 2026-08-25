@@ -12,7 +12,8 @@ CSS = (ROOT / "renderer" / "watchlist-desk.css").read_text(encoding="utf-8")
 INDEX = (ROOT / "renderer" / "index.html").read_text(encoding="utf-8")
 IDENTITY = json.loads((ROOT / "release_identity.json").read_text(encoding="utf-8"))
 VERSION = IDENTITY["version"]
-CURRENT_CERT = ROOT / "release" / f"v{VERSION}" / "run_full_certification.sh"
+CURRENT_MANIFEST = ROOT / "release" / f"v{VERSION}" / "certification-manifest.json"
+CANONICAL_EXECUTOR = ROOT / "tools" / "release" / "run_full_certification.py"
 BASE_PROOF = ROOT / "release" / "v18.6.0" / "browser_watchlist_membership_test.py"
 
 
@@ -67,20 +68,37 @@ extension_asset = f"watchlist-ui.js?v={git_blob_token(JS_PATH)}"
 if contract_asset not in INDEX or extension_asset not in INDEX or INDEX.index(contract_asset) > INDEX.index(extension_asset):
     raise SystemExit("watchlist contract FAIL: DESKS runtime contract must load before watchlist extension")
 
-# The current release certification must consume a real global-remove browser
-# proof, but that proof may be inherited from the release where the behavior was
-# introduced. Do not force cosmetic copies into every later release directory.
-if not CURRENT_CERT.is_file():
-    raise SystemExit("watchlist contract FAIL: current G12 certification script is missing")
-cert_text = CURRENT_CERT.read_text(encoding="utf-8")
-proof_matches = sorted(set(re.findall(r'release/v[0-9.]+/browser_watchlist_global_remove_test\.py', cert_text)))
+# Current releases use the version-neutral G12 executor with a declarative
+# per-release manifest. The global-remove proof may be inherited from the release
+# where the behavior was introduced; do not reintroduce retired per-release shell
+# orchestrators or cosmetic copies merely to satisfy this contract.
+if not CANONICAL_EXECUTOR.is_file():
+    raise SystemExit("watchlist contract FAIL: canonical version-neutral G12 executor is missing")
+if not CURRENT_MANIFEST.is_file():
+    raise SystemExit("watchlist contract FAIL: current G12 certification manifest is missing")
+manifest = json.loads(CURRENT_MANIFEST.read_text(encoding="utf-8"))
+if manifest.get("schema") != "DE.PULSE-G12-EVIDENCE-MANIFEST-1" or manifest.get("productVersion") != VERSION:
+    raise SystemExit("watchlist contract FAIL: current G12 manifest identity/schema mismatch")
+chrome_tests = manifest.get("chromeTests", [])
+proof_matches = sorted({
+    str(command[1])
+    for command in chrome_tests
+    if isinstance(command, list)
+    and len(command) >= 2
+    and str(command[1]).startswith("release/")
+    and re.fullmatch(r"release/v[0-9.]+/browser_watchlist_global_remove_test\.py", str(command[1]))
+})
 if len(proof_matches) != 1:
     raise SystemExit(f"watchlist contract FAIL: expected exactly one G12 global-remove proof binding, found {proof_matches}")
 proof_path = ROOT / proof_matches[0]
 if not proof_path.is_file():
     raise SystemExit(f"watchlist contract FAIL: G12 global-remove browser proof is missing: {proof_matches[0]}")
+executor = CANONICAL_EXECUTOR.read_text(encoding="utf-8")
+for marker in ("DE.PULSE-G12-EVIDENCE-MANIFEST-1", 'manifest.get("chromeTests"', "run(log, list(command), env=os.environ.copy())"):
+    if marker not in executor:
+        raise SystemExit(f"watchlist contract FAIL: canonical G12 executor lost manifest Chrome execution marker {marker!r}")
 
 print(
     f"watchlist membership contract PASS · app v{VERSION} uses {contract_filename} "
-    f"with toggle semantics, content-derived extension cache identity, and G12 edge proof {proof_matches[0]}"
+    f"with toggle semantics, content-derived extension cache identity, and manifest-bound G12 edge proof {proof_matches[0]}"
 )

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Canonical G2 source-health entrypoint with registered process-slice compatibility.
+"""Canonical G2 source-health entrypoint with governed lifecycle compatibility.
 
-The conserved G2 core predates generic process work slices and contains one
-#70-specific active-work-slice assertion. This adapter validates the real
-canonical active process slice first, then normalizes only that legacy identity
-field while the unchanged G2 core executes. All source/orphan/duplicate and
-architecture checks remain owned by the core.
+The conserved G2 core predates generic process work slices and active product
+release-closure candidates. This adapter validates the real canonical state first,
+then normalizes only legacy identity fields while the unchanged G2 core executes.
+All source/orphan/duplicate and architecture checks remain owned by the core.
 
 The pre-existing Adaptive Data Health policy gate is executed after the conserved
-G2 core. #95 also binds the canonical provider registration back to the same #80
+G2 core. #95 also binds canonical provider registration back to the same #80
 provider-capability matrix through a registration-aware extension, preserving
 fail-closed recurrence without creating a new workflow/gate family.
 """
@@ -29,11 +28,17 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
-def validate_registered_process_slice() -> dict:
+def load_json(path: Path) -> dict:
     try:
-        state = json.loads(_ORIGINAL_READ_TEXT(STATE_PATH, encoding="utf-8"))
+        value = json.loads(_ORIGINAL_READ_TEXT(path, encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
     except Exception as exc:
-        fail("canonical current-state unreadable: " + str(exc))
+        fail(path.relative_to(ROOT).as_posix() + " unreadable: " + str(exc))
+        return {}
+
+
+def validate_registered_process_slice() -> dict:
+    state = load_json(STATE_PATH)
     active = state.get("activeWorkSlice", {}) if isinstance(state.get("activeWorkSlice"), dict) else {}
     work_id = str(active.get("workSliceId", "")).strip()
     if not work_id:
@@ -41,7 +46,7 @@ def validate_registered_process_slice() -> dict:
     path = ROOT / "governance" / "work-slices" / work_id / "work-slice.json"
     if not path.is_file():
         fail("registered active work-slice metadata missing: " + path.relative_to(ROOT).as_posix())
-    work = json.loads(_ORIGINAL_READ_TEXT(path, encoding="utf-8"))
+    work = load_json(path)
     if work.get("workSliceId") != work_id:
         fail("current-state/work-slice id drift")
     if work.get("issue") != active.get("issue"):
@@ -55,6 +60,55 @@ def validate_registered_process_slice() -> dict:
     if work.get("productBehaviorChange") is not False or active.get("productBehaviorChange") is not False:
         fail("active process work slice must declare productBehaviorChange=false")
     return state
+
+
+def validate_release_closure_projection(state: dict) -> dict | None:
+    capability = state.get("productCapabilityGate", {}) if isinstance(state.get("productCapabilityGate"), dict) else {}
+    if str(capability.get("reservationStatus", "")).strip().upper() not in {"ACTIVE", "IN_PROGRESS"}:
+        return None
+    work_rel = str(capability.get("workSlicePath", "")).strip()
+    if not work_rel:
+        return None
+    work_path = ROOT / work_rel
+    if not work_path.is_file():
+        fail("registered product work-slice metadata missing: " + work_rel)
+    work = load_json(work_path)
+    if work.get("type") != "PRODUCT_RELEASE_CLOSURE":
+        return None
+
+    identity = load_json(ROOT / "release_identity.json")
+    stable = state.get("stable", {}) if isinstance(state.get("stable"), dict) else {}
+    current = str(identity.get("version", "")).strip().lstrip("v")
+    previous = str(identity.get("previous_stable", "")).strip().lstrip("v")
+    if identity.get("channel") != "STABLE":
+        fail("release closure candidate must retain STABLE channel identity")
+    if not current or not previous or current == previous:
+        fail("release closure candidate/current Stable version separation invalid")
+    if str(identity.get("stable_baseline", "")).strip().lstrip("v") != previous:
+        fail("release closure stable_baseline / previous_stable drift")
+    if str(stable.get("productVersion", "")).strip().lstrip("v") != previous:
+        fail("release closure must preserve previous published Stable productVersion")
+    if str(stable.get("tag", "")).strip() != f"v{previous}-stable":
+        fail("release closure must preserve previous published Stable tag")
+    if work.get("workSliceId") != capability.get("reservedWorkSliceId") or work.get("issue") != capability.get("reservedIssue"):
+        fail("release closure reservation/work-slice identity drift")
+    if work.get("branch") != capability.get("reservedBranch"):
+        fail("release closure reservation/work-slice branch drift")
+    if str(work.get("publicProductVersion", "")).strip().lstrip("v") != current:
+        fail("release closure publicProductVersion / release identity drift")
+    if str(work.get("stableProductVersionAtStart", "")).strip().lstrip("v") != previous:
+        fail("release closure Stable-at-start / published Stable drift")
+    if str(work.get("baselineCandidateSha", "")).strip() != str(stable.get("candidateSha", "")).strip():
+        fail("release closure baseline/current Stable candidate drift")
+    if str(work.get("baselineSourceFingerprint", "")).strip() != str(stable.get("sourceFingerprint", "")).strip():
+        fail("release closure baseline/current Stable fingerprint drift")
+    if str(work.get("baselineBuildId", "")).strip() != str(stable.get("buildId", "")).strip():
+        fail("release closure baseline/current Stable build drift")
+    if str(work.get("targetStable", "")).strip() != f"v{current}-stable":
+        fail("release closure target Stable identity drift")
+    if work.get("productBehaviorChange") is not True or work.get("blocksNextProductCapability") is not True:
+        fail("release closure must declare product behavior change and block subsequent capability work")
+    return identity
 
 
 def run_gate(path: str) -> None:
@@ -72,8 +126,18 @@ def run_data_health_gate() -> None:
 
 def main() -> int:
     state = validate_registered_process_slice()
+    release_identity = validate_release_closure_projection(state)
     normalized = json.loads(json.dumps(state))
     normalized.setdefault("activeWorkSlice", {})["workSliceId"] = "ADAPT-CI-CONVERGENCE-001"
+
+    # The conserved core predates release-closure candidate identity. After the
+    # real previous-Stable/baseline reservation is validated above, project only
+    # the three legacy equality fields in-memory. This does not mutate GitHub or
+    # redefine the published Stable machine state.
+    if release_identity is not None:
+        normalized.setdefault("stable", {})["productVersion"] = str(release_identity.get("version", "")).strip().lstrip("v")
+        normalized.setdefault("stable", {})["buildId"] = str(release_identity.get("build_id", "")).strip()
+        normalized.setdefault("stable", {})["platformBuildNumber"] = str(release_identity.get("bundle_version", "")).strip()
 
     def read_text(self: Path, *args, **kwargs):
         try:
@@ -90,6 +154,8 @@ def main() -> int:
     finally:
         Path.read_text = _ORIGINAL_READ_TEXT
 
+    if release_identity is not None:
+        print("G2 release-closure adapter: previous Stable truth validated; legacy core projection isolated in-memory")
     run_data_health_gate()
     return 0
 

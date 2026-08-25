@@ -5,6 +5,11 @@
 the registered work-slice metadata, the three canonical workflows, the current
 release identity, and immutable Stable checkpoints. Retired v18.6 CI plans are
 historical evidence only and are deliberately not runtime dependencies here.
+
+During PRODUCT_RELEASE_CLOSURE, the published Stable remains the immediate
+predecessor while release_identity.json describes the unpublished candidate.
+The resume contract validates both authorities explicitly so a fresh assistant
+cannot silently treat an unqualified candidate as already published Stable.
 """
 from pathlib import Path
 import json
@@ -15,11 +20,17 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 errors: list[str] = []
 CLOSED_PROCESS_STATES = {"COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
+ACTIVE_PRODUCT_STATES = {"ACTIVE", "IN_PROGRESS"}
 
 
 def need(ok: bool, msg: str) -> None:
     if not ok:
         errors.append(msg)
+
+
+def semver(value: str) -> tuple[int, int, int] | None:
+    match = re.fullmatch(r"(?:v)?(\d+)\.(\d+)\.(\d+)", str(value or "").strip())
+    return tuple(int(part) for part in match.groups()) if match else None
 
 
 required_docs = [
@@ -86,21 +97,65 @@ identity_release = str(ident.get("version", "")).lstrip("v")
 identity_build = str(ident.get("build_id", ""))
 identity_previous_stable = str(ident.get("previous_stable", "")).lstrip("v")
 identity_stable_baseline = str(ident.get("stable_baseline", "")).lstrip("v")
+release_closure = False
+published_stable_version = ""
 
 try:
     state = json.loads(state_path.read_text())
     stable = state.get("stable", {}) if isinstance(state.get("stable"), dict) else {}
     active = state.get("activeWorkSlice", {}) if isinstance(state.get("activeWorkSlice"), dict) else {}
     gate = state.get("productCapabilityGate", {}) if isinstance(state.get("productCapabilityGate"), dict) else {}
+    published_stable_version = str(stable.get("productVersion", "")).lstrip("v")
 
-    need(stable.get("productVersion") == identity_release, "current-state Stable productVersion / release identity drift")
-    need(stable.get("buildId") == identity_build, "current-state Stable buildId / release identity drift")
-    need(stable.get("platformBuildNumber") == str(ident.get("bundle_version", "")), "current-state platform build number / release identity drift")
-    need(stable.get("tag") == f"v{identity_release}-stable", "current-state Stable tag / release identity drift")
+    product_work = {}
+    product_work_rel = str(gate.get("workSlicePath", "")).strip()
+    if product_work_rel and (ROOT / product_work_rel).is_file():
+        product_work = json.loads((ROOT / product_work_rel).read_text())
+    product_status = str(gate.get("reservationStatus", "")).strip().upper()
+    release_closure = (
+        product_work.get("type") == "PRODUCT_RELEASE_CLOSURE"
+        and product_status in ACTIVE_PRODUCT_STATES
+    )
+
+    if release_closure:
+        need(ident.get("channel") == "STABLE", "release-closure candidate must retain STABLE channel identity")
+        need(identity_previous_stable == published_stable_version, "release-closure previous_stable must equal published Stable")
+        need(identity_stable_baseline == published_stable_version, "release-closure stable_baseline must equal published Stable")
+        current_semver = semver(identity_release)
+        previous_semver = semver(published_stable_version)
+        need(bool(current_semver and previous_semver and current_semver > previous_semver), "release-closure candidate SemVer must be newer than published Stable")
+        need(stable.get("tag") == f"v{published_stable_version}-stable", "release-closure published Stable tag drift")
+        need(stable.get("buildId") == product_work.get("baselineBuildId"), "release-closure published Stable build / work-slice baseline drift")
+        try:
+            need(int(str(ident.get("bundle_version", "0"))) > int(str(stable.get("platformBuildNumber", "0"))), "release-closure candidate platform build must be newer than published Stable")
+        except Exception:
+            need(False, "release-closure platform build values invalid")
+        need(gate.get("blocked") is False and gate.get("blockedByIssue") is None, "release-closure product reservation must be unblocked from completed process work")
+        need(product_work.get("workSliceId") == gate.get("reservedWorkSliceId"), "release-closure reserved workSliceId drift")
+        need(product_work.get("issue") == gate.get("reservedIssue"), "release-closure reserved issue drift")
+        need(product_work.get("branch") == gate.get("reservedBranch"), "release-closure reserved branch drift")
+        need(str(product_work.get("publicProductVersion", "")).lstrip("v") == identity_release, "release-closure publicProductVersion / candidate identity drift")
+        need(str(product_work.get("stableProductVersionAtStart", "")).lstrip("v") == published_stable_version, "release-closure Stable-at-start drift")
+        need(product_work.get("baselineCandidateSha") == stable.get("candidateSha"), "release-closure baseline candidate / published Stable drift")
+        need(product_work.get("baselineSourceFingerprint") == stable.get("sourceFingerprint"), "release-closure baseline fingerprint / published Stable drift")
+        need(product_work.get("baselineBuildId") == stable.get("buildId"), "release-closure baseline build / published Stable drift")
+        need(product_work.get("targetStable") == f"v{identity_release}-stable", "release-closure target Stable drift")
+        need(product_work.get("productBehaviorChange") is True, "release-closure must declare productBehaviorChange=true")
+        need(product_work.get("blocksNextProductCapability") is True, "release-closure must block subsequent product capability work")
+        closure_ledger = str(product_work.get("closureLedger", "")).strip()
+        need(bool(closure_ledger) and (ROOT / closure_ledger).is_file(), "release-closure ledger missing")
+    else:
+        need(stable.get("productVersion") == identity_release, "current-state Stable productVersion / release identity drift")
+        need(stable.get("buildId") == identity_build, "current-state Stable buildId / release identity drift")
+        need(stable.get("platformBuildNumber") == str(ident.get("bundle_version", "")), "current-state platform build number / release identity drift")
+        need(stable.get("tag") == f"v{identity_release}-stable", "current-state Stable tag / release identity drift")
+
     need(isinstance(stable.get("candidateSha"), str) and re.fullmatch(r"[0-9a-f]{40}", stable.get("candidateSha", "")), "current-state Stable candidateSha invalid")
     need(isinstance(stable.get("sourceFingerprint"), str) and re.fullmatch(r"[0-9a-f]{64}", stable.get("sourceFingerprint", "")), "current-state Stable sourceFingerprint invalid")
     need(stable.get("publication") == "PASS_NO_REBUILD", "current-state Stable publication must remain PASS_NO_REBUILD")
 
+    # Retained process-work authority remains independently durable after it has
+    # unblocked the product release-closure reservation.
     work_slice_id = str(active.get("workSliceId", "")).strip()
     active_status = str(active.get("status", "")).strip().upper()
     completed_process = active_status in CLOSED_PROCESS_STATES
@@ -159,12 +214,15 @@ try:
     need(certified_release == stable_release, "checkpoint release must match certifiedStable version")
 
     if identity_release != stable_release:
-        need(identity_previous_stable == stable_release, "current Stable previous_stable must match immutable predecessor checkpoint")
-        need(identity_stable_baseline == stable_release, "current Stable stable_baseline must match immutable predecessor checkpoint")
+        need(identity_previous_stable == stable_release, "candidate previous_stable must match immutable predecessor checkpoint")
+        need(identity_stable_baseline == stable_release, "candidate stable_baseline must match immutable predecessor checkpoint")
     else:
         need(bool(identity_previous_stable), "promoted Stable previous_stable must identify its predecessor")
         need(bool(identity_stable_baseline), "promoted Stable stable_baseline must identify its certified predecessor baseline")
         need(identity_previous_stable == identity_stable_baseline, "promoted Stable previous_stable/stable_baseline mismatch")
+
+    if release_closure:
+        need(published_stable_version == stable_release, "release-closure published Stable must match immutable build checkpoint")
 
     candidate = cp.get("candidateSourceCommit") or certified.get("candidateSourceCommit") or certified.get("certifiedSourceCheckout")
     need(isinstance(candidate, str) and re.fullmatch(r"[0-9a-f]{40}", candidate), "checkpoint candidate source commit must be a Git SHA")
@@ -197,6 +255,9 @@ try:
         )
     )
     need(stable_handoff_ok, "current handoff must identify the immutable Stable checkpoint release")
+    if release_closure:
+        need(f"**Candidate identity:** `v{identity_release}`" in handoff, "release-closure handoff must identify the unpublished candidate identity")
+        need("T9" in handoff and "IN_PROGRESS" in handoff, "release-closure handoff must project active T9 state")
 except Exception as exc:
     errors.append(f"build checkpoint invalid/unreadable: {exc}")
 
@@ -207,8 +268,8 @@ try:
     evidence_release = str(ev.get("release", "")).lstrip("v")
     need(evidence_release == stable_release, "release evidence checkpoint must match immutable Stable build checkpoint")
     need(ev.get("channel") == "STABLE", "release evidence checkpoint must describe certified Stable evidence")
-    stable = ev.get("stable", {}) if isinstance(ev.get("stable"), dict) else {}
-    need(stable.get("tag") == f"v{stable_release}-stable", "release evidence Stable tag mismatch")
+    stable_ev = ev.get("stable", {}) if isinstance(ev.get("stable"), dict) else {}
+    need(stable_ev.get("tag") == f"v{stable_release}-stable", "release evidence Stable tag mismatch")
     need(isinstance(ev.get("evidence"), dict), "release evidence checkpoint evidence map missing")
     evidence_metadata_rule = ev.get("metadataHeadRule")
     if not evidence_metadata_rule:
@@ -237,9 +298,10 @@ if errors:
         print(" -", error)
     sys.exit(1)
 
+mode = "PRODUCT_RELEASE_CLOSURE" if release_closure else "STABLE_ALIGNED"
 print(
     "Adaptive Build Resume Contract: PASS · "
-    f"canonical Stable=v{identity_release} · immutable predecessor checkpoint=v{stable_release} · "
+    f"mode={mode} · published Stable=v{stable_release} · candidate=v{identity_release} · "
     "GitHub-only ChatGPT/Codex/Claude portability enforced · current-state/work-slice truth bound · "
     "three-workflow control plane enforced · post-Stable continuity enforced · metadata fingerprint-excluded"
 )
