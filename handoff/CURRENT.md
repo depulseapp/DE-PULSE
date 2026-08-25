@@ -5,6 +5,9 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
+**Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
+**Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
+**Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Current closure branch:** `adapt-v18-final-closure-10-10-001`  
 **Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
