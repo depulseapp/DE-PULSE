@@ -86,11 +86,11 @@ func TestProviderCapabilityProjectionRetainsSpecialStatusSemantics(t *testing.T)
 		byKey[row.Provider+"|"+row.Capability] = row.Status
 	}
 	checks := map[string]string{
-		"Finnhub|Analyst / insider premium context":                       "NOT ENTITLED",
-		"Alpaca|SIP movers / most active":                                 "NOT ENTITLED",
+		"Finnhub|Analyst / insider premium context":                                         "NOT ENTITLED",
+		"Alpaca|SIP movers / most active":                                                   "NOT ENTITLED",
 		tradeInsightProviderName + "|Adjusted daily OHLCV / corporate-action corroboration": "NOT ENTITLED",
-		"yfinance|Recovery-only public market context":                     "AVAILABLE",
-		"CBOE|Official VIX validation / delayed close":                     "AVAILABLE",
+		"yfinance|Recovery-only public market context":                                      "AVAILABLE",
+		"CBOE|Official VIX validation / delayed close":                                      "AVAILABLE",
 	}
 	for key, want := range checks {
 		if got := byKey[key]; got != want {

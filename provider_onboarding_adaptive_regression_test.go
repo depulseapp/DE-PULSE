@@ -50,19 +50,19 @@ func TestRegisteredCapabilityDiagnosticsPreserveSpecializedTruth(t *testing.T) {
 		statuses[row.Provider+"|"+row.Capability] = row.Status
 	}
 	checks := map[string]string{
-		"Finnhub|Primary U.S. equity + earnings/peers":                    "AVAILABLE",
-		"Finnhub|Analyst / insider premium context":                      "PLAN LIMITED",
-		"Alpaca|IEX quotes / snapshots / liquidity":                      "AVAILABLE",
-		"Alpaca|SIP movers / most active":                                "PLAN LIMITED",
+		"Finnhub|Primary U.S. equity + earnings/peers":                                      "AVAILABLE",
+		"Finnhub|Analyst / insider premium context":                                         "PLAN LIMITED",
+		"Alpaca|IEX quotes / snapshots / liquidity":                                         "AVAILABLE",
+		"Alpaca|SIP movers / most active":                                                   "PLAN LIMITED",
 		tradeInsightProviderName + "|Adjusted daily OHLCV / corporate-action corroboration": "AVAILABLE",
-		"FRED|Rates / credit / conditions / USD":                         "AVAILABLE",
-		"BLS|Inflation / labor / wages / PPI":                            "AVAILABLE",
-		"EIA|Petroleum / natural gas / energy state":                     "AVAILABLE",
-		"Twelve Data|FX / direct global context":                         "AVAILABLE",
-		"Twelve Data|VIX / indices / historical recovery":                "AVAILABLE",
-		"yfinance|Recovery-only public market context":                    "AVAILABLE",
-		"CBOE|Official VIX validation / delayed close":                   "AVAILABLE",
-		"Marketaux|Stock news fallback":                                  "AVAILABLE",
+		"FRED|Rates / credit / conditions / USD":                                            "AVAILABLE",
+		"BLS|Inflation / labor / wages / PPI":                                               "AVAILABLE",
+		"EIA|Petroleum / natural gas / energy state":                                        "AVAILABLE",
+		"Twelve Data|FX / direct global context":                                            "AVAILABLE",
+		"Twelve Data|VIX / indices / historical recovery":                                   "AVAILABLE",
+		"yfinance|Recovery-only public market context":                                      "AVAILABLE",
+		"CBOE|Official VIX validation / delayed close":                                      "AVAILABLE",
+		"Marketaux|Stock news fallback":                                                     "AVAILABLE",
 	}
 	if len(statuses) != len(checks) {
 		t.Fatalf("provider diagnostic count changed: got=%d want=%d statuses=%v", len(statuses), len(checks), statuses)
@@ -103,7 +103,9 @@ func TestManualEntitlementRevalidationProbesSameKeyPlanChangeWithoutErasingOther
 	changed := e.forceProviderEntitlementRevalidation(settings, secrets)
 	foundFinnhub := false
 	for _, provider := range changed {
-		if provider == "Finnhub" { foundFinnhub = true }
+		if provider == "Finnhub" {
+			foundFinnhub = true
+		}
 	}
 	if !foundFinnhub {
 		t.Fatalf("manual recheck did not include configured Finnhub: %v", changed)
