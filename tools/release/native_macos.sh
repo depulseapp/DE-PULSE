@@ -256,9 +256,6 @@ PY
     return 1
   fi
 
-  # Immediate framework/JXA aborts normally surface within startup. Keep both
-  # processes alive for a bounded dwell so SIGABRT/uncaught-exception exits are
-  # observable instead of racing the readiness check.
   sleep 3
   if ! kill -0 "$gui_pid" 2>/dev/null || ! kill -0 "$window_pid" 2>/dev/null; then
     echo "ERROR: native window lifecycle did not remain alive (cycle=$cycle backend=$gui_pid window=$window_pid)" >&2
@@ -267,9 +264,6 @@ PY
     return 1
   fi
 
-  # Test-owned cleanup. Terminating the JXA child causes the existing desktop
-  # lifecycle to interrupt the backend. Bounded TERM/INT/KILL fallbacks ensure
-  # no orphaned process can contaminate the warm-relaunch cycle.
   stop_native_cycle
   echo "PASS: actual packaged native macOS window cycle=$cycle backendPid=$gui_pid windowPid=$window_pid"
 }
@@ -305,23 +299,131 @@ if grep -q -- 'protocol does not exist' "$GUI_WINDOW_LOG"; then
   exit 1
 fi
 
+# T9 previous-Stable upgrade proof. Use the immutable published v18.9.1 Stable
+# tag/candidate as the predecessor, run it against a clean profile, then launch
+# the exact current package against the same profile. This avoids a synthetic
+# migration fixture while keeping the release asset/source authority explicit.
+PREVIOUS_TAG="v18.9.1-stable"
+PREVIOUS_SHA="e55d8d25b15cec2ffb0f5411bc358bc40b359cf9"
+PREVIOUS_FP="0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff"
+PREVIOUS_VERSION="18.9.1"
+PREVIOUS_BUILD_ID="v18.9.1-stable-20260821"
+PREVIOUS_WORKTREE="${RUNNER_TEMP:-/tmp}/depulse-v18.9.1-stable-worktree"
+PREVIOUS_STAGE="${RUNNER_TEMP:-/tmp}/depulse-v18.9.1-stable-macos-stage"
+PREVIOUS_CLEAN="${RUNNER_TEMP:-/tmp}/depulse-v18.9.1-stable-macos-clean"
+UPGRADE_HOME="${RUNNER_TEMP:-/tmp}/depulse-native-macos-upgrade-home"
+rm -rf "$PREVIOUS_WORKTREE" "$PREVIOUS_STAGE" "$PREVIOUS_CLEAN" "$UPGRADE_HOME"
+test "$(git rev-list -n 1 "$PREVIOUS_TAG")" = "$PREVIOUS_SHA"
+test "$(python3 tools/release/source_fingerprint.py --mode git --commit "$PREVIOUS_SHA")" = "$PREVIOUS_FP"
+git worktree add --detach "$PREVIOUS_WORKTREE" "$PREVIOUS_TAG" >/dev/null
+mkdir -p "$PREVIOUS_STAGE/$APP_BUNDLE/Contents/MacOS" "$PREVIOUS_STAGE/$APP_BUNDLE/Contents/Resources" "$PREVIOUS_CLEAN" "$UPGRADE_HOME"
+PREVIOUS_APP="$PREVIOUS_STAGE/$APP_BUNDLE"
+cp "$PREVIOUS_WORKTREE/platform-icons/DePulse.icns" "$PREVIOUS_APP/Contents/Resources/DePulse.icns"
+(
+  cd "$PREVIOUS_WORKTREE"
+  MACOSX_DEPLOYMENT_TARGET=11.0 CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 CC="$CC" \
+    CGO_CFLAGS="-isysroot $SDKROOT -arch arm64" \
+    CGO_LDFLAGS="-isysroot $SDKROOT -arch arm64" \
+    go build -trimpath -o "$PREVIOUS_APP/Contents/MacOS/DePulse-arm64" .
+)
+cat > "$PREVIOUS_APP/Contents/MacOS/DePulseLauncher" <<'LAUNCH'
+#!/bin/sh
+APP_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+case "$(/usr/bin/uname -m)" in
+  arm64) exec "$APP_DIR/DePulse-arm64" "$@" ;;
+  *) exit 1 ;;
+esac
+LAUNCH
+chmod +x "$PREVIOUS_APP/Contents/MacOS/DePulseLauncher" "$PREVIOUS_APP/Contents/MacOS/DePulse-arm64"
+/usr/bin/codesign --force --deep --sign - "$PREVIOUS_APP"
+/usr/bin/codesign --verify --deep --strict "$PREVIOUS_APP"
+PREVIOUS_ZIP="$PREVIOUS_STAGE/De-Pulse-v18.9.1-Stable-macOS-Apple-Silicon.zip"
+/usr/bin/ditto -c -k --sequesterRsrc --keepParent "$PREVIOUS_APP" "$PREVIOUS_ZIP"
+/usr/bin/ditto -x -k "$PREVIOUS_ZIP" "$PREVIOUS_CLEAN"
+PREVIOUS_PKG_APP="$PREVIOUS_CLEAN/$APP_BUNDLE"
+/usr/bin/codesign --verify --deep --strict "$PREVIOUS_PKG_APP"
+
+UPGRADE_INSTANCE="$UPGRADE_HOME/Library/Application Support/$RUNTIME_CONFIG/instance.json"
+UPGRADE_DB="$UPGRADE_HOME/Library/Application Support/$RUNTIME_CONFIG/depulse-v17.db"
+run_upgrade_headless_cycle() {
+  launcher="$1"
+  expected_version="$2"
+  expected_build="$3"
+  phase="$4"
+  snapshot="$5"
+  rm -f "$UPGRADE_INSTANCE"
+  HOME="$UPGRADE_HOME" DEPULSE_HEADLESS=1 PMT_NO_BROWSER=1 "$launcher" >"$OUT/upgrade-${phase}.log" 2>&1 &
+  upgrade_pid=$!
+  for _ in $(seq 1 180); do [ -s "$UPGRADE_INSTANCE" ] && break; sleep 0.1; done
+  test -s "$UPGRADE_INSTANCE"
+  python3 - "$UPGRADE_INSTANCE" "$expected_version" "$expected_build" <<'PY'
+import json,sys,time,urllib.request
+inst=json.load(open(sys.argv[1])); version=sys.argv[2]; build=sys.argv[3]; base=inst['url'].rstrip('/')
+last=None
+for _ in range(50):
+    try:
+        with urllib.request.urlopen(base+'/api/health',timeout=2) as r: health=json.loads(r.read().decode())
+        with urllib.request.urlopen(base+'/api/ready',timeout=2) as r: ready=json.loads(r.read().decode())
+        with urllib.request.urlopen(base+'/',timeout=2) as r: root=r.read(256)
+        assert health.get('version')==version and health.get('buildId')==build,health
+        assert ready.get('ok') is True and ready.get('persistence',{}).get('backend')=='sqlite' and ready.get('persistence',{}).get('ready') is True,ready
+        assert root
+        break
+    except Exception as exc:
+        last=exc; time.sleep(.15)
+else:
+    raise SystemExit(f'upgrade cycle unavailable: {last}')
+PY
+  kill -INT "$upgrade_pid" 2>/dev/null || true
+  wait "$upgrade_pid" 2>/dev/null || true
+  test -s "$UPGRADE_DB"
+  python3 - "$UPGRADE_DB" "$snapshot" "$phase" <<'PY'
+import json,sqlite3,sys
+path,out,phase=sys.argv[1:]
+con=sqlite3.connect(path)
+assert con.execute('pragma integrity_check').fetchone()[0]=='ok'
+versions=[r[0] for r in con.execute('select version from schema_migrations order by version')]
+symbols=con.execute('select count(*) from symbol_registry').fetchone()[0]
+identities=con.execute('select count(*) from identity_state').fetchone()[0]
+assert versions and versions==sorted(set(versions)),versions
+assert symbols>0 and identities>=1,(symbols,identities)
+json.dump({'phase':phase,'migrations':versions,'symbols':symbols,'identities':identities},open(out,'w'),sort_keys=True)
+con.close()
+PY
+  rm -f "$UPGRADE_INSTANCE"
+}
+
+run_upgrade_headless_cycle "$PREVIOUS_PKG_APP/Contents/MacOS/DePulseLauncher" "$PREVIOUS_VERSION" "$PREVIOUS_BUILD_ID" previous-stable "$OUT/upgrade-before.json"
+run_upgrade_headless_cycle "$PKG_APP/Contents/MacOS/DePulseLauncher" "$DEPULSE_VERSION" "$DEPULSE_BUILD_ID" current "$OUT/upgrade-after.json"
+python3 - "$OUT/upgrade-before.json" "$OUT/upgrade-after.json" <<'PY'
+import json,sys
+before=json.load(open(sys.argv[1])); after=json.load(open(sys.argv[2]))
+assert set(before['migrations']).issubset(set(after['migrations'])),(before,after)
+assert after['symbols'] >= before['symbols'],(before,after)
+assert after['identities'] >= before['identities'],(before,after)
+print('macOS previous-Stable upgrade: PASS')
+PY
+git worktree remove --force "$PREVIOUS_WORKTREE" >/dev/null
+
 ART_SHA="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
 python3 - "$OUT/G13-G14-macOS-Apple-Silicon.json" "$PACKAGE" "$ART_SHA" <<'PY'
 import json,os,sys,datetime,platform
 path,artifact,sha=sys.argv[1:]
 data={
- 'schema':'DE.PULSE-G13-G14-NATIVE-2','release':'v'+os.environ['DEPULSE_VERSION'],'platform':'macOS Apple Silicon','status':'PASS',
+ 'schema':'DE.PULSE-G13-G14-NATIVE-3','release':'v'+os.environ['DEPULSE_VERSION'],'platform':'macOS Apple Silicon','status':'PASS',
  'certifiedSourceSha':os.environ['DEPULSE_CANDIDATE_SHA'],'sourceFingerprint':os.environ['DEPULSE_SOURCE_FINGERPRINT'],'buildId':os.environ['DEPULSE_BUILD_ID'],
+ 'previousStable':{'tag':'v18.9.1-stable','candidateSha':'e55d8d25b15cec2ffb0f5411bc358bc40b359cf9','buildId':'v18.9.1-stable-20260821'},
  'artifact':artifact,'artifactSha256':sha,'host':{'os':platform.platform(),'arch':platform.machine()},
  'checks':{
    'exactGitObjectFingerprint':'PASS','nativeBuild':'PASS','arm64Format':'PASS','sqliteLinkage':'PASS','codeSign':'PASS','cleanExtraction':'PASS',
    'canonicalBundleExecutable':'PASS','legacyExecutableAbsent':'PASS',
    'actualPackagedBackendLaunch':'PASS','healthIdentity':'PASS','readySQLite':'PASS','sqliteMigrations':'PASS','sqliteIntegrity':'PASS','rootSurface':'PASS',
    'actualPackagedNativeWindowLaunch':'PASS','nativeWindowStartupDwell':'PASS','warmNativeWindowRelaunch':'PASS',
-   'warmProfileSQLiteReuse':'PASS','nativeWindowProtocolResolution':'PASS','nativeWindowCleanup':'PASS'
+   'warmProfileSQLiteReuse':'PASS','nativeWindowProtocolResolution':'PASS','nativeWindowCleanup':'PASS',
+   'previousStableTagCandidateBinding':'PASS','previousStableProfileUpgrade':'PASS','upgradeSQLiteIntegrity':'PASS','upgradeStatePreserved':'PASS'
  },
  'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat()
 }
 open(path,'w').write(json.dumps(data,indent=2,sort_keys=True)+'\n')
 PY
-echo "PASS: G13/G14 macOS Apple Silicon v$DEPULSE_VERSION (backend + actual native window + warm relaunch)"
+echo "PASS: G13/G14 macOS Apple Silicon v$DEPULSE_VERSION (backend + native window + warm relaunch + previous-Stable upgrade)"
