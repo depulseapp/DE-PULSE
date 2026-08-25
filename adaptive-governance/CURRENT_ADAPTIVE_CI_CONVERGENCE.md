@@ -3,19 +3,19 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Completed provider onboarding:** #95 / PR #101  
-**Completed provider observability/usefulness:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / PR #105 / merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001` / PR #103  
-**Retained process closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**#94 closure reconciliation:** `adapt-provider-telemetry-001-closure` / PR #106  
+**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
+**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Active branch:** `adapt-provider-professional-closure-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Future hosted program:** #66 remains blocked/not started.
 
-#70/#73 remain the completed CI/repository control-plane foundation. #94 used only canonical CI Fast and CI Qualified: exact candidate `ae669a9a39604908086f36f75a78a9c1c1f93ae8` passed Fast #976 / `32807961635` and Qualified #196 / `32808052157`; PR #105 expected-head merged as `249ce52d3af513b763ac46ac22a1b28ce01bd346`; main Fast #977 / `32808395855` passed branch hygiene + Post-Stable continuity. Phase-A closure candidate `09b1d2e2cc160cd2652b1acf59d88e7e98f4b8b8` passed Fast #978 / `32808710702` while #94 remained the projected active reservation, proving its completed closure ledger.
+#70/#73 remain the completed CI/repository control-plane foundation. #94 completed on exact candidate `ae669a9a39604908086f36f75a78a9c1c1f93ae8` with Fast #976 / `32807961635`, Qualified #196 / `32808052157`, PR #105 merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`, closure PR #106 merge `d7b46d5d0ea50a47ad47e2f8974b6488e84b7536`, and main Fast #981 / `32809656631` green.
 
-## Closure reconciliation CI contract
+## #107 CI contract
 
-PR #106 is certification/governance only. Finalize current-state/handoff/CURRENT projections without changing product source, then require canonical exact-head Fast PASS and impact-selected Qualified PASS on one unchanged final closure candidate. Re-fetch `main`, merge with expected-head protection, and confirm post-merge branch hygiene/Post-Stable continuity remain green. No retry branch, direct-main patch, temporary workflow, gate waiver or Release workflow is allowed.
+#107 is process/governance only. The active closure authority is `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`; all six blocking gaps remain unresolved until immutable evidence exists. Regular Fast must validate ledger completeness/enforcement, current-state projection convergence, Adaptive Resume/portability, source health/Data Health recurrence, Post-Stable continuity and all other impact-selected checks without weakening any gate.
 
-Once reservation removal is committed, `governance/current-state.json` projects the retained completed process authority #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001`; therefore `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json` remains the canonical active-process closure ledger for convergence checks.
+After exact-head Fast PASS, mark the PR Ready and require Planner v3 impact-selected Qualified PASS on the identical candidate. Skipped lanes are acceptable only when Planner v3 classifies them N/A from the process-only delta. Re-fetch `main` and PR head before expected-head merge. Then require the main-push Fast branch-hygiene and Post-Stable continuity sentinel to remain green.
 
-The next product capability remains unreserved pending a fresh #65 live-source semantic-overlap audit. #66 remains blocked.
+No direct-main patch, force push, retry branch, temporary workflow, gate waiver or Release workflow is allowed. Final ledger verification and #107/#65 closure happen only after the GitHub run/merge/main-sentinel objects exist. #66 remains blocked/not started.

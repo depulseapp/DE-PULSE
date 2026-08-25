@@ -20,23 +20,7 @@
   },
   "metadataHeadRule": "The immutable v18.9.1 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future process/product branch.",
   "gates": {
-    "G0": "PASS",
-    "G1": "PASS",
-    "G2": "PASS",
-    "G3": "PASS",
-    "G4": "PASS",
-    "G5": "PASS",
-    "G6": "PASS",
-    "G7": "PASS",
-    "G8": "PASS",
-    "G9": "PASS",
-    "G10": "PASS",
-    "G11": "PASS",
-    "G12": "PASS",
-    "G13": "PASS",
-    "G14": "PASS",
-    "G15": "PASS",
-    "G16": "PASS"
+    "G0": "PASS", "G1": "PASS", "G2": "PASS", "G3": "PASS", "G4": "PASS", "G5": "PASS", "G6": "PASS", "G7": "PASS", "G8": "PASS", "G9": "PASS", "G10": "PASS", "G11": "PASS", "G12": "PASS", "G13": "PASS", "G14": "PASS", "G15": "PASS", "G16": "PASS"
   },
   "releaseSummary": {
     "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
@@ -56,18 +40,8 @@
     "entrypoints": ["AGENTS.md", "CLAUDE.md"]
   },
   "completedReleaseScope": [
-    {
-      "issue": 64,
-      "release": "v18.9.1",
-      "disposition": "COMPLETED_IN_V18.9.1_STABLE",
-      "requirement": "ADAPT-RUNTIME-CRASH-001"
-    },
-    {
-      "issue": 61,
-      "release": "v18.9.0",
-      "disposition": "COMPLETED_IN_V18.9.0_STABLE",
-      "requirement": "ADAPT-TRADEINSIGHT-001"
-    }
+    {"issue": 64, "release": "v18.9.1", "disposition": "COMPLETED_IN_V18.9.1_STABLE", "requirement": "ADAPT-RUNTIME-CRASH-001"},
+    {"issue": 61, "release": "v18.9.0", "disposition": "COMPLETED_IN_V18.9.0_STABLE", "requirement": "ADAPT-TRADEINSIGHT-001"}
   ],
   "escapedRuntimeDefects": [],
   "activeProgram": {
@@ -76,7 +50,6 @@
     "completedProcessResidual": {
       "issue": 102,
       "requirement": "ADAPT-POST-STABLE-CONTINUITY-001",
-      "classification": "PROCESS_RELEASE_ENGINEERING_POST_STABLE_CONTINUITY",
       "candidate": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
       "fastRun": 32803346202,
       "qualifiedRun": 32803373245,
@@ -91,10 +64,31 @@
       "qualifiedRun": 32801546814,
       "mergeCommit": "2eab9bd38b0a75a116de46e531015ed699ed7308"
     },
-    "separateResidualIssue": 94,
+    "completedProviderTelemetry": {
+      "issue": 94,
+      "requirement": "ADAPT-PROVIDER-TELEMETRY-001",
+      "candidate": "ae669a9a39604908086f36f75a78a9c1c1f93ae8",
+      "fastRun": 32807961635,
+      "qualifiedRun": 32808052157,
+      "productMergeCommit": "249ce52d3af513b763ac46ac22a1b28ce01bd346",
+      "closureMergeCommit": "d7b46d5d0ea50a47ad47e2f8974b6488e84b7536",
+      "mainContinuityRun": 32809656631,
+      "disposition": "COMPLETE_ADVISORY_ONLY_NO_STABLE_RELEASE"
+    },
+    "activeProcessResidual": {
+      "issue": 107,
+      "requirement": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
+      "classification": "PROCESS_PROVIDER_INTELLIGENCE_PROFESSIONAL_CLOSURE",
+      "baselineMain": "d7b46d5d0ea50a47ad47e2f8974b6488e84b7536",
+      "branch": "adapt-provider-professional-closure-001",
+      "status": "IN_PROGRESS",
+      "productBehaviorChange": false,
+      "blocksNextProductCapability": true,
+      "auditComment": 5405370494
+    },
     "futureBlockedIssue": 66,
-    "selectionRule": "Perform a fresh live-source/#65 semantic-overlap audit before reserving the next product capability. #94 remains a known residual but is not automatically selected."
+    "selectionRule": "#107 is the sole active process closure after a fresh #65 semantic-overlap audit proved no actionable v18 product leaf remains. Do not activate #66 until #107/#65 are durably closed and a fresh future-program decision is made."
   },
-  "nextStep": "Run the fresh #65 live-source semantic-overlap audit against current main and open issues before reserving the next product slice. Do not assume #94 is next until overlap is re-proven, and do not start #66.",
-  "updatedAt": "2026-08-24T20:05:00-07:00"
+  "nextStep": "Complete #107 professional closure with fail-closed ledger, exact-head Fast, same-head impact-selected Qualified, expected-head merge and green post-merge main continuity; then close #107 and parent #65. Do not start #66.",
+  "updatedAt": "2026-08-24T21:51:00-07:00"
 }
