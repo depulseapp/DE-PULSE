@@ -10,11 +10,11 @@
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Current closure branch:** `adapt-v18-final-closure-10-10-001`  
 **Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
-**Current candidate identity:** `18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
+**Candidate identity:** `v18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
 **Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
-**Active child:** #122 / T9 — cross-platform packaged runtime / release / provenance — **IN PROGRESS**  
-**Next child:** #123 / T10 — future-proof zero-gap final certification — **NOT STARTED / BLOCKED UNTIL T9 VERIFIED**  
+**Active child:** #122 / T9 — cross-platform packaged runtime / release / provenance — **IN_PROGRESS**  
+**Next child:** #123 / T10 — future-proof zero-gap final certification — **NOT_STARTED / BLOCKED UNTIL T9 VERIFIED**  
 **Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — **BLOCKED**.
 
 ## Completed closure tracks
@@ -86,7 +86,7 @@ Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/ED
 2. Read this file and `governance/current-state.json` first, then the T9 assurance artifact, v18.10 release contract/manifest and parent closure ledger.
 3. GitHub objects and executable evidence outrank this prose and all chat memory.
 4. Treat T1-T8 as complete only while their durable evidence remains intact; T8 authority is source `e4542890...`, Fast #1080, Qualified #216 and merge `a3a82aee...`.
-5. T9/#122 is active; T10/#123 is NOT_STARTED and v19/#66 is blocked.
+5. T9/#122 is IN_PROGRESS; T10/#123 is NOT_STARTED and v19/#66 is blocked.
 6. Never infer assurance from file existence or issue state. Require exact-head executable positive, negative/failure and platform evidence.
 7. Preserve Smart Provider Router v2, canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
 8. Use G0-G16 only. T9 must earn exact-head Fast and identical-head Qualified; final public v18.10.0 publication is T10-only after T1-T10 are VERIFIED.
