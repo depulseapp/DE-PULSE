@@ -45,6 +45,14 @@ def clean_version(value: object) -> str:
     return str(value or "").strip().lstrip("v")
 
 
+def version_tuple(value: object) -> tuple[int, ...]:
+    cleaned = clean_version(value)
+    try:
+        return tuple(int(part) for part in cleaned.split("."))
+    except Exception:
+        return ()
+
+
 def fail(items: list[str]) -> int:
     print("DE.PULSE post-Stable continuity: FAIL", file=sys.stderr)
     for item in items:
@@ -211,9 +219,6 @@ def process_work_slice_errors(
     if active.get("productBehaviorChange") is not False:
         errors.append("current-state process work slice must declare productBehaviorChange=false")
 
-    # The resume checkpoint files are immutable evidence for the prior Stable. A
-    # process-only work slice may run with those checkpoints one Stable behind,
-    # but not arbitrarily stale and never with build/evidence disagreement.
     if checkpoint_version != identity_version and checkpoint_version != previous_stable:
         errors.append(
             "process work-slice checkpoint may only equal the current Stable or its immediate predecessor: "
@@ -278,8 +283,11 @@ def product_work_slice_errors(
     stable_tag = str(stable.get("tag", "")).strip()
     stable_candidate = str(stable.get("candidateSha", "")).strip()
     stable_fingerprint = str(stable.get("sourceFingerprint", "")).strip()
-    expected_tag = f"v{identity_version}-stable"
     previous_stable = clean_version(identity.get("previous_stable"))
+    work_type = str(work_slice.get("type", "")).strip()
+    is_release_closure = work_type == "PRODUCT_RELEASE_CLOSURE"
+    published_stable_version = previous_stable if is_release_closure else identity_version
+    expected_tag = f"v{published_stable_version}-stable"
     completed_process_id = str(active.get("workSliceId", "")).strip()
     completed_process_path = (
         ROOT / "governance" / "work-slices" / completed_process_id / "work-slice.json"
@@ -289,15 +297,36 @@ def product_work_slice_errors(
     completed_process = load_json(completed_process_path) if completed_process_id else {}
 
     if identity.get("channel") != "STABLE":
-        errors.append("product work slice requires unchanged STABLE release identity")
-    if clean_version(stable.get("productVersion")) != identity_version:
-        errors.append("current-state Stable productVersion / release identity drift")
-    if stable_tag != expected_tag:
-        errors.append(f"current-state Stable tag mismatch: {stable_tag or '<missing>'} != {expected_tag}")
-    if str(stable.get("buildId", "")) != str(identity.get("build_id", "")):
-        errors.append("current-state Stable buildId / release identity drift")
-    if str(stable.get("platformBuildNumber", "")) != str(identity.get("bundle_version", "")):
-        errors.append("current-state platform build number / release identity drift")
+        errors.append("product work slice requires STABLE candidate release identity")
+    if is_release_closure:
+        if not previous_stable:
+            errors.append("release closure candidate must declare previous_stable")
+        if clean_version(identity.get("stable_baseline")) != previous_stable:
+            errors.append("release closure stable_baseline / previous_stable drift")
+        if not version_tuple(identity_version) or not version_tuple(previous_stable) or version_tuple(identity_version) <= version_tuple(previous_stable):
+            errors.append("release closure candidate version must be strictly newer than published Stable")
+        if clean_version(stable.get("productVersion")) != previous_stable:
+            errors.append("release closure must preserve previous Stable productVersion until publication")
+        if stable_tag != expected_tag:
+            errors.append(f"release closure must preserve published Stable tag: {stable_tag or '<missing>'} != {expected_tag}")
+        if str(stable.get("buildId", "")) != str(work_slice.get("baselineBuildId", "")):
+            errors.append("release closure published Stable buildId / baseline build drift")
+        try:
+            stable_build = int(stable.get("platformBuildNumber", 0))
+            candidate_build = int(identity.get("bundle_version", 0))
+            if stable_build <= 0 or candidate_build <= stable_build:
+                errors.append("release closure platform build must advance monotonically beyond published Stable")
+        except Exception:
+            errors.append("release closure platform build numbers are invalid")
+    else:
+        if clean_version(stable.get("productVersion")) != identity_version:
+            errors.append("current-state Stable productVersion / release identity drift")
+        if stable_tag != expected_tag:
+            errors.append(f"current-state Stable tag mismatch: {stable_tag or '<missing>'} != {expected_tag}")
+        if str(stable.get("buildId", "")) != str(identity.get("build_id", "")):
+            errors.append("current-state Stable buildId / release identity drift")
+        if str(stable.get("platformBuildNumber", "")) != str(identity.get("bundle_version", "")):
+            errors.append("current-state platform build number / release identity drift")
     if stable.get("publication") != "PASS_NO_REBUILD":
         errors.append("current-state Stable publication must remain PASS_NO_REBUILD")
     if not stable_candidate or not stable_fingerprint:
@@ -341,26 +370,39 @@ def product_work_slice_errors(
             errors.append("product capability/work-slice id drift")
         if work_slice.get("issue") != reserved_issue:
             errors.append("product capability/work-slice issue drift")
-        if work_slice.get("type") != "PRODUCT_CAPABILITY":
-            errors.append("registered product work slice is not PRODUCT_CAPABILITY")
+        if work_type not in {"PRODUCT_CAPABILITY", "PRODUCT_RELEASE_CLOSURE"}:
+            errors.append("registered product work slice must be PRODUCT_CAPABILITY or PRODUCT_RELEASE_CLOSURE")
         if str(work_slice.get("status", "")).strip().upper() not in ACTIVE_PRODUCT_STATES:
             errors.append("registered product work-slice status is not active")
         if str(work_slice.get("branch", "")).strip() != reserved_branch:
             errors.append("product capability/work-slice branch drift")
-        if work_slice.get("publicProductVersion") is not None:
-            errors.append("product work-slice identity must remain separate from public SemVer")
+        if is_release_closure:
+            if clean_version(work_slice.get("publicProductVersion")) != identity_version:
+                errors.append("release closure publicProductVersion / candidate identity drift")
+            if clean_version(work_slice.get("stableProductVersionAtStart")) != previous_stable:
+                errors.append("release closure Stable-at-start must equal previous Stable")
+            if str(work_slice.get("targetStable", "")).strip() != f"v{identity_version}-stable":
+                errors.append("release closure targetStable / candidate identity drift")
+            if not str(work_slice.get("releaseClaim", "")).strip():
+                errors.append("release closure releaseClaim missing")
+            closure_rel = str(work_slice.get("closureLedger", "")).strip()
+            if not closure_rel or not (ROOT / closure_rel).is_file():
+                errors.append("release closure requires a retained closure ledger")
+        elif work_slice.get("publicProductVersion") is not None:
+            errors.append("product capability identity must remain separate from public SemVer")
         if work_slice.get("productBehaviorChange") is not True:
-            errors.append("product capability work slice must declare productBehaviorChange=true")
+            errors.append("product work slice must declare productBehaviorChange=true")
         if work_slice.get("blocksNextProductCapability") is not True:
-            errors.append("active product capability must block starting the next product capability")
-        if clean_version(work_slice.get("stableProductVersionAtStart")) != identity_version:
+            errors.append("active product work must block starting the next product capability")
+        if not is_release_closure and clean_version(work_slice.get("stableProductVersionAtStart")) != identity_version:
             errors.append("product work-slice Stable-at-start version / release identity drift")
         if str(work_slice.get("baselineCandidateSha", "")).strip() != stable_candidate:
             errors.append("product work-slice baseline candidate / current Stable candidate drift")
         if str(work_slice.get("baselineSourceFingerprint", "")).strip() != stable_fingerprint:
             errors.append("product work-slice baseline fingerprint / current Stable fingerprint drift")
-        if str(work_slice.get("baselineBuildId", "")).strip() != str(identity.get("build_id", "")):
-            errors.append("product work-slice baseline build / release identity drift")
+        expected_baseline_build = str(stable.get("buildId", "")) if is_release_closure else str(identity.get("build_id", ""))
+        if str(work_slice.get("baselineBuildId", "")).strip() != expected_baseline_build:
+            errors.append("product work-slice baseline build / governing Stable identity drift")
 
     if not completed_process:
         errors.append("completed process work-slice metadata missing while product work is active")
@@ -379,9 +421,13 @@ def product_work_slice_errors(
         if not final_evidence or not (ROOT / final_evidence).is_file():
             errors.append("retained completed process work slice lacks final qualification evidence")
 
-    # Immutable resume checkpoints may lag by exactly one Stable while a new
-    # version-independent product work slice starts from the current Stable.
-    if checkpoint_version != identity_version and checkpoint_version != previous_stable:
+    if is_release_closure:
+        if checkpoint_version != previous_stable:
+            errors.append(
+                "release closure checkpoint must remain the immediate published Stable until publication: "
+                f"checkpoint=v{checkpoint_version}, previous=v{previous_stable or '<missing>'}"
+            )
+    elif checkpoint_version != identity_version and checkpoint_version != previous_stable:
         errors.append(
             "product work-slice checkpoint may only equal the current Stable or its immediate predecessor: "
             f"checkpoint=v{checkpoint_version}, current=v{identity_version}, predecessor=v{previous_stable or '<missing>'}"
@@ -452,6 +498,9 @@ def main() -> int:
         registered_process_branch = str(active.get("branch", "")).strip()
         registered_closure_branch = str(active.get("closureBranch", "")).strip()
         registered_product_branch = str(capability_gate.get("reservedBranch", "")).strip()
+        work_slice_rel = str(capability_gate.get("workSlicePath", "")).strip()
+        registered_product_work = load_json(ROOT / work_slice_rel) if work_slice_rel else {}
+        registered_product_type = str(registered_product_work.get("type", "")).strip()
         is_registered_process = (
             branch in {registered_process_branch, registered_closure_branch}
             and bool(branch)
@@ -480,7 +529,7 @@ def main() -> int:
                 )
             )
         elif is_registered_product:
-            mode = "PRODUCT_WORK_SLICE"
+            mode = "PRODUCT_RELEASE_CLOSURE" if registered_product_type == "PRODUCT_RELEASE_CLOSURE" else "PRODUCT_WORK_SLICE"
             errors.extend(
                 product_work_slice_errors(
                     identity=identity,
@@ -510,6 +559,11 @@ def main() -> int:
     if mode == "PRODUCT_WORK_SLICE":
         print("registered product work-slice / Stable tag / ancestry / SemVer-separation invariants: PASS")
         print("prior-Stable immutable resume checkpoint exception: BOUNDED_TO_IMMEDIATE_PREDECESSOR")
+    if mode == "PRODUCT_RELEASE_CLOSURE":
+        print("active release-closure candidate / published-Stable separation: PASS")
+        print("previous Stable tag/candidate/fingerprint/baseline/ancestry invariants: PASS")
+        print("candidate SemVer + platform build monotonicity: PASS")
+        print("publication remains deferred until canonical release gates: PASS")
     return 0
 
 
