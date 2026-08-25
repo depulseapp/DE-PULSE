@@ -2,23 +2,28 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Closure branch:** `adapt-provider-professional-closure-001-closure`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 complete by executable evidence.  
-**Future hosted program:** #66 remains blocked/not started.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Parent ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
+**Feature ledger:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`  
+**Future hosted program:** #66 remains BLOCKED.
 
-## #107 verified gaps
+## Current closure truth
 
-All six Professional Closure gaps are VERIFIED against immutable evidence:
-1. `HISTORICAL-LEAF-DISPOSITION` — VERIFIED by fresh #65 audit comment `5405370494` plus completed issue/PR/run evidence.
-2. `NO-ACTIONABLE-V18-PRODUCT-GAP` — VERIFIED by the post-#94 live-source/open-issue audit.
-3. `TRADEINSIGHT-CONTRACT-BOUNDARIES` — VERIFIED; direct SEC/EDGAR and Router v2 authority preserved, unverified endpoints fail closed.
-4. `CURRENT-PROJECTION-CONVERGENCE` — VERIFIED by Fast #983 / `32811045734` and Qualified #198 / `32811081438`.
-5. `FUTURE-PROGRAM-SEPARATION` — VERIFIED; #66 remains separate/not started with no reservation.
-6. `EXACT-HEAD-DELIVERY` — VERIFIED by candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2`, Fast #983, Qualified #198, PR #108 expected-head merge `e9c236b2b9f229968f93ffe9ac600f45080389a7`, and main Fast #984 / `32811424765` branch-hygiene/Post-Stable-continuity PASS.
+No v18.10 assurance track is pre-verified. All ten parent gaps begin OPEN and block publication:
+1. `T1-FEATURE-TRACEABILITY` / #114
+2. `T2-UNIT-CONTRACT-PROPERTY` / #115
+3. `T3-FUNCTIONAL-E2E` / #116
+4. `T4-EDGE-FAILURE-DATA-TRUTH` / #117
+5. `T5-PERSISTENCE-LIFECYCLE-RECOVERY` / #118
+6. `T6-SECURITY-ROLES-RIGHTS` / #119
+7. `T7-UI-UX-IA-CONTENT` / #120
+8. `T8-PERFORMANCE-CONCURRENCY-SOAK` / #121
+9. `T9-PACKAGED-CROSS-PLATFORM-RELEASE` / #122
+10. `T10-FUTURE-PROOF-ZERO-GAP-CERTIFICATION` / #123
 
-No gap was closed by documentation alone. No product behavior or Stable/public SemVer release was introduced. Smart Provider Router v2, canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain unchanged.
+The feature ledger intentionally starts `DISCOVERY_PENDING` with zero feature rows. T1 must discover every shipped feature from current source/GitHub/release evidence; it is prohibited to assume completeness from memory or old issue status. Any `UNOWNED`, `UNTESTED`, `UNKNOWN`, duplicate owner, closed-issue-without-executable-evidence or unexplained carry-forward blocks closure.
 
-The v18 provider-intelligence program has zero unexplained actionable implementation gaps. Future work is unreserved; #66 requires a fresh explicit program decision.
+A genuine implementation/test/data-truth/UI/UX/security/persistence/performance/platform miss becomes an explicit corrective under #113, is fixed through canonical owners and must re-enter the relevant T2–T9 evidence matrix. Documentation alone closes nothing.
+
+The v18.10 parent may be marked COMPLETE and called **10/10 Future-Proof Final v18 Closure** only when all ten gaps are VERIFIED, the final immutable candidate completes G0–G16 and Stable publication succeeds without rebuild. Smart Provider Router v2, canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle/identity/session owners, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain permanent.
