@@ -2,33 +2,29 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider-intelligence program:** #65 / #107  
-**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
-**Future hosted umbrella:** #66 — no product reservation yet.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Next child:** #114 / T1  
+**Future hosted umbrella:** #66 — BLOCKED.
 
 ## Retained Data Health process
 
 The inherited **#81/#82/#83/#78/#84** process remains in force: unclassified provider/fetch paths **fail closed**, **canonical freshness** remains authoritative, and Smart Provider Router v2 remains the only general routing/admission owner.
 
-## Zero-miss v19 execution loop
+## v18.10 execution loop
 
-For every future v19 patch:
-
-**LOOKUP live GitHub/source -> COMPARE with conservation rows -> CLASSIFY source overlap -> DECIDE one residual -> freeze G1 requirement/platform matrix -> implement smallest canonical-owner delta -> exact-head evidence -> reconcile every assigned row -> close -> only then advance.**
+**FETCH live GitHub/source -> T1 DISCOVER every shipped feature -> MAP requirement + canonical owner + evidence classes -> OPEN named corrective for real miss -> FIX smallest canonical-owner delta -> RE-RUN affected T2–T8 evidence -> T9 package the unchanged candidate -> T10 prove durable regression ownership + zero gaps -> exact-head release certification.**
 
 Rules:
-- roadmap prose never proves a feature is missing;
-- reuse/consolidate before add;
-- one primary implementation responsibility per patch;
-- parent requirement IDs and dependencies are frozen before implementation;
-- Mac/Windows/Web are `REQUIRED` or justified `N/A` at G1 for every shared capability;
-- one-platform evidence is diagnostic only;
-- external/provider blockers are explicit `EXTERNAL_BLOCKED`, never bypassed;
-- no applicable row may disappear between versions;
-- end-of-band closure has no feature scope and must prove zero unexplained carry-forward;
-- G10/G15 block on unowned/unevidenced applicable rows;
-- G16 reconciles the machine ledger against actual GitHub/CI/artifact truth.
+- T1 inventory is source/evidence driven, never memory driven;
+- closed historical issue alone does not prove implementation;
+- every applicable feature row requires positive functional plus negative/edge/failure ownership;
+- user-visible rows require explicit UI/UX/IA/content disposition, not only renderer-pass status;
+- implementation misses are explicit corrective work, never hidden inside closure metadata;
+- tests are reused only if they materially prove the mapped requirement;
+- no vanity coverage target substitutes for meaningful behavior assertions;
+- macOS Apple Silicon and Windows x64 packaged evidence are mandatory for shared native v18 behavior;
+- one immutable final candidate must pass Fast/Qualified/Release; no retry branch/workflow family;
+- T10 must make future #66/v19 requirement conservation executable in CI and preserve GitHub-only continuation.
 
-The canonical conservation ledger is `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`. Existing canonical provider, Data Health, freshness, cache/persistence, subscription, telemetry, reconciliation, identity/session and lifecycle owners remain authoritative.
+Permanent canonical owners remain authoritative: Smart Provider Router v2; Data Health; canonical freshness/recovery; cache/persistence/state; multi-feed subscription; telemetry/reconciliation/lifecycle; identity/session; direct SEC/EDGAR. No parallel testing subsystem may become a second product owner.
