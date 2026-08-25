@@ -190,7 +190,7 @@ def collect_errors(root: Path, *, g11_candidate_sha: str = '', tag_lookup: Calla
         if handoff and token and token not in handoff: errors.append(f'{code}: {token!r} not present in handoff/CURRENT.md')
 
     version_text = read_text(root / 'VERSION.txt', errors, 'VERSION_UNREADABLE')
-    for code, token in (('VERSION_DISPLAY_MISMATCH', display_version), ('VERSION_BUILD_MISMATCH', current_build), ('VERSION_PREDECESSOR_MISMATCH', f'Previous Stable: {previous_stable}')):
+    for code, token in (('VERSION_DISPLAY_MISMATCH', display_version), ('VERSION_BUILD_MISMATCH', current_build), ('VERSION_PREDECESSOR_MISMATCH', f'Previous Stable: v{previous_stable}')):
         if version_text and token and token not in version_text: errors.append(f'{code}: {token!r} not present')
 
     boot = read_text(root / 'app_bootstrap.go', errors, 'APP_BOOTSTRAP_UNREADABLE')
