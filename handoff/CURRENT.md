@@ -10,55 +10,84 @@
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Current closure branch:** `adapt-v18-final-closure-10-10-001`  
 **Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Current candidate identity:** `18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
-**Completed T1:** #114 / PR #127 / merge `b434886751fde1804a4906c9cac41dcce4584834`  
-**Completed T2:** #115 / PR #128 / merge `bd26f91964235a8fdb390184684f4fdd216eb1e6`  
-**Completed T3:** #116 / PR #129 / merge `cf0cc9aa877188775d5c36cb805e6c8935d776bb`  
-**Completed T4:** #117 / PR #130 / merge `fadd9247f63779195138f8d79cbaa0f304b16e61`  
-**Completed T5:** #118 / PR #132 / merge `81137e4481cdf4a351e45c599efa0777ef93460a`  
-**Completed T6:** #119 / PR #133 / merge `ca051884c733118c11e13b0b5ef169c810c39714`  
-**Completed T7:** #120 / PR #134 / merge `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`  
-**Next child:** #121 / T8 — performance / load / soak / concurrency / resource safety — **NOT STARTED**  
-**Recorded companion:** #122 / T9 — cross-platform packaged runtime / release / provenance — **NOT STARTED**  
-**Frozen T1 responsibility count:** 180  
-**T1 frozen assurance manifest:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json`  
-**T2 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json`  
-**T3 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T3_FUNCTIONAL_ASSURANCE.json`  
-**T4 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T4_EDGE_FAILURE_DATA_TRUTH_ASSURANCE.json`  
-**T5 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json`  
-**T6 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json`  
-**T7 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T7_UI_UX_IA_CONTENT_ASSURANCE.json`  
 **Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
-**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — BLOCKED.
+**Active child:** #122 / T9 — cross-platform packaged runtime / release / provenance — **IN PROGRESS**  
+**Next child:** #123 / T10 — future-proof zero-gap final certification — **NOT STARTED / BLOCKED UNTIL T9 VERIFIED**  
+**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — **BLOCKED**.
 
-## Current authority
+## Completed closure tracks
 
-T1-T7 are durably closed. T7 final qualified source head `d5a6028a140599c3dd1c54e4f0fa184b83baccb1` passed exact-head Fast #1063/run `32886292524` and identical-head Qualified #214/run `32886516851`; PR #134 merged expected-head as `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`.
+- T1 #114 / PR #127 / merge `b434886751fde1804a4906c9cac41dcce4584834`
+- T2 #115 / PR #128 / merge `bd26f91964235a8fdb390184684f4fdd216eb1e6`
+- T3 #116 / PR #129 / merge `cf0cc9aa877188775d5c36cb805e6c8935d776bb`
+- T4 #117 / PR #130 / merge `fadd9247f63779195138f8d79cbaa0f304b16e61`
+- T5 #118 / PR #132 / merge `81137e4481cdf4a351e45c599efa0777ef93460a`
+- T6 #119 / PR #133 / merge `ca051884c733118c11e13b0b5ef169c810c39714`
+- T7 #120 / PR #134 / merge `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`
+- T8 #121 / PR #135 / merge `a3a82aee21fe8e6822d11ba678afefdd6361ef97`
 
-T7 resolved the immutable 180-responsibility inventory to 34 user-visible responsibilities with 34 covered, zero uncovered and 146 non-user-visible. Explicit visible dispositions are KEEP=26, MERGE=5, MOVE=2, REMOVE=1, RENAME=0, REDESIGN=0. Qualified Chrome checked out the exact final source head and executed the canonical `tests/renderer/responsive_ui_test.py` matrix through the registered browser owner: **393/393 PASS across 15 viewports and 21 surfaces**. WebKit compatibility, renderer contracts, persistence/DB integration, security/data-rights, full Go suite, race detector, randomized package order and repository migration safety all passed.
+T8 final source `e4542890eddf0d6c94e59e991d9d17ae8cc3ca35` passed exact-head Fast #1080/run `32899149506` and identical-head Qualified #216/run `32899321362`. Qualified full Go, race detector and randomized package order passed. `T8_PERFORMANCE_LOAD_SOAK_CONCURRENCY_RESOURCE_ASSURANCE.json` is `COMPLETE` with zero gaps.
 
-T8/#121 is the next governed closure track but is **NOT_STARTED by this handoff update**. T9/#122 is recorded as the next companion and is also NOT_STARTED. T10/#123 and v19/#66 remain blocked. No v18.10.0 release is authorized until all remaining tracks are VERIFIED and G0-G16 publication succeeds.
+## T9 current authority
+
+T9/#122 is the only active closure track. It certifies the actual distributable v18.10.0 candidate rather than source-only behavior. T9 does **not** publish Stable and does **not** start T10.
+
+Canonical T9 evidence owners:
+- `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json`
+- `release/v18.10.0/release_contract.json`
+- `release/v18.10.0/certification-manifest.json`
+- `tools/ci/v18_t9_packaged_cross_platform_release_assurance_gate.py`
+- `tools/release/native_macos.sh`
+- `tools/release/native_windows.ps1`
+- `tools/release/g15_assurance.py`
+- `tools/ci/impact_plan.py`
+- `.github/workflows/ci-fast.yml`
+- `.github/workflows/ci-qualified.yml`
+- `.github/workflows/release.yml`
+
+The candidate identity is synchronized across `release_identity.json`, `app_bootstrap.go`, `VERSION.txt`, `renderer/release-identity.js` and `renderer/index.html`:
+- product version `18.10.0`
+- build ID `v18.10.0-stable-20260825`
+- platform build `181000`
+- previous Stable `v18.9.1`
+- runtime/config continuity `PersonalMarketTerminal`
+
+Previous-Stable upgrade authority is immutable `v18.9.1-stable` at candidate `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`, fingerprint `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`, build `v18.9.1-stable-20260821`. Both native harnesses invoke the previous Stable tag's own certified native harness in an isolated worktree and then launch the exact v18.10.0 package against the same profile to prove migrations, SQLite integrity and persisted identity/symbol state are preserved.
+
+The T9 Planner v3 contract requires one unchanged source head to run:
+- backend full Go suite
+- race detector
+- randomized package order
+- persistence/DB integration
+- renderer contracts
+- Chrome primary behavior
+- WebKit primary compatibility
+- security/data-rights contracts
+- macOS Apple Silicon actual packaged lifecycle
+- Windows x64 actual packaged lifecycle
+
+macOS must prove clean extraction, arm64/SQLite/code-sign identity, packaged backend fresh/warm relaunch, actual Cocoa/WKWebView fresh/warm lifecycle, and v18.9.1 profile upgrade. Windows must prove clean extraction, PE x64 identity, packaged fresh/warm relaunch, and v18.9.1 profile upgrade. Both native evidence files bind exact source SHA, Git-object fingerprint, build ID and package SHA-256.
+
+Current T9 open evidence gaps are intentionally limited to exact-head Fast, identical-head full Qualified, and native evidence binding from that Qualified run. T9 remains `IMPLEMENTED_UNVERIFIED` until those executable results pass.
 
 ## Exactly one next action
 
-In a new governed work step, fetch fresh `main` and the closure branch, read #113 and #121 plus their current comments, inspect the frozen T1 ledger and T3/T4 workflow evidence, and then begin **T8/#121 only** if GitHub machine state still names it as the next child. This handoff commit does not initialize or start T8. Do not start T9, T10 or v19 in the same step.
-
-## T8 boundary when it is later started
-
-T8 must prove realistic active-market and degraded-load behavior without creating a parallel performance-specific provider/router/data-health/recovery subsystem. Required evidence includes provider/API demand and latency/error/fallback/rate-limit pressure; Finnhub/Alpaca subscription/snapshot/history load; Opportunity Radar/scanners; Pre-Market/Market Open Prep and catalyst jobs; news/SEC/macro; cache/persistence reads/writes; goroutines/CPU/memory/allocations/GC/locks; UI/API latency; duplicate work/fan-out; race detector; randomized package order; repeated/soak behavior; backpressure/circuit behavior; protected-session capacity and truthful recovery. Local overload that materially delays freshness, manufactures DATA DEGRADED, misstates readiness/evidence, or makes the UI materially slow is a release blocker.
+Fetch fresh `main` and `adapt-v18-final-closure-10-10-001`, confirm #122 remains active and no newer source has superseded the branch, then finish T9 only: run exact-head Fast, run identical-head Qualified with backend/race/randomized + DB + renderer + Chrome + WebKit + security/data-rights + macOS + Windows selected, inspect the native package evidence, fix any real failures, and only then mark T9 VERIFIED/merge/close. Do not start T10, publish v18.10.0 Stable or begin v19 in the same step before T9 is durably verified.
 
 ## Retained architecture
 
-Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains advisory only. U.S. equities processing, GLD/SLV/USO actionable exceptions, governed SHADOW → VALIDATED → APPROVED → PRODUCTION provider maturity, and No Execution remain permanent. No parallel subsystem may be created merely to satisfy closure testing.
+Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains advisory only. U.S. equities processing, GLD/SLV/USO actionable exceptions, governed SHADOW → VALIDATED → APPROVED → PRODUCTION provider maturity, and No Execution remain permanent. Linux is CI/test only; required packaged release targets are macOS Apple Silicon and Windows x64. Hosted Web GA remains v19 scope. No parallel subsystem may be created merely to satisfy closure testing.
 
 ## Resume rule
 
-1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, #113 and next child #121 first; also inspect any newer PR/workflow state.
-2. Read this file and `governance/current-state.json` first, then the v18.10 plan, frozen T1 manifest/reconciliation, T2-T7 assurance artifacts, #113 and #121.
-3. Confirm #120 remains closed, PR #134 remains merged at `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`, and final source head `d5a6028a140599c3dd1c54e4f0fa184b83baccb1` retains Fast #1063 + Qualified #214 before relying on T7 closure.
-4. Treat T8/#121 as **NOT_STARTED** until a later governed step explicitly initializes it. T9/#122 remains NOT_STARTED.
-5. GitHub objects and executable evidence outrank this prose and all chat memory.
-6. Never infer assurance from a closed issue or test-file existence; require executable positive evidence and applicable negative/edge/failure evidence.
-7. Preserve Smart Provider Router v2, Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle, identity/session, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-8. Use G0-G16 only: canonical Fast exact-head PASS -> identical-head Qualified PASS -> expected-head merge for implementation tracks; final public v18.10.0 publication only after T1-T10 are VERIFIED.
+1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, #113, #122 and current PR/workflow state before modifying anything.
+2. Read this file and `governance/current-state.json` first, then the T9 assurance artifact, v18.10 release contract/manifest and parent closure ledger.
+3. GitHub objects and executable evidence outrank this prose and all chat memory.
+4. Treat T1-T8 as complete only while their durable evidence remains intact; T8 authority is source `e4542890...`, Fast #1080, Qualified #216 and merge `a3a82aee...`.
+5. T9/#122 is active; T10/#123 is NOT_STARTED and v19/#66 is blocked.
+6. Never infer assurance from file existence or issue state. Require exact-head executable positive, negative/failure and platform evidence.
+7. Preserve Smart Provider Router v2, canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+8. Use G0-G16 only. T9 must earn exact-head Fast and identical-head Qualified; final public v18.10.0 publication is T10-only after T1-T10 are VERIFIED.
 9. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone.
