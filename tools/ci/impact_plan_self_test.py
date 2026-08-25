@@ -57,6 +57,20 @@ def main() -> int:
     require(process["portabilityRequired"] is True, "process-only change must require portability")
     require(process["backendRequired"] is False, "process-only change must not force backend")
 
+    t2_control = analyze_changed_paths([
+        "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json"
+    ])
+    require(t2_control["processOnly"] is False, "active T2 assurance state must not be treated as process-only")
+    require(t2_control["qualifiedLane"] == "full", "active T2 assurance state must select backend + renderer evidence")
+    require(t2_control["backendRequired"] is True, "active T2 assurance state must require backend unit/package execution")
+    require(t2_control["rendererRequired"] is True, "active T2 assurance state must require renderer contract execution")
+    require(t2_control["chromeRequired"] is True and t2_control["webkitRequired"] is True, "renderer dependencies must remain intact during T2 qualification")
+    require(t2_control["nativeMacosRequired"] is False and t2_control["nativeWindowsRequired"] is False, "T2 must not implicitly start packaged-platform qualification")
+
+    t2_gate = analyze_changed_paths(["tools/ci/v18_t2_unit_contract_assurance_gate.py"])
+    require(t2_gate["qualifiedLane"] == "full", "T2 gate changes must re-run their executable backend + renderer evidence graph")
+    require(t2_gate["backendRequired"] is True and t2_gate["rendererRequired"] is True, "T2 gate dependency graph incomplete")
+
     stable_manifest = analyze_changed_paths(["release/v18.6.1/stable-evidence-manifest.json"])
     require(stable_manifest["qualifiedLane"] == "ci-harness", "durable Stable evidence index must stay process-only")
     require("RELEASE_TOOLING" in stable_manifest["changeClasses"], "Stable evidence index must remain release-governed")
@@ -137,6 +151,7 @@ def main() -> int:
     print("DE.PULSE CI impact planner v3 self-test: PASS")
     print("dependency-aware backend/renderer/Chrome/WebKit selection: PASS")
     print("capability evidence-owner path routing: PASS")
+    print("active T2 cross-layer assurance routing: PASS")
     print("WebKit/browser vs native-macOS ownership separation: PASS")
     print("active release browser-test fail-safe routing: PASS")
     print("process-only portability selection: PASS")
