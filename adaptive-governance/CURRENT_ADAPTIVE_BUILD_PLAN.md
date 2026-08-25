@@ -2,43 +2,35 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
-**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
-**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+**Completed provider/data-health program:** #79 with final #84 / PR #91  
+**Completed canonical identity:** #92 / PR #93  
+**Completed provider onboarding:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
+**Active process work:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001`  
+**Separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Future hosted program:** #66 remains blocked/not started.
 
-#95 required build outputs are:
-1. `provider_registration.go` is the single provider-onboarding descriptor consumed by existing owners for route membership/priority, configuration, quota/cost/expected-delay metadata and capability diagnostics.
-2. Every production-routable dataset declaration carries canonical owner/consumer purpose plus adapter/schema/timestamp/freshness/failure/rights/evidence/approval/invalidation contracts. Incomplete declarations fail closed even if lifecycle text says `PRODUCTION`.
-3. Existing `routeChains()`, configured-provider checks and provider quota/cost/delay helpers project from the canonical registration rather than requiring new provider-specific switches for each integration.
-4. `provider_capabilities.go` projects existing truthful provider capability diagnostics from the same registration without losing special semantics such as TradeInsight SHADOW, Alpaca plan-limited activity, Finnhub premium evidence or Twelve Data direct-FX detection.
-5. `provider_entitlement_refresh.go` owns only configuration-triggered entitlement invalidation. One-way fingerprints remain process-local and never enter logs, diagnostics, governance or persistence.
-6. Smart Provider Router v2 invokes targeted configuration revalidation before ranking, not during snapshot construction, so snapshot locks are not mutated/re-entered.
-7. Existing **Provider Capabilities → Recheck** may force bounded fresh entitlement observation for same-key server-side plan changes; it may not erase genuine outage/rate-limit/NOT_SUPPORTED/healthy evidence.
-8. Regression proof covers synthetic-provider adoption, route parity, fail-closed incomplete contracts, free-plan exclusion, config-change upgrade, same-key manual recheck, successful re-eligibility, downgrade/402/403 fallback and unrelated-capability isolation.
-9. Regression preserves current behavior for Finnhub, Alpaca, Twelve Data, TradeInsight, Marketaux, FRED, BLS, EIA, SEC/EDGAR, yfinance and CBOE, plus direct SEC authority, U.S. equities, GLD/SLV/USO and No Execution.
-10. Preserve existing Data Engine capability-row behavior/order; registration refactoring must not introduce unrelated UI rearrangement.
-11. Keep #94 separate. #95 does not introduce semantic usefulness scoring or alter production provider order from new #94 evidence.
-12. Maintain `governance/current-state.json`, #95 work-slice/closure ledger, all four CURRENT Adaptive projections, `handoff/CURRENT.md` and issue #95 as a cross-session executable resume set.
+#102 required build outputs are:
+
+1. Replace stale v18.9.0 durable resume checkpoints with truthful v18.9.1 Stable evidence bound to PR #69, exact source `d7276c3421dd2b4529ac2a987466be3cffa05678`, Stable candidate `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`, fingerprint `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff` and build ID `v18.9.1-stable-20260821`.
+2. Add `release/v18.9.1/stable-evidence-manifest.json` from real GitHub Fast #581 / Qualified #163 / Release #33 and retained G12/macOS/Windows/G15/G16 artifact IDs and digests.
+3. Explicitly state that retrospective Stable evidence does not redefine, rebuild or republish the immutable `v18.9.1-stable` release.
+4. Reconcile `ADAPT-PROVIDER-ONBOARDING-001` work-slice and closure ledger to real completed #95 evidence: candidate `3a988f24fc799d130384ff89c9fd1f243db46571`, Fast #965, Qualified #193 and PR #101 merge `2eab9bd38b0a75a116de46e531015ed699ed7308`.
+5. Project #102 as the active `PROCESS_RELEASE_ENGINEERING / POST_STABLE_CONTINUITY` work slice in `governance/current-state.json`, `handoff/CURRENT.md` and all CURRENT Adaptive projections. Product selection remains blocked while #102 is open.
+6. Keep #94 separate/not started and #66 blocked/not started. Do not smuggle product work into this process slice.
+7. Run the unchanged continuity/source/portability/current-state/closure gates, canonical exact-head Fast, then impact-selected Qualified on the identical #102 candidate; merge only with a fresh live-main expected-head guard.
+8. Do not create a Stable/public SemVer release solely for #102 and do not alter provider/router/Data Health/freshness/cache/persistence/lifecycle behavior.
 
 ## Retained Adaptive Data Health build owners
-#95 inherits rather than replaces the completed #80 Data Health artifacts: `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Those remain executable classification/SLO/fetch-path inputs to Smart Provider Router v2 and source-health recurrence. The live **Adaptive Roadmap**, **Build Plan**, **Build Process**, and **Delivery Process** must retain this foundation while identifying #95 as the active extension.
 
-The completed #79 program remains executable input: canonical provider capability, Data Health SLO, fetch-path classification, Router v2, lifecycle/readiness, freshness, persistence, telemetry and degradation owners cannot be replaced by #95. Provider onboarding describes/adopts capabilities into those owners; it does not become a new health/router/lifecycle system.
+The completed #80 Data Health artifacts remain executable inputs beneath #102 and completed #95: `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. These continue to bind the Adaptive Roadmap, Build Plan, Build Process, and Delivery Process to the canonical provider classification, freshness/SLO and fetch-path owners. #102 changes none of those contracts.
 
-## Executable owners already introduced on #95 branch
-- `provider_registration.go`
-- `provider_entitlement_refresh.go`
-- `provider_router.go`
-- `smart_router_v2.go`
-- `provider_capabilities.go`
-- `data_engine_handlers.go`
-- `provider_registration_regression_test.go`
-- `provider_onboarding_adaptive_regression_test.go`
-- `provider_capability_projection_regression_test.go`
+The completed #79/#84 program remains executable input: canonical provider capability, Data Health SLO, fetch-path classification, Smart Provider Router v2, lifecycle/readiness, freshness, persistence, telemetry and degradation owners cannot be replaced by this continuity slice.
 
-These source changes are implementation evidence but are **not yet qualification evidence**. The #95 closure ledger remains fail-closed until focused regressions and canonical exact-head CI succeed.
+## Retained completed product owners
 
-Delivery remains one existing branch/one PR: reconcile source compatibility first, run focused tests, run canonical Fast on the exact final candidate, then impact-selected Qualified on the identical head, then expected-head merge only if live `main` is unchanged. No Stable/public SemVer release is created solely for #95.
+#95 remains executable product architecture, not work to rebuild. `provider_registration.go`, `provider_entitlement_refresh.go`, Smart Provider Router v2, provider capability diagnostics and their regressions remain canonical. Registration-aware recurrence continues to bind registered/routed providers to the same provider-capability matrix.
+
+## After #102
+
+The next product build is not preselected by this process slice. #65 must perform a fresh live-source overlap audit. #94 may then be reserved if its provider-observability/usefulness residual is still genuine; otherwise select the next real residual. #66 remains future-blocked.

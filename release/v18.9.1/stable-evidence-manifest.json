@@ -1,0 +1,45 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.9.1",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.9.1-stable-20260821",
+  "stableTag": "v18.9.1-stable",
+  "certifiedCandidate": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
+  "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "runs": {
+    "fast": 32546289014,
+    "qualified": 32546364036,
+    "canonicalReleaseG11G16": 32546555659
+  },
+  "gates": {
+    "G0-G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "g12FullCertification": {"artifactId": 9468730974, "digest": "sha256:45dc47bf4539490b7ac0ad54c77c1c445ee1202c58d43fcdc0d7fcf37e522300"},
+    "macOSAppleSilicon": {"artifactId": 9468744315, "digest": "sha256:ece4d52d3426243b991b47f3e732503554b8a60314805f0221ef14aa136d4306"},
+    "windowsX64": {"artifactId": 9468744475, "digest": "sha256:6c0d1dc72732c53da0138272875563fc5fec44a58522056d4fd32f673d28df6e"},
+    "g15ReleaseAssurance": {"artifactId": 9468747228, "digest": "sha256:a50eba57eea5f81e6684e25569713eabe48fdfe31d515a2746aef7cd16b4dfdc"},
+    "g16Closure": {"artifactId": 9468751229, "digest": "sha256:2ea31e27b7ae1e3d8779da61a7aecdfeb9059c2bb2b3bb491c3e893acc8caf03"}
+  },
+  "scopeAuthority": {
+    "issue": 64,
+    "productPr": 69,
+    "releaseContract": "release/v18.9.1/release_contract.json",
+    "note": "The macOS native-window runtime reliability corrective closed through exact-head Fast #581, Qualified #163 and canonical Release #33; same-run macOS Apple Silicon and Windows x64 package/runtime evidence passed and publication performed no rebuild."
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true,
+    "manifestDoesNotRebuildOrRepublishStable": true
+  }
+}

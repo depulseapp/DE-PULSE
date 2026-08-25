@@ -2,20 +2,21 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
-**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
-**Active closure ledger:** `governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/closure.json`  
-**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+**Completed provider onboarding:** #95 / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
+**Active process work:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001`  
+**Active closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
+**Separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Future hosted program:** #66 remains blocked/not started.
 
-#95 closure is fail-closed. Its blocking gaps remain the canonical provider-registration contract, capability-scoped entitlement auto-adaptation, provider adoption/diagnostic parity, current-provider regression safety, Adaptive portability binding, and exact-head delivery evidence. Source or governance text alone cannot mark these VERIFIED.
+#102 closure is fail-closed. Its blocking gaps are:
 
-The completed #80–#84 provider/Data Health program remains inherited architecture, not work to rebuild. Registration/admission extends Smart Provider Router v2 and the canonical provider-capability matrix; it may not create a parallel router, Data Health owner, freshness/cache/persistence owner or provider lifecycle system. Historical Router identity aliases must resolve to the same durable provider classification rather than becoming duplicate providers. Direct SEC/EDGAR remains authoritative for Form 4.
+1. **V18-9-1-DURABLE-STABLE-EVIDENCE** — both durable resume checkpoints and the retrospective v18.9.1 Stable manifest must match immutable GitHub release/run/artifact truth.
+2. **PROVIDER-ONBOARDING-95-POST-MERGE** — #95 must remain completed using candidate `3a988f24fc799d130384ff89c9fd1f243db46571`, Fast #965, Qualified #193 and PR #101 merge evidence; the deleted #95 branch must not be presented as active.
+3. **CURRENT-PROJECTION-CONVERGENCE** — machine current state, handoff and all CURRENT Adaptive projections must agree on #102 and preserve #94/#66 separation.
+4. **POST-STABLE-CONTINUITY-SENTINEL** — the unchanged sentinel must pass after checkpoint alignment; no waiver or rule weakening is acceptable.
+5. **EXACT-HEAD-DELIVERY** — canonical Fast PASS followed by impact-selected Qualified PASS on the identical #102 candidate, then expected-head merge and a green next main continuity sentinel.
 
-Closure requires real executable proof for synthetic-provider onboarding, incomplete production-contract fail-closed behavior, free/paid configuration transitions, same-key manual entitlement recheck, downgrade/402/403 fallback and unrelated-capability isolation, current-provider compatibility, legacy Data Engine diagnostic order, and the permanent U.S.-equities/GLD-SLV-USO/No Execution boundaries.
+The completed #80-#84 provider/Data Health foundation and #95 onboarding architecture remain inherited product truth, not gaps to rebuild. Smart Provider Router v2, canonical freshness/degradation/cache/persistence/telemetry/lifecycle owners, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain unchanged.
 
-Final delivery evidence is canonical **CI Fast PASS** followed by deterministic impact-selected **CI Qualified PASS** on the identical candidate, then a fresh live-`main` check and expected-head merge of PR #101. Any source/governance change invalidates prior qualification for closure. No Stable/public SemVer release is created solely for #95.
-
-#94 remains a separate telemetry/usefulness residual and must not be bundled into #95. #66 remains future-blocked/not started.
+No source/governance prose may mark #102 closed by itself. Exact GitHub run/merge objects and executable continuity gates are required. No Stable/public SemVer release is created solely for #102. Product selection resumes only after #102 closes and #65 performs a fresh semantic-overlap audit.

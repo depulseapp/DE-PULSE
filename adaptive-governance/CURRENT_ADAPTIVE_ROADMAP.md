@@ -2,32 +2,32 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
-**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
-**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+**Completed provider/data-health program:** #79 with final #84 / PR #91  
+**Completed canonical identity:** #92 / PR #93  
+**Completed provider onboarding:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
+**Active process work:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001`  
+**Separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Future hosted program:** #66 remains blocked/not started.
 
-The current v18.9.x direction is to make the completed provider/data-health architecture easier to extend **without creating a second provider architecture**. #95 turns provider onboarding itself into a bounded adaptive contract while preserving the already-qualified Smart Provider Router v2, lifecycle/readiness, Data Health, freshness, persistence, telemetry, reconciliation and degradation owners.
+The immediate roadmap step is repository continuity, not a new product capability. #102 reconciles durable v18.9.1 Stable checkpoints and post-merge #95 projections to immutable GitHub evidence. It has no product behavior change and creates no new public SemVer release.
 
-## Retained Data Health foundation
-The completed provider program sequence remains durable executable history and inherited contract: **#80 baseline → #81 Router v2 adoption + #82 common health/recovery → #83 lifecycle + #78 TradeInsight admission → #84 zero-gap closure**. #95 extends that architecture; it does not replace it. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited, and Smart Provider Router v2 remains the sole general routing authority.
+## Retained Data Health and provider foundation
 
-## #95 adaptive destination
-A supported provider/capability should require one real adapter/normalizer plus one canonical provider registration. That registration declares only the metadata/evidence needed by existing owners: canonical datasets/capabilities, route priority, configuration requirements, quota/cost/cadence metadata, capability diagnostics, canonical owner/consumer purpose, adapter/schema/timestamp/freshness/failure/rights contracts, evidence/approval references and invalidation rules.
+The completed provider program sequence remains durable executable history and inherited contract: **#80 baseline -> #81 Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #95 canonical onboarding/adaptation**. Smart Provider Router v2 remains the sole general routing/admission authority. `ProviderRegistration` is the canonical onboarding descriptor, not a second router, lifecycle, Data Health, freshness, cache, persistence or telemetry authority.
 
-The registration is **not a new authority**. Smart Provider Router v2 remains sole general routing/admission authority; lifecycle/readiness remains the promotion authority; Data Health/freshness/degradation remain their canonical owners; provider data-rights evidence remains independently governed. A `PRODUCTION` label cannot make an incomplete provider contract routable.
+`PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited. Registration-aware Data Health recurrence continues to classify canonical registered/routed providers against the provider-capability matrix, including the historical Router `SEC` member mapping to durable `SEC EDGAR` authority.
 
-## Entitlement adaptation
-When credentials or plan-affecting configuration change, only stale entitlement/configuration suppression for the affected provider is reopened before the next canonical Router v2 decision. Real provider evidence remains authoritative; API-key presence never proves a paid plan. If the provider changes entitlement server-side while the same key remains, the existing privileged **Provider Capabilities → Recheck** action may request a bounded fresh entitlement observation instead of waiting for a stale cooldown.
+## #102 continuity destination
 
-Upgrade/downgrade observations are capability-scoped. A 402/403/plan-limited response may suppress the affected capability and permit existing fallback, but must not poison unrelated capabilities or become a generic provider outage. Successful evidence restores eligibility through the existing capability state owner; production authority still requires governed lifecycle/rights evidence.
+A new assistant must be able to reconstruct the real state from GitHub without being told that deleted/completed #95 work is still active. Therefore the v18.9.1 build/evidence checkpoints, retrospective Stable evidence manifest, #95 completion ledger, machine current state, handoff and all CURRENT Adaptive projections must converge on immutable release/run/merge truth.
 
-## Portability and continuity
-#95 is durable only when executable source, the #95 work-slice/closure ledger, `governance/current-state.json`, `handoff/CURRENT.md`, these four CURRENT Adaptive projections, issue #95 and exact-head CI/merge objects agree. Documentation alone cannot close the slice. A new ChatGPT account, another assistant, or another implementation session must be able to fetch the live branch and continue from those repository objects without chat memory.
+#102 does not change or republish `v18.9.1-stable`. It records Fast #581 / Qualified #163 / Release #33 and retained artifact IDs/digests already produced by GitHub. Exact-head Fast and impact-selected Qualified are required for the #102 process candidate itself before expected-head merge.
 
-## Retained boundaries
-The completed #79/#84 Data Health foundation remains an invariant. Smart Provider Router v2 remains sole general routing authority; direct SEC/EDGAR remains Form 4 authority; U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. TradeInsight SEC/search/movers capabilities whose REST contracts are unverified remain fail-closed/gated. #94 stays a separate telemetry/usefulness residual and must not be silently bundled into #95. #66 remains future-blocked/not started.
+## What follows #102
 
-After #95 closes through exact-head Fast -> impact-selected Qualified -> expected-head merge, #65 resumes fresh semantic-overlap selection of the next genuine residual. v19/v20 inherit this canonical onboarding contract rather than rebuilding a new provider registry/data plane.
+After #102 closes, #65 performs a fresh live-source semantic-overlap audit before reserving the next product slice. #94 is the known separate provider telemetry/usefulness residual and is a likely candidate only if that audit confirms the residual still exists. #66 remains future-blocked until the ordered v18 native/data-plane closure permits v19 hosted work.
+
+## Permanent boundaries
+
+U.S. equities processing only; GLD/SLV/USO remain governed actionable exceptions; No Execution remains permanent; direct SEC/EDGAR remains Form 4 authority; provider lifecycle promotion remains evidence/governance controlled; canonical freshness/degradation/cache/persistence/telemetry/reconciliation owners remain unchanged; G0-G16 and the three canonical CI workflows remain the only delivery architecture.

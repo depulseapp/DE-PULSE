@@ -2,39 +2,42 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
-**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
-**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
-**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
+**Completed provider onboarding:** #95 / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
+**Active process work:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
+**Separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Future hosted program:** #66 remains blocked/not started.
 
-Delivery remains PR-first, exact-head governed and evidence-bound. #95 uses the existing `adapt-provider-onboarding-001` branch; do not create another branch for the same slice. No Stable/public SemVer release is performed merely to close #95.
+Delivery is PR-first, exact-head governed and evidence-bound. #102 is a process/release-continuity correction with no product behavior change and no public release.
 
-Before qualification, the branch must prove through focused regression that:
-- route/configuration/quota/cost/delay/capability diagnostic metadata are adopted from the canonical provider registration without introducing a second provider router/registry/health/lifecycle owner;
-- incomplete production contracts fail closed even when a lifecycle label says `PRODUCTION`;
-- existing provider route ordering/roles and Data Engine capability semantics/order are preserved unless an intentional separately-scoped change is approved;
-- free-plan/`NOT_ENTITLED` evidence excludes only the affected capability;
-- relevant credential/config change reopens only affected entitlement/configuration suppression and the next canonical Router v2 attempt can establish fresh evidence;
-- same-key server-side plan upgrades can be rechecked through the existing privileged Provider Capabilities action without waiting for the stale entitlement cooldown;
-- downgrade/402/403/plan-limited evidence safely re-suppresses the capability and uses existing fallback/degradation behavior without poisoning unrelated capabilities;
-- current Finnhub, Alpaca, Twelve Data, TradeInsight, Marketaux, FRED, BLS, EIA, SEC/EDGAR, yfinance and CBOE behavior remains compatible;
-- direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO actionable exceptions and No Execution remain unchanged;
-- no credential value or reusable credential-derived material appears in source-visible evidence, diagnostics, persistence, logs or artifacts.
+## Before qualification
+
+The #102 branch must prove:
+- `.depulse-certification/resume/build-checkpoint.json` and `release-evidence-checkpoint.json` truthfully describe immutable v18.9.1 Stable rather than v18.9.0;
+- `release/v18.9.1/stable-evidence-manifest.json` binds actual GitHub run/artifact IDs and digests and explicitly cannot redefine/rebuild/republish Stable;
+- #95 is projected complete using its real Fast #965 / Qualified #193 / PR #101 merge evidence;
+- `governance/current-state.json`, `handoff/CURRENT.md`, Roadmap, Build Plan, Build Process, Delivery Process, CI Convergence and Gap Closure agree on #102 as the active process work;
+- #94 remains separate/not started and #66 remains blocked/not started;
+- the unchanged post-Stable continuity, portability, source-health/current-state and closure gates pass;
+- no product source/provider/router/Data Health/lifecycle/freshness/cache/persistence behavior changed.
 
 ## Retained Data Health delivery contract
-The completed #80–#84 provider/data-health foundation remains delivery authority under #95. The required wording remains explicit because the canonical recurrence gate binds it: **canonical Fast exact-head PASS** must precede **Qualified exact-head PASS** on the identical candidate, while SEC/EDGAR authority and No Execution remain unchanged. #95 adds no waiver or alternate qualification path.
+
+The completed #80-#84 provider/Data Health foundation remains delivery authority under completed #95 and active #102. The exact inherited recurrence contract remains: **canonical Fast exact-head PASS** must precede **Qualified exact-head PASS** on the identical candidate. Smart Provider Router v2 remains the sole general routing/admission authority, direct **SEC/EDGAR** remains Form 4 authority, canonical freshness/degradation semantics remain unchanged, and **No Execution** remains permanent.
 
 ## Canonical qualification order
-1. Re-fetch live `main` and live #95 branch; inspect candidate diff and ensure no concurrent work was lost.
-2. Run focused/local/static regression where available and fix genuine findings without weakening gates.
-3. Commit final source/governance candidate.
-4. Run canonical **CI Fast** on that exact head.
-5. If Fast passes, run deliberate impact-selected **CI Qualified** on the identical head. Backend/race/randomized order and any planner-selected renderer/native/DB lanes must pass as selected.
-6. Any source change after either gate creates a new candidate; rerun the required exact-head gates.
-7. Merge only if live `main` still matches the expected merge base and the PR head matches the qualified candidate.
-8. Record immutable run IDs/job conclusions/candidate SHA/merge SHA in #95 and its closure evidence after GitHub produces them. Never fabricate future CI evidence into source.
+
+1. Re-fetch live `main` and live `adapt-post-stable-continuity-001`; inspect the complete delta.
+2. Commit one coherent continuity candidate before opening the PR whenever practical.
+3. Open one Draft PR for #102.
+4. Run canonical Fast exact-head PASS on the PR head.
+5. Mark the same exact candidate Ready so Planner v3 runs impact-selected Qualified exact-head PASS.
+6. Any candidate mutation after Fast/Qualified invalidates the corresponding evidence and must be requalified.
+7. Re-fetch live `main`; merge only with expected-head protection and only if the qualified PR head is unchanged.
+8. Inspect the resulting main-push branch-hygiene/post-Stable continuity run. The continuity sentinel must be green without weakening it.
+9. Record immutable run/merge evidence on issue #102. No Release workflow or Stable/public SemVer release is run for this process slice.
 
 ## Closure boundary
-The #95 closure ledger remains fail-closed until every blocking gap is VERIFIED. Source code plus governance text is insufficient. If CI exposes a real defect, correct the architecture/source and requalify; do not waive or weaken assurance. #94 remains a separate residual and #66 remains future-blocked/not started.
+
+#102 closes only when the durable checkpoints, retrospective Stable manifest, #95 post-merge projections, all CURRENT surfaces, exact-head Fast/Qualified and guarded merge/main-sentinel evidence reconcile. Product work does not start until a fresh #65 overlap audit selects the next genuine residual.
