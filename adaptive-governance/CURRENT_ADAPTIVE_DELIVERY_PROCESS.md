@@ -2,22 +2,22 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider-intelligence program:** #65 / #107  
-**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
-**Future hosted umbrella:** #66 — planned but product implementation is unreserved.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Future hosted umbrella:** #66 — BLOCKED until final v18 closure.
 
 ## Permanent delivery boundaries
 
-Smart Provider Router v2 remains sole general routing/admission authority. Direct **SEC/EDGAR** remains filing/Form 4 authority. Canonical freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle owners remain unchanged. U.S. equities, GLD/SLV/USO actionable exceptions and **No Execution** remain permanent.
+Smart Provider Router v2 remains sole general routing/admission authority. Direct **SEC/EDGAR** remains filing/Form 4 authority. Canonical freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners remain unchanged. U.S. equities, GLD/SLV/USO actionable exceptions and **No Execution** remain permanent.
 
-## Zero-miss future delivery
+## v18.10 delivery contract
 
-Every future v19 product slice must obtain **canonical Fast exact-head PASS** followed by **Qualified exact-head PASS** on the identical candidate, then expected-head merge from fresh `main`. The conservation rows assigned to that slice must be evidenced on the same candidate or explicitly bound to valid equivalent inherited evidence.
+Each T1–T10 child closes only with executable evidence bound back to the parent ledger. Real implementation/UX/test defects discovered during closure are fixed in bounded child/corrective work and affected evidence is rerun. A closure-only commit cannot bury feature work.
 
-A dependency-band closure is process/assurance only: it cannot implement omitted feature work to make the ledger look clean. If an applicable row is not implemented/evidenced, the band stays open or the row receives an explicit named external blocker; it is never silently shifted.
+Every source candidate that is eligible to merge must obtain **canonical Fast exact-head PASS** followed by **Qualified exact-head PASS** on the identical candidate and then expected-head merge from fresh `main`. Final `v18.10.0` publication additionally runs the canonical Release G11–G16 path on one frozen release candidate, including required macOS Apple Silicon and Windows x64 packaged proof and no-rebuild publication.
 
-For shared capability delivery, Mac + Windows + Web are independently evidenced when G1 marks them REQUIRED. No shared capability is Delivered/GA and no next shared domain begins with material parity debt.
+T7 delivery explicitly includes information-architecture/content corrections when evidence shows a visible item is misplaced, duplicated, misleading or low-value. Such changes are product changes and must receive affected functional/renderer/accessibility/platform regression evidence before the track closes.
 
-`v19.5.0` remains a no-feature Major Closure and cannot compensate for missed implementation. It consumes the fully reconciled requirement ledger, #66 closure, security/rights/entitlement/privacy/IaC/supply-chain/recovery/SLO/capacity evidence and actual supported deployment/artifact proof.
+T10 is the only track allowed to authorize the phrase **10/10 Future-Proof Final v18 Closure**. It requires every T1 feature row to have durable regression ownership, all parent gaps VERIFIED, future #66 conservation mechanically enforced in existing CI, GitHub-only continuation proven, zero unexplained P0/P1 gaps and final immutable release evidence.
+
+v19/#66 may not begin from roadmap labels while #113 is open or v18.10.0 is unpublished.
