@@ -53,6 +53,8 @@ Starting with v19, every future patch has one primary implementation responsibil
 
 Each dependency band ends with a no-feature zero-gap closure. The next band may not start while an applicable requirement is unassigned, unexplained, unevidenced or silently carried forward. Canonical detail for #66 is `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md` and `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`.
 
+The final v18.10.0 T10 closure must make this conservation mechanically enforceable in existing CI before first v19 product G1.
+
 ## 5. Durable strategic workstreams
 
 - Smart Intelligent Provider Router v2 / coverage-aware residual-gap routing.
@@ -85,9 +87,32 @@ Historical v18.9.x labels are dispositioned by completed GitHub evidence and mus
 
 Their final dispositions are governed by live GitHub evidence; several later labels were delivered/inherited/superseded without separate public Stable publication.
 
-## 7. v19 — Professional Hosted Product — granular rebaseline
+## 7. v18.10.0 — 10/10 Future-Proof Final v18 Closure
 
-All labels below are planned reservations until their own G0/G1 source-overlap audit. #66 is not broadly started merely because the roadmap is planned.
+**Mandatory before any v19 product implementation.** Parent: #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`. Target Stable: `v18.10.0-stable`.
+
+This is one final public v18 release executed through ten independently closable assurance tracks. It may discover and correct genuine shipped-v18 implementation/test/data-truth/UI/UX/security/persistence/performance/platform defects. It cannot hide a miss behind documentation or a closure-only label.
+
+1. **T1 / #114** — complete feature / requirement / owner / test traceability. Build the exhaustive machine feature-assurance ledger from current source + GitHub + release evidence. Any UNOWNED/UNTESTED/UNKNOWN/unexplained row blocks closure.
+2. **T2 / #115** — exhaustive unit / contract / static / property assurance, including boundaries, invalid inputs, deterministic/state invariants and property/fuzz-style evidence where useful.
+3. **T3 / #116** — full functional / integration / end-to-end workflow matrix for every shipped v18 feature, role and applicable session state.
+4. **T4 / #117** — stale/missing/partial/future/contradictory data, provider failure/rate limit/fallback/cache/recovery, session transitions and other edge/adversarial/failure truth.
+5. **T5 / #118** — persistence / restart / migration / install / upgrade / backup/recovery lifecycle assurance.
+6. **T6 / #119** — security / role / secret / provider-right / negative authorization assurance; direct-route/API parity; SEC authority; No Execution.
+7. **T7 / #120** — UI / UX / information architecture / content / accessibility. Every visible item receives KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition. Correct placement/usefulness is required, not only pixel/function correctness.
+8. **T8 / #121** — performance / load / soak / concurrency / resource safety, including race detector, randomized package order, active-market load, provider pressure, CPU/memory/GC/locks and protected-session responsiveness.
+9. **T9 / #122** — actual macOS Apple Silicon + Windows x64 packaged runtime/release/provenance certification, with Chrome/WebKit renderer qualification. Hosted Web product GA remains v19.
+10. **T10 / #123** — future-proof regression ownership, executable v19/#66 conservation CI, GitHub-only handoff portability, final zero-gap sweep and immutable G0-G16 publication.
+
+A feature row is not 10/10 until it has requirement provenance, canonical owner, positive functional evidence, applicable unit/contract evidence, edge/negative/failure evidence, persistence/restart evidence where applicable, role/security/rights evidence where applicable, UI/UX/IA/content evidence if visible, required platform evidence and durable regression ownership.
+
+`v18.10.0` cannot be called **10/10 Future-Proof Final v18 Closure** until all T1–T10 gaps are VERIFIED, zero unexplained P0/P1 implementation/test/UX/security/data-truth/performance/platform gaps remain, and the same immutable candidate passes final Fast -> Qualified -> Release G0-G16 publication with no rebuild.
+
+Canonical detail: `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/V18_10_FINAL_CLOSURE_PLAN.md` and `feature-assurance-ledger.json`.
+
+## 8. v19 — Professional Hosted Product — granular rebaseline
+
+**BLOCKED until v18.10.0 Stable is published and the post-closure residual/source-overlap audit explicitly permits v19.** All labels below remain planned reservations until their own G0/G1 source-overlap audit. #66 is not broadly started merely because the roadmap is planned.
 
 ### v19.0.x — Governance / Control Plane / Trust / Data Foundation
 - `v19.0.0` Provider Legal/Data Rights Registry + Evidence Binding
@@ -169,7 +194,7 @@ All labels below are planned reservations until their own G0/G1 source-overlap a
 ### v19.5.0 — Major Closure
 - `v19.5.0` no-feature Major Closure. Require #66 PASS, every conservation row reconciled, zero material Mac/Windows/Web parity debt, rights/identity/RBAC/product-entitlement/privacy separation, lifecycle/IaC/supply-chain/API/recovery/SLO/capacity proof and actual supported artifact/deployment evidence.
 
-## 8. v20 — Governed Adaptive Intelligence — provisional granular reservations
+## 9. v20 — Governed Adaptive Intelligence — provisional granular reservations
 
 v20 cannot start before `v19.4.5` research-readiness and `v19.5.0` Major Closure. These labels remain provisional and must be re-audited against v19 evidence before G1.
 
@@ -224,10 +249,10 @@ v20 cannot start before `v19.4.5` research-readiness and `v19.5.0` Major Closure
 
 Every shared adaptive user-facing capability follows Mac + Windows + Web lockstep. Deterministic market truth, No Execution, provider lifecycle promotion and Router authority remain protected.
 
-## 9. G0-G16 enforcement
+## 10. G0-G16 enforcement
 
 G1 requirement conservation + platform matrix; G2 canonical owner/adapters; G3 one contract + equivalence/negative/failure tests; G4 all required implementations; G6 cross-platform integration; G7 security/data-rights/privacy; G8 load/capacity/recovery; G9 function/meaning equivalence; G10 zero unowned coverage; G11/G12 immutable RC certification; G13/G14 actual artifacts/deployments; G15 no GA with unresolved applicable rows; G16 zero-gap learning/handoff.
 
-## 10. Permanent principle
+## 11. Permanent principle
 
-**Build shared truth once -> expose each capability across all applicable supported clients together -> prove requirement conservation + equivalence -> only then advance the product.**
+**Build shared truth once -> test every shipped behavior and failure mode -> place every user-visible capability where it best belongs -> prove required platforms and durable regression ownership -> publish v18.10.0 only at true 10/10 -> then build shared future truth once -> expose each future capability across all applicable supported clients together -> prove requirement conservation + equivalence -> only then advance the product.**

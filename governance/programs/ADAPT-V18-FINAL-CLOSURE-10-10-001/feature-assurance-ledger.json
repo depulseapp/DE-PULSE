@@ -1,0 +1,45 @@
+{
+  "schema": "DE.PULSE-V18-FINAL-FEATURE-ASSURANCE-1",
+  "programIssue": 113,
+  "targetVersion": "v18.10.0",
+  "status": "DISCOVERY_PENDING",
+  "inventoryOwnerIssue": 114,
+  "rules": {
+    "allShippedFeaturesMustBePresent": true,
+    "allApplicableEvidenceClassesMustBeOwned": true,
+    "closedIssueAloneIsNotEvidence": true,
+    "documentationAloneCannotCloseGap": true,
+    "newlyDiscoveredImplementationMissCreatesCorrective": true,
+    "allowedFeatureStates": ["DISCOVERED_UNVERIFIED", "IMPLEMENTED_UNVERIFIED", "VERIFIED", "CORRECTIVE_REQUIRED", "EXTERNAL_BLOCKED_WITH_EVIDENCE"],
+    "blockingStates": ["UNOWNED", "UNTESTED", "UNKNOWN", "DUPLICATE_OWNER", "ISSUE_CLOSED_WITHOUT_EXECUTABLE_EVIDENCE", "UNEXPLAINED_CARRY_FORWARD"]
+  },
+  "requiredEvidenceClasses": [
+    "REQUIREMENT_PROVENANCE",
+    "CANONICAL_OWNER",
+    "POSITIVE_FUNCTIONAL",
+    "UNIT_CONTRACT_WHERE_APPLICABLE",
+    "EDGE_NEGATIVE_FAILURE",
+    "PERSISTENCE_RESTART_WHERE_APPLICABLE",
+    "ROLE_SECURITY_RIGHTS_WHERE_APPLICABLE",
+    "UI_UX_IA_CONTENT_WHERE_VISIBLE",
+    "SUPPORTED_PLATFORM_WHERE_APPLICABLE",
+    "DURABLE_REGRESSION_OWNER"
+  ],
+  "uiDispositionValues": ["KEEP", "MOVE", "MERGE", "REMOVE", "RENAME", "REDESIGN", "NOT_USER_VISIBLE"],
+  "tracks": {
+    "T1": 114,
+    "T2": 115,
+    "T3": 116,
+    "T4": 117,
+    "T5": 118,
+    "T6": 119,
+    "T7": 120,
+    "T8": 121,
+    "T9": 122,
+    "T10": 123
+  },
+  "features": [],
+  "discoveryComplete": false,
+  "unexplainedGapCount": null,
+  "updatedAt": null
+}

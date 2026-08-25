@@ -2,34 +2,33 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider-intelligence program:** #65 / #107  
-**Retained current work-slice projection:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
-**Future hosted umbrella:** #66 — planned but no product work slice is reserved.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Program branch:** `adapt-v18-final-closure-10-10-001`  
+**Next child:** #114 / T1  
+**Future hosted umbrella:** #66 — BLOCKED.
 
-## Zero-miss v19 build contract
+## v18.10.0 build contract
 
-The canonical v19 plan is `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`; its machine conservation ledger is `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`.
+One public final v18 release is decomposed into ten independently closable assurance tracks #114–#123. T1 freezes exhaustive feature/requirement/owner/test inventory first. T2–T8 close unit/functional/failure/persistence/security/UI-performance evidence and bounded corrections against that inventory. T9 certifies actual macOS Apple Silicon + Windows x64 packages plus Chrome/WebKit renderer truth. T10 binds durable regression ownership, executable future requirement conservation, portable handoff and final G0–G16 publication.
 
-Every future patch:
-1. owns one primary implementation responsibility;
-2. starts with live-source overlap classification: `INHERITED`, `EXTEND_EXISTING_OWNER`, `REPLACE_CONSOLIDATE`, `NEW_RESIDUAL`, or `EXTERNAL_BLOCKED`;
-3. binds all applicable #66 requirement IDs before G1;
-4. records dependencies and exact completion/evidence criteria;
-5. cannot close with an applicable unassigned/unevidenced row;
-6. cannot advance to the next dependency band until the band zero-gap closure passes;
-7. implements every shared user-facing capability in Mac + Windows + Web lockstep for all G1 `REQUIRED` clients.
+Every shipped feature must end with requirement provenance, canonical owner, positive functional evidence, applicable unit/contract evidence, edge/negative/failure evidence, persistence/restart evidence where applicable, role/security/rights evidence where applicable, UI/UX/IA/content evidence if visible, required platform evidence and a durable regression owner. `UNOWNED`, `UNTESTED`, `UNKNOWN` or unexplained carry-forward blocks closure.
 
-The inherited Data Health build inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Their recurrence and ownership remain projected consistently through the Adaptive Roadmap, Build Plan, Build Process and Delivery Process. v19 extends existing owners; it does not create parallel Router, health, freshness, cache, persistence, telemetry, reconciliation, subscription, identity or lifecycle systems.
+The inherited Data Health build inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Their recurrence and ownership remain projected consistently through the **Adaptive Roadmap**, **Build Plan**, **Build Process** and **Delivery Process**. v18.10 testing/fixes must reuse existing Router, Data Health, freshness, cache, persistence, telemetry, reconciliation, subscription, identity and lifecycle owners.
 
-## Dependency bands
+## Ten tracks
 
-- `v19.0.0`–`v19.0.18`: rights, tenant/control, privacy, environment/trust, PostgreSQL, secrets, supply chain, provider quality and point-in-time primitives; `v19.0.18` is no-feature foundation closure.
-- `v19.1.0`–`v19.1.15`: authenticated gateway, serving policy, lawful reuse/live fan-out and typed sync primitives; `v19.1.15` is no-feature data-plane/sync closure.
-- `v19.2.0`–`v19.2.16`: Mac + Windows + Web capability enablement plus multi-user/DR/load assurance; `v19.2.16` is #66 closure.
-- `v19.3.0`–`v19.3.7`: institutional/13F, two-sided evidence and AODR lineage; `v19.3.7` is no-feature evidence closure.
-- `v19.4.0`–`v19.4.6`: operational SLO/runbooks/economics/adaptive readiness and zero-gap sweep.
-- `v19.5.0`: no-feature Major Closure.
+- T1 #114 traceability ledger.
+- T2 #115 unit/contract/static/property assurance.
+- T3 #116 full functional/integration/E2E matrix.
+- T4 #117 edge/adversarial/failure/data-truth matrix.
+- T5 #118 persistence/restart/migration/install/upgrade/recovery.
+- T6 #119 security/roles/secrets/rights/negative authorization.
+- T7 #120 UI/UX/information architecture/content/accessibility; every visible row gets KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition.
+- T8 #121 performance/load/soak/concurrency/resource safety.
+- T9 #122 cross-platform packaged runtime/release/provenance certification.
+- T10 #123 future-proof regression ownership/zero-gap/portable final certification.
 
-v20 remains provisional and cannot begin before `v19.4.5` readiness plus `v19.5.0` Major Closure.
+## Future-proof rule
+
+Before first v19 product G1, the #66 72-row requirement-conservation ledger must be mechanically enforced in existing CI. v19 cannot begin until v18.10.0 Stable is published and a fresh post-closure residual/source-overlap audit explicitly permits it.
