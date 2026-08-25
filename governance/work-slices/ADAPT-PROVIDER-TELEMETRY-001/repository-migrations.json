@@ -1,0 +1,29 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-PROVIDER-TELEMETRY-001",
+  "issue": 94,
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "workSliceBaselineMainSha": "15077c042333cc7a4ef389dd75adbbbb0d51b462",
+  "moveDefaults": {
+    "owner": "ADAPT-PROVIDER-TELEMETRY-001 / package-main provider telemetry and usefulness",
+    "reason": "Preventive direct-to-version-neutral registration: #94 introduces package-main semantic provider telemetry owners after root convergence. A version-stacked predecessor is intentionally never created; canonical root targets are registered directly so they can consume private package-main reconciliation/runtime owners without a parallel exported API, router, persistence or reconciliation subsystem.",
+    "removalCondition": "Version-scoped predecessor remains absent; version-neutral package-main target moves only with a cohesive capability extraction that preserves Smart Provider Router v2 routing invariance, canonical provider reconciliation truth and PersistenceManager ownership.",
+    "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+    "allowedReferenceFiles": []
+  },
+  "moves": [
+    {"oldPath":"v18_9_provider_usefulness.go","newPath":"provider_usefulness.go"},
+    {"oldPath":"v18_9_provider_usefulness_runtime.go","newPath":"provider_usefulness_runtime.go"},
+    {
+      "oldPath":"v18_9_provider_usefulness_test.go",
+      "newPath":"provider_usefulness_regression_test.go",
+      "owner":"ADAPT-PROVIDER-TELEMETRY-001 / package-main provider usefulness regression evidence",
+      "reason":"Prevent version-stacked test recurrence while retaining private package-main access for reconciliation eligibility, bounded persistence, role-gated projection and routing-invariance proof.",
+      "removalCondition":"Version-scoped predecessor remains absent; regression owner moves only with a cohesive capability extraction that preserves exact Go test identities or records governed identity renames."
+    }
+  ],
+  "testIdentityRenames": {},
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "temporaryAliases": []
+}
