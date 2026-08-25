@@ -39,9 +39,34 @@
     "noVanityCoveragePercentage": true,
     "laterTracksRemainUnverified": true
   },
-  "gapDeclarationState": "PENDING_FIRST_EXECUTION",
-  "knownCoverageGaps": [],
-  "uncoveredResponsibilityCount": null,
+  "gapDeclarationState": "CURRENT",
+  "knownCoverageGaps": [
+    "RELEASE-RENDERER-CHROME-WEBKIT"
+  ],
+  "uncoveredResponsibilityCount": 1,
+  "firstExecutableCensus": {
+    "headSha": "3f948df8749a4c7bcd2cfdb7dff03f1dae7d96d6",
+    "fastRunId": 32858282167,
+    "fastRunNumber": 1010,
+    "effectiveResponsibilities": 180,
+    "coveredResponsibilities": 179,
+    "uncoveredResponsibilities": 1,
+    "uncoveredIds": [
+      "RELEASE-RENDERER-CHROME-WEBKIT"
+    ],
+    "evidenceClassCounts": {
+      "GO_UNIT_PACKAGE": 423,
+      "RENDERER_NODE_CONTRACT": 22,
+      "CI_STATIC_CONTRACT": 0,
+      "ACCEPTANCE_E2E": 11,
+      "BROWSER_E2E": 2,
+      "PLATFORM_RELEASE_EVIDENCE": 0,
+      "UNKNOWN_EXECUTABLE": 4
+    },
+    "interpretation": "The single uncovered responsibility currently points only to browser-oriented evidence, which is intentionally non-substitutable for T2. The gap must be resolved by a materially relevant unit/contract/static owner, not by reclassifying browser execution."
+  },
+  "evidenceSupplements": {},
+  "resolvedCoverageGaps": [],
   "exactHeadQualificationRequired": true,
   "completionCondition": "Every one of the 180 effective shipped-v18 responsibilities resolves a non-empty T2 expectation and at least one current executable unit/contract/static evidence owner; all declared T2 gaps are closed and selected exact-head tests pass.",
   "t3CompanionIssue": 116,
