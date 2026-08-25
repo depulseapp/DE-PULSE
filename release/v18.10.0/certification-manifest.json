@@ -35,7 +35,9 @@
     ["python3","tools/ci/v18_t6_security_roles_rights_assurance_gate.py"],
     ["python3","tools/ci/v18_t7_ui_ux_ia_content_assurance_gate.py"],
     ["python3","tools/ci/v18_t8_performance_load_soak_concurrency_resource_assurance_gate.py"],
-    ["python3","tools/ci/v18_t9_packaged_cross_platform_release_assurance_gate.py"]
+    ["python3","tools/ci/v18_t9_packaged_cross_platform_release_assurance_gate.py"],
+    ["python3","tools/ci/requirement_conservation_gate.py"],
+    ["python3","tools/ci/v18_t10_future_proof_zero_gap_certification_gate.py"]
   ],
   "focusedGoPattern":"TestT8|TestV18_9_1|TestV189|TestV1882|TestV1881|TestV188",
   "nodeTests": [
