@@ -71,6 +71,35 @@ def main() -> int:
     require(t2_gate["qualifiedLane"] == "full", "T2 gate changes must re-run their executable backend + renderer evidence graph")
     require(t2_gate["backendRequired"] is True and t2_gate["rendererRequired"] is True, "T2 gate dependency graph incomplete")
 
+    t9_control = analyze_changed_paths([
+        "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"
+    ])
+    require(t9_control["processOnly"] is False, "T9 assurance state must not be treated as process-only")
+    require(t9_control["qualifiedLane"] == "full", "T9 assurance must select full cross-layer qualification")
+    for key in (
+        "backendRequired",
+        "rendererRequired",
+        "chromeRequired",
+        "webkitRequired",
+        "securityRightsRequired",
+        "dbIntegrationRequired",
+        "nativeMacosRequired",
+        "nativeWindowsRequired",
+    ):
+        require(t9_control[key] is True, f"T9 assurance missing required evidence selection: {key}")
+    require(t9_control["releaseRehearsalRequired"] is True, "T9 assurance must retain release rehearsal")
+    require("RELEASE_TOOLING" in t9_control["changeClasses"], "T9 assurance must remain release-governed")
+
+    t9_gate = analyze_changed_paths(["tools/ci/v18_t9_packaged_cross_platform_release_assurance_gate.py"])
+    require(t9_gate["qualifiedLane"] == "full", "T9 gate changes must re-run full cross-platform evidence")
+    require(t9_gate["nativeMacosRequired"] and t9_gate["nativeWindowsRequired"], "T9 gate must select both native platforms")
+
+    t9_manifest = analyze_changed_paths(["release/v18.10.0/certification-manifest.json"])
+    require(t9_manifest["qualifiedLane"] == "full", "v18.10.0 certification manifest must select full T9 evidence")
+    require(t9_manifest["chromeRequired"] and t9_manifest["webkitRequired"], "T9 manifest must select both primary browser surfaces")
+    require(t9_manifest["dbIntegrationRequired"] and t9_manifest["securityRightsRequired"], "T9 manifest must select DB and security/data-rights")
+    require(t9_manifest["nativeMacosRequired"] and t9_manifest["nativeWindowsRequired"], "T9 manifest must select both native packages")
+
     stable_manifest = analyze_changed_paths(["release/v18.6.1/stable-evidence-manifest.json"])
     require(stable_manifest["qualifiedLane"] == "ci-harness", "durable Stable evidence index must stay process-only")
     require("RELEASE_TOOLING" in stable_manifest["changeClasses"], "Stable evidence index must remain release-governed")
@@ -152,6 +181,7 @@ def main() -> int:
     print("dependency-aware backend/renderer/Chrome/WebKit selection: PASS")
     print("capability evidence-owner path routing: PASS")
     print("active T2 cross-layer assurance routing: PASS")
+    print("T9 full cross-platform assurance routing: PASS")
     print("WebKit/browser vs native-macOS ownership separation: PASS")
     print("active release browser-test fail-safe routing: PASS")
     print("process-only portability selection: PASS")
