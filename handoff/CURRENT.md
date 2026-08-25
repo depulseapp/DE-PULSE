@@ -16,8 +16,9 @@
 **Completed T3:** #116 / PR #129 / merge `cf0cc9aa877188775d5c36cb805e6c8935d776bb`  
 **Completed T4:** #117 / PR #130 / merge `fadd9247f63779195138f8d79cbaa0f304b16e61`  
 **Completed T5:** #118 / PR #132 / merge `81137e4481cdf4a351e45c599efa0777ef93460a`  
-**Active child:** #119 / T6 — security / roles / secrets / rights / negative authorization  
-**Recorded companion:** #120 / T7 — NOT STARTED  
+**Completed T6:** #119 / PR #133 / merge `ca051884c733118c11e13b0b5ef169c810c39714`  
+**Active child:** #120 / T7 — UI / UX / information architecture / content / accessibility  
+**Recorded companion:** #121 / T8 — NOT STARTED  
 **Frozen T1 responsibility count:** 180  
 **T1 frozen assurance manifest:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json`  
 **T2 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json`  
@@ -30,27 +31,25 @@
 
 ## Current authority
 
-T1-T5 are durably closed. T5 final head `2fd65d7724564db802840db44116bd95a8901281` passed exact-head Fast #1044/run `32873458078` and identical-head Qualified #210/run `32873584790`; PR #132 merged with expected-head guard as `81137e4481cdf4a351e45c599efa0777ef93460a`. The T5 gate resolved 177 persistence-bearing responsibilities as covered, 3 source-proven non-applicable, and zero uncovered applicable responsibilities.
+T1-T6 are durably closed. T6 final head `0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b` passed exact-head Fast #1051/run `32876475257` and identical-head Qualified #211/run `32876753635`; PR #133 merged with expected-head protection as `ca051884c733118c11e13b0b5ef169c810c39714`. T6 resolved 179 security/role/rights-bearing responsibilities as applicable and covered, one renderer-portability responsibility as source-proven non-applicable, and zero uncovered. Qualified proved CI/harness, security/data-rights, persistence/DB integration including the production `CGO_ENABLED=0` file-fallback credential/workspace isolation path, full Go, race detector and randomized package order.
 
-T6/#119 is now the sole active closure action. It must prove role/capability truth, direct-route/API parity, sensitive-action re-auth where applicable, secret non-leakage, provider rights/admission boundaries, direct SEC/EDGAR authority, invalid/expired/missing credential behavior, negative authorization, telemetry/log redaction, No Execution, and absence of v19 hosted-commercial assumptions. T7/#120 remains NOT_STARTED.
+T7/#120 is now the sole active closure action. It must audit every shipped v18 user-visible responsibility for best-fit placement, hierarchy, usefulness, truthful wording, duplication, control proximity, loading/empty/degraded states, role awareness, responsive behavior, focus/keyboard/contrast/accessibility, Chrome/WebKit behavior and native-shell presentation where applicable. T8/#121 remains NOT_STARTED.
 
 ## Exactly one next action
 
-**Continue T6/#119 only:** reconstruct the frozen 180-responsibility inventory, resolve security/role/rights applicability for every row, require meaningful positive access/authority evidence and meaningful negative denial/redaction/boundary evidence for every applicable row, and record the exact uncovered set from executable evidence. Do not start T7 until T6 is durably closed or GitHub machine state explicitly advances it.
+**Continue T7/#120 only:** reconstruct the frozen 180-responsibility inventory, identify every user-visible row, require an explicit `KEEP` / `MOVE` / `MERGE` / `REMOVE` / `RENAME` / `REDESIGN` disposition for each visible row, map executable UI/IA/content/accessibility evidence, and record the exact uncovered/debt set. If source/evidence proves a bounded IA/content defect, implement it and re-run affected functional/regression evidence. Do not start T8 until T7 is durably closed or GitHub machine state explicitly advances it.
 
-## T6 closure discipline
+## T7 closure discipline
 
-- Preserve the immutable T1 inventory; do not create a hand-picked security list.
-- Every row must have a T6 expectation and explicit applicability result.
-- Applicable rows require both positive and negative executable evidence; UI hiding alone cannot satisfy authorization.
-- Direct-route/API authorization must match role/capability semantics.
-- Secrets, provider keys, credential material and sensitive diagnostics must remain redacted from public state, logs/telemetry and failure output.
-- Provider data rights/commercial readiness remain separate from operational entitlement and must not mutate Smart Provider Router v2 scoring/routing.
-- Direct SEC/EDGAR remains authoritative for filing/Form 4 truth; provider enrichment cannot displace it.
-- No Execution remains a permanent product boundary; no trade/order authority may be introduced or inferred.
-- Hosted-commercial assumptions remain blocked until v19 governance permits them.
-- If a genuine implementation miss appears, create a named corrective under #113; do not hide it with a non-applicable declaration.
-- T6 remains unverified until every applicable row is covered, all declared gaps are closed, exact-head Fast and identical-head Qualified pass, and expected-head merge is durable.
+- Preserve the immutable T1 inventory; do not create a hand-picked UI list.
+- Every effective row must receive a T7 expectation and explicit visibility/applicability result.
+- Every user-visible row must have one explicit frozen disposition: `KEEP`, `MOVE`, `MERGE`, `REMOVE`, `RENAME`, or `REDESIGN`; non-user-visible rows must remain `NOT_USER_VISIBLE` and cannot be given cosmetic UI ownership.
+- Audit role-aware navigation, information hierarchy, terminology, content truth, duplicate surfaces, control/task proximity, typography/spacing/table consistency, loading/empty/degraded states, accessibility/focus/keyboard behavior, responsive stability and browser/native-shell presentation where applicable.
+- UI hiding cannot repair security defects; T6 remains the authorization owner.
+- Read-only presentation cannot become a new market-data, persistence, provider-routing or recovery owner.
+- If a surface is wrong, duplicated, misleading or low-value, implement the smallest bounded correction and re-run impacted T2/T3/T4/T6 evidence as required by the dependency graph.
+- Screenshot/visual review may supplement but cannot replace executable renderer/browser/accessibility evidence.
+- T7 remains unverified until every visible row is explicitly disposed, all material UI/UX/IA/content debt is closed or source-proven non-applicable, exact-head Fast and identical-head Qualified pass, and expected-head merge is durable.
 
 ## Retained architecture
 
@@ -58,10 +57,10 @@ Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/ED
 
 ## Resume rule
 
-1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, current closure PR if any, #113 and active child #119 first.
-2. Read this file, `governance/current-state.json`, the v18.10 plan, frozen T1 manifest/reconciliation, T2-T5 assurance and T6 assurance.
-3. Confirm T1-T5 durable evidence before relying on the frozen 180-responsibility inventory.
-4. Resume **T6/#119 only** from current exact branch head. T7/#120 remains NOT_STARTED.
+1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, current closure PR if any, #113 and active child #120 first.
+2. Read this file, `governance/current-state.json`, the v18.10 plan, frozen T1 manifest/reconciliation, T2-T6 assurance and the T7 assurance artifact when present.
+3. Confirm T1-T6 durable evidence before relying on the frozen 180-responsibility inventory.
+4. Resume **T7/#120 only** from current exact branch head. T8/#121 remains NOT_STARTED.
 5. GitHub objects and executable evidence outrank this prose and all chat history.
 6. Use G0-G16 only: Fast exact-head PASS -> identical-head Qualified PASS -> expected-head merge. Final v18.10.0 publication remains prohibited until T1-T10 are VERIFIED.
 7. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone.
