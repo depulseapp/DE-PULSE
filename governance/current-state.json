@@ -52,8 +52,34 @@
     "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
     "parentProgramIssue": 113,
     "parentProgramScopeId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
-    "nextChildIssue": 114,
-    "nextChildTrack": "T1",
+    "completedChildTracks": [
+      {
+        "track": "T1",
+        "issue": 114,
+        "status": "COMPLETE",
+        "frozenHeadSha": "57f0847c44a9ae5916509a72da492d1dd2a003bc",
+        "fastRunId": 32855548397,
+        "qualifiedRunId": 32855619652,
+        "mergedPullRequest": 127,
+        "mergedCommitSha": "b434886751fde1804a4906c9cac41dcce4584834",
+        "effectiveShippedV18ResponsibilityCount": 180,
+        "unexplainedGapCount": 0,
+        "freezeManifest": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json"
+      }
+    ],
+    "nextChildIssue": 115,
+    "nextChildTrack": "T2",
+    "nextCompanionChildIssue": 116,
+    "nextCompanionChildTrack": "T3",
+    "nextGovernedTracks": [
+      {"track": "T2", "issue": 115, "status": "NOT_STARTED"},
+      {"track": "T3", "issue": 116, "status": "NOT_STARTED"}
+    ],
+    "downstreamAssuranceState": {
+      "T2ToT9Verified": false,
+      "T10Started": false,
+      "assuranceCeilingAfterT1": "IMPLEMENTED_UNVERIFIED"
+    },
     "futureProgramBlockerIssue": 113,
     "futureBlockedIssue": 66,
     "futureBlockedReason": "No v19 product implementation until v18.10.0 Stable is published as 10/10 Future-Proof Final v18 Closure, all T1-T10 gaps are VERIFIED, and the post-closure source-overlap/residual audit explicitly permits v19."
