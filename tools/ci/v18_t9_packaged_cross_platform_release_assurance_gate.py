@@ -154,6 +154,8 @@ def main() -> int:
     manifest = load(CERT_MANIFEST)
     previous = load(PREVIOUS_STABLE)
     product = current.get("productCapabilityGate") or {}
+    downstream = product.get("downstreamAssuranceState") or {}
+    t10_started = downstream.get("T10Started")
     state = str(t9.get("state") or "")
 
     if t9.get("schema") != "DE.PULSE-V18-T9-PACKAGED-CROSS-PLATFORM-RELEASE-ASSURANCE-1" or t9.get("programIssue") != 113 or t9.get("trackIssue") != 122 or t9.get("targetVersion") != "v18.10.0":
@@ -302,9 +304,6 @@ def main() -> int:
         if marker not in release:
             errors.append(f"canonical release no-rebuild/provenance contract drifted: {marker}")
 
-    if (product.get("downstreamAssuranceState") or {}).get("T10Started") is not False:
-        errors.append("T10 must remain not started during T9 closure handoff")
-
     gaps = [row for row in t9.get("knownCoverageGaps", []) if isinstance(row, dict)]
     open_gap_ids = {str(row.get("id")) for row in gaps if row.get("status") == "OPEN"}
     t9_closure = closure_row(closure, "T9-PACKAGED-CROSS-PLATFORM-RELEASE")
@@ -312,6 +311,8 @@ def main() -> int:
     completed_t9 = next((row for row in completed if isinstance(row, dict) and row.get("track") == "T9" and row.get("issue") == 122), None)
 
     if state == "IN_PROGRESS":
+        if t10_started is not False:
+            errors.append("T10 must remain not started while T9 itself is IN_PROGRESS")
         if work_slice.get("nextTrack") != {"track": "T9", "issue": 122}:
             errors.append("IN_PROGRESS T9 requires work-slice nextTrack T9/#122")
         if product.get("nextChildIssue") != 122 or product.get("nextChildTrack") != "T9":
@@ -328,10 +329,6 @@ def main() -> int:
         if completed_t9 is not None:
             errors.append("IN_PROGRESS T9 must not already appear in completedChildTracks")
     elif state == "COMPLETE":
-        if work_slice.get("nextTrack") != {"track": "T10", "issue": 123}:
-            errors.append("COMPLETE T9 requires work-slice handoff to T10/#123")
-        if work_slice.get("nextCompanionTrack") not in (None, {}):
-            errors.append("COMPLETE T9 must not retain a companion track beside sole remaining T10")
         if not isinstance(completed_t9, dict) or completed_t9.get("status") != "COMPLETE" or not str(completed_t9.get("frozenHeadSha") or "") or not completed_t9.get("fastRunId") or not completed_t9.get("qualifiedRunId"):
             errors.append("COMPLETE T9 requires durable exact-head Fast/Qualified completedChildTracks evidence")
         if completed_t9.get("frozenHeadSha") != t9.get("finalSourceSha") or completed_t9.get("fastRunId") != t9.get("fastRunId") or completed_t9.get("qualifiedRunId") != t9.get("qualifiedRunId"):
@@ -340,12 +337,30 @@ def main() -> int:
             errors.append("COMPLETE T9 closure row must be VERIFIED")
         if gaps:
             errors.append("COMPLETE T9 cannot retain coverage gaps")
-        if product.get("nextChildIssue") != 123 or product.get("nextChildTrack") != "T10":
-            errors.append("COMPLETE T9 must hand off next child to T10/#123")
-        if product.get("nextCompanionChildIssue") is not None or product.get("nextCompanionChildTrack") is not None:
-            errors.append("COMPLETE T9 must not retain a companion child beside sole remaining T10")
-        if governed_status(product, "T10") != "NOT_STARTED":
-            errors.append("COMPLETE T9 must not silently start T10")
+
+        if t10_started is False:
+            if work_slice.get("nextTrack") != {"track": "T10", "issue": 123}:
+                errors.append("fresh COMPLETE T9 handoff requires work-slice nextTrack T10/#123")
+            if work_slice.get("nextCompanionTrack") not in (None, {}):
+                errors.append("fresh COMPLETE T9 handoff must not retain a companion track beside sole remaining T10")
+            if product.get("nextChildIssue") != 123 or product.get("nextChildTrack") != "T10":
+                errors.append("fresh COMPLETE T9 handoff must point next child to T10/#123")
+            if product.get("nextCompanionChildIssue") is not None or product.get("nextCompanionChildTrack") is not None:
+                errors.append("fresh COMPLETE T9 handoff must not retain a companion child beside sole remaining T10")
+            if governed_status(product, "T10") != "NOT_STARTED":
+                errors.append("fresh COMPLETE T9 handoff requires T10 NOT_STARTED")
+        elif t10_started is True:
+            t10_status = governed_status(product, "T10")
+            if t10_status not in {"IN_PROGRESS", "RELEASE_AUTHORIZED", "COMPLETE", "VERIFIED"}:
+                errors.append("post-handoff COMPLETE T9 requires an explicit governed T10 progression state")
+            next_issue = product.get("nextChildIssue")
+            next_track = product.get("nextChildTrack")
+            if next_issue not in (123, None) or next_track not in ("T10", None):
+                errors.append("post-handoff COMPLETE T9 may only coexist with T10/#123 or final no-next-child state")
+            if next_issue == 123 and work_slice.get("nextTrack") != {"track": "T10", "issue": 123}:
+                errors.append("active post-handoff T10 must remain the work-slice nextTrack")
+        else:
+            errors.append("COMPLETE T9 requires explicit boolean downstreamAssuranceState.T10Started")
     else:
         errors.append(f"unsupported T9 state: {state!r}")
 
@@ -362,7 +377,7 @@ def main() -> int:
     print("Qualified graph: backend/race/randomized + DB + renderer + Chrome + WebKit + security/data-rights + macOS + Windows")
     print("native upgrade: immutable v18.9.1 Stable harness/profile -> exact v18.10.0 package on both required platforms")
     print("Linux: CI/test only; Hosted Web GA: not claimed by v18")
-    print("T9 publication: PROHIBITED; T10 authorization: NOT IMPLIED")
+    print("T9 publication: PROHIBITED; T10 start must be owned by a later governed state")
 
     if errors:
         print("V18 T9 ASSURANCE GATE: FAIL", file=sys.stderr)
