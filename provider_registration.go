@@ -1,13 +1,14 @@
 package main
 
 import (
+	"crypto/sha256"
 	"sort"
 	"strings"
 
 	"depulse/internal/providerlifecycle"
 )
 
-const providerRegistrationContractVersion = "provider-registration-v1.1.0"
+const providerRegistrationContractVersion = "provider-registration-v1.2.0"
 
 // ProviderDatasetContract is the bounded adaptive work/evidence contract for one
 // provider capability on one canonical dataset. It is deliberately descriptive:
@@ -36,14 +37,19 @@ type ProviderDatasetContract struct {
 
 // ProviderRegistration is the single provider-onboarding descriptor consumed
 // by the existing router/capability owners. Adding a provider still requires
-// code for its adapter/normalizer and governed evidence, but provider metadata
-// and route adoption no longer need parallel switches/maps.
+// code for its adapter/normalizer and governed evidence, but provider metadata,
+// configuration invalidation and route adoption no longer need parallel maps.
 type ProviderRegistration struct {
-	Name       string
-	QuotaLabel string
-	CostClass  string
-	Configured func(Settings, Secrets) bool
-	Routes     []ProviderDatasetContract
+	Name                     string
+	QuotaLabel               string
+	CostClass                string
+	Configured               func(Settings, Secrets) bool
+	ConfigurationFingerprint func(Settings, Secrets) [32]byte
+	Routes                   []ProviderDatasetContract
+}
+
+func providerConfigurationFingerprint(parts ...string) [32]byte {
+	return sha256.Sum256([]byte(strings.Join(parts, "\x00")))
 }
 
 func inheritedProductionRoute(provider, dataset, capability string, priority int, expectedDelay string, uses ...string) ProviderDatasetContract {
@@ -91,6 +97,7 @@ func providerRegistrations() []ProviderRegistration {
 	return []ProviderRegistration{
 		{Name: "Alpaca", QuotaLabel: "Entitlement / feed dependent", CostClass: "Broker/data entitlement",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.AlpacaKey) && has(s.AlpacaSecret) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("Alpaca", strings.TrimSpace(s.AlpacaKey), strings.TrimSpace(s.AlpacaSecret)) },
 			Routes: []ProviderDatasetContract{
 				inheritedProductionRoute("Alpaca", "US Live Equities", "IEX quotes / snapshots / liquidity", 1, "Near-live when entitled", "Day", "Market Open Prep", "Trade Readiness", "Decision Queue"),
 				inheritedProductionRoute("Alpaca", canonicalUSAssetUniverseDataset, "U.S. asset universe / instrument identity", 1, "Provider asset-directory cadence", "Symbol Validation", "Instrument Identity"),
@@ -100,6 +107,7 @@ func providerRegistrations() []ProviderRegistration {
 			}},
 		{Name: "Finnhub", QuotaLabel: "API plan / endpoint dependent", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.Finnhub) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("Finnhub", strings.TrimSpace(s.Finnhub)) },
 			Routes: []ProviderDatasetContract{
 				inheritedProductionRoute("Finnhub", "US Live Equities", "Primary U.S. equity", 2, "Near-live when entitled", "Day", "Swing", "Long", "Discovery", "Trade Readiness"),
 				inheritedProductionRoute("Finnhub", "News", "Company news", 1, "Near-live when entitled", "News", "Research", "Catalyst Watch"),
@@ -108,9 +116,11 @@ func providerRegistrations() []ProviderRegistration {
 			}},
 		{Name: tradeInsightProviderName, QuotaLabel: "Runtime tier / response headers", CostClass: "Beta / free tier",
 			Configured: func(_ Settings, s Secrets) bool { return tradeInsightConfigured(s.TradeInsight) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint(tradeInsightProviderName, strings.TrimSpace(s.TradeInsight)) },
 			Routes: []ProviderDatasetContract{tradeInsightProductionHistoryRoute(2)}},
 		{Name: "Twelve Data", QuotaLabel: "Credit based", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.TwelveData) },
+			ConfigurationFingerprint: func(s Settings, sec Secrets) [32]byte { return providerConfigurationFingerprint("Twelve Data", strings.TrimSpace(sec.TwelveData), strings.ToLower(strings.TrimSpace(s.GlobalProviderMode))) },
 			Routes: []ProviderDatasetContract{
 				inheritedProductionRoute("Twelve Data", "US Live Equities", "U.S. equity fallback", 3, "Near-live when entitled", "Data Freshness", "Recovery"),
 				inheritedProductionRoute("Twelve Data", canonicalGlobalMarketContextDataset, "FX / direct global context", 1, "Near-live when entitled", "Market Regime", "Dashboard", "Research"),
@@ -119,18 +129,23 @@ func providerRegistrations() []ProviderRegistration {
 			}},
 		{Name: "Marketaux", QuotaLabel: "Request quota", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.Marketaux) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("Marketaux", strings.TrimSpace(s.Marketaux)) },
 			Routes: []ProviderDatasetContract{inheritedProductionRoute("Marketaux", "News", "Stock news fallback", 2, "Near-live when entitled", "News", "Dashboard", "Research", "Catalyst Watch")}},
 		{Name: "FRED", QuotaLabel: "Free API key", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.FRED) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("FRED", strings.TrimSpace(s.FRED)) },
 			Routes: []ProviderDatasetContract{inheritedProductionRoute("FRED", "Macro", "Rates / credit / conditions / USD", 1, "Series release cadence", "Market Regime", "Swing", "Long", "Research", "Trade Readiness")}},
 		{Name: "SEC", QuotaLabel: "Fair-access policy", CostClass: "Public / no API fee",
 			Configured: func(s Settings, _ Secrets) bool { return has(s.SECEmail) },
+			ConfigurationFingerprint: func(s Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("SEC", strings.TrimSpace(s.SECEmail)) },
 			Routes: []ProviderDatasetContract{inheritedProductionRoute("SEC", "Fundamentals", "SEC fundamental authority/fallback", 2, "Filing dissemination cadence", "Research", "Fundamentals")}},
 		{Name: "SEC EDGAR", QuotaLabel: "Fair-access policy", CostClass: "Public / no API fee",
 			Configured: func(s Settings, _ Secrets) bool { return has(s.SECEmail) },
+			ConfigurationFingerprint: func(s Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("SEC EDGAR", strings.TrimSpace(s.SECEmail)) },
 			Routes: []ProviderDatasetContract{inheritedProductionRoute("SEC EDGAR", "SEC", "Direct SEC/EDGAR filings and Form 4 authority", 1, "Filing dissemination cadence", "SEC", "Research", "Catalyst Watch")}},
 		{Name: "yfinance", QuotaLabel: "Public recovery · best effort", CostClass: "Public / no API fee",
 			Configured: func(_ Settings, _ Secrets) bool { return true },
+			ConfigurationFingerprint: func(_ Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("yfinance", "public-recovery") },
 			Routes: []ProviderDatasetContract{
 				inheritedProductionRoute("yfinance", "VIX / Indices", "Recovery-only VIX/index context", 2, "Recovery-only; may be delayed", "Data Freshness", "Recovery"),
 				inheritedProductionRoute("yfinance", canonicalHistoricalBarsDataset, "Recovery-only historical bars", 4, "Recovery-only; may be delayed", "Historical Bars", "Recovery"),
@@ -139,9 +154,10 @@ func providerRegistrations() []ProviderRegistration {
 			}},
 		{Name: "CBOE", QuotaLabel: "Public official/delayed", CostClass: "Public / no API fee",
 			Configured: func(_ Settings, _ Secrets) bool { return true },
+			ConfigurationFingerprint: func(_ Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("CBOE", "public-official") },
 			Routes: []ProviderDatasetContract{inheritedProductionRoute("CBOE", "VIX / Indices", "Official VIX validation / delayed close", 3, "Official delayed/close validation", "VIX", "Market Regime", "Data Freshness")}},
-		{Name: "BLS", QuotaLabel: "Official API", CostClass: "Public / free API", Configured: func(_ Settings, _ Secrets) bool { return true }},
-		{Name: "EIA", QuotaLabel: "Free API key", CostClass: "Public / free API", Configured: func(_ Settings, s Secrets) bool { return has(s.EIA) }},
+		{Name: "BLS", QuotaLabel: "Official API", CostClass: "Public / free API", Configured: func(_ Settings, _ Secrets) bool { return true }, ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("BLS", strings.TrimSpace(s.BLS)) }},
+		{Name: "EIA", QuotaLabel: "Free API key", CostClass: "Public / free API", Configured: func(_ Settings, s Secrets) bool { return has(s.EIA) }, ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("EIA", strings.TrimSpace(s.EIA)) }},
 	}
 }
 
