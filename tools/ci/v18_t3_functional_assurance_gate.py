@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""T3 functional/integration/end-to-end assurance over the frozen v18 inventory."""
+"""T3 functional/integration/end-to-end assurance over the frozen v18 inventory.
+
+The gate is lifecycle-aware: while T3 is IN_PROGRESS it must be the sole active
+child; after T3 is COMPLETE it remains a durable regression gate while T4 and
+later closure tracks advance. T3 never certifies T4-T10.
+"""
 from __future__ import annotations
 
 import argparse
@@ -87,12 +92,24 @@ def main() -> int:
 
     product = current_state.get("productCapabilityGate") or {}
     governed = product.get("nextGovernedTracks") or []
-    t3_state = next((str(x.get("status") or "") for x in governed if isinstance(x, dict) and x.get("track") == "T3"), "")
-    t4_state = next((str(x.get("status") or "") for x in governed if isinstance(x, dict) and x.get("track") == "T4"), "")
-    if product.get("nextChildIssue") != 116 or product.get("nextChildTrack") != "T3" or t3_state != "IN_PROGRESS":
-        errors.append("current-state must identify T3/#116 as the active IN_PROGRESS child")
-    if t4_state != "NOT_STARTED":
-        errors.append("T3 audit must not silently start T4/#117")
+    t3_runtime_state = next((str(x.get("status") or "") for x in governed if isinstance(x, dict) and x.get("track") == "T3"), "")
+    t4_runtime_state = next((str(x.get("status") or "") for x in governed if isinstance(x, dict) and x.get("track") == "T4"), "")
+    assurance_state = str(t3.get("state") or "")
+
+    if assurance_state == "IN_PROGRESS":
+        if product.get("nextChildIssue") != 116 or product.get("nextChildTrack") != "T3" or t3_runtime_state != "IN_PROGRESS":
+            errors.append("IN_PROGRESS T3 must be the active T3/#116 child")
+        if t4_runtime_state != "NOT_STARTED":
+            errors.append("IN_PROGRESS T3 must not silently start T4/#117")
+    elif assurance_state == "COMPLETE":
+        completed = product.get("completedChildTracks") or []
+        t3_completed = next((x for x in completed if isinstance(x, dict) and x.get("track") == "T3" and x.get("issue") == 116), None)
+        if not isinstance(t3_completed, dict) or t3_completed.get("status") != "COMPLETE":
+            errors.append("COMPLETE T3 must remain recorded in completedChildTracks")
+        if not str((t3_completed or {}).get("mergedCommitSha") or "").strip():
+            errors.append("COMPLETE T3 requires durable mergedCommitSha evidence")
+    else:
+        errors.append(f"unsupported T3 state: {assurance_state!r}")
 
     gaps = closure.get("gaps") or []
     for required in ("T1-FEATURE-TRACEABILITY", "T2-UNIT-CONTRACT-PROPERTY"):
@@ -101,7 +118,7 @@ def main() -> int:
             errors.append(f"T3 requires {required}=VERIFIED")
     t3_gap = next((x for x in gaps if isinstance(x, dict) and x.get("id") == "T3-FUNCTIONAL-E2E"), None)
     if not isinstance(t3_gap, dict) or t3_gap.get("status") not in {"IMPLEMENTED_UNVERIFIED","VERIFIED"}:
-        errors.append("parent closure ledger must record active T3 as IMPLEMENTED_UNVERIFIED or VERIFIED")
+        errors.append("parent closure ledger must record T3 as IMPLEMENTED_UNVERIFIED or VERIFIED")
 
     if "python3 tools/ci/v18_t3_functional_assurance_gate.py" not in CI_FAST.read_text(encoding="utf-8"):
         errors.append("T3 assurance gate is not bound into canonical CI Fast")
@@ -211,7 +228,7 @@ def main() -> int:
         for error in errors:
             print(" - " + error, file=sys.stderr)
         return 1
-    print(f"V18 T3 ASSURANCE GATE: PASS (strict={strict})")
+    print(f"V18 T3 ASSURANCE GATE: PASS (strict={strict}, lifecycle={assurance_state})")
     return 0
 
 if __name__ == "__main__":
