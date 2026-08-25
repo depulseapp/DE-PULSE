@@ -110,8 +110,8 @@ def main() -> None:
             "displayName": "QA Analyst",
             "role": "USER",
             "temporaryPassword": TEMP_PASSWORD,
-        })
-        assert created.get("ok") is True or created.get("user", {}).get("username") == "qa.analyst"
+        }, expect=201)
+        assert created.get("ok") is True and created.get("user", {}).get("username") == "qa.analyst"
 
         user_jar, user = make_opener()
         login = request(user, user_jar, base, "/api/auth/login", {"username": "qa.analyst", "password": TEMP_PASSWORD})
