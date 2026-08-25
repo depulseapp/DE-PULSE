@@ -8,6 +8,9 @@
   "status": "IN_PROGRESS",
   "publicProductVersion": null,
   "stableProductVersionAtStart": "18.9.1",
+  "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "baselineBuildId": "v18.9.1-stable-20260821",
   "baselineMainSha": "57d530e58bfb0b38cc108980cd5cd4a041014db8",
   "branch": "adapt-provider-onboarding-001",
   "productBehaviorChange": true,
@@ -18,6 +21,7 @@
   "dependencies": [65, 79, 84, 92],
   "siblingResidualIssue": 94,
   "closureLedger": "governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/closure.json",
+  "repositoryMigrationLedger": "governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/repository-migrations.json",
   "requiredOutputs": [
     "one canonical provider registration contract consumed by Smart Provider Router v2 metadata/configuration/cost/quota/delay and capability diagnostics",
     "production-route admission fails closed unless lifecycle plus adapter/schema/timestamp/freshness/failure/rights/evidence/approval/invalidation contract is complete",
@@ -34,7 +38,9 @@
     "provider_capabilities.go",
     "data_engine_handlers.go",
     "provider_registration_regression_test.go",
-    "provider_capability_projection_regression_test.go"
+    "provider_onboarding_adaptive_regression_test.go",
+    "provider_capability_projection_regression_test.go",
+    "governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/repository-migrations.json"
   ],
   "implementationCommitsBeforeGovernanceBinding": [
     "c9323d16c522ff6140d03911579083ac6a2e29af",
