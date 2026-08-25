@@ -3,7 +3,7 @@
   "programIssue": 113,
   "trackIssue": 118,
   "targetVersion": "v18.10.0",
-  "state": "IN_PROGRESS",
+  "state": "COMPLETE",
   "startedFromMainSha": "fadd9247f63779195138f8d79cbaa0f304b16e61",
   "frozenT1GitBlobSha": "cb352904900a7156197d752ef21c348daa74bd05",
   "effectiveShippedV18ResponsibilityCount": 180,
@@ -66,7 +66,22 @@
     "uncoveredIds": ["LEGACY-EVIDENCE-ROUTES","RELEASE-RENDERER-CHROME-WEBKIT","SURF-DASHBOARD"],
     "finding": "The three first-pass uncovered responsibilities own no durable state. Frozen source/provenance review classifies them T5 NOT_APPLICABLE rather than creating parallel persistence owners."
   },
-  "closureCensus": null,
+  "closureCensus": {
+    "headSha": "2fd65d7724564db802840db44116bd95a8901281",
+    "fastRunNumber": 1044,
+    "fastRunId": 32873458078,
+    "qualifiedRunNumber": 210,
+    "qualifiedRunId": 32873584790,
+    "effectiveResponsibilities": 180,
+    "applicableResponsibilities": 177,
+    "coveredApplicableResponsibilities": 177,
+    "nonApplicableResponsibilities": 3,
+    "uncoveredResponsibilities": 0,
+    "mergedPullRequest": 132,
+    "mergedCommitSha": "81137e4481cdf4a351e45c599efa0777ef93460a",
+    "qualifiedEvidence": ["CI/harness PASS","backend full Go suite PASS","race detector PASS","randomized package order PASS","persistence/DB integration PASS","Ubuntu/macOS/Windows portability PASS"],
+    "conclusion": "VERIFIED"
+  },
   "completionCondition": "Every effective T1 responsibility has a T5 expectation and explicit applicability result; every applicable persistence-bearing responsibility has current executable restart/migration/recovery evidence through canonical owners; all declared gaps are closed; exact-head Fast and identical-head Qualified pass.",
   "t6CompanionIssue": 119,
   "t6StartedByThisArtifact": false
