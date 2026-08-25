@@ -16,21 +16,22 @@ const (
 	providerUsefulnessFeatureVersion = "v1"
 	providerUsefulnessMinCrossSource = 5
 	providerUsefulnessSeenLimit      = 512
+	providerUsefulnessPersistEveryMs = int64((30 * time.Second) / time.Millisecond)
 )
 
 type ProviderUsefulnessDiagnostic struct {
-	Provider            string   `json:"provider"`
-	State               string   `json:"state"` // INSUFFICIENT or OBSERVING
-	EligibleSamples     int64    `json:"eligibleSamples"`
-	CrossSourceSamples  int64    `json:"crossSourceSamples"`
-	AgreementSamples    int64    `json:"agreementSamples"`
-	ConflictSamples     int64    `json:"conflictSamples"`
-	SingleSourceSamples int64    `json:"singleSourceSamples"`
+	Provider             string   `json:"provider"`
+	State                string   `json:"state"` // INSUFFICIENT or OBSERVING
+	EligibleSamples      int64    `json:"eligibleSamples"`
+	CrossSourceSamples   int64    `json:"crossSourceSamples"`
+	AgreementSamples     int64    `json:"agreementSamples"`
+	ConflictSamples      int64    `json:"conflictSamples"`
+	SingleSourceSamples  int64    `json:"singleSourceSamples"`
 	CanonicalSelections int64    `json:"canonicalSelections"`
-	ExcludedSamples     int64    `json:"excludedSamples"`
-	AgreementPct        *float64 `json:"agreementPct,omitempty"`
-	RoutingImpact       string   `json:"routingImpact"`
-	LastObservedAt      int64    `json:"lastObservedAt,omitempty"`
+	ExcludedSamples      int64    `json:"excludedSamples"`
+	AgreementPct         *float64 `json:"agreementPct,omitempty"`
+	RoutingImpact        string   `json:"routingImpact"`
+	LastObservedAt       int64    `json:"lastObservedAt,omitempty"`
 }
 
 type providerUsefulnessAggregate struct {
@@ -51,12 +52,14 @@ type providerUsefulnessPersistedState struct {
 }
 
 type providerUsefulnessTracker struct {
-	mu          sync.Mutex
-	persistence *PersistenceManager
-	restored    bool
-	providers   map[string]providerUsefulnessAggregate
-	seen        map[string]bool
-	seenOrder   []string
+	mu            sync.Mutex
+	persistence   *PersistenceManager
+	restored      bool
+	providers     map[string]providerUsefulnessAggregate
+	seen          map[string]bool
+	seenOrder     []string
+	dirty         bool
+	lastPersistAt int64
 }
 
 var canonicalProviderUsefulness = newProviderUsefulnessTracker()
@@ -82,6 +85,7 @@ func providerUsefulnessDecisionSignature(row ProviderReconciliationDecision) str
 		normalizeSymbol(row.Symbol),
 		strings.ToUpper(strings.TrimSpace(row.State)),
 		strings.ToUpper(strings.TrimSpace(row.CanonicalProvider)),
+		jsonFloat(row.CanonicalValue),
 	}
 	observations := append([]ProviderQuoteObservation(nil), row.Observations...)
 	sort.Slice(observations, func(i, j int) bool {
@@ -128,7 +132,10 @@ func (t *providerUsefulnessTracker) bindPersistence(p *PersistenceManager) {
 		t.providers = map[string]providerUsefulnessAggregate{}
 		t.seen = map[string]bool{}
 		t.seenOrder = nil
-		t.restored = false
+		trestored := false
+		t.restored = trestored
+		t.dirty = false
+		t.lastPersistAt = 0
 	}
 	t.mu.Unlock()
 
@@ -189,6 +196,8 @@ func (t *providerUsefulnessTracker) restoreStateLocked(state providerUsefulnessP
 		t.seen[signature] = true
 		t.seenOrder = append(t.seenOrder, signature)
 	}
+	t.lastPersistAt = state.UpdatedAt
+	t.dirty = false
 }
 
 func (t *providerUsefulnessTracker) markSeenLocked(signature string) bool {
@@ -290,6 +299,9 @@ func (t *providerUsefulnessTracker) observe(rows []ProviderReconciliationDecisio
 			}
 		}
 	}
+	if changed {
+		t.dirty = true
+	}
 	return changed
 }
 
@@ -337,11 +349,23 @@ func (t *providerUsefulnessTracker) persist(p *PersistenceManager, now int64) {
 	if t == nil || p == nil {
 		return
 	}
+	if now <= 0 {
+		now = time.Now().UnixMilli()
+	}
 	t.mu.Lock()
+	if !t.dirty || (t.lastPersistAt > 0 && now-t.lastPersistAt < providerUsefulnessPersistEveryMs) {
+		t.mu.Unlock()
+		return
+	}
 	state := t.stateLocked(now)
+	t.dirty = false
+	t.lastPersistAt = now
 	t.mu.Unlock()
 	raw, err := json.Marshal(state)
 	if err != nil {
+		t.mu.Lock()
+		t.dirty = true
+		t.mu.Unlock()
 		return
 	}
 	sum := sha256.Sum256(raw)
@@ -354,9 +378,8 @@ func (t *providerUsefulnessTracker) persist(p *PersistenceManager, now int64) {
 func enrichProviderUsefulnessSnapshot(snap RuntimeSnapshot, p *PersistenceManager) RuntimeSnapshot {
 	canonicalProviderUsefulness.bindPersistence(p)
 	now := time.Now().UnixMilli()
-	if canonicalProviderUsefulness.observe(snap.ProviderReconciliation, now) {
-		canonicalProviderUsefulness.persist(p, now)
-	}
+	canonicalProviderUsefulness.observe(snap.ProviderReconciliation, now)
+	canonicalProviderUsefulness.persist(p, now)
 	snap.RuntimeLoad.ProviderUsefulness = canonicalProviderUsefulness.diagnostics()
 	return snap
 }
