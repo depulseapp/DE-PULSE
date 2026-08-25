@@ -38,14 +38,17 @@
     },
     {
       "id": "T2-UNIT-CONTRACT-PROPERTY",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "VERIFIED",
       "owner": "#115",
       "implementationPaths": ["tests", "*_test.go", "tools/ci"],
       "evidenceRequired": ["unit/package/contract/static evidence", "boundary/invalid-input/state invariants", "property/fuzz-style evidence where material"],
       "evidence": [
-        "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json",
-        "tools/ci/v18_t2_unit_contract_assurance_gate.py",
-        "T2 first execution pending explicit coverage-gap reconciliation and exact-head qualification"
+        "T2_UNIT_CONTRACT_ASSURANCE.json: COMPLETE; frozen T1 blob cb352904900a7156197d752ef21c348daa74bd05; 180/180 effective responsibilities covered; zero uncovered",
+        "first census Fast #1010 / run 32858282167 exposed exactly one evidence-class gap: RELEASE-RENDERER-CHROME-WEBKIT",
+        "gap resolved by reusing existing tools/ci/browser_risk_routing_gate.py as an explicit CI_STATIC_CONTRACT without reclassifying browser execution",
+        "Fast #1014 / run 32859116404 success on pre-freeze head 851a847400e76cde4db0f1c68e402d44d903b1f7",
+        "Qualified #206 / run 32859169576 success on identical pre-freeze head; gofmt, go vet, full Go suite, race detector, randomized package order, renderer contracts, Chrome and WebKit all PASS",
+        "T2 gate remains Fast-bound and strict when state=COMPLETE; final closure metadata head must re-pass Fast and identical-head Qualified before merge"
       ],
       "closureCondition": "No applicable T1 row lacks meaningful unit/contract/static/property regression ownership.",
       "blocksIssueClosure": true
