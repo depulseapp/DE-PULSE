@@ -22,13 +22,17 @@ The #102 branch must prove:
 - the unchanged post-Stable continuity, portability, source-health/current-state and closure gates pass;
 - no product source/provider/router/Data Health/lifecycle/freshness/cache/persistence behavior changed.
 
+## Retained Data Health delivery contract
+
+The completed #80-#84 provider/Data Health foundation remains delivery authority under completed #95 and active #102. The exact inherited recurrence contract remains: **canonical Fast exact-head PASS** must precede **Qualified exact-head PASS** on the identical candidate. Smart Provider Router v2 remains the sole general routing/admission authority, direct **SEC/EDGAR** remains Form 4 authority, canonical freshness/degradation semantics remain unchanged, and **No Execution** remains permanent.
+
 ## Canonical qualification order
 
 1. Re-fetch live `main` and live `adapt-post-stable-continuity-001`; inspect the complete delta.
 2. Commit one coherent continuity candidate before opening the PR whenever practical.
 3. Open one Draft PR for #102.
-4. Run canonical **CI Fast exact-head PASS** on the PR head.
-5. Mark the same exact candidate Ready so Planner v3 runs **impact-selected Qualified exact-head PASS**.
+4. Run canonical Fast exact-head PASS on the PR head.
+5. Mark the same exact candidate Ready so Planner v3 runs impact-selected Qualified exact-head PASS.
 6. Any candidate mutation after Fast/Qualified invalidates the corresponding evidence and must be requalified.
 7. Re-fetch live `main`; merge only with expected-head protection and only if the qualified PR head is unchanged.
 8. Inspect the resulting main-push branch-hygiene/post-Stable continuity run. The continuity sentinel must be green without weakening it.

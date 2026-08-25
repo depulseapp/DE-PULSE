@@ -21,9 +21,15 @@
 7. Run the unchanged continuity/source/portability/current-state/closure gates, canonical exact-head Fast, then impact-selected Qualified on the identical #102 candidate; merge only with a fresh live-main expected-head guard.
 8. Do not create a Stable/public SemVer release solely for #102 and do not alter provider/router/Data Health/freshness/cache/persistence/lifecycle behavior.
 
+## Retained Adaptive Data Health build owners
+
+The completed #80 Data Health artifacts remain executable inputs beneath #102 and completed #95: `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. These continue to bind the Adaptive Roadmap, Build Plan, Build Process, and Delivery Process to the canonical provider classification, freshness/SLO and fetch-path owners. #102 changes none of those contracts.
+
+The completed #79/#84 program remains executable input: canonical provider capability, Data Health SLO, fetch-path classification, Smart Provider Router v2, lifecycle/readiness, freshness, persistence, telemetry and degradation owners cannot be replaced by this continuity slice.
+
 ## Retained completed product owners
 
-#95 remains executable product architecture, not work to rebuild. `provider_registration.go`, `provider_entitlement_refresh.go`, Smart Provider Router v2, provider capability diagnostics and their regressions remain canonical. The completed #80-#84 Data Health artifacts and recurrence checks remain active inputs beneath them.
+#95 remains executable product architecture, not work to rebuild. `provider_registration.go`, `provider_entitlement_refresh.go`, Smart Provider Router v2, provider capability diagnostics and their regressions remain canonical. Registration-aware recurrence continues to bind registered/routed providers to the same provider-capability matrix.
 
 ## After #102
 

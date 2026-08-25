@@ -26,9 +26,11 @@ For #102, follow LOOKUP -> COMPARE -> CLASSIFY -> DECIDE -> UPDATE and remain ev
 - merge only after re-fetching live `main` and using the expected-head guard;
 - no direct-main patch, no gate waiver, no Release workflow and no Stable/public SemVer publication for #102.
 
-## Retained Data Health invariants
+## Retained Adaptive Data Health process contract
 
-The completed **#80 -> #81/#82/#83/#78 -> #84 -> #95** provider architecture remains inherited executable authority. Registration-aware recurrence, canonical freshness, scoped degradation/recovery, Smart Provider Router v2, lifecycle/readiness, fault recovery, cache/persistence reuse, direct SEC/EDGAR Form 4 authority, U.S. equities, GLD/SLV/USO and No Execution remain unchanged.
+The completed sequence **#81/#82/#83/#78/#84** remains inherited executable history from the #80 baseline. Its Smart Provider Router v2, **fail closed** behavior, **canonical freshness**, provider-capability classification, scoped degradation/recovery, lifecycle/readiness and direct-authority boundaries remain active constraints. #102 changes only continuity metadata and cannot replace those owners.
+
+Registration-aware recurrence added with #95 remains part of the same G2/source-health protection: registered/routed provider identities must continue to classify against the canonical #80 provider-capability matrix, including the historical Router `SEC` -> durable `SEC EDGAR` identity.
 
 ## Acceptance discipline
 
