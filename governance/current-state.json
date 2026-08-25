@@ -66,7 +66,7 @@
     "nextCompanionChildIssue": 122,
     "nextCompanionChildTrack": "T9",
     "nextGovernedTracks": [
-      {"track":"T8","issue":121,"status":"NOT_STARTED"},
+      {"track":"T8","issue":121,"status":"IN_PROGRESS"},
       {"track":"T9","issue":122,"status":"NOT_STARTED"}
     ],
     "downstreamAssuranceState": {
