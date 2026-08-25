@@ -6,54 +6,9 @@
   "closurePolicy": "v18.10.0 may be published and called 10/10 Future-Proof Final v18 Closure only after all ten assurance tracks are VERIFIED by executable evidence, every discovered implementation/test/UX/security/data-truth/performance/platform gap is either fixed and re-qualified or explicitly proven non-applicable, the exact release candidate passes G0-G16, and durable regression/requirement ownership prevents silent future loss. Documentation alone cannot verify a gap.",
   "allGapsMustBeVerified": true,
   "gaps": [
-    {
-      "id": "T1-FEATURE-TRACEABILITY",
-      "status": "VERIFIED",
-      "owner": "#114",
-      "implementationPaths": [
-        "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001",
-        "tests",
-        "renderer",
-        "*.go"
-      ],
-      "evidenceRequired": [
-        "exhaustive shipped-feature ledger",
-        "requirement provenance",
-        "canonical owner",
-        "test owner",
-        "no UNOWNED/UNTESTED/UNKNOWN/unexplained carry-forward"
-      ],
-      "evidence": [
-        "feature-assurance-ledger-freeze.json: 87 high-level rows + 78 scan-1 + 16 scan-2 - 1 explicit future-source exclusion = 180 effective shipped-v18 responsibilities",
-        "T1_FINAL_RECONCILIATION.json: state COMPLETE; effectiveShippedV18ResponsibilityCount=180; unexplainedGapCount=0",
-        "T1_QUALITY_RESOLUTION.json: state COMPLETE; #125/#126 READY_10_10 for T1-specific corrective scope; unresolvedBlockingDecisions=[]",
-        "frozen head 57f0847c44a9ae5916509a72da492d1dd2a003bc",
-        "Fast #1006 / run 32855548397 success on frozen head",
-        "Qualified #205 / run 32855619652 success on identical frozen head",
-        "PR #127 expected-head merge b434886751fde1804a4906c9cac41dcce4584834",
-        "issues #114/#125/#126 closed completed"
-      ],
-      "closureCondition": "Every shipped v18 capability/surface/data path/role/persistence path is traceable and any real miss is explicitly opened/fixed.",
-      "blocksIssueClosure": true
-    },
-    {
-      "id": "T2-UNIT-CONTRACT-PROPERTY",
-      "status": "VERIFIED",
-      "owner": "#115",
-      "implementationPaths": ["tests", "*_test.go", "tools/ci"],
-      "evidenceRequired": ["unit/package/contract/static evidence", "boundary/invalid-input/state invariants", "property/fuzz-style evidence where material"],
-      "evidence": [
-        "T2_UNIT_CONTRACT_ASSURANCE.json: COMPLETE; frozen T1 blob cb352904900a7156197d752ef21c348daa74bd05; 180/180 effective responsibilities covered; zero uncovered",
-        "first census Fast #1010 / run 32858282167 exposed exactly one evidence-class gap: RELEASE-RENDERER-CHROME-WEBKIT",
-        "gap resolved by reusing existing tools/ci/browser_risk_routing_gate.py as an explicit CI_STATIC_CONTRACT without reclassifying browser execution",
-        "Fast #1014 / run 32859116404 success on pre-freeze head 851a847400e76cde4db0f1c68e402d44d903b1f7",
-        "Qualified #206 / run 32859169576 success on identical pre-freeze head; gofmt, go vet, full Go suite, race detector, randomized package order, renderer contracts, Chrome and WebKit all PASS",
-        "T2 gate remains Fast-bound and strict when state=COMPLETE; final closure metadata head must re-pass Fast and identical-head Qualified before merge"
-      ],
-      "closureCondition": "No applicable T1 row lacks meaningful unit/contract/static/property regression ownership.",
-      "blocksIssueClosure": true
-    },
-    {"id":"T3-FUNCTIONAL-E2E","status":"OPEN","owner":"#116","implementationPaths":["tests","renderer","*.go"],"evidenceRequired":["realistic full feature workflows","role/session variants","integration/e2e regression ownership"],"evidence":[],"closureCondition":"Every applicable T1 feature row has realistic functional evidence and no implementation miss remains unexplained.","blocksIssueClosure":true},
+    {"id":"T1-FEATURE-TRACEABILITY","status":"VERIFIED","owner":"#114","implementationPaths":["governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001","tests","renderer","*.go"],"evidenceRequired":["exhaustive shipped-feature ledger","requirement provenance","canonical owner","test owner","no UNOWNED/UNTESTED/UNKNOWN/unexplained carry-forward"],"evidence":["feature-assurance-ledger-freeze.json: 180 effective shipped-v18 responsibilities","T1_FINAL_RECONCILIATION.json COMPLETE; unexplainedGapCount=0","Fast #1006 / 32855548397","Qualified #205 / 32855619652","PR #127 merge b434886751fde1804a4906c9cac41dcce4584834"],"closureCondition":"Every shipped v18 capability/surface/data path/role/persistence path is traceable and any real miss is explicitly opened/fixed.","blocksIssueClosure":true},
+    {"id":"T2-UNIT-CONTRACT-PROPERTY","status":"VERIFIED","owner":"#115","implementationPaths":["tests","*_test.go","tools/ci"],"evidenceRequired":["unit/package/contract/static evidence","boundary/invalid-input/state invariants","property/fuzz-style evidence where material"],"evidence":["T2_UNIT_CONTRACT_ASSURANCE.json COMPLETE; 180/180; zero uncovered","Fast #1015 / 32859811809 on 9928ddfb7998d9cd12ee748e3ff8f8982d5b62ee","Qualified #207 / 32859915847 on identical head: full Go/race/shuffle/renderer/Chrome/WebKit PASS","PR #128 expected-head merge bd26f91964235a8fdb390184684f4fdd216eb1e6"],"closureCondition":"No applicable T1 row lacks meaningful unit/contract/static/property regression ownership.","blocksIssueClosure":true},
+    {"id":"T3-FUNCTIONAL-E2E","status":"IMPLEMENTED_UNVERIFIED","owner":"#116","implementationPaths":["tests","renderer","*.go"],"evidenceRequired":["realistic full feature workflows","role/session variants","integration/e2e regression ownership"],"evidence":["T3 functional census is active against the frozen 180-responsibility inventory; no verification claim yet"],"closureCondition":"Every applicable T1 feature row has realistic functional evidence and no implementation miss remains unexplained.","blocksIssueClosure":true},
     {"id":"T4-EDGE-FAILURE-DATA-TRUTH","status":"OPEN","owner":"#117","implementationPaths":["tests","provider_*","data_*","runtime_*","renderer"],"evidenceRequired":["stale/missing/partial/future/contradictory evidence tests","provider/rate-limit/fallback/cache/recovery tests","session/invalid-input/unavailable-vs-zero truth"],"evidence":[],"closureCondition":"Adverse inputs/failures cannot manufacture healthy/current/confident/zero truth and every applicable T1 row has negative/edge evidence.","blocksIssueClosure":true},
     {"id":"T5-PERSISTENCE-LIFECYCLE-RECOVERY","status":"OPEN","owner":"#118","implementationPaths":["persistence_*","tests","packaging"],"evidenceRequired":["SQLite integrity/migrations","fresh/warm restart","state retention","upgrade/rollback/recovery","no destructive repair dependency"],"evidence":[],"closureCondition":"Every persistence-bearing feature survives required lifecycle/recovery paths without corruption or leakage.","blocksIssueClosure":true},
     {"id":"T6-SECURITY-ROLES-RIGHTS","status":"OPEN","owner":"#119","implementationPaths":["identity_*","http_auth.go","provider_data_rights.go","renderer","tests"],"evidenceRequired":["role/capability positive and negative tests","direct-route/API parity","secret non-leakage","provider rights and SEC authority","No Execution proof"],"evidence":[],"closureCondition":"No unauthorized/sensitive path or secret/right boundary remains unproven.","blocksIssueClosure":true},

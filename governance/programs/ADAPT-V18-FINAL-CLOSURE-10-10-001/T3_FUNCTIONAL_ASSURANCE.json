@@ -1,0 +1,28 @@
+{
+  "schema":"DE.PULSE-V18-T3-FUNCTIONAL-ASSURANCE-1",
+  "programIssue":113,
+  "trackIssue":116,
+  "targetVersion":"v18.10.0",
+  "state":"IN_PROGRESS",
+  "startedFromMainSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6",
+  "frozenT1GitBlobSha":"cb352904900a7156197d752ef21c348daa74bd05",
+  "effectiveShippedV18ResponsibilityCount":180,
+  "acceptedEvidenceClasses":["ACCEPTANCE_E2E","HTTP_INTEGRATION","BROWSER_E2E","RENDERER_FUNCTIONAL","GO_FUNCTIONAL","CI_WORKFLOW_CONTRACT"],
+  "rules":{
+    "allEffectiveT1ResponsibilitiesRequireT3Expectation":true,
+    "allEffectiveT1ResponsibilitiesRequireMeaningfulFunctionalOwner":true,
+    "staticOnlyCannotCloseVisibleWorkflow":true,
+    "backendUnitOnlyCannotCloseVisibleWorkflow":true,
+    "closedIssueAloneIsNotEvidence":true,
+    "genuineImplementationMissRequiresNamedCorrectiveUnder113":true,
+    "t4OrLaterCertificationNotImplied":true
+  },
+  "gapDeclarationState":"PENDING_FIRST_EXECUTION",
+  "knownCoverageGaps":[],
+  "uncoveredResponsibilityCount":null,
+  "evidenceSupplements":{},
+  "exactHeadQualificationRequired":true,
+  "completionCondition":"All 180 effective shipped-v18 responsibilities resolve their T3 expectation and have at least one current meaningful realistic functional/integration/end-to-end owner; all declared gaps are closed; exact-head Fast and identical-head Qualified pass.",
+  "t4CompanionIssue":117,
+  "t4StartedByThisArtifact":false
+}

@@ -18,16 +18,16 @@
   "targetStable": "v18.10.0-stable",
   "releaseClaim": "10/10 Future-Proof Final v18 Closure",
   "children": [
-    {"track": "T1", "issue": 114, "name": "complete feature / requirement / owner / test traceability"},
-    {"track": "T2", "issue": 115, "name": "unit / contract / static / property assurance"},
-    {"track": "T3", "issue": 116, "name": "functional / integration / end-to-end feature matrix"},
-    {"track": "T4", "issue": 117, "name": "edge / adversarial / failure / data-truth matrix"},
-    {"track": "T5", "issue": 118, "name": "persistence / restart / migration / install / upgrade / recovery"},
-    {"track": "T6", "issue": 119, "name": "security / roles / secrets / rights / negative authorization"},
-    {"track": "T7", "issue": 120, "name": "UI / UX / information architecture / content / accessibility"},
-    {"track": "T8", "issue": 121, "name": "performance / load / soak / concurrency / resource safety"},
-    {"track": "T9", "issue": 122, "name": "cross-platform packaged runtime / release / provenance certification"},
-    {"track": "T10", "issue": 123, "name": "future-proof regression ownership / zero-gap / portable final certification"}
+    {"track":"T1","issue":114,"name":"complete feature / requirement / owner / test traceability"},
+    {"track":"T2","issue":115,"name":"unit / contract / static / property assurance"},
+    {"track":"T3","issue":116,"name":"functional / integration / end-to-end feature matrix"},
+    {"track":"T4","issue":117,"name":"edge / adversarial / failure / data-truth matrix"},
+    {"track":"T5","issue":118,"name":"persistence / restart / migration / install / upgrade / recovery"},
+    {"track":"T6","issue":119,"name":"security / roles / secrets / rights / negative authorization"},
+    {"track":"T7","issue":120,"name":"UI / UX / information architecture / content / accessibility"},
+    {"track":"T8","issue":121,"name":"performance / load / soak / concurrency / resource safety"},
+    {"track":"T9","issue":122,"name":"cross-platform packaged runtime / release / provenance certification"},
+    {"track":"T10","issue":123,"name":"future-proof regression ownership / zero-gap / portable final certification"}
   ],
   "architectureBoundaries": [
     "US_EQUITIES_PROCESSING",
@@ -39,6 +39,10 @@
     "NO_AUTOMATIC_PROVIDER_LIFECYCLE_PROMOTION",
     "NO_PARALLEL_SUBSYSTEMS"
   ],
-  "nextTrack": {"track": "T2", "issue": 115},
+  "completedTracks": [
+    {"track":"T1","issue":114,"mergedCommitSha":"b434886751fde1804a4906c9cac41dcce4584834"},
+    {"track":"T2","issue":115,"mergedCommitSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6"}
+  ],
+  "nextTrack": {"track":"T3","issue":116},
   "v19BlockedUntil": "v18.10.0 Stable published, T10 complete, post-closure residual/source-overlap audit PASS"
 }
