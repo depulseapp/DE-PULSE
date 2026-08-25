@@ -6,6 +6,7 @@
 **Published Stable:** `v18.9.1-stable`  
 **Published Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Published Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
+**Published Stable build ID:** `v18.9.1-stable-20260821`  
 **Release branch:** `v18.10.0-development`  
 **Target release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
 **Candidate identity:** `v18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
