@@ -4,12 +4,15 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
+import subprocess
+import sys
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
 ARCHITECTURE=(ROOT/'renderer'/'documentation-architecture.js').read_text(encoding='utf-8')
 OWNER=(ROOT/'renderer'/'documentation-ui.js').read_text(encoding='utf-8')
 ACCESS=(ROOT/'renderer'/'documentation-access.js').read_text(encoding='utf-8')
+RESPONSIVE_GATE=ROOT/'tools'/'ci'/'responsive_ui_sharded_gate.py'
 
 HARNESS=r"""
 let authPrincipal={role:'USER'};
@@ -83,11 +86,30 @@ def run(engine:str)->None:
     print(f'PASS: Documentation architecture + capability owner + role decorator on {engine}')
 
 
+def run_t7_responsive_matrix(engine:str)->None:
+    if engine!='chrome':
+        return
+    if not sys.platform.startswith('linux'):
+        print('T7 responsive full matrix: SKIP outside Qualified Linux Chrome owner')
+        return
+    chrome=Path(os.environ.get('CHROME_BIN','/usr/bin/google-chrome'))
+    chromium=Path('/usr/bin/chromium')
+    if not chrome.is_file():
+        raise RuntimeError(f'Qualified Chrome executable unavailable: {chrome}')
+    if not chromium.exists():
+        subprocess.run(['sudo','ln','-sf',str(chrome),str(chromium)],check=True)
+    if not chromium.exists():
+        raise RuntimeError('unable to bind Qualified Chrome executable at /usr/bin/chromium for responsive matrix')
+    subprocess.run([sys.executable,str(RESPONSIVE_GATE)],cwd=ROOT,env=os.environ.copy(),check=True)
+    print('PASS: T7 canonical 15-viewport responsive matrix via Qualified Chrome owner')
+
+
 def main()->None:
     parser=argparse.ArgumentParser()
     parser.add_argument('--engine',choices=('chrome','webkit'),required=True)
     args=parser.parse_args()
     run(args.engine)
+    run_t7_responsive_matrix(args.engine)
 
 
 if __name__=='__main__':
