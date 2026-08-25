@@ -7,7 +7,9 @@
 **Published Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Published Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Published Stable build ID:** `v18.9.1-stable-20260821`  
+**Canonical closure branch:** `adapt-v18-final-closure-10-10-001`  
 **Release branch:** `v18.10.0-development`  
+**Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
 **Target release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
 **Candidate identity:** `v18.10.0` / `v18.10.0-stable-20260825` / platform build `181000`  
 **Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` — **IN_PROGRESS until G16**  
@@ -51,7 +53,7 @@ Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/ED
 
 ## Resume rule
 
-1. Fetch live `main`, `v18.10.0-development`, #113, #123, the active release PR and workflow state before modifying anything.
+1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, `v18.10.0-development`, #113, #123, the active release PR and workflow state before modifying anything.
 2. Read this file, `governance/current-state.json`, the parent closure ledger, `T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json`, `release_identity.json`, and the canonical G0–G16 workflow owners.
 3. GitHub objects and executable evidence outrank prose and chat memory.
 4. T10 authorization basis is `ab50c8a...`, Fast #1097 and Qualified #219. The final release-branch head must independently obtain `DE.PULSE/fast-head` and `DE.PULSE/qualified-head` before merge.
