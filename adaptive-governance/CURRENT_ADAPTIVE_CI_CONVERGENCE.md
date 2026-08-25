@@ -2,18 +2,19 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Closure branch:** `adapt-provider-professional-closure-001-closure`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Final qualification evidence:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/final-qualification-evidence.json`  
-**Parent program:** #65 complete by executable evidence.  
-**Future hosted program:** #66 remains blocked/not started.
+**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
+**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
+**Parent ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
+**Feature ledger:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`
 
-#70/#73 remain the CI/repository control-plane foundation. #107 implementation candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2` passed Fast #983 / `32811045734` and Qualified #198 / `32811081438` on the identical head. Planner v3 selected ci-harness + portability + backend; all three portability targets, full Go suite, race detector and randomized package order passed. PR #108 expected-head merged as `e9c236b2b9f229968f93ffe9ac600f45080389a7`; main Fast #984 / `32811424765` passed branch hygiene plus both Post-Stable continuity checks while product Fast was skipped as designed.
+#70/#73 remain the CI/repository control-plane foundation. Exactly three routine workflows remain canonical: CI Fast, CI Qualified and Release. No retry branch, duplicate workflow family, direct-main patch or gate waiver is allowed for the final v18 closure.
 
-## Final closure convergence contract
+## 10/10 CI contract
 
-The completed active process authority remains #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`; its canonical ledger is fully VERIFIED and its final evidence file binds the immutable implementation candidate, Fast, Qualified, expected-head merge and main sentinel. The closure branch changes governance/checkpoint metadata only and must itself earn canonical Fast and impact-selected Qualified before expected-head merge.
+T1 must enumerate the shipped feature surface and durable test owners. T2–T8 add/reuse meaningful evidence, not vanity test counts. T9 requires actual packaged native evidence and browser renderer qualification. T10 binds the final regression ownership and runs the all-selected certification matrix on one immutable release candidate.
 
-No direct-main patch, force push, retry branch, temporary workflow, gate waiver or Release workflow is allowed. Immutable v18.9.1 Stable evidence remains unchanged. No next product reservation exists; #66 remains separate/not started.
+At minimum, final closure evidence must include source-health/migration/requirement gates; gofmt/go vet/full Go; race detector; randomized package order; deterministic functional equivalence; persistence integration; security/data-rights negatives; renderer JS; Chrome; WebKit; responsive/role-aware UI; edge/failure/data-truth matrix; load/soak/capacity; macOS Apple Silicon packaged lifecycle; Windows x64 packaged runtime; release identity/fingerprint/provenance/artifact integrity; and no-rebuild Stable publication.
+
+The current #66 72-row conservation ledger is strong planning authority but is not yet mechanically checked by Fast. T10/#123 must add that enforcement inside existing G0–G16 before first v19 product G1. This is a future-proofing requirement, not a new top-level gate.
+
+No final `10/10` claim is allowed from partial lanes, one platform, source tests alone or documentation alone.
