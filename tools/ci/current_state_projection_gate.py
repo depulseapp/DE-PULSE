@@ -24,6 +24,19 @@ WAIVER_PROJECTIONS = (
 )
 
 
+def projected_active_state(state: dict) -> tuple[dict, str]:
+    product = state.get("productCapabilityGate", {})
+    if isinstance(product, dict) and str(product.get("reservationStatus", "")).strip() == "IN_PROGRESS":
+        return {
+            "workSliceId": product.get("reservedWorkSliceId"),
+            "issue": product.get("reservedIssue"),
+            "branch": product.get("reservedBranch"),
+            "closureLedger": product.get("closureLedger"),
+        }, "PRODUCT_CAPABILITY"
+    active = state.get("activeWorkSlice", {})
+    return (active if isinstance(active, dict) else {}), "WORK_SLICE"
+
+
 def main() -> int:
     errors: list[str] = []
     if not STATE.is_file():
@@ -33,7 +46,10 @@ def main() -> int:
 
     state = json.loads(STATE.read_text(encoding="utf-8"))
     stable = state.get("stable", {})
-    active = state.get("activeWorkSlice", {})
+    process_active = state.get("activeWorkSlice", {})
+    if not isinstance(process_active, dict):
+        process_active = {}
+    active, projection_authority = projected_active_state(state)
     stable_tag = str(stable.get("tag", "")).strip()
     stable_sha = str(stable.get("candidateSha", "")).strip()
     work_slice = str(active.get("workSliceId", "")).strip()
@@ -73,7 +89,7 @@ def main() -> int:
     if closure and closure not in ci_projection:
         errors.append("CURRENT_ADAPTIVE_CI_CONVERGENCE.md does not name canonical closure ledger")
 
-    waivers = active.get("externalControlWaivers", [])
+    waivers = process_active.get("externalControlWaivers", [])
     if waivers is not None and not isinstance(waivers, list):
         errors.append("activeWorkSlice.externalControlWaivers must be an array")
         waivers = []
@@ -109,7 +125,8 @@ def main() -> int:
 
     print("DE.PULSE current-state projection convergence")
     print(f"canonical Stable: {stable_tag} @ {stable_sha}")
-    print(f"active work slice: #{issue} / {work_slice} / {branch}")
+    print(f"projection authority: {projection_authority}")
+    print(f"active projected work: #{issue} / {work_slice} / {branch}")
     print(f"projected current surfaces: {len(texts)}/{len(SURFACES)}")
     print(f"projected external-control waivers: {len(waivers or [])}")
     if errors:

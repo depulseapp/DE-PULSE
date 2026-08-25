@@ -3,13 +3,19 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Retained completed process authority:** #73 / `ADAPT-ROOT-CONVERGENCE-001` / `adapt-root-convergence-001`  
-**Process closure ledger:** `governance/work-slices/ADAPT-ROOT-CONVERGENCE-001/closure.json`  
-**Completed product work:** #80 / `ADAPT-DATAHEALTH-BASELINE-001` / PR #86 / merge `c75a5f1467920f57fa23c3dbc400e51edc5275c8`  
-**Completed Router adoption:** #81 / `ADAPT-PROVIDER-ROUTER-PRODUCTION-001` / Fast #878 / Qualified #184 / PR #87 / merge `1870dd3881dbe7f6463f242e35fdc19e70d9ae15`  
-**Active product work:** #82 / `ADAPT-DATAHEALTH-RUNTIME-001` / `adapt-datahealth-runtime-001`
+**Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
+**Completed canonical identity:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
+**Active product work:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / `adapt-provider-onboarding-001`  
+**Active closure ledger:** `governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/closure.json`  
+**Separate sibling residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`
 
-#81 is complete: durable evidence is retained at `governance/work-slices/ADAPT-PROVIDER-ROUTER-PRODUCTION-001/final-qualification-evidence.json`, and all former #80 general-routing `MIGRATE` paths are Router v2-managed.
+#95 closure is fail-closed. Its blocking gaps remain the canonical provider-registration contract, capability-scoped entitlement auto-adaptation, provider adoption/diagnostic parity, current-provider regression safety, Adaptive portability binding, and exact-head delivery evidence. Source or governance text alone cannot mark these VERIFIED.
 
-#82 closure is fail-closed on seven gaps in `governance/work-slices/ADAPT-DATAHEALTH-RUNTIME-001/closure.json`: canonical scoped health evaluation; warm-state/fallback truth; recovery hysteresis/unlatch; critical-work priority/backpressure/load shedding; scoped telemetry/fault coverage; CURRENT Adaptive governance propagation; exact-head Fast/Qualified. Every gap blocks closure until VERIFIED by executable evidence.
+The completed #80–#84 provider/Data Health program remains inherited architecture, not work to rebuild. Registration/admission extends Smart Provider Router v2 and the canonical provider-capability matrix; it may not create a parallel router, Data Health owner, freshness/cache/persistence owner or provider lifecycle system. Historical Router identity aliases must resolve to the same durable provider classification rather than becoming duplicate providers. Direct SEC/EDGAR remains authoritative for Form 4.
 
-Avoidable degradation must not be hidden: cache/fallback/scheduling/load/recovery defects belong to #82. Genuine stale/missing/contradictory/low-quality required evidence must remain truthfully degraded. Lifecycle/promotion evidence remains #83 with TradeInsight #78; final zero-gap closure remains #84.
+Closure requires real executable proof for synthetic-provider onboarding, incomplete production-contract fail-closed behavior, free/paid configuration transitions, same-key manual entitlement recheck, downgrade/402/403 fallback and unrelated-capability isolation, current-provider compatibility, legacy Data Engine diagnostic order, and the permanent U.S.-equities/GLD-SLV-USO/No Execution boundaries.
+
+Final delivery evidence is canonical **CI Fast PASS** followed by deterministic impact-selected **CI Qualified PASS** on the identical candidate, then a fresh live-`main` check and expected-head merge of PR #101. Any source/governance change invalidates prior qualification for closure. No Stable/public SemVer release is created solely for #95.
+
+#94 remains a separate telemetry/usefulness residual and must not be bundled into #95. #66 remains future-blocked/not started.
