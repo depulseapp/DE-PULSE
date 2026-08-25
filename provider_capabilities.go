@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"sort"
 	"strings"
 	"time"
 )
@@ -27,20 +28,66 @@ func capabilityStatusFromHealth(configured bool, h string) string {
 	return "TEMPORARILY UNAVAILABLE"
 }
 
+// providerCapabilityLegacyDisplayOrder freezes only the pre-#95 Data Engine
+// presentation order. It is intentionally not provider onboarding metadata: a
+// future provider does not need to edit this list to become registered/routable.
+// Unlisted diagnostics sort after the retained legacy rows by provider/capability.
+func providerCapabilityLegacyDisplayOrder(provider, capability string) int {
+	key := providerKey(provider) + "|" + strings.ToLower(strings.TrimSpace(capability))
+	return map[string]int{
+		providerKey("Finnhub") + "|primary u.s. equity + earnings/peers":                 1,
+		providerKey("Finnhub") + "|analyst / insider premium context":                 2,
+		providerKey("Alpaca") + "|iex quotes / snapshots / liquidity":                 3,
+		providerKey("Alpaca") + "|sip movers / most active":                           4,
+		providerKey(tradeInsightProviderName) + "|adjusted daily ohlcv / corporate-action corroboration": 5,
+		providerKey("FRED") + "|rates / credit / conditions / usd":                    6,
+		providerKey("BLS") + "|inflation / labor / wages / ppi":                       7,
+		providerKey("EIA") + "|petroleum / natural gas / energy state":                8,
+		providerKey("Twelve Data") + "|fx / direct global context":                    9,
+		providerKey("Twelve Data") + "|vix / indices / historical recovery":          10,
+		providerKey("yfinance") + "|recovery-only public market context":             11,
+		providerKey("CBOE") + "|official vix validation / delayed close":             12,
+		providerKey("Marketaux") + "|stock news fallback":                            13,
+	}[key]
+}
+
 func buildProviderCapabilityRegistryFromRegistrations(regs []ProviderRegistration, settings Settings, secrets Secrets, health map[string]string, intel map[string]SymbolIntelligence, direct map[string]GlobalDriver) []ProviderCapabilityEntry {
+	type displayRow struct {
+		entry       ProviderCapabilityEntry
+		legacyOrder int
+	}
 	now := time.Now().UnixMilli()
-	rows := make([]ProviderCapabilityEntry, 0)
+	displayRows := make([]displayRow, 0)
 	for _, reg := range regs {
 		for _, diagnostic := range reg.Diagnostics {
 			status := "TEMPORARILY UNAVAILABLE"
 			if diagnostic.Status != nil {
 				status = diagnostic.Status(settings, secrets, health, intel, direct)
 			}
-			rows = append(rows, ProviderCapabilityEntry{
+			entry := ProviderCapabilityEntry{
 				Provider: reg.Name, Capability: diagnostic.Capability, Status: status,
 				Detail: diagnostic.Detail, UpdatedAt: now, Uses: append([]string(nil), diagnostic.Uses...),
-			})
+			}
+			displayRows = append(displayRows, displayRow{entry: entry, legacyOrder: providerCapabilityLegacyDisplayOrder(reg.Name, diagnostic.Capability)})
 		}
+	}
+	sort.SliceStable(displayRows, func(i, j int) bool {
+		left, right := displayRows[i], displayRows[j]
+		leftLegacy, rightLegacy := left.legacyOrder > 0, right.legacyOrder > 0
+		if leftLegacy != rightLegacy {
+			return leftLegacy
+		}
+		if leftLegacy && left.legacyOrder != right.legacyOrder {
+			return left.legacyOrder < right.legacyOrder
+		}
+		if left.entry.Provider != right.entry.Provider {
+			return strings.ToLower(left.entry.Provider) < strings.ToLower(right.entry.Provider)
+		}
+		return strings.ToLower(left.entry.Capability) < strings.ToLower(right.entry.Capability)
+	})
+	rows := make([]ProviderCapabilityEntry, 0, len(displayRows))
+	for _, row := range displayRows {
+		rows = append(rows, row.entry)
 	}
 	return rows
 }
