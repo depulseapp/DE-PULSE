@@ -1,0 +1,107 @@
+{
+  "schema": "DE.PULSE-V18-T8-PERFORMANCE-LOAD-SOAK-CONCURRENCY-RESOURCE-ASSURANCE-1",
+  "programIssue": 113,
+  "trackIssue": 121,
+  "targetVersion": "v18.10.0",
+  "state": "IN_PROGRESS",
+  "startedFromMainSha": "45b132abb22143c7decb35cfe5ad40dc5d27a748",
+  "rules": {
+    "reuseCanonicalRuntimeOwners": true,
+    "noParallelPerformanceOrBackpressureSubsystem": true,
+    "deterministicBoundedCiEvidencePreferredOverFragileWallClockBenchmarks": true,
+    "raceAndRandomizedExecutionRemainRequired": true,
+    "providerPressureMustPreserveProtectedCriticalCapacity": true,
+    "queuesAndPermitsMustConvergeAfterCancellationAndRecovery": true,
+    "duplicateProviderWorkMustRemainCoalesced": true,
+    "persistencePressureMustPreserveIntegrityAndRecovery": true,
+    "resourceEvidenceMustCoverGoroutineCpuMemoryGcAndLockRiskWhereMaterial": true,
+    "latencyEvidenceMustUseRepositoryOwnedMeaningfulBudgets": true,
+    "t9OrT10CertificationNotImplied": true
+  },
+  "requiredControlAreas": [
+    "provider pressure and protected capacity",
+    "scanner and scheduled/background job pressure",
+    "persistence pressure and lifecycle recovery",
+    "bounded queue and permit convergence",
+    "duplicate upstream work coalescing",
+    "goroutine and concurrency safety",
+    "CPU, memory and GC resource safety",
+    "lock/contention risk",
+    "UI/API latency budgets",
+    "race detector",
+    "randomized execution order",
+    "bounded soak/repeated-run recovery"
+  ],
+  "existingExecutableEvidence": [
+    {
+      "owner": "workload_backpressure_regression_test.go",
+      "covers": [
+        "provider-rest hard capacity and queue bounds",
+        "reserved Tier 0/1 capacity and queue headroom",
+        "low-priority shedding",
+        "freshness recovery priority under provider pressure",
+        "live subscription reserved headroom",
+        "provider rate-limit cooldown behavior"
+      ]
+    },
+    {
+      "owner": "active_market_reliability_regression_test.go",
+      "covers": [
+        "duplicate active-market snapshot burst coalesces to one real provider fetch",
+        "bounded provider pressure is projected truthfully as protected degradation",
+        "queued workers cancel cleanly under active-market pressure"
+      ]
+    },
+    {
+      "owner": ".github/workflows/ci-qualified.yml",
+      "covers": [
+        "full Go race detector lane",
+        "randomized Go test execution lane",
+        "repeated persistence transaction/restart challenge lane"
+      ]
+    }
+  ],
+  "newExecutableEvidence": [
+    {
+      "owner": "t8_runtime_pressure_resource_regression_test.go",
+      "test": "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
+      "covers": [
+        "repeated bounded provider-rest pressure",
+        "repeated scanner pressure",
+        "repeated background job pressure",
+        "repeated AI work pressure",
+        "hard queue/capacity bounds",
+        "cancellation convergence",
+        "permit release accounting",
+        "post-pressure admission recovery"
+      ],
+      "qualification": "PENDING_EXACT_HEAD_FAST_AND_QUALIFIED"
+    }
+  ],
+  "knownCoverageGaps": [
+    {
+      "id": "T8-PERSISTENCE-PRESSURE",
+      "status": "OPEN",
+      "required": "Bind or add deterministic repeated persistence pressure/integrity/restart evidence beyond the existing T5 lifecycle census."
+    },
+    {
+      "id": "T8-PROCESS-RESOURCE-SAFETY",
+      "status": "OPEN",
+      "required": "Bind deterministic evidence for goroutine convergence plus CPU/memory/GC/lock risk without brittle host-dependent thresholds."
+    },
+    {
+      "id": "T8-LATENCY-BUDGETS",
+      "status": "OPEN",
+      "required": "Identify repository-owned UI/API latency budgets and prove protected-session responsiveness under pressure."
+    },
+    {
+      "id": "T8-EXACT-HEAD-QUALIFICATION",
+      "status": "OPEN",
+      "required": "Fast and identical-head Qualified must pass with T8 assurance gate before verification."
+    }
+  ],
+  "gapDeclarationState": "CURRENT",
+  "completionCondition": "T8 may become COMPLETE only after every required control area is bound to current executable evidence, all material performance/concurrency/resource gaps are fixed or source-proven non-applicable, the dedicated T8 fail-closed assurance gate passes, and exact-head Fast plus identical-head Qualified prove race/randomized/persistence/runtime/browser evidence without weakening prior gates.",
+  "t9StartedByThisArtifact": false,
+  "t10StartedByThisArtifact": false
+}
