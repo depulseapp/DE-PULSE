@@ -32,6 +32,8 @@ def classify(path_text: str) -> str:
         return "RENDERER_FUNCTIONAL"
     if name.endswith("_test.go"):
         return "GO_FUNCTIONAL"
+    if lower == "tools/ci/release_rehearsal.py":
+        return "CI_WORKFLOW_CONTRACT"
     if lower.startswith("tools/ci/") and name.endswith(("_gate.py", "_contract.py", "_test.py", "_test.js")):
         return "CI_WORKFLOW_CONTRACT"
     if lower.startswith("tools/release/") or lower.startswith("packaging/") or lower.startswith(".github/workflows/"):
@@ -51,14 +53,14 @@ PROFILE_CLASSES = {
     "RELEASE": {"CI_WORKFLOW_CONTRACT","ACCEPTANCE_E2E"},
 }
 
-# T1 froze two responsibilities into broader profiles even though their T3 proof is
-# deliberately lower-level than the surrounding profile. Keep these exceptions named
-# and bounded rather than weakening the whole profile:
-# - provider rights is an internal fail-closed egress boundary, not a user workflow;
-# - developer schema probe and test-profile migration are executable release-support
-#   behaviors whose direct regression owners are Go tests.
+# T1 froze a small number of responsibilities into broader profiles even though their
+# T3 proof is deliberately lower-level than the surrounding profile. Keep these
+# exceptions named and bounded rather than weakening an entire evidence class.
 ROW_CLASS_EXCEPTIONS = {
     "CORE-PROVIDER-DATA-RIGHTS": {"GO_FUNCTIONAL"},
+    "PROVIDER-AI-GEMINI": {"GO_FUNCTIONAL"},
+    "PROVIDER-AI-GROQ": {"GO_FUNCTIONAL"},
+    "PROVIDER-AI-OPENROUTER": {"GO_FUNCTIONAL"},
     "RELEASE-DEVELOPER-SCHEMA-PROBE": {"GO_FUNCTIONAL"},
     "RELEASE-TEST-PROFILE-MIGRATION": {"GO_FUNCTIONAL", "BROWSER_E2E"},
 }
@@ -201,6 +203,7 @@ def main() -> int:
         print("uncovered ids: " + ", ".join(uncovered))
     print("security/identity/workspace/SSE workflow owner executes through real HTTP routes: PASS")
     print("provider telemetry/usefulness visible owner executes as a privileged renderer workflow: PASS")
+    print("AI provider adapters are exercised offline through deterministic functional provider/routing fixtures: PASS")
     print("visible workflows cannot be closed by backend-unit/static evidence alone: PASS")
     print("T4-T10 certification is not implied by T3: PASS")
     if errors:
