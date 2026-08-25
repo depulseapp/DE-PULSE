@@ -119,7 +119,7 @@ func (e *Engine) sampleRuntimeLoad() {
 	e.mu.RUnlock()
 	liveSubscriptions := []LiveSubscriptionBudgetDiagnostics{
 		liveSubscriptionBudget("Alpaca IEX", alpacaPlanMaxSymbols, alpacaActiveTarget, alpacaActive, alpacaConnected),
-		liveSubscriptionBudget("Finnhub", finnhubPlanMaxSymbols, finnhubActiveTarget, finnhubActive, alpacaConnected),
+		liveSubscriptionBudget("Finnhub", finnhubPlanMaxSymbols, finnhubActiveTarget, finnhubActive, finnhubConnected),
 	}
 	broadSnapshots := e.broadSnapshotDiagnostics()
 	httpDiag := HTTPRuntimeDiagnostics{}
