@@ -16,7 +16,7 @@
 
 The fresh post-#94 #65 semantic-overlap audit found no actionable v18 provider-intelligence product leaf. #107 is therefore the only remaining v18 action and is a no-feature Professional Closure process slice. It must bind the final historical-leaf dispositions, prove projection/evidence convergence, close #65, and leave #66 separate/not started.
 
-The completed executable sequence remains durable authority: **#80 baseline -> #81 Smart Provider Router v2 production adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 provider onboarding -> #94 observational usefulness telemetry**. The canonical provider-capability matrix remains `governance/data-health/provider-capability-matrix.json`; no historical version label reopens delivered work.
+The completed executable sequence remains durable authority: **#80 baseline -> #81 Smart Provider Router v2 production adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 provider onboarding -> #94 observational usefulness telemetry**. The canonical provider-capability matrix remains `governance/data-health/provider-capability-matrix.json`; no historical version label reopens delivered work. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable, contradictory or genuinely plan-limited.
 
 ## #107 roadmap contract
 
