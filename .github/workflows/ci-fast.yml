@@ -68,6 +68,8 @@ jobs:
         run: python3 tools/ci/v18_t2_unit_contract_assurance_gate.py
       - name: V18 T3 functional / integration / end-to-end assurance
         run: python3 tools/ci/v18_t3_functional_assurance_gate.py
+      - name: V18 T4 edge / adversarial / failure / data-truth assurance
+        run: python3 tools/ci/v18_t4_edge_failure_data_truth_assurance_gate.py
       - name: Platform-neutral source provenance regression
         run: python3 tools/ci/source_provenance_test.py
       - name: Release identity
@@ -153,6 +155,7 @@ jobs:
             echo '- v18 T1 feature reality/quality structural audit: PASS'
             echo '- v18 T2 unit/contract/static/property census: PASS'
             echo '- v18 T3 functional/integration/end-to-end census: PASS'
+            echo '- v18 T4 edge/adversarial/failure/data-truth census: PASS'
             echo '- Git-object provenance: PASS'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
@@ -192,7 +195,7 @@ jobs:
       - name: Apply conservative branch hygiene
         run: python3 tools/ci/branch_hygiene.py --apply --json-out branch-hygiene.json
       - name: Retain cleanup report
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0 # v7.0.1
         with:
           name: DE-PULSE-branch-hygiene-${{ github.sha }}
           path: branch-hygiene.json
