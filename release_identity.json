@@ -6,7 +6,7 @@
   "channel": "STABLE",
   "stable_baseline": "v18.9.1",
   "previous_stable": "v18.9.1",
-  "scope": "10/10 Future-Proof Final v18 Closure: exhaustive T1-T10 assurance, real macOS Apple Silicon and Windows x64 packaged lifecycle/upgrade certification, immutable source/artifact provenance, durable regression ownership, GitHub-portable handoff and permanent No Execution/provider/data-truth boundaries; release authorization is based on T10 exact-head Fast #1097 and identical-head Qualified #219 and remains subject to fresh release-branch Fast/Qualified plus canonical G11-G16 no-rebuild publication",
+  "scope": "10/10 Future-Proof Final v18 Closure: exhaustive T1-T10 assurance, real macOS Apple Silicon and Windows x64 packaged lifecycle/upgrade certification, immutable source/artifact provenance, durable regression ownership, GitHub-portable handoff and permanent No Execution/provider/data-truth boundaries; release authorization is based on T10 exact-head Fast #1097 and identical-head Qualified #219 and remains subject to fresh release-branch Fast/Qualified plus canonical G11-G16 no-rebuild publication; G12 consistency repair aligns the legacy version-consistency assertion with canonical content-derived renderer cache identity and exact release-contract legacy/documentation semantics",
   "bundle_version": "181000",
   "runtime_config": "PersonalMarketTerminal",
   "application_bundle": "De-Pulse.app",

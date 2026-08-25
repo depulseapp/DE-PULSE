@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from release_identity import asset_cache_token
+
 ROOT = Path(__file__).resolve().parents[2]
 I = json.loads((ROOT / "release_identity.json").read_text())
 VERSION = str(I["version"])
@@ -90,7 +92,7 @@ overlay_identity = bool(overlay_name) and (
     f"DEPULSE_RELEASE_VERSION = '{VERSION}'" in overlay
     and f"DEPULSE_RELEASE_BUILD_ID = '{BUILD}'" in overlay
     and "DEPULSE_RELEASE_QA_ENTRY" in overlay
-    and f"{overlay_name}?v={VERSION}" in index
+    and f"{overlay_name}?v={asset_cache_token(overlay_name, canonical_git=True)}" in index
 )
 need(renderer_identity or patch_identity or overlay_identity, "renderer/patch/release-overlay version mismatch")
 
