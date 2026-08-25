@@ -49,15 +49,67 @@
     "SURF-ADMINISTRATION": {
       "owners": ["tests/renderer/administration_surface_test.js"],
       "rationale": "This regression was added by qualified corrective #126 after the immutable discovery ledger and is the current canonical renderer evidence for the Administration MOVE."
+    },
+    "CAP-OPPORTUNITY-RADAR": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "The T7 composition regression executes the existing Opportunity Radar role/responsive and consolidation contracts and verifies its canonical merged rapid-dislocation explanation plus No Execution wording."
+    },
+    "CAP-RAPID-MOVE": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "The focused T7 renderer regression verifies the Rapid Move SSE projection, deduped warning notification, confirmed-vs-validating catalyst wording and merged Opportunity Radar presentation without introducing a new navigation or execution surface."
+    },
+    "CORE-MASTER-SYMBOL-BOUNDARY": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "The T7 composition executes the canonical symbol/desk renderer regression proving Tracked Symbols add/global-remove/exact Undo/final-desk protection and strict U.S.-listed boundary UX."
+    },
+    "CORE-PROVIDER-TELEMETRY": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "The T7 composition executes the focused provider telemetry surface regression, including transport reliability wording and privileged-role presentation."
+    },
+    "CORE-PROVIDER-USEFULNESS": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "The focused provider surface regression proves usefulness is privileged, advisory-only and explicitly states no routing effect; non-privileged roles remove the semantic projection."
+    },
+    "JOB-CATALYST-REACTION-WATCH": {
+      "owners": ["tests/renderer/responsive_ui_test.py"],
+      "rationale": "The current Playwright matrix explicitly renders the Earnings & Material Catalyst Watch adaptive sidebar row and fails on clipping/ellipsis/line-clamp or loss of the event-driven label across the governed responsive fixture."
+    },
+    "SHELL-IDENTITY-SIGNOUT": {
+      "owners": ["tests/renderer/t7_visible_surface_assurance_test.js"],
+      "rationale": "Qualified role/responsive execution owns principal/sign-out visibility while the T7 composition verifies canonical logout action binding and visible recoverable failure feedback."
+    },
+    "SURF-AI-COPILOT": {
+      "owners": ["tests/renderer/responsive_ui_test.py"],
+      "rationale": "The Playwright matrix explicitly asserts AI hierarchy provider → target → received context → review → result and includes AI in the full responsive surface matrix."
+    },
+    "SURF-MARKET-INTELLIGENCE": {
+      "owners": ["tests/renderer/responsive_ui_test.py", "tests/renderer/surface_consolidation_test.js"],
+      "rationale": "Current browser evidence asserts Dashboard-to-Market-Intelligence ownership/order, Global Market Driver semantics and layout, while consolidation protects legacy route demotion and degraded-vs-zero truth."
+    },
+    "SURF-SETTINGS": {
+      "owners": ["tests/renderer/responsive_ui_test.py"],
+      "rationale": "The current Playwright matrix asserts Settings hierarchy, save-bar non-overlap, middle-page scroll restoration, header feedback context preservation, Auto-Start placement and cross-device scaling."
     }
   },
-  "gapDeclarationState": "PENDING_FIRST_EXECUTION",
+  "gapDeclarationState": "CURRENT",
   "knownCoverageGaps": [],
-  "visibleResponsibilityCount": null,
-  "coveredVisibleResponsibilityCount": null,
-  "uncoveredResponsibilityCount": null,
-  "nonVisibleResponsibilityCount": null,
-  "firstExecutableCensus": null,
+  "visibleResponsibilityCount": 34,
+  "coveredVisibleResponsibilityCount": 34,
+  "uncoveredResponsibilityCount": 0,
+  "nonVisibleResponsibilityCount": 146,
+  "firstExecutableCensus": {
+    "headSha": "85bf1bb56538dbee255dc8b0c05a4fa426f9992d",
+    "fastRunNumber": 1053,
+    "fastRunId": 32880360092,
+    "effectiveResponsibilities": 180,
+    "visibleResponsibilities": 34,
+    "coveredVisibleResponsibilities": 24,
+    "uncoveredVisibleResponsibilities": 10,
+    "nonVisibleResponsibilities": 146,
+    "dispositions": {"KEEP": 26, "MERGE": 5, "MOVE": 2, "REMOVE": 1, "RENAME": 0, "REDESIGN": 0, "NOT_USER_VISIBLE": 146},
+    "uncoveredIds": ["CAP-OPPORTUNITY-RADAR", "CAP-RAPID-MOVE", "CORE-MASTER-SYMBOL-BOUNDARY", "CORE-PROVIDER-TELEMETRY", "CORE-PROVIDER-USEFULNESS", "JOB-CATALYST-REACTION-WATCH", "SHELL-IDENTITY-SIGNOUT", "SURF-AI-COPILOT", "SURF-MARKET-INTELLIGENCE", "SURF-SETTINGS"],
+    "finding": "The first executable T7 census found no unowned physical UI placement; it found ten visible responsibilities whose current executable UI evidence was not yet bound to the immutable T1 rows. Current source/test review resolves nine through existing focused/browser owners and adds one focused Rapid Move presentation assertion without changing product runtime behavior."
+  },
   "closureCensus": null,
   "completionCondition": "Every effective T1 responsibility has a T7 expectation and explicit visibility resolution; every visible responsibility has one KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition plus current executable UI/UX/IA/content/accessibility evidence; all material UI debt is corrected or source-proven non-applicable; exact-head Fast and identical-head Qualified pass before expected-head merge.",
   "t8CompanionIssue": 121,
