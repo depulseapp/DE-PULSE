@@ -78,20 +78,33 @@
         "effectiveShippedV18ResponsibilityCount": 180,
         "uncoveredResponsibilityCount": 0,
         "assuranceState": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json"
+      },
+      {
+        "track": "T3",
+        "issue": 116,
+        "status": "COMPLETE",
+        "frozenHeadSha": "d094956465b48639e05efeb5eff988ec5f2bf840",
+        "fastRunId": 32864424807,
+        "qualifiedRunId": 32864615125,
+        "mergedPullRequest": 129,
+        "mergedCommitSha": "cf0cc9aa877188775d5c36cb805e6c8935d776bb",
+        "effectiveShippedV18ResponsibilityCount": 180,
+        "uncoveredResponsibilityCount": 0,
+        "assuranceState": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T3_FUNCTIONAL_ASSURANCE.json"
       }
     ],
-    "nextChildIssue": 116,
-    "nextChildTrack": "T3",
-    "nextCompanionChildIssue": 117,
-    "nextCompanionChildTrack": "T4",
+    "nextChildIssue": 117,
+    "nextChildTrack": "T4",
+    "nextCompanionChildIssue": 118,
+    "nextCompanionChildTrack": "T5",
     "nextGovernedTracks": [
-      {"track":"T3","issue":116,"status":"IN_PROGRESS"},
-      {"track":"T4","issue":117,"status":"NOT_STARTED"}
+      {"track":"T4","issue":117,"status":"IN_PROGRESS"},
+      {"track":"T5","issue":118,"status":"NOT_STARTED"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": false,
       "T10Started": false,
-      "assuranceCeilingAfterT2": "IMPLEMENTED_UNVERIFIED"
+      "assuranceCeilingAfterT3": "IMPLEMENTED_UNVERIFIED"
     },
     "futureProgramBlockerIssue": 113,
     "futureBlockedIssue": 66,
