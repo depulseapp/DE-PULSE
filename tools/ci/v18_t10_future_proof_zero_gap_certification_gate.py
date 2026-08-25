@@ -92,6 +92,13 @@ def regression_ownership_errors() -> tuple[list[str], int]:
     omissions2 = scan2.get("omissionsFound") or []
     exclusions = recon.get("excludedFutureSourceCarryForward") or []
     excluded_ids = {str(row.get("id") or "") for row in exclusions if isinstance(row, dict)}
+    physical = {
+        str(row.get("id") or ""): row
+        for row in features
+        if isinstance(row, dict) and str(row.get("id") or "")
+    }
+    parent_overrides = recon.get("scanParentOverrides") or {}
+    parent_by_category = recon.get("scanParentByCategory") or {}
 
     effective_ids: list[str] = []
     for row in features:
@@ -114,12 +121,31 @@ def regression_ownership_errors() -> tuple[list[str], int]:
                 errors.append(f"{source_name}: omission scan contains a non-object row")
                 continue
             row_id = str(row.get("id") or "")
+            category = str(row.get("category") or "")
             effective_ids.append(row_id)
+
+            parent_id = str(parent_overrides.get(row_id) or parent_by_category.get(category) or "")
+            parent = physical.get(parent_id)
+            if not parent_id or not isinstance(parent, dict):
+                errors.append(f"{row_id}: omission-scan responsibility has no valid canonical parent")
+                continue
+
+            # Match the immutable T1 resolver: a scan may carry direct tests, but when
+            # discovery recorded only source owners (for example BACKGROUND_JOB rows),
+            # regression evidence is inherited only from its named canonical parent.
             tests = [str(x) for x in row.get("tests") or []]
             if not tests:
-                errors.append(f"{row_id}: omission-scan responsibility has no regression tests")
+                tests = [str(x) for x in parent.get("existingRegressionOwners") or []]
+            if not tests:
+                errors.append(f"{row_id}: omission-scan responsibility and canonical parent have no regression tests")
             elif not any(owner_exists(test) for test in tests):
                 errors.append(f"{row_id}: omission-scan regression owner no longer exists")
+
+            durable = [str(x) for x in parent.get("durableRegressionOwner") or []]
+            if "#123" not in durable:
+                errors.append(f"{row_id}: canonical parent {parent_id} lost T10/#123 durable binding")
+            if not any(owner_exists(owner) for owner in durable):
+                errors.append(f"{row_id}: canonical parent {parent_id} has no executable durable regression owner")
 
     if len(effective_ids) != 180:
         errors.append(f"effective T1 regression responsibility count drifted: {len(effective_ids)} != 180")
