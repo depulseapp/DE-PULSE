@@ -9,7 +9,16 @@
 
 Future labels are reservations until their own G0/G1. Every patch has one primary implementation responsibility. Before implementation, live source is classified `INHERITED`, `EXTEND_EXISTING_OWNER`, `REPLACE_CONSOLIDATE`, `NEW_RESIDUAL`, or `EXTERNAL_BLOCKED`. A roadmap label never proves that implementation is missing and never authorizes a duplicate canonical owner.
 
-The machine conservation ledger is `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`. It contains 72 named requirements. Every applicable requirement must remain assigned to one primary planned version or explicit inherited/external disposition. `UNASSIGNED`, unexplained carry-forward, or unevidenced closure blocks the patch and dependency band.
+The machine conservation ledger is `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`. It contains 72 named #66 requirements. Every applicable requirement must remain assigned to one primary planned version or explicit inherited/external disposition. `UNASSIGNED`, unexplained carry-forward, or unevidenced closure blocks the patch and dependency band.
+
+### Pre-v19 residual guard
+
+v18 is closed and the immutable Stable remains `v18.9.1-stable`. The live open-issue audit at planning time found no open v18 product issue. Closure, however, must never hide a newly proven historical miss. At every future G0, GitHub issues/comments and current executable source/evidence are rechecked for relevant v18 residuals. Any newly proven v18 requirement/defect receives exactly one disposition:
+- `DELIVERED_OR_INHERITED` — executable evidence proves it is already satisfied;
+- `MAP_TO_NAMED_V19_REQUIREMENT` — the residual genuinely belongs to an existing v19 canonical owner and is attached to a specific HOST row/version with rationale; or
+- `PRE_V19_CORRECTIVE` — the residual is a material v18 correctness/security/reliability prerequisite and must be fixed/certified before v19 implementation advances.
+
+A historical issue being closed is not by itself proof of implementation, and a newly discovered v18 prerequisite may preempt the future roadmap. No speculative v18 version is reserved in advance; if a corrective is actually required, its public version is chosen from live release identity/SemVer at that time and is fully G0–G16 governed.
 
 Each dependency band ends with a no-feature zero-gap closure. A closure patch may not implement forgotten feature work merely to make the ledger appear clean.
 
@@ -180,4 +189,4 @@ A patch is never closed from source inspection, documentation, a unit test or on
 
 ## 11. Stop conditions
 
-Stop and reconcile instead of advancing when an applicable ledger row is unassigned; an existing canonical owner is being duplicated; a dependency is incomplete; a REQUIRED platform has material parity debt; provider rights are unknown; product entitlement or tenant isolation cannot be proven; recovery behavior is undefined; or an evidence fingerprint no longer matches the candidate. External/provider blockers receive a named `EXTERNAL_BLOCKED` disposition and never authorize bypass.
+Stop and reconcile instead of advancing when an applicable ledger row is unassigned; an existing canonical owner is being duplicated; a dependency is incomplete; a REQUIRED platform has material parity debt; provider rights are unknown; product entitlement or tenant isolation cannot be proven; recovery behavior is undefined; a material v18 residual/prerequisite is newly proven and not dispositioned; or an evidence fingerprint no longer matches the candidate. External/provider blockers receive a named `EXTERNAL_BLOCKED` disposition and never authorize bypass.
