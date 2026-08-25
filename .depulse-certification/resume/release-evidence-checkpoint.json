@@ -12,9 +12,7 @@
     "promotionRun": 32546555659,
     "certificationRun": 32546555659
   },
-  "currentCandidate": {
-    "qualificationHead": "d7276c3421dd2b4529ac2a987466be3cffa05678"
-  },
+  "currentCandidate": {"qualificationHead": "d7276c3421dd2b4529ac2a987466be3cffa05678"},
   "evidence": {
     "G0-G10": {"status": "PASS", "fastRun": 32546289014, "qualifiedRun": 32546364036},
     "G10": {"status": "PASS", "fastRun": 32546289014, "qualifiedRun": 32546364036},
@@ -26,35 +24,23 @@
     "G16": {"status": "PASS_CLOSED", "runId": 32546555659, "artifactId": 9468751229, "artifactDigest": "sha256:2ea31e27b7ae1e3d8779da61a7aecdfeb9059c2bb2b3bb491c3e893acc8caf03"},
     "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32546555659, "tag": "v18.9.1-stable", "certifiedCandidate": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9"}
   },
-  "releaseScope": {
-    "issue": 64,
-    "pullRequest": 69,
-    "requirement": "ADAPT-RUNTIME-CRASH-001",
-    "disposition": "COMPLETED_IN_V18.9.1_STABLE"
-  },
+  "releaseScope": {"issue": 64, "pullRequest": 69, "requirement": "ADAPT-RUNTIME-CRASH-001", "disposition": "COMPLETED_IN_V18.9.1_STABLE"},
   "postStableLearning": {
     "continuityIssue": 102,
     "continuityDisposition": "RESOLVED_WITHOUT_STABLE_REBUILD_OR_REPUBLICATION",
-    "continuityCandidate": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
-    "continuityFastRun": 32803346202,
-    "continuityQualifiedRun": 32803373245,
-    "continuityMergeCommit": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
-    "continuityMainRun": 32803734938,
     "providerTelemetryIssue": 94,
     "providerTelemetryDisposition": "COMPLETE_NO_STABLE_RELEASE",
-    "providerTelemetryCandidate": "ae669a9a39604908086f36f75a78a9c1c1f93ae8",
-    "providerTelemetryFastRun": 32807961635,
-    "providerTelemetryQualifiedRun": 32808052157,
-    "providerTelemetryProductMerge": "249ce52d3af513b763ac46ac22a1b28ce01bd346",
-    "providerTelemetryClosureMerge": "d7b46d5d0ea50a47ad47e2f8974b6488e84b7536",
-    "providerTelemetryMainRun": 32809656631,
     "professionalClosureIssue": 107,
     "professionalClosureRequirement": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
-    "professionalClosureStatus": "IN_PROGRESS_NO_PRODUCT_BEHAVIOR_CHANGE",
-    "professionalClosureBaselineMain": "d7b46d5d0ea50a47ad47e2f8974b6488e84b7536",
+    "professionalClosureDisposition": "COMPLETE_NO_PRODUCT_BEHAVIOR_CHANGE_NO_STABLE_RELEASE",
+    "professionalClosureCandidate": "dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2",
+    "professionalClosureFastRun": 32811045734,
+    "professionalClosureQualifiedRun": 32811081438,
+    "professionalClosureMerge": "e9c236b2b9f229968f93ffe9ac600f45080389a7",
+    "professionalClosureMainRun": 32811424765,
     "professionalClosureAuditComment": 5405370494,
-    "note": "#107 is a process-only parent-program closure after the fresh #65 semantic-overlap audit found no actionable v18 product leaf. It must not rebuild, republish or redefine v18.9.1 Stable evidence."
+    "note": "#107 completed the v18 provider-intelligence program by evidence only. It did not rebuild, republish or redefine v18.9.1 Stable and did not start #66."
   },
-  "nextRequiredEvidence": "#107 exact-head Fast, same-head impact-selected Qualified, expected-head merge and post-merge main continuity before #107/#65 close. #66 remains separate/not started.",
-  "updatedAt": "2026-08-24T21:51:00-07:00"
+  "nextRequiredEvidence": "No v18 provider-intelligence release evidence is pending. Future work requires a fresh explicit program-selection decision; #66 remains separate/not started.",
+  "updatedAt": "2026-08-24T22:06:00-07:00"
 }

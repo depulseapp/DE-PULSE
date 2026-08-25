@@ -2,20 +2,18 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider onboarding:** #95 / PR #101  
-**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Active branch:** `adapt-provider-professional-closure-001`  
+**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
+**Closure branch:** `adapt-provider-professional-closure-001-closure`  
 **Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Final qualification evidence:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/final-qualification-evidence.json`  
+**Parent program:** #65 complete by executable evidence.  
 **Future hosted program:** #66 remains blocked/not started.
 
-#70/#73 remain the completed CI/repository control-plane foundation. #94 completed on exact candidate `ae669a9a39604908086f36f75a78a9c1c1f93ae8` with Fast #976 / `32807961635`, Qualified #196 / `32808052157`, PR #105 merge `249ce52d3af513b763ac46ac22a1b28ce01bd346`, closure PR #106 merge `d7b46d5d0ea50a47ad47e2f8974b6488e84b7536`, and main Fast #981 / `32809656631` green.
+#70/#73 remain the CI/repository control-plane foundation. #107 implementation candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2` passed Fast #983 / `32811045734` and Qualified #198 / `32811081438` on the identical head. Planner v3 selected ci-harness + portability + backend; all three portability targets, full Go suite, race detector and randomized package order passed. PR #108 expected-head merged as `e9c236b2b9f229968f93ffe9ac600f45080389a7`; main Fast #984 / `32811424765` passed branch hygiene plus both Post-Stable continuity checks while product Fast was skipped as designed.
 
-## #107 CI contract
+## Final closure convergence contract
 
-#107 is process/governance only. The active closure authority is `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`; all six blocking gaps remain unresolved until immutable evidence exists. Regular Fast must validate ledger completeness/enforcement, current-state projection convergence, Adaptive Resume/portability, source health/Data Health recurrence, Post-Stable continuity and all other impact-selected checks without weakening any gate.
+The completed active process authority remains #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`; its canonical ledger is fully VERIFIED and its final evidence file binds the immutable implementation candidate, Fast, Qualified, expected-head merge and main sentinel. The closure branch changes governance/checkpoint metadata only and must itself earn canonical Fast and impact-selected Qualified before expected-head merge.
 
-After exact-head Fast PASS, mark the PR Ready and require Planner v3 impact-selected Qualified PASS on the identical candidate. Skipped lanes are acceptable only when Planner v3 classifies them N/A from the process-only delta. Re-fetch `main` and PR head before expected-head merge. Then require the main-push Fast branch-hygiene and Post-Stable continuity sentinel to remain green.
-
-No direct-main patch, force push, retry branch, temporary workflow, gate waiver or Release workflow is allowed. Final ledger verification and #107/#65 closure happen only after the GitHub run/merge/main-sentinel objects exist. #66 remains blocked/not started.
+No direct-main patch, force push, retry branch, temporary workflow, gate waiver or Release workflow is allowed. Immutable v18.9.1 Stable evidence remains unchanged. No next product reservation exists; #66 remains separate/not started.

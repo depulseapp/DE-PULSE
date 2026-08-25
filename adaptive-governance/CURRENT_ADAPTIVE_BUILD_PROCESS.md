@@ -2,22 +2,21 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider onboarding:** #95 / PR #101  
 **Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Active branch:** `adapt-provider-professional-closure-001`  
+**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
 **Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Parent program:** #65 complete by executable evidence.  
 **Future hosted program:** #66 remains blocked/not started.
 
 ## Retained Adaptive Data Health process contract
 
-The completed sequence **#81/#82/#83/#78/#84** remains inherited executable history. Smart Provider Router v2 retains its existing **fail closed** behavior and **canonical freshness** contract; provider-capability classification, scoped degradation/recovery and lifecycle/readiness remain active constraints. Completed #95 registration-aware recurrence and completed #94 observational usefulness telemetry extend those owners rather than creating parallel routing, health, cache, persistence, telemetry or reconciliation authorities.
+The completed sequence **#81/#82/#83/#78/#84** remains inherited executable history. Smart Provider Router v2 retains its **fail closed** behavior and **canonical freshness** contract; provider-capability classification, scoped degradation/recovery and lifecycle/readiness remain active constraints. Completed #95 registration-aware recurrence and #94 observational usefulness extend those existing owners rather than creating parallel routing, health, cache, persistence, telemetry or reconciliation authorities.
 
-## Active #107 process
+## Current process state
 
-#107 is PROCESS / PROFESSIONAL CLOSURE only. Product behavior must remain unchanged and the next product capability stays blocked while #107 is `IN_PROGRESS`. Every blocking item in `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json` remains OPEN/IMPLEMENTED_UNVERIFIED until executable evidence proves it; documentation-only closure is prohibited.
+#107 is complete by exact evidence: candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2`, Fast #983 / `32811045734`, Qualified #198 / `32811081438`, PR #108 expected-head merge `e9c236b2b9f229968f93ffe9ac600f45080389a7`, and main Fast #984 / `32811424765`. Its six-gap ledger is VERIFIED. No product behavior changed and no Release workflow was used.
 
-Use LOOKUP -> COMPARE -> CLASSIFY -> DECIDE evidence already recorded by the fresh #65 audit. Delivered foundations are not reimplemented. Vendor-contract-gated TradeInsight capabilities remain fail closed; direct SEC/EDGAR remains authoritative for Form 4. No endpoint/schema guessing, no automatic lifecycle promotion, no parallel provider subsystem and no v19/#66 implementation is permitted.
+Do not reopen completed v18 work from documentation labels. Unverified TradeInsight REST/schema capabilities remain fail closed and direct SEC/EDGAR remains Form 4 authority. No endpoint/schema guessing, automatic lifecycle promotion or parallel provider subsystem is allowed.
 
-Delivery order is fixed: coherent process packet -> canonical exact-head Fast -> impact-selected Qualified on the identical head -> fresh `main` guard -> expected-head merge -> post-merge main continuity -> final evidence binding -> close #107 and parent #65. Preserve G0-G16 and the canonical three-workflow architecture throughout.
+If future development is explicitly requested, use LOOKUP -> COMPARE -> CLASSIFY -> DECIDE from current GitHub state before creating any new reservation. #66 remains separate/not started until that fresh decision. Any future delivery still uses G0-G16, exact-head Fast, impact-selected Qualified and expected-head merge.
