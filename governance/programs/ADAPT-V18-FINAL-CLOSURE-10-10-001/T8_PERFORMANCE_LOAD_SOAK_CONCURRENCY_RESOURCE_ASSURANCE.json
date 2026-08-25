@@ -63,7 +63,7 @@
   ],
   "newExecutableEvidence": [
     {
-      "owner": "t8_runtime_pressure_resource_regression_test.go",
+      "owner": "workload_backpressure_regression_test.go",
       "test": "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
       "covers": [
         "repeated bounded provider-rest pressure",
