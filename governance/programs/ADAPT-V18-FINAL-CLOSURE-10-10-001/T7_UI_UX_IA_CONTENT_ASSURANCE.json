@@ -90,6 +90,41 @@
     "plannerSelectedJobs": ["ci-harness","backend","renderer","chrome","webkit","security-rights"],
     "conclusion": "FAST_PASS_QUALIFICATION_REQUIRED"
   },
+  "preMergeQualificationEvidence": {
+    "headSha": "8aa98da8f6981e9ab308b0fe4a719d1f07c00982",
+    "fastRunNumber": 1061,
+    "fastRunId": 32885400188,
+    "qualifiedRunNumber": 213,
+    "qualifiedRunId": 32885540291,
+    "effectiveResponsibilities": 180,
+    "visibleResponsibilities": 34,
+    "coveredVisibleResponsibilities": 34,
+    "uncoveredVisibleResponsibilities": 0,
+    "nonVisibleResponsibilities": 146,
+    "dispositions": {"KEEP":26,"MERGE":5,"MOVE":2,"REMOVE":1,"RENAME":0,"REDESIGN":0,"NOT_USER_VISIBLE":146},
+    "plannerSelectedJobs": ["ci-harness","backend","renderer","chrome","webkit","security-rights","db-integration"],
+    "responsiveEvidence": {
+      "canonicalOwner": "tests/renderer/responsive_ui_test.py",
+      "qualifiedChromeJobId": 97925219980,
+      "checksPassed": 393,
+      "checksTotal": 393,
+      "viewports": 15,
+      "surfaces": 21,
+      "fullMatrix": true
+    },
+    "qualifiedEvidence": [
+      "CI/harness PASS",
+      "backend full Go suite PASS",
+      "race detector PASS",
+      "randomized package order PASS",
+      "persistence/DB integration PASS",
+      "renderer contracts PASS",
+      "Chrome canonical responsive matrix 393/393 across 15 viewports and 21 surfaces PASS",
+      "WebKit compatibility PASS",
+      "security/data-rights PASS"
+    ],
+    "conclusion": "PRE_MERGE_QUALIFIED"
+  },
   "closureCensus": null,
   "completionCondition": "Every effective T1 responsibility has a T7 expectation and explicit visibility resolution; every visible responsibility has one KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition plus current executable UI/UX/IA/content/accessibility evidence; all material UI debt is corrected or source-proven non-applicable; exact-head Fast and identical-head Qualified pass before expected-head merge.",
   "t8CompanionIssue": 121,
