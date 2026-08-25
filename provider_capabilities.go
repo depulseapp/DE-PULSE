@@ -14,13 +14,11 @@ func capabilityStatusFromHealth(configured bool, h string) string {
 	if strings.Contains(s, "entitlement") || strings.Contains(s, "subscription") || strings.Contains(s, "plan limited") || strings.Contains(s, "403") || strings.Contains(s, "payment required") {
 		return "PLAN LIMITED"
 	}
-
 	for _, bad := range []string{"unavailable", "degraded", "failed", "error", "offline", "disconnected", "not configured", "checking", "loading"} {
 		if strings.Contains(s, bad) {
 			return "TEMPORARILY UNAVAILABLE"
 		}
 	}
-
 	for _, good := range []string{"healthy", "available", "connected", "direct fx", "official"} {
 		if strings.Contains(s, good) {
 			return "AVAILABLE"
@@ -29,78 +27,26 @@ func capabilityStatusFromHealth(configured bool, h string) string {
 	return "TEMPORARILY UNAVAILABLE"
 }
 
-func buildProviderCapabilityRegistry(settings Settings, secrets Secrets, health map[string]string, intel map[string]SymbolIntelligence, direct map[string]GlobalDriver) []ProviderCapabilityEntry {
+func buildProviderCapabilityRegistryFromRegistrations(regs []ProviderRegistration, settings Settings, secrets Secrets, health map[string]string, intel map[string]SymbolIntelligence, direct map[string]GlobalDriver) []ProviderCapabilityEntry {
 	now := time.Now().UnixMilli()
-	usesCore := []string{"Market Regime", "Day", "Swing", "Long", "Discovery", "Research", "Decision Queue", "Trade Readiness"}
-	hasPremiumIntel := false
-	for _, v := range intel {
-		if v.RecommendationTrend != "" || v.PriceTarget > 0 || v.InsiderNetShares != 0 {
-			hasPremiumIntel = true
-			break
+	rows := make([]ProviderCapabilityEntry, 0)
+	for _, reg := range regs {
+		for _, diagnostic := range reg.Diagnostics {
+			status := "TEMPORARILY UNAVAILABLE"
+			if diagnostic.Status != nil {
+				status = diagnostic.Status(settings, secrets, health, intel, direct)
+			}
+			rows = append(rows, ProviderCapabilityEntry{
+				Provider: reg.Name, Capability: diagnostic.Capability, Status: status,
+				Detail: diagnostic.Detail, UpdatedAt: now, Uses: append([]string(nil), diagnostic.Uses...),
+			})
 		}
-	}
-	directFX := false
-	for k := range direct {
-		if strings.HasPrefix(k, "fx_") {
-			directFX = true
-			break
-		}
-	}
-	rows := []ProviderCapabilityEntry{
-		{Provider: "Finnhub", Capability: "Primary U.S. equity + earnings/peers", Status: capabilityStatusFromHealth(secrets.Finnhub != "", health["quotes-rest"]), Detail: "Live/REST plus earnings surprise and peer context.", UpdatedAt: now, Uses: usesCore},
-		{Provider: "Finnhub", Capability: "Analyst / insider premium context", Status: func() string {
-			if secrets.Finnhub == "" {
-				return "NOT ENTITLED"
-			}
-			if hasPremiumIntel {
-				return "AVAILABLE"
-			}
-			return "PLAN LIMITED"
-		}(), Detail: "Used only when endpoint entitlement returns real data; never required for deterministic scoring.", UpdatedAt: now, Uses: []string{"Research", "Swing", "Long", "Decision Queue"}},
-		{Provider: "Alpaca", Capability: "IEX quotes / snapshots / liquidity", Status: capabilityStatusFromHealth(secrets.AlpacaKey != "" && secrets.AlpacaSecret != "", health["alpaca-live"]), Detail: "Bid/ask, size, spread, quote age and snapshot hydration.", UpdatedAt: now, Uses: []string{"Day", "Market Open Prep", "Trade Readiness", "Decision Queue"}},
-		{Provider: "Alpaca", Capability: "SIP movers / most active", Status: func() string {
-			if secrets.AlpacaKey == "" || secrets.AlpacaSecret == "" {
-				return "NOT ENTITLED"
-			}
-			if strings.Contains(strings.ToLower(health["market-activity"]), "available") {
-				return "AVAILABLE"
-			}
-			return "PLAN LIMITED"
-		}(), Detail: "Discovery seed only when account entitlement permits.", UpdatedAt: now, Uses: []string{"Discovery", "Dashboard"}},
-		{Provider: tradeInsightProviderName, Capability: "Adjusted daily OHLCV / corporate-action corroboration", Status: func() string {
-			if !tradeInsightConfigured(secrets.TradeInsight) {
-				return "NOT ENTITLED"
-			}
-			history := strings.ToLower(strings.TrimSpace(health["history"]))
-			actions := strings.ToLower(strings.TrimSpace(health["tradeinsight-corporate-actions"]))
-			if strings.Contains(history, "tradeinsight") || strings.Contains(actions, "healthy") {
-				return "AVAILABLE"
-			}
-			return "SHADOW"
-		}(), Detail: "Smart Router v2 member of canonical Historical Bars. Daily adjusted OHLCV only; dividends/splits are supplemental evidence merged into the canonical corporate-action ledger.", UpdatedAt: now, Uses: []string{"Historical Bars", "Research", "Corporate Actions", "Adaptive Intelligence"}},
-		{Provider: "FRED", Capability: "Rates / credit / conditions / USD", Status: capabilityStatusFromHealth(secrets.FRED != "", health["fred-rates"]), Detail: "Slow macro state; cadence-aware cache.", UpdatedAt: now, Uses: []string{"Market Regime", "Swing", "Long", "Research", "Trade Readiness"}},
-		{Provider: "BLS", Capability: "Inflation / labor / wages / PPI", Status: capabilityStatusFromHealth(true, health["bls-actuals"]), Detail: "Official release-triggered actuals; no invented consensus.", UpdatedAt: now, Uses: []string{"Market Regime", "Swing", "Long", "Research"}},
-		{Provider: "EIA", Capability: "Petroleum / natural gas / energy state", Status: capabilityStatusFromHealth(secrets.EIA != "", health["eia-actuals"]), Detail: "Official energy release context.", UpdatedAt: now, Uses: []string{"Market Regime", "Research", "Swing", "Long"}},
-		{Provider: "Twelve Data", Capability: "FX / direct global context", Status: func() string {
-			if secrets.TwelveData == "" {
-				return "NOT ENTITLED"
-			}
-			if directFX {
-				return "AVAILABLE"
-			}
-			return capabilityStatusFromHealth(true, health["global-direct"])
-		}(), Detail: "Direct FX/global where entitled; official/proxy/cache fallback remains truthful.", UpdatedAt: now, Uses: []string{"Market Regime", "Dashboard", "Research"}},
-		{Provider: "Twelve Data", Capability: "VIX / indices / historical recovery", Status: capabilityStatusFromHealth(secrets.TwelveData != "", health["vix"]), Detail: "v15 primary VIX/index route and first historical fallback after Alpaca.", UpdatedAt: now, Uses: []string{"Market Regime", "Dashboard", "Day", "Swing", "Long"}},
-		{Provider: "yfinance", Capability: "Recovery-only public market context", Status: "AVAILABLE", Detail: "Fallback only for VIX, historical bars, earnings and fundamentals; never the primary live production feed.", UpdatedAt: now, Uses: []string{"Data Freshness", "Research", "Recovery"}},
-		{Provider: "CBOE", Capability: "Official VIX validation / delayed close", Status: "AVAILABLE", Detail: "Authoritative VIX validation and delayed/official fallback only; not a general stock provider.", UpdatedAt: now, Uses: []string{"VIX", "Market Regime", "Data Freshness"}},
-		{Provider: "Marketaux", Capability: "Stock news fallback", Status: func() string {
-			if secrets.Marketaux != "" {
-				return "AVAILABLE"
-			}
-			return "NOT ENTITLED"
-		}(), Detail: "Supplemental/fallback company news when Finnhub is unavailable.", UpdatedAt: now, Uses: []string{"News", "Dashboard", "Research", "Catalyst Watch"}},
 	}
 	return rows
+}
+
+func buildProviderCapabilityRegistry(settings Settings, secrets Secrets, health map[string]string, intel map[string]SymbolIntelligence, direct map[string]GlobalDriver) []ProviderCapabilityEntry {
+	return buildProviderCapabilityRegistryFromRegistrations(providerRegistrations(), settings, secrets, health, intel, direct)
 }
 
 func (e *Engine) setPreparationRich(key, state, detail string, success, late bool, attention string, summary, changed []string, exceptions []CheckpointException) {
@@ -162,7 +108,6 @@ func preparationRanForTradingDay(p PreparationJobStatus, now time.Time) bool {
 	sameDay := func(ts int64) bool {
 		return ts > 0 && time.UnixMilli(ts).In(easternLocation()).Format("2006-01-02") == day
 	}
-
 	if sameDay(p.LastSuccess) {
 		return true
 	}
@@ -196,7 +141,6 @@ func readinessFreshnessGate(rows []FreshnessDiagnostic, required []string, now t
 		case "LIVE", "FRESH", "DUE SOON":
 			usable++
 		case "DELAYED":
-
 			if name == "VIX" {
 				usable++
 				exceptions = append(exceptions, CheckpointException{Reason: name + " · DELAYED · " + defaultString(row.Reason, "past ideal cadence"), Severity: "MEDIUM", Target: "maintenance", Source: defaultString(row.Provider, name), UpdatedAt: now.UnixMilli()})
@@ -295,7 +239,6 @@ func materialSECFilingForTradingRisk(f FilingItem) bool {
 		return materialText(text) || strings.Contains(text, "earn") || strings.Contains(text, "guidance") || strings.Contains(text, "going concern")
 	}
 	if strings.HasPrefix(form, "4") || category == "insider" {
-
 		sig := strings.ToUpper(strings.TrimSpace(f.Signal))
 		return (sig == "BUY" || sig == "SELL") && (math.Abs(f.Value) >= 100000 || math.Abs(f.Shares) >= 10000)
 	}
