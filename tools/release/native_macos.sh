@@ -135,11 +135,9 @@ PY
   rm -f "$instance"
 }
 
-# Current package fresh and warm backend/profile lifecycle.
 run_headless_cycle "$PKG_APP/Contents/MacOS/DePulseLauncher" "$DEPULSE_VERSION" "$DEPULSE_BUILD_ID" "$HOME_DIR" current-fresh "$OUT/current-fresh.json"
 run_headless_cycle "$PKG_APP/Contents/MacOS/DePulseLauncher" "$DEPULSE_VERSION" "$DEPULSE_BUILD_ID" "$HOME_DIR" current-warm "$OUT/current-warm.json"
 
-# Actual non-headless Cocoa/WKWebView fresh + warm lifecycle on the current package.
 GUI_INSTANCE="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/instance.json"
 GUI_WINDOW_LOG="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/native-window.log"
 GUI_DB="$GUI_HOME/Library/Application Support/$RUNTIME_CONFIG/depulse-v17.db"
@@ -217,6 +215,7 @@ test "$(python3 tools/release/source_fingerprint.py --mode git --commit "$PREVIO
 git worktree add --detach "$PREVIOUS_WORKTREE" "$PREVIOUS_TAG" >/dev/null
 (
   cd "$PREVIOUS_WORKTREE"
+  GITHUB_WORKSPACE="$PREVIOUS_WORKTREE" \
   RUNNER_TEMP="$PREVIOUS_RUNNER_TEMP" \
   DEPULSE_OUTPUT_DIR="$PREVIOUS_OUT" \
   DEPULSE_CANDIDATE_SHA="$PREVIOUS_SHA" \
