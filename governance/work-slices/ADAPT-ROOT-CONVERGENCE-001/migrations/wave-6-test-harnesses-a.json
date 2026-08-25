@@ -12,7 +12,7 @@
       "reason": "The Playwright responsive matrix is non-production renderer acceptance evidence and belongs under tests/renderer rather than repository root.",
       "removalCondition": "Old root path absent and the canonical responsive sharded gate invokes tests/renderer/responsive_ui_test.py.",
       "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
-      "allowedReferenceFiles": []
+      "allowedReferenceFiles": ["tools/ci/documentation_owner_browser_test.py"]
     },
     {
       "oldPath": "professional_expert_runtime_test.js",
