@@ -1,90 +1,95 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.9.0",
+  "release": "v18.9.1",
   "channel": "STABLE",
   "branch": "main",
-  "pullRequest": 62,
-  "candidateSourceCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
-  "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9",
+  "pullRequest": 69,
+  "candidateSourceCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.9.0-stable-20260821",
+  "buildId": "v18.9.1-stable-20260821",
   "certifiedStable": {
-    "version": "v18.9.0",
-    "tag": "v18.9.0-stable",
-    "promotionCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
-    "candidateSourceCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
-    "certifiedSourceCheckout": "9ea81cddae4875ae15d3719ca028519a36c597b6",
-    "qualifiedSourceHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
-    "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9"
+    "version": "v18.9.1",
+    "tag": "v18.9.1-stable",
+    "promotionCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+    "candidateSourceCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+    "certifiedSourceCheckout": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+    "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
+    "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff"
   },
-  "metadataHeadRule": "The immutable v18.9.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future development branch.",
+  "metadataHeadRule": "The immutable v18.9.1 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future process/product branch.",
   "gates": {
-    "G0":"PASS","G1":"PASS","G2":"PASS","G3":"PASS","G4":"PASS","G5":"PASS","G6":"PASS","G7":"PASS","G8":"PASS","G9":"PASS","G10":"PASS","G11":"PASS","G12":"PASS","G13":"PASS","G14":"PASS","G15":"PASS","G16":"PASS"
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS",
+    "G7": "PASS",
+    "G8": "PASS",
+    "G9": "PASS",
+    "G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13": "PASS",
+    "G14": "PASS",
+    "G15": "PASS",
+    "G16": "PASS"
   },
   "releaseSummary": {
-    "qualifiedSourceHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc",
-    "fastRun": 32525637987,
-    "fastRunNumber": 481,
-    "qualifiedRun": 32525738828,
-    "qualifiedRunNumber": 153,
-    "releaseRun": 32526121817,
-    "releaseRunNumber": 32,
+    "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
+    "fastRun": 32546289014,
+    "fastRunNumber": 581,
+    "qualifiedRun": 32546364036,
+    "qualifiedRunNumber": 163,
+    "releaseRun": 32546555659,
+    "releaseRunNumber": 33,
     "publication": "PASS_NO_REBUILD",
-    "productPR": 62,
-    "scopeIssue": 61
+    "productPR": 69,
+    "scopeIssue": 64
   },
   "assistantPortability": {
-    "status":"ENFORCED",
-    "authoritativeHandoff":"handoff/CURRENT.md",
-    "entrypoints":["AGENTS.md","CLAUDE.md"]
+    "status": "ENFORCED",
+    "authoritativeHandoff": "handoff/CURRENT.md",
+    "entrypoints": ["AGENTS.md", "CLAUDE.md"]
   },
   "completedReleaseScope": [
+    {
+      "issue": 64,
+      "release": "v18.9.1",
+      "disposition": "COMPLETED_IN_V18.9.1_STABLE",
+      "requirement": "ADAPT-RUNTIME-CRASH-001"
+    },
     {
       "issue": 61,
       "release": "v18.9.0",
       "disposition": "COMPLETED_IN_V18.9.0_STABLE",
       "requirement": "ADAPT-TRADEINSIGHT-001"
-    },
-    {
-      "issue": 57,
-      "release": "v18.8.2",
-      "disposition": "RESOLVED_IN_V18.8.2_STABLE_AND_RECONCILED_CLOSED",
-      "requirement": "ADAPT-FRESHNESS-001"
     }
   ],
-  "escapedRuntimeDefects": [
-    {
-      "originalIssue": 63,
-      "correctiveIssue": 64,
-      "releaseFound": "v18.9.0",
-      "targetRelease": "v18.9.1",
-      "disposition": "CARRIED_TO_NEXT_CORRECTIVE_RELEASE",
-      "requirement": "ADAPT-RUNTIME-CRASH-001",
-      "signature": "macOS Apple Silicon EXC_CRASH (SIGABRT) / abort() called"
-    }
-  ],
+  "escapedRuntimeDefects": [],
   "activeProgram": {
     "issue": 65,
     "requirement": "ADAPT-PROVIDER-INTELLIGENCE-010",
-    "policy": "SMALL_DEPENDENCY_ORDERED_PATCHES_ONE_PRIMARY_RESPONSIBILITY",
-    "patchTrain": [
-      "v18.9.1 runtime crash corrective",
-      "v18.9.2 TradeInsight Settings/API-key UX",
-      "v18.9.3 coverage-aware Smart Provider Router core",
-      "v18.9.4 canonical company identity/all-desk presentation",
-      "v18.9.5 Market Data Modes/capability diagnostics",
-      "v18.9.6 TradeInsight SEC Form 4 enrichment",
-      "v18.9.7 TradeInsight ticker/company search",
-      "v18.9.8 TradeInsight movers/ranking evidence",
-      "v18.9.9 remaining useful TradeInsight capability sweep",
-      "v18.9.10 provider efficiency/Adaptive Intelligence telemetry",
-      "v18.9.11 professional closure audit"
-    ],
-    "splitFurtherIfNeeded": true,
-    "heavyMultiDomainBuildsProhibited": true,
-    "implementationMissRule": "No known miss may be silently deferred; fix in scope or durably assign to a later patch before closure."
+    "currentProcessResidual": {
+      "issue": 102,
+      "requirement": "ADAPT-POST-STABLE-CONTINUITY-001",
+      "classification": "PROCESS_RELEASE_ENGINEERING_POST_STABLE_CONTINUITY",
+      "productBehaviorChange": false
+    },
+    "completedProviderOnboarding": {
+      "issue": 95,
+      "candidate": "3a988f24fc799d130384ff89c9fd1f243db46571",
+      "fastRun": 32801432713,
+      "qualifiedRun": 32801546814,
+      "mergeCommit": "2eab9bd38b0a75a116de46e531015ed699ed7308"
+    },
+    "separateResidualIssue": 94,
+    "futureBlockedIssue": 66,
+    "selectionRule": "Finish #102 continuity reconciliation, then perform a fresh live-source/#65 semantic-overlap audit before selecting the next product capability."
   },
-  "nextStep":"Diagnose issue #64 / ADAPT-RUNTIME-CRASH-001 from complete macOS crash evidence or deterministic reproduction and freeze narrow v18.9.1 G1. Do not start v18.9.2 until v18.9.1 is truthfully closed or crash is proven external/non-product.",
-  "updatedAt":"2026-08-21T15:12:00-07:00"
+  "nextStep": "Complete issue #102 / ADAPT-POST-STABLE-CONTINUITY-001 on adapt-post-stable-continuity-001: reconcile durable v18.9.1 checkpoints, retrospective Stable evidence, #95 post-merge closure projections and CURRENT state; obtain exact-head Fast and impact-selected Qualified, then guarded merge. Do not start #94 or #66 from this checkpoint.",
+  "updatedAt": "2026-08-24T19:43:00-07:00"
 }

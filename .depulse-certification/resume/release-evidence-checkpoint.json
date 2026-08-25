@@ -1,44 +1,42 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.9.0",
+  "release": "v18.9.1",
   "channel": "STABLE",
-  "metadataHeadRule": "This checkpoint describes immutable v18.9.0 Stable evidence; post-Stable continuity metadata does not redefine or rebuild the certified artifact.",
+  "metadataHeadRule": "This checkpoint describes immutable v18.9.1 Stable evidence; post-Stable continuity metadata may advance main without redefining or rebuilding the certified artifact.",
   "stable": {
-    "tag": "v18.9.0-stable",
-    "promotionCommit": "9ea81cddae4875ae15d3719ca028519a36c597b6",
-    "sourceFingerprint": "a8719090c341c874dbd1279cc31ad98e84075d5701c46a800bf951340780ecb9",
-    "buildId": "v18.9.0-stable-20260821",
-    "promotionRun": 32526121817,
-    "certificationRun": 32526121817
+    "tag": "v18.9.1-stable",
+    "promotionCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+    "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+    "buildId": "v18.9.1-stable-20260821",
+    "promotionRun": 32546555659,
+    "certificationRun": 32546555659
   },
   "currentCandidate": {
-    "qualificationHead": "9e86b5e731f7a585cc77c1521f3639fc7a208efc"
+    "qualificationHead": "d7276c3421dd2b4529ac2a987466be3cffa05678"
   },
   "evidence": {
-    "G0-G10": {"status": "PASS", "fastRun": 32525637987, "qualifiedRun": 32525738828},
-    "G10": {"status": "PASS", "fastRun": 32525637987, "qualifiedRun": 32525738828},
-    "G11": {"status": "PASS", "runId": 32526121817},
-    "G12": {"status": "PASS", "runId": 32526121817, "artifactId": 9462349733, "artifactDigest": "sha256:03763bbfc2cced86e886e36ec4dd1b5fe083befd74cd5ad162016c54fee6e828"},
-    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32526121817, "artifactId": 9462372802, "artifactDigest": "sha256:5b2c583360a7779cf795e2588f4a05814efb2ed964d4e0b49efd23268953bc33"},
-    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32526121817, "artifactId": 9462402486, "artifactDigest": "sha256:7b7e74f9175c24d6a372008255740e4fa8028c56a8a7adb51ea74a359314cb64"},
-    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32526121817, "artifactId": 9462412823, "artifactDigest": "sha256:fe9b8bb43196cddc2899c8498ffacd07a2f73215ae060dee2faa263ecd22e28c"},
-    "G16": {"status": "PASS_CLOSED", "runId": 32526121817, "artifactId": 9462424569, "artifactDigest": "sha256:d60c4a8d8c06cab1452420960401241c26894168ace91679786290adec2d305e"},
-    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32526121817, "tag": "v18.9.0-stable", "certifiedCandidate": "9ea81cddae4875ae15d3719ca028519a36c597b6"}
+    "G0-G10": {"status": "PASS", "fastRun": 32546289014, "qualifiedRun": 32546364036},
+    "G10": {"status": "PASS", "fastRun": 32546289014, "qualifiedRun": 32546364036},
+    "G11": {"status": "PASS", "runId": 32546555659},
+    "G12": {"status": "PASS", "runId": 32546555659, "artifactId": 9468730974, "artifactDigest": "sha256:45dc47bf4539490b7ac0ad54c77c1c445ee1202c58d43fcdc0d7fcf37e522300"},
+    "G13-G14-macOS-Apple-Silicon": {"status": "PASS", "runId": 32546555659, "artifactId": 9468744315, "artifactDigest": "sha256:ece4d52d3426243b991b47f3e732503554b8a60314805f0221ef14aa136d4306"},
+    "G13-G14-Windows-x64": {"status": "PASS", "runId": 32546555659, "artifactId": 9468744475, "artifactDigest": "sha256:6c0d1dc72732c53da0138272875563fc5fec44a58522056d4fd32f673d28df6e"},
+    "G15": {"status": "PASS_RELEASE_ASSURANCE", "runId": 32546555659, "artifactId": 9468747228, "artifactDigest": "sha256:a50eba57eea5f81e6684e25569713eabe48fdfe31d515a2746aef7cd16b4dfdc"},
+    "G16": {"status": "PASS_CLOSED", "runId": 32546555659, "artifactId": 9468751229, "artifactDigest": "sha256:2ea31e27b7ae1e3d8779da61a7aecdfeb9059c2bb2b3bb491c3e893acc8caf03"},
+    "StablePublication": {"status": "PASS_NO_REBUILD", "runId": 32546555659, "tag": "v18.9.1-stable", "certifiedCandidate": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9"}
   },
   "releaseScope": {
-    "issue": 61,
-    "pullRequest": 62,
-    "requirement": "ADAPT-TRADEINSIGHT-001",
-    "disposition": "COMPLETED_IN_V18.9.0_STABLE"
+    "issue": 64,
+    "pullRequest": 69,
+    "requirement": "ADAPT-RUNTIME-CRASH-001",
+    "disposition": "COMPLETED_IN_V18.9.1_STABLE"
   },
   "postStableLearning": {
-    "originalCrashIssue": 63,
-    "correctiveIssue": 64,
-    "classification": "REAL_WORLD_POST_CERTIFICATION_ESCAPE",
-    "requirement": "ADAPT-RUNTIME-CRASH-001",
-    "nextRequiredEvidence": "Complete macOS crash report/backtrace or deterministic reproduction before corrective product changes; preserve user state and normal exact-head release process."
+    "continuityIssue": 102,
+    "classification": "DURABLE_POST_STABLE_CONTINUITY_RECONCILIATION",
+    "note": "Main CI after #95 exposed stale v18.9.0 resume checkpoints. The corrective is metadata/process-only and must preserve immutable v18.9.1 Stable evidence and binaries."
   },
-  "nextRequiredEvidence": "Issue #64 root-cause evidence and bounded corrective-release G1; optional provider/Market-Mode expansion waits behind this blocker unless evidence proves it external/non-product.",
-  "updatedAt": "2026-08-21T14:12:00-07:00"
+  "nextRequiredEvidence": "Issue #102 exact-head Fast and impact-selected Qualified on adapt-post-stable-continuity-001, expected-head PR merge, and a green next main post-Stable continuity sentinel. #94 remains separate and #66 remains blocked.",
+  "updatedAt": "2026-08-24T19:43:00-07:00"
 }
