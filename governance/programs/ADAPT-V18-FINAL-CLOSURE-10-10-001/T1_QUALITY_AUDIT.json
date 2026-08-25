@@ -1,0 +1,237 @@
+{
+  "schema": "DE.PULSE-V18-T1-QUALITY-AUDIT-1",
+  "programIssue": 113,
+  "trackIssue": 114,
+  "targetVersion": "v18.10.0",
+  "state": "IN_PROGRESS",
+  "semantics": {
+    "profileDefaultsAreDeterministicInheritance": true,
+    "everyEffectiveResponsibilityMustResolveOneProfile": true,
+    "overridesReplaceOnlyNamedFields": true,
+    "ready1010MeansNoKnownT1SpecificCorrective": "READY_10_10 in this file means the T1 reality/quality audit found no remaining feature-specific corrective. It does not mark T2-T9 evidence VERIFIED.",
+    "laterEvidenceMayReopen": true
+  },
+  "profileDefaults": {
+    "VISIBLE_STATEFUL": {
+      "productUtilityAssessment": "KEEP: user-facing stateful workflow provides current product value and remains justified when backed by canonical state owners.",
+      "correctnessAssessment": "Current behavior must project/mutate canonical state, validate inputs and preserve truthful loading/empty/degraded/error states; no independent data acquisition is justified at the surface.",
+      "architectureAssessment": "Reuse canonical application, data, identity and persistence owners; surface code is projection/orchestration only.",
+      "intelligenceAssessment": {"currentLevel":"NOT_APPLICABLE","expectedLevel":"NOT_APPLICABLE","fit":"FIT","gaps":[],"rationale":"The surface itself should not become an independent learning/decision owner; intelligent behavior belongs to canonical engine responsibilities."},
+      "dataTruthAssessment": "Applicable visible evidence must preserve provenance/freshness/degraded truth; surface-only controls must not manufacture market truth.",
+      "maintainabilityAssessment": "KEEP with bounded extraction/refactor when ownership is obscured; no style-only rewrite.",
+      "staleCodeAssessment": "No unexplained duplicate current surface owner is permitted; compatibility code requires reachability/equivalence evidence.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Role/capability/direct-route parity is required for privileged controls; otherwise normal authenticated access rules apply.",
+      "persistenceLifecycleAssessment": "Durable mutation must use canonical state/persistence owners and restore correctly after restart where applicable.",
+      "performanceEfficiencyAssessment": "Rendering and mutation must remain bounded under realistic state volume and background activity.",
+      "observabilityAssessment": "Visible failures must remain distinguishable from healthy/empty state and must not create app-global false health.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "VISIBLE_READONLY": {
+      "productUtilityAssessment": "KEEP: read-only projection is justified when it materially improves decision support, trust, navigation or diagnostics without duplicating canonical acquisition/state.",
+      "correctnessAssessment": "Projection must reflect canonical current state and preserve missing/stale/partial/contradictory evidence truth.",
+      "architectureAssessment": "Read-only UI must remain a projection of canonical owners, not a parallel state/data subsystem.",
+      "intelligenceAssessment": {"currentLevel":"NOT_APPLICABLE","expectedLevel":"NOT_APPLICABLE","fit":"FIT","gaps":[],"rationale":"Read-only presentation is not itself a learning authority; intelligence belongs to the evidence/state owner it presents."},
+      "dataTruthAssessment": "Required: unknown/unavailable/stale/partial evidence remains explicit and is never rendered as healthy zero or fabricated certainty.",
+      "maintainabilityAssessment": "KEEP; extract oversized presentation ownership when it materially improves truth/ownership, with regression protection.",
+      "staleCodeAssessment": "No duplicate visible evidence home may remain current; intentional redirects/compatibility paths must be named and bounded.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Restricted diagnostics/evidence must be capability/provider-rights filtered; otherwise authenticated projection only.",
+      "persistenceLifecycleAssessment": "No independent persistence; restored canonical state must render correctly where applicable.",
+      "performanceEfficiencyAssessment": "Large-state refresh/render cadence must remain bounded and responsive.",
+      "observabilityAssessment": "Loading/degraded/unavailable state must be explicit enough to diagnose projection versus source failure.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "DATA_PATH": {
+      "productUtilityAssessment": "KEEP when the data path supplies distinct required evidence, authority, recovery or context to current consumers; redundant acquisition is not justified.",
+      "correctnessAssessment": "Schema/normalization/routing/authority/freshness rules must remain deterministic and truthful under missing, stale, contradictory, timeout and fallback conditions.",
+      "architectureAssessment": "Reuse Smart Provider Router v2 and canonical freshness/cache/reconciliation/persistence/subscription owners where applicable; direct authorities remain explicit exceptions rather than hidden routers.",
+      "intelligenceAssessment": {"currentLevel":"DETERMINISTIC_REQUIRED","expectedLevel":"DETERMINISTIC_REQUIRED","fit":"FIT","gaps":[],"rationale":"Provider/data truth and authority boundaries should remain deterministic by default. Adaptive ranking is permitted only in explicitly named policy owners."},
+      "dataTruthAssessment": "Required: provenance, evidence time, provider lifecycle, direct authority, fallback and degraded states remain distinguishable.",
+      "maintainabilityAssessment": "KEEP one owner per acquisition/normalization responsibility; remove/merge only with consumer and equivalence proof.",
+      "staleCodeAssessment": "No second router, cache, freshness, reconciliation or feature-specific fallback subsystem may survive unexplained.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Provider entitlement/data-rights/secrets/egress rules apply where the capability or projection is restricted.",
+      "persistenceLifecycleAssessment": "Cache/durable evidence may persist only through canonical cache/persistence owners; live/transient data must not silently become durable authority.",
+      "performanceEfficiencyAssessment": "Requests/fan-out must be bounded, coalesced/cache-aware and rate-limit/backpressure aware.",
+      "observabilityAssessment": "Provider/source/freshness/failure/recovery distinctions must be diagnosable without changing routing truth by telemetry alone.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "BACKGROUND_JOB": {
+      "productUtilityAssessment": "KEEP only when the job performs distinct scheduled/event-driven work that cannot be safely derived on demand and does not duplicate another cadence owner.",
+      "correctnessAssessment": "Cadence/window/idempotency/cancellation/manual-trigger behavior must delegate to canonical data/state owners and remain truthful when prerequisites/providers are unavailable.",
+      "architectureAssessment": "One runtime scheduler plus named coordinator/domain owners; no feature-specific polling architecture or duplicate broad refetch.",
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"Session/event/materiality-aware cadence is useful; hidden self-modifying schedules are not. Explicit adaptive-policy owners may override this default."},
+      "dataTruthAssessment": "Jobs must not extend timestamps or reuse stale prerequisites to fabricate successful current work.",
+      "maintainabilityAssessment": "KEEP distinct jobs with bounded cadence and shared scheduler ownership; merge only if lifecycle/evidence semantics are truly identical.",
+      "staleCodeAssessment": "Every active job needs a current consumer/cadence reason; historical loops without current consumers are closure debt.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Manual triggers and restricted provider work must preserve role/provider-rights checks.",
+      "persistenceLifecycleAssessment": "Durable checkpoints/state use canonical persistence; restart may not duplicate semantic work.",
+      "performanceEfficiencyAssessment": "Background work yields to protected market-session priorities, respects backpressure, and remains bounded.",
+      "observabilityAssessment": "Expected idle, running, skipped/deferred and failed states must be distinguishable where operationally relevant.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "SECURITY_STATEFUL": {
+      "productUtilityAssessment": "KEEP: identity/session/authorization/rights responsibilities are necessary product safety boundaries and should remain explicit rather than hidden in convenience code.",
+      "correctnessAssessment": "Authorization, hierarchy, session/reauth, input validation, revocation and isolation must fail closed and be consistent across UI/direct route/API.",
+      "architectureAssessment": "Exactly one identity/session/authorization owner; UI visibility never substitutes for server-side enforcement.",
+      "intelligenceAssessment": {"currentLevel":"DETERMINISTIC_REQUIRED","expectedLevel":"DETERMINISTIC_REQUIRED","fit":"FIT","gaps":[],"rationale":"Security/rights decisions must stay deterministic, reviewable and fail closed; adaptive authorization is inappropriate."},
+      "dataTruthAssessment": "Security/status projections must not imply authorization/health that the canonical security state does not grant.",
+      "maintainabilityAssessment": "KEEP explicit bounded security owners; avoid duplicated role matrices or ad-hoc route checks.",
+      "staleCodeAssessment": "Legacy authorization branches or UI-only security paths are blocking if they can diverge from canonical enforcement.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Primary dimension: role/capability hierarchy, direct-route parity, recent auth, secret redaction, provider rights and per-user isolation must be explicit.",
+      "persistenceLifecycleAssessment": "Identity/session/workspace durable state must restore without plaintext credentials or cross-user leakage.",
+      "performanceEfficiencyAssessment": "Concurrent sessions/admin mutations must remain bounded and race-safe; security may not be bypassed for performance.",
+      "observabilityAssessment": "Denied/expired/revoked/malformed states must be diagnosable without exposing secrets or sensitive internals.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "RUNTIME_STATEFUL": {
+      "productUtilityAssessment": "KEEP when runtime state/lifecycle/load/recovery work preserves reliable current decision support and replaces rather than duplicates ad-hoc loops.",
+      "correctnessAssessment": "Lifecycle, load, degradation, cancellation, recovery and hysteresis must preserve canonical state and never fabricate healthy evidence.",
+      "architectureAssessment": "Reuse one lifecycle/scheduler/workload/degradation/subscription owner set; feature loops must delegate rather than fork runtime control.",
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"Runtime should react to session/load/provider context; adaptive behavior must be explicitly bounded in named policy owners."},
+      "dataTruthAssessment": "Runtime pressure/recovery cannot upgrade stale/missing evidence to healthy state or hide scoped degradation.",
+      "maintainabilityAssessment": "KEEP with explicit concurrency/lifecycle ownership and bounded extraction where monolithic coupling creates concrete risk.",
+      "staleCodeAssessment": "Duplicate lifecycle/recovery/load loops are not allowed; old paths need reachability/equivalence proof before removal.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Privileged runtime controls and provider secret/rights boundaries remain enforced.",
+      "persistenceLifecycleAssessment": "Shutdown/restart flushes/checkpoints only through canonical state/cache/persistence owners and may not fabricate warm state.",
+      "performanceEfficiencyAssessment": "Primary dimension: bounded goroutines/queues/locks/fan-out, protected-session priority, load shedding and backpressure.",
+      "observabilityAssessment": "Pressure/degradation/recovery/cancellation states must be scoped and diagnosable.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "PERSISTENCE": {
+      "productUtilityAssessment": "KEEP: durable state/restart/upgrade continuity is required for native product reliability; future backend seams are not themselves current product features unless shipped.",
+      "correctnessAssessment": "Serialization/schema/migration/atomicity/integrity/restore behavior must preserve canonical records and fail visibly on corrupt/interrupted/unavailable state.",
+      "architectureAssessment": "One persistence manager/backend contract; feature-specific stores extend it without creating parallel persistence systems.",
+      "intelligenceAssessment": {"currentLevel":"DETERMINISTIC_REQUIRED","expectedLevel":"DETERMINISTIC_REQUIRED","fit":"FIT","gaps":[],"rationale":"Persistence, migrations and recovery must be deterministic and auditable."},
+      "dataTruthAssessment": "Persisted timestamps/provenance/state must not upgrade stale/transient evidence or conflate cache with durable authority.",
+      "maintainabilityAssessment": "KEEP backend capability separation; future backend source must be explicitly scoped so it cannot masquerade as shipped behavior.",
+      "staleCodeAssessment": "Backend variants are justified only by supported platform/build contracts or explicit future-program carry-forward.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "User/identity/workspace/secrets isolation and storage boundaries must prevent cross-user/plaintext leakage.",
+      "persistenceLifecycleAssessment": "Primary dimension: save/load/migration/integrity/backup/restore/restart/upgrade behavior is explicit and test-owned.",
+      "performanceEfficiencyAssessment": "Concurrent reads/writes, pools/locks and archive work remain bounded; correctness outranks throughput shortcuts.",
+      "observabilityAssessment": "Backend readiness/integrity/operation failures must remain distinguishable from empty healthy state.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "BOUNDARY": {
+      "productUtilityAssessment": "KEEP: permanent scope/authority/lifecycle boundaries prevent product drift and unsafe or misleading capability expansion.",
+      "correctnessAssessment": "Allowed behavior remains available while forbidden behavior is absent/fail-closed across direct route, fallback, pressure and packaged runtime.",
+      "architectureAssessment": "Boundary rules constrain canonical owners; they do not create parallel feature implementations.",
+      "intelligenceAssessment": {"currentLevel":"DETERMINISTIC_REQUIRED","expectedLevel":"DETERMINISTIC_REQUIRED","fit":"FIT","gaps":[],"rationale":"Permanent scope/authority/security boundaries must not self-modify or be rank-swapped by learning."},
+      "dataTruthAssessment": "Authority/context/alternative-evidence distinctions remain explicit and cannot be blurred by fallback or UI wording.",
+      "maintainabilityAssessment": "KEEP concise boundary assertions near relevant owners plus durable regression checks.",
+      "staleCodeAssessment": "Any legacy path bypassing the boundary is blocking; harmless compatibility code still needs explicit proof.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Boundary bypass through role/provider rights/fallback is prohibited.",
+      "persistenceLifecycleAssessment": "Boundary remains conserved across restart/migration where durable state participates.",
+      "performanceEfficiencyAssessment": "Load/backpressure cannot relax the boundary.",
+      "observabilityAssessment": "Denied/gated/unsupported states must be distinguishable from provider/runtime failure where relevant.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    },
+    "RELEASE": {
+      "productUtilityAssessment": "KEEP: exact-head CI, package/platform and provenance responsibilities are necessary to prove the source tested is the source delivered.",
+      "correctnessAssessment": "Head identity, workflow topology, package provenance, no-rebuild publication and platform lifecycle must fail closed on divergence/missing evidence.",
+      "architectureAssessment": "One canonical Fast/Qualified/release workflow family; no shadow release or duplicate expensive gate path.",
+      "intelligenceAssessment": {"currentLevel":"DETERMINISTIC_REQUIRED","expectedLevel":"DETERMINISTIC_REQUIRED","fit":"FIT","gaps":[],"rationale":"Release/provenance decisions must remain deterministic and reproducible."},
+      "dataTruthAssessment": "Release/version/source labels must match exact Git objects and immutable evidence; stale checkpoints cannot redefine Stable.",
+      "maintainabilityAssessment": "KEEP conserved efficient gates; simplify only when equivalent evidence is preserved.",
+      "staleCodeAssessment": "Retired workflows/tests may remain only as explicit equivalence sentinels; no active duplicate publication path.",
+      "sourceDisposition": "KEEP",
+      "securityRightsAssessment": "Tokens/secrets/artifacts/publication permissions remain least-privilege and non-leaking.",
+      "persistenceLifecycleAssessment": "Install/upgrade/rollback/profile preservation is required where packaged runtime state participates.",
+      "performanceEfficiencyAssessment": "CI conservation avoids redundant expensive work without weakening exact-head evidence.",
+      "observabilityAssessment": "Candidate/head/artifact/run identity and failure stage must be reconstructable from GitHub evidence.",
+      "improvementOpportunities": [],
+      "closureDecision": "READY_10_10"
+    }
+  },
+  "overrides": {
+    "SURF-DOCUMENTATION": {
+      "staleCodeAssessment": "T1 found stale provider-flow wording and legacy monolith ownership. Corrective #125 extracted a dedicated architecture owner and corrected current Router v2 + multi-feed truth; executable qualification is still required.",
+      "maintainabilityAssessment": "Dedicated documentation architecture owner is the target; remaining legacy monolith fallback may stay only as explicitly non-canonical compatibility until reachability/equivalence-backed cleanup.",
+      "sourceDisposition": "REFACTOR",
+      "improvementOpportunities": ["qualify dedicated documentation architecture owner and stale-wording regression"],
+      "closureDecision": "IMPROVE_BEFORE_CLOSURE",
+      "correctiveIssue": 125
+    },
+    "SURF-ADMINISTRATION": {
+      "architectureAssessment": "Administration must be a capability-scoped surface that reuses canonical identity/session/admin APIs; embedding it inside Settings was an IA mismatch, not a reason for a new security backend.",
+      "maintainabilityAssessment": "Dedicated surface ownership reduces Settings coupling while preserving one identity/session authority.",
+      "sourceDisposition": "REFACTOR",
+      "uiDisposition": "MOVE",
+      "improvementOpportunities": ["qualify dedicated authorized Administration destination and Settings separation"],
+      "closureDecision": "IMPROVE_BEFORE_CLOSURE",
+      "correctiveIssue": 126
+    },
+    "SURF-MARKET-INTELLIGENCE": {
+      "maintainabilityAssessment": "Current unknown classification behavior is truthful, but a hard-coded sector/industry classification table is a maintainability limitation if coverage grows.",
+      "improvementOpportunities": ["Future governed evidence-derived sector/industry classification can replace hard-coded coverage while preserving unknown-as-unknown truth."],
+      "closureDecision": "DEFER_NON_BLOCKING_IMPROVEMENT",
+      "deferredImprovementOwner": "#123 durable regression ownership; future governed Market Intelligence slice if classification expansion is approved"
+    },
+    "LEGACY-EVIDENCE-ROUTES": {
+      "architectureAssessment": "Legacy News/Earnings/Filings destinations are intentional compatibility redirects into canonical Market Intelligence/Research, not current evidence owners.",
+      "staleCodeAssessment": "Redirect compatibility remains justified. Old monolith standalone render implementations are cleanup candidates only after reachability/equivalence proof.",
+      "sourceDisposition": "CLEANUP",
+      "uiDisposition": "REMOVE",
+      "improvementOpportunities": ["Remove unreachable legacy render implementations only after navigation/reachability/equivalence evidence proves compatibility is preserved."],
+      "closureDecision": "DEFER_NON_BLOCKING_IMPROVEMENT",
+      "deferredImprovementOwner": "#120 IA evidence plus #123 durable regression ownership"
+    },
+    "CAP-OPPORTUNITY-RADAR": {
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"Bounded candidate detection/promotion reacts to current market/session evidence and reuses shared acquisition without altering protected deterministic desk formulas."}
+    },
+    "CAP-RAPID-MOVE": {
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"Production move detection is deterministic/context-aware; outcome learning remains SHADOW and cannot auto-promote or rewrite protected rules."}
+    },
+    "SURF-AI-COPILOT": {
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"AI is a bounded evidence-grounded second opinion over canonical packages, not market-data truth, authorization, routing or execution authority."}
+    },
+    "CORE-SMART-ROUTER-V2": {
+      "intelligenceAssessment": {"currentLevel":"ADAPTIVE_POLICY","expectedLevel":"ADAPTIVE_POLICY","fit":"FIT","gaps":[],"rationale":"Capability quality/rate-limit evidence may affect bounded ranking/avoidance while explicit provider lifecycle remains governed and cannot auto-promote."}
+    },
+    "CORE-PROVIDER-USEFULNESS": {
+      "intelligenceAssessment": {"currentLevel":"EVIDENCE_LEARNING","expectedLevel":"EVIDENCE_LEARNING","fit":"FIT","gaps":[],"rationale":"Durable agreement/conflict/single-source usefulness evidence is advisory-only today and cannot directly change routing without a separately governed policy."}
+    },
+    "CORE-CANONICAL-PIPELINE": {
+      "intelligenceAssessment": {"currentLevel":"EVIDENCE_LEARNING","expectedLevel":"EVIDENCE_LEARNING","fit":"FIT","gaps":[],"rationale":"Durable evidence/decision/outcome lineage is the correct bounded learning foundation and does not create an execution journal."}
+    },
+    "CORE-SIGNAL-VALIDATION": {
+      "intelligenceAssessment": {"currentLevel":"EVIDENCE_LEARNING","expectedLevel":"EVIDENCE_LEARNING","fit":"FIT","gaps":[],"rationale":"Outcome recording supports validation/learning while protected decision and No Execution boundaries remain deterministic."}
+    },
+    "CORE-ADAPTIVE-DATA-POLICY": {
+      "intelligenceAssessment": {"currentLevel":"ADAPTIVE_POLICY","expectedLevel":"ADAPTIVE_POLICY","fit":"FIT","gaps":[],"rationale":"Cadence/utility adjustments are the appropriate adaptive layer when bounded, explainable, reversible and subordinate to canonical data/routing owners."}
+    },
+    "CORE-SESSION-INTELLIGENCE-COORDINATOR": {
+      "intelligenceAssessment": {"currentLevel":"CONTEXT_AWARE","expectedLevel":"CONTEXT_AWARE","fit":"FIT","gaps":[],"rationale":"Temporal prep orchestration should react to session/catalyst context but not become a learning or acquisition authority."}
+    },
+    "RUNTIME-WORKLOAD-BACKPRESSURE": {
+      "intelligenceAssessment": {"currentLevel":"ADAPTIVE_POLICY","expectedLevel":"ADAPTIVE_POLICY","fit":"FIT","gaps":[],"rationale":"Bounded load shedding/reserved capacity should adapt to current pressure while preserving Tier-0/protected priorities and deterministic safety limits."}
+    }
+  },
+  "repositoryWideFindings": [
+    {
+      "id": "RENDERER-MONOLITH-MAINTAINABILITY",
+      "severity": "NON_BLOCKING_IMPROVEMENT",
+      "finding": "renderer/renderer.js and renderer/styles.css remain large monolithic assets while newer responsibilities are being extracted into smaller canonical modules. Size alone does not justify rewrite; targeted extraction is preferred when it improves ownership, truth or testability.",
+      "sourceDisposition": "REFACTOR",
+      "closureDecision": "DEFER_NON_BLOCKING_IMPROVEMENT",
+      "deferredImprovementOwner": "#120 UI/IA assurance plus #123 durable regression ownership",
+      "guardrails": ["no style-only rewrite", "no behavior change without equivalence evidence", "keep compatibility redirects until reachability proof"]
+    }
+  ],
+  "unresolvedBlockingDecisions": ["SURF-DOCUMENTATION:#125", "SURF-ADMINISTRATION:#126"],
+  "updatedAt": "2026-08-25T08:12:00Z"
+}
