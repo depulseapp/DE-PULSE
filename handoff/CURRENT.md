@@ -5,44 +5,51 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
-**Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
-**Certified Stable build ID:** `v18.9.1-stable-20260821`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91  
-**Completed TradeInsight Settings/API-key UX:** #76 / PR #77  
-**Completed canonical identity:** #92 / PR #93  
-**Completed provider onboarding:** #95 / PR #101  
-**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001`  
-**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch identity:** `adapt-provider-professional-closure-001`  
-**Closure branch:** `adapt-provider-professional-closure-001-closure`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Final qualification evidence:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/final-qualification-evidence.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010` — complete by executable evidence.  
-**Future hosted program:** #66 remains separate/blocked/not started.
+**Completed v18 provider/data-health and professional closure:** #65/#107, final closure merge `6aef3806d5684cc75daec0a2274bbf51fe135201`  
+**Active process-only planning slice:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
+**Active branch:** `adapt-v19-zero-miss-plan-001`  
+**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — not broadly started and no product slice reserved.  
+**Detailed future plan:** `governance/V19_V20_ZERO_MISS_PLAN.md`  
+**Machine requirement ledger:** `governance/v19-v20-requirement-conservation.json`  
+**Planning closure ledger:** `governance/work-slices/ADAPT-V19-ZERO-MISS-PLAN-001/closure.json`
 
 ## Current authority
 
-GitHub objects and executable evidence outrank this handoff. The v18 provider-intelligence program is complete by evidence. The fresh #65 semantic-overlap audit is comment `5405370494`; it proved there was no remaining implementable v18 provider-intelligence product leaf. #107 candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2` passed Fast #983 / `32811045734` and Qualified #198 / `32811081438` on the identical head. Planner v3 selected ci-harness + portability + backend; full Go suite, race detector and randomized package order passed. PR #108 expected-head merged as `e9c236b2b9f229968f93ffe9ac600f45080389a7`; main Fast #984 / `32811424765` passed branch hygiene and Post-Stable continuity, with product Fast skipped as designed. No Release workflow or public SemVer release was created for #107.
+GitHub objects and executable evidence outrank this handoff. v18 is closed by executable evidence. The apparent historical #57 Market Intelligence defect is also closed/completed; it is retained as inherited v18 closure evidence rather than reopened. There is currently no named v18 corrective blocker.
 
-Historical #65 reservations are fully dispositioned: v18.9.2 Settings delivered by #76/PR #77; v18.9.3 Router delivered/inherited by #79/#81/#84; v18.9.4 identity delivered by #92; v18.9.5 and v18.9.11 inherited/superseded; v18.9.6 observability delivered by #94; v18.9.7-v18.9.9 remain vendor-contract gated; v18.9.10 admission is delivered/governed and unverified endpoints remain fail closed; v18.9.12 is completed #107 Professional Closure.
+The user requested a fresh future rebaseline because broad version packets risked missed implementation subcontracts. #110 therefore replaces the old broad future reservations with small dependency-ordered v19/v20 slices. Every dependency band ends with a no-feature zero-gap closure checkpoint.
+
+The canonical future sources are now:
+- `governance/ROADMAP.md` — compact canonical version sequence;
+- `governance/V19_V20_ZERO_MISS_PLAN.md` — detailed responsibility/dependency/closure criteria;
+- `governance/v19-v20-requirement-conservation.json` — machine map of GitHub issue requirements to versions;
+- `tools/ci/v19_v20_requirement_conservation_gate.py` — fail-closed conservation check wired into canonical CI Fast.
+
+The conservation ledger explicitly maps issue #66 body plus all seven architecture/version comments, issue #65 v19/v20 strategic inheritance, issue #57 v18 closure evidence and issue #110 planning requirements. Allowed dispositions are `INHERITED`, `IMPLEMENT_IN` and `FUTURE_BLOCKED`; unassigned/unexplained work is a planning failure.
 
 ## Retained architecture
 
-Smart Provider Router v2 remains the sole general routing/admission authority. Direct SEC/EDGAR remains Form 4 authority. Canonical Data Health, freshness, degradation, cache, persistence, telemetry, reconciliation and lifecycle owners remain unchanged. Provider usefulness remains observational `ADVISORY_ONLY`; unverified TradeInsight REST/schema capabilities remain fail closed. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. G0–G16 and the three canonical workflows remain the delivery control plane.
+Smart Provider Router v2 remains the sole general routing/admission authority. Direct SEC/EDGAR remains Form 4 authority. Canonical Data Health, freshness, degradation, subscription, cache, persistence/state, identity, session/calendar, telemetry, reconciliation and lifecycle owners remain unchanged. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent. Shared user-facing capability follows Mac + Windows + Web lockstep. Adaptive production influence remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; no silent self-modification.
+
+## Current planning state
+
+#110 is process/release-engineering governance only and has `productBehaviorChange=false`. It temporarily blocks the next product capability until the plan itself passes exact-head Fast and impact-selected Qualified. It does not reserve or implement Provider Gateway, PostgreSQL, KMS, sync, client parity, v20 intelligence or any other product behavior.
+
+The new plan is deliberately granular. v19 contains separate slices for provider rights, tenant identity, device lifecycle, session/privileged auth, RBAC, product entitlement, privacy lifecycle, IaC/service trust, PostgreSQL schema/capacity/recovery, KMS/secret lifecycle, supply chain, provider scorecards, point-in-time quality, hosted API/gateway/serving/live fan-out, sync envelope/outbox/checkpoint/bootstrap/retention/conflict, cross-platform product domains, assurance, point-in-time evidence, ADR-GDI reliability/economics and Major Closure. v20 separately covers adaptive control/model governance, ASBI, Institutional/13F + TDTI, AODR, ADR-GDI adaptive operations and Professional Closure.
 
 ## Exactly one next action
 
-Do **not** resume v18 provider-intelligence implementation and do **not** automatically start #66. If future development is explicitly requested, fetch live GitHub state and make a fresh program-selection/eligibility decision before creating or reserving any #66 work slice.
+Finish #110 CURRENT/checkpoint projection convergence, then open one Draft PR from `adapt-v19-zero-miss-plan-001` and let canonical Fast validate the conservation gate and planning closure ledger. Do not start the first v19 product slice before #110 merges and a fresh source-overlap G0/G1 identifies the first genuine residual.
 
 ## Resume rule
 
-1. Fetch live `main` first; GitHub may have advanced after this projection.
-2. Read this file, `governance/current-state.json`, `AGENTS.md`, portability/CI-efficiency governance, and current issue states before mutation.
-3. Treat #76/#77, #79/#84, #92, #95, #102, #94 and #107 as completed foundations unless new executable evidence proves a regression.
-4. Do not reopen old v18.9.x labels from documentation alone.
-5. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-6. #66 is not started or reserved; it requires an explicit fresh future-program decision.
-7. Any future work still uses canonical exact-head Fast -> impact-selected Qualified -> expected-head merge and G0–G16.
-8. Another ChatGPT account, Codex or Claude must resume from GitHub source-of-truth rather than chat memory.
+1. Fetch live `main` and `adapt-v19-zero-miss-plan-001` first; GitHub may have advanced.
+2. Read this file, `governance/current-state.json`, `AGENTS.md`, portability/CI-efficiency governance, issue #110, issue #66 and their current comments before mutation.
+3. Treat v18 as closed unless fresh current-main executable evidence proves a real unsuperseded regression; if one exists, add it as a named corrective blocker rather than hiding it in v19.
+4. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/subscription/cache/persistence/state/identity/session/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+5. Keep issue #66 as the hosted umbrella but do not broadly activate it while #110 is open.
+6. Preserve all mapped #66 issue/comment requirements through `governance/v19-v20-requirement-conservation.json`.
+7. Shared capability work follows Mac + Windows + Web lockstep.
+8. Any future implementation still uses G0-G16 and exact-head Fast -> impact-selected Qualified -> expected-head merge.
+9. Another ChatGPT/Codex/Claude account must resume from GitHub source-of-truth rather than chat memory.
