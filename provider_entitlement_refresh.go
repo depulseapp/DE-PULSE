@@ -132,7 +132,3 @@ func (e *Engine) forceProviderEntitlementRevalidation(settings Settings, secrets
 type providerConfigurationError struct{ message string }
 
 func (e *providerConfigurationError) Error() string { return e.message }
-
-func resetProviderConfigurationObservationForTest(e *Engine) {
-	providerConfigurationObservations.Delete(e)
-}
