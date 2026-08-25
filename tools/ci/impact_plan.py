@@ -58,6 +58,13 @@ WEBKIT_EVIDENCE_FILES = {
 CAPABILITY_EVIDENCE_FILES = RENDERER_EVIDENCE_FILES | {
     "tools/ci/webkit_browser_test.py",
 }
+# Active cross-layer assurance controls are not ordinary process-only files.
+# A change to their ownership/closure semantics must re-qualify the executable
+# backend + renderer evidence graph they certify, without inventing a new lane.
+T2_CROSS_LAYER_ASSURANCE_FILES = {
+    "tools/ci/v18_t2_unit_contract_assurance_gate.py",
+    "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json",
+}
 NATIVE_MACOS_FILES = {
     "tools/release/native_macos.sh",
     "desktop_lifecycle.go",
@@ -113,7 +120,7 @@ def resolve_base(base: str, head: str, target_ref: str) -> tuple[str, str]:
 
 
 def is_process_only(path: str) -> bool:
-    if path in CAPABILITY_EVIDENCE_FILES:
+    if path in CAPABILITY_EVIDENCE_FILES or path in T2_CROSS_LAYER_ASSURANCE_FILES:
         return False
     if STABLE_EVIDENCE_RE.fullmatch(path):
         return True
@@ -147,6 +154,9 @@ def explicit_classes(path: str) -> set[str]:
         classes.add("RENDERER_UI")
     if path.endswith(".go") or path in {"go.mod", "go.sum"}:
         classes.add("BACKEND")
+
+    if path in T2_CROSS_LAYER_ASSURANCE_FILES:
+        classes.update({"BACKEND", "RENDERER_UI"})
 
     if any(token in p for token in ("auth", "login", "rbac", "security", "secret", "credential", "permission")):
         classes.add("AUTH_SECURITY")
