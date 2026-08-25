@@ -59,7 +59,7 @@ assert(overallDiagram.includes('No Execution'),'permanent No Execution boundary 
 vm.runInContext(ownerSource,context,{filename:'documentation-ui.js'});
 const owner=vm.runInContext('__DE_PULSE_DOCUMENTATION_UI__',context);
 assert.strictEqual(owner.owner,'renderer/documentation-ui.js');
-assert.strictEqual(owner.registry().state,'ACTIVE_CANONICAL_OWNER_WITH_LEGACY_RENDER_FALLBACK');
+assert.strictEqual(owner.registry().state,'ACTIVE_OWNER_WITH_LEGACY_FALLBACK');
 assert.strictEqual(owner.registry().architectureOwner,'renderer/documentation-architecture.js');
 assert(vm.runInContext('renderDocumentation()',context).includes('data-render-owner="documentation-ui"'));
 assert(vm.runInContext('renderDocumentation()',context).includes('data-architecture-owner="renderer/documentation-architecture.js"'));
