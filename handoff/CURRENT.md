@@ -17,8 +17,9 @@
 **Completed T4:** #117 / PR #130 / merge `fadd9247f63779195138f8d79cbaa0f304b16e61`  
 **Completed T5:** #118 / PR #132 / merge `81137e4481cdf4a351e45c599efa0777ef93460a`  
 **Completed T6:** #119 / PR #133 / merge `ca051884c733118c11e13b0b5ef169c810c39714`  
-**Active child:** #120 / T7 — UI / UX / information architecture / content / accessibility  
-**Recorded companion:** #121 / T8 — NOT STARTED  
+**Completed T7:** #120 / PR #134 / merge `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`  
+**Next child:** #121 / T8 — performance / load / soak / concurrency / resource safety — **NOT STARTED**  
+**Recorded companion:** #122 / T9 — cross-platform packaged runtime / release / provenance — **NOT STARTED**  
 **Frozen T1 responsibility count:** 180  
 **T1 frozen assurance manifest:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json`  
 **T2 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json`  
@@ -26,41 +27,38 @@
 **T4 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T4_EDGE_FAILURE_DATA_TRUTH_ASSURANCE.json`  
 **T5 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json`  
 **T6 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json`  
+**T7 assurance:** `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T7_UI_UX_IA_CONTENT_ASSURANCE.json`  
 **Parent closure ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
 **Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — BLOCKED.
 
 ## Current authority
 
-T1-T6 are durably closed. T6 final head `0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b` passed exact-head Fast #1051/run `32876475257` and identical-head Qualified #211/run `32876753635`; PR #133 merged with expected-head protection as `ca051884c733118c11e13b0b5ef169c810c39714`. T6 resolved 179 security/role/rights-bearing responsibilities as applicable and covered, one renderer-portability responsibility as source-proven non-applicable, and zero uncovered. Qualified proved CI/harness, security/data-rights, persistence/DB integration including the production `CGO_ENABLED=0` file-fallback credential/workspace isolation path, full Go, race detector and randomized package order.
+T1-T7 are durably closed. T7 final qualified source head `d5a6028a140599c3dd1c54e4f0fa184b83baccb1` passed exact-head Fast #1063/run `32886292524` and identical-head Qualified #214/run `32886516851`; PR #134 merged expected-head as `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`.
 
-T7/#120 is now the sole active closure action. It must audit every shipped v18 user-visible responsibility for best-fit placement, hierarchy, usefulness, truthful wording, duplication, control proximity, loading/empty/degraded states, role awareness, responsive behavior, focus/keyboard/contrast/accessibility, Chrome/WebKit behavior and native-shell presentation where applicable. T8/#121 remains NOT_STARTED.
+T7 resolved the immutable 180-responsibility inventory to 34 user-visible responsibilities with 34 covered, zero uncovered and 146 non-user-visible. Explicit visible dispositions are KEEP=26, MERGE=5, MOVE=2, REMOVE=1, RENAME=0, REDESIGN=0. Qualified Chrome checked out the exact final source head and executed the canonical `tests/renderer/responsive_ui_test.py` matrix through the registered browser owner: **393/393 PASS across 15 viewports and 21 surfaces**. WebKit compatibility, renderer contracts, persistence/DB integration, security/data-rights, full Go suite, race detector, randomized package order and repository migration safety all passed.
+
+T8/#121 is the next governed closure track but is **NOT_STARTED by this handoff update**. T9/#122 is recorded as the next companion and is also NOT_STARTED. T10/#123 and v19/#66 remain blocked. No v18.10.0 release is authorized until all remaining tracks are VERIFIED and G0-G16 publication succeeds.
 
 ## Exactly one next action
 
-**Continue T7/#120 only:** reconstruct the frozen 180-responsibility inventory, identify every user-visible row, require an explicit `KEEP` / `MOVE` / `MERGE` / `REMOVE` / `RENAME` / `REDESIGN` disposition for each visible row, map executable UI/IA/content/accessibility evidence, and record the exact uncovered/debt set. If source/evidence proves a bounded IA/content defect, implement it and re-run affected functional/regression evidence. Do not start T8 until T7 is durably closed or GitHub machine state explicitly advances it.
+In a new governed work step, fetch fresh `main` and the closure branch, read #113 and #121 plus their current comments, inspect the frozen T1 ledger and T3/T4 workflow evidence, and then begin **T8/#121 only** if GitHub machine state still names it as the next child. This handoff commit does not initialize or start T8. Do not start T9, T10 or v19 in the same step.
 
-## T7 closure discipline
+## T8 boundary when it is later started
 
-- Preserve the immutable T1 inventory; do not create a hand-picked UI list.
-- Every effective row must receive a T7 expectation and explicit visibility/applicability result.
-- Every user-visible row must have one explicit frozen disposition: `KEEP`, `MOVE`, `MERGE`, `REMOVE`, `RENAME`, or `REDESIGN`; non-user-visible rows must remain `NOT_USER_VISIBLE` and cannot be given cosmetic UI ownership.
-- Audit role-aware navigation, information hierarchy, terminology, content truth, duplicate surfaces, control/task proximity, typography/spacing/table consistency, loading/empty/degraded states, accessibility/focus/keyboard behavior, responsive stability and browser/native-shell presentation where applicable.
-- UI hiding cannot repair security defects; T6 remains the authorization owner.
-- Read-only presentation cannot become a new market-data, persistence, provider-routing or recovery owner.
-- If a surface is wrong, duplicated, misleading or low-value, implement the smallest bounded correction and re-run impacted T2/T3/T4/T6 evidence as required by the dependency graph.
-- Screenshot/visual review may supplement but cannot replace executable renderer/browser/accessibility evidence.
-- T7 remains unverified until every visible row is explicitly disposed, all material UI/UX/IA/content debt is closed or source-proven non-applicable, exact-head Fast and identical-head Qualified pass, and expected-head merge is durable.
+T8 must prove realistic active-market and degraded-load behavior without creating a parallel performance-specific provider/router/data-health/recovery subsystem. Required evidence includes provider/API demand and latency/error/fallback/rate-limit pressure; Finnhub/Alpaca subscription/snapshot/history load; Opportunity Radar/scanners; Pre-Market/Market Open Prep and catalyst jobs; news/SEC/macro; cache/persistence reads/writes; goroutines/CPU/memory/allocations/GC/locks; UI/API latency; duplicate work/fan-out; race detector; randomized package order; repeated/soak behavior; backpressure/circuit behavior; protected-session capacity and truthful recovery. Local overload that materially delays freshness, manufactures DATA DEGRADED, misstates readiness/evidence, or makes the UI materially slow is a release blocker.
 
 ## Retained architecture
 
-Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains advisory only. U.S. equities processing, GLD/SLV/USO actionable exceptions, governed provider lifecycle and No Execution remain permanent. No parallel subsystem may be created merely to satisfy closure testing.
+Smart Provider Router v2 remains sole routing/admission authority. Direct SEC/EDGAR remains filing/Form 4 authority. Canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle and identity/session owners remain authoritative. Provider usefulness remains advisory only. U.S. equities processing, GLD/SLV/USO actionable exceptions, governed SHADOW → VALIDATED → APPROVED → PRODUCTION provider maturity, and No Execution remain permanent. No parallel subsystem may be created merely to satisfy closure testing.
 
 ## Resume rule
 
-1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, current closure PR if any, #113 and active child #120 first.
-2. Read this file, `governance/current-state.json`, the v18.10 plan, frozen T1 manifest/reconciliation, T2-T6 assurance and the T7 assurance artifact when present.
-3. Confirm T1-T6 durable evidence before relying on the frozen 180-responsibility inventory.
-4. Resume **T7/#120 only** from current exact branch head. T8/#121 remains NOT_STARTED.
-5. GitHub objects and executable evidence outrank this prose and all chat history.
-6. Use G0-G16 only: Fast exact-head PASS -> identical-head Qualified PASS -> expected-head merge. Final v18.10.0 publication remains prohibited until T1-T10 are VERIFIED.
-7. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone.
+1. Fetch live `main`, `adapt-v18-final-closure-10-10-001`, #113 and next child #121 first; also inspect any newer PR/workflow state.
+2. Read this file and `governance/current-state.json` first, then the v18.10 plan, frozen T1 manifest/reconciliation, T2-T7 assurance artifacts, #113 and #121.
+3. Confirm #120 remains closed, PR #134 remains merged at `80dcbf483378dbf8886bf6f3e421b17fce01b7d5`, and final source head `d5a6028a140599c3dd1c54e4f0fa184b83baccb1` retains Fast #1063 + Qualified #214 before relying on T7 closure.
+4. Treat T8/#121 as **NOT_STARTED** until a later governed step explicitly initializes it. T9/#122 remains NOT_STARTED.
+5. GitHub objects and executable evidence outrank this prose and all chat memory.
+6. Never infer assurance from a closed issue or test-file existence; require executable positive evidence and applicable negative/edge/failure evidence.
+7. Preserve Smart Provider Router v2, Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle, identity/session, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+8. Use G0-G16 only: canonical Fast exact-head PASS -> identical-head Qualified PASS -> expected-head merge for implementation tracks; final public v18.10.0 publication only after T1-T10 are VERIFIED.
+9. A new ChatGPT account, Codex or Claude must be able to resume from GitHub alone.

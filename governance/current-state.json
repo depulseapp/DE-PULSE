@@ -58,20 +58,21 @@
       {"track":"T3","issue":116,"status":"COMPLETE","frozenHeadSha":"d094956465b48639e05efeb5eff988ec5f2bf840","fastRunId":32864424807,"qualifiedRunId":32864615125,"mergedPullRequest":129,"mergedCommitSha":"cf0cc9aa877188775d5c36cb805e6c8935d776bb","effectiveShippedV18ResponsibilityCount":180,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T3_FUNCTIONAL_ASSURANCE.json"},
       {"track":"T4","issue":117,"status":"COMPLETE","frozenHeadSha":"cf8bab0650e6e1d0d2b099ebaf2ec18757737368","fastRunId":32869228199,"qualifiedRunId":32869561799,"mergedPullRequest":130,"mergedCommitSha":"fadd9247f63779195138f8d79cbaa0f304b16e61","effectiveShippedV18ResponsibilityCount":180,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T4_EDGE_FAILURE_DATA_TRUTH_ASSURANCE.json"},
       {"track":"T5","issue":118,"status":"COMPLETE","frozenHeadSha":"2fd65d7724564db802840db44116bd95a8901281","fastRunId":32873458078,"qualifiedRunId":32873584790,"mergedPullRequest":132,"mergedCommitSha":"81137e4481cdf4a351e45c599efa0777ef93460a","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":177,"nonApplicableResponsibilityCount":3,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json"},
-      {"track":"T6","issue":119,"status":"COMPLETE","frozenHeadSha":"0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b","fastRunId":32876475257,"qualifiedRunId":32876753635,"mergedPullRequest":133,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":179,"nonApplicableResponsibilityCount":1,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json"}
+      {"track":"T6","issue":119,"status":"COMPLETE","frozenHeadSha":"0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b","fastRunId":32876475257,"qualifiedRunId":32876753635,"mergedPullRequest":133,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":179,"nonApplicableResponsibilityCount":1,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json"},
+      {"track":"T7","issue":120,"status":"COMPLETE","frozenHeadSha":"d5a6028a140599c3dd1c54e4f0fa184b83baccb1","fastRunId":32886292524,"qualifiedRunId":32886516851,"mergedPullRequest":134,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5","effectiveShippedV18ResponsibilityCount":180,"visibleResponsibilityCount":34,"coveredVisibleResponsibilityCount":34,"nonVisibleResponsibilityCount":146,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T7_UI_UX_IA_CONTENT_ASSURANCE.json"}
     ],
-    "nextChildIssue": 120,
-    "nextChildTrack": "T7",
-    "nextCompanionChildIssue": 121,
-    "nextCompanionChildTrack": "T8",
+    "nextChildIssue": 121,
+    "nextChildTrack": "T8",
+    "nextCompanionChildIssue": 122,
+    "nextCompanionChildTrack": "T9",
     "nextGovernedTracks": [
-      {"track":"T7","issue":120,"status":"IN_PROGRESS"},
-      {"track":"T8","issue":121,"status":"NOT_STARTED"}
+      {"track":"T8","issue":121,"status":"NOT_STARTED"},
+      {"track":"T9","issue":122,"status":"NOT_STARTED"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": false,
       "T10Started": false,
-      "assuranceCeilingAfterT6": "IMPLEMENTED_UNVERIFIED"
+      "assuranceCeilingAfterT7": "IMPLEMENTED_UNVERIFIED"
     },
     "futureProgramBlockerIssue": 113,
     "futureBlockedIssue": 66,

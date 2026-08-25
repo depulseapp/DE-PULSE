@@ -3,7 +3,7 @@
   "programIssue": 113,
   "trackIssue": 120,
   "targetVersion": "v18.10.0",
-  "state": "IN_PROGRESS",
+  "state": "COMPLETE",
   "startedFromMainSha": "ca051884c733118c11e13b0b5ef169c810c39714",
   "frozenT1GitBlobSha": "cb352904900a7156197d752ef21c348daa74bd05",
   "effectiveShippedV18ResponsibilityCount": 180,
@@ -125,7 +125,43 @@
     ],
     "conclusion": "PRE_MERGE_QUALIFIED"
   },
-  "closureCensus": null,
+  "closureCensus": {
+    "headSha": "d5a6028a140599c3dd1c54e4f0fa184b83baccb1",
+    "fastRunNumber": 1063,
+    "fastRunId": 32886292524,
+    "qualifiedRunNumber": 214,
+    "qualifiedRunId": 32886516851,
+    "effectiveResponsibilities": 180,
+    "visibleResponsibilities": 34,
+    "coveredVisibleResponsibilities": 34,
+    "uncoveredVisibleResponsibilities": 0,
+    "nonVisibleResponsibilities": 146,
+    "dispositions": {"KEEP":26,"MERGE":5,"MOVE":2,"REMOVE":1,"RENAME":0,"REDESIGN":0,"NOT_USER_VISIBLE":146},
+    "responsiveEvidence": {
+      "canonicalOwner": "tests/renderer/responsive_ui_test.py",
+      "qualifiedChromeJobId": 97928351663,
+      "checksPassed": 393,
+      "checksTotal": 393,
+      "viewports": 15,
+      "surfaces": 21,
+      "fullMatrix": true
+    },
+    "mergedPullRequest": 134,
+    "mergedCommitSha": "80dcbf483378dbf8886bf6f3e421b17fce01b7d5",
+    "qualifiedEvidence": [
+      "CI/harness PASS",
+      "backend full Go suite PASS",
+      "race detector PASS",
+      "randomized package order PASS",
+      "persistence/DB integration PASS",
+      "renderer contracts PASS",
+      "Chrome canonical responsive matrix 393/393 across 15 viewports and 21 surfaces PASS",
+      "WebKit compatibility PASS",
+      "security/data-rights PASS",
+      "repository migration safety PASS"
+    ],
+    "conclusion": "VERIFIED"
+  },
   "completionCondition": "Every effective T1 responsibility has a T7 expectation and explicit visibility resolution; every visible responsibility has one KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition plus current executable UI/UX/IA/content/accessibility evidence; all material UI debt is corrected or source-proven non-applicable; exact-head Fast and identical-head Qualified pass before expected-head merge.",
   "t8CompanionIssue": 121,
   "t8StartedByThisArtifact": false
