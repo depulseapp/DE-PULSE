@@ -3,26 +3,24 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
 **Completed provider onboarding:** #95 / PR #101  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001` / PR #103 / merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`  
-**Closure branch:** `adapt-post-stable-continuity-001-closure`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**Known separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started/reserved  
+**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / PR #103 + closure PR #104  
+**Active product work:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / `adapt-provider-telemetry-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Future hosted program:** #66 remains blocked/not started.
 
-#70/#73 remain the completed CI/repository control-plane foundation. #102 used only the canonical CI Fast and CI Qualified workflows; no Release workflow was triggered because release identity did not change.
+#70/#73 remain the completed CI/repository control-plane foundation. #94 uses only the canonical CI Fast and CI Qualified workflows; release identity remains `v18.9.1-stable`, so no Release workflow belongs to this slice.
 
-Immutable #102 implementation evidence:
-- candidate `8adab6391dd6f64f302ca15d3d8bc2b278633c71`;
-- Fast #967 / `32803346202` exact-head PASS, including source-health/Data Health recurrence, closure-ledger, adaptive portability and unchanged Post-Stable continuity contract;
-- Qualified #194 / `32803373245` exact-head PASS with Planner v3 selecting `ci-harness + portability + backend`;
-- Ubuntu/macOS/Windows portability PASS;
-- backend gofmt, vet, full Go suite, race detector and randomized package order PASS;
-- PR #103 expected-head merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`;
-- main Fast #968 / `32803734938` branch hygiene PASS and Post-Stable continuity sentinel PASS.
+## Required #94 evidence
 
-The completed #80-#84 provider/Data Health architecture and #95 registration-aware recurrence remain inherited executable authority. Canonical `ProviderRegistration` identities and Router v2 members must still classify against the provider-capability matrix, including historical Router `SEC` -> durable `SEC EDGAR` identity. Smart Provider Router v2 remains sole general routing/admission authority.
+- exact candidate identity and source fingerprint;
+- canonical Fast exact-head PASS, including current-state/work-slice/source-health, Go formatting/vet/tests and impacted renderer checks selected by the workflow;
+- Planner v3 impact selection on the same candidate;
+- impact-selected Qualified PASS on the identical head, including every selected evidence owner;
+- source proof that semantic usefulness remains `ADVISORY_ONLY` and Smart Provider Router v2 has no usefulness dependency;
+- expected-head protected merge after a fresh `main` fetch;
+- post-merge branch hygiene/continuity remains green and no Release workflow is triggered.
 
-The closure branch must itself earn exact-head Fast and impact-selected Qualified on one unchanged candidate before expected-head merge. No gate waiver, temporary workflow, retry branch, direct-main patch or Stable release is permitted.
+The active closure ledger remains fail-closed until these immutable GitHub objects exist. No gate waiver, retry branch, direct-main patch or temporary workflow is permitted.
 
-After #102 closure, CI remains unchanged. The next action is a fresh #65 semantic-overlap audit before any product branch is reserved.
+Completed #80-#84, #92, #95 and #102 remain inherited executable authority. Smart Provider Router v2 remains sole general routing/admission authority; direct SEC/EDGAR, canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle, U.S. equities, GLD/SLV/USO and No Execution remain unchanged.
