@@ -8,7 +8,7 @@ import (
 	"depulse/internal/providerlifecycle"
 )
 
-const providerRegistrationContractVersion = "provider-registration-v1.2.0"
+const providerRegistrationContractVersion = "provider-registration-v1.3.0"
 
 // ProviderDatasetContract is the bounded adaptive work/evidence contract for one
 // provider capability on one canonical dataset. It is deliberately descriptive:
@@ -35,10 +35,18 @@ type ProviderDatasetContract struct {
 	Uses              []string
 }
 
+type ProviderCapabilityDiagnosticRegistration struct {
+	Capability string
+	Detail     string
+	Uses       []string
+	Status     func(Settings, Secrets, map[string]string, map[string]SymbolIntelligence, map[string]GlobalDriver) string
+}
+
 // ProviderRegistration is the single provider-onboarding descriptor consumed
 // by the existing router/capability owners. Adding a provider still requires
 // code for its adapter/normalizer and governed evidence, but provider metadata,
-// configuration invalidation and route adoption no longer need parallel maps.
+// configuration invalidation, capability diagnostics and route adoption no
+// longer need parallel provider maps.
 type ProviderRegistration struct {
 	Name                     string
 	QuotaLabel               string
@@ -46,6 +54,7 @@ type ProviderRegistration struct {
 	Configured               func(Settings, Secrets) bool
 	ConfigurationFingerprint func(Settings, Secrets) [32]byte
 	Routes                   []ProviderDatasetContract
+	Diagnostics              []ProviderCapabilityDiagnosticRegistration
 }
 
 func providerConfigurationFingerprint(parts ...string) [32]byte {
@@ -94,6 +103,7 @@ func tradeInsightProductionHistoryRoute(priority int) ProviderDatasetContract {
 
 func providerRegistrations() []ProviderRegistration {
 	has := func(v string) bool { return strings.TrimSpace(v) != "" }
+	coreUses := []string{"Market Regime", "Day", "Swing", "Long", "Discovery", "Research", "Decision Queue", "Trade Readiness"}
 	return []ProviderRegistration{
 		{Name: "Alpaca", QuotaLabel: "Entitlement / feed dependent", CostClass: "Broker/data entitlement",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.AlpacaKey) && has(s.AlpacaSecret) },
@@ -104,6 +114,16 @@ func providerRegistrations() []ProviderRegistration {
 				inheritedProductionRoute("Alpaca", canonicalUSMarketCalendarDataset, "U.S. market calendar", 1, "Official market-calendar cadence", "Session Awareness", "Preparation Jobs"),
 				inheritedProductionRoute("Alpaca", canonicalUSCorporateActionsDataset, "Corporate actions", 1, "Corporate-action dissemination cadence", "Corporate Actions", "Historical Normalization", "Research"),
 				inheritedProductionRoute("Alpaca", canonicalHistoricalBarsDataset, "Historical OHLCV", 1, "Completed-bar cadence", "Historical Bars", "Research", "Adaptive Intelligence"),
+			},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "IEX quotes / snapshots / liquidity", Detail: "Bid/ask, size, spread, quote age and snapshot hydration.", Uses: []string{"Day", "Market Open Prep", "Trade Readiness", "Decision Queue"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(has(s.AlpacaKey) && has(s.AlpacaSecret), health["alpaca-live"])
+				}},
+				{Capability: "SIP movers / most active", Detail: "Discovery seed only when account entitlement permits.", Uses: []string{"Discovery", "Dashboard"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					if !has(s.AlpacaKey) || !has(s.AlpacaSecret) { return "NOT ENTITLED" }
+					if strings.Contains(strings.ToLower(health["market-activity"]), "available") { return "AVAILABLE" }
+					return "PLAN LIMITED"
+				}},
 			}},
 		{Name: "Finnhub", QuotaLabel: "API plan / endpoint dependent", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.Finnhub) },
@@ -113,11 +133,32 @@ func providerRegistrations() []ProviderRegistration {
 				inheritedProductionRoute("Finnhub", "News", "Company news", 1, "Near-live when entitled", "News", "Research", "Catalyst Watch"),
 				inheritedProductionRoute("Finnhub", "Earnings", "Earnings calendar / surprise", 1, "Provider event/filing cadence", "Earnings", "Catalyst Watch", "Research"),
 				inheritedProductionRoute("Finnhub", "Fundamentals", "Company fundamentals", 1, "Provider fundamental-update cadence", "Research", "Swing", "Long"),
+			},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Primary U.S. equity + earnings/peers", Detail: "Live/REST plus earnings surprise and peer context.", Uses: append([]string(nil), coreUses...), Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(has(s.Finnhub), health["quotes-rest"])
+				}},
+				{Capability: "Analyst / insider premium context", Detail: "Used only when endpoint entitlement returns real data; never required for deterministic scoring.", Uses: []string{"Research", "Swing", "Long", "Decision Queue"}, Status: func(_ Settings, s Secrets, _ map[string]string, intel map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					if !has(s.Finnhub) { return "NOT ENTITLED" }
+					for _, v := range intel {
+						if v.RecommendationTrend != "" || v.PriceTarget > 0 || v.InsiderNetShares != 0 { return "AVAILABLE" }
+					}
+					return "PLAN LIMITED"
+				}},
 			}},
 		{Name: tradeInsightProviderName, QuotaLabel: "Runtime tier / response headers", CostClass: "Beta / free tier",
 			Configured: func(_ Settings, s Secrets) bool { return tradeInsightConfigured(s.TradeInsight) },
 			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint(tradeInsightProviderName, strings.TrimSpace(s.TradeInsight)) },
-			Routes: []ProviderDatasetContract{tradeInsightProductionHistoryRoute(2)}},
+			Routes: []ProviderDatasetContract{tradeInsightProductionHistoryRoute(2)},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Adjusted daily OHLCV / corporate-action corroboration", Detail: "Smart Router v2 member of canonical Historical Bars. Daily adjusted OHLCV only; dividends/splits are supplemental evidence merged into the canonical corporate-action ledger.", Uses: []string{"Historical Bars", "Research", "Corporate Actions", "Adaptive Intelligence"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					if !tradeInsightConfigured(s.TradeInsight) { return "NOT ENTITLED" }
+					history := strings.ToLower(strings.TrimSpace(health["history"]))
+					actions := strings.ToLower(strings.TrimSpace(health["tradeinsight-corporate-actions"]))
+					if strings.Contains(history, "tradeinsight") || strings.Contains(actions, "healthy") { return "AVAILABLE" }
+					return "SHADOW"
+				}},
+			}},
 		{Name: "Twelve Data", QuotaLabel: "Credit based", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.TwelveData) },
 			ConfigurationFingerprint: func(s Settings, sec Secrets) [32]byte { return providerConfigurationFingerprint("Twelve Data", strings.TrimSpace(sec.TwelveData), strings.ToLower(strings.TrimSpace(s.GlobalProviderMode))) },
@@ -126,15 +167,36 @@ func providerRegistrations() []ProviderRegistration {
 				inheritedProductionRoute("Twelve Data", canonicalGlobalMarketContextDataset, "FX / direct global context", 1, "Near-live when entitled", "Market Regime", "Dashboard", "Research"),
 				inheritedProductionRoute("Twelve Data", "VIX / Indices", "VIX / indices", 1, "Near-live when entitled", "VIX", "Market Regime", "Day", "Swing", "Long"),
 				inheritedProductionRoute("Twelve Data", canonicalHistoricalBarsDataset, "Historical OHLCV fallback", 3, "Completed-bar cadence", "Historical Bars", "Recovery"),
+			},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "FX / direct global context", Detail: "Direct FX/global where entitled; official/proxy/cache fallback remains truthful.", Uses: []string{"Market Regime", "Dashboard", "Research"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, direct map[string]GlobalDriver) string {
+					if !has(s.TwelveData) { return "NOT ENTITLED" }
+					for k := range direct { if strings.HasPrefix(k, "fx_") { return "AVAILABLE" } }
+					return capabilityStatusFromHealth(true, health["global-direct"])
+				}},
+				{Capability: "VIX / indices / historical recovery", Detail: "v15 primary VIX/index route and first historical fallback after Alpaca.", Uses: []string{"Market Regime", "Dashboard", "Day", "Swing", "Long"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(has(s.TwelveData), health["vix"])
+				}},
 			}},
 		{Name: "Marketaux", QuotaLabel: "Request quota", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.Marketaux) },
 			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("Marketaux", strings.TrimSpace(s.Marketaux)) },
-			Routes: []ProviderDatasetContract{inheritedProductionRoute("Marketaux", "News", "Stock news fallback", 2, "Near-live when entitled", "News", "Dashboard", "Research", "Catalyst Watch")}},
+			Routes: []ProviderDatasetContract{inheritedProductionRoute("Marketaux", "News", "Stock news fallback", 2, "Near-live when entitled", "News", "Dashboard", "Research", "Catalyst Watch")},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Stock news fallback", Detail: "Supplemental/fallback company news when Finnhub is unavailable.", Uses: []string{"News", "Dashboard", "Research", "Catalyst Watch"}, Status: func(_ Settings, s Secrets, _ map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					if has(s.Marketaux) { return "AVAILABLE" }
+					return "NOT ENTITLED"
+				}},
+			}},
 		{Name: "FRED", QuotaLabel: "Free API key", CostClass: "Free tier / optional paid upgrade",
 			Configured: func(_ Settings, s Secrets) bool { return has(s.FRED) },
 			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("FRED", strings.TrimSpace(s.FRED)) },
-			Routes: []ProviderDatasetContract{inheritedProductionRoute("FRED", "Macro", "Rates / credit / conditions / USD", 1, "Series release cadence", "Market Regime", "Swing", "Long", "Research", "Trade Readiness")}},
+			Routes: []ProviderDatasetContract{inheritedProductionRoute("FRED", "Macro", "Rates / credit / conditions / USD", 1, "Series release cadence", "Market Regime", "Swing", "Long", "Research", "Trade Readiness")},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Rates / credit / conditions / USD", Detail: "Slow macro state; cadence-aware cache.", Uses: []string{"Market Regime", "Swing", "Long", "Research", "Trade Readiness"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(has(s.FRED), health["fred-rates"])
+				}},
+			}},
 		{Name: "SEC", QuotaLabel: "Fair-access policy", CostClass: "Public / no API fee",
 			Configured: func(s Settings, _ Secrets) bool { return has(s.SECEmail) },
 			ConfigurationFingerprint: func(s Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("SEC", strings.TrimSpace(s.SECEmail)) },
@@ -151,13 +213,33 @@ func providerRegistrations() []ProviderRegistration {
 				inheritedProductionRoute("yfinance", canonicalHistoricalBarsDataset, "Recovery-only historical bars", 4, "Recovery-only; may be delayed", "Historical Bars", "Recovery"),
 				inheritedProductionRoute("yfinance", "Earnings", "Recovery-only earnings", 2, "Recovery-only; may be delayed", "Earnings", "Recovery"),
 				inheritedProductionRoute("yfinance", "Fundamentals", "Recovery-only fundamentals", 3, "Recovery-only; may be delayed", "Fundamentals", "Recovery"),
+			},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Recovery-only public market context", Detail: "Fallback only for VIX, historical bars, earnings and fundamentals; never the primary live production feed.", Uses: []string{"Data Freshness", "Research", "Recovery"}, Status: func(_ Settings, _ Secrets, _ map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string { return "AVAILABLE" }},
 			}},
 		{Name: "CBOE", QuotaLabel: "Public official/delayed", CostClass: "Public / no API fee",
 			Configured: func(_ Settings, _ Secrets) bool { return true },
 			ConfigurationFingerprint: func(_ Settings, _ Secrets) [32]byte { return providerConfigurationFingerprint("CBOE", "public-official") },
-			Routes: []ProviderDatasetContract{inheritedProductionRoute("CBOE", "VIX / Indices", "Official VIX validation / delayed close", 3, "Official delayed/close validation", "VIX", "Market Regime", "Data Freshness")}},
-		{Name: "BLS", QuotaLabel: "Official API", CostClass: "Public / free API", Configured: func(_ Settings, _ Secrets) bool { return true }, ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("BLS", strings.TrimSpace(s.BLS)) }},
-		{Name: "EIA", QuotaLabel: "Free API key", CostClass: "Public / free API", Configured: func(_ Settings, s Secrets) bool { return has(s.EIA) }, ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("EIA", strings.TrimSpace(s.EIA)) }},
+			Routes: []ProviderDatasetContract{inheritedProductionRoute("CBOE", "VIX / Indices", "Official VIX validation / delayed close", 3, "Official delayed/close validation", "VIX", "Market Regime", "Data Freshness")},
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Official VIX validation / delayed close", Detail: "Authoritative VIX validation and delayed/official fallback only; not a general stock provider.", Uses: []string{"VIX", "Market Regime", "Data Freshness"}, Status: func(_ Settings, _ Secrets, _ map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string { return "AVAILABLE" }},
+			}},
+		{Name: "BLS", QuotaLabel: "Official API", CostClass: "Public / free API",
+			Configured: func(_ Settings, _ Secrets) bool { return true },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("BLS", strings.TrimSpace(s.BLS)) },
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Inflation / labor / wages / PPI", Detail: "Official release-triggered actuals; no invented consensus.", Uses: []string{"Market Regime", "Swing", "Long", "Research"}, Status: func(_ Settings, _ Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(true, health["bls-actuals"])
+				}},
+			}},
+		{Name: "EIA", QuotaLabel: "Free API key", CostClass: "Public / free API",
+			Configured: func(_ Settings, s Secrets) bool { return has(s.EIA) },
+			ConfigurationFingerprint: func(_ Settings, s Secrets) [32]byte { return providerConfigurationFingerprint("EIA", strings.TrimSpace(s.EIA)) },
+			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
+				{Capability: "Petroleum / natural gas / energy state", Detail: "Official energy release context.", Uses: []string{"Market Regime", "Research", "Swing", "Long"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
+					return capabilityStatusFromHealth(has(s.EIA), health["eia-actuals"])
+				}},
+			}},
 	}
 }
 
