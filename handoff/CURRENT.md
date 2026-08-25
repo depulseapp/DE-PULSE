@@ -4,6 +4,10 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
+**Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
+**Certified Stable qualified source:** `d7276c3421dd2b4529ac2a987466be3cffa05678`  
+**Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
+**Certified Stable build ID:** `v18.9.1-stable-20260821`  
 **Live planning baseline:** `6aef3806d5684cc75daec0a2274bbf51fe135201`  
 **Completed provider/data-health program:** #79/#84  
 **Completed provider-intelligence program:** #65 with Professional Closure #107  
