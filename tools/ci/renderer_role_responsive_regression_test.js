@@ -16,4 +16,5 @@ assert(css.includes('.opportunity-radar-head,.opportunity-radar-row')&&css.inclu
 assert(renderer.includes('Research Target')&&renderer.includes("freshLabel=v151ResearchHydrating?'REFRESHING'")&&renderer.includes('Technical Context')&&renderer.includes('return context preserved'));
 assert(css.includes('.research-command-v2 .ticker-control')&&css.includes('height:36px')&&css.includes('.research-origin-context'));
 assert(!/\.ticker-control,\.ticker-input\{[^}]*height:36px/.test(css),'global controls must not be compacted');
+require('../../tests/renderer/t7_visible_surface_assurance_test.js');
 console.log('v18.0.5 renderer / role visibility / responsive touched-surface acceptance: PASS');
