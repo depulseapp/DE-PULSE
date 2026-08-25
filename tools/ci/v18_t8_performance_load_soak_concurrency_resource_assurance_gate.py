@@ -15,7 +15,6 @@ CLOSURE = ROOT / "governance" / "work-slices" / "ADAPT-V18-FINAL-CLOSURE-10-10-0
 WORKLOAD = ROOT / "workload_backpressure_regression_test.go"
 ACTIVE = ROOT / "active_market_reliability_regression_test.go"
 SLO = ROOT / "runtime_slo.go"
-SLO_TEST = ROOT / "runtime_slo_budget_regression_test.go"
 CI_FAST = ROOT / ".github" / "workflows" / "ci-fast.yml"
 CI_QUALIFIED = ROOT / ".github" / "workflows" / "ci-qualified.yml"
 T5 = PROGRAM / "T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json"
@@ -73,7 +72,7 @@ def main() -> int:
     args = parser.parse_args()
     errors: list[str] = []
 
-    for path in (T8, CURRENT, CLOSURE, WORKLOAD, ACTIVE, SLO, SLO_TEST, CI_FAST, CI_QUALIFIED, T5):
+    for path in (T8, CURRENT, CLOSURE, WORKLOAD, ACTIVE, SLO, CI_FAST, CI_QUALIFIED, T5):
         if not path.is_file():
             errors.append(f"required T8 owner missing: {path.relative_to(ROOT)}")
     if errors:
@@ -113,26 +112,28 @@ def main() -> int:
     if t5.get("state") != "COMPLETE" or t5.get("uncoveredResponsibilityCount") != 0:
         errors.append("T8 persistence pressure must inherit a zero-gap COMPLETE T5 lifecycle owner")
 
-    if not contains(WORKLOAD,
-                    "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
-                    "baseline.MaxQueue", "baseline.Capacity", "expectedCanceled", "expectedCompleted",
-                    "post-pressure admission recovery"):
-        # Last phrase is governance wording, not Go source; accept the actual recovery assertion instead.
-        workload_text = WORKLOAD.read_text(encoding="utf-8", errors="ignore")
-        required = (
-            "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
-            "baseline.MaxQueue", "baseline.Capacity", "expectedCanceled", "expectedCompleted",
-            "did not recover admission after pressure",
-        )
-        if not all(needle in workload_text for needle in required):
-            errors.append("canonical workload owner lost bounded T8 pressure/cancellation/recovery evidence")
+    workload_text = WORKLOAD.read_text(encoding="utf-8", errors="ignore")
+    for marker in (
+        "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
+        "baseline.MaxQueue", "baseline.Capacity", "expectedCanceled", "expectedCompleted",
+        "did not recover admission after pressure",
+    ):
+        if marker not in workload_text:
+            errors.append(f"canonical workload owner lost T8 pressure evidence: {marker}")
 
-    if not contains(ACTIVE,
-                    "TestV1870ActiveMarketDuplicateSnapshotBurstCoalesces",
-                    "calls.Load() != 1",
-                    "TestV1870ActiveMarketProviderPressureIsBoundedAndTruthful",
-                    "PressureState != \"PROTECTED\""):
-        errors.append("active-market duplicate-work/protected-pressure evidence missing")
+    active_text = ACTIVE.read_text(encoding="utf-8", errors="ignore")
+    for marker in (
+        "TestV1870ActiveMarketDuplicateSnapshotBurstCoalesces",
+        "calls.Load() != 1",
+        "TestV1870ActiveMarketProviderPressureIsBoundedAndTruthful",
+        "PressureState != \"PROTECTED\"",
+        "TestT8CanonicalRuntimeSLOBudgetsFailClosedAtOwnedThresholds",
+        '"Interactive API p95"', '"Provider queue"', '"Persistence queue age"',
+        '"DB write rate"', '"CPU utilization"', '"Local process budget"',
+        '"Startup/warm-start time"', '"Storage growth"',
+    ):
+        if marker not in active_text:
+            errors.append(f"active-market/T8 canonical evidence missing marker: {marker}")
 
     slo_text = SLO.read_text(encoding="utf-8", errors="ignore")
     for budget in (
@@ -148,16 +149,6 @@ def main() -> int:
     ):
         if budget not in slo_text:
             errors.append(f"canonical runtime SLO budget missing/drifted: {budget}")
-
-    slo_test_text = SLO_TEST.read_text(encoding="utf-8", errors="ignore")
-    for marker in (
-        "TestT8CanonicalRuntimeSLOBudgetsFailClosedAtOwnedThresholds",
-        '"Interactive API p95"', '"Provider queue"', '"Persistence queue age"',
-        '"DB write rate"', '"CPU utilization"', '"Local process budget"',
-        '"Startup/warm-start time"', '"Storage growth"',
-    ):
-        if marker not in slo_test_text:
-            errors.append(f"T8 SLO regression missing marker: {marker}")
 
     qualified = CI_QUALIFIED.read_text(encoding="utf-8", errors="ignore")
     for marker in (
