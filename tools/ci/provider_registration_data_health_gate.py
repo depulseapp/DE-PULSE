@@ -14,6 +14,8 @@ from pathlib import Path
 import re
 import sys
 
+from data_health_policy_gate import ROUTER_PROVIDER_ALIASES
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRATION_PATH = ROOT / "provider_registration.go"
 MATRIX_PATH = ROOT / "governance" / "data-health" / "provider-capability-matrix.json"
@@ -23,6 +25,10 @@ def fail(message: str) -> None:
     print("DE.PULSE provider-registration Data Health: FAIL", file=sys.stderr)
     print(" - " + message, file=sys.stderr)
     raise SystemExit(2)
+
+
+def canonical_provider(provider: str) -> str:
+    return ROUTER_PROVIDER_ALIASES.get(provider, provider)
 
 
 def matrix_providers() -> set[str]:
@@ -40,6 +46,12 @@ def matrix_providers() -> set[str]:
     }
     if not names:
         fail("provider-capability matrix resolved zero provider identities")
+    missing_alias_targets = sorted(set(ROUTER_PROVIDER_ALIASES.values()) - names)
+    if missing_alias_targets:
+        fail(
+            "canonical #80 provider alias targets missing from provider-capability matrix: "
+            + ", ".join(missing_alias_targets)
+        )
     return names
 
 
@@ -47,7 +59,7 @@ def registered_providers(source: str) -> set[str]:
     names = set(re.findall(r'\bName:\s*"([^"]+)"', source))
     if re.search(r'\bName:\s*tradeInsightProviderName\b', source):
         names.add("TradeInsight")
-    return names
+    return {canonical_provider(name) for name in names}
 
 
 def routed_registration_providers(source: str) -> set[str]:
@@ -57,7 +69,7 @@ def routed_registration_providers(source: str) -> set[str]:
         and "tradeInsightProductionHistoryRoute(" in source
     ):
         names.add("TradeInsight")
-    return names
+    return {canonical_provider(name) for name in names}
 
 
 def main() -> int:
