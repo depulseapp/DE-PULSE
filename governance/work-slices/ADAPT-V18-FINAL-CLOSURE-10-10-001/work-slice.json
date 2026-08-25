@@ -39,6 +39,6 @@
     "NO_AUTOMATIC_PROVIDER_LIFECYCLE_PROMOTION",
     "NO_PARALLEL_SUBSYSTEMS"
   ],
-  "nextTrack": {"track": "T1", "issue": 114},
+  "nextTrack": {"track": "T2", "issue": 115},
   "v19BlockedUntil": "v18.10.0 Stable published, T10 complete, post-closure residual/source-overlap audit PASS"
 }
