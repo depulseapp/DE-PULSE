@@ -19,7 +19,6 @@
     "extreme_30_test_fixture_test.go": {"owner":"Extreme-30 package-main evidence fixture","reason":"Shared package-main fixture for conserved Extreme-30 evidence; moving it would force artificial public/test APIs."},
     "performance_regression_test.go": {"owner":"Performance package-main regression evidence","reason":"Measures integrated package-main behavior and internal state without introducing production-only test seams."},
     "retired_equivalence_regression_test.go": {"owner":"Retired-test equivalence package-main evidence","reason":"Conserves legacy assertions against current package-main behavior and intentionally remains colocated with that behavior."},
-    "runtime_slo_budget_regression_test.go": {"owner":"T8 runtime SLO package-main regression evidence","reason":"Exercises canonical runtime_slo.go budgets and package-main telemetry/state without introducing test-only production exports or a parallel performance owner."},
     "signal_intelligence_regression_test.go": {"owner":"Signal intelligence package-main regression evidence","reason":"Requires unexported package-main integration access; retained as a final evidence owner rather than creating test-only production exports."}
   },
   "migrationRegisteredRootTargetsAreOwned": true,
