@@ -110,6 +110,7 @@ func (e *Engine) sampleRuntimeLoad() {
 	if e.providerTelemetry != nil {
 		providers = e.providerTelemetry.Diagnostics()
 	}
+	usefulness := e.sampleProviderUsefulness(now)
 	e.mu.RLock()
 	finnhubActive := len(e.subscribedSymbols)
 	alpacaActive := len(e.alpacaSubscribedSymbols)
@@ -118,7 +119,7 @@ func (e *Engine) sampleRuntimeLoad() {
 	e.mu.RUnlock()
 	liveSubscriptions := []LiveSubscriptionBudgetDiagnostics{
 		liveSubscriptionBudget("Alpaca IEX", alpacaPlanMaxSymbols, alpacaActiveTarget, alpacaActive, alpacaConnected),
-		liveSubscriptionBudget("Finnhub", finnhubPlanMaxSymbols, finnhubActiveTarget, finnhubActive, finnhubConnected),
+		liveSubscriptionBudget("Finnhub", finnhubPlanMaxSymbols, finnhubActiveTarget, finnhubActive, alpacaConnected),
 	}
 	broadSnapshots := e.broadSnapshotDiagnostics()
 	httpDiag := HTTPRuntimeDiagnostics{}
@@ -152,6 +153,7 @@ func (e *Engine) sampleRuntimeLoad() {
 		Persistence:              persistence,
 		Workload:                 workload,
 		ProviderRequests:         providers,
+		ProviderUsefulness:       usefulness,
 		LiveSubscriptions:        liveSubscriptions,
 		BroadSnapshots:           broadSnapshots,
 		HTTP:                     httpDiag,
