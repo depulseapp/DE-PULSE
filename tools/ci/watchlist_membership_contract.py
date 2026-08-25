@@ -94,7 +94,7 @@ proof_path = ROOT / proof_matches[0]
 if not proof_path.is_file():
     raise SystemExit(f"watchlist contract FAIL: G12 global-remove browser proof is missing: {proof_matches[0]}")
 executor = CANONICAL_EXECUTOR.read_text(encoding="utf-8")
-for marker in ("DE.PULSE-G12-EVIDENCE-MANIFEST-1", 'manifest.get("chromeTests"', "run(log, list(command), env=browser_env)"):
+for marker in ("DE.PULSE-G12-EVIDENCE-MANIFEST-1", 'manifest.get("chromeTests"', "run(log, list(command), env=os.environ.copy())"):
     if marker not in executor:
         raise SystemExit(f"watchlist contract FAIL: canonical G12 executor lost manifest Chrome execution marker {marker!r}")
 
