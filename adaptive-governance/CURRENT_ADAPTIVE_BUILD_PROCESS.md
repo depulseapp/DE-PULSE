@@ -2,21 +2,31 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 complete by executable evidence.  
-**Future hosted program:** #66 remains blocked/not started.
+**Completed provider-intelligence program:** #65 / #107  
+**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
+**Future hosted umbrella:** #66 — no product reservation yet.
 
-## Retained Adaptive Data Health process contract
+## Retained Data Health process
 
-The completed sequence **#81/#82/#83/#78/#84** remains inherited executable history. Smart Provider Router v2 retains its **fail closed** behavior and **canonical freshness** contract; provider-capability classification, scoped degradation/recovery and lifecycle/readiness remain active constraints. Completed #95 registration-aware recurrence and #94 observational usefulness extend those existing owners rather than creating parallel routing, health, cache, persistence, telemetry or reconciliation authorities.
+The inherited **#81/#82/#83/#78/#84** process remains in force: unclassified provider/fetch paths **fail closed**, **canonical freshness** remains authoritative, and Smart Provider Router v2 remains the only general routing/admission owner.
 
-## Current process state
+## Zero-miss v19 execution loop
 
-#107 is complete by exact evidence: candidate `dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2`, Fast #983 / `32811045734`, Qualified #198 / `32811081438`, PR #108 expected-head merge `e9c236b2b9f229968f93ffe9ac600f45080389a7`, and main Fast #984 / `32811424765`. Its six-gap ledger is VERIFIED. No product behavior changed and no Release workflow was used.
+For every future v19 patch:
 
-Do not reopen completed v18 work from documentation labels. Unverified TradeInsight REST/schema capabilities remain fail closed and direct SEC/EDGAR remains Form 4 authority. No endpoint/schema guessing, automatic lifecycle promotion or parallel provider subsystem is allowed.
+**LOOKUP live GitHub/source -> COMPARE with conservation rows -> CLASSIFY source overlap -> DECIDE one residual -> freeze G1 requirement/platform matrix -> implement smallest canonical-owner delta -> exact-head evidence -> reconcile every assigned row -> close -> only then advance.**
 
-If future development is explicitly requested, use LOOKUP -> COMPARE -> CLASSIFY -> DECIDE from current GitHub state before creating any new reservation. #66 remains separate/not started until that fresh decision. Any future delivery still uses G0-G16, exact-head Fast, impact-selected Qualified and expected-head merge.
+Rules:
+- roadmap prose never proves a feature is missing;
+- reuse/consolidate before add;
+- one primary implementation responsibility per patch;
+- parent requirement IDs and dependencies are frozen before implementation;
+- Mac/Windows/Web are `REQUIRED` or justified `N/A` at G1 for every shared capability;
+- one-platform evidence is diagnostic only;
+- external/provider blockers are explicit `EXTERNAL_BLOCKED`, never bypassed;
+- no applicable row may disappear between versions;
+- end-of-band closure has no feature scope and must prove zero unexplained carry-forward;
+- G10/G15 block on unowned/unevidenced applicable rows;
+- G16 reconciles the machine ledger against actual GitHub/CI/artifact truth.
+
+The canonical conservation ledger is `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`. Existing canonical provider, Data Health, freshness, cache/persistence, subscription, telemetry, reconciliation, identity/session and lifecycle owners remain authoritative.

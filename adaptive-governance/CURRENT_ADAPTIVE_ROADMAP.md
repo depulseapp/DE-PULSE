@@ -2,22 +2,25 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.9.1-stable`  
-**Completed provider/data-health program:** #79 with final #84 / PR #91  
-**Completed canonical identity:** #92 / PR #93  
-**Completed provider onboarding:** #95 / PR #101  
-**Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Retained implementation branch:** `adapt-provider-professional-closure-001`  
-**Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010` — complete by executable evidence.  
-**Future hosted program:** #66 remains blocked/not started.
+**Completed provider-intelligence program:** #65 with Professional Closure #107  
+**Planning rebaseline:** #110 / `ADAPT-V19-ZERO-MISS-PLAN-001`  
+**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — planned but product implementation remains unreserved/unstarted.
 
 ## Current roadmap state
 
-The fresh #65 semantic-overlap audit found no actionable v18 provider-intelligence product leaf, and #107 completed the no-feature Professional Closure evidence chain. No historical v18.9.x label authorizes new implementation.
+The v18 provider-intelligence program is complete by executable evidence. #110 rebaselines the unstarted v19/v20 future train into small dependency-ordered reservations. It does **not** start a v19 product slice.
 
-The completed executable sequence remains durable authority: **#80 baseline -> #81 Smart Provider Router v2 production adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 provider onboarding -> #94 observational usefulness telemetry -> #107 professional closure**. The canonical `provider-capability` / `provider-capability matrix` owner remains `governance/data-health/provider-capability-matrix.json`. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states for genuine evidence gaps and are not cosmetically suppressed.
+Canonical future detail:
+- `governance/ROADMAP.md`
+- `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`
+- `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`
 
-Smart Provider Router v2 remains sole general routing/admission authority; direct SEC/EDGAR remains Form 4 authority; unverified TradeInsight SEC/search/movers REST/schema capabilities remain vendor-contract gated/fail closed. No next product capability is reserved. #66 requires a separate fresh explicit program-selection decision.
+Every v19 patch has one primary implementation responsibility, must perform a fresh source-overlap classification before G1, and is bound to named conservation rows. Each v19 dependency band ends with a no-feature zero-gap closure; the next band cannot start with an applicable `UNASSIGNED`, unexplained, unevidenced or silently carried-forward requirement.
 
-Permanent boundaries remain U.S. equities processing, GLD/SLV/USO actionable exceptions, No Execution, governed provider lifecycle promotion, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle ownership, G0-G16 and the three canonical workflows.
+The retained executable provider/data-health sequence **#80 baseline -> #81 Smart Provider Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure** remains authority. Operator truth retains `PARTIAL COVERAGE` and `DATA DEGRADED`; future hosted work may not cosmetically suppress those states.
+
+Permanent boundaries remain Smart Provider Router v2 sole routing/admission owner, direct SEC/EDGAR filing/Form 4 authority, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle ownership, U.S. equities with GLD/SLV/USO actionable exceptions, No Execution, governed lifecycle promotion and Mac + Windows + Web lockstep for shared capabilities.
+
+## Next program-selection rule
+
+After the #110 planning slice is merged/closed, fetch live `main` and choose **only the first real residual** after source overlap. The expected first reservation is in the `v19.0.x` rights/control foundation, but documentation does not pre-authorize implementation and #66 must not be broadly started from labels alone.
