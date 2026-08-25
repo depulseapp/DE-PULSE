@@ -68,13 +68,14 @@
     "nextCompanionChildIssue": null,
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
-      {"track":"T10","issue":123,"status":"NOT_STARTED"}
+      {"track":"T10","issue":123,"status":"IN_PROGRESS"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": true,
       "T9Started": true,
       "T9Verified": true,
-      "T10Started": false,
+      "T10Started": true,
+      "T10State": "IN_PROGRESS",
       "assuranceCeilingAfterT9": "IMPLEMENTED_UNVERIFIED"
     },
     "futureProgramBlockerIssue": 113,
