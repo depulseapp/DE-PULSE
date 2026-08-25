@@ -25,8 +25,7 @@ func (e *Engine) sampleProviderUsefulness(now time.Time) []ProviderUsefulnessDia
 	router := e.buildProviderRouterSnapshot(settings, secrets, quotes, lastUpdated)
 	decisions := buildProviderReconciliation(router, providerQuotes, quotes, now.UnixMilli())
 	canonicalProviderUsefulness.bindPersistence(persistence)
-	if canonicalProviderUsefulness.observe(decisions, now.UnixMilli()) {
-		canonicalProviderUsefulness.persist(persistence, now.UnixMilli())
-	}
+	canonicalProviderUsefulness.observe(decisions, now.UnixMilli())
+	canonicalProviderUsefulness.persist(persistence, now.UnixMilli())
 	return canonicalProviderUsefulness.diagnostics()
 }
