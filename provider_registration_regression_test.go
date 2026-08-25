@@ -9,6 +9,10 @@ import (
 	"depulse/internal/providerlifecycle"
 )
 
+func resetProviderConfigurationObservationForTest(e *Engine) {
+	providerConfigurationObservations.Delete(e)
+}
+
 func TestProviderRegistrationPreservesProductionRouteBaseline(t *testing.T) {
 	expected := map[string][]string{
 		"US Live Equities":                  {"Alpaca", "Finnhub", "Twelve Data"},
