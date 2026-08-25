@@ -7,6 +7,7 @@
 **Certified Stable candidate:** `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`  
 **Certified Stable source fingerprint:** `0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff`  
 **Certified Stable build ID:** `v18.9.1-stable-20260821`  
+**Immutable predecessor resume checkpoint release:** `v18.9.0` / `v18.9.0-stable`  
 **Current live-main baseline for this slice:** `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91 / merge `733d90ca125a4fe5abd38a2ea40de0623703dfd4`  
 **Completed canonical identity slice:** #92 / PR #93 / merge `57d530e58bfb0b38cc108980cd5cd4a041014db8`  
