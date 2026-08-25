@@ -4,25 +4,25 @@
 **Certified Stable:** `v18.9.1-stable`  
 **Completed provider/data-health program:** #79 with final #84 / PR #91  
 **Completed canonical identity:** #92 / PR #93  
-**Completed provider onboarding:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
-**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / `adapt-post-stable-continuity-001` / PR #103 / merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`  
-**Closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**Known separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started/reserved  
+**Completed provider onboarding:** #95 / `ADAPT-PROVIDER-ONBOARDING-001` / PR #101  
+**Completed continuity process:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / PR #103 + closure PR #104  
+**Active product work:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` / `adapt-provider-telemetry-001`  
+**Closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
 **Future hosted program:** #66 remains blocked/not started.
 
-#102 is complete: exact candidate `8adab6391dd6f64f302ca15d3d8bc2b278633c71` passed Fast #967 and Qualified #194, PR #103 merged with expected-head protection, and main Fast #968 proved the Post-Stable continuity sentinel and aligned v18.9.1 Stable evidence green. No product behavior changed and no Stable/public SemVer release was rebuilt or republished.
+## Current roadmap decision
 
-## Retained Data Health and provider foundation
+The fresh post-#102 #65 semantic-overlap audit re-proved #94 as the next real dependency-ordered residual. Existing transport telemetry already computes completion, success percentage and P50/P95; #94 projects those diagnostics into privileged Maintenance without a duplicate calculation owner. Existing provider reconciliation already owns AGREED/CONFLICT/SINGLE SOURCE/STALE truth; #94 derives bounded semantic-usefulness aggregates only from those decisions and persists only compact aggregate/dedup state through the canonical persistence manager.
 
-The completed provider program sequence remains durable executable history and inherited contract: **#80 baseline -> #81 Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #95 canonical onboarding/adaptation**. Smart Provider Router v2 remains the sole general routing/admission authority. `ProviderRegistration` is the canonical onboarding descriptor, not a second router, lifecycle, Data Health, freshness, cache, persistence or telemetry authority.
+Semantic usefulness remains `ADVISORY_ONLY`. Sparse or single-source evidence stays `INSUFFICIENT`; stale, invalid and non-contemporaneous evidence cannot manufacture a provider score. Smart Provider Router v2 ordering/admission/lifecycle remains unchanged.
 
-`PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited. Registration-aware Data Health recurrence continues to classify canonical registered/routed providers against the provider-capability matrix, including historical Router `SEC` -> durable `SEC EDGAR` identity.
+## Retained foundation and boundaries
 
-## Next roadmap decision
+The inherited sequence **#80 baseline -> #81 Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 onboarding/adaptation** remains executable authority. Smart Provider Router v2 remains the sole general routing/admission owner; direct SEC/EDGAR remains Form 4 authority; canonical freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners remain unchanged; U.S. equities only, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
 
-The next product capability is intentionally **unreserved**. The immediate roadmap action is a fresh #65 live-source semantic-overlap audit across current `main`, current open issues and existing executable owners. The audit must distinguish already-delivered behavior from genuine residuals before a new branch/work-slice is reserved. #94 is a known telemetry/usefulness residual candidate, but it is not automatically selected. #66 remains future-blocked.
+`PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional Data Health states whenever canonical evidence is incomplete, stale, unavailable or genuinely plan-limited. #94 does not redefine those states.
 
-## Permanent boundaries
+## Delivery boundary
 
-U.S. equities processing only; GLD/SLV/USO remain governed actionable exceptions; No Execution remains permanent; direct SEC/EDGAR remains Form 4 authority; provider lifecycle promotion remains evidence/governance controlled; canonical freshness/degradation/cache/persistence/telemetry/reconciliation owners remain unchanged; G0-G16 and the three canonical CI workflows remain the only delivery architecture.
+#94 must earn exact-head Fast and impact-selected Qualified on one unchanged candidate before expected-head merge. No Stable/public SemVer release belongs to #94 alone. #66 remains future-blocked.

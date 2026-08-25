@@ -1,0 +1,74 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-PROVIDER-TELEMETRY-001",
+  "issue": 94,
+  "branch": "adapt-provider-telemetry-001",
+  "status": "IN_PROGRESS",
+  "allGapsMustBeVerified": true,
+  "closurePolicy": "Issue #94 may close only after every blocking gap is VERIFIED by executable exact-head evidence and expected-head merge evidence; sparse semantic observations remain insufficient rather than guessed, and no telemetry result may change Smart Provider Router v2 ordering.",
+  "gaps": [
+    {
+      "id": "TRANSPORT-DIAGNOSTIC-PROJECTION",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "CANONICAL_PROVIDER_TELEMETRY_PLUS_PRIVILEGED_RENDERER",
+      "implementationPaths": ["runtime_observability.go", "renderer/provider-telemetry-ui.js", "renderer/index.html"],
+      "evidenceRequired": ["existing successes/errors/successPct/P50/P95 fields are projected without duplicate backend calculation", "privileged DOM shows completed, success/failure, success percentage, median/P50, P95 and average latency"],
+      "closureCondition": "Fast/Qualified regression evidence proves richer transport diagnostics on the existing privileged Maintenance surface."
+    },
+    {
+      "id": "SEMANTIC-USEFULNESS-AGGREGATION",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "CANONICAL_PROVIDER_RECONCILIATION_DERIVED_TELEMETRY",
+      "implementationPaths": ["provider_usefulness.go", "provider_usefulness_runtime.go", "runtime_load_profile.go"],
+      "evidenceRequired": ["AGREED and CONFLICT participation aggregates only from ProviderReconciliationDecision observations", "single-source evidence remains INSUFFICIENT", "agreement percentage appears only after the minimum cross-source sample floor"],
+      "closureCondition": "Tests prove deterministic bounded aggregation with no invented semantic score."
+    },
+    {
+      "id": "EVIDENCE-ELIGIBILITY-TRUTH",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "CANONICAL_RECONCILIATION_TIMESTAMP_AND_CONTEMPORANEITY",
+      "implementationPaths": ["provider_reconciliation.go", "provider_usefulness.go", "provider_usefulness_regression_test.go"],
+      "evidenceRequired": ["non-contemporaneous observations are excluded before usefulness aggregation", "material future timestamps fail validity", "STALE/invalid exclusions do not become eligible evidence and provider attribution is never guessed"],
+      "closureCondition": "Regression proof covers stale, non-contemporaneous and materially future evidence."
+    },
+    {
+      "id": "BOUNDED-RESTART-SAFE-PERSISTENCE",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "CANONICAL_PERSISTENCE_MANAGER",
+      "implementationPaths": ["provider_usefulness.go", "persistence_repository.go", "persistence_archive.go", "provider_usefulness_regression_test.go"],
+      "evidenceRequired": ["only aggregate telemetry and bounded decision signatures are retained", "PersistenceManager derived-feature path is reused with no schema or parallel persistence owner", "restart restores aggregate and dedup state"],
+      "closureCondition": "Persistence regression proves bounded restart-safe aggregate retention through the existing persistence owner."
+    },
+    {
+      "id": "PRIVILEGED-ROLE-PROJECTION",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "ROLE_AWARE_RENDERER",
+      "implementationPaths": ["renderer/provider-telemetry-ui.js", "renderer/index.html", "provider_usefulness_regression_test.go"],
+      "evidenceRequired": ["OWNER/ADMIN/SUPER_OWNER can see new provider telemetry", "USER/DEMO cannot receive the new internal projection", "no duplicate page or navigation surface is introduced"],
+      "closureCondition": "Renderer/static regressions prove role-gated projection on the existing Maintenance surface."
+    },
+    {
+      "id": "ROUTING-INVARIANCE",
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "SMART_PROVIDER_ROUTER_V2",
+      "implementationPaths": ["smart_router_v2.go", "provider_usefulness.go", "provider_usefulness_runtime.go", "provider_usefulness_regression_test.go"],
+      "evidenceRequired": ["semantic telemetry is ADVISORY_ONLY", "Smart Provider Router v2 has no usefulness dependency", "provider order/admission/lifecycle remain unchanged"],
+      "closureCondition": "Source and regression evidence prove zero routing-policy dependency on semantic usefulness telemetry."
+    },
+    {
+      "id": "EXACT-HEAD-QUALIFICATION",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "CANONICAL_FAST_QUALIFIED_DELIVERY",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["canonical Fast exact-head PASS", "impact-selected Qualified exact-head PASS on the identical candidate", "expected-head protected merge after fresh main re-fetch", "no Release workflow for #94-only delivery"],
+      "closureCondition": "Immutable GitHub run/status/PR/merge evidence is recorded after final qualification."
+    }
+  ]
+}

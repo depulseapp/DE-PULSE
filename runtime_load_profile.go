@@ -34,6 +34,7 @@ type RuntimeLoadDiagnostics struct {
 	Persistence              PersistenceDiagnostics              `json:"persistence"`
 	Workload                 []WorkClassDiagnostics              `json:"workload"`
 	ProviderRequests         []ProviderRequestDiagnostics        `json:"providerRequests,omitempty"`
+	ProviderUsefulness       []ProviderUsefulnessDiagnostic      `json:"providerUsefulness,omitempty"`
 	LiveSubscriptions        []LiveSubscriptionBudgetDiagnostics `json:"liveSubscriptions,omitempty"`
 	BroadSnapshots           BroadSnapshotBrokerDiagnostics      `json:"broadSnapshots"`
 	HTTP                     HTTPRuntimeDiagnostics              `json:"http"`
@@ -109,6 +110,7 @@ func (e *Engine) sampleRuntimeLoad() {
 	if e.providerTelemetry != nil {
 		providers = e.providerTelemetry.Diagnostics()
 	}
+	usefulness := e.sampleProviderUsefulness(now)
 	e.mu.RLock()
 	finnhubActive := len(e.subscribedSymbols)
 	alpacaActive := len(e.alpacaSubscribedSymbols)
@@ -151,6 +153,7 @@ func (e *Engine) sampleRuntimeLoad() {
 		Persistence:              persistence,
 		Workload:                 workload,
 		ProviderRequests:         providers,
+		ProviderUsefulness:       usefulness,
 		LiveSubscriptions:        liveSubscriptions,
 		BroadSnapshots:           broadSnapshots,
 		HTTP:                     httpDiag,

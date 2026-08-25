@@ -11,52 +11,44 @@
 **Completed provider/data-health program:** #79 with final #84 / PR #91  
 **Completed canonical identity:** #92 / PR #93  
 **Completed provider onboarding:** #95 / PR #101 / merge `2eab9bd38b0a75a116de46e531015ed699ed7308`  
-**Completed continuity process authority:** #102 / `ADAPT-POST-STABLE-CONTINUITY-001` / implementation PR #103 / merge `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`  
-**Retained process branch identity:** `adapt-post-stable-continuity-001`  
-**Closure branch:** `adapt-post-stable-continuity-001-closure`  
-**Work-slice:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/work-slice.json`  
-**Closure ledger:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/closure.json`  
-**Final qualification evidence:** `governance/work-slices/ADAPT-POST-STABLE-CONTINUITY-001/final-qualification-evidence.json`  
+**Completed continuity process:** #102 / PR #103 + closure PR #104 / durable main `15077c042333cc7a4ef389dd75adbbbb0d51b462`  
+**Active product work slice:** #94 / `ADAPT-PROVIDER-TELEMETRY-001`  
+**Active branch:** `adapt-provider-telemetry-001`  
+**Work-slice:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/work-slice.json`  
+**Closure ledger:** `governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json`  
 **Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
-**Known separate product residual:** #94 / `ADAPT-PROVIDER-TELEMETRY-001` — not started/reserved  
 **Future hosted program:** #66 remains blocked/not started.
 
 ## Current authority
 
-GitHub objects and executable evidence outrank this handoff. #95 and #102 are complete and must not be resumed as implementation work.
+GitHub objects and executable evidence outrank this handoff. #79/#84, #92, #95 and #102 are completed foundations and must not be restarted absent new executable regression evidence.
 
-#95 completed on candidate `3a988f24fc799d130384ff89c9fd1f243db46571`: Fast #965 / `32801432713` PASS, Qualified #193 / `32801546814` PASS on the identical head, and PR #101 expected-head merged as `2eab9bd38b0a75a116de46e531015ed699ed7308`.
+The required post-#102 #65 semantic-overlap audit was completed against live `main` `15077c042333cc7a4ef389dd75adbbbb0d51b462`. It re-proved #94 as the remaining dependency-ordered provider product residual: transport telemetry already computes successes/errors/success percentage/P50/P95 but the privileged operator renderer does not project them, and canonical provider reconciliation has decision-level AGREED/CONFLICT/SINGLE SOURCE/STALE truth but no bounded restart-safe semantic usefulness aggregate. #66 remains future-blocked.
 
-#102 repaired repository continuity only. Candidate `8adab6391dd6f64f302ca15d3d8bc2b278633c71` passed Fast #967 / `32803346202` and impact-selected Qualified #194 / `32803373245` on the identical head. PR #103 expected-head merged as `25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36`. Main Fast #968 / `32803734938` then proved branch hygiene PASS and the previously failing **Post-Stable continuity sentinel PASS**, including aligned v18.9.1 Stable evidence validation. No product behavior changed and no Stable/public SemVer release was rebuilt or republished.
+## Active #94 implementation contract
 
-## Durable v18.9.1 evidence
-
-- PR #69 source: `d7276c3421dd2b4529ac2a987466be3cffa05678`
-- Stable merge/candidate: `e55d8d25b15cec2ffb0f5411bc358bc40b359cf9`
-- Fast #581 / `32546289014`: PASS
-- Qualified #163 / `32546364036`: PASS
-- Release #33 / `32546555659`: PASS G11-G16 / same-run no-rebuild publication
-- G12 artifact: `9468730974`
-- macOS Apple Silicon G13/G14: `9468744315`
-- Windows x64 G13/G14: `9468744475`
-- G15: `9468747228`
-- G16: `9468751229`
-- `release/v18.9.1/stable-evidence-manifest.json` is retrospective evidence only and explicitly does not redefine, rebuild or republish the immutable Stable release.
+#94 extends existing owners only:
+- `runtime_observability.go` remains transport reliability authority; no duplicate request/latency calculation is created.
+- `buildProviderReconciliation` remains semantic evidence truth. Usefulness telemetry consumes `ProviderReconciliationDecision`; it does not create another reconciliation algorithm.
+- semantic usefulness counts only eligible canonical reconciliation observations; sparse/single-source evidence remains `INSUFFICIENT`, stale/invalid/non-contemporaneous evidence cannot manufacture a score, and provider attribution is never guessed.
+- bounded aggregate/dedup state persists as one derived feature through the existing `PersistenceManager`; no database schema or parallel persistence owner is introduced.
+- privileged Maintenance UI labels **Transport reliability** separately from **Semantic Evidence** and projects the new internal diagnostics only for SUPER_OWNER/OWNER/ADMIN.
+- usefulness is `ADVISORY_ONLY`; Smart Provider Router v2 ordering, admission, lifecycle and promotion remain unchanged.
 
 ## Retained product architecture
 
-The completed #80-#84 Data Health sequence and #95 provider onboarding remain inherited executable authority. Smart Provider Router v2 remains the sole general provider routing/admission authority. `ProviderRegistration` remains the canonical onboarding descriptor, not a second router/lifecycle/health owner. Canonical freshness, degradation, cache, persistence, telemetry, reconciliation and provider lifecycle owners remain unchanged. Direct SEC/EDGAR remains Form 4 authority. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
+Smart Provider Router v2 remains the sole general provider routing/admission authority. `ProviderRegistration` remains the canonical onboarding descriptor, not a second router/lifecycle/health owner. Canonical freshness, degradation, cache, persistence, transport telemetry, reconciliation and provider lifecycle owners remain unchanged. Direct SEC/EDGAR remains Form 4 authority. U.S. equities processing, GLD/SLV/USO actionable exceptions and No Execution remain permanent.
 
 ## Exactly one next action
 
-Perform a **fresh #65 live-source semantic-overlap audit** from the current `main` before reserving or implementing any next product slice. Re-read issue #65 and current comments, inspect all open residuals and relevant source/commits, classify what is already delivered by #79/#92/#95 and what is genuinely missing, then durably reserve only the next real dependency-ordered residual. #94 is a known candidate but is **not automatically next** until the audit re-proves the gap. Do not start #66.
+Continue #94 on `adapt-provider-telemetry-001` from live GitHub state. Finish executable regressions and fail-closed closure evidence, then open one Draft PR to trigger canonical Fast on the exact candidate. Fix only real failures. After Fast PASS, make the same head Ready to trigger impact-selected Qualified. Do not mutate source after qualification; re-fetch live `main` and merge only with expected-head protection. Do not trigger Release and do not start #66.
 
 ## Resume rule
 
-1. Fetch live `main` first; GitHub may have advanced after this closure projection.
-2. Read this file, `governance/current-state.json`, `AGENTS.md`, portability/CI-efficiency contracts, issue #65 and its latest comments, completed #102 evidence, and current open issues.
-3. Run a semantic overlap audit against current executable source before creating or reserving the next product branch/slice.
-4. Do not reopen #79/#84, #92, #95 or #102 unless new executable evidence proves a real regression in their owned scope.
-5. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
-6. #94 remains separate/unstarted until selected by the audit; #66 remains future-blocked.
-7. Continue using canonical exact-head Fast -> impact-selected Qualified -> expected-head merge; no gate weakening or extra workflow family.
+1. Fetch live `main` and `adapt-provider-telemetry-001` first; another session may have advanced either.
+2. Read this file, `governance/current-state.json`, `AGENTS.md`, portability/CI-efficiency contracts, issue #65 latest comments, issue #94 and its comments, and the #94 work-slice/closure ledger before changing source.
+3. Inspect commits since baseline main `15077c042333cc7a4ef389dd75adbbbb0d51b462` so no #94 work is duplicated.
+4. Preserve Smart Provider Router v2, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle owners, direct SEC/EDGAR, U.S. equities, GLD/SLV/USO and No Execution.
+5. Semantic usefulness remains advisory/non-routing until a separately governed future validation explicitly changes that policy.
+6. #66 remains future-blocked; do not absorb unrelated #65 residuals into #94.
+7. Continue using canonical exact-head Fast -> impact-selected Qualified -> expected-head merge; no gate weakening, direct-main push, retry branch or extra workflow family.

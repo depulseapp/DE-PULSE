@@ -1,0 +1,52 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-1",
+  "workSliceId": "ADAPT-PROVIDER-TELEMETRY-001",
+  "issue": 94,
+  "title": "Provider observability & production usefulness telemetry residual",
+  "type": "PRODUCT_CAPABILITY",
+  "subtype": "PROVIDER_TELEMETRY_USEFULNESS",
+  "status": "IN_PROGRESS",
+  "publicProductVersion": null,
+  "stableProductVersionAtStart": "18.9.1",
+  "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "baselineSourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "baselineBuildId": "v18.9.1-stable-20260821",
+  "baselineMainSha": "15077c042333cc7a4ef389dd75adbbbb0d51b462",
+  "branch": "adapt-provider-telemetry-001",
+  "productBehaviorChange": true,
+  "blocksNextProductCapability": true,
+  "scopeId": "ADAPT-PROVIDER-TELEMETRY-001",
+  "parentProgramIssue": 65,
+  "parentProgramScopeId": "ADAPT-PROVIDER-INTELLIGENCE-010",
+  "dependencies": [65, 79, 84, 92, 95, 102],
+  "closureLedger": "governance/work-slices/ADAPT-PROVIDER-TELEMETRY-001/closure.json",
+  "requiredOutputs": [
+    "privileged Maintenance projects existing provider completed request count, success/failure ratio, success percentage, median/P50 and P95 alongside average latency",
+    "transport reliability is explicitly separate from semantic provider usefulness",
+    "semantic usefulness is derived only from canonical ProviderReconciliationDecision truth and does not create a second reconciliation owner",
+    "single-source, sparse, stale, invalid and non-contemporaneous evidence cannot manufacture a usefulness score",
+    "bounded aggregate usefulness telemetry and its dedup ledger persist through the canonical PersistenceManager derived-feature path",
+    "semantic usefulness remains ADVISORY_ONLY and cannot alter Smart Provider Router v2 ordering, lifecycle or admission",
+    "normal USER/DEMO roles do not receive the new privileged internal telemetry projection",
+    "exact-head Fast and impact-selected Qualified pass before expected-head merge; no Stable/public SemVer release is created solely for this slice"
+  ],
+  "implementationPaths": [
+    "provider_usefulness.go",
+    "provider_usefulness_runtime.go",
+    "runtime_load_profile.go",
+    "renderer/provider-telemetry-ui.js",
+    "renderer/index.html",
+    "provider_usefulness_regression_test.go"
+  ],
+  "architectureBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_TELEMETRY_RECONCILIATION_LIFECYCLE_OWNERS",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "NO_AUTOMATIC_LIFECYCLE_PROMOTION",
+    "NO_PARALLEL_PROVIDER_ROUTER_HEALTH_CACHE_PERSISTENCE_OR_RECONCILIATION_SUBSYSTEM"
+  ],
+  "releaseBoundary": "No Stable/public SemVer release belongs to #94 alone. Delivery requires exact-head Fast, impact-selected Qualified and expected-head merge evidence on the same candidate."
+}
