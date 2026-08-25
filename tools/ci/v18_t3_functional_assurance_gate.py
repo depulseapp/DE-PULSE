@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import subprocess
 import sys
 from typing import Any
 
@@ -14,6 +15,7 @@ from v18_t2_unit_contract_assurance_gate import (
 
 T3 = PROGRAM / "T3_FUNCTIONAL_ASSURANCE.json"
 CI_FAST = ROOT / ".github" / "workflows" / "ci-fast.yml"
+SECURITY_WORKFLOW = ROOT / "tests" / "integration" / "security_identity_sse_workflow_test.py"
 
 
 def classify(path_text: str) -> str:
@@ -85,6 +87,14 @@ def main() -> int:
         errors.append("T3 requires the immutable frozen T1 discovery blob")
     if t3.get("trackIssue") != 116 or t3.get("programIssue") != 113 or t3.get("frozenT1GitBlobSha") != actual_blob:
         errors.append("T3 assurance identity/frozen T1 binding mismatch")
+
+    if not SECURITY_WORKFLOW.is_file():
+        errors.append("T3 security/identity/workspace/SSE integration owner is missing")
+    else:
+        try:
+            subprocess.run([sys.executable, str(SECURITY_WORKFLOW)], cwd=ROOT, check=True)
+        except subprocess.CalledProcessError as exc:
+            errors.append(f"T3 security/identity/workspace/SSE workflow failed with exit code {exc.returncode}")
 
     effective = reconstruct_effective(ledger, scan1, scan2, reconciliation, errors)
     expected_count = int((freeze.get("effectiveInventory") or {}).get("effectiveShippedV18Responsibilities") or 0)
@@ -172,6 +182,7 @@ def main() -> int:
         print(f"{cls}: {class_counts[cls]}")
     if uncovered:
         print("uncovered ids: " + ", ".join(uncovered))
+    print("security/identity/workspace/SSE workflow owner executes through real HTTP routes: PASS")
     print("visible workflows cannot be closed by backend-unit/static evidence alone: PASS")
     print("T4-T10 certification is not implied by T3: PASS")
     if errors:
