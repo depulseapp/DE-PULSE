@@ -56,6 +56,8 @@ jobs:
         run: python3 tools/ci/work_slice_closure_gate.py
       - name: Conserved v17/v18 requirement-ledger integrity
         run: python3 tools/ci/implementation_reconciliation_gate.py
+      - name: Conserved v19/v20 requirement-ledger integrity
+        run: python3 tools/ci/v19_v20_requirement_conservation_gate.py
       - name: Watchlist membership regression contract
         run: python3 tools/ci/watchlist_membership_contract.py
       - name: Adaptive resume portability contract
@@ -139,6 +141,7 @@ jobs:
             echo '- retired pre-v17 test/gate equivalence: PASS'
             echo '- active work-slice closure-ledger enforcement: PASS'
             echo '- conserved v17/v18 ledger integrity: PASS'
+            echo '- conserved v19/v20 ledger integrity: PASS'
             echo '- adaptive resume portability: PASS'
             echo '- post-Stable continuity: PASS'
             echo '- Git-object provenance: PASS'
