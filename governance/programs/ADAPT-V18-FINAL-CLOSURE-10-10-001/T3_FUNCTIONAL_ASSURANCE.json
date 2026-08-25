@@ -3,7 +3,7 @@
   "programIssue":113,
   "trackIssue":116,
   "targetVersion":"v18.10.0",
-  "state":"IN_PROGRESS",
+  "state":"COMPLETE",
   "startedFromMainSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6",
   "frozenT1GitBlobSha":"cb352904900a7156197d752ef21c348daa74bd05",
   "effectiveShippedV18ResponsibilityCount":180,
@@ -27,8 +27,19 @@
     "effectiveResponsibilities":180,
     "coveredResponsibilities":149,
     "uncoveredResponsibilities":31,
-    "evidenceClassCounts":{"ACCEPTANCE_E2E":11,"BROWSER_E2E":2,"GO_FUNCTIONAL":423,"HTTP_INTEGRATION":2,"RENDERER_FUNCTIONAL":22,"UNKNOWN_EXECUTABLE":2},
-    "interpretation":"These were functional evidence-ownership gaps, not automatically implementation defects. Remediation maps them to current executable owners; visible/security gaps gained cross-layer owners rather than being closed by static evidence."
+    "evidenceClassCounts":{"ACCEPTANCE_E2E":11,"BROWSER_E2E":2,"GO_FUNCTIONAL":423,"HTTP_INTEGRATION":2,"RENDERER_FUNCTIONAL":22,"UNKNOWN_EXECUTABLE":2}
+  },
+  "closureCensus":{
+    "headSha":"b221ca8848a55e07d3af42e19191d2cf1e8cc470",
+    "fastRunId":32864134475,
+    "fastRunNumber":1027,
+    "effectiveResponsibilities":180,
+    "coveredResponsibilities":180,
+    "uncoveredResponsibilities":0,
+    "evidenceClassCounts":{"ACCEPTANCE_E2E":12,"BROWSER_E2E":3,"CI_WORKFLOW_CONTRACT":10,"GO_FUNCTIONAL":424,"HTTP_INTEGRATION":16,"RENDERER_FUNCTIONAL":28,"UNKNOWN_EXECUTABLE":2},
+    "realSecurityIdentityWorkspaceSSEWorkflow":"PASS",
+    "providerTelemetryUsefulnessRendererWorkflow":"PASS",
+    "interpretation":"All frozen shipped-v18 responsibilities now have meaningful T3 functional/integration/end-to-end ownership. T4-T10 are not implied and remain separately governed."
   },
   "evidenceSupplements":{
     "CAP-CACHE-CONTROLS":{"owners":["tests/integration/http_workflow_test.py"],"rationale":"The canonical HTTP workflow clears and refreshes cache through the real authenticated application routes and verifies running-demo rehydration."},
