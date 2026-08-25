@@ -1,0 +1,53 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-FINAL-QUALIFICATION-1",
+  "status": "VERIFIED",
+  "workSliceId": "ADAPT-POST-STABLE-CONTINUITY-001",
+  "issue": 102,
+  "gapId": "EXACT-HEAD-DELIVERY",
+  "candidateSha": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+  "mergeCommitSha": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+  "fast": {
+    "context": "DE.PULSE/fast-head",
+    "runNumber": 967,
+    "runId": 32803346202,
+    "conclusion": "success",
+    "candidateSha": "8adab6391dd6f64f302ca15d3d8bc2b278633c71"
+  },
+  "qualified": {
+    "context": "DE.PULSE/qualified-head",
+    "runNumber": 194,
+    "runId": 32803373245,
+    "conclusion": "success",
+    "candidateSha": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+    "selectedJobs": ["ci-harness", "portability", "backend"],
+    "evidenceOwners": [
+      "CI_HARNESS",
+      "CI_PORTABILITY_UBUNTU",
+      "CI_PORTABILITY_MACOS",
+      "CI_PORTABILITY_WINDOWS",
+      "BACKEND_FULL_GO",
+      "RACE_DETECTOR",
+      "RANDOMIZED_PACKAGE_ORDER"
+    ]
+  },
+  "merge": {
+    "pullRequest": 103,
+    "merged": true,
+    "expectedHeadSha": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+    "mergeCommitSha": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+    "base": "main"
+  },
+  "postMergeMain": {
+    "runNumber": 968,
+    "runId": 32803734938,
+    "headSha": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+    "branchHygiene": "success",
+    "postStableContinuitySentinel": "success",
+    "alignedStableEvidenceValidation": "success",
+    "productFastPreflight": "skipped_as_designed"
+  },
+  "evidenceInterpretation": "The #102 implementation candidate reconciled durable v18.9.1 continuity and completed #95 projections. Fast and impact-selected Qualified passed on the identical candidate, expected-head merge succeeded, and the resulting main push proved the previously failing Post-Stable continuity sentinel green without weakening it. This closure binding records immutable GitHub evidence only.",
+  "noProductBehaviorChange": true,
+  "stableReleaseEvidenceUnchanged": true,
+  "noReleaseRebuildOrRepublish": true
+}

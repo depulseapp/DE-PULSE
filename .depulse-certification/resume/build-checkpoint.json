@@ -73,11 +73,16 @@
   "activeProgram": {
     "issue": 65,
     "requirement": "ADAPT-PROVIDER-INTELLIGENCE-010",
-    "currentProcessResidual": {
+    "completedProcessResidual": {
       "issue": 102,
       "requirement": "ADAPT-POST-STABLE-CONTINUITY-001",
       "classification": "PROCESS_RELEASE_ENGINEERING_POST_STABLE_CONTINUITY",
-      "productBehaviorChange": false
+      "candidate": "8adab6391dd6f64f302ca15d3d8bc2b278633c71",
+      "fastRun": 32803346202,
+      "qualifiedRun": 32803373245,
+      "mergeCommit": "25c9f73bbb459b047c4a99e8a126bf7b2b7dbb36",
+      "mainContinuityRun": 32803734938,
+      "disposition": "COMPLETE_NO_PRODUCT_BEHAVIOR_CHANGE"
     },
     "completedProviderOnboarding": {
       "issue": 95,
@@ -88,8 +93,8 @@
     },
     "separateResidualIssue": 94,
     "futureBlockedIssue": 66,
-    "selectionRule": "Finish #102 continuity reconciliation, then perform a fresh live-source/#65 semantic-overlap audit before selecting the next product capability."
+    "selectionRule": "Perform a fresh live-source/#65 semantic-overlap audit before reserving the next product capability. #94 remains a known residual but is not automatically selected."
   },
-  "nextStep": "Complete issue #102 / ADAPT-POST-STABLE-CONTINUITY-001 on adapt-post-stable-continuity-001: reconcile durable v18.9.1 checkpoints, retrospective Stable evidence, #95 post-merge closure projections and CURRENT state; obtain exact-head Fast and impact-selected Qualified, then guarded merge. Do not start #94 or #66 from this checkpoint.",
-  "updatedAt": "2026-08-24T19:43:00-07:00"
+  "nextStep": "Run the fresh #65 live-source semantic-overlap audit against current main and open issues before reserving the next product slice. Do not assume #94 is next until overlap is re-proven, and do not start #66.",
+  "updatedAt": "2026-08-24T20:05:00-07:00"
 }
