@@ -1,0 +1,125 @@
+{
+  "schema": "DE.PULSE-V18-T1-FINAL-RECONCILIATION-1",
+  "programIssue": 113,
+  "trackIssue": 114,
+  "targetVersion": "v18.10.0",
+  "state": "IN_PROGRESS",
+  "purpose": "Reconcile the canonical high-level feature ledger with both independent source/runtime omission scans without duplicating canonical ownership or losing scan granularity.",
+  "completionAuthority": "This file is the final reconciliation authority for the two immutable discovery checkpoints. The discovery checkpoint files may retain IN_PROGRESS because they record the state at the time each independent pass was captured; final completion requires this file, the quality audit, and the feature-assurance gate to agree.",
+  "sourceCheckpoints": [
+    {
+      "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_INDEPENDENT_OMISSION_SCAN.json",
+      "role": "independent source/provider/job pass",
+      "checkpointStateIsHistorical": true
+    },
+    {
+      "path": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T1_INDEPENDENT_OMISSION_SCAN_2.json",
+      "role": "independent HTTP/maintenance/observability/renderer pass",
+      "checkpointStateIsHistorical": true
+    }
+  ],
+  "effectiveInventoryRules": {
+    "canonicalHighLevelRowsComeFromFeatureAssuranceLedger": true,
+    "everyOmissionScanResponsibilityMustResolveToAnEffectiveRow": true,
+    "scanResponsibilitiesInheritOnlyFromNamedCanonicalParent": true,
+    "scanOwnersAndTestsRemainDirectEvidence": true,
+    "oneResponsibilityMayNotResolveToMultipleParents": true,
+    "excludedFutureSourceCarryForwardIsNotShippedV18": true,
+    "qualityAuditMustResolveEveryEffectiveResponsibility": true,
+    "laterT2ToT9EvidenceMayReopenAnyT1Decision": true
+  },
+  "scanParentByCategory": {
+    "RUNTIME_DATA_TRANSPORT": "CORE-LIVE-SUBSCRIPTIONS",
+    "RUNTIME_CONTRACT": "RUNTIME-LIFECYCLE",
+    "RELEASE_PERSISTENCE": "RELEASE-IDENTITY-PROVENANCE",
+    "PERSISTENCE": "PERSIST-CANONICAL-BACKEND",
+    "RUNTIME_FOUNDATION": "RUNTIME-LIFECYCLE",
+    "ASSURANCE_TOOLING": "RELEASE-QUALIFIED",
+    "PROVIDER_CAPABILITY": "CORE-PROVIDER-CAPABILITY-REGISTRY",
+    "DIRECT_OFFICIAL_OR_ROUTED_CAPABILITY": "CORE-PROVIDER-ROUTER",
+    "DIRECT_OFFICIAL_AUTHORITY": "CORE-DATA-FRESHNESS",
+    "RECOVERY_CAPABILITY": "CORE-ROUTED-REFRESH",
+    "PROVIDER_CAPABILITY_PRODUCTION": "CORE-PROVIDER-CAPABILITY-REGISTRY",
+    "PROVIDER_CAPABILITY_PRODUCTION_SHADOW_EVIDENCE_ROLE": "CORE-PROVIDER-LIFECYCLE",
+    "GATED_CAPABILITY": "CORE-PROVIDER-LIFECYCLE",
+    "AI_EGRESS_CAPABILITY": "CORE-PROVIDER-DATA-RIGHTS",
+    "BACKGROUND_JOB": "RUNTIME-JOB-SCHEDULER",
+    "AUTHENTICATED_DATA_TRANSPORT": "SECURITY-AUTH-SESSIONS",
+    "USER_STATE": "CORE-USER-WORKSPACE-ISOLATION",
+    "USER_STATE_RUNTIME_HINT": "CORE-LIVE-SUBSCRIPTIONS",
+    "PORTABILITY_SECURITY": "CORE-USER-WORKSPACE-ISOLATION",
+    "DESKTOP_SECURITY": "SECURITY-HTTP",
+    "DESKTOP_LIFECYCLE": "RUNTIME-LIFECYCLE",
+    "OPERATOR_ACTION": "SURF-MAINTENANCE",
+    "RUNTIME_CONTROL": "SHELL-RUNTIME-CONTROL",
+    "USER_DATA_PATH": "CORE-ALTERNATIVE-COMMUNITY-INTELLIGENCE",
+    "RUNTIME_OBSERVABILITY": "RUNTIME-WORKLOAD-BACKPRESSURE",
+    "SUPPORTED_RENDERER": "RELEASE-IDENTITY-PROVENANCE"
+  },
+  "scanParentOverrides": {
+    "PROVIDER-FRED-MACRO": "CORE-MACRO-ACTUALS",
+    "PROVIDER-TREASURY-YIELDS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-BLS-ACTUALS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-BEA-ACTUALS": "CORE-MACRO-ACTUALS",
+    "PROVIDER-EIA-ENERGY": "CORE-MACRO-ACTUALS",
+    "PROVIDER-OFFICIAL-MACRO-CALENDARS": "CORE-MACRO-EVENTS",
+    "PROVIDER-CBOE-VIX": "CORE-VIX-INDICES",
+    "PROVIDER-SEC-FUNDAMENTALS": "CORE-NEWS-EARNINGS-FUNDAMENTALS",
+    "PROVIDER-SEC-EDGAR-FILINGS-FORM4": "CORE-SEC-EDGAR",
+    "PROVIDER-TRADEINSIGHT-DAILY-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-ADJUSTED-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-BOUNDED-BULK-HISTORY": "CORE-HISTORICAL-BARS",
+    "PROVIDER-TRADEINSIGHT-CORPORATE-ACTIONS": "CORE-CORPORATE-ACTION-TRUTH",
+    "BOUNDARY-TRADEINSIGHT-SEC-FORM4-GATED": "BOUNDARY-DIRECT-SEC-AUTHORITY",
+    "PROVIDER-TWSE-TAIEX-OFFICIAL-CLOSE": "CORE-GLOBAL-CONTEXT",
+    "CAP-COMMUNITY-EVIDENCE-INGEST": "CORE-ALTERNATIVE-COMMUNITY-INTELLIGENCE",
+    "RELEASE-RENDERER-CHROME-WEBKIT": "RELEASE-IDENTITY-PROVENANCE"
+  },
+  "excludedFutureSourceCarryForward": [
+    {
+      "id": "PERSIST-POSTGRES-FOUNDATION",
+      "disposition": "EXCLUDED_FROM_SHIPPED_V18_INVENTORY_KEEP_SOURCE_FOR_FUTURE_PROGRAM",
+      "canonicalSourceOwners": ["persistence_backend_postgres.go", "persistence_backend_postgres_stub.go"],
+      "provenance": ["issue:#66", "source:postgres build tag", "source:!postgres unavailable stub"],
+      "reason": "The PostgreSQL implementation is source-carried behind the postgres build tag. Normal v18 binaries compile an explicit unavailable stub, and #66 classifies hosted PostgreSQL/sync as a blocked v19 program. It is therefore not a shipped v18 capability and must not inflate the v18 feature inventory. Keeping the source is intentional future-program carry-forward, not dead code."
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "id": "TRADEINSIGHT-CONGRESS-PRODUCTION-VS-SHADOW-EVIDENCE",
+      "disposition": "EXPLAINED_DISTINCT_DIMENSIONS",
+      "reason": "Congressional Trading provider capability is governed PRODUCTION while persisted Research records remain SHADOW alternative evidence. Provider lifecycle and decision-evidence authority are distinct dimensions."
+    },
+    {
+      "id": "ADMINISTRATION-CONDITIONAL-SURFACE-VS-SETTINGS-EMBED",
+      "disposition": "CORRECTIVE_126_SUPERSEDES_DISCOVERY_CHECKPOINT",
+      "reason": "Later T1 evidence proved the capability-scoped Administration IA contract was current and unsuperseded. Corrective #126 implements a dedicated authorized destination using the existing identity/session owners; qualification remains required before closure."
+    },
+    {
+      "id": "DOCUMENTATION-LEGACY-PROVIDER-FLOW",
+      "disposition": "CORRECTIVE_125",
+      "reason": "Stale documentation ownership/provider-flow wording was a genuine user/developer-facing truth defect. Corrective #125 extracts the architecture owner and aligns the diagram with Router v2 plus multi-feed allocation; qualification remains required before closure."
+    }
+  ],
+  "correctiveIssues": [
+    {
+      "issue": 125,
+      "featureId": "SURF-DOCUMENTATION",
+      "state": "IMPLEMENTED_AWAITING_EXECUTABLE_QUALIFICATION"
+    },
+    {
+      "issue": 126,
+      "featureId": "SURF-ADMINISTRATION",
+      "state": "IMPLEMENTED_AWAITING_EXECUTABLE_QUALIFICATION"
+    }
+  ],
+  "finalScanAssertions": {
+    "duplicateOwnerChecksExplained": true,
+    "noAdditionalUntrackedImplementationMissConfirmed": true,
+    "allScanResponsibilitiesRequireEffectiveCoverage": true,
+    "allFutureCarryForwardMustBeExplicit": true,
+    "t2ToT10RemainBlocked": true
+  },
+  "unexplainedGapCount": null,
+  "updatedAt": "2026-08-25T08:11:00Z"
+}
