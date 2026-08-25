@@ -6,26 +6,20 @@
 **Completed canonical identity:** #92 / PR #93  
 **Completed provider onboarding:** #95 / PR #101  
 **Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Active branch:** `adapt-provider-professional-closure-001`  
+**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
 **Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Parent program:** #65 complete by executable evidence.  
 **Future hosted program:** #66 remains blocked/not started.
 
 ## Retained Adaptive Data Health build owners
 
-The canonical Data Health governance inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. They continue to bind the Adaptive Roadmap, Build Plan, Build Process and Delivery Process to canonical provider classification, freshness/SLO, degradation/recovery and fetch-path owners.
+The canonical inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. They bind the Adaptive Roadmap, Build Plan, Build Process and Delivery Process to provider capability classification, freshness/SLO, degradation/recovery and fetch-path ownership.
 
-Completed #79/#84, #92, #95 and #94 remain executable foundations. Smart Provider Router v2, provider lifecycle/readiness, canonical freshness, persistence, transport telemetry, semantic reconciliation and degradation owners cannot be replaced. #94 semantic usefulness remains observational `ADVISORY_ONLY` and cannot alter routing/admission/lifecycle.
+Completed #79/#84, #92, #95, #94 and #107 are inherited executable foundations. Smart Provider Router v2, provider lifecycle/readiness, canonical freshness, persistence, transport telemetry, semantic reconciliation and degradation owners cannot be replaced. #94 semantic usefulness remains `ADVISORY_ONLY` and cannot alter routing/admission/lifecycle.
 
-## Active #107 build packet
+## Current build-selection state
 
-1. Bind the fresh #65 audit comment `5405370494` to one final disposition for every historical v18.9.x leaf.
-2. Keep all six #107 closure gaps fail-closed until immutable evidence verifies them.
-3. Project #107, branch `adapt-provider-professional-closure-001`, and its canonical ledger through machine state, handoff, resume checkpoints and all CURRENT Adaptive surfaces.
-4. Preserve the immutable v18.9.1 Stable tag/candidate/source fingerprint/build/release evidence exactly.
-5. Preserve direct SEC/EDGAR authority, fail-closed unverified TradeInsight capabilities, U.S. equities, GLD/SLV/USO and No Execution.
-6. Earn canonical exact-head Fast, then impact-selected Qualified on the identical candidate, then expected-head merge after fresh `main` re-fetch.
-7. Verify main branch hygiene/Post-Stable continuity, bind final evidence, close #107 and #65, and leave #66 separate/not started.
+There is no reserved v18 product slice. #107 closed the provider-intelligence program without product behavior or a Stable/public SemVer release. #66 is a separate future program and stays blocked/not started until an explicit fresh program-selection decision is made from live GitHub state.
 
-No product capability is reserved while #107 is open. No product/runtime source and no Release workflow belongs to this build packet.
+Any future build must first re-fetch live `main`, inspect current issues/source overlap, then reserve exactly one real work slice. Do not infer missing work from old v18.9.x labels and do not create parallel provider, health, cache, persistence, telemetry, reconciliation or lifecycle owners.

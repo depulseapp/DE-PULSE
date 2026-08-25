@@ -6,24 +6,18 @@
 **Completed canonical identity:** #92 / PR #93  
 **Completed provider onboarding:** #95 / PR #101  
 **Completed provider observability/usefulness:** #94 / PR #105 + closure PR #106  
-**Active work slice:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
-**Active branch:** `adapt-provider-professional-closure-001`  
+**Completed professional closure:** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001`  
+**Retained implementation branch:** `adapt-provider-professional-closure-001`  
 **Canonical closure ledger:** `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010`  
+**Parent program:** #65 / `ADAPT-PROVIDER-INTELLIGENCE-010` — complete by executable evidence.  
 **Future hosted program:** #66 remains blocked/not started.
 
 ## Current roadmap state
 
-The fresh post-#94 #65 semantic-overlap audit found no actionable v18 provider-intelligence product leaf. #107 is therefore the only remaining v18 action and is a no-feature Professional Closure process slice. It must bind the final historical-leaf dispositions, prove projection/evidence convergence, close #65, and leave #66 separate/not started.
+The fresh #65 semantic-overlap audit found no actionable v18 provider-intelligence product leaf, and #107 completed the no-feature Professional Closure evidence chain. No historical v18.9.x label authorizes new implementation.
 
-The completed executable sequence remains durable authority: **#80 baseline -> #81 Smart Provider Router v2 production adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 provider onboarding -> #94 observational usefulness telemetry**. The canonical provider-capability matrix remains `governance/data-health/provider-capability-matrix.json`; no historical version label reopens delivered work. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states whenever canonical evidence is incomplete, stale, unavailable, contradictory or genuinely plan-limited.
+The completed executable sequence remains durable authority: **#80 baseline -> #81 Smart Provider Router v2 production adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure -> #92 canonical identity -> #95 provider onboarding -> #94 observational usefulness telemetry -> #107 professional closure**. The canonical `provider-capability` / `provider-capability matrix` owner remains `governance/data-health/provider-capability-matrix.json`. `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful exceptional states for genuine evidence gaps and are not cosmetically suppressed.
 
-## #107 roadmap contract
+Smart Provider Router v2 remains sole general routing/admission authority; direct SEC/EDGAR remains Form 4 authority; unverified TradeInsight SEC/search/movers REST/schema capabilities remain vendor-contract gated/fail closed. No next product capability is reserved. #66 requires a separate fresh explicit program-selection decision.
 
-No product source/runtime/UI/provider behavior may be added. Direct SEC/EDGAR remains Form 4 authority. Unverified TradeInsight SEC/search/movers endpoints and schemas remain vendor-contract gated and fail closed. Smart Provider Router v2 remains the sole general routing/admission authority. Canonical freshness, degradation, cache, persistence, telemetry, reconciliation and lifecycle owners remain unchanged.
-
-#107 closes only after exact-head Fast, same-head impact-selected Qualified, expected-head merge and green post-merge main continuity are bound to the fail-closed ledger. No Stable/public SemVer release is created solely for #107. #66 is not automatically activated by #65 closure.
-
-## Permanent boundaries
-
-U.S. equities processing only; GLD/SLV/USO remain governed actionable exceptions; No Execution remains permanent; provider lifecycle promotion remains evidence/governance controlled; G0-G16 and the three canonical CI workflows remain the only delivery architecture.
+Permanent boundaries remain U.S. equities processing, GLD/SLV/USO actionable exceptions, No Execution, governed provider lifecycle promotion, canonical Data Health/freshness/degradation/cache/persistence/telemetry/reconciliation/lifecycle ownership, G0-G16 and the three canonical workflows.
