@@ -465,6 +465,7 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 					active = h.Provider
 					break
 				}
+			}
 		}
 
 		state := "READY"
