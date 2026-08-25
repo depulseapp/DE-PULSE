@@ -47,7 +47,7 @@
     "reservedWorkSliceId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
     "reservedIssue": 113,
     "reservedBranch": "adapt-v18-final-closure-10-10-001",
-    "reservationStatus": "IN_PROGRESS",
+    "reservationStatus": "RELEASE_AUTHORIZED",
     "workSlicePath": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/work-slice.json",
     "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
     "parentProgramIssue": 113,
@@ -68,15 +68,18 @@
     "nextCompanionChildIssue": null,
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
-      {"track":"T10","issue":123,"status":"IN_PROGRESS"}
+      {"track":"T10","issue":123,"status":"RELEASE_AUTHORIZED"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": true,
       "T9Started": true,
       "T9Verified": true,
       "T10Started": true,
-      "T10State": "IN_PROGRESS",
-      "assuranceCeilingAfterT9": "IMPLEMENTED_UNVERIFIED"
+      "T10State": "RELEASE_AUTHORIZED",
+      "T10AuthorizationBasisSha": "ab50c8a715eecae266afba62486bca83f9ae11e9",
+      "T10FastRunId": 32909821788,
+      "T10QualifiedRunId": 32909905537,
+      "assuranceCeilingAfterT9": "RELEASE_AUTHORIZED"
     },
     "futureProgramBlockerIssue": 113,
     "futureBlockedIssue": 66,
