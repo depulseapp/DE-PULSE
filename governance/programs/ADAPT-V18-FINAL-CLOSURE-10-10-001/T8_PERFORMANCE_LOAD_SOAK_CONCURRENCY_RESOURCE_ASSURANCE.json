@@ -3,8 +3,13 @@
   "programIssue": 113,
   "trackIssue": 121,
   "targetVersion": "v18.10.0",
-  "state": "IN_PROGRESS",
+  "state": "COMPLETE",
   "startedFromMainSha": "45b132abb22143c7decb35cfe5ad40dc5d27a748",
+  "finalSourceSha": "e4542890eddf0d6c94e59e991d9d17ae8cc3ca35",
+  "fastRunId": 32899149506,
+  "qualifiedRunId": 32899321362,
+  "mergedPullRequest": 135,
+  "mergedCommitSha": "a3a82aee21fe8e6822d11ba678afefdd6361ef97",
   "rules": {
     "reuseCanonicalRuntimeOwners": true,
     "noParallelPerformanceOrBackpressureSubsystem": true,
@@ -52,146 +57,30 @@
     "sourceOwner": "runtime_slo.go"
   },
   "existingExecutableEvidence": [
-    {
-      "owner": "workload_backpressure_regression_test.go",
-      "covers": [
-        "provider-rest hard capacity and queue bounds",
-        "reserved Tier 0/1 capacity and queue headroom",
-        "low-priority shedding",
-        "freshness recovery priority under provider pressure",
-        "live subscription reserved headroom",
-        "provider rate-limit cooldown behavior",
-        "repeated provider/scanner/background/AI saturation, cancellation and recovery"
-      ]
-    },
-    {
-      "owner": "active_market_reliability_regression_test.go",
-      "covers": [
-        "duplicate active-market snapshot burst coalesces to one real provider fetch",
-        "bounded provider pressure is projected truthfully as protected degradation",
-        "queued workers cancel cleanly under active-market pressure",
-        "canonical runtime SLO remains WARN rather than falsely BLOCKING when protected capacity is preserved",
-        "canonical runtime SLO PASS/WARN/BLOCK budget thresholds"
-      ]
-    },
-    {
-      "owner": "runtime_slo.go",
-      "covers": [
-        "interactive API p95 budget",
-        "provider queue depth and age budget",
-        "persistence queue and write-rate budget",
-        "CPU/goroutine/heap process budget",
-        "Opportunity Radar cadence budget",
-        "provider request and live subscription budgets",
-        "startup and storage growth budgets"
-      ]
-    },
-    {
-      "owner": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json",
-      "covers": [
-        "177 applicable persistence-bearing responsibilities covered",
-        "SQLite integrity/migration/restart/recovery ownership",
-        "zero uncovered persistence lifecycle responsibilities"
-      ]
-    },
-    {
-      "owner": ".github/workflows/ci-qualified.yml",
-      "covers": [
-        "full Go suite",
-        "full Go race detector lane",
-        "randomized Go test execution lane",
-        "persistence-focused DB regression lane",
-        "cross-OS source/tooling portability"
-      ]
-    }
+    {"owner":"workload_backpressure_regression_test.go","covers":["provider-rest hard capacity and queue bounds","reserved Tier 0/1 capacity and queue headroom","low-priority shedding","freshness recovery priority under provider pressure","live subscription reserved headroom","provider rate-limit cooldown behavior","repeated provider/scanner/background/AI saturation, cancellation and recovery"]},
+    {"owner":"active_market_reliability_regression_test.go","covers":["duplicate active-market snapshot burst coalesces to one real provider fetch","bounded provider pressure is projected truthfully as protected degradation","queued workers cancel cleanly under active-market pressure","canonical runtime SLO remains WARN rather than falsely BLOCKING when protected capacity is preserved","canonical runtime SLO PASS/WARN/BLOCK budget thresholds"]},
+    {"owner":"runtime_slo.go","covers":["interactive API p95 budget","provider queue depth and age budget","persistence queue and write-rate budget","CPU/goroutine/heap process budget","Opportunity Radar cadence budget","provider request and live subscription budgets","startup and storage growth budgets"]},
+    {"owner":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T5_PERSISTENCE_LIFECYCLE_ASSURANCE.json","covers":["177 applicable persistence-bearing responsibilities covered","SQLite integrity/migration/restart/recovery ownership","zero uncovered persistence lifecycle responsibilities"]},
+    {"owner":".github/workflows/ci-qualified.yml","covers":["full Go suite","full Go race detector lane","randomized Go test execution lane","persistence-focused DB regression lane","cross-OS source/tooling portability"]}
   ],
   "newExecutableEvidence": [
-    {
-      "owner": "workload_backpressure_regression_test.go",
-      "test": "TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue",
-      "covers": [
-        "repeated bounded provider-rest pressure",
-        "repeated scanner pressure",
-        "repeated background job pressure",
-        "repeated AI work pressure",
-        "hard queue/capacity bounds",
-        "cancellation convergence",
-        "permit release accounting",
-        "post-pressure admission recovery"
-      ],
-      "qualification": "PENDING_EXACT_HEAD_FAST_AND_QUALIFIED"
-    },
-    {
-      "owner": "active_market_reliability_regression_test.go",
-      "test": "TestT8CanonicalRuntimeSLOBudgetsFailClosedAtOwnedThresholds",
-      "covers": [
-        "interactive API p95 PASS/WARN/BLOCK thresholds",
-        "provider queue depth/age WARN/BLOCK thresholds",
-        "persistence queue age and DB write-rate thresholds",
-        "CPU utilization thresholds",
-        "goroutine and heap hard process limits",
-        "startup and storage growth thresholds"
-      ],
-      "qualification": "PENDING_EXACT_HEAD_FAST_AND_QUALIFIED"
-    },
-    {
-      "owner": "tools/ci/v18_t8_performance_load_soak_concurrency_resource_assurance_gate.py",
-      "covers": [
-        "fail-closed T8 governance/source/evidence binding",
-        "canonical owner conservation",
-        "measured SLO budget conservation",
-        "race/randomized/persistence Qualified lane conservation",
-        "Linux CI-only boundary and T9 platform conservation"
-      ],
-      "qualification": "PENDING_EXACT_HEAD_FAST_AND_QUALIFIED"
-    }
+    {"owner":"workload_backpressure_regression_test.go","test":"TestT8RepeatedWorkloadPressureConvergesWithoutLeakedPermitsOrQueue","covers":["repeated bounded provider-rest pressure","repeated scanner pressure","repeated background job pressure","repeated AI work pressure","hard queue/capacity bounds","cancellation convergence","permit release accounting","post-pressure admission recovery"],"qualification":"PASS_EXACT_HEAD_FAST_AND_QUALIFIED"},
+    {"owner":"active_market_reliability_regression_test.go","test":"TestT8CanonicalRuntimeSLOBudgetsFailClosedAtOwnedThresholds","covers":["interactive API p95 PASS/WARN/BLOCK thresholds","provider queue depth/age WARN/BLOCK thresholds","persistence queue age and DB write-rate thresholds","CPU utilization thresholds","goroutine and heap hard process limits","startup and storage growth thresholds"],"qualification":"PASS_EXACT_HEAD_FAST_AND_QUALIFIED"},
+    {"owner":"tools/ci/v18_t8_performance_load_soak_concurrency_resource_assurance_gate.py","covers":["fail-closed T8 governance/source/evidence binding","canonical owner conservation","measured SLO budget conservation","race/randomized/persistence Qualified lane conservation","Linux CI-only boundary and T9 platform conservation"],"qualification":"PASS_EXACT_HEAD_FAST_AND_QUALIFIED"}
   ],
   "resolvedCoverageFindings": [
-    {
-      "id": "T8-PERSISTENCE-PRESSURE",
-      "status": "RESOLVED",
-      "evidence": [
-        "T5 persistence lifecycle assurance is COMPLETE with 177/177 applicable covered and zero uncovered",
-        "Qualified retains the persistence-focused SQLite/Persistence/Migration/Canonical/Cache regression lane",
-        "runtime_slo.go measures persistence queue age and DB write-rate pressure with explicit WARN/BLOCK limits",
-        "active_market_reliability_regression_test.go fail-closes those limits under the canonical active-market reliability owner"
-      ],
-      "decision": "Reuse canonical persistence ownership; do not introduce a parallel T8 persistence engine."
-    },
-    {
-      "id": "T8-PROCESS-RESOURCE-SAFETY",
-      "status": "RESOLVED",
-      "evidence": [
-        "runtime_slo.go measures CPU utilization, goroutine count and heap allocation with hard release limits",
-        "workload_backpressure_regression_test.go repeatedly proves bounded queues/permits, cancellation convergence and no controller-owned work left queued/in-flight",
-        "Qualified full Go race detector and randomized order remain mandatory",
-        "active_market_reliability_regression_test.go fail-closes CPU/goroutine/heap limits"
-      ],
-      "decision": "Do not invent host-sensitive GC-pause or lock-timing thresholds without a repository-owned SLO; material allocation/GC pressure is bounded by heap/CPU/process envelopes and material race/contention remains governed by race detection, bounded admission and recovery evidence."
-    },
-    {
-      "id": "T8-LATENCY-BUDGETS",
-      "status": "RESOLVED",
-      "evidence": [
-        "runtime_slo.go owns Interactive API p95 ≤250 ms target and >1000 ms BLOCK",
-        "provider queue target depth <12 and age ≤2000 ms with depth ≥24 or age >5000 ms BLOCK",
-        "persistence queue ≤2000 ms target and >10000 ms BLOCK",
-        "startup ≤1000 ms target and >5000 ms BLOCK",
-        "Opportunity Radar must complete within configured cadence",
-        "active_market_reliability_regression_test.go protects the deterministic fixed thresholds"
-      ],
-      "decision": "Use the existing canonical runtime SLO contract rather than introducing arbitrary benchmark-only latency numbers."
-    }
+    {"id":"T8-PERSISTENCE-PRESSURE","status":"RESOLVED","evidence":["T5 persistence lifecycle assurance is COMPLETE with 177/177 applicable covered and zero uncovered","Qualified retains the persistence-focused SQLite/Persistence/Migration/Canonical/Cache regression lane","runtime_slo.go measures persistence queue age and DB write-rate pressure with explicit WARN/BLOCK limits","active_market_reliability_regression_test.go fail-closes those limits under the canonical active-market reliability owner"],"decision":"Reuse canonical persistence ownership; do not introduce a parallel T8 persistence engine."},
+    {"id":"T8-PROCESS-RESOURCE-SAFETY","status":"RESOLVED","evidence":["runtime_slo.go measures CPU utilization, goroutine count and heap allocation with hard release limits","workload_backpressure_regression_test.go repeatedly proves bounded queues/permits, cancellation convergence and no controller-owned work left queued/in-flight","Qualified full Go race detector and randomized order passed on exact source e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","active_market_reliability_regression_test.go fail-closes CPU/goroutine/heap limits"],"decision":"Do not invent host-sensitive GC-pause or lock-timing thresholds without a repository-owned SLO; material allocation/GC pressure is bounded by heap/CPU/process envelopes and material race/contention remains governed by race detection, bounded admission and recovery evidence."},
+    {"id":"T8-LATENCY-BUDGETS","status":"RESOLVED","evidence":["runtime_slo.go owns Interactive API p95 ≤250 ms target and >1000 ms BLOCK","provider queue target depth <12 and age ≤2000 ms with depth ≥24 or age >5000 ms BLOCK","persistence queue ≤2000 ms target and >10000 ms BLOCK","startup ≤1000 ms target and >5000 ms BLOCK","Opportunity Radar must complete within configured cadence","active_market_reliability_regression_test.go protects the deterministic fixed thresholds"],"decision":"Use the existing canonical runtime SLO contract rather than introducing arbitrary benchmark-only latency numbers."}
   ],
-  "knownCoverageGaps": [
-    {
-      "id": "T8-EXACT-HEAD-QUALIFICATION",
-      "status": "OPEN",
-      "required": "Fast and identical-head Qualified must pass with the T8 assurance gate and canonical SLO-budget regression before verification."
-    }
-  ],
-  "gapDeclarationState": "CURRENT",
-  "completionCondition": "T8 may become COMPLETE only after every required control area is bound to current executable evidence, all material performance/concurrency/resource findings are resolved or source-proven non-applicable, the dedicated T8 fail-closed assurance gate passes, and exact-head Fast plus identical-head Qualified prove Go/race/randomized/persistence/runtime/browser evidence without weakening prior gates.",
+  "qualificationEvidence": {
+    "fast": {"runNumber":1080,"runId":32899149506,"sourceSha":"e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","status":"PASS"},
+    "qualified": {"runNumber":216,"runId":32899321362,"sourceSha":"e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","status":"PASS","fullGo":"PASS","raceDetector":"PASS","randomizedOrder":"PASS"},
+    "merge": {"pullRequest":135,"mergeCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97","status":"PASS_EXPECTED_HEAD"}
+  },
+  "knownCoverageGaps": [],
+  "gapDeclarationState": "FINAL",
+  "completionCondition": "SATISFIED — all T8 control areas are bound to executable evidence and exact-head Fast plus identical-head Qualified passed before expected-head merge.",
   "t9StartedByThisArtifact": false,
   "t10StartedByThisArtifact": false
 }
