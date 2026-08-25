@@ -1,0 +1,62 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-1",
+  "workSliceId": "ADAPT-PROVIDER-ONBOARDING-001",
+  "issue": 95,
+  "title": "Seamless provider onboarding & entitlement auto-adaptation",
+  "type": "PRODUCT_CAPABILITY",
+  "subtype": "PROVIDER_ONBOARDING_ADAPTATION",
+  "status": "IN_PROGRESS",
+  "publicProductVersion": null,
+  "stableProductVersionAtStart": "18.9.1",
+  "baselineMainSha": "57d530e58bfb0b38cc108980cd5cd4a041014db8",
+  "branch": "adapt-provider-onboarding-001",
+  "productBehaviorChange": true,
+  "blocksNextProductCapability": true,
+  "scopeId": "ADAPT-PROVIDER-ONBOARDING-001",
+  "parentProgramIssue": 65,
+  "parentProgramScopeId": "ADAPT-PROVIDER-INTELLIGENCE-010",
+  "dependencies": [65, 79, 84, 92],
+  "siblingResidualIssue": 94,
+  "closureLedger": "governance/work-slices/ADAPT-PROVIDER-ONBOARDING-001/closure.json",
+  "requiredOutputs": [
+    "one canonical provider registration contract consumed by Smart Provider Router v2 metadata/configuration/cost/quota/delay and capability diagnostics",
+    "production-route admission fails closed unless lifecycle plus adapter/schema/timestamp/freshness/failure/rights/evidence/approval/invalidation contract is complete",
+    "provider configuration changes reopen only affected stale entitlement/configuration suppression before the next canonical route decision",
+    "manual Provider Capabilities recheck can force fresh bounded entitlement proof for same-key server-side plan changes",
+    "synthetic-provider and current-provider regression proof without a parallel router/health/cache/persistence/lifecycle owner",
+    "CURRENT Adaptive governance and handoff point directly to executable #95 owners and exact branch state"
+  ],
+  "implementationPaths": [
+    "provider_registration.go",
+    "provider_entitlement_refresh.go",
+    "provider_router.go",
+    "smart_router_v2.go",
+    "provider_capabilities.go",
+    "data_engine_handlers.go",
+    "provider_registration_regression_test.go",
+    "provider_capability_projection_regression_test.go"
+  ],
+  "implementationCommitsBeforeGovernanceBinding": [
+    "c9323d16c522ff6140d03911579083ac6a2e29af",
+    "092b153ea01f32c121278140976e094576544570",
+    "7924fdde09578ca182adfd7d62534496b01d1c21",
+    "0403f4038fbd5b6e5549c3510ea8ed0c242a7796",
+    "447fe3cfea0f424a29835a9087fe7e16f0cbf139",
+    "662deb812785d9ef2a13ca7e748a240e14bea562",
+    "021c20da74008d46b17b13d70f8f67ef15d9b226",
+    "be550080b1fd1ca62a9acab568516bf62373731a",
+    "8054cbbb720e25ee2a637a17a853b78cb05a1f89",
+    "f083b7cfa92b9f899388566f1fe56ed9c5b5eebe"
+  ],
+  "architectureBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
+    "CANONICAL_FRESHNESS_CACHE_PERSISTENCE_TELEMETRY_STATE_OWNERS",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "NO_AUTOMATIC_LIFECYCLE_PROMOTION",
+    "NO_PARALLEL_PROVIDER_ONBOARDING_ROUTER_OR_HEALTH_SUBSYSTEM"
+  ],
+  "releaseBoundary": "No Stable/public SemVer release is authorized solely for #95. Exact-head Fast plus impact-selected Qualified and expected-head merge evidence are required before closure."
+}
