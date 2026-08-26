@@ -19,7 +19,7 @@ var canonicalEnvironments = []string{"dev", "test", "stage", "prod"}
 var desiredStateJSON []byte
 
 type DesiredState struct {
-	IsolationID      string `json:"isolationId"`
+	IsolationID     string `json:"isolationId"`
 	ServiceIdentity string `json:"serviceIdentity"`
 	IngressPolicy   string `json:"ingressPolicy"`
 	EgressPolicy    string `json:"egressPolicy"`
@@ -100,7 +100,7 @@ func validateManifest(m manifest) error {
 
 func validateDesiredState(environment string, state DesiredState) error {
 	fields := map[string]string{
-		"isolationId":      state.IsolationID,
+		"isolationId":     state.IsolationID,
 		"serviceIdentity": state.ServiceIdentity,
 		"ingressPolicy":   state.IngressPolicy,
 		"egressPolicy":    state.EgressPolicy,
