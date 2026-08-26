@@ -13,6 +13,33 @@
     "publication": "PASS_NO_REBUILD"
   },
   "activeWorkSlice": {
+    "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+    "issue": 148,
+    "parentProgramIssue": 66,
+    "parentProgramScopeId": "ADAPT-HOSTED-SYNC-001",
+    "type": "PRODUCT_ARCHITECTURE_FOUNDATION",
+    "subtype": "HOSTED_TRUST_TENANT_RIGHTS_PERSISTENCE_SECURITY_FOUNDATION",
+    "publicProductVersion": "19.0.0",
+    "stableProductVersionAtStart": "18.10.0",
+    "baselineCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "baselineSourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
+    "baselineBuildId": "v18.10.0-stable-20260825",
+    "baselineMainSha": "7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c",
+    "branch": "adapt-hosted-trust-foundation-001",
+    "draftPullRequest": 149,
+    "status": "BUILDING",
+    "productBehaviorChange": true,
+    "blocksNextProductCapability": true,
+    "targetRequirements": "HOST-001..HOST-023",
+    "workSlicePath": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json",
+    "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
+    "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
+    "rebaselineAuthority": "governance/V19_V20_REBASELINE.md",
+    "nextDependencyBand": "HOST-001..HOST-003 provider rights",
+    "zeroMissAuditState": "REOPENED_UNVERIFIED",
+    "externalControlWaivers": []
+  },
+  "latestCompletedWorkSlice": {
     "workSliceId": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
     "issue": 107,
     "type": "PROCESS_RELEASE_ENGINEERING",
@@ -71,7 +98,7 @@
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
       {"track":"T10","issue":123,"status":"COMPLETE"},
-      {"track":"HOSTED_TRUST_FOUNDATION","issue":148,"status":"G1_RESERVED","requirements":"HOST-001..HOST-023"}
+      {"track":"HOSTED_TRUST_FOUNDATION","issue":148,"status":"BUILDING","requirements":"HOST-001..HOST-023"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": true,
@@ -86,7 +113,7 @@
       "T10ReleaseRunId": 32917159547,
       "T10StableCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
       "assuranceCeilingAfterT9": "COMPLETE",
-      "v19HostedTrustFoundationState": "G1_RESERVED"
+      "v19HostedTrustFoundationState": "BUILDING"
     },
     "futureProgramBlockerIssue": 148,
     "futureBlockedIssue": 148,
@@ -99,7 +126,7 @@
     "postClosureSourceOverlapAuditFastRunId": 32925719203,
     "postClosureSourceOverlapAuditQualifiedRunId": 32925800749,
     "postClosureSourceOverlapAuditMergeSha": "f5364888fad81114d1372d0d6d4975b282f83874",
-    "v19G1Permission": "STARTED_G1_RESERVED"
+    "v19G1Permission": "G1_PASSED_BUILDING"
   },
   "permanentBoundaries": [
     "US_EQUITIES_PROCESSING",
