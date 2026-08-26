@@ -13,6 +13,7 @@
 **Canonical v19/v20 rebaseline:** `governance/V19_V20_REBASELINE.md`  
 **Backlog/version map:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
 **HOST/version map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
+**Legacy future-commitment conservation:** `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`  
 **Cross-integration map:** `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`  
 **Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
 **Active version:** `v19.0.0` — Hosted Trust & Identity Foundation  
@@ -29,11 +30,38 @@ v18.10.0 remains the immutable 10/10 Future-Proof Final v18 Closure. Its release
 
 The prior future micro-version and requirement-packet scheduling is superseded. Requirements remain individually conserved/evidenced, but current planning and delivery use coherent **version/build numbers**.
 
-All 22 testing/future backlog issues (#150-#171) are mapped with zero unmapped rows in `backlog-version-matrix.json`.
+The zero-miss rebaseline now has four requirement families:
+1. all **180 certified v18 responsibilities** remain inherited regression/conservation baseline;
+2. all **72 HOST requirements** are mapped with zero unmapped/duplicate rows in `host-requirement-version-map.json`;
+3. all **22 testing/future backlog issues #150-#171** are mapped with zero unmapped rows in `backlog-version-matrix.json` and cross-integrated in `cross-integration-matrix.json`;
+4. older future-roadmap/build-plan commitments not represented solely by HOST/backlog IDs are mapped in `legacy-future-commitment-conservation.json` with zero unmapped rows.
 
-All 72 HOST requirements are mapped with zero unmapped/duplicate rows in `host-requirement-version-map.json`. The source `requirement-conservation.json` remains authority for requirement text/provenance/owners; its old `plannedVersion` micro-assignments are superseded for scheduling by the rebaseline map.
+The legacy matrix explicitly conserves Smart Router residual-gap routing, Shared Symbol Intelligence, Opportunity Radar/AODR, TradeInsight shadow roles, Provider->Market Mode integration, institutional/13F, TDTI/two-sided thesis, ADR-GDI reliability, hosted Gateway/sync, governed Adaptive Intelligence, ASBI, MFE/MAE/calibration/usefulness, halt/LULD/pause/resume semantics, cross-platform lockstep, canonical Data Health recurrence and permanent architecture/process boundaries.
 
-`cross-integration-matrix.json` records the required downstream/Market-Regime/Outcome-Learning disposition for all 22 backlog issues. `whole-product-surface-rebaseline.json` preserves the 180 certified v18 responsibilities as inherited baseline and gives current surface-level disposition/placement; each affected version must still enumerate actual current source/runtime surfaces before G3 and reconcile complete coverage at G10.
+`whole-product-surface-rebaseline.json` preserves the certified v18 responsibilities as inherited baseline and gives current surface-level disposition/placement; each affected version must still enumerate actual current source/runtime surfaces before G3 and reconcile complete coverage at G10.
+
+## Source-confirmed SHORT-side Desk gap
+
+A current source audit of `renderer/renderer.js` confirmed the screenshot-style plan strip exists today (`Entry Zone`, `Trim / Target`, `Invalidation`, `Setup Score`) and bearish direction labels exist, but the deterministic plan is **not a true mirrored SHORT setup**:
+- `computePlan` derives `BEARISH/STRONG BEARISH` from a low directional score;
+- regardless of direction, target geometry is built above price/entry and invalidation below entry;
+- `actionState` comparisons are long-oriented;
+- the same numeric score is used as both directional encoding and displayed `Setup Score`, so a strong bearish/SHORT thesis can appear numerically like a low-quality setup.
+
+This is now conserved as `LEGACY-TRADER-SETUP-SHORT-001` in **v19.3.0**, not left implicit under institutional two-sided thesis work.
+
+Required future contract:
+- explicit `LONG / SHORT / NO_SETUP-WAIT` side;
+- separate directional evidence from 0–100 setup-quality score;
+- LONG target above / invalidation below;
+- SHORT cover-target below / invalidation above;
+- direction-aware R-multiple, entry-distance, action state, sorting, chart overlays and replay/outcome snapshots;
+- Research/Discovery use the same canonical setup side/geometry;
+- preserve existing Day/Swing/Long Desk look-and-feel, changing only truthful side-aware content/labels where required;
+- bearish evidence never forces a SHORT setup when quality/readiness is insufficient;
+- No Execution remains permanent.
+
+This deterministic Desk contract is distinct from v19.6.0/v20.3.0 **two-sided thesis/TDTI** evidence.
 
 ## Current v19/v20 sequence
 
@@ -43,7 +71,7 @@ v19:
 v20:
 `v20.0.0 -> v20.1.0 -> v20.2.0 -> v20.3.0 -> v20.3.1 -> v20.4.0 -> v20.5.0 -> v20.6.0`
 
-Exact scope is in `governance/ROADMAP.md` and `governance/V19_V20_REBASELINE.md`.
+Exact scope is in `governance/ROADMAP.md`, `governance/V19_V20_REBASELINE.md`, and the rebaseline machine companions. `v19.3.0` includes the newly explicit two-sided deterministic Desk setup contract; no extra public version is required solely for this correction unless its future G0/G1 source-overlap/risk audit proves a dedicated patch boundary is safer.
 
 ## Active v19.0.0 scope
 
@@ -58,7 +86,7 @@ At the rebaseline audit:
 - Fast #1141 / run `32929281393` failed source-health because these production helpers were unreferenced: `createSessionWithSecurityLocked`, `registerHostedDevice`, `bindHostedDeviceToSession`, `setHostedDeviceStatus`, `authorizeHostedIdentity`;
 - therefore the identity/session work must be production-wired through existing canonical authenticated identity/HTTP owners, or helpers proven unnecessary must be consolidated/removed.
 
-The first rebaseline-only Fast on head `1b983eb56c064510d2c5eaf1dc606d2fddf0126d` failed earlier at workflow/release-state coherence because this handoff rewrite temporarily omitted exact Stable identity fields. Those fields are restored above. That governance failure does not replace or close the underlying product source-health gap; fetch the live head/checks after this correction.
+A later rebaseline-only Fast on head `1b983eb56c064510d2c5eaf1dc606d2fddf0126d` failed workflow/release-state coherence because an earlier handoff rewrite temporarily omitted exact Stable identity fields. Those exact Stable fields are restored at the top of this file. That governance failure does not replace or close the underlying product source-health gap. Always fetch the live branch head and current checks before continuing.
 
 ## Permanent smart/intelligent rule
 
@@ -89,13 +117,14 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 3. Run exact-head Fast on the coherent new candidate.
 4. Continue the remaining HOST-001..023 dependency order only after current evidence is truthful.
 5. Do not begin `v19.1.0` until v19.0.0 exit criteria pass.
+6. Do not implement the future SHORT-side Desk correction early inside v19.0.0; it is durably conserved for v19.3.0 unless a governed source-overlap/risk replan moves it explicitly.
 
 ## Resume rule
 
-1. Read this file first, then `governance/V19_V20_REBASELINE.md`, `governance/ROADMAP.md`, `governance/current-state.json`, all four rebaseline machine maps, CURRENT adaptive Roadmap/Build Plan/Build Process/Delivery Process/Gap Closure/CI Convergence, issue #148, parent #66, PR #149 and current CI evidence.
+1. Read this file first, then `governance/V19_V20_REBASELINE.md`, `governance/ROADMAP.md`, `governance/current-state.json`, **all five rebaseline machine companions** (`backlog-version-matrix.json`, `host-requirement-version-map.json`, `legacy-future-commitment-conservation.json`, `cross-integration-matrix.json`, `whole-product-surface-rebaseline.json`), CURRENT adaptive Roadmap/Build Plan/Build Process/Delivery Process/Gap Closure/CI Convergence, issue #148, parent #66, PR #149 and current CI evidence.
 2. GitHub/source/executable evidence outranks prose and all chat memory.
 3. Preserve v18.10.0 Stable immutability.
 4. Do not create requirement-sized public versions, branches or PRs.
-5. Do not silently drop/split backlog or HOST rows; use the machine maps.
+5. Do not silently drop/split certified-v18, backlog, HOST or legacy-future rows; use the machine conservation files.
 6. Do not weaken G0-G16, architecture/source/data-truth/security/platform/CI gates.
 7. Update durable GitHub state at every version transition so another assistant/account/model can resume independently.
