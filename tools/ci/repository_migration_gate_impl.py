@@ -348,8 +348,30 @@ def main() -> int:
             work_slice = json.loads(work_slice_path.read_text())
             if work_slice.get("workSliceId") != work_slice_id:
                 errors.append("current-state/work-slice ID mismatch")
-            if work_slice.get("publicProductVersion") is not None:
-                errors.append("process-hardening work slice consumed a public product version")
+            active_type = str(active.get("type", "")).strip().upper()
+            work_type = str(work_slice.get("type", "")).strip().upper()
+            if active_type != work_type:
+                errors.append("current-state/work-slice type mismatch")
+            active_version = active.get("publicProductVersion")
+            work_version = work_slice.get("publicProductVersion")
+            if active_version != work_version:
+                errors.append("current-state/work-slice publicProductVersion mismatch")
+            active_behavior = active.get("productBehaviorChange")
+            work_behavior = work_slice.get("productBehaviorChange")
+            if active_behavior != work_behavior:
+                errors.append("current-state/work-slice productBehaviorChange mismatch")
+            if work_type.startswith("PROCESS_"):
+                if work_version is not None:
+                    errors.append("process-hardening work slice consumed a public product version")
+                if work_behavior is not False:
+                    errors.append("process-hardening work slice must declare productBehaviorChange=false")
+            elif work_type.startswith("PRODUCT_"):
+                if not str(work_version or "").strip():
+                    errors.append("product work slice missing publicProductVersion")
+                if work_behavior is not True:
+                    errors.append("product work slice must declare productBehaviorChange=true")
+            else:
+                errors.append(f"unsupported active work-slice type: {work_type or '<empty>'}")
 
     status = git("status", "--porcelain", "--untracked-files=all").stdout.strip()
     if status:
