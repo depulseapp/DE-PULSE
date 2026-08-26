@@ -33,10 +33,12 @@ These do not add G17. They strengthen requirement/owner/test selection and G10 r
 
 ## Current executable state
 
-The original hosted-helper reachability defect is resolved. On exact-head Fast #1165 for `f36417fda84e063d5a9cafcc31c464b051f5b3af`, recursive/package-aware source health reported zero unregistered orphan production Go helpers. Exact-head Fast #1166 for `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` then passed Canonical workflow policy and Recursive source-health, including the restored Adaptive Data Health contract. Its current blocker is repository/current-state projection convergence, not product helper reachability.
+The original hosted-helper reachability defect remains resolved. Exact-head Fast #1167 / run `32980268194` on `170477f222226d3ae7f5da41cb0822a655ab5e54` passed Canonical workflow policy, Recursive source-health, Adaptive Data Health conservation, repository migration/current-state projection convergence, active work-slice closure-ledger validation, resume/post-Stable continuity, and v18 T1-T9 assurance. It then failed only at V19 requirement conservation because `governance/ROADMAP.md` had lost the durable `Zero-Miss Future-Version Conservation` section identity while the underlying 72 HOST rows and conservation rules remained intact.
+
+Current branch head `716bfa1495de18061484ad26f81f1e830c520378` restores that canonical zero-miss section together with source-overlap-before-G1 and zero-gap-before-next-band semantics while retaining coherent version/build planning. No gate, Stable artifact or packet-sized release model was reintroduced.
 
 GitHub-hosted artifact attestation remains mandatory where supported. Where repository/account constraints prevent hosted attestation enforcement, existing exact-hash provenance, promotion verification and SBOM remain compensating evidence.
 
 ## Exactly one next action
 
-Restore the seven CURRENT/handoff projections to the canonical machine state and closure ledger, then obtain a fresh exact-head Fast on PR #149. Do not start v19.1.0 or spend Qualified/Release budget until v19.0.0 Fast evidence is green and current-version closure criteria are reconciled.
+Obtain fresh exact-head Fast on the current PR #149 head, verify V19 requirement conservation and the remaining formatting/vet/unit/static gates, then continue fixing only the first truthful executable failure. Do not start v19.1.0 or spend Qualified/Release budget until v19.0.0 Fast evidence is green and current-version closure criteria are reconciled.
