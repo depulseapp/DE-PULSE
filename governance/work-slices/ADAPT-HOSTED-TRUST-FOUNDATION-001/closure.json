@@ -18,11 +18,11 @@
     },
     {
       "id": "HOST-004-007-TENANT-IDENTITY-SESSION",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED",
       "owner": "canonical identity/auth/session/reauth/workspace owners",
-      "implementationPaths": ["identity_model.go", "http_auth.go", "identity_reauth.go", "workspace_isolation_regression_test.go"],
+      "implementationPaths": ["identity_model.go", "http_auth.go", "http_health.go", "identity_reauth.go", "reauthentication_regression_test.go", "workspace_isolation_regression_test.go"],
       "evidenceRequired": ["first-class tenant/account isolation independent of role/product entitlement/provider rights", "SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability semantics", "device registration/revocation/lost/stale lifecycle", "session expiry/refresh/revocation and sensitive reauth/MFA-class controls", "cross-tenant and revoked-state denial"],
-      "evidence": [],
+      "evidence": ["Canonical hosted identity/device/session helpers are production-reachable through existing authenticated HTTP owners; device registration binds the current session and device-status mutation is gated by current registered-device trust rather than a parallel identity subsystem", "reauthentication_regression_test.go proves explicit local-tenant migration, cross-tenant/inactive-tenant denial, role-capability separation, device registration and session binding, lost/revoked/stale device denial, bound-session revocation and cookie clearing, rejection of direct ACTIVE trust reactivation, and recent-auth plus explicit MFA proof for sensitive hosted authorization", "Fast #1165 / run 32978721012 on f36417fda84e063d5a9cafcc31c464b051f5b3af reported zero unregistered orphan production Go helpers and G2 PASS after consolidation into canonical root owners", "Fast #1167 / run 32980268194 on 170477f222226d3ae7f5da41cb0822a655ab5e54 passed T3 functional/integration/end-to-end assurance and T6 security/roles/rights assurance; that run failed later only at V19 requirement conservation because the canonical roadmap had lost the zero-miss section marker"],
       "closureCondition": "Hosted tenant/account/device/session identity extends existing canonical identity owners with positive and negative authorization evidence.",
       "blocksIssueClosure": true
     },
