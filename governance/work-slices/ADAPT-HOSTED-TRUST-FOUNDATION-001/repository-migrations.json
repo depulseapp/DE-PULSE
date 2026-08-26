@@ -1,0 +1,12 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
+  "moves": [],
+  "temporaryAliases": [],
+  "removedGoTestIdentities": [],
+  "retiredExecutablePaths": [],
+  "testIdentityRenames": {
+    ".:TestV184ProviderRightsStayOutOfExecutableRouting": ".:TestHOST003ExecutableRouterFailsClosedThenAdmitsReviewedRights"
+  }
+}
