@@ -1,38 +1,39 @@
 {
   "schemaVersion": 2,
   "protocolVersion": "2.1-ai-portable",
-  "release": "v18.9.1",
+  "release": "v18.10.0",
   "channel": "STABLE",
   "branch": "main",
-  "pullRequest": 69,
-  "candidateSourceCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-  "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
+  "pullRequest": 143,
+  "candidateSourceCommit": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+  "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
   "sourceFingerprintState": "STABLE_PROMOTED",
-  "buildId": "v18.9.1-stable-20260821",
+  "buildId": "v18.10.0-stable-20260825",
   "certifiedStable": {
-    "version": "v18.9.1",
-    "tag": "v18.9.1-stable",
-    "promotionCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-    "candidateSourceCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-    "certifiedSourceCheckout": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-    "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
-    "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff"
+    "version": "v18.10.0",
+    "tag": "v18.10.0",
+    "promotionCommit": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "candidateSourceCommit": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "certifiedSourceCheckout": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "qualifiedSourceHead": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+    "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037"
   },
-  "metadataHeadRule": "The immutable v18.9.1 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded continuity/checkpoint metadata advances main or a future process/product branch.",
+  "metadataHeadRule": "The immutable v18.10.0 Stable tag/candidate/fingerprint remains authority even if later fingerprint-excluded closure, audit, or future-program metadata advances main.",
   "gates": {
     "G0": "PASS", "G1": "PASS", "G2": "PASS", "G3": "PASS", "G4": "PASS", "G5": "PASS", "G6": "PASS", "G7": "PASS", "G8": "PASS", "G9": "PASS", "G10": "PASS", "G11": "PASS", "G12": "PASS", "G13": "PASS", "G14": "PASS", "G15": "PASS", "G16": "PASS"
   },
   "releaseSummary": {
-    "qualifiedSourceHead": "d7276c3421dd2b4529ac2a987466be3cffa05678",
-    "fastRun": 32546289014,
-    "fastRunNumber": 581,
-    "qualifiedRun": 32546364036,
-    "qualifiedRunNumber": 163,
-    "releaseRun": 32546555659,
-    "releaseRunNumber": 33,
+    "qualifiedSourceHead": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+    "fastRun": 32916919933,
+    "fastRunNumber": 1109,
+    "qualifiedRun": 32916988785,
+    "qualifiedRunNumber": 224,
+    "releaseRun": 32917159547,
+    "releaseRunNumber": 41,
     "publication": "PASS_NO_REBUILD",
-    "productPR": 69,
-    "scopeIssue": 64
+    "productPR": 143,
+    "scopeIssue": 113,
+    "trackIssue": 123
   },
   "assistantPortability": {
     "status": "ENFORCED",
@@ -40,43 +41,20 @@
     "entrypoints": ["AGENTS.md", "CLAUDE.md"]
   },
   "completedReleaseScope": [
-    {"issue": 64, "release": "v18.9.1", "disposition": "COMPLETED_IN_V18.9.1_STABLE", "requirement": "ADAPT-RUNTIME-CRASH-001"},
-    {"issue": 61, "release": "v18.9.0", "disposition": "COMPLETED_IN_V18.9.0_STABLE", "requirement": "ADAPT-TRADEINSIGHT-001"}
+    {"issue": 113, "release": "v18.10.0", "disposition": "COMPLETED_10_10_FUTURE_PROOF_FINAL_V18_CLOSURE", "requirement": "ADAPT-V18-FINAL-CLOSURE-10-10-001"},
+    {"issue": 123, "release": "v18.10.0", "disposition": "COMPLETED_T10_ZERO_GAP_PORTABLE_CERTIFICATION", "requirement": "V18-CLOSURE-T10"}
   ],
   "escapedRuntimeDefects": [],
   "activeProgram": {
-    "issue": 65,
-    "requirement": "ADAPT-PROVIDER-INTELLIGENCE-010",
-    "disposition": "COMPLETE_BY_EXECUTABLE_EVIDENCE",
-    "completedProviderOnboarding": {
-      "issue": 95,
-      "candidate": "3a988f24fc799d130384ff89c9fd1f243db46571",
-      "fastRun": 32801432713,
-      "qualifiedRun": 32801546814,
-      "mergeCommit": "2eab9bd38b0a75a116de46e531015ed699ed7308"
-    },
-    "completedProviderTelemetry": {
-      "issue": 94,
-      "candidate": "ae669a9a39604908086f36f75a78a9c1c1f93ae8",
-      "fastRun": 32807961635,
-      "qualifiedRun": 32808052157,
-      "productMergeCommit": "249ce52d3af513b763ac46ac22a1b28ce01bd346",
-      "closureMergeCommit": "d7b46d5d0ea50a47ad47e2f8974b6488e84b7536"
-    },
-    "completedProfessionalClosure": {
-      "issue": 107,
-      "requirement": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
-      "candidate": "dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2",
-      "fastRun": 32811045734,
-      "qualifiedRun": 32811081438,
-      "mergeCommit": "e9c236b2b9f229968f93ffe9ac600f45080389a7",
-      "mainContinuityRun": 32811424765,
-      "closureBranch": "adapt-provider-professional-closure-001-closure",
-      "disposition": "COMPLETE_NO_PRODUCT_BEHAVIOR_CHANGE_NO_STABLE_RELEASE"
-    },
+    "issue": 113,
+    "requirement": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
+    "disposition": "COMPLETE_BY_EXECUTABLE_EVIDENCE_AND_STABLE_PUBLICATION",
+    "releaseCandidate": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "releaseRun": 32917159547,
+    "g16Artifact": 9588734888,
     "futureBlockedIssue": 66,
-    "selectionRule": "The v18 provider-intelligence program is complete by executable evidence. No next product capability is reserved. #66 remains a separate future program and may start only after a fresh explicit future-program decision."
+    "selectionRule": "v18.10.0 is the final v18 Stable. #66 remains PLANNED_UNSTARTED until the mandatory post-v18.10 source-overlap/residual audit explicitly permits first v19 G1."
   },
-  "nextStep": "Do not resume v18 provider-intelligence implementation. If future development is explicitly requested, fetch live GitHub state and make a fresh program-selection decision before reserving or starting #66.",
-  "updatedAt": "2026-08-24T22:06:00-07:00"
+  "nextStep": "Run the mandatory post-v18.10 source-overlap/residual audit against #66/HOST-001..HOST-072 before reserving or starting any v19 product implementation.",
+  "updatedAt": "2026-08-26T01:30:00Z"
 }
