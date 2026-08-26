@@ -128,3 +128,173 @@ func TestV184ProtectedMutationRequiresReauthThenSucceeds(t *testing.T) {
 		t.Fatalf("recently reauthenticated principal blocked: code=%d called=%d body=%s", allowed.Code, called, allowed.Body.String())
 	}
 }
+
+func TestHOST004LegacyIdentityMigratesToExplicitLocalTenant(t *testing.T) {
+	p, s := newIdentityTestService(t)
+	s.mu.Lock()
+	if len(s.state.Tenants) == 0 || s.state.Tenants[0].ID != localTenantID || s.state.Tenants[0].Status != TenantActive {
+		s.mu.Unlock()
+		t.Fatalf("local tenant migration missing: %+v", s.state.Tenants)
+	}
+	for _, u := range s.state.Users {
+		if normalizedTenantID(u.TenantID) != localTenantID {
+			s.mu.Unlock()
+			t.Fatalf("legacy user not tenant-bound: %+v", u)
+		}
+	}
+	s.mu.Unlock()
+	reloaded, err := NewIdentityService(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	reloaded.mu.Lock()
+	defer reloaded.mu.Unlock()
+	if len(reloaded.state.Tenants) == 0 || reloaded.state.Tenants[0].ID != localTenantID {
+		t.Fatalf("tenant migration did not persist: %+v", reloaded.state.Tenants)
+	}
+}
+
+func TestHOST005RoleCapabilitiesAreExplicitAndIndependent(t *testing.T) {
+	cases := []struct {
+		role       UserRole
+		capability string
+		want       bool
+	}{
+		{RoleSuperOwner, hostedCapabilityTenantManage, true},
+		{RoleOwner, hostedCapabilityAccountManage, true},
+		{RoleAdmin, hostedCapabilityUserManage, true},
+		{RoleAdmin, hostedCapabilityTenantManage, false},
+		{RoleUser, hostedCapabilityStandardUse, true},
+		{RoleUser, hostedCapabilityUserManage, false},
+		{RoleDemo, hostedCapabilityDemoUse, true},
+		{RoleDemo, hostedCapabilityStandardUse, false},
+	}
+	for _, tc := range cases {
+		if got := roleHasHostedCapability(tc.role, tc.capability); got != tc.want {
+			t.Fatalf("role=%s capability=%s got=%v want=%v", tc.role, tc.capability, got, tc.want)
+		}
+	}
+}
+
+func TestHOST004HostedIdentityDeniesCrossTenantAndInactiveTenant(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_330_000_000, 0)
+	_, p, _ := v184CredentialedOwner(t, s, base)
+
+	cross := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: "tenant-other", Capability: hostedCapabilityStandardUse})
+	if cross.Allowed {
+		t.Fatalf("cross-tenant principal was allowed: %+v", cross)
+	}
+
+	s.mu.Lock()
+	for i := range s.state.Tenants {
+		if s.state.Tenants[i].ID == localTenantID {
+			s.state.Tenants[i].Status = TenantDisabled
+		}
+	}
+	_ = s.persistLocked()
+	s.mu.Unlock()
+	inactive := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityStandardUse})
+	if inactive.Allowed {
+		t.Fatalf("disabled tenant was allowed: %+v", inactive)
+	}
+}
+
+func TestHOST006DeviceLifecycleRevokesBoundSessionsAndBlocksCrossTenantMutation(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_340_000_000, 0)
+	token, p, _ := v184CredentialedOwner(t, s, base)
+	device, err := s.registerHostedDevice(p, "browser", "sha256:test-device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.bindHostedDeviceToSession(p, device.ID); err != nil {
+		t.Fatal(err)
+	}
+	allowed := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityStandardUse, RequireRegisteredDevice: true})
+	if !allowed.Allowed || allowed.DeviceID != device.ID {
+		t.Fatalf("active registered device blocked: %+v", allowed)
+	}
+
+	crossTenant := p
+	crossTenant.TenantID = "tenant-other"
+	if err := s.setHostedDeviceStatus(crossTenant, device.ID, DeviceLost); err == nil {
+		t.Fatal("cross-tenant device mutation was allowed")
+	}
+	if err := s.setHostedDeviceStatus(p, device.ID, DeviceLost); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.resolve(token, false); err == nil {
+		t.Fatal("lost device did not revoke its bound session")
+	}
+	blocked := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityStandardUse, RequireRegisteredDevice: true})
+	if blocked.Allowed {
+		t.Fatalf("lost device/session remained authorized: %+v", blocked)
+	}
+}
+
+func TestHOST006StaleRegisteredDeviceFailsClosed(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_350_000_000, 0)
+	_, p, _ := v184CredentialedOwner(t, s, base)
+	device, err := s.registerHostedDevice(p, "browser", "sha256:stale-device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.bindHostedDeviceToSession(p, device.ID); err != nil {
+		t.Fatal(err)
+	}
+	s.mu.Lock()
+	for i := range s.state.Devices {
+		if s.state.Devices[i].ID == device.ID {
+			s.state.Devices[i].LastSeenAt = base.Add(-31 * 24 * time.Hour).UnixMilli()
+		}
+	}
+	_ = s.persistLocked()
+	s.mu.Unlock()
+	decision := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityStandardUse, RequireRegisteredDevice: true})
+	if decision.Allowed {
+		t.Fatalf("stale registered device remained authorized: %+v", decision)
+	}
+}
+
+func TestHOST007SensitiveHostedActionRequiresFreshReauthAndExplicitMFAProof(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_360_000_000, 0)
+	_, p, password := v184CredentialedOwner(t, s, base)
+	device, err := s.registerHostedDevice(p, "browser", "sha256:mfa-device")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.bindHostedDeviceToSession(p, device.ID); err != nil {
+		t.Fatal(err)
+	}
+	requirement := HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityTenantManage, RequireRegisteredDevice: true, RequireRecentAuthentication: true, RequireMFA: true}
+	if decision := s.authorizeHostedIdentity(p, requirement); decision.Allowed {
+		t.Fatalf("sensitive action allowed without MFA proof: %+v", decision)
+	}
+	if err := s.recordHostedMFAVerification(p); err != nil {
+		t.Fatal(err)
+	}
+	if decision := s.authorizeHostedIdentity(p, requirement); !decision.Allowed {
+		t.Fatalf("fresh reauth + explicit MFA proof blocked: %+v", decision)
+	}
+
+	s.now = func() time.Time { return base.Add(16 * time.Minute) }
+	if decision := s.authorizeHostedIdentity(p, requirement); decision.Allowed {
+		t.Fatalf("stale sensitive assurance remained authorized: %+v", decision)
+	}
+	ok, err := s.reauthenticateSession(p.SessionID, password)
+	if err != nil || !ok {
+		t.Fatalf("reauth failed: ok=%v err=%v", ok, err)
+	}
+	if decision := s.authorizeHostedIdentity(p, requirement); decision.Allowed {
+		t.Fatalf("password reauth alone incorrectly satisfied MFA: %+v", decision)
+	}
+	if err := s.recordHostedMFAVerification(p); err != nil {
+		t.Fatal(err)
+	}
+	if decision := s.authorizeHostedIdentity(p, requirement); !decision.Allowed {
+		t.Fatalf("refreshed sensitive assurance blocked: %+v", decision)
+	}
+}
