@@ -30,10 +30,13 @@ func TestV184CommercialReadinessDefaultsFailClosedForEveryProvider(t *testing.T)
 func TestV184CommercialReadinessRequiresEvidenceAndExplicitApproval(t *testing.T) {
 	base := ProviderDataRightsMetadata{
 		PolicyVersion:  providerDataRightsPolicyVersion,
+		Provider:       "Finnhub",
 		ReviewState:    providerRightsApproved,
 		CommercialUse:  providerRightsApproved,
 		Redistribution: providerRightsApproved,
 		AIUse:          providerRightsApproved,
+		EvidenceRef:    "rights/provider/finnhub/test-fixture",
+		EvidenceDigest: "sha256:" + strings.Repeat("a", 64),
 	}
 	withoutEvidence := evaluateProviderCommercialReadiness(base)
 	if withoutEvidence.State != providerCommercialBlocked || withoutEvidence.CommercialUseReady || withoutEvidence.RedistributionReady || withoutEvidence.AIUseReady {
