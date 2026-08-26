@@ -13,6 +13,7 @@
 **Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001` / `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
 **Post-v18 overlap audit:** #145 / PR #146 + reconciliation PR #147 — **PASS/CLOSED**  
 **Active v19 G1:** #148 / `ADAPT-HOSTED-TRUST-FOUNDATION-001` / `adapt-hosted-trust-foundation-001`  
+**Active PR:** #149 — single long-lived Draft PR  
 **Active work-slice:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`  
 **Active G1 scope:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json`  
 **Active closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`  
@@ -24,19 +25,23 @@ v18.10.0 remains the immutable 10/10 Future-Proof Final v18 Closure. No v19 work
 
 ## Current v19 authority
 
-The mandatory post-v18 source-overlap audit is complete. Every `HOST-001..HOST-072` requirement has an inherited/extended/residual/process disposition with zero unexplained overlap. #148 is the first permitted v19 product reservation and owns **HOST-001..HOST-023** as one coherent dependency-ordered Hosted Trust Foundation band rather than 23 micro-releases.
+#148 owns **HOST-001..HOST-023** as one coherent **v19.0.x Hosted Trust Foundation band**. The band is intentionally decomposed into small dependency-correct engineering packets to prevent implementation misses, but those packets are not separate public releases/branches/PRs by default.
 
-Implementation order:
-1. HOST-001..003 provider rights;
-2. HOST-004..007 tenant/account identity/device/session;
-3. HOST-008..009 product entitlement/quota;
-4. HOST-010..014 privacy/environment/service trust;
-5. HOST-015..016 PostgreSQL tenancy/recovery through existing `persistence_backend_postgres.go`;
-6. HOST-017..020 managed secrets/KMS and supply-chain/deploy provenance;
-7. HOST-021..022 provider scorecards and point-in-time/no-lookahead truth;
-8. HOST-023 zero-gap closure before Hosted Provider Gateway activation.
+Packets:
+1. P1 `HOST-001..003` provider rights — implementation Fast evidence obtained; final band verification pending.
+2. P2 `HOST-004..007` tenant/account identity/device/session/reauth — active; production reachability through existing authenticated HTTP/identity owners is the current blocker.
+3. P3 `HOST-008..009` product entitlement/quota.
+4. P4 `HOST-010..014` privacy/environment/service trust.
+5. P5 `HOST-015..016` PostgreSQL tenancy/recovery through existing `persistence_backend_postgres.go`.
+6. P6 `HOST-017..020` managed secrets/KMS and supply-chain/deploy provenance.
+7. P7 `HOST-021..022` provider scorecards and point-in-time/no-lookahead truth.
+8. P8 `HOST-023` zero-gap band closure before Hosted Provider Gateway activation.
 
-Every active closure gap is blocking and must be VERIFIED with executable evidence. PostgreSQL connection success, a working provider key, documentation-only claims or UI hiding do not constitute hosted readiness.
+Per-packet completeness is fail-closed: requirement -> canonical owner -> consumer -> positive/adverse evidence -> persistence/security/UI applicability must be bound before advancement. Small packets exist to improve completeness and fault isolation, not to reduce assurance.
+
+Default Qualified checkpoints are risk-based: Q1 after `HOST-001..009`; Q2 after `HOST-010..020`; Q3 final G10/`HOST-001..023`. An extra checkpoint is allowed only when a material new risk surface justifies it. Exact-head Fast applies to coherent changed candidates. Metadata/evidence should be batched with the implementation candidate it describes when safe. Public release/version identity advances at coherent band/release boundaries, not every packet.
+
+This supersedes any chat-only proposal for one separate public v19 release per HOST packet.
 
 ## Permanent architecture boundaries
 
@@ -46,7 +51,7 @@ U.S. Equities Processing only; No Execution; Smart Provider Router v2 remains so
 
 - bind requirement -> owner -> consumer -> positive/adverse evidence -> persistence/security/UI applicability during implementation;
 - classify product behavior vs test/evidence vs ownership-binding vs N/A gaps before adding machinery;
-- requirements are traceability, not forced release events;
+- requirements and packets are traceability/evidence units, not forced release events;
 - preserve frozen v18 history as conservation rather than growing unconditional historical gate chains;
 - hosted multi-tenant negative security is mandatory where applicable;
 - point-in-time/no-lookahead truth precedes historical/adaptive evaluation;
@@ -56,12 +61,13 @@ U.S. Equities Processing only; No Execution; Smart Provider Router v2 remains so
 
 ## Exactly one next action
 
-Open the single long-lived Draft PR for #148, obtain exact-head G1 Fast on the current G1 scope candidate, and if green begin `HOST-001..HOST-003_PROVIDER_RIGHTS` implementation on that same branch/PR.
+Finish P2 `HOST-004..007` production wiring through existing authenticated HTTP/identity owners on PR #149, obtain coherent exact-head Fast evidence, then continue P3 on the same branch/PR without creating a requirement-sized release.
 
 ## Resume rule
 
-1. Fetch live `main`, branch `adapt-hosted-trust-foundation-001`, issue #148, parent #66, open PR, `handoff/CURRENT.md`, `governance/current-state.json`, work-slice/G1/closure files and current Stable before modifying anything.
+1. Fetch live `main`, branch `adapt-hosted-trust-foundation-001`, issue #148, parent #66, PR #149, `handoff/CURRENT.md`, `governance/current-state.json`, work-slice/G1/closure files and current Stable before modifying anything.
 2. GitHub objects and executable evidence outrank prose/chat memory.
 3. Preserve v18.10.0 Stable immutability and permanent boundaries.
 4. Do not create another branch for requirement-sized work inside #148.
-5. Continue the smallest dependency-correct packet and keep the Draft PR current with coherent candidate batching.
+5. Continue the smallest dependency-correct packet and keep PR #149 current with coherent candidate batching.
+6. Do not convert internal packet IDs into public release/version boundaries unless a governed risk/release boundary requires it.

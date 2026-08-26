@@ -8,6 +8,7 @@
   "subtype": "HOSTED_TRUST_TENANT_RIGHTS_PERSISTENCE_SECURITY_FOUNDATION",
   "status": "G1_RESERVED",
   "publicProductVersion": "19.0.x",
+  "versionStrategy": "one coherent v19.0.x Hosted Trust Foundation band; internal packets are evidence/engineering checkpoints, not separate public releases by default",
   "stableProductVersionAtStart": "18.10.0",
   "baselineCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
   "baselineSourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
@@ -20,15 +21,22 @@
   "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
   "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
   "implementationOrder": [
-    "HOST-001..HOST-003 provider rights",
-    "HOST-004..HOST-007 tenant identity/device/session",
-    "HOST-008..HOST-009 product entitlement/quota",
-    "HOST-010..HOST-014 privacy/environment/service trust",
-    "HOST-015..HOST-016 PostgreSQL tenancy/recovery",
-    "HOST-017..HOST-020 managed secrets/supply chain",
-    "HOST-021..HOST-022 provider scorecards/point-in-time truth",
-    "HOST-023 band zero-gap closure"
+    "P1 HOST-001..HOST-003 provider rights",
+    "P2 HOST-004..HOST-007 tenant identity/device/session/reauth",
+    "P3 HOST-008..HOST-009 product entitlement/quota",
+    "P4 HOST-010..HOST-014 privacy/environment/service trust",
+    "P5 HOST-015..HOST-016 PostgreSQL tenancy/recovery",
+    "P6 HOST-017..HOST-020 managed secrets/supply chain",
+    "P7 HOST-021..HOST-022 provider scorecards/point-in-time truth",
+    "P8 HOST-023 band zero-gap closure"
   ],
+  "packetRule": "use the smallest dependency-correct packet that prevents implementation misses and supports complete positive/adverse evidence; packets do not automatically create branches, PRs, public versions, Qualified runs or releases",
+  "qualifiedCheckpoints": [
+    "Q1 after HOST-001..HOST-009 authorization boundary",
+    "Q2 after HOST-010..HOST-020 privacy/persistence/secrets boundary",
+    "Q3 final G10 HOST-001..HOST-023 band closure"
+  ],
+  "qualifiedExceptionRule": "add an extra Qualified checkpoint only for a materially new risk surface; never solely because an internal packet completed",
   "architectureBoundaries": [
     "US_EQUITIES_PROCESSING",
     "NO_EXECUTION",
@@ -40,6 +48,6 @@
     "POSTGRES_FOUNDATION_EXTEND_NOT_REPLACE",
     "NO_PARALLEL_CANONICAL_SUBSYSTEMS"
   ],
-  "deliveryRule": "one development branch -> one Draft PR -> coherent candidate batching -> exact-head Fast per changed candidate -> Qualified at coherent checkpoint/G10 -> merge/release only when governed",
-  "nextAction": "Obtain exact-head G1 Fast, then implement HOST-001..003 through existing provider-rights owners."
+  "deliveryRule": "one development branch -> one Draft PR -> small dependency-correct engineering packets -> coherent candidate batching -> exact-head Fast per coherent changed candidate -> risk-based Qualified checkpoints -> merge/release only when governed",
+  "nextAction": "Finish HOST-004..007 production reachability through existing authenticated HTTP/identity owners, obtain coherent Fast evidence, then continue HOST-008..009 on the same Draft PR."
 }
