@@ -9,6 +9,7 @@ import (
 func (a *Application) registerHealthRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/health", a.handleHealth)
 	mux.HandleFunc("/api/ready", a.handleReady)
+	a.registerHostedIdentityRoutes(mux)
 }
 
 func (a *Application) handleHealth(w http.ResponseWriter, _ *http.Request) {
