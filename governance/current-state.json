@@ -34,8 +34,8 @@
     "finalQualificationEvidence": "governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/final-qualification-evidence.json"
   },
   "productCapabilityGate": {
-    "blocked": false,
-    "blockedByIssue": null,
+    "blocked": true,
+    "blockedByIssue": 148,
     "unblockedByCompletedWorkSlice": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
     "completedCapability": "v18 provider-intelligence professional closure",
     "completedWorkSliceId": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
@@ -43,15 +43,16 @@
     "completedPullRequest": 108,
     "completedMergeSha": "e9c236b2b9f229968f93ffe9ac600f45080389a7",
     "completedEvidence": "#65 audit comment 5405370494; #107 candidate dfad4ef91f6af5d2bf09e1eda0212fbbea55bec2; Fast #983 / 32811045734; Qualified #198 / 32811081438; PR #108 expected-head merge e9c236b2b9f229968f93ffe9ac600f45080389a7; main Fast #984 / 32811424765",
-    "nextReservedCapability": "v18.10.0 — 10/10 Future-Proof Final v18 Closure",
-    "reservedWorkSliceId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
-    "reservedIssue": 113,
-    "reservedBranch": "adapt-v18-final-closure-10-10-001",
-    "reservationStatus": "COMPLETE",
-    "workSlicePath": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/work-slice.json",
-    "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
-    "parentProgramIssue": 113,
-    "parentProgramScopeId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
+    "nextReservedCapability": "v19 Hosted Trust Foundation — HOST-001..HOST-023",
+    "reservedWorkSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+    "reservedIssue": 148,
+    "reservedBranch": "adapt-hosted-trust-foundation-001",
+    "reservationStatus": "IN_PROGRESS",
+    "workSlicePath": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json",
+    "g1ScopePath": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
+    "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
+    "parentProgramIssue": 66,
+    "parentProgramScopeId": "ADAPT-HOSTED-SYNC-001",
     "completedChildTracks": [
       {"track":"T1","issue":114,"status":"COMPLETE","frozenHeadSha":"57f0847c44a9ae5916509a72da492d1dd2a003bc","fastRunId":32855548397,"qualifiedRunId":32855619652,"mergedPullRequest":127,"mergedCommitSha":"b434886751fde1804a4906c9cac41dcce4584834","effectiveShippedV18ResponsibilityCount":180,"unexplainedGapCount":0,"freezeManifest":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger-freeze.json"},
       {"track":"T2","issue":115,"status":"COMPLETE","frozenHeadSha":"9928ddfb7998d9cd12ee748e3ff8f8982d5b62ee","fastRunId":32859811809,"qualifiedRunId":32859915847,"mergedPullRequest":128,"mergedCommitSha":"bd26f91964235a8fdb390184684f4fdd216eb1e6","effectiveShippedV18ResponsibilityCount":180,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T2_UNIT_CONTRACT_ASSURANCE.json"},
@@ -64,12 +65,12 @@
       {"track":"T9","issue":122,"status":"COMPLETE","frozenHeadSha":"f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8","fastRunId":32904453472,"qualifiedRunId":32904637110,"mergedPullRequest":136,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81","uncoveredResponsibilityCount":0,"sourceFingerprint":"fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee","macOSArtifactId":9584360683,"windowsArtifactId":9584372877,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"},
       {"track":"T10","issue":123,"status":"COMPLETE","frozenHeadSha":"ec39319c86dee5e5976751abc42bc96a402a6d46","fastRunId":32916919933,"qualifiedRunId":32916988785,"mergedPullRequest":143,"mergedCommitSha":"584e9e0ce91ec08e08cfd52c7cf60392ab74dd12","releaseRunId":32917159547,"stableTag":"v18.10.0","sourceFingerprint":"0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037","g16ArtifactId":9588734888,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json"}
     ],
-    "nextChildIssue": null,
-    "nextChildTrack": null,
+    "nextChildIssue": 148,
+    "nextChildTrack": "HOSTED_TRUST_FOUNDATION",
     "nextCompanionChildIssue": null,
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
-      {"track":"T10","issue":123,"status":"VERIFIED"}
+      {"track":"HOSTED_TRUST_FOUNDATION","issue":148,"status":"G1_RESERVED","requirements":"HOST-001..HOST-023"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": true,
@@ -83,11 +84,12 @@
       "T10QualifiedRunId": 32916988785,
       "T10ReleaseRunId": 32917159547,
       "T10StableCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
-      "assuranceCeilingAfterT9": "COMPLETE"
+      "assuranceCeilingAfterT9": "COMPLETE",
+      "v19HostedTrustFoundationState": "G1_RESERVED"
     },
-    "futureProgramBlockerIssue": null,
-    "futureBlockedIssue": null,
-    "futureBlockedReason": null,
+    "futureProgramBlockerIssue": 148,
+    "futureBlockedIssue": 148,
+    "futureBlockedReason": "HOST-024 Hosted Provider Gateway and later #66 bands remain blocked until #148 HOST-001..HOST-023 closes with executable evidence.",
     "postClosureSourceOverlapAuditRequired": true,
     "postClosureSourceOverlapAuditStatus": "PASS",
     "postClosureSourceOverlapAuditIssue": 145,
@@ -96,7 +98,7 @@
     "postClosureSourceOverlapAuditFastRunId": 32925719203,
     "postClosureSourceOverlapAuditQualifiedRunId": 32925800749,
     "postClosureSourceOverlapAuditMergeSha": "f5364888fad81114d1372d0d6d4975b282f83874",
-    "v19G1Permission": "PERMITTED_NOT_STARTED"
+    "v19G1Permission": "STARTED_G1_RESERVED"
   },
   "permanentBoundaries": [
     "US_EQUITIES_PROCESSING",
