@@ -320,10 +320,10 @@ type AccountDataExport struct {
 	Profile            AccountPrivacyProfile     `json:"profile"`
 	Preferences        UIState                   `json:"preferences"`
 	Watchlists         []Watchlist               `json:"watchlists"`
-	ResearchMetadata   []map[string]any           `json:"researchMetadata"`
-	Feedback           []map[string]any           `json:"feedback"`
+	ResearchMetadata   []map[string]any          `json:"researchMetadata"`
+	Feedback           []map[string]any          `json:"feedback"`
 	HostedSyncMetadata AccountHostedSyncMetadata `json:"hostedSyncMetadata"`
-	CategoryStatus     map[string]string          `json:"categoryStatus"`
+	CategoryStatus     map[string]string         `json:"categoryStatus"`
 }
 
 func normalizeAccountDeletionReason(raw string) (string, error) {

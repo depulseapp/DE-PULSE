@@ -509,9 +509,9 @@ func TestHOST011ReplaceRestoreCarriesForwardDeletionTombstone(t *testing.T) {
 	archive := PersistenceArchive{
 		HasIdentity: true,
 		Identity: IdentityPersistentState{
-			Version: 1,
-			Users: []UserRecord{{ID: "privacy-deleted", TenantID: localTenantID, Username: "old-profile", DisplayName: "Old Profile", Role: RoleUser, Status: UserActive, PasswordHash: "old-password-hash"}},
-			Devices: []DeviceRecord{{ID: "old-device", TenantID: localTenantID, UserID: "privacy-deleted", FingerprintHash: "old-fingerprint", Status: DeviceActive}},
+			Version:  1,
+			Users:    []UserRecord{{ID: "privacy-deleted", TenantID: localTenantID, Username: "old-profile", DisplayName: "Old Profile", Role: RoleUser, Status: UserActive, PasswordHash: "old-password-hash"}},
+			Devices:  []DeviceRecord{{ID: "old-device", TenantID: localTenantID, UserID: "privacy-deleted", FingerprintHash: "old-fingerprint", Status: DeviceActive}},
 			Sessions: []SessionRecord{{ID: "old-session", UserID: "privacy-deleted", TokenHash: "old-token-hash"}},
 		},
 		UserWorkspaces: []UserWorkspace{v181WorkspaceWithSymbols("privacy-deleted", "NVDA", "TSLA")},
