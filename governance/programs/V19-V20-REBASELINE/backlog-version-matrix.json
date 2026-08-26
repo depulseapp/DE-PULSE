@@ -1,0 +1,57 @@
+{
+  "schema": "DE.PULSE-V19-V20-BACKLOG-REBASELINE-1",
+  "status": "AUTHORITATIVE_REBASELINE",
+  "baseline": {
+    "stable": "v18.10.0",
+    "mainShaAtAudit": "7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c",
+    "activeBranch": "adapt-hosted-trust-foundation-001",
+    "activePullRequest": 149,
+    "activeHeadAtAudit": "c5d0713d16f95522fd013123a78bc7cc58dc2422",
+    "activeHeadQualification": "FAST_FAILED_SOURCE_HEALTH",
+    "backlogRange": "#150-#171",
+    "backlogCount": 22
+  },
+  "rules": {
+    "publicPlanningUnit": "VERSION",
+    "internalRequirementRowsAreNotReleases": true,
+    "packetTerminologyIsNotCurrentPlanningAuthority": true,
+    "heavyFeaturesMayUseSequentialBuildIncrementsOrOneAdditionalPatchVersion": true,
+    "smallRelatedIssuesAreCombined": true,
+    "noUnmappedIssue": true,
+    "noIssueSplitWithoutExplicitSecondaryPlacement": true,
+    "crossIntegrationIssue": 170,
+    "wholeProductAuditIssue": 171,
+    "crossIntegrationAppliesToEveryCapabilityVersion": true,
+    "wholeProductAuditAppliesToEveryUserVisibleVersion": true
+  },
+  "issues": [
+    {"backlog":1,"issue":150,"title":"Canonical data-path traceability / degradation truth","primaryVersion":"v19.1.0","secondaryVersions":[],"disposition":"IMPLEMENT","reason":"Foundation for truthful canonical data health before hosted serving and later intelligence."},
+    {"backlog":2,"issue":151,"title":"Global ticker processor + always-live SPY/QQQ","primaryVersion":"v19.1.0","secondaryVersions":[],"disposition":"IMPLEMENT","reason":"Shared processing and deduplication must precede multi-user hosted fan-out."},
+    {"backlog":3,"issue":152,"title":"App-shell notification + secondary-header hierarchy","primaryVersion":"v19.3.0","secondaryVersions":[],"disposition":"IMPLEMENT_COMBINED_UI","reason":"Small cross-platform shell correction combined with role/product information-architecture work."},
+    {"backlog":4,"issue":153,"title":"Smart Provider Router v2 cross-integration audit","primaryVersion":"v19.1.0","secondaryVersions":[],"disposition":"AUDIT_AND_CORRECT","reason":"Prove every routable capability and consumer uses Router/canonical state before adding new hosted or analytical consumers."},
+    {"backlog":5,"issue":154,"title":"Adaptive provider recovery + dependent re-evaluation","primaryVersion":"v19.1.0","secondaryVersions":[],"disposition":"IMPLEMENT","reason":"Recovery is incomplete unless canonical refresh propagates to dependent consumers."},
+    {"backlog":6,"issue":155,"title":"Maintenance truthfulness/canonical integration","primaryVersion":"v19.1.0","secondaryVersions":["v19.3.0"],"disposition":"SPLIT_BY_OWNER","reason":"Runtime diagnostic truth closes with canonical data runtime; visual density/composition closes with product IA."},
+    {"backlog":7,"issue":156,"title":"Owner/Admin/User capability + UX audit","primaryVersion":"v19.3.0","secondaryVersions":["v19.0.0"],"disposition":"SPLIT_BY_LAYER","reason":"v19.0.0 establishes authoritative auth/session capability semantics; v19.3.0 completes role-aware product composition across clients."},
+    {"backlog":8,"issue":157,"title":"Canonical options/GEX + Call/Put Wall structure","primaryVersion":"v19.5.1","secondaryVersions":[],"disposition":"HEAVY_FEATURE_SEPARATE_BUILD","reason":"Options provider entitlement, schema, completeness, GEX and structural-level validation form a distinct high-risk data capability."},
+    {"backlog":9,"issue":158,"title":"Market Intelligence usefulness/density audit","primaryVersion":"v19.4.0","secondaryVersions":[],"disposition":"AUDIT_AND_IMPLEMENT","reason":"Market Intelligence and Research share evidence/synthesis dependencies and should be reconciled together."},
+    {"backlog":10,"issue":159,"title":"Maintenance density/operator workflow","primaryVersion":"v19.3.0","secondaryVersions":[],"disposition":"IMPLEMENT_COMBINED_UI","reason":"Combine with role-aware whole-product IA after canonical Maintenance truth is proven."},
+    {"backlog":11,"issue":160,"title":"Data Engine integration freshness; preserve UI","primaryVersion":"v19.1.0","secondaryVersions":["v19.3.0"],"disposition":"SPLIT_VERIFY_ONLY","reason":"Canonical integration is verified in runtime foundation; later cross-platform/role audit verifies presentation without broad redesign."},
+    {"backlog":12,"issue":161,"title":"Research freshness defect + density/usefulness","primaryVersion":"v19.4.0","secondaryVersions":[],"disposition":"AUDIT_AND_IMPLEMENT","reason":"Combine Research evidence hierarchy, freshness and contextual AI workflow in one coherent build."},
+    {"backlog":13,"issue":162,"title":"Research Target + contextual AI second opinion","primaryVersion":"v19.4.0","secondaryVersions":[],"disposition":"HEAVY_WORKFLOW_BUILD","reason":"Research remains deterministic first; AI consumes one bounded canonical evidence snapshot and remains optional."},
+    {"backlog":14,"issue":163,"title":"Discovery/Opportunity Radar functional effectiveness","primaryVersion":"v19.4.1","secondaryVersions":[],"disposition":"HEAVY_FEATURE_SEPARATE_PATCH","reason":"Discovery detection/admission/ranking/session behavior is large enough to qualify separately rather than overloading v19.4.0."},
+    {"backlog":15,"issue":164,"title":"Authentication/session lifecycle audit","primaryVersion":"v19.0.0","secondaryVersions":["v19.3.0"],"disposition":"SPLIT_BY_LAYER","reason":"Canonical auth/device/session/reauth belongs in current trust foundation; product/client UX parity is reverified in v19.3.0."},
+    {"backlog":16,"issue":165,"title":"Outcome Learning + agent orchestration + MCP/API readiness","primaryVersion":"v19.6.0","secondaryVersions":["v20.0.0","v20.4.0"],"disposition":"PHASED_ARCHITECTURE","reason":"v19 builds point-in-time outcome/capability foundations; v20.0 enables bounded learning; v20.4 adds optional agents/MCP only after canonical controls are proven."},
+    {"backlog":17,"issue":166,"title":"Adaptive Chart Pattern Learning + Outcome Intelligence","primaryVersion":"v20.1.0","secondaryVersions":[],"disposition":"HEAVY_ADAPTIVE_FEATURE","reason":"Requires historical bootstrap, point-in-time outcomes, background scheduling and shadow validation; it follows v20 adaptive control plane."},
+    {"backlog":18,"issue":167,"title":"Global Symbol Store + memberships + owner lifecycle + adaptive priority","primaryVersion":"v19.1.0","secondaryVersions":["v19.3.0"],"disposition":"SPLIT_BY_LAYER","reason":"Global identity/membership/processing core must precede hosted fan-out; Owner Administration presentation lands with role-aware IA."},
+    {"backlog":19,"issue":168,"title":"Event-Anchored Levels + Reaction Intelligence","primaryVersion":"v19.5.0","secondaryVersions":[],"disposition":"IMPLEMENT_COMBINED_INTELLIGENCE","reason":"Shares canonical OHLCV/event/structure context with price-volume intelligence and should not create another page."},
+    {"backlog":20,"issue":169,"title":"Price & Volume Structure Intelligence","primaryVersion":"v19.5.0","secondaryVersions":[],"disposition":"IMPLEMENT_COMBINED_INTELLIGENCE","reason":"Deterministic structural intelligence, confluence and event anchors can share one normalized evidence layer and consumers."},
+    {"backlog":21,"issue":170,"title":"Cross-integration + Market Regime contribution contract","primaryVersion":"v19.6.1","secondaryVersions":["v19.1.0","v19.3.0","v19.4.0","v19.4.1","v19.5.0","v19.5.1","v19.6.0","v20.0.0","v20.1.0","v20.2.0","v20.3.0","v20.3.1","v20.4.0","v20.5.0"],"disposition":"MANDATORY_CROSS_VERSION_GATE","reason":"Applied during every capability build; v19.6.1 is the formal whole-v19 reconciliation before Major Closure."},
+    {"backlog":22,"issue":171,"title":"Whole-product tab/data/feature density + intelligence maturity audit","primaryVersion":"v19.3.0","secondaryVersions":["v19.4.0","v19.4.1","v19.6.1"],"disposition":"MANDATORY_PRODUCT_AUDIT","reason":"UI/IA decisions begin with whole-product composition, continue through Research/Market Intelligence/Discovery, and receive final intelligence/cross-integration reconciliation before closure."}
+  ],
+  "coverage": {
+    "mappedBacklogIssues": 22,
+    "unmappedBacklogIssues": 0,
+    "splitIssuesWithExplicitSecondaryPlacement": [155,156,160,164,165,167,170,171],
+    "metaIssues": [170,171]
+  }
+}
