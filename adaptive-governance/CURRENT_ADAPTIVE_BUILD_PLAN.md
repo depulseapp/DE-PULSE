@@ -1,40 +1,75 @@
 # CURRENT Adaptive Build Plan
 
-**Canonical machine state:** `governance/current-state.json`  
+**Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Backlog/version matrix:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
+**HOST/version map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
 **Certified Stable:** `v18.10.0` — immutable  
-**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
-**Active v19 G1:** #148 / `ADAPT-HOSTED-TRUST-FOUNDATION-001` / `adapt-hosted-trust-foundation-001`  
-**Work-slice:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`  
-**G1 scope:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json`  
-**Closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`  
-**Parent:** #66 / `ADAPT-HOSTED-SYNC-001`.
+**Active build:** `v19.0.0` — Hosted Trust & Identity Foundation  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
 
-The v18.10.0 build contract remains closed: T1–T10, exact-head Fast/Qualified, macOS Apple Silicon + Windows x64 lifecycle, G15 provenance, SBOM, no-rebuild publication and G16 all passed. #148 owns `HOST-001..HOST-023` as one coherent **v19.0.x Hosted Trust Foundation band**, not 23 micro-releases.
+## Build sizing rule
 
-## Packet sizing and version rule
+Plan and communicate work by **real version/build**, not requirement packets. Requirement rows, issue acceptance bullets and CI evidence rows remain granular traceability units inside the version.
 
-Engineering packets stay small enough to make omissions visible. Release/qualification boundaries stay large enough to avoid Actions waste. Do not trade implementation completeness for fewer CI runs, and do not turn every small packet into a new public version.
+- Combine small, related changes when they share canonical owners and acceptance evidence.
+- Give feature-heavy/risk-heavy work its own version or patch version. Current deliberate heavy splits include `v19.4.1` Discovery, `v19.5.1` Options/GEX and `v20.3.1` AODR.
+- Do not create a version for every requirement, card, page defect or CI checkpoint.
+- Do not enlarge a version so much that ownership, adverse testing or rollback becomes unclear.
+- Use commits and risk-based CI checkpoints for implementation progress; they are not product planning units.
 
-Internal packets:
-- P1 `HOST-001..003` provider rights.
-- P2 `HOST-004..007` tenant/account identity/device/session/reauth.
-- P3 `HOST-008..009` product entitlement/quota.
-- P4 `HOST-010..014` privacy/environment/service trust.
-- P5 `HOST-015..016` PostgreSQL tenancy/recovery via existing `persistence_backend_postgres.go`.
-- P6 `HOST-017..020` managed secrets/KMS + supply-chain/deploy provenance.
-- P7 `HOST-021..022` provider scorecards/point-in-time truth.
-- P8 `HOST-023` zero-gap closure.
+## Required build matrix for every version
 
-Per-packet acceptance is strict: canonical owner, consumers, reuse/consolidation disposition, positive evidence, adverse evidence, persistence/security/UI applicability, point-in-time/freshness semantics where data-bearing, and closure acceptance must all be bound before the packet can advance. Findings are classified as `PRODUCT_BEHAVIOR_GAP`, `TEST_OR_EVIDENCE_GAP`, `OWNERSHIP_BINDING_GAP`, or `NOT_APPLICABLE` before changing product code.
+Before G3, every assigned requirement/issue row must resolve:
+- source-overlap disposition: `INHERITED / EXTEND_EXISTING_OWNER / REPLACE_CONSOLIDATE / NEW_RESIDUAL / EXTERNAL_BLOCKED / N_A`;
+- canonical owner and upstream evidence;
+- actual consumers and user/trader decision purpose;
+- data freshness/provenance/point-in-time semantics;
+- positive + negative/failure evidence;
+- persistence/restart/migration applicability;
+- role/auth/product-entitlement/provider-right applicability;
+- load/resource/backpressure applicability;
+- Mac/Windows/Web requirement or justified N/A;
+- durable regression owner.
 
-Default Qualified checkpoints are: Q1 after P1–P3 (`HOST-001..009`) because provider rights + identity + entitlement form one authorization boundary; Q2 after P4–P6 (`HOST-010..020`) because privacy + PostgreSQL + secrets form the hosted trust/persistence boundary; Q3 final after P7–P8/G10 (`HOST-001..023`). Extra Qualified runs are permitted only for materially new risk surfaces, not because a packet number changed. Coherent implementation candidates still receive exact-head Fast; batch pure closure/evidence metadata with its implementation commit when safe.
+For intelligence-bearing work also record:
+- intelligence maturity: `DETERMINISTIC_ONLY / ADAPTIVE_CANDIDATE / LEARNING_ENABLED / AI_ASSISTED / NOT_USEFUL`;
+- downstream cross-integration `REQUIRED / CONDITIONAL / NOT_USEFUL` for Market Regime, Tradeability, Discovery, Watchlist, Research, Desks, Prep, alerts, Outcome/Pattern, Data Health/Maintenance and processing priority;
+- Market Regime contribution `YES / CONDITIONAL / NO`;
+- Outcome Learning contribution `YES / CONDITIONAL / NO`;
+- duplicate/isolation conflict and consolidation decision;
+- re-evaluation behavior after canonical recovery/new evidence.
 
-## Conserved Data Health build inputs
+For visible work also record #171 disposition: `KEEP / IMPROVE / CONSOLIDATE / COLLAPSE / MOVE / REMOVE`.
 
-The inherited Data Health build inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Their ownership and recurrence continue to project consistently through the **Adaptive Roadmap**, **Adaptive Build Plan**, **Build Process**, and **Delivery Process**. Future changes reuse the existing Router, Data Health, canonical freshness, cache, persistence, telemetry, reconciliation, subscription, identity and lifecycle owners.
+## v19 build plan
 
-Do not reduce evidence for changed candidates. Reduce candidate churn and historical gate accumulation instead. Frozen v18 T1–T10 remain a conservation baseline; exact-head Fast/Qualified and canonical Release remain mandatory where applicable.
+- `v19.0.0` trust/identity: HOST-001..023, #164 core auth/session, security portions of #156.
+- `v19.1.0` canonical runtime/global symbols: #150/#151/#153/#154/#155/#160/#167 core.
+- `v19.2.0` gateway/shared serving/sync: HOST-024..039.
+- `v19.3.0` cross-platform roles/product IA: HOST-040..047/053 + #152/#156/#159/#160 presentation/#167 Admin/#171/#164 UX.
+- `v19.4.0` Market Intelligence/Research: HOST-049 + #158/#161/#162/#171.
+- `v19.4.1` Discovery: HOST-048 + #163/#171.
+- `v19.5.0` price-volume/event intelligence: #168/#169.
+- `v19.5.1` options/GEX structure: #157.
+- `v19.6.0` point-in-time/outcome-ready foundation: HOST-057..064 + deterministic #165.
+- `v19.6.1` reliability/economics/readiness: HOST-050..056/065..071 + final #170/#171 reconciliation.
+- `v19.7.0` Major Closure: HOST-072; no feature scope.
+
+## v20 build plan
+
+- `v20.0.0` Outcome Learning & Adaptive Control Plane.
+- `v20.1.0` Adaptive Chart Pattern & Similarity Intelligence (#166).
+- `v20.2.0` Adaptive Market Synthesis, Market Regime & Discovery Learning.
+- `v20.3.0` Adaptive Institutional / Two-Sided Thesis.
+- `v20.3.1` AODR Adaptive Opportunity Intelligence.
+- `v20.4.0` Agent Orchestration & Controlled MCP/API.
+- `v20.5.0` Adaptive Operations.
+- `v20.6.0` Professional Adaptive Closure; no feature scope.
+
+## Zero-miss rule
+
+No version closes with an unassigned applicable backlog row, HOST requirement, source-discovered responsibility, cross-integration, role/right case, UI disposition or regression owner. #170 and #171 are applied inside the affected versions rather than deferred as documentation-only work.
 
 ## Exactly one next action
 
-Finish P2 `HOST-004..007` production reachability on PR #149, obtain coherent exact-head Fast, then continue P3 on the same branch/PR. Do not create a separate public version or release for P2.
+Continue `v19.0.0` on PR #149. Resolve the Fast #1141 source-health failure by production-wiring or correctly consolidating the hosted identity/session helpers through the existing canonical auth/HTTP owners, then run exact-head Fast. Do not begin the next version until current-version closure criteria are met.
