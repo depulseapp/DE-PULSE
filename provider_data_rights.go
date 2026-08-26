@@ -17,9 +17,9 @@ const (
 	providerCommercialReady                  = "READY"
 	providerHostedRightsBlocked              = "BLOCKED"
 	providerHostedRightsAllowed              = "ALLOWED"
-	providerRightsRenewalUnknown              = "UNKNOWN"
-	providerRightsRenewalCurrent              = "CURRENT"
-	providerRightsRenewalExpired              = "EXPIRED"
+	providerRightsRenewalUnknown             = "UNKNOWN"
+	providerRightsRenewalCurrent             = "CURRENT"
+	providerRightsRenewalExpired             = "EXPIRED"
 )
 
 const (
@@ -52,7 +52,7 @@ type ProviderDataRightsMetadata struct {
 	ReviewState         string                      `json:"reviewState"`
 	CommercialUse       string                      `json:"commercialUse"`
 	MultiUserUse        string                      `json:"multiUserUse"`
-	Proxying             string                      `json:"proxying"`
+	Proxying            string                      `json:"proxying"`
 	CachingRetention    string                      `json:"cachingRetention"`
 	Redistribution      string                      `json:"redistribution"`
 	Display             string                      `json:"display"`
@@ -75,13 +75,13 @@ type ProviderDataRightsMetadata struct {
 // later hosted serving/cache/persistence/live-fanout composition. It is not a
 // provider rank, score or fallback decision and must not become a second router.
 type ProviderHostedRightsDecision struct {
-	PolicyVersion string   `json:"policyVersion"`
-	State         string   `json:"state"`
-	Allowed       bool     `json:"allowed"`
-	Purpose       string   `json:"purpose"`
-	Environment   string   `json:"environment"`
-	EvidenceRef   string   `json:"evidenceRef,omitempty"`
-	EvidenceDigest string  `json:"evidenceDigest,omitempty"`
+	PolicyVersion   string   `json:"policyVersion"`
+	State           string   `json:"state"`
+	Allowed         bool     `json:"allowed"`
+	Purpose         string   `json:"purpose"`
+	Environment     string   `json:"environment"`
+	EvidenceRef     string   `json:"evidenceRef,omitempty"`
+	EvidenceDigest  string   `json:"evidenceDigest,omitempty"`
 	BlockingReasons []string `json:"blockingReasons,omitempty"`
 }
 
@@ -192,13 +192,13 @@ func evaluateProviderHostedRightsDecision(rights ProviderDataRightsMetadata, pur
 		state = providerHostedRightsAllowed
 	}
 	return ProviderHostedRightsDecision{
-		PolicyVersion: providerHostedRightsPolicyVersion,
-		State: state,
-		Allowed: state == providerHostedRightsAllowed,
-		Purpose: purpose,
-		Environment: environment,
-		EvidenceRef: strings.TrimSpace(rights.EvidenceRef),
-		EvidenceDigest: strings.TrimSpace(rights.EvidenceDigest),
+		PolicyVersion:   providerHostedRightsPolicyVersion,
+		State:           state,
+		Allowed:         state == providerHostedRightsAllowed,
+		Purpose:         purpose,
+		Environment:     environment,
+		EvidenceRef:     strings.TrimSpace(rights.EvidenceRef),
+		EvidenceDigest:  strings.TrimSpace(rights.EvidenceDigest),
 		BlockingReasons: blocking,
 	}
 }
@@ -250,16 +250,16 @@ func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 		ReviewState:      providerRightsUnreviewed,
 		CommercialUse:    providerRightsNotAsserted,
 		MultiUserUse:     providerRightsNotAsserted,
-		Proxying:          providerRightsNotAsserted,
+		Proxying:         providerRightsNotAsserted,
 		CachingRetention: providerRightsNotAsserted,
 		Redistribution:   providerRightsNotAsserted,
-		Display:           providerRightsNotAsserted,
-		AIUse:             providerRightsNotAsserted,
-		UsageLimits:       "",
-		Attribution:       "",
-		RenewalState:      providerRightsRenewalUnknown,
-		EvidenceBound:     false,
-		Detail:            "Operational entitlement is separate from licensing/data-rights approval; provider-specific commercial, multi-user, proxy, cache/retention, redistribution/display, AI/derived-use, environment and term evidence is not bound.",
+		Display:          providerRightsNotAsserted,
+		AIUse:            providerRightsNotAsserted,
+		UsageLimits:      "",
+		Attribution:      "",
+		RenewalState:     providerRightsRenewalUnknown,
+		EvidenceBound:    false,
+		Detail:           "Operational entitlement is separate from licensing/data-rights approval; provider-specific commercial, multi-user, proxy, cache/retention, redistribution/display, AI/derived-use, environment and term evidence is not bound.",
 	}
 	rights.CommercialReadiness = evaluateProviderCommercialReadiness(rights)
 	return rights
