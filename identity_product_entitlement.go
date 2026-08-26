@@ -20,10 +20,10 @@ const (
 	ProductStatusSuspended ProductStatus = "SUSPENDED"
 	ProductStatusDisabled  ProductStatus = "DISABLED"
 
-	productCapabilityHostedServing       = "HOSTED_SERVING"
+	productCapabilityHostedServing        = "HOSTED_SERVING"
 	productCapabilityExtendedIntelligence = "EXTENDED_INTELLIGENCE"
-	productQuotaHostedMutationUnits      = "HOSTED_MUTATION_UNITS"
-	productQuotaHostedExpensiveUnits     = "HOSTED_EXPENSIVE_UNITS"
+	productQuotaHostedMutationUnits       = "HOSTED_MUTATION_UNITS"
+	productQuotaHostedExpensiveUnits      = "HOSTED_EXPENSIVE_UNITS"
 	productMeteringWindow                 = 24 * time.Hour
 )
 
@@ -35,13 +35,13 @@ const (
 )
 
 type TenantProductEntitlement struct {
-	TenantID        string            `json:"tenantId"`
-	Plan            ProductPlan       `json:"plan"`
-	Status          ProductStatus     `json:"status"`
-	WindowStartedAt int64             `json:"windowStartedAt"`
-	Usage           map[string]int64  `json:"usage,omitempty"`
-	StatusChangedAt int64             `json:"statusChangedAt,omitempty"`
-	UpdatedAt       int64             `json:"updatedAt"`
+	TenantID        string           `json:"tenantId"`
+	Plan            ProductPlan      `json:"plan"`
+	Status          ProductStatus    `json:"status"`
+	WindowStartedAt int64            `json:"windowStartedAt"`
+	Usage           map[string]int64 `json:"usage,omitempty"`
+	StatusChangedAt int64            `json:"statusChangedAt,omitempty"`
+	UpdatedAt       int64            `json:"updatedAt"`
 }
 
 type ProductQuotaCharge struct {
