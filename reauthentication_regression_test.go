@@ -328,7 +328,7 @@ func TestHOST006HostedDeviceHTTPRegistrationBindsCurrentSession(t *testing.T) {
 		t.Fatalf("device fingerprint leaked in response: %s", res.Body.String())
 	}
 	var body struct {
-		OK bool `json:"ok"`
+		OK     bool `json:"ok"`
 		Device struct {
 			ID     string       `json:"id"`
 			Label  string       `json:"label"`

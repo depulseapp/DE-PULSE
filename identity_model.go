@@ -105,7 +105,7 @@ type IdentityPersistentState struct {
 }
 
 type Principal struct {
-	TenantID   string   `json:"tenantId,omitempty"`
+	TenantID    string   `json:"tenantId,omitempty"`
 	UserID      string   `json:"userId"`
 	Username    string   `json:"username"`
 	DisplayName string   `json:"displayName,omitempty"`

@@ -18,11 +18,11 @@ const (
 )
 
 type HostedIdentityRequirement struct {
-	TenantID                   string `json:"tenantId"`
-	Capability                 string `json:"capability"`
-	RequireRegisteredDevice    bool   `json:"requireRegisteredDevice"`
-	RequireRecentAuthentication bool  `json:"requireRecentAuthentication"`
-	RequireMFA                 bool   `json:"requireMfa"`
+	TenantID                    string `json:"tenantId"`
+	Capability                  string `json:"capability"`
+	RequireRegisteredDevice     bool   `json:"requireRegisteredDevice"`
+	RequireRecentAuthentication bool   `json:"requireRecentAuthentication"`
+	RequireMFA                  bool   `json:"requireMfa"`
 }
 
 type HostedIdentityDecision struct {
