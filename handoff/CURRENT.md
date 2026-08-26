@@ -10,45 +10,58 @@
 **Published Stable build ID:** `v18.10.0-stable-20260825`  
 **Canonical release run:** #41 / `32917159547` — G11–G16 PASS / no-rebuild publication  
 **Final v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` — COMPLETE  
-**T10:** #123 — COMPLETE / VERIFIED  
 **Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001` / `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Post-v18 overlap audit:** #145 / PR #146 — **PASS**  
-**Audit qualified source:** `cabf476b9cb26102a36e5a8913b61c86bc357854`  
-**Audit Fast:** #1122 / `32925719203` — PASS  
-**Audit Qualified:** #226 / `32925800749` — PASS, Ubuntu/macOS/Windows portability PASS  
-**Audit merge:** `f5364888fad81114d1372d0d6d4975b282f83874`  
-**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — `PLANNED_UNSTARTED`; **v19 G1 is permitted but not started**.
+**Post-v18 overlap audit:** #145 / PR #146 + reconciliation PR #147 — **PASS/CLOSED**  
+**Active v19 G1:** #148 / `ADAPT-HOSTED-TRUST-FOUNDATION-001` / `adapt-hosted-trust-foundation-001`  
+**Active work-slice:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`  
+**Active G1 scope:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json`  
+**Active closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`  
+**Parent hosted program:** #66 / `ADAPT-HOSTED-SYNC-001`.
 
-## Final v18.10.0 authority
+## Stable authority
 
-v18.10.0 remains the immutable **10/10 Future-Proof Final v18 Closure**. T1–T10 are complete with zero unexplained P0/P1 gaps. The effective shipped-v18 inventory remains exactly 180 responsibilities with durable executable regression ownership. No post-v18 audit/rebaseline change rebuilt, republished, overwrote or redefined the Stable candidate or binaries.
+v18.10.0 remains the immutable 10/10 Future-Proof Final v18 Closure. No v19 work may rebuild, republish, overwrite or redefine the Stable candidate or binaries.
 
-## Post-v18 audit authority
+## Current v19 authority
 
-The mandatory source-overlap/residual audit against #66 is complete. Every conserved `HOST-001..HOST-072` requirement has an inherited/extended/residual/process disposition and `unexplainedOverlapCount = 0`. The durable audit owners are:
-- `governance/programs/ADAPT-HOSTED-SYNC-001/post-v18-source-overlap-audit.json`
-- `governance/programs/ADAPT-HOSTED-SYNC-001/post-v18-source-overlap-audit.md`
-- `adaptive-governance/ADAPTIVE_CI_V19_REBASELINE.md`
-- the four CURRENT adaptive projections.
+The mandatory post-v18 source-overlap audit is complete. Every `HOST-001..HOST-072` requirement has an inherited/extended/residual/process disposition with zero unexplained overlap. #148 is the first permitted v19 product reservation and owns **HOST-001..HOST-023** as one coherent dependency-ordered Hosted Trust Foundation band rather than 23 micro-releases.
 
-The audit permanently carries forward these lessons: requirements are traceability rather than forced micro-releases; evidence ownership is bound during implementation; frozen v18 history is conserved rather than multiplied into ever-growing CI chains; PostgreSQL is extended rather than replaced; hosted multi-tenant adverse security is mandatory; point-in-time/no-lookahead truth precedes adaptive evaluation; decision usefulness/outcome calibration becomes first-class where applicable; halt/LULD/volatility-pause semantics must be explicitly resolved; hosted production telemetry complements deterministic CI SLOs.
+Implementation order:
+1. HOST-001..003 provider rights;
+2. HOST-004..007 tenant/account identity/device/session;
+3. HOST-008..009 product entitlement/quota;
+4. HOST-010..014 privacy/environment/service trust;
+5. HOST-015..016 PostgreSQL tenancy/recovery through existing `persistence_backend_postgres.go`;
+6. HOST-017..020 managed secrets/KMS and supply-chain/deploy provenance;
+7. HOST-021..022 provider scorecards and point-in-time/no-lookahead truth;
+8. HOST-023 zero-gap closure before Hosted Provider Gateway activation.
+
+Every active closure gap is blocking and must be VERIFIED with executable evidence. PostgreSQL connection success, a working provider key, documentation-only claims or UI hiding do not constitute hosted readiness.
 
 ## Permanent architecture boundaries
 
-U.S. Equities Processing only; No Execution; Smart Provider Router v2 remains sole provider routing/admission authority; direct SEC/EDGAR remains Form 4 authority; canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners remain authoritative; GLD/SLV/USO remain actionable tradable exceptions; no automatic provider lifecycle promotion; no parallel routing/health/cache/persistence/reconciliation/lifecycle subsystem. macOS Apple Silicon + Windows x64 remain required native targets; Linux is CI/test only; hosted Web is v19 scope.
+U.S. Equities Processing only; No Execution; Smart Provider Router v2 remains sole provider routing/admission authority; direct SEC/EDGAR remains Form 4 authority; canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners remain authoritative; GLD/SLV/USO remain actionable tradable exceptions; no automatic provider lifecycle promotion; no parallel routing/health/cache/persistence/reconciliation/lifecycle subsystem.
 
-## Portable continuation
+## Adaptive/rebaseline rules carried into #148
 
-GitHub remains the source of truth. `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `governance/current-state.json`, immutable Stable evidence, the #66 conservation ledger and `tools/ci/adaptive_resume_gate.py` are the vendor-neutral continuation owners. A new ChatGPT account, Codex, Claude or human developer must fetch live GitHub state first; old chat memory is not required.
+- bind requirement -> owner -> consumer -> positive/adverse evidence -> persistence/security/UI applicability during implementation;
+- classify product behavior vs test/evidence vs ownership-binding vs N/A gaps before adding machinery;
+- requirements are traceability, not forced release events;
+- preserve frozen v18 history as conservation rather than growing unconditional historical gate chains;
+- hosted multi-tenant negative security is mandatory where applicable;
+- point-in-time/no-lookahead truth precedes historical/adaptive evaluation;
+- measured decision usefulness/outcome calibration remains first-class for intelligence-affecting work;
+- explicitly resolve halt/LULD/volatility-pause/resume tradeability before professional hosted closure;
+- deterministic CI SLOs and future hosted production telemetry complement each other.
 
 ## Exactly one next action
 
-Reserve the first coherent v19 G1 **Hosted Trust Foundation** work slice under #66. Before implementation, map the selected HOST rows to exact existing canonical owners/justified residuals, evidence owners, hosted adverse-security expectations, point-in-time semantics and PostgreSQL activation boundaries. Do not create one work slice or release per HOST row.
+Open the single long-lived Draft PR for #148, obtain exact-head G1 Fast on the current G1 scope candidate, and if green begin `HOST-001..HOST-003_PROVIDER_RIGHTS` implementation on that same branch/PR.
 
 ## Resume rule
 
-1. Fetch live `main`, remaining branches, issue #66, `handoff/CURRENT.md`, `governance/current-state.json`, current Stable tag/release and the post-v18 audit evidence before modifying anything.
-2. Read the AI-assistant portability contract, CI-efficiency/rebaseline contracts, #66 requirement-conservation ledger and executable continuity/conservation gates.
-3. GitHub objects and executable evidence outrank prose and chat memory.
-4. Preserve v18.10.0 Stable immutability.
-5. v19 G1 is permitted but must be explicitly reserved as one coherent governed work slice before product implementation begins.
+1. Fetch live `main`, branch `adapt-hosted-trust-foundation-001`, issue #148, parent #66, open PR, `handoff/CURRENT.md`, `governance/current-state.json`, work-slice/G1/closure files and current Stable before modifying anything.
+2. GitHub objects and executable evidence outrank prose/chat memory.
+3. Preserve v18.10.0 Stable immutability and permanent boundaries.
+4. Do not create another branch for requirement-sized work inside #148.
+5. Continue the smallest dependency-correct packet and keep the Draft PR current with coherent candidate batching.
