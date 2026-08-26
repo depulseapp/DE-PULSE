@@ -260,7 +260,9 @@ func reportProviderRouteFailure(ctx context.Context, err error) {
 
 // executeProviderRoute is the single executable routing authority. Provider-
 // specific loaders know how to fetch/normalize one source; only this function
-// decides which provider is attempted and in what order.
+// decides which provider is attempted and in what order. Hosted rights are an
+// admission condition on this authority; they never create a second route or
+// alter Smart Router numerical scores.
 func (e *Engine) executeProviderRoute(ctx context.Context, dataset string, attempts map[string]providerRouteAttempt) (string, bool) {
 	e.app.mu.RLock()
 	settings := clone(e.app.state.Settings)
@@ -272,6 +274,9 @@ func (e *Engine) executeProviderRoute(ctx context.Context, dataset string, attem
 		provider := candidate.Provider
 		attempt := attempts[provider]
 		if attempt == nil || !candidate.Eligible {
+			continue
+		}
+		if !hostedProviderRightsAllowed(provider, providerHostedUseProductionServing, time.Now()) {
 			continue
 		}
 		if !e.providerAllowedFor(dataset, provider) {
@@ -355,7 +360,7 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 			lastSuccess = last["fundamentals"]
 			active = sourceProvider(e.health["fundamentals"])
 			if strings.Contains(strings.ToLower(e.health["fundamentals"]), "sec") {
-				active = "SEC"
+				active = "SEC EDGAR"
 			}
 		case "SEC":
 			lastSuccess = last["filings"]
@@ -398,6 +403,12 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 				score.State = providerCapabilityNotConfigured
 				score.Reasons = append(score.Reasons, "not configured; entitlement not probed")
 			}
+			rights := providerDataRightsMetadata(provider)
+			rightsDecision := hostedProviderRightsDecision(provider, providerHostedUseProductionServing, nowTime)
+			if !rightsDecision.Allowed {
+				score.Eligible = false
+				score.Reasons = append(score.Reasons, "hosted rights blocked: "+strings.Join(rightsDecision.BlockingReasons, "; "))
+			}
 			if score.Eligible && score.Score > preferredScore {
 				preferred = provider
 				preferredScore = score.Score
@@ -419,6 +430,8 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 			if !configured {
 				health = "NOT CONFIGURED"
 				entitlement = providerCapabilityUnknown
+			} else if !rightsDecision.Allowed {
+				health = "RIGHTS BLOCKED"
 			} else if providerCapabilityStateActive(cap, now) {
 				health = cap.State
 			} else if circuit == "OPEN" || circuit == "RATE LIMITED" {
@@ -440,22 +453,29 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 				rate = "RATE LIMITED"
 			}
 			recovery := "READY"
-			if circuit == "OPEN" || circuit == "RATE LIMITED" || providerCapabilityStateActive(cap, now) {
+			if !rightsDecision.Allowed || circuit == "OPEN" || circuit == "RATE LIMITED" || providerCapabilityStateActive(cap, now) {
 				recovery = "SUPPRESSED"
 			} else if circuit == "PROBING" {
 				recovery = "PROBING"
 			} else if c.Failures == 0 && c.LastFailure > 0 && c.LastSuccess > c.LastFailure {
 				recovery = "RECOVERED"
 			}
+			lastError := defaultString(cap.Reason, c.LastError)
+			if !rightsDecision.Allowed {
+				lastError = strings.Join(rightsDecision.BlockingReasons, "; ")
+			}
 			hops = append(hops, ProviderRouteHop{
 				Provider: provider, Role: role, Configured: configured, Health: health, Circuit: circuit, Priority: i + 1,
 				Quota: providerQuotaLabel(provider), RateLimit: rate, LatencyMs: c.LatencyMs, LastSuccess: c.LastSuccess, LastFailure: c.LastFailure,
-				FailureCount: c.Failures, Attempts: c.Attempts, LastError: defaultString(cap.Reason, c.LastError), Recovery: recovery,
+				FailureCount: c.Failures, Attempts: c.Attempts, LastError: lastError, Recovery: recovery,
 				ExpectedDelay: expectedProviderDelay(dataset, provider), CostClass: providerCostClass(provider), Entitlement: entitlement,
-				DataRights: providerDataRightsMetadata(provider), Score: score.Score, ScoreReasons: append([]string(nil), score.Reasons...),
+				DataRights: rights, Score: score.Score, ScoreReasons: append([]string(nil), score.Reasons...),
 			})
 		}
-		if preferred == "" && len(chain) > 0 {
+		if active != "" && !hostedProviderRightsAllowed(active, providerHostedUseProductionServing, nowTime) {
+			active = ""
+		}
+		if preferred == "" && len(chain) > 0 && !isHostedRuntime() {
 			preferred = chain[0]
 			preferredReason = "configured route order; no eligible provider has enough current evidence"
 		}
@@ -465,7 +485,6 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 					active = h.Provider
 					break
 				}
-			}
 		}
 
 		state := "READY"
@@ -481,6 +500,8 @@ func (e *Engine) buildProviderRouterSnapshot(settings Settings, secrets Secrets,
 					continue
 				}
 				switch {
+				case h.Health == "RIGHTS BLOCKED":
+					reason = "Preferred provider is blocked by hosted legal/data-rights policy."
 				case h.Entitlement == providerCapabilityNotEntitled:
 					reason = "Preferred provider is NOT_ENTITLED for this capability/session."
 				case h.Circuit == "RATE LIMITED":
