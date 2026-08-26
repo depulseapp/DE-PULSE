@@ -1,0 +1,101 @@
+{
+  "schema": "DE.PULSE-ZERO-MISS-IMPLEMENTATION-CLOSURE-1",
+  "status": "PERMANENT",
+  "failClosed": true,
+  "appliesTo": [
+    "ADAPTIVE_ROADMAP",
+    "ADAPTIVE_BUILD_PLAN",
+    "ADAPTIVE_BUILD_PROCESS",
+    "ADAPTIVE_DELIVERY_PROCESS",
+    "WORK_SLICES",
+    "DEPENDENCY_BANDS",
+    "CLOSURE_LEDGERS",
+    "HANDOFFS",
+    "RELEASES"
+  ],
+  "lifecycle": [
+    "PLANNED",
+    "IMPLEMENTED",
+    "PRODUCTION_INTEGRATED",
+    "VERIFIED",
+    "RELEASE_QUALIFIED"
+  ],
+  "completionInvariant": "Framework != Implementation != Production Integration != Verification != Release Qualification",
+  "forwardAdvanceRule": {
+    "allowedOnlyWhen": "every mandatory responsibility in the current dependency band is VERIFIED or G1-evidenced NOT_APPLICABLE",
+    "openOrPartialMayAuthorizeAdvance": false,
+    "implementedUnverifiedMayAuthorizeAdvance": false,
+    "contractOnlyMayAuthorizeAdvance": false,
+    "externalBlockedMayAuthorizeAdvance": false
+  },
+  "zeroMissClosureChain": [
+    "REQUIREMENT",
+    "CANONICAL_OWNER",
+    "PRODUCTION_INTEGRATION",
+    "CONSUMER_REACHABILITY",
+    "POSITIVE_BEHAVIOR",
+    "ADVERSE_FAIL_CLOSED_BEHAVIOR",
+    "PERSISTENCE_RESTART_LIFECYCLE_WHERE_APPLICABLE",
+    "SECURITY_RIGHTS_PRIVACY_WHERE_APPLICABLE",
+    "OBSERVABILITY_DIAGNOSABILITY_WHERE_APPLICABLE",
+    "EXECUTABLE_REGRESSION_EVIDENCE",
+    "REAL_INTEGRATION_INFRASTRUCTURE_EXTERNAL_EVIDENCE_WHERE_REQUIRED",
+    "EXACT_HEAD_CI",
+    "CLOSURE_LEDGER"
+  ],
+  "insufficientEvidenceAlone": [
+    "MODEL_TYPE_SCHEMA_EXISTS",
+    "HELPER_EVALUATOR_EXISTS",
+    "DOCUMENTATION_SAYS_IMPLEMENTED",
+    "ISSUE_OR_PR_CLOSED",
+    "UNIT_TEST_PASS",
+    "FAST_CI_PASS_WHEN_REAL_INTEGRATION_EVIDENCE_IS_REQUIRED",
+    "RUNTIME_ENVIRONMENT_DECLARATION",
+    "API_KEY_OR_CONNECTION_SUCCESS",
+    "PROVIDER_CONFIGURATION",
+    "MOCK_OR_STUB_ONLY",
+    "HISTORICAL_PASS_ON_DIFFERENT_SOURCE_FINGERPRINT"
+  ],
+  "diagnosticOnlyStates": [
+    "OPEN",
+    "PARTIAL",
+    "IMPLEMENTED_UNVERIFIED",
+    "CONTRACT_ONLY",
+    "FRAMEWORK_ONLY",
+    "DECLARED_READY"
+  ],
+  "diagnosticStatesMayBeSummarizedAsDone": false,
+  "automaticReopen": {
+    "enabled": true,
+    "trigger": "current audit discovers any missing mandatory closure-chain link",
+    "downstreamCompletionRemainsValid": false
+  },
+  "externalBlockerRule": {
+    "mayBeMarkedVerifiedWithoutEvidence": false,
+    "resolution": [
+      "OBTAIN_AND_VERIFY_REQUIRED_REAL_EVIDENCE",
+      "PRE_ADVANCEMENT_G1_REBASELINE_WITH_DURABLE_RATIONALE_AND_USER_APPROVED_NOT_APPLICABLE_DISPOSITION"
+    ],
+    "postHocScopeShrinkToObtainClosure": false
+  },
+  "handoffRequiredFields": [
+    "EXACT_LIVE_BRANCH_HEAD",
+    "EARLIEST_NOT_VERIFIED_DEPENDENCY_BAND",
+    "MISSING_CLOSURE_CHAIN_LINKS",
+    "LATEST_EXECUTABLE_EVIDENCE",
+    "ADVANCEMENT_ALLOWED_BOOLEAN"
+  ],
+  "evidencePriority": [
+    "CURRENT_SOURCE_RUNTIME_TRUTH",
+    "CURRENT_EXECUTABLE_INFRASTRUCTURE_EVIDENCE",
+    "CLOSURE_LEDGER",
+    "CURRENT_HANDOFF_GOVERNANCE",
+    "ISSUE_PR_PROSE",
+    "CHAT_HISTORY"
+  ],
+  "currentV19Application": {
+    "doNotRelabelKnownMissingWorkAsVerified": true,
+    "resumeFromEarliestReopenedDependencyBand": true,
+    "advanceOnlyAfterFullVerifiedEvidence": true
+  }
+}
