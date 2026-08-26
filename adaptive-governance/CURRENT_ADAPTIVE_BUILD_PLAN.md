@@ -1,34 +1,15 @@
 # CURRENT Adaptive Build Plan
 
 **Canonical machine state:** `governance/current-state.json`  
-**Certified Stable:** `v18.9.1-stable`  
-**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
-**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
-**Program branch:** `adapt-v18-final-closure-10-10-001`  
-**Next child:** #114 / T1  
-**Future hosted umbrella:** #66 — BLOCKED.
+**Certified Stable:** `v18.10.0`  
+**Completed final-v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` on `adapt-v18-final-closure-10-10-001`  
+**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
+**Future hosted umbrella:** #66 — `PLANNED_UNSTARTED` pending source-overlap audit.
 
-## v18.10.0 build contract
+The v18.10.0 build contract is closed: T1–T10, exact-head Fast/Qualified, actual macOS Apple Silicon + Windows x64 packaged lifecycle, G15 provenance, SBOM, no-rebuild Stable publication and G16 all passed. The durable feature ledger remains 180 effective v18 responsibilities; future regression ownership and retired-test equivalence remain fail-closed.
 
-One public final v18 release is decomposed into ten independently closable assurance tracks #114–#123. T1 freezes exhaustive feature/requirement/owner/test inventory first. T2–T8 close unit/functional/failure/persistence/security/UI-performance evidence and bounded corrections against that inventory. T9 certifies actual macOS Apple Silicon + Windows x64 packages plus Chrome/WebKit renderer truth. T10 binds durable regression ownership, executable future requirement conservation, portable handoff and final G0–G16 publication.
+Before v19, the build plan requires one source-driven overlap audit of `HOST-001..HOST-072`. Each row must identify the existing v18 canonical owner to extend/consolidate, or a justified new residual owner. No duplicate provider router, freshness, cache, persistence, live-subscription, telemetry, identity/session or reconciliation owner may be introduced.
 
-Every shipped feature must end with requirement provenance, canonical owner, positive functional evidence, applicable unit/contract evidence, edge/negative/failure evidence, persistence/restart evidence where applicable, role/security/rights evidence where applicable, UI/UX/IA/content evidence if visible, required platform evidence and a durable regression owner. `UNOWNED`, `UNTESTED`, `UNKNOWN` or unexplained carry-forward blocks closure.
+## Exactly one next action
 
-The inherited Data Health build inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Their recurrence and ownership remain projected consistently through the **Adaptive Roadmap**, **Build Plan**, **Build Process** and **Delivery Process**. v18.10 testing/fixes must reuse existing Router, Data Health, freshness, cache, persistence, telemetry, reconciliation, subscription, identity and lifecycle owners.
-
-## Ten tracks
-
-- T1 #114 traceability ledger.
-- T2 #115 unit/contract/static/property assurance.
-- T3 #116 full functional/integration/E2E matrix.
-- T4 #117 edge/adversarial/failure/data-truth matrix.
-- T5 #118 persistence/restart/migration/install/upgrade/recovery.
-- T6 #119 security/roles/secrets/rights/negative authorization.
-- T7 #120 UI/UX/information architecture/content/accessibility; every visible row gets KEEP/MOVE/MERGE/REMOVE/RENAME/REDESIGN disposition.
-- T8 #121 performance/load/soak/concurrency/resource safety.
-- T9 #122 cross-platform packaged runtime/release/provenance certification.
-- T10 #123 future-proof regression ownership/zero-gap/portable final certification.
-
-## Future-proof rule
-
-Before first v19 product G1, the #66 72-row requirement-conservation ledger must be mechanically enforced in existing CI. v19 cannot begin until v18.10.0 Stable is published and a fresh post-closure residual/source-overlap audit explicitly permits it.
+Complete the #66 source-overlap/residual audit and record PASS before creating the first v19 product work slice.
