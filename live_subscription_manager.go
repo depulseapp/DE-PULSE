@@ -300,8 +300,13 @@ func quoteIsRecentAlpacaLive(q Quote, now int64) bool {
 
 // effectiveAlpacaIEXSymbols keeps the v15 preferred Alpaca pool subscribed and
 // uses its five reserve slots for highest-priority Finnhub overflow symbols when
-// their secondary stream is unavailable/stale.
+// their secondary stream is unavailable/stale. Hosted rights are re-evaluated
+// every subscription sync; an expiry/downgrade returns an empty desired set so
+// the existing WebSocket is actively unsubscribed instead of leaking fanout.
 func (e *Engine) effectiveAlpacaIEXSymbols() []string {
+	if !hostedProviderRightsAllowed("Alpaca", providerHostedUseProductionServing, time.Now()) {
+		return nil
+	}
 	alloc := e.multiFeedAllocation()
 	e.mu.RLock()
 	finnhubConnected := e.webSocketConnected
@@ -334,7 +339,11 @@ func (e *Engine) effectiveAlpacaIEXSymbols() []string {
 // Finnhub as the second provider for Alpaca-primary symbols whose IEX observation
 // is stale/unavailable. On an Alpaca disconnect, high-priority primary symbols
 // are promoted before lower-priority overflow, up to Finnhub's plan ceiling.
+// Hosted rights loss immediately collapses the desired subscription set.
 func (e *Engine) effectiveFinnhubSymbols() []string {
+	if !hostedProviderRightsAllowed("Finnhub", providerHostedUseProductionServing, time.Now()) {
+		return nil
+	}
 	alloc := e.multiFeedAllocation()
 	e.mu.RLock()
 	alpacaConnected := e.alpacaWebSocketConnected
