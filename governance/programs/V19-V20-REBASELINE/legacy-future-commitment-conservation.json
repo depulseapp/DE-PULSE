@@ -1,0 +1,174 @@
+{
+  "schema": "DE.PULSE-V19-V20-LEGACY-FUTURE-COMMITMENT-CONSERVATION-1",
+  "status": "AUTHORITATIVE_REBASELINE_COMPANION",
+  "purpose": "Conserve approved future roadmap/build-plan responsibilities that are not represented solely by the 22 backlog issues or HOST-001..072. This matrix prevents a coherent-version rebaseline from silently dropping legacy strategic/trader-quality commitments.",
+  "sourceAuthorities": [
+    "main:governance/ROADMAP.md before coherent v19/v20 rebaseline",
+    "main:adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md before coherent v19/v20 rebaseline",
+    "issue #65 planned v19/v20 inheritance",
+    "v18.10.0 certified feature-assurance baseline"
+  ],
+  "relationship": {
+    "backlogMap": "governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json",
+    "hostMap": "governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json",
+    "crossIntegrationMap": "governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json",
+    "surfaceMap": "governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json"
+  },
+  "commitments": [
+    {
+      "id": "LEGACY-FUTURE-001",
+      "commitment": "Smart Intelligent Provider Router v2 / coverage-aware residual-gap routing",
+      "placement": ["v19.1.0", "v19.6.1", "v20.5.0"],
+      "disposition": "CONSERVED_EXTEND_EXISTING_OWNER",
+      "notes": "Router v2 remains sole general provider routing/admission authority; later adaptive provider usefulness cannot bypass lifecycle/rights/freshness authority."
+    },
+    {
+      "id": "LEGACY-FUTURE-002",
+      "commitment": "Shared Symbol Intelligence / multi-user demand union / fetch-once-calculate-once fan-out",
+      "placement": ["v19.1.0", "v19.2.0", "v19.3.0"],
+      "disposition": "CONSERVED",
+      "notes": "Global Symbol Store + memberships + shared serving/sync + cross-platform projections; processing scales with unique symbols/capabilities, not users x pages."
+    },
+    {
+      "id": "LEGACY-FUTURE-003",
+      "commitment": "Opportunity Radar / AODR foundation, lineage, outcomes and later adaptive ranking",
+      "placement": ["v19.4.1", "v19.6.0", "v20.3.1"],
+      "disposition": "CONSERVED_SPLIT_BY_DEPENDENCY",
+      "notes": "Deterministic Discovery effectiveness first, point-in-time lineage second, adaptive AODR only after outcome/control-plane readiness."
+    },
+    {
+      "id": "LEGACY-FUTURE-004",
+      "commitment": "TradeInsight SHADOW/secondary intelligence through canonical owners only",
+      "placement": ["INHERITED_V18", "v19.1.0", "v19.6.1"],
+      "disposition": "CONSERVED_INHERITED_AND_REAUDITED",
+      "notes": "Direct SEC/EDGAR authority remains protected. TradeInsight stays capability-scoped; no generic live-provider promotion."
+    },
+    {
+      "id": "LEGACY-FUTURE-005",
+      "commitment": "Provider -> Market Mode adaptive integration without provider-brand ownership",
+      "placement": ["v19.1.0", "v19.6.1", "v20.2.0"],
+      "disposition": "CONSERVED",
+      "notes": "Providers contribute canonical capability evidence; Market Regime/Mode synthesis stays canonical and evidence-aware."
+    },
+    {
+      "id": "LEGACY-FUTURE-006",
+      "commitment": "Institutional / 13F point-in-time evidence",
+      "placement": ["v19.6.0", "v20.3.0"],
+      "disposition": "CONSERVED",
+      "notes": "Source/revision/query foundation precedes adaptive institutional interpretation."
+    },
+    {
+      "id": "LEGACY-FUTURE-007",
+      "commitment": "Two-sided thesis / TDTI evidence",
+      "placement": ["v19.6.0", "v20.3.0"],
+      "disposition": "CONSERVED",
+      "notes": "This is thesis/evidence intelligence and is distinct from the deterministic SHORT Desk setup contract in LEGACY-TRADER-SETUP-SHORT-001."
+    },
+    {
+      "id": "LEGACY-FUTURE-008",
+      "commitment": "ADR-GDI reliability / graceful degradation / capacity",
+      "placement": ["v19.1.0", "v19.6.1"],
+      "disposition": "CONSERVED",
+      "notes": "Canonical Data Health/freshness/recovery first; hosted SLO/capacity/economics and graceful degradation closure later."
+    },
+    {
+      "id": "LEGACY-FUTURE-009",
+      "commitment": "Hosted account / zero-key Provider Gateway / sync architecture under #66",
+      "placement": ["v19.0.0", "v19.2.0", "v19.3.0", "v19.7.0"],
+      "disposition": "CONSERVED_VIA_HOST_001_072",
+      "notes": "All HOST-001..072 are separately mapped with zero unmapped/duplicate rows."
+    },
+    {
+      "id": "LEGACY-FUTURE-010",
+      "commitment": "Governed Adaptive Intelligence after trustworthy evidence infrastructure",
+      "placement": ["v19.6.0", "v19.6.1", "v20.0.0", "v20.1.0", "v20.2.0", "v20.3.0", "v20.3.1", "v20.4.0", "v20.5.0", "v20.6.0"],
+      "disposition": "CONSERVED_DEPENDENCY_ORDERED",
+      "notes": "Point-in-time/outcome readiness precedes learned influence; SHADOW/validation/promotion/rollback remain bounded."
+    },
+    {
+      "id": "LEGACY-FUTURE-011",
+      "commitment": "ASBI evidence normalization, synthesis, contradiction/abstention, confidence/explanation, outcome feedback and learning guardrails",
+      "placement": ["v20.0.0", "v20.2.0"],
+      "disposition": "CONSERVED_CONSOLIDATED",
+      "notes": "Control-plane/calibration/guardrails live in v20.0.0; adaptive signal/market synthesis and contradiction-aware usefulness learning live in v20.2.0. ASBI is not deleted merely because the old micro-version name is removed."
+    },
+    {
+      "id": "LEGACY-FUTURE-012",
+      "commitment": "Trader-quality outcome evidence: MFE, MAE, horizon return, false-positive/miss rate, confidence calibration and usefulness by regime/freshness/contradiction",
+      "placement": ["v19.6.0", "v20.0.0", "v20.1.0", "v20.2.0"],
+      "disposition": "CONSERVED",
+      "notes": "v19 records point-in-time outcomes; v20 calibrates and learns usefulness without implying guaranteed profitability."
+    },
+    {
+      "id": "LEGACY-FUTURE-013",
+      "commitment": "Exchange halt / LULD / volatility-pause / resume tradeability semantics",
+      "placement": ["v19.4.1", "v19.6.1"],
+      "disposition": "CONSERVED",
+      "notes": "Discovery must detect/handle halt-resume correctly and professional v19 closure must prove canonical tradeability semantics."
+    },
+    {
+      "id": "LEGACY-FUTURE-014",
+      "commitment": "Mac Apple Silicon + Windows x64 + hosted Web lockstep for shared future capabilities",
+      "placement": ["ALL_APPLICABLE_V19_V20"],
+      "disposition": "PERMANENT_BOUNDARY",
+      "notes": "Platform mechanics may differ; domain truth, authorization, rights, freshness and intelligence semantics may not fork."
+    },
+    {
+      "id": "LEGACY-FUTURE-015",
+      "commitment": "Canonical Data Health inputs and recurrence: provider capability matrix, SLO, fetch-path ownership, recovery and truthful degradation",
+      "placement": ["v19.1.0", "ALL_LATER_APPLICABLE"],
+      "disposition": "PERMANENT_CANONICAL_OWNER",
+      "notes": "Missing != zero; stale != current; recovery != preferred; affected consumers re-evaluate after canonical recovery."
+    },
+    {
+      "id": "LEGACY-TRADER-SETUP-SHORT-001",
+      "commitment": "Two-sided deterministic Desk setup contract with true SHORT-side entry/cover-target/invalidation/action/R-multiple semantics",
+      "placement": ["v19.3.0"],
+      "disposition": "SOURCE_CONFIRMED_GAP_CONSERVED_FOR_IMPLEMENTATION",
+      "sourceFinding": "Current renderer computePlan derives BEARISH direction from a low directional score but always constructs long-oriented geometry: target above price/entry and invalidation below entry. actionState is also long-oriented. Therefore the visible Entry Zone / Trim-Target / Invalidation / Setup Score strip is not a true mirrored SHORT plan today.",
+      "requiredContract": {
+        "side": "LONG | SHORT | NO_SETUP/WAIT; side is explicit and not inferred from UI color",
+        "setupQuality": "0..100 quality/confidence-style setup score independent of bullish/bearish direction; never presented as win probability",
+        "directionalEvidence": "separate signed/banded directional evidence so a strong SHORT setup may still have a high setup-quality score",
+        "longGeometry": "entry zone; trim/target above entry; invalidation below entry; positive R computed in long direction",
+        "shortGeometry": "short-entry zone; cover/target below entry; invalidation above entry; positive R computed in short direction",
+        "actionState": "IN_ENTRY_ZONE / APPROACHING / EXTENDED / TARGET_REVIEW / INVALIDATED comparisons reverse correctly for SHORT",
+        "labels": "SHORT may use Cover / Target rather than long-only Trim / Target wording where clearer; preserve existing Desk look-and-feel",
+        "consumers": ["Day Trade Desk", "Swing Desk", "Long-Term horizon where a two-sided thesis is evidence-eligible", "Research horizon summary", "Discovery handoff", "historical replay/outcome snapshots"],
+        "truthfulness": "Do not force a SHORT setup solely because directional evidence is bearish; NO_SETUP/WAIT remains valid when quality/readiness is insufficient.",
+        "executionBoundary": "Decision support only; No Execution remains permanent."
+      },
+      "evidenceRequired": [
+        "unit/contract tests for mirrored long/short geometry and R-multiple",
+        "bearish strong-setup regression proving high setup quality is possible without bullish encoding",
+        "action-state boundary tests for both sides",
+        "Day/Swing/Long applicability tests",
+        "replay/snapshot compatibility and migration tests",
+        "Research/Discovery cross-consumer direction consistency",
+        "Mac/Windows/Web UI parity where applicable",
+        "no change to approved Desk visual language except truthful side-aware labels/content"
+      ]
+    },
+    {
+      "id": "LEGACY-FUTURE-016",
+      "commitment": "G0-G16 zero-miss requirement/evidence conservation, exact-head CI, portability and no-rebuild release discipline",
+      "placement": ["ALL_VERSIONS"],
+      "disposition": "PERMANENT_PROCESS_BOUNDARY",
+      "notes": "Coherent versions replace micro-version scheduling without weakening row-level evidence or regression ownership."
+    },
+    {
+      "id": "LEGACY-FUTURE-017",
+      "commitment": "U.S. Equities Processing, GLD/SLV/USO actionable exceptions, No Execution, direct SEC/EDGAR authority and no parallel canonical subsystems",
+      "placement": ["ALL_VERSIONS"],
+      "disposition": "PERMANENT_PRODUCT_ARCHITECTURE_BOUNDARY",
+      "notes": "Rebaseline cannot override these constraints."
+    }
+  ],
+  "summary": {
+    "commitmentCount": 17,
+    "unmappedCount": 0,
+    "sourceConfirmedNewlyExplicitGapCount": 1,
+    "sourceConfirmedNewlyExplicitGapIds": ["LEGACY-TRADER-SETUP-SHORT-001"],
+    "rule": "No legacy future commitment is considered conserved merely because a broad version title sounds related. The exact row must remain mapped/evidenced through G10/G16."
+  }
+}
