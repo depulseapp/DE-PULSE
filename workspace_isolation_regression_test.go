@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -316,5 +317,263 @@ func TestV181EnsureUserWorkspaceCreatesDurableEmptyWorkspace(t *testing.T) {
 	}
 	if !found {
 		t.Fatal("new authenticated workspace was not persisted")
+	}
+}
+
+func hostPrivacyUserFixture(t *testing.T) (*PersistenceManager, *IdentityService, *Application, string, Principal, string) {
+	t.Helper()
+	p, identity := newIdentityTestService(t)
+	base := time.Unix(2_430_000_000, 0)
+	_, owner, _ := v184CredentialedOwner(t, identity, base)
+	created, err := identity.adminCreateUser(owner, "privacy-user", "Privacy User", RoleUser, "temporary privacy password")
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, principal, err := identity.setPassword(created.ID, "durable privacy password")
+	if err != nil {
+		t.Fatal(err)
+	}
+	app := &Application{configDir: t.TempDir(), hub: NewHub(), state: defaultEmptyWorkspaceState(), persistence: p, identity: identity, workspaces: map[string]UserWorkspace{}}
+	workspace := v181WorkspaceWithSymbols(created.ID, "NVDA", "AMD")
+	app.workspaces[created.ID] = workspace
+	if err := p.SaveUserWorkspace(context.Background(), workspace); err != nil {
+		t.Fatal(err)
+	}
+	return p, identity, app, token, principal, "durable privacy password"
+}
+
+func hostPrivacyGET(path, token string) *http.Request {
+	req := httptest.NewRequest(http.MethodGet, path, nil)
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
+	return req
+}
+
+func hostPrivacyDELETE(path, token, csrf, body string) *http.Request {
+	req := httptest.NewRequest(http.MethodDelete, path, strings.NewReader(body))
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
+	req.AddCookie(&http.Cookie{Name: csrfCookieName, Value: csrf})
+	req.Header.Set("X-DE-PULSE-CSRF", csrf)
+	req.Header.Set("Content-Type", "application/json")
+	return req
+}
+
+func TestHOST010AccountExportIncludesPortableCategoriesAndExcludesSecrets(t *testing.T) {
+	_, identity, app, token, principal, _ := hostPrivacyUserFixture(t)
+	fingerprint := "sha256:privacy-device-fingerprint-secret"
+	device, err := identity.registerHostedDevice(principal, "privacy browser", fingerprint)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := identity.bindHostedDeviceToSession(principal, device.ID); err != nil {
+		t.Fatal(err)
+	}
+
+	identity.mu.Lock()
+	passwordHash := ""
+	tokenHash := ""
+	fingerprintHash := ""
+	for _, user := range identity.state.Users {
+		if user.ID == principal.UserID {
+			passwordHash = user.PasswordHash
+		}
+	}
+	for _, session := range identity.state.Sessions {
+		if session.UserID == principal.UserID {
+			tokenHash = session.TokenHash
+		}
+	}
+	for _, storedDevice := range identity.state.Devices {
+		if storedDevice.UserID == principal.UserID {
+			fingerprintHash = storedDevice.FingerprintHash
+		}
+	}
+	identity.mu.Unlock()
+	if passwordHash == "" || tokenHash == "" || fingerprintHash == "" {
+		t.Fatal("fixture did not contain credential material to prove export exclusion")
+	}
+
+	rr := httptest.NewRecorder()
+	hostedIdentityHTTPMux(app).ServeHTTP(rr, hostPrivacyGET("/api/auth/account/export", token))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("account export failed: code=%d body=%s", rr.Code, rr.Body.String())
+	}
+	if rr.Header().Get("Cache-Control") != "no-store" {
+		t.Fatalf("account export is cacheable: headers=%v", rr.Header())
+	}
+	body := rr.Body.String()
+	for label, secret := range map[string]string{"password hash": passwordHash, "session token hash": tokenHash, "device fingerprint": fingerprintHash, "raw token": token} {
+		if secret != "" && strings.Contains(body, secret) {
+			t.Fatalf("%s leaked in account export: %s", label, body)
+		}
+	}
+	var exported AccountDataExport
+	if err := json.Unmarshal(rr.Body.Bytes(), &exported); err != nil {
+		t.Fatal(err)
+	}
+	if exported.SchemaVersion != 1 || exported.Profile.ID != principal.UserID || exported.Profile.Username != principal.Username {
+		t.Fatalf("identity/profile missing from export: %+v", exported.Profile)
+	}
+	if !contains(trackedSymbolsFromWatchlists(exported.Watchlists), "NVDA") || exported.Preferences.SelectedTicker != "NVDA" {
+		t.Fatalf("workspace preferences/watchlists missing from export: %+v", exported)
+	}
+	if exported.ResearchMetadata == nil || exported.Feedback == nil || exported.CategoryStatus["researchMetadata"] != "not-persisted-per-user" || exported.CategoryStatus["feedback"] != "not-persisted-per-user" {
+		t.Fatalf("non-persisted categories were not represented truthfully: %+v", exported)
+	}
+	if len(exported.HostedSyncMetadata.Devices) != 1 || len(exported.HostedSyncMetadata.Sessions) == 0 {
+		t.Fatalf("safe hosted sync metadata missing: %+v", exported.HostedSyncMetadata)
+	}
+}
+
+func TestHOST011AccountDeletionRevokesIdentityAndScrubsWorkspace(t *testing.T) {
+	p, identity, app, token, principal, _ := hostPrivacyUserFixture(t)
+	device, err := identity.registerHostedDevice(principal, "delete browser", "sha256:delete-device-secret")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := identity.bindHostedDeviceToSession(principal, device.ID); err != nil {
+		t.Fatal(err)
+	}
+	csrf := "privacy-delete-csrf"
+	rr := httptest.NewRecorder()
+	hostedIdentityHTTPMux(app).ServeHTTP(rr, hostPrivacyDELETE("/api/auth/account", token, csrf, `{"reason":"USER_REQUESTED"}`))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("account deletion failed: code=%d body=%s", rr.Code, rr.Body.String())
+	}
+	if _, err := identity.resolve(token, false); err == nil {
+		t.Fatal("deleted account session remained usable")
+	}
+
+	identity.mu.Lock()
+	var tombstone UserRecord
+	found := false
+	for _, user := range identity.state.Users {
+		if user.ID == principal.UserID {
+			tombstone = user
+			found = true
+		}
+	}
+	for _, session := range identity.state.Sessions {
+		if session.UserID == principal.UserID {
+			identity.mu.Unlock()
+			t.Fatalf("deleted account session retained: %+v", session)
+		}
+	}
+	for _, storedDevice := range identity.state.Devices {
+		if storedDevice.UserID == principal.UserID {
+			identity.mu.Unlock()
+			t.Fatalf("deleted account device retained: %+v", storedDevice)
+		}
+	}
+	identity.mu.Unlock()
+	if !found || !isAccountDeletionTombstone(tombstone) {
+		t.Fatalf("minimal deletion tombstone missing: %+v", tombstone)
+	}
+	if tombstone.TenantID == "" || tombstone.DisplayName != accountDeletionReasonUserRequest || tombstone.PasswordHash != "" || tombstone.Role != "" || tombstone.CreatedAt != 0 || tombstone.LastLoginAt != 0 {
+		t.Fatalf("tombstone retained more than deletion proof: %+v", tombstone)
+	}
+
+	workspaces, err := p.LoadUserWorkspaces(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	workspaceFound := false
+	for _, workspace := range workspaces {
+		if workspace.UserID != principal.UserID {
+			continue
+		}
+		workspaceFound = true
+		if got := trackedSymbolsFromWatchlists(workspace.Watchlists); len(got) != 0 {
+			t.Fatalf("deleted account workspace retained personal symbols: %v", got)
+		}
+	}
+	if !workspaceFound {
+		t.Fatal("deleted account did not retain the expected minimal empty workspace row")
+	}
+}
+
+func TestHOST011LastCriticalOwnerCannotSelfDelete(t *testing.T) {
+	_, identity := newIdentityTestService(t)
+	base := time.Unix(2_440_000_000, 0)
+	token, owner, _ := v184CredentialedOwner(t, identity, base)
+	if _, err := identity.deleteAccount(owner.UserID, accountDeletionReasonUserRequest); err == nil || !strings.Contains(err.Error(), "last active owner") {
+		t.Fatalf("sole critical owner deletion was not rejected: %v", err)
+	}
+	if _, err := identity.resolve(token, false); err != nil {
+		t.Fatalf("rejected owner deletion damaged current identity: %v", err)
+	}
+}
+
+func TestHOST011ReplaceRestoreCarriesForwardDeletionTombstone(t *testing.T) {
+	deletedAt := int64(2_450_000_000_000)
+	currentTombstone := UserRecord{ID: "privacy-deleted", TenantID: localTenantID, Username: accountDeletionTombstoneUsername, DisplayName: accountDeletionReasonUserRequest, Status: UserDisabled, UpdatedAt: deletedAt}
+	archive := PersistenceArchive{
+		HasIdentity: true,
+		Identity: IdentityPersistentState{
+			Version: 1,
+			Users: []UserRecord{{ID: "privacy-deleted", TenantID: localTenantID, Username: "old-profile", DisplayName: "Old Profile", Role: RoleUser, Status: UserActive, PasswordHash: "old-password-hash"}},
+			Devices: []DeviceRecord{{ID: "old-device", TenantID: localTenantID, UserID: "privacy-deleted", FingerprintHash: "old-fingerprint", Status: DeviceActive}},
+			Sessions: []SessionRecord{{ID: "old-session", UserID: "privacy-deleted", TokenHash: "old-token-hash"}},
+		},
+		UserWorkspaces: []UserWorkspace{v181WorkspaceWithSymbols("privacy-deleted", "NVDA", "TSLA")},
+	}
+	got := enforceArchiveAccountDeletionPrivacy(archive, IdentityPersistentState{Users: []UserRecord{currentTombstone}})
+	if len(got.Identity.Users) != 1 || !isAccountDeletionTombstone(got.Identity.Users[0]) || got.Identity.Users[0].UpdatedAt != deletedAt {
+		t.Fatalf("replace restore resurrected deleted identity: %+v", got.Identity.Users)
+	}
+	if len(got.Identity.Devices) != 0 || len(got.Identity.Sessions) != 0 {
+		t.Fatalf("replace restore resurrected deleted security records: devices=%+v sessions=%+v", got.Identity.Devices, got.Identity.Sessions)
+	}
+	if len(got.UserWorkspaces) != 1 || len(trackedSymbolsFromWatchlists(got.UserWorkspaces[0].Watchlists)) != 0 {
+		t.Fatalf("replace restore resurrected deleted workspace: %+v", got.UserWorkspaces)
+	}
+}
+
+func TestHOST012PrivacyDataHandlingInventoryCoversPersistentStoresAndREST(t *testing.T) {
+	raw, err := os.ReadFile("governance/programs/ADAPT-HOSTED-SYNC-001/privacy-data-handling.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var inventory struct {
+		Requirements []string `json:"requirements"`
+		Stores       []struct {
+			ID        string `json:"id"`
+			Deletion  string `json:"deletion"`
+			Retention string `json:"retention"`
+			Export    string `json:"export"`
+		} `json:"stores"`
+		REST struct {
+			Export struct {
+				Method string `json:"method"`
+				Path   string `json:"path"`
+			} `json:"export"`
+			Delete struct {
+				Method string `json:"method"`
+				Path   string `json:"path"`
+			} `json:"delete"`
+		} `json:"rest"`
+		OperatorAccess map[string]string `json:"operatorAccess"`
+	}
+	if err := json.Unmarshal(raw, &inventory); err != nil {
+		t.Fatal(err)
+	}
+	for _, requirement := range []string{"HOST-010", "HOST-011", "HOST-012"} {
+		if !contains(inventory.Requirements, requirement) {
+			t.Fatalf("privacy inventory lost requirement %s", requirement)
+		}
+	}
+	stores := map[string]bool{}
+	for _, store := range inventory.Stores {
+		stores[store.ID] = store.Deletion != "" && store.Retention != "" && store.Export != ""
+	}
+	for _, required := range []string{"sqlite", "postgres", "cache", "pitr-backup", "audit"} {
+		if !stores[required] {
+			t.Fatalf("privacy inventory missing complete %s behavior: %+v", required, stores)
+		}
+	}
+	if inventory.REST.Export.Method != http.MethodGet || inventory.REST.Export.Path != "/api/auth/account/export" || inventory.REST.Delete.Method != http.MethodDelete || inventory.REST.Delete.Path != "/api/auth/account" {
+		t.Fatalf("privacy REST contract drifted: %+v", inventory.REST)
+	}
+	if inventory.OperatorAccess["restore"] == "" || inventory.OperatorAccess["deletedAccount"] == "" {
+		t.Fatalf("operator privacy behavior missing: %+v", inventory.OperatorAccess)
 	}
 }

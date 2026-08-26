@@ -46,6 +46,10 @@ func validRequestCSRF(r *http.Request) bool {
 	return subtle.ConstantTimeCompare([]byte(header), []byte(cookie.Value)) == 1
 }
 
+func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst any) error {
+	return json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10)).Decode(dst)
+}
+
 func (a *Application) handleAuthStatus(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		writeError(w, 405, "Method not allowed")
@@ -169,7 +173,7 @@ func (a *Application) handleUpdateProfile(w http.ResponseWriter, r *http.Request
 	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "principal": np})
 }
 
-func (a *Application) authResolved(allowPasswordSetup bool, next http.HandlerFunc) http.HandlerFunc {
+func (a *Application) authResolved(allowPasswordSetup, enforceProductAccess bool, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if a.identity == nil {
 			c, err := r.Cookie("pmt_session")
@@ -194,14 +198,16 @@ func (a *Application) authResolved(allowPasswordSetup bool, next http.HandlerFun
 			writeError(w, http.StatusForbidden, "Security token validation failed.")
 			return
 		}
-		if !a.enforceHostedProductAccess(w, r, p) {
-			return
-		}
-		if !a.enforceHostedRequestQuota(w, r, p) {
-			return
-		}
-		if !a.consumeHostedProductRequest(w, r, p) {
-			return
+		if enforceProductAccess {
+			if !a.enforceHostedProductAccess(w, r, p) {
+				return
+			}
+			if !a.enforceHostedRequestQuota(w, r, p) {
+				return
+			}
+			if !a.consumeHostedProductRequest(w, r, p) {
+				return
+			}
 		}
 		if err := a.ensureUserWorkspace(p.UserID); err != nil {
 			writeError(w, http.StatusInternalServerError, "User workspace unavailable.")
@@ -211,10 +217,13 @@ func (a *Application) authResolved(allowPasswordSetup bool, next http.HandlerFun
 	}
 }
 func (a *Application) auth(next http.HandlerFunc) http.HandlerFunc {
-	return a.authResolved(false, next)
+	return a.authResolved(false, true, next)
 }
 func (a *Application) authAllowPasswordSetup(next http.HandlerFunc) http.HandlerFunc {
-	return a.authResolved(true, next)
+	return a.authResolved(true, true, next)
+}
+func (a *Application) authAccountLifecycle(next http.HandlerFunc) http.HandlerFunc {
+	return a.authResolved(false, false, next)
 }
 
 func (a *Application) requireRole(required UserRole, next http.HandlerFunc) http.HandlerFunc {
@@ -299,6 +308,8 @@ const (
 func (a *Application) registerHostedIdentityRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/auth/device/register", a.auth(a.requireRecentAuthentication(postOnly(a.handleRegisterHostedDevice))))
 	mux.HandleFunc("/api/auth/device/status", a.auth(a.requireRecentAuthentication(postOnly(a.handleHostedDeviceStatus))))
+	mux.HandleFunc("/api/auth/account/export", a.authAccountLifecycle(a.requireRecentAuthentication(a.handleAccountDataExport)))
+	mux.HandleFunc("/api/auth/account", a.authAccountLifecycle(a.requireRecentAuthentication(a.handleDeleteAccount)))
 }
 
 func (a *Application) authorizeHostedDeviceManagement(p Principal, requireRegisteredDevice bool) HostedIdentityDecision {

@@ -180,6 +180,15 @@ func (p *PersistenceManager) RestoreArchiveFile(ctx context.Context, path, mode 
 	if err != nil {
 		return PersistenceArchive{}, err
 	}
+	currentIdentity := IdentityPersistentState{}
+	if normalizedMode == persistenceRestoreModeReplace {
+		currentIdentity, err = p.backend.LoadIdentityState(ctx)
+		if err != nil {
+			p.recordPersistenceFailure(err)
+			return PersistenceArchive{}, fmt.Errorf("load current deletion tombstones before replace restore: %w", err)
+		}
+	}
+	archive = enforceArchiveAccountDeletionPrivacy(archive, currentIdentity)
 	if err := backend.RestorePersistenceArchive(ctx, archive, normalizedMode); err != nil {
 		p.recordPersistenceFailure(err)
 		return PersistenceArchive{}, err
