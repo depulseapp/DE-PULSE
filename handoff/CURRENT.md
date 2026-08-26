@@ -3,10 +3,18 @@
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS**
 
 **Certified Stable:** `v18.10.0` — immutable  
+**Stable candidate SHA:** `584e9e0ce91ec08e08cfd52c7cf60392ab74dd12`  
+**Stable qualified source SHA:** `ec39319c86dee5e5976751abc42bc96a402a6d46`  
+**Stable source fingerprint:** `0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037`  
+**Stable build ID:** `v18.10.0-stable-20260825`  
+**Stable platform build number:** `181000`  
+**Stable release run:** `32917159547`  
 **Canonical product roadmap:** `governance/ROADMAP.md`  
 **Canonical v19/v20 rebaseline:** `governance/V19_V20_REBASELINE.md`  
 **Backlog/version map:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
 **HOST/version map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
+**Cross-integration map:** `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`  
+**Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
 **Active version:** `v19.0.0` — Hosted Trust & Identity Foundation  
 **Active issue:** #148  
 **Active PR:** #149 — Draft  
@@ -24,6 +32,8 @@ The prior future micro-version and requirement-packet scheduling is superseded. 
 All 22 testing/future backlog issues (#150-#171) are mapped with zero unmapped rows in `backlog-version-matrix.json`.
 
 All 72 HOST requirements are mapped with zero unmapped/duplicate rows in `host-requirement-version-map.json`. The source `requirement-conservation.json` remains authority for requirement text/provenance/owners; its old `plannedVersion` micro-assignments are superseded for scheduling by the rebaseline map.
+
+`cross-integration-matrix.json` records the required downstream/Market-Regime/Outcome-Learning disposition for all 22 backlog issues. `whole-product-surface-rebaseline.json` preserves the 180 certified v18 responsibilities as inherited baseline and gives current surface-level disposition/placement; each affected version must still enumerate actual current source/runtime surfaces before G3 and reconcile complete coverage at G10.
 
 ## Current v19/v20 sequence
 
@@ -44,11 +54,11 @@ Existing #148 / PR #149 is retained; do not restart it and do not create another
 At the rebaseline audit:
 - HOST-001..003 provider rights had real implementation but remained final-version unverified;
 - HOST-004..007 hosted identity/device/session/reauth work was in progress;
-- pre-rebaseline PR head `c5d0713d16f95522fd013123a78bc7cc58dc2422` was **not qualified**;
+- pre-rebaseline product head `c5d0713d16f95522fd013123a78bc7cc58dc2422` was **not qualified**;
 - Fast #1141 / run `32929281393` failed source-health because these production helpers were unreferenced: `createSessionWithSecurityLocked`, `registerHostedDevice`, `bindHostedDeviceToSession`, `setHostedDeviceStatus`, `authorizeHostedIdentity`;
 - therefore the identity/session work must be production-wired through existing canonical authenticated identity/HTTP owners, or helpers proven unnecessary must be consolidated/removed.
 
-Governance-only rebaseline commits after that failed head do not convert the unfinished product code to PASS. Fetch the live PR head and current checks before continuing.
+The first rebaseline-only Fast on head `1b983eb56c064510d2c5eaf1dc606d2fddf0126d` failed earlier at workflow/release-state coherence because this handoff rewrite temporarily omitted exact Stable identity fields. Those fields are restored above. That governance failure does not replace or close the underlying product source-health gap; fetch the live head/checks after this correction.
 
 ## Permanent smart/intelligent rule
 
@@ -82,7 +92,7 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Resume rule
 
-1. Read this file first, then `governance/V19_V20_REBASELINE.md`, `governance/ROADMAP.md`, `governance/current-state.json`, the two rebaseline machine maps, CURRENT adaptive Roadmap/Build Plan/Build Process/Delivery Process, issue #148, parent #66, PR #149 and current CI evidence.
+1. Read this file first, then `governance/V19_V20_REBASELINE.md`, `governance/ROADMAP.md`, `governance/current-state.json`, all four rebaseline machine maps, CURRENT adaptive Roadmap/Build Plan/Build Process/Delivery Process/Gap Closure/CI Convergence, issue #148, parent #66, PR #149 and current CI evidence.
 2. GitHub/source/executable evidence outranks prose and all chat memory.
 3. Preserve v18.10.0 Stable immutability.
 4. Do not create requirement-sized public versions, branches or PRs.
