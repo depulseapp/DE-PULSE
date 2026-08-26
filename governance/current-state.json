@@ -86,10 +86,17 @@
       "assuranceCeilingAfterT9": "COMPLETE"
     },
     "futureProgramBlockerIssue": null,
-    "futureBlockedIssue": 66,
-    "futureBlockedReason": "v18.10.0 Stable and T10 are complete. #66 remains PLANNED_UNSTARTED until the mandatory post-v18.10 source-overlap/residual audit explicitly passes and permits v19 G1.",
+    "futureBlockedIssue": null,
+    "futureBlockedReason": null,
     "postClosureSourceOverlapAuditRequired": true,
-    "postClosureSourceOverlapAuditStatus": "PENDING"
+    "postClosureSourceOverlapAuditStatus": "PASS",
+    "postClosureSourceOverlapAuditIssue": 145,
+    "postClosureSourceOverlapAuditPullRequest": 146,
+    "postClosureSourceOverlapAuditQualifiedSourceSha": "cabf476b9cb26102a36e5a8913b61c86bc357854",
+    "postClosureSourceOverlapAuditFastRunId": 32925719203,
+    "postClosureSourceOverlapAuditQualifiedRunId": 32925800749,
+    "postClosureSourceOverlapAuditMergeSha": "f5364888fad81114d1372d0d6d4975b282f83874",
+    "v19G1Permission": "PERMITTED_NOT_STARTED"
   },
   "permanentBoundaries": [
     "US_EQUITIES_PROCESSING",
