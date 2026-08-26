@@ -2,6 +2,7 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
+**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
 **Post-v18 audit:** #145 / `adapt-post-v18-overlap-rebaseline-001` — PASS candidate pending exact-head qualification/merge  
 **Future hosted umbrella:** #66 — `PLANNED_UNSTARTED` until #145 is merged.
 

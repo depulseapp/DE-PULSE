@@ -3,6 +3,7 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Completed final-v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` — COMPLETE  
+**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
 **Post-v18 audit:** #145 / `adapt-post-v18-overlap-rebaseline-001` — PASS candidate pending exact-head qualification/merge  
 **Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — `PLANNED_UNSTARTED` until #145 is merged.
 

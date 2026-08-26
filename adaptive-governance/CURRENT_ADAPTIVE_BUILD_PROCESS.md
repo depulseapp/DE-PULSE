@@ -2,6 +2,7 @@
 
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
+**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
 **Post-v18 audit:** #145 / `adapt-post-v18-overlap-rebaseline-001` — PASS candidate pending exact-head qualification/merge.
 
 The permanent execution loop remains source-driven and exact-head: LOOKUP -> COMPARE -> CLASSIFY -> DECIDE -> UPDATE -> Fast -> Qualified -> G11–G16 when a release is actually being produced. v18.10.0 remains immutable and is not reopened by this audit.
