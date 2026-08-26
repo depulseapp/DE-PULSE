@@ -8,6 +8,8 @@
 
 v18.10.0 is published and T1–T10 are VERIFIED. The 180 effective shipped-v18 responsibilities remain under durable regression ownership. The 72-row `HOST-001..HOST-072` future requirement-conservation ledger is executable in canonical CI. The retained #107 process work is historical control-plane evidence, not the next implementation target.
 
+The inherited executable Data Health/provider sequence remains permanent authority: **#80 baseline -> #81 Smart Provider Router v2 adoption + #82 common health/recovery -> #83 lifecycle + #78 TradeInsight admission -> #84 zero-gap closure**. Operator truth continues to use `PARTIAL COVERAGE` and `DATA DEGRADED`; future work must not weaken or bypass those truthful states.
+
 Permanent product boundaries remain U.S. Equities Processing, No Execution, Smart Provider Router v2 sole routing/admission authority, direct SEC/EDGAR Form 4 authority, canonical freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session ownership, GLD/SLV/USO actionable exceptions and no parallel subsystems.
 
 ## Exactly one next action
