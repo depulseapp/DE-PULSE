@@ -68,6 +68,10 @@ func filterRuntimeSymbols(items []string, allowed map[string]bool) []string {
 }
 
 func (a *Application) runtimeSnapshotForUserFrom(userID string, snap RuntimeSnapshot) RuntimeSnapshot {
+	// Legal/data-rights admission precedes the existing per-user privacy filter.
+	// This preserves one canonical shared engine while preventing an authenticated
+	// consumer from reaching provider data that the hosted process may not serve.
+	snap = enforceHostedRuntimeRightsSnapshot(snap)
 	a.mu.RLock()
 	allowed := a.runtimeAllowedSymbolsLocked(userID)
 	a.mu.RUnlock()
@@ -180,7 +184,7 @@ func (e *Engine) SnapshotForUser(userID string) RuntimeSnapshot {
 	if e == nil {
 		return RuntimeSnapshot{}
 	}
-	snap := e.Snapshot()
+	snap := enforceHostedRuntimeRightsSnapshot(e.Snapshot())
 	if e.app == nil || e.app.workspaces == nil {
 		return snap
 	}
@@ -194,7 +198,7 @@ func (a *Application) broadcastRuntime() {
 	if a == nil || a.hub == nil || a.engine == nil {
 		return
 	}
-	snap := a.engine.Snapshot()
+	snap := enforceHostedRuntimeRightsSnapshot(a.engine.Snapshot())
 	a.mu.RLock()
 	ids := make([]string, 0, len(a.workspaces))
 	for userID := range a.workspaces {
@@ -232,6 +236,9 @@ func (a *Application) symbolAllowedForUser(userID, symbol string) bool {
 }
 
 func (a *Application) broadcastSymbolEvent(symbol string, payload any) {
+	if !hostedQuoteServingAllowedForSymbol(a, symbol) {
+		return
+	}
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(payload)
@@ -282,6 +289,7 @@ func filterFilingItemsForAllowed(items []FilingItem, allowed map[string]bool) []
 }
 
 func (a *Application) broadcastNews(items []NewsItem) {
+	items = hostedNewsItemsForServing(items)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(map[string]any{"type": "news", "news": items})
@@ -296,6 +304,7 @@ func (a *Application) broadcastNews(items []NewsItem) {
 }
 
 func (a *Application) broadcastEarnings(items []EarningsItem) {
+	items = hostedEarningsItemsForServing(items)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(map[string]any{"type": "earnings", "earnings": items})
@@ -310,6 +319,8 @@ func (a *Application) broadcastEarnings(items []EarningsItem) {
 }
 
 func (a *Application) broadcastFilings(items []FilingItem, intelligence map[string]SECIntelligenceSummary) {
+	items = hostedFilingItemsForServing(items)
+	intelligence = hostedSECIntelligenceForServing(intelligence)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		payload := map[string]any{"type": "filings", "filings": items}
