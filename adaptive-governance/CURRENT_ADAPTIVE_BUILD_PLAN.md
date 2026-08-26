@@ -1,6 +1,7 @@
 # CURRENT Adaptive Build Plan
 
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Backlog/version matrix:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
 **HOST/version map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
 **Legacy future-commitment conservation:** `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`  
@@ -8,7 +9,9 @@
 **Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Active build:** `v19.0.0` — Hosted Trust & Identity Foundation  
-**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 ## Build sizing rule
 
@@ -103,4 +106,4 @@ No version closes with an unassigned applicable certified-v18 responsibility, ba
 
 ## Exactly one next action
 
-Continue `v19.0.0` on PR #149. Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` proved the hosted identity/session helpers are production-reachable under recursive source health, but the run remained red because the CURRENT Adaptive documents had drifted from the conserved Data Health build contracts. Restore those contracts coherently across the Adaptive Roadmap, Build Plan, Build Process and Delivery Process, then run fresh exact-head Fast. Do not begin the next version until current-version closure criteria are met.
+Continue `v19.0.0` on PR #149. Exact-head Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health, including the conserved Data Health build contracts. The current blocker is Repository migration safety/current-state projection convergence. Restore the machine-state/work-slice/closure-ledger references across all CURRENT/handoff surfaces, then run fresh exact-head Fast. Do not begin the next version until current-version closure criteria are met.

@@ -9,6 +9,7 @@
 **Stable build ID:** `v18.10.0-stable-20260825`  
 **Stable platform build number:** `181000`  
 **Stable release run:** `32917159547`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Canonical product roadmap:** `governance/ROADMAP.md`  
 **Canonical v19/v20 rebaseline:** `governance/V19_V20_REBASELINE.md`  
 **Backlog/version map:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
@@ -17,9 +18,11 @@
 **Cross-integration map:** `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`  
 **Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
 **Active version:** `v19.0.0` — Hosted Trust & Identity Foundation  
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
 **Active issue:** #148  
 **Active PR:** #149 — Draft  
 **Active branch:** `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`  
 **Parent hosted program:** #66 / `ADAPT-HOSTED-SYNC-001`
 
 ## Stable authority
@@ -79,14 +82,14 @@ Existing #148 / PR #149 is retained; do not restart it and do not create another
 
 `v19.0.0` owns HOST-001..023 plus the core authentication/session requirements from backlog #164 and backend-security overlap from #156.
 
-At the rebaseline audit:
-- HOST-001..003 provider rights had real implementation but remained final-version unverified;
-- HOST-004..007 hosted identity/device/session/reauth work was in progress;
-- pre-rebaseline product head `c5d0713d16f95522fd013123a78bc7cc58dc2422` was **not qualified**;
-- Fast #1141 / run `32929281393` failed source-health because these production helpers were unreferenced: `createSessionWithSecurityLocked`, `registerHostedDevice`, `bindHostedDeviceToSession`, `setHostedDeviceStatus`, `authorizeHostedIdentity`;
-- therefore the identity/session work must be production-wired through existing canonical authenticated identity/HTTP owners, or helpers proven unnecessary must be consolidated/removed.
+The original hosted identity/session helper production-reachability defect is now resolved through canonical authenticated HTTP owners. The active source has production reachability for device registration/binding/status/authorization, and the ordinary session path reaches `createSessionWithSecurityLocked` without weakening hosted device/MFA-preserving rotation.
 
-A later rebaseline-only Fast on head `1b983eb56c064510d2c5eaf1dc606d2fddf0126d` failed workflow/release-state coherence because an earlier handoff rewrite temporarily omitted exact Stable identity fields. Those exact Stable fields are restored at the top of this file. That governance failure does not replace or close the underlying product source-health gap. Always fetch the live branch head and current checks before continuing.
+Exact-head evidence progression:
+- Fast #1164 / run `32976765692` exposed a root-ownership violation from two new root files; those files were consolidated into canonical existing auth/test owners rather than weakening the gate.
+- Fast #1165 / run `32978721012` on `f36417fda84e063d5a9cafcc31c464b051f5b3af` reported zero unregistered orphan production Go helpers and G2 PASS; it then exposed CURRENT Adaptive Data Health contract drift.
+- Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health, including Adaptive Data Health conservation. Its remaining blocker is repository/current-state projection convergence across CURRENT/handoff surfaces.
+
+Therefore do not reopen the helper defect. Restore machine-state/work-slice/closure-ledger projection convergence, obtain a new exact-head Fast, then continue v19.0.0 closure from the first remaining executable failure. HOST-001..023 remain final-version verification responsibilities until the closure ledger truthfully closes them.
 
 ## Permanent smart/intelligent rule
 
@@ -112,10 +115,10 @@ U.S. Equities Processing; GLD/SLV/USO actionable exceptions; No Execution; Smart
 
 ## Exactly one next action
 
-1. Fetch live `main`, live branch `adapt-hosted-trust-foundation-001`, #148, PR #149 and current checks.
-2. Continue `v19.0.0`; resolve the hosted identity/session production-reachability/source-health gap through existing canonical auth/HTTP owners.
-3. Run exact-head Fast on the coherent new candidate.
-4. Continue the remaining HOST-001..023 dependency order only after current evidence is truthful.
+1. Preserve the live `main` and `adapt-hosted-trust-foundation-001` source-of-truth check before every write.
+2. Restore all seven CURRENT/handoff projections to `governance/current-state.json`, `ADAPT-HOSTED-TRUST-FOUNDATION-001`, #148, `adapt-hosted-trust-foundation-001`, and the canonical closure ledger where required.
+3. Run exact-head Fast on the coherent candidate and continue fixing the first truthful executable failure.
+4. Continue remaining HOST-001..023 dependency/closure order only after current evidence is truthful.
 5. Do not begin `v19.1.0` until v19.0.0 exit criteria pass.
 6. Do not implement the future SHORT-side Desk correction early inside v19.0.0; it is durably conserved for v19.3.0 unless a governed source-overlap/risk replan moves it explicitly.
 

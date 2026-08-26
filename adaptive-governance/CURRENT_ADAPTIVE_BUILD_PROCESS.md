@@ -1,9 +1,12 @@
 # CURRENT Adaptive Build Process
 
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Active version:** `v19.0.0`  
-**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 The execution loop remains source-driven and exact-head:
 
@@ -82,4 +85,4 @@ Frozen v18 T1-T10 remains baseline conservation evidence; do not rerun history m
 
 ## Exactly one next action
 
-Continue `v19.0.0` on PR #149. Exact-head Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` cleared recursive helper/source ownership with zero unregistered orphan production Go helpers, but the recursive source-health lane remained red because CURRENT Adaptive Data Health conservation had drifted. Restore that CURRENT governance contract and obtain fresh exact-head Fast. Do not start `v19.1.0` while v19.0.0 remains unqualified.
+Continue `v19.0.0` on PR #149. Exact-head Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health. The active failure is Repository migration safety/current-state projection convergence. Restore the canonical machine-state/work-slice/closure-ledger projection across all CURRENT/handoff surfaces and obtain fresh exact-head Fast. Do not start `v19.1.0` while v19.0.0 remains unqualified.

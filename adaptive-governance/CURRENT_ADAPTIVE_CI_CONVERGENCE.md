@@ -2,8 +2,11 @@
 
 **Certified Stable:** `v18.10.0` — immutable  
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Active version:** `v19.0.0`  
-**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 Exactly three routine workflow families remain canonical: `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. G0-G16 remains the only gate model.
 
@@ -30,10 +33,10 @@ These do not add G17. They strengthen requirement/owner/test selection and G10 r
 
 ## Current executable state
 
-The pre-rebaseline product head `c5d0713d16f95522fd013123a78bc7cc58dc2422` failed Fast #1141 / `32929281393` at recursive source-health because hosted identity/session helpers were not production-referenced. Rebaseline-only governance commits do not make that product failure pass. A fresh exact-head Fast is required after the product reachability gap is corrected.
+The original hosted-helper reachability defect is resolved. On exact-head Fast #1165 for `f36417fda84e063d5a9cafcc31c464b051f5b3af`, recursive/package-aware source health reported zero unregistered orphan production Go helpers. Exact-head Fast #1166 for `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` then passed Canonical workflow policy and Recursive source-health, including the restored Adaptive Data Health contract. Its current blocker is repository/current-state projection convergence, not product helper reachability.
 
 GitHub-hosted artifact attestation remains mandatory where supported. Where repository/account constraints prevent hosted attestation enforcement, existing exact-hash provenance, promotion verification and SBOM remain compensating evidence.
 
 ## Exactly one next action
 
-Fix the v19.0.0 identity/session production-reachability/source-health gap on PR #149, then run exact-head Fast on the coherent candidate. Do not start v19.1.0 or spend Qualified/Release budget on an unready version head.
+Restore the seven CURRENT/handoff projections to the canonical machine state and closure ledger, then obtain a fresh exact-head Fast on PR #149. Do not start v19.1.0 or spend Qualified/Release budget until v19.0.0 Fast evidence is green and current-version closure criteria are reconciled.

@@ -1,9 +1,12 @@
 # CURRENT Adaptive Delivery Process
 
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Active version:** `v19.0.0`  
-**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 v18.10.0 delivery remains authoritative: exact-head Fast, Qualified, canonical Release G11-G16, actual macOS Apple Silicon + Windows x64 native evidence, provenance/SBOM and no-rebuild publication.
 
@@ -62,4 +65,4 @@ Adaptive influence must progress through governed evidence states and remain bou
 
 ## Exactly one next action
 
-Continue `v19.0.0` on PR #149. Exact-head Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` proved the original hosted-helper orphan/source-health defect is resolved, but Fast remained red because the CURRENT Adaptive Data Health delivery contract had drifted. Restore the conserved Roadmap / Build Plan / Build Process / Delivery Process projection, then obtain fresh exact-head Fast and continue current-version closure only from that evidence. Do not advance to `v19.1.0` yet.
+Continue `v19.0.0` on PR #149. Exact-head Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health, including Data Health conservation. Repository migration safety then failed only on current-state projection convergence. Restore the machine-state/work-slice/closure-ledger projections and obtain fresh exact-head Fast; continue current-version closure only from that evidence. Do not advance to `v19.1.0` yet.

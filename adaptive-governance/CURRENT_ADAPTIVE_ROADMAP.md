@@ -1,6 +1,7 @@
 # CURRENT Adaptive Roadmap
 
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Backlog map:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
 **HOST map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
 **Legacy future-commitment conservation:** `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`  
@@ -8,8 +9,10 @@
 **Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Active version:** `v19.0.0` — Hosted Trust & Identity Foundation  
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
 **Active issue/PR:** #148 / PR #149  
-**Active branch:** `adapt-hosted-trust-foundation-001`
+**Active branch:** `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 The prior future micro-version/packet scheduling is superseded. Requirements remain individually conserved and evidenced, but current planning is by coherent **version/build**.
 
@@ -84,4 +87,4 @@ Hard UI protections remain: keep Day/Swing/Long Desk look-and-feel/workflow; kee
 
 ## Current exact state / next action
 
-The active head has moved beyond the earlier `c5d0713d16f95522fd013123a78bc7cc58dc2422` helper-reachability defect. On exact-head Fast #1165 for `f36417fda84e063d5a9cafcc31c464b051f5b3af`, recursive/package-aware source-health reported zero unregistered orphan production Go helpers and G2 passed; the remaining Fast blocker is CURRENT Adaptive Data Health contract drift inside the recursive source-health step. Restore the conserved Data Health contracts across the CURRENT Adaptive Roadmap / Build Plan / Build Process / Delivery Process, then obtain fresh exact-head Fast. Do not start `v19.1.0` before `v19.0.0` exit criteria pass.
+Exact-head Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health, including zero orphan production helpers and the restored Adaptive Data Health contract. The current blocker is Repository migration safety/current-state projection convergence: all CURRENT/handoff surfaces must project the machine authority, active work-slice identity and closure ledger where required. Restore that convergence, then obtain fresh exact-head Fast. Do not start `v19.1.0` before `v19.0.0` exit criteria pass.

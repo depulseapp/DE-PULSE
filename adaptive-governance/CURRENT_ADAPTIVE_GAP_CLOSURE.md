@@ -2,8 +2,11 @@
 
 **Certified Stable:** `v18.10.0` — immutable  
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Machine current-state authority:** `governance/current-state.json`  
 **Active version:** `v19.0.0` — Hosted Trust & Identity Foundation  
-**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`
+**Active work slice:** `ADAPT-HOSTED-TRUST-FOUNDATION-001`  
+**Active issue/PR/branch:** #148 / PR #149 / `adapt-hosted-trust-foundation-001`  
+**Canonical closure ledger:** `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
 ## Current closure truth
 
@@ -19,14 +22,11 @@ Current version `v19.0.0` owns HOST-001..023 plus applicable core #164 auth/sess
 
 ## Current executable gap
 
-At the rebaseline audit, pre-rebaseline PR head `c5d0713d16f95522fd013123a78bc7cc58dc2422` was **not qualified**. Fast #1141 / run `32929281393` failed recursive source-health because five hosted identity/session production helpers had no production references:
-- `createSessionWithSecurityLocked`;
-- `registerHostedDevice`;
-- `bindHostedDeviceToSession`;
-- `setHostedDeviceStatus`;
-- `authorizeHostedIdentity`.
+The prior hosted identity/session helper reachability gap is resolved. Production HTTP wiring now reaches the canonical hosted device registration/binding/status/authorization owners, and exact-head Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` reported zero unregistered orphan production Go helpers with G2 PASS.
 
-HOST-001..003 provider-rights implementation exists but remains part of the final v19.0.0 verification responsibility. HOST-004..007 identity/device/session/reauth is the active product gap. Governance-only rebaseline commits do not close it.
+Exact-head Fast #1166 on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` also passed Canonical workflow policy and Recursive source-health, including Adaptive Data Health conservation. The remaining failure is `Repository migration safety` current-state projection convergence: CURRENT/handoff surfaces must project the canonical work-slice ID, machine-state authority and closure ledger. This is an ownership/evidence projection gap, not a reopened product helper defect.
+
+HOST-001..003 provider-rights implementation and HOST-004..007 identity/device/session/reauth remain part of final v19.0.0 verification responsibility; passing source-health alone does not close the full version.
 
 ## Gap classification rule
 
@@ -41,4 +41,4 @@ No version can reach G10 with an unassigned applicable backlog/HOST/source-disco
 
 ## Exactly one next action
 
-Fetch live PR #149 head/checks, then production-wire or correctly consolidate the hosted identity/session helpers through existing canonical auth/HTTP owners and obtain fresh exact-head Fast. Do not begin `v19.1.0` until `v19.0.0` closes truthfully.
+Restore the canonical current-state/work-slice/closure-ledger projections across all seven CURRENT/handoff surfaces and obtain fresh exact-head Fast. Do not begin `v19.1.0` until `v19.0.0` closes truthfully.
