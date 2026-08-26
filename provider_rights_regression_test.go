@@ -297,8 +297,8 @@ type providerRightsMemoryBackend struct {
 	intelligence PersistenceIntelligenceBatch
 }
 
-func (b *providerRightsMemoryBackend) Name() string           { return "memory" }
-func (b *providerRightsMemoryBackend) Capabilities() []string { return []string{"test"} }
+func (b *providerRightsMemoryBackend) Name() string               { return "memory" }
+func (b *providerRightsMemoryBackend) Capabilities() []string     { return []string{"test"} }
 func (b *providerRightsMemoryBackend) Init(context.Context) error { return nil }
 func (b *providerRightsMemoryBackend) UpsertSymbols(context.Context, []SymbolRegistryRecord) (int, error) {
 	return 0, nil
