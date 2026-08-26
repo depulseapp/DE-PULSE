@@ -34,8 +34,8 @@
     "finalQualificationEvidence": "governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/final-qualification-evidence.json"
   },
   "productCapabilityGate": {
-    "blocked": true,
-    "blockedByIssue": 148,
+    "blocked": false,
+    "blockedByIssue": null,
     "unblockedByCompletedWorkSlice": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
     "completedCapability": "v18 provider-intelligence professional closure",
     "completedWorkSliceId": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
