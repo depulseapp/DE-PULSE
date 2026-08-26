@@ -42,7 +42,8 @@ def branch_name() -> str:
 
 
 def clean_version(value: object) -> str:
-    return str(value or "").strip().lstrip("v")
+    raw = str(value or "").strip().lstrip("v")
+    return raw[:-7] if raw.endswith("-stable") else raw
 
 
 def version_tuple(value: object) -> tuple[int, ...]:
@@ -51,6 +52,16 @@ def version_tuple(value: object) -> tuple[int, ...]:
         return tuple(int(part) for part in cleaned.split("."))
     except Exception:
         return ()
+
+
+def stable_tag_for(version: object) -> str:
+    policy = load_json(ROOT / "governance" / "versioning-policy.json")
+    current = version_tuple(version)
+    cutover = version_tuple(policy.get("effectiveAfterProductVersion"))
+    if not current or not cutover:
+        return f"v{clean_version(version)}"
+    pattern = policy.get("legacyStableTagPattern") if current <= cutover else policy.get("futureStableTagPattern")
+    return str(pattern).format(productVersion=clean_version(version))
 
 
 def fail(items: list[str]) -> int:
@@ -120,7 +131,7 @@ def process_work_slice_errors(
     stable_tag = str(stable.get("tag", "")).strip()
     stable_candidate = str(stable.get("candidateSha", "")).strip()
     stable_fingerprint = str(stable.get("sourceFingerprint", "")).strip()
-    expected_tag = f"v{identity_version}-stable"
+    expected_tag = stable_tag_for(identity_version)
     previous_stable = clean_version(identity.get("previous_stable"))
 
     registered_branch = str(active.get("branch", "")).strip()
@@ -287,7 +298,7 @@ def product_work_slice_errors(
     work_type = str(work_slice.get("type", "")).strip()
     is_release_closure = work_type == "PRODUCT_RELEASE_CLOSURE"
     published_stable_version = previous_stable if is_release_closure else identity_version
-    expected_tag = f"v{published_stable_version}-stable"
+    expected_tag = stable_tag_for(published_stable_version)
     completed_process_id = str(active.get("workSliceId", "")).strip()
     completed_process_path = (
         ROOT / "governance" / "work-slices" / completed_process_id / "work-slice.json"
@@ -381,7 +392,7 @@ def product_work_slice_errors(
                 errors.append("release closure publicProductVersion / candidate identity drift")
             if clean_version(work_slice.get("stableProductVersionAtStart")) != previous_stable:
                 errors.append("release closure Stable-at-start must equal previous Stable")
-            if str(work_slice.get("targetStable", "")).strip() != f"v{identity_version}-stable":
+            if str(work_slice.get("targetStable", "")).strip() != stable_tag_for(identity_version):
                 errors.append("release closure targetStable / candidate identity drift")
             if not str(work_slice.get("releaseClaim", "")).strip():
                 errors.append("release closure releaseClaim missing")
@@ -478,7 +489,7 @@ def main() -> int:
         return fail(errors)
 
     mode = ""
-    stable_tag = f"v{identity_version}-stable"
+    stable_tag = stable_tag_for(identity_version)
 
     if identity_version == checkpoint_version:
         mode = "STABLE_ALIGNED"

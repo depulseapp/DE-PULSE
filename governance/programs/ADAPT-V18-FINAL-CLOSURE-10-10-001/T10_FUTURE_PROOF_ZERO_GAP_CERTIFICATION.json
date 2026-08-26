@@ -3,7 +3,7 @@
   "programIssue": 113,
   "trackIssue": 123,
   "targetVersion": "v18.10.0",
-  "state": "RELEASE_AUTHORIZED",
+  "state": "COMPLETE",
   "initializationBaseSha": "33d8580d862f64b61ff96ac7d9297dff5d6e2192",
   "t9Authority": {
     "sourceSha": "f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8",
@@ -46,7 +46,7 @@
     "explicitFutureSourceExclusions": 1,
     "scan1Responsibilities": 78,
     "scan2Responsibilities": 16,
-    "rule": "Every shipped-v18 high-level row must retain an existing executable durableRegressionOwner; every omission-scan responsibility must retain an existing executable test owner. PERSIST-POSTGRES-FOUNDATION/#66 remains explicit future-source exclusion."
+    "rule": "Every shipped-v18 high-level row retains an existing executable durableRegressionOwner; every omission-scan responsibility retains an existing executable test owner. PERSIST-POSTGRES-FOUNDATION/#66 remains explicit future-source exclusion."
   },
   "v19ConservedRequirementCount": 72,
   "v19Conservation": {
@@ -56,23 +56,21 @@
     "status": "PLANNED_UNSTARTED",
     "productProgramReserved": false,
     "sourceOverlapBeforeG1": true,
-    "bandClosureRequiredBeforeNextBand": true
+    "bandClosureRequiredBeforeNextBand": true,
+    "postClosureAuditStatus": "PENDING"
   },
   "portableResume": {
     "vendorNeutralContract": "governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md",
     "currentHandoff": "handoff/CURRENT.md",
     "machineState": "governance/current-state.json",
     "resumeGate": "tools/ci/adaptive_resume_gate.py",
-    "rootAdapters": [
-      "AGENTS.md",
-      "CLAUDE.md"
-    ],
+    "rootAdapters": ["AGENTS.md", "CLAUDE.md"],
     "oldChatRequired": false
   },
   "publicationOrdering": {
     "prePublicationState": "RELEASE_AUTHORIZED",
     "postPublicationState": "COMPLETE",
-    "rationale": "Issue #123 requires T10 completion to include Stable publication/G16, while publication itself must remain gated by all pre-publication T10 controls. RELEASE_AUTHORIZED is therefore the non-final state after exact-head Fast/Qualified and zero internal gaps; COMPLETE/VERIFIED is recorded only after no-rebuild Stable publication and G16 evidence."
+    "rationale": "Issue #123 requires T10 completion to include Stable publication/G16, while publication itself must remain gated by all pre-publication T10 controls. RELEASE_AUTHORIZED therefore remained non-final until canonical no-rebuild Stable publication and G16 passed."
   },
   "authorizationBasis": {
     "sourceSha": "ab50c8a715eecae266afba62486bca83f9ae11e9",
@@ -84,18 +82,51 @@
     "sameHead": true,
     "result": "PASS"
   },
-  "finalSourceSha": "ab50c8a715eecae266afba62486bca83f9ae11e9",
-  "fastRunId": 32909821788,
-  "qualifiedRunId": 32909905537,
-  "knownCoverageGaps": [
-    {
-      "id": "T10-G11-G16-STABLE-PUBLICATION",
-      "status": "OPEN",
-      "owner": "#123",
-      "closure": "Canonical v18.10.0-development release PR must itself pass exact-head Fast and Qualified, then publish the exact certified candidate through G11-G16 with no rebuild; post-publication continuity records T10 COMPLETE/VERIFIED and keeps v19 blocked pending the fresh source-overlap audit."
-    }
-  ],
+  "finalSourceSha": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+  "fastRunId": 32916919933,
+  "qualifiedRunId": 32916988785,
+  "releaseQualification": {
+    "pullRequest": 143,
+    "qualifiedSourceSha": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+    "fastRunNumber": 1109,
+    "fastRunId": 32916919933,
+    "qualifiedRunNumber": 224,
+    "qualifiedRunId": 32916988785,
+    "sameHead": true,
+    "result": "PASS"
+  },
+  "releaseCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+  "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
+  "buildId": "v18.10.0-stable-20260825",
+  "stableTag": "v18.10.0",
+  "stableReleaseId": 376817596,
+  "releaseRunId": 32917159547,
+  "releaseEvidence": {
+    "G11": "PASS",
+    "G12": {"status":"PASS","artifactId":9588689090,"digest":"sha256:b6d0703c081f33853e05bf474ee5c1b4c47aa15be8c6b5d1f3d051adfa271a25"},
+    "G13G14MacOS": {"status":"PASS","workflowArtifactId":9588712924,"workflowArtifactDigest":"sha256:f40818dff718313d5bde09e9dd0ce4b5ea6fed3ad703bd5d5c19ba643ed963cb","releaseAssetId":530029672,"releaseAssetDigest":"sha256:3649d8525c60857f368194504bd3402a838c146fb24bf2df14a2a4df25419bf9"},
+    "G13G14Windows": {"status":"PASS","workflowArtifactId":9588717426,"workflowArtifactDigest":"sha256:a218a172a3910ca38fc0b7afcdfac98f47e83d7a7322d632805d2c7ee40d3940","releaseAssetId":530029679,"releaseAssetDigest":"sha256:367ac38903061ca854b5a2477ce00e21f4030c75b5150feceb1301fce7135cc9"},
+    "G15": {"status":"PASS","artifactId":9588721906,"digest":"sha256:01fdb25e7cd0d08b7891641c741f2dbf3b6955046172022af71ffa4213f4aeff"},
+    "StablePublication": "PASS_NO_REBUILD",
+    "promotionVerificationAsset": {"releaseAssetId":530029717,"digest":"sha256:6d60dca6869f9bdb8e6543d216ed489412229bed211cdd3437c2bc75bc4be2aa"},
+    "sbomAsset": {"releaseAssetId":530029686,"digest":"sha256:9e3c51ac0eebe589dbdf81e07ba5acb0c1d2bd43be54c9204a2d7583b59b422b"},
+    "githubHostedAttestation": "UNAVAILABLE_USER_OWNED_PRIVATE_REPOSITORY",
+    "provenanceDisposition": "Exact-artifact source/build/hash binding remains mandatory through G15 plus promotion-verification.json; hosted GitHub attestation is additionally required wherever GitHub supports repository attestations."
+  },
+  "g16Evidence": {
+    "schema": "DE.PULSE-G16-CI-DELIVERY-6",
+    "status": "PASS_CLOSED",
+    "artifactId": 9588734888,
+    "digest": "sha256:1336d0ea96fe1b07b77f0a7e91e05c4c9bc15dd63d673bdcc02280ac357fc3cb",
+    "candidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "qualifiedSourceHead": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+    "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
+    "publication": "PASS",
+    "noRebuildPublication": true,
+    "rerunsObserved": 0
+  },
+  "knownCoverageGaps": [],
   "releaseAuthorized": true,
-  "stablePublished": false,
-  "completionCondition": "T10 is COMPLETE only after all T1-T9 evidence remains verified, 180 effective v18 responsibilities retain executable regression ownership, the 72-row v19/#66 ledger is mechanically fail-closed in canonical CI, GitHub-only resume portability remains executable, zero unexplained P0/P1 gap remains, exact-head Fast/Qualified authorize release, and the exact candidate is published through G11-G16 without rebuild."
+  "stablePublished": true,
+  "completionCondition": "SATISFIED: T1-T9 remain verified; 180 effective v18 responsibilities retain executable regression ownership; HOST-001..HOST-072 remain mechanically conserved; GitHub-only resume portability is executable; zero unexplained P0/P1 gap remains; exact-head release Fast/Qualified passed; and candidate 584e9e0ce91ec08e08cfd52c7cf60392ab74dd12 published as Stable v18.10.0 through canonical G11-G16 without rebuild. v19/#66 remains unstarted pending the mandatory post-closure source-overlap/residual audit."
 }

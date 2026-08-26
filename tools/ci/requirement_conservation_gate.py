@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Permanent fail-closed conservation gate for the reserved v19/#66 program."""
+"""Permanent fail-closed conservation gate for the planned v19/#66 program."""
 from __future__ import annotations
 
 import json
@@ -29,6 +29,7 @@ REQUIRED_BOUNDARIES = {
     "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
     "NO_PARALLEL_CANONICAL_OWNERS",
 }
+CLOSED = {"COMPLETE", "COMPLETED", "CLOSED", "VERIFIED"}
 
 
 def load(path: Path) -> dict:
@@ -72,7 +73,6 @@ def main() -> int:
     for key in REQUIRED_RULES:
         if rules.get(key) is not True:
             errors.append(f"v19 conservation rule must remain true: {key}")
-
     missing_boundaries = sorted(REQUIRED_BOUNDARIES - boundaries)
     if missing_boundaries:
         errors.append("v19 permanent boundaries missing: " + ", ".join(missing_boundaries))
@@ -100,12 +100,26 @@ def main() -> int:
             errors.append(f"{row_id}: dependencies must be an array when present")
 
     gate = current.get("productCapabilityGate") or {}
+    stable = current.get("stable") or {}
     blocked_issue = gate.get("futureBlockedIssue")
     if blocked_issue == 66:
         if rules.get("productProgramReserved") is not False:
-            errors.append("#66 is blocked in current-state, so productProgramReserved must remain false")
-        if gate.get("futureProgramBlockerIssue") != 113:
-            errors.append("v19/#66 must remain blocked by v18.10 parent #113 before publication")
+            errors.append("#66 is not active, so productProgramReserved must remain false")
+
+        stable_is_final_v18 = stable.get("productVersion") == "18.10.0" and stable.get("publication") == "PASS_NO_REBUILD"
+        post_audit_required = gate.get("postClosureSourceOverlapAuditRequired") is True
+        post_audit_status = str(gate.get("postClosureSourceOverlapAuditStatus") or "").upper()
+        reservation_status = str(gate.get("reservationStatus") or "").upper()
+
+        if stable_is_final_v18 and reservation_status in CLOSED:
+            if not post_audit_required:
+                errors.append("post-v18.10 #66 block requires postClosureSourceOverlapAuditRequired=true")
+            if post_audit_status not in {"PENDING", "PASS"}:
+                errors.append("post-v18.10 source-overlap audit status must be PENDING or PASS")
+            if post_audit_status == "PENDING" and rules.get("productProgramReserved") is not False:
+                errors.append("#66 must remain unreserved while the post-v18.10 source-overlap audit is pending")
+        elif gate.get("futureProgramBlockerIssue") != 113:
+            errors.append("before final-v18 publication, v19/#66 must remain blocked by parent #113")
     elif rules.get("productProgramReserved") not in (False, True):
         errors.append("productProgramReserved must be boolean")
 

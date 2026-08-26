@@ -1,0 +1,48 @@
+{
+  "schema": "DE.PULSE-STABLE-EVIDENCE-1",
+  "release": "v18.10.0",
+  "status": "STABLE_PUBLISHED",
+  "buildId": "v18.10.0-stable-20260825",
+  "stableTag": "v18.10.0",
+  "certifiedCandidate": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+  "qualifiedSourceHead": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+  "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
+  "runs": {
+    "fast": 32916919933,
+    "qualified": 32916988785,
+    "canonicalReleaseG11G16": 32917159547
+  },
+  "gates": {
+    "G0-G10": "PASS",
+    "G11": "PASS",
+    "G12": "PASS",
+    "G13-G14-macOS-Apple-Silicon": "PASS",
+    "G13-G14-Windows-x64": "PASS",
+    "G15": "PASS_RELEASE_ASSURANCE",
+    "G16": "PASS_CLOSED",
+    "StablePublication": "PASS_NO_REBUILD"
+  },
+  "artifacts": {
+    "g12FullCertification": {"artifactId": 9588689090, "digest": "sha256:b6d0703c081f33853e05bf474ee5c1b4c47aa15be8c6b5d1f3d051adfa271a25"},
+    "macOSAppleSilicon": {"artifactId": 9588712924, "digest": "sha256:f40818dff718313d5bde09e9dd0ce4b5ea6fed3ad703bd5d5c19ba643ed963cb", "releaseSha256": "3649d8525c60857f368194504bd3402a838c146fb24bf2df14a2a4df25419bf9"},
+    "windowsX64": {"artifactId": 9588717426, "digest": "sha256:a218a172a3910ca38fc0b7afcdfac98f47e83d7a7322d632805d2c7ee40d3940", "releaseSha256": "367ac38903061ca854b5a2477ce00e21f4030c75b5150feceb1301fce7135cc9"},
+    "g15ReleaseAssurance": {"artifactId": 9588721906, "digest": "sha256:01fdb25e7cd0d08b7891641c741f2dbf3b6955046172022af71ffa4213f4aeff"},
+    "g16Closure": {"artifactId": 9588734888, "digest": "sha256:1336d0ea96fe1b07b77f0a7e91e05c4c9bc15dd63d673bdcc02280ac357fc3cb"}
+  },
+  "scopeAuthority": {
+    "issue": 113,
+    "trackIssue": 123,
+    "productPr": 143,
+    "releaseContract": "release/v18.10.0/release_contract.json",
+    "note": "The final v18 closure passed exact-head Fast #1109, Qualified #224, canonical Release #41, same-run macOS Apple Silicon and Windows x64 package/runtime evidence, G15 exact-hash provenance, SBOM generation and no-rebuild publication."
+  },
+  "provenance": {
+    "authoritativeCheckpoint": ".depulse-certification/resume/release-evidence-checkpoint.json",
+    "immutableStableTagRemainsAuthority": true,
+    "manifestCommittedAfterStable": true,
+    "manifestDoesNotRedefineStableArtifact": true,
+    "manifestDoesNotRebuildOrRepublishStable": true,
+    "hostedAttestation": "SKIPPED_UNSUPPORTED_USER_OWNED_PRIVATE_REPOSITORY",
+    "mandatoryExactHashProvenance": "PASS"
+  }
+}

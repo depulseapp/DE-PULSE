@@ -1,15 +1,15 @@
 {
   "schema": "DE.PULSE-CURRENT-STATE-1",
   "stable": {
-    "productVersion": "18.9.1",
-    "tag": "v18.9.1-stable",
-    "candidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-    "qualifiedSourceSha": "d7276c3421dd2b4529ac2a987466be3cffa05678",
-    "sourceFingerprint": "0062f46dea5690d0b3fcd8a9ed3b1f71ebe1522c7dee2cb218e9d36b9e0076ff",
-    "buildId": "v18.9.1-stable-20260821",
-    "platformBuildNumber": "18901",
-    "releaseRunId": 32546555659,
-    "evidenceSchemaVersion": "DE.PULSE-G16-CI-DELIVERY-3",
+    "productVersion": "18.10.0",
+    "tag": "v18.10.0",
+    "candidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+    "qualifiedSourceSha": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+    "sourceFingerprint": "0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037",
+    "buildId": "v18.10.0-stable-20260825",
+    "platformBuildNumber": "181000",
+    "releaseRunId": 32917159547,
+    "evidenceSchemaVersion": "DE.PULSE-G16-CI-DELIVERY-6",
     "publication": "PASS_NO_REBUILD"
   },
   "activeWorkSlice": {
@@ -47,7 +47,7 @@
     "reservedWorkSliceId": "ADAPT-V18-FINAL-CLOSURE-10-10-001",
     "reservedIssue": 113,
     "reservedBranch": "adapt-v18-final-closure-10-10-001",
-    "reservationStatus": "IN_PROGRESS",
+    "reservationStatus": "COMPLETE",
     "workSlicePath": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/work-slice.json",
     "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
     "parentProgramIssue": 113,
@@ -61,29 +61,35 @@
       {"track":"T6","issue":119,"status":"COMPLETE","frozenHeadSha":"0da6f3cc99e29a819bd1d9829a7f9e8d95da2f6b","fastRunId":32876475257,"qualifiedRunId":32876753635,"mergedPullRequest":133,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714","effectiveShippedV18ResponsibilityCount":180,"applicableResponsibilityCount":179,"nonApplicableResponsibilityCount":1,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T6_SECURITY_ROLES_RIGHTS_ASSURANCE.json"},
       {"track":"T7","issue":120,"status":"COMPLETE","frozenHeadSha":"d5a6028a140599c3dd1c54e4f0fa184b83baccb1","fastRunId":32886292524,"qualifiedRunId":32886516851,"mergedPullRequest":134,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5","effectiveShippedV18ResponsibilityCount":180,"visibleResponsibilityCount":34,"coveredVisibleResponsibilityCount":34,"nonVisibleResponsibilityCount":146,"uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T7_UI_UX_IA_CONTENT_ASSURANCE.json"},
       {"track":"T8","issue":121,"status":"COMPLETE","frozenHeadSha":"e4542890eddf0d6c94e59e991d9d17ae8cc3ca35","fastRunId":32899149506,"qualifiedRunId":32899321362,"mergedPullRequest":135,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97","uncoveredResponsibilityCount":0,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T8_PERFORMANCE_LOAD_SOAK_CONCURRENCY_RESOURCE_ASSURANCE.json"},
-      {"track":"T9","issue":122,"status":"COMPLETE","frozenHeadSha":"f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8","fastRunId":32904453472,"qualifiedRunId":32904637110,"mergedPullRequest":136,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81","uncoveredResponsibilityCount":0,"sourceFingerprint":"fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee","macOSArtifactId":9584360683,"windowsArtifactId":9584372877,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"}
+      {"track":"T9","issue":122,"status":"COMPLETE","frozenHeadSha":"f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8","fastRunId":32904453472,"qualifiedRunId":32904637110,"mergedPullRequest":136,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81","uncoveredResponsibilityCount":0,"sourceFingerprint":"fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee","macOSArtifactId":9584360683,"windowsArtifactId":9584372877,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"},
+      {"track":"T10","issue":123,"status":"COMPLETE","frozenHeadSha":"ec39319c86dee5e5976751abc42bc96a402a6d46","fastRunId":32916919933,"qualifiedRunId":32916988785,"mergedPullRequest":143,"mergedCommitSha":"584e9e0ce91ec08e08cfd52c7cf60392ab74dd12","releaseRunId":32917159547,"stableTag":"v18.10.0","sourceFingerprint":"0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037","g16ArtifactId":9588734888,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json"}
     ],
-    "nextChildIssue": 123,
-    "nextChildTrack": "T10",
+    "nextChildIssue": null,
+    "nextChildTrack": null,
     "nextCompanionChildIssue": null,
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
-      {"track":"T10","issue":123,"status":"RELEASE_AUTHORIZED"}
+      {"track":"T10","issue":123,"status":"VERIFIED"}
     ],
     "downstreamAssuranceState": {
       "T2ToT9Verified": true,
       "T9Started": true,
       "T9Verified": true,
       "T10Started": true,
-      "T10State": "RELEASE_AUTHORIZED",
+      "T10State": "COMPLETE",
       "T10AuthorizationBasisSha": "ab50c8a715eecae266afba62486bca83f9ae11e9",
-      "T10FastRunId": 32909821788,
-      "T10QualifiedRunId": 32909905537,
-      "assuranceCeilingAfterT9": "RELEASE_AUTHORIZED"
+      "T10FinalQualifiedSourceSha": "ec39319c86dee5e5976751abc42bc96a402a6d46",
+      "T10FastRunId": 32916919933,
+      "T10QualifiedRunId": 32916988785,
+      "T10ReleaseRunId": 32917159547,
+      "T10StableCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+      "assuranceCeilingAfterT9": "COMPLETE"
     },
-    "futureProgramBlockerIssue": 113,
+    "futureProgramBlockerIssue": null,
     "futureBlockedIssue": 66,
-    "futureBlockedReason": "No v19 product implementation until v18.10.0 Stable is published as 10/10 Future-Proof Final v18 Closure, all T1-T10 gaps are VERIFIED, and the post-closure source-overlap/residual audit explicitly permits v19."
+    "futureBlockedReason": "v18.10.0 Stable and T10 are complete. #66 remains PLANNED_UNSTARTED until the mandatory post-v18.10 source-overlap/residual audit explicitly passes and permits v19 G1.",
+    "postClosureSourceOverlapAuditRequired": true,
+    "postClosureSourceOverlapAuditStatus": "PENDING"
   },
   "permanentBoundaries": [
     "US_EQUITIES_PROCESSING",
