@@ -70,7 +70,7 @@ def main() -> int:
     ]
     verified = []
     for evidence, platform, artifact_path in checks:
-        assert evidence.get('schema') == 'DE.PULSE-G13-G14-NATIVE-2', evidence
+        assert evidence.get('schema') == 'DE.PULSE-G13-G14-NATIVE-3', evidence
         assert evidence.get('status') == 'PASS', evidence
         assert evidence.get('platform') == platform, evidence
         assert evidence.get('certifiedSourceSha') == a.certified_run_head, evidence
