@@ -2,8 +2,8 @@
 """Canonical G2 source-health entrypoint with governed lifecycle compatibility.
 
 The conserved G2 core predates generic process work slices and active product
-release-closure candidates. This adapter validates the real canonical state first,
-then normalizes only legacy identity fields while the unchanged G2 core executes.
+capability slices. This adapter validates the real canonical state first, then
+normalizes only legacy identity fields while the unchanged G2 core executes.
 All source/orphan/duplicate and architecture checks remain owned by the core.
 
 The pre-existing Adaptive Data Health policy gate is executed after the conserved
@@ -37,7 +37,14 @@ def load_json(path: Path) -> dict:
         return {}
 
 
-def validate_registered_process_slice() -> dict:
+def validate_registered_active_slice() -> dict:
+    """Validate the real active slice before any legacy G2 projection.
+
+    Historical process slices retain their stricter process-only invariants.
+    Product capability slices are accepted only when they are the exact active
+    reservation in productCapabilityGate and the canonical work-slice metadata
+    agrees on identity, branch, version and behavior-change semantics.
+    """
     state = load_json(STATE_PATH)
     active = state.get("activeWorkSlice", {}) if isinstance(state.get("activeWorkSlice"), dict) else {}
     work_id = str(active.get("workSliceId", "")).strip()
@@ -53,12 +60,33 @@ def validate_registered_process_slice() -> dict:
         fail("current-state/work-slice issue drift")
     if work.get("branch") != active.get("branch"):
         fail("current-state/work-slice branch drift")
-    if work.get("type") != "PROCESS_RELEASE_ENGINEERING" or active.get("type") != "PROCESS_RELEASE_ENGINEERING":
-        fail("active process work slice must use the established PROCESS_RELEASE_ENGINEERING lifecycle")
-    if work.get("publicProductVersion") is not None or active.get("publicProductVersion") is not None:
-        fail("active process work slice must not consume a public product version")
-    if work.get("productBehaviorChange") is not False or active.get("productBehaviorChange") is not False:
-        fail("active process work slice must declare productBehaviorChange=false")
+    if work.get("type") != active.get("type"):
+        fail("current-state/work-slice type drift")
+
+    work_type = str(work.get("type", "")).strip()
+    if work_type == "PROCESS_RELEASE_ENGINEERING":
+        if work.get("publicProductVersion") is not None or active.get("publicProductVersion") is not None:
+            fail("active process work slice must not consume a public product version")
+        if work.get("productBehaviorChange") is not False or active.get("productBehaviorChange") is not False:
+            fail("active process work slice must declare productBehaviorChange=false")
+        return state
+
+    capability = state.get("productCapabilityGate", {}) if isinstance(state.get("productCapabilityGate"), dict) else {}
+    if str(capability.get("reservationStatus", "")).strip().upper() not in {"ACTIVE", "IN_PROGRESS"}:
+        fail("active product work slice requires an ACTIVE/IN_PROGRESS product capability reservation")
+    if capability.get("reservedWorkSliceId") != work_id or capability.get("reservedIssue") != active.get("issue"):
+        fail("active product work slice / capability reservation identity drift")
+    if capability.get("reservedBranch") != active.get("branch"):
+        fail("active product work slice / capability reservation branch drift")
+    expected_path = str(capability.get("workSlicePath", "")).strip()
+    if expected_path and (ROOT / expected_path).resolve() != path.resolve():
+        fail("active product work slice / capability reservation path drift")
+    if work.get("publicProductVersion") != active.get("publicProductVersion"):
+        fail("current-state/work-slice publicProductVersion drift")
+    if work.get("productBehaviorChange") is not True or active.get("productBehaviorChange") is not True:
+        fail("active product work slice must declare productBehaviorChange=true")
+    if work.get("blocksNextProductCapability") is not True or active.get("blocksNextProductCapability") is not True:
+        fail("active product work slice must block the next product capability until closure")
     return state
 
 
@@ -125,10 +153,15 @@ def run_data_health_gate() -> None:
 
 
 def main() -> int:
-    state = validate_registered_process_slice()
+    state = validate_registered_active_slice()
     release_identity = validate_release_closure_projection(state)
     normalized = json.loads(json.dumps(state))
+    # The conserved G2 core still validates the historical #70 process identity.
+    # The real active slice was validated above; project only those old process
+    # identity fields in-memory so truthful product slices need not be stored as
+    # stale process state in governance/current-state.json.
     normalized.setdefault("activeWorkSlice", {})["workSliceId"] = "ADAPT-CI-CONVERGENCE-001"
+    normalized.setdefault("activeWorkSlice", {})["publicProductVersion"] = None
 
     # The conserved core predates release-closure candidate identity. After the
     # real previous-Stable/baseline reservation is validated above, project only
@@ -156,6 +189,8 @@ def main() -> int:
 
     if release_identity is not None:
         print("G2 release-closure adapter: previous Stable truth validated; legacy core projection isolated in-memory")
+    else:
+        print("G2 active-slice adapter: canonical active slice validated; legacy process projection isolated in-memory")
     run_data_health_gate()
     return 0
 
