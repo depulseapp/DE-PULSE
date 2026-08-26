@@ -1,0 +1,56 @@
+{
+  "schema": "DE.PULSE-V19-V20-WHOLE-PRODUCT-SURFACE-REBASELINE-1",
+  "status": "REBASELINE_BASELINE",
+  "sourceBasis": {
+    "stable": "v18.10.0",
+    "inheritedCertifiedResponsibilityCount": 180,
+    "v18AssuranceLedger": "governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json",
+    "currentNavigationSource": "renderer/index.html",
+    "rule": "All 180 certified v18 responsibilities remain regression/conservation baseline. This surface map adds current future disposition; it does not replace per-responsibility evidence. Each affected version must source-enumerate actual current DOM/routes/background consumers before G3 and reconcile complete coverage at G10."
+  },
+  "hardProtections": {
+    "desksLookAndFeel": "PRESERVE",
+    "dashboardMarketRegime": "PRESERVE",
+    "dashboardDeskControl": "PRESERVE",
+    "dataEngineLookAndFeel": "PRESERVE",
+    "aiCopilotEngineHeaderVisual": "PRESERVE_UNLESS_SEPARATELY_JUSTIFIED"
+  },
+  "surfaces": [
+    {"surface":"App Shell / Primary Header","purpose":"global product identity, notification and account actions","baselineDisposition":"IMPROVE","version":"v19.3.0","notes":"Flexible notification center; no page-specific toast owner."},
+    {"surface":"Secondary Market/Data Header","purpose":"session + Data Health + clocks + runtime control","baselineDisposition":"IMPROVE","version":"v19.3.0","notes":"Clear hierarchy; Data Health gets flexible explanatory space; informational status is not button-like."},
+    {"surface":"Market Instruments / ticker strip","purpose":"compact live market reference","baselineDisposition":"KEEP","version":"v19.1.0","notes":"Use canonical global processing; ticker-only is acceptable when density requires; no duplicate subscriptions."},
+    {"surface":"Dashboard","purpose":"immediate high-level operating/trading overview","baselineDisposition":"IMPROVE_OTHERS_PRESERVE_CORE","version":"v19.3.0","notes":"Market Regime and Desk Control materially unchanged. Audit all other sections for duplication, decision value and progressive disclosure."},
+    {"surface":"Market Regime","purpose":"canonical global market synthesis","baselineDisposition":"KEEP","version":"v19.3.0","notes":"Preserve visual/primary behavior; improve underlying contributor cross-integration in v19.5/v19.6/v20 as evidence matures."},
+    {"surface":"Desk Control","purpose":"workspace/desk management and high-level control","baselineDisposition":"KEEP","version":"v19.3.0","notes":"Preserve current Dashboard presentation unless a bounded defect is proven."},
+    {"surface":"Market Intelligence","purpose":"market state, tradeability, what changed, evidence, contradictions and horizon relevance","baselineDisposition":"IMPROVE_CONSOLIDATE_COLLAPSE","version":"v19.4.0","notes":"Remove diagnostic plumbing from primary view; retain sourced evidence; consume canonical regime/contributors."},
+    {"surface":"Day Trade Desk","purpose":"intraday decision workflow","baselineDisposition":"KEEP_VISUAL_AUDIT_CONTENT","version":"v19.3.0","notes":"Preserve look/workflow. Remove only proven redundant/noisy projections; use canonical company name where primary ticker identity allows."},
+    {"surface":"Swing Desk","purpose":"multi-day/intermediate decision workflow","baselineDisposition":"KEEP_VISUAL_AUDIT_CONTENT","version":"v19.3.0","notes":"Preserve look/workflow; consume canonical symbol/evidence without duplicate processing."},
+    {"surface":"Long-Term Desk","purpose":"long-horizon decision workflow","baselineDisposition":"KEEP_VISUAL_AUDIT_CONTENT","version":"v19.3.0","notes":"Preserve look/workflow; short-lived event/flow evidence only where horizon-relevant."},
+    {"surface":"Watchlist / Master Symbols / symbol membership","purpose":"user interest and compact symbol intelligence","baselineDisposition":"IMPROVE_CANONICALIZE","version":"v19.1.0","secondaryVersion":"v19.3.0","notes":"Separate user membership from Global Symbol Store; compact pattern/structure/event status only when material."},
+    {"surface":"Discovery / Opportunity Radar","purpose":"identify what deserves attention now and move user toward a supported decision","baselineDisposition":"IMPROVE_FUNCTIONALLY","version":"v19.4.1","notes":"Major-mover detection/admission/ranking/session behavior is a functional correction, not cosmetic redesign."},
+    {"surface":"Research","purpose":"deep sourced symbol evidence and deterministic Decision Brief","baselineDisposition":"IMPROVE_CONSOLIDATE","version":"v19.4.0","notes":"Fix freshness containment; tabs have distinct evidence purpose; Desks retain horizon decision ownership."},
+    {"surface":"Research Target / contextual AI","purpose":"select target, assemble canonical evidence, optional second opinion","baselineDisposition":"IMPROVE_WORKFLOW","version":"v19.4.0","notes":"AI optional/non-blocking/evidence-bound; no parallel market-data path."},
+    {"surface":"AI Copilot standalone","purpose":"optional AI synthesis/orchestration where differentiated","baselineDisposition":"KEEP_VISUAL_AUDIT_ROLE","version":"v19.4.0","notes":"Preserve current engine/header visual. Decide KEEP/SIMPLIFY/ABSORB/ROLE-SCOPE from actual utility after Research integration proof."},
+    {"surface":"Pre-Market Prep","purpose":"session-specific preparation/checkpoint synthesis","baselineDisposition":"KEEP_IMPROVE_INTEGRATION","version":"v19.1.0","secondaryVersion":"v19.3.0","notes":"Consume canonical recovered state; no stale local duplicate truth; avoid becoming another Dashboard."},
+    {"surface":"Market Open Prep","purpose":"market-open preparation/checkpoint synthesis","baselineDisposition":"KEEP_IMPROVE_INTEGRATION","version":"v19.1.0","secondaryVersion":"v19.3.0","notes":"Checkpoint semantics must be explicit if ages differ from Pre-Market Prep/current Data Health."},
+    {"surface":"Alerts / Rapid Move / Catalyst surfaces","purpose":"material event/opportunity notification","baselineDisposition":"KEEP_IMPROVE_CROSS_INTEGRATION","version":"v19.4.1","secondaryVersion":"v19.5.0","notes":"Use shared Discovery/event/structure owners; avoid duplicate scanners; alert usefulness feeds Outcome Learning."},
+    {"surface":"Data Engine","purpose":"current data/runtime capability view","baselineDisposition":"KEEP_VISUAL_UPDATE_INTEGRATION","version":"v19.1.0","secondaryVersion":"v19.3.0","notes":"No broad redesign. Verify Router/provider/freshness/global-processing/options/adaptive truth and role projection."},
+    {"surface":"Maintenance","purpose":"operator exception/health/recovery/action workflow","baselineDisposition":"IMPROVE_CONSOLIDATE_COLLAPSE","version":"v19.1.0","secondaryVersion":"v19.3.0","notes":"Truth first, then layered IA: summary -> capability/provider detail -> deep diagnostics."},
+    {"surface":"Settings","purpose":"personal/product/provider configuration and preferences","baselineDisposition":"KEEP_FOCUSED","version":"v19.3.0","notes":"Runtime diagnostics belong in Maintenance/Data Health; role/entitlement/provider-right differences must be explicit."},
+    {"surface":"Administration","purpose":"privileged tenant/global controls","baselineDisposition":"IMPROVE_ROLE_SCOPE","version":"v19.3.0","notes":"Add governed Global Symbols owner view; separate Owner-only from delegated Admin; no UI-only security."},
+    {"surface":"Account / Profile / Device / Session","purpose":"identity/session/device state and user controls","baselineDisposition":"IMPROVE_COMPLETE_LIFECYCLE","version":"v19.0.0","secondaryVersion":"v19.3.0","notes":"Silent renewal when safe; truthful reauth/logout/revocation; cross-platform parity."},
+    {"surface":"Documentation / Help","purpose":"explain product behavior, sources and workflows","baselineDisposition":"KEEP_UPDATE_TRUTH","version":"v19.3.0","notes":"No duplicated live operational truth; keep architecture/help consistent with Router/global processing/rebaseline."},
+    {"surface":"Global Symbols Administration","purpose":"Owner governance of durable global symbol lifecycle/priority","baselineDisposition":"NEW_WITHIN_ADMIN","version":"v19.3.0","notes":"Pin/promote/demote/suspend/archive/restore; destructive purge is separately protected. Uses v19.1 core Global Symbol Store."},
+    {"surface":"Price/Volume/Event Structure projections","purpose":"compact contextual structural intelligence in existing workflows","baselineDisposition":"NEW_CONTEXTUAL_NO_NEW_PAGE","version":"v19.5.0","notes":"Surface only material zones/event reactions in Watchlist/Discovery/Research/Desks/Prep; detailed evidence via progressive disclosure."},
+    {"surface":"Options/GEX Structure projections","purpose":"options structural context when evidence is healthy","baselineDisposition":"NEW_CONTEXTUAL_NO_NEW_PAGE","version":"v19.5.1","notes":"Call/Put Wall, Gamma Magnet/Flip/clusters are influence evidence, not guaranteed support/resistance."},
+    {"surface":"Future Pattern Intelligence projections","purpose":"learned pattern/similarity context in existing workflows","baselineDisposition":"NEW_CONTEXTUAL_NO_NEW_PAGE","version":"v20.1.0","notes":"Watchlist/Discovery/Research/Desks consume one canonical Pattern Intelligence owner."}
+  ],
+  "coverageRules": {
+    "primaryAndEmbeddedSurfaceRows": 28,
+    "allCurrentSourceSurfacesMustBeEnumeratedBeforeAffectedVersionG3": true,
+    "everyVisibleMajorElementGetsDisposition": true,
+    "allCertifiedV18ResponsibilitiesRemainInherited": true,
+    "noCanonicalEvidenceDeletedForCosmeticSimplification": true,
+    "finalWholeProductReconciliationVersion": "v19.6.1"
+  }
+}
