@@ -4,7 +4,7 @@
   "issue": 113,
   "type": "PRODUCT_RELEASE_CLOSURE",
   "subtype": "FULL_PRODUCT_10_10_FUTURE_PROOF_CERTIFICATION",
-  "status": "IN_PROGRESS",
+  "status": "COMPLETE",
   "publicProductVersion": "18.10.0",
   "stableProductVersionAtStart": "18.9.1",
   "baselineCandidateSha": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
@@ -15,7 +15,7 @@
   "productBehaviorChange": true,
   "blocksNextProductCapability": true,
   "closureLedger": "governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json",
-  "targetStable": "v18.10.0-stable",
+  "targetStable": "v18.10.0",
   "releaseClaim": "10/10 Future-Proof Final v18 Closure",
   "children": [
     {"track":"T1","issue":114,"name":"complete feature / requirement / owner / test traceability"},
@@ -48,9 +48,11 @@
     {"track":"T6","issue":119,"mergedCommitSha":"ca051884c733118c11e13b0b5ef169c810c39714"},
     {"track":"T7","issue":120,"mergedCommitSha":"80dcbf483378dbf8886bf6f3e421b17fce01b7d5"},
     {"track":"T8","issue":121,"mergedCommitSha":"a3a82aee21fe8e6822d11ba678afefdd6361ef97"},
-    {"track":"T9","issue":122,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81"}
+    {"track":"T9","issue":122,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81"},
+    {"track":"T10","issue":123,"qualifiedSourceSha":"ec39319c86dee5e5976751abc42bc96a402a6d46","releaseCandidateSha":"584e9e0ce91ec08e08cfd52c7cf60392ab74dd12","releaseRunId":32917159547}
   ],
-  "nextTrack": {"track":"T10","issue":123},
+  "nextTrack": null,
   "nextCompanionTrack": null,
-  "v19BlockedUntil": "v18.10.0 Stable published, T10 complete, post-closure residual/source-overlap audit PASS"
+  "v19BlockedUntil": "post-v18.10.0 residual/source-overlap audit PASS explicitly permits #66 G1",
+  "postClosureV19Gate": "PENDING_SOURCE_OVERLAP_AUDIT"
 }
