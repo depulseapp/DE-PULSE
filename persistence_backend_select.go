@@ -8,15 +8,29 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"depulse/internal/hostedpersistence"
 )
 
 const (
-	persistenceBackendEnv      = "DEPULSE_PERSISTENCE_BACKEND"
-	postgresDatabaseURLEnv     = "DEPULSE_DATABASE_URL"
-	postgresMaxOpenConnsEnv    = "DEPULSE_DB_MAX_OPEN_CONNS"
-	postgresMaxIdleConnsEnv    = "DEPULSE_DB_MAX_IDLE_CONNS"
-	postgresConnMaxLifetimeEnv = "DEPULSE_DB_CONN_MAX_LIFETIME"
-	postgresConnMaxIdleTimeEnv = "DEPULSE_DB_CONN_MAX_IDLE_TIME"
+	persistenceBackendEnv        = "DEPULSE_PERSISTENCE_BACKEND"
+	postgresDatabaseURLEnv       = "DEPULSE_DATABASE_URL"
+	postgresMaxOpenConnsEnv      = "DEPULSE_DB_MAX_OPEN_CONNS"
+	postgresMaxIdleConnsEnv      = "DEPULSE_DB_MAX_IDLE_CONNS"
+	postgresConnMaxLifetimeEnv   = "DEPULSE_DB_CONN_MAX_LIFETIME"
+	postgresConnMaxIdleTimeEnv   = "DEPULSE_DB_CONN_MAX_IDLE_TIME"
+	postgresPolicyVersionEnv     = "DEPULSE_DB_POLICY_VERSION"
+	postgresRLSDispositionEnv    = "DEPULSE_DB_RLS_DISPOSITION"
+	postgresMigrationStrategyEnv = "DEPULSE_DB_MIGRATION_STRATEGY"
+	postgresHAReadyEnv           = "DEPULSE_DB_HA_READY"
+	postgresBackupEncryptedEnv   = "DEPULSE_DB_BACKUP_ENCRYPTED"
+	postgresPITRReadyEnv         = "DEPULSE_DB_PITR_READY"
+	postgresRPOEnv               = "DEPULSE_DB_RPO"
+	postgresRTOEnv               = "DEPULSE_DB_RTO"
+	postgresRestoreDrillAtEnv    = "DEPULSE_DB_RESTORE_DRILL_AT"
+	postgresRestoreDrillIDEnv    = "DEPULSE_DB_RESTORE_DRILL_ID"
+	postgresRollbackPolicyEnv    = "DEPULSE_DB_ROLLBACK_POLICY"
+	postgresRollbackVerifiedEnv  = "DEPULSE_DB_ROLLBACK_VERIFIED"
 )
 
 type postgresPersistenceConfig struct {
@@ -33,9 +47,44 @@ func newPersistenceBackend(configDir string) PersistenceBackend {
 	case "", "local", "sqlite":
 		return newLocalPersistenceBackend(configDir)
 	case "postgres", "postgresql":
-		return newPostgresPersistenceBackend(postgresPersistenceConfigFromEnv())
+		config := postgresPersistenceConfigFromEnv()
+		if isHostedRuntime() {
+			if err := hostedpersistence.Validate(hostedPostgresRuntimeDeclaration(config), time.Now()); err != nil {
+				return newUnavailablePersistenceBackend("hosted PostgreSQL policy: " + err.Error())
+			}
+		}
+		return newPostgresPersistenceBackend(config)
 	default:
 		return newUnavailablePersistenceBackend(fmt.Sprintf("unsupported persistence backend %q", mode))
+	}
+}
+
+func hostedPostgresRuntimeDeclaration(config postgresPersistenceConfig) hostedpersistence.RuntimeDeclaration {
+	return hostedpersistence.RuntimeDeclaration{
+		Environment:        strings.TrimSpace(os.Getenv(hostedEnvironmentEnv)),
+		DatabaseURL:        config.DatabaseURL,
+		MaxOpenConnections: config.MaxOpenConns,
+		PolicyVersion:      strings.TrimSpace(os.Getenv(postgresPolicyVersionEnv)),
+		RLSDisposition:     strings.TrimSpace(os.Getenv(postgresRLSDispositionEnv)),
+		MigrationStrategy:  strings.TrimSpace(os.Getenv(postgresMigrationStrategyEnv)),
+		HAReady:            strictBoolEnv(postgresHAReadyEnv),
+		BackupEncrypted:    strictBoolEnv(postgresBackupEncryptedEnv),
+		PITRReady:          strictBoolEnv(postgresPITRReadyEnv),
+		RPO:                strings.TrimSpace(os.Getenv(postgresRPOEnv)),
+		RTO:                strings.TrimSpace(os.Getenv(postgresRTOEnv)),
+		RestoreDrillAt:     strings.TrimSpace(os.Getenv(postgresRestoreDrillAtEnv)),
+		RestoreDrillID:     strings.TrimSpace(os.Getenv(postgresRestoreDrillIDEnv)),
+		RollbackPolicy:     strings.TrimSpace(os.Getenv(postgresRollbackPolicyEnv)),
+		RollbackVerified:   strictBoolEnv(postgresRollbackVerifiedEnv),
+	}
+}
+
+func strictBoolEnv(name string) bool {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(name))) {
+	case "1", "true", "yes", "on", "required", "verified":
+		return true
+	default:
+		return false
 	}
 }
 
