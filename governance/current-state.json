@@ -65,11 +65,12 @@
       {"track":"T9","issue":122,"status":"COMPLETE","frozenHeadSha":"f3d7e1a7f9287cd9d48bec8e2084e870fa4619e8","fastRunId":32904453472,"qualifiedRunId":32904637110,"mergedPullRequest":136,"mergedCommitSha":"06f711aed8696535ed1afb9206f5f75b0c9d5b81","uncoveredResponsibilityCount":0,"sourceFingerprint":"fde880d0b6308f06aeed1152399d261160c017aa4eb06bbd283becc0cfca0dee","macOSArtifactId":9584360683,"windowsArtifactId":9584372877,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T9_PACKAGED_CROSS_PLATFORM_RELEASE_ASSURANCE.json"},
       {"track":"T10","issue":123,"status":"COMPLETE","frozenHeadSha":"ec39319c86dee5e5976751abc42bc96a402a6d46","fastRunId":32916919933,"qualifiedRunId":32916988785,"mergedPullRequest":143,"mergedCommitSha":"584e9e0ce91ec08e08cfd52c7cf60392ab74dd12","releaseRunId":32917159547,"stableTag":"v18.10.0","sourceFingerprint":"0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037","g16ArtifactId":9588734888,"assuranceState":"governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/T10_FUTURE_PROOF_ZERO_GAP_CERTIFICATION.json"}
     ],
-    "nextChildIssue": 148,
-    "nextChildTrack": "HOSTED_TRUST_FOUNDATION",
+    "nextChildIssue": null,
+    "nextChildTrack": null,
     "nextCompanionChildIssue": null,
     "nextCompanionChildTrack": null,
     "nextGovernedTracks": [
+      {"track":"T10","issue":123,"status":"COMPLETE"},
       {"track":"HOSTED_TRUST_FOUNDATION","issue":148,"status":"G1_RESERVED","requirements":"HOST-001..HOST-023"}
     ],
     "downstreamAssuranceState": {
