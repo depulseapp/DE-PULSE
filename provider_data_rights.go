@@ -405,3 +405,42 @@ func providerQuoteHostedRightsAllowed(q Quote, purpose string, now time.Time) bo
 	}
 	return hostedProviderRightsAllowed(provider, purpose, now)
 }
+
+// hostedRightsFilteredMarketCache extends the existing market-cache owner. In
+// hosted mode only provider-attributed quotes with current production-serving
+// and retention approval can cross the cache boundary. Legacy mixed collections
+// without per-row provider provenance fail closed; desktop remains unchanged.
+func hostedRightsFilteredMarketCache(c MarketCache) MarketCache {
+	if !isHostedRuntime() {
+		return c
+	}
+	out := MarketCache{
+		Quotes:                   map[string]Quote{},
+		ProviderCapabilityStates: c.ProviderCapabilityStates,
+		SavedAt:                  c.SavedAt,
+	}
+	now := time.Now()
+	for symbol, q := range c.Quotes {
+		if providerQuoteHostedRightsAllowed(q, providerHostedUseProductionServing, now) {
+			out.Quotes[symbol] = q
+		}
+	}
+	return out
+}
+
+func (c MarketCache) MarshalJSON() ([]byte, error) {
+	type marketCacheAlias MarketCache
+	filtered := hostedRightsFilteredMarketCache(c)
+	return json.Marshal(marketCacheAlias(filtered))
+}
+
+func (c *MarketCache) UnmarshalJSON(data []byte) error {
+	type marketCacheAlias MarketCache
+	var decoded marketCacheAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	filtered := hostedRightsFilteredMarketCache(MarketCache(decoded))
+	*c = filtered
+	return nil
+}
