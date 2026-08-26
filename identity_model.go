@@ -96,12 +96,13 @@ type SessionRecord struct {
 }
 
 type IdentityPersistentState struct {
-	Version   int             `json:"version"`
-	Tenants   []TenantRecord  `json:"tenants,omitempty"`
-	Users     []UserRecord    `json:"users"`
-	Devices   []DeviceRecord  `json:"devices,omitempty"`
-	Sessions  []SessionRecord `json:"sessions"`
-	UpdatedAt int64           `json:"updatedAt"`
+	Version             int                        `json:"version"`
+	Tenants             []TenantRecord             `json:"tenants,omitempty"`
+	Users               []UserRecord               `json:"users"`
+	Devices             []DeviceRecord             `json:"devices,omitempty"`
+	Sessions            []SessionRecord            `json:"sessions"`
+	ProductEntitlements []TenantProductEntitlement `json:"productEntitlements,omitempty"`
+	UpdatedAt           int64                      `json:"updatedAt"`
 }
 
 type Principal struct {
@@ -210,6 +211,9 @@ func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {
 		if err := s.persistLocked(); err != nil {
 			return nil, fmt.Errorf("persist identity tenant migration: %w", err)
 		}
+	}
+	if err := s.ensureHostedProductEntitlements(); err != nil {
+		return nil, fmt.Errorf("persist identity product entitlement migration: %w", err)
 	}
 	if err := s.ensureBootstrapOwnerLocked(); err != nil {
 		return nil, err

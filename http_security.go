@@ -368,8 +368,12 @@ func (l *hostedRequestQuotaLimiter) Allow(key string, expensive bool) (bool, int
 
 var hostedQuotaLimiter = newHostedRequestQuotaLimiter(4096, hostedMutationQuotaPerMinute, hostedExpensiveQuotaPerMinute, time.Minute)
 
+func hostedProductAccessApplies(r *http.Request) bool {
+	return isHostedRuntime() && r != nil && r.URL != nil && strings.HasPrefix(r.URL.Path, "/api/") && !strings.HasPrefix(r.URL.Path, "/api/auth/")
+}
+
 func hostedQuotaApplies(r *http.Request) bool {
-	if !isHostedRuntime() || r == nil || r.URL == nil || !strings.HasPrefix(r.URL.Path, "/api/") || strings.HasPrefix(r.URL.Path, "/api/auth/") {
+	if !hostedProductAccessApplies(r) {
 		return false
 	}
 	switch r.Method {
@@ -380,7 +384,27 @@ func hostedQuotaApplies(r *http.Request) bool {
 	}
 }
 
+func writeHostedProductDenied(w http.ResponseWriter, decision ProductEntitlementDecision) {
+	if decision.RetryAfterSeconds > 0 {
+		w.Header().Set("Retry-After", strconv.Itoa(decision.RetryAfterSeconds))
+		writeError(w, http.StatusTooManyRequests, "Hosted product quota exceeded. Try again later.")
+		return
+	}
+	writeError(w, http.StatusForbidden, "Hosted product access unavailable.")
+}
+
 func (a *Application) enforceHostedRequestQuota(w http.ResponseWriter, r *http.Request, p Principal) bool {
+	if hostedProductAccessApplies(r) {
+		if a == nil || a.identity == nil {
+			writeError(w, http.StatusServiceUnavailable, "Product entitlement unavailable.")
+			return false
+		}
+		decision := a.identity.authorizeHostedProduct(p, productCapabilityHostedServing)
+		if !decision.Allowed {
+			writeHostedProductDenied(w, decision)
+			return false
+		}
+	}
 	if !hostedQuotaApplies(r) {
 		return true
 	}
@@ -389,10 +413,24 @@ func (a *Application) enforceHostedRequestQuota(w http.ResponseWriter, r *http.R
 	if a != nil && a.httpTelemetry != nil {
 		a.httpTelemetry.RecordHostedQuota(expensive, allowed)
 	}
-	if allowed {
-		return true
+	if !allowed {
+		w.Header().Set("Retry-After", strconv.Itoa(retryAfter))
+		writeError(w, http.StatusTooManyRequests, "Hosted request quota exceeded. Try again later.")
+		return false
 	}
-	w.Header().Set("Retry-After", strconv.Itoa(retryAfter))
-	writeError(w, http.StatusTooManyRequests, "Hosted request quota exceeded. Try again later.")
-	return false
+
+	charges := []ProductQuotaCharge{{Dimension: productQuotaHostedMutationUnits, Units: 1}}
+	if expensive {
+		charges = append(charges, ProductQuotaCharge{Dimension: productQuotaHostedExpensiveUnits, Units: 1})
+	}
+	decision, err := a.identity.consumeHostedProductQuota(p, productCapabilityHostedServing, charges)
+	if err != nil {
+		writeError(w, http.StatusServiceUnavailable, "Product metering unavailable.")
+		return false
+	}
+	if !decision.Allowed {
+		writeHostedProductDenied(w, decision)
+		return false
+	}
+	return true
 }
