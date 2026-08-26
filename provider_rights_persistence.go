@@ -102,8 +102,11 @@ func (b *hostedRightsPersistenceBackend) SaveIntelligence(ctx context.Context, b
 		return b.inner.SaveIntelligence(ctx, batch)
 	}
 	now := time.Now()
-	filtered := batch
-	filtered.Evidence = filtered.Evidence[:0]
+	filtered := PersistenceIntelligenceBatch{
+		Decisions: append([]DecisionLineageRecord(nil), batch.Decisions...),
+		Outcomes:  append([]OutcomeHistoryRecord(nil), batch.Outcomes...),
+		Features:  append([]DerivedFeatureRecord(nil), batch.Features...),
+	}
 	for _, record := range batch.Evidence {
 		if hostedRightsExternalEvidenceAllowed(record, now) {
 			filtered.Evidence = append(filtered.Evidence, record)
