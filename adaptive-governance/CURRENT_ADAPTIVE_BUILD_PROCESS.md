@@ -7,7 +7,9 @@
 
 The final-v18 execution loop is complete and remains permanent regression policy: discover from source -> map requirement/canonical owner/evidence -> fix smallest canonical-owner delta -> exact-head Fast -> identical-head Qualified -> immutable G11–G16 candidate -> same-run no-rebuild publication -> G16 handoff. No quality requirement was removed to achieve v18.10.0.
 
-For the next program, do not begin implementation from roadmap labels. First compare live source and v18 canonical owners against all 72 conserved #66 requirements. Reuse/consolidate before creating new owners. Smart Provider Router v2, Data Health/freshness, cache/persistence/state, multi-feed subscription, telemetry/reconciliation/lifecycle, identity/session and direct SEC/EDGAR remain canonical.
+The inherited **#81/#82/#83/#78/#84** Data Health process remains in force: unclassified provider/fetch paths **fail closed**, **canonical freshness** remains authoritative, and Smart Provider Router v2 remains the only general routing/admission owner. Data Health, cache/persistence/state, multi-feed subscription, telemetry/reconciliation/lifecycle, identity/session and direct SEC/EDGAR remain canonical and must be reused rather than duplicated.
+
+For the next program, do not begin implementation from roadmap labels. First compare live source and v18 canonical owners against all 72 conserved #66 requirements. Reuse/consolidate before creating new owners.
 
 ## Exactly one next action
 
