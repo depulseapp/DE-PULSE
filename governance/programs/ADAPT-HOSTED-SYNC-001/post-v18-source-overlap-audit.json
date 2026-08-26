@@ -1,0 +1,72 @@
+{
+  "schema": "DE.PULSE-POST-V18-SOURCE-OVERLAP-AUDIT-1",
+  "issue": 145,
+  "parentProgramIssue": 66,
+  "scopeId": "ADAPT-HOSTED-SYNC-001",
+  "baselineMainSha": "9253a20fac2580e9e5d6d4f7a0777761f724c679",
+  "stable": "v18.10.0",
+  "state": "PASS_CANDIDATE_PENDING_EXACT_HEAD_QUALIFICATION_AND_MERGE",
+  "requirementsAudited": 72,
+  "requiredRange": "HOST-001..HOST-072",
+  "unexplainedOverlapCount": 0,
+  "v18StableMutated": false,
+  "v19G1Started": false,
+  "rules": {
+    "requirementsAreTraceabilityNotReleaseEvents": true,
+    "coherentImplementationBandsRequired": true,
+    "continuousRequirementOwnerEvidenceBinding": true,
+    "assuranceGapClassificationRequired": true,
+    "frozenV18ConservationInsteadOfHistoricalGateAccumulation": true,
+    "postgresFoundationMustBeExtendedNotReplaced": true,
+    "hostedActivationRequiresTenantIsolationAndRecoveryProof": true,
+    "hostedAdversarialMultiTenantSecurityRequired": true,
+    "pointInTimeNoLookaheadTruthCritical": true,
+    "decisionUsefulnessOutcomeCalibrationRequiredWhereApplicable": true,
+    "haltLuldTradeabilityResolutionRequiredBeforeProfessionalHostedClosure": true,
+    "productionSloTelemetryComplementsDeterministicCi": true,
+    "mainProtectionWhenPlanSupportsRequiredStatuses": true
+  },
+  "bands": [
+    {"name":"HOSTED_TRUST_FOUNDATION","rows":"HOST-001..HOST-023","disposition":"REUSE_EXTEND_PLUS_JUSTIFIED_HOSTED_RESIDUALS"},
+    {"name":"HOSTED_SERVING_SYNC_FOUNDATION","rows":"HOST-024..HOST-039","disposition":"REUSE_EXTEND_PLUS_JUSTIFIED_SYNC_RESIDUALS"},
+    {"name":"CROSS_PLATFORM_HOSTED_PARITY","rows":"HOST-040..HOST-056","disposition":"EXTEND_EXISTING_DOMAIN_PLATFORM_SECURITY_RUNTIME_OWNERS"},
+    {"name":"POINT_IN_TIME_EVIDENCE_AND_TRADER_QUALITY","rows":"HOST-057..HOST-064","disposition":"NEW_EVIDENCE_DOMAINS_REUSING_PROVENANCE_RESEARCH_DISCOVERY_OUTCOME_OWNERS"},
+    {"name":"RELIABILITY_COST_ADAPTIVE_READINESS_AND_CLOSURE","rows":"HOST-065..HOST-072","disposition":"EXTEND_EXISTING_RELIABILITY_OBSERVABILITY_RIGHTS_ADAPTIVE_AND_G0_G16_OWNERS"}
+  ],
+  "criticalExistingOwners": [
+    "Smart Provider Router v2",
+    "provider_data_rights.go / provider registration",
+    "canonical Data Health/freshness/reconciliation",
+    "canonical cache/persistence/single-flight",
+    "persistence_backend_postgres.go",
+    "live_subscription_manager.go",
+    "canonical identity/session/reauth/workspace security",
+    "direct SEC/EDGAR filing/Form 4 authority",
+    "Research/evidence/provenance owners",
+    "Opportunity Radar/Discovery owners",
+    "decision lineage/outcome history",
+    "G0-G16 exact-head release/provenance owners"
+  ],
+  "explicitForwardResiduals": [
+    "product entitlement and quota policy",
+    "privacy lifecycle",
+    "hosted IaC/environment/service trust",
+    "managed-secret/KMS lifecycle",
+    "hosted supply-chain/deploy traceability",
+    "hosted gateway/serving policy",
+    "API/protocol lifecycle",
+    "sync outbox/bootstrap/conflict/retention framework around canonical persistence",
+    "tenant fairness/noisy-neighbor controls",
+    "institutional/13F evidence domain",
+    "two-sided thesis evidence substrate"
+  ],
+  "preG1ResidualChecks": [
+    "source-prove or govern halt/LULD/volatility-pause/resume ownership",
+    "preserve point-in-time no-lookahead semantics",
+    "define outcome/usefulness metrics for intelligence-affecting slices",
+    "define hosted cross-tenant/cache/fan-out/stream-revocation negative tests",
+    "define PostgreSQL tenant isolation/migration/recovery acceptance",
+    "define CI historical-conservation compaction without weakening affected tests"
+  ],
+  "g1Permission": "PERMITTED_ONLY_AFTER_EXACT_HEAD_QUALIFICATION_AND_MERGE_TO_MAIN"
+}
