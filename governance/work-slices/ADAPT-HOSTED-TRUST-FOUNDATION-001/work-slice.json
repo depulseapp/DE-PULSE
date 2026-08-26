@@ -6,7 +6,7 @@
   "parentProgramScopeId": "ADAPT-HOSTED-SYNC-001",
   "type": "PRODUCT_ARCHITECTURE_FOUNDATION",
   "subtype": "HOSTED_TRUST_TENANT_RIGHTS_PERSISTENCE_SECURITY_FOUNDATION",
-  "status": "G1_RESERVED",
+  "status": "BUILDING",
   "publicProductVersion": "19.0.0",
   "versionStrategy": "one coherent v19.0.0 Hosted Trust & Identity Foundation build; HOST rows and commits are requirement/evidence traceability, not separate public versions or planning packets",
   "stableProductVersionAtStart": "18.10.0",
@@ -50,5 +50,6 @@
     "NO_PARALLEL_CANONICAL_SUBSYSTEMS"
   ],
   "deliveryRule": "one development branch -> one Draft PR -> dependency-correct commits/evidence -> coherent candidate batching -> exact-head Fast per coherent changed candidate -> risk-based Qualified checkpoints -> G10 whole-version closure -> merge/release only when governed",
-  "nextAction": "Finish HOST-004..007 production reachability through existing authenticated HTTP/identity owners, obtain fresh exact-head Fast evidence, then continue HOST-008..009 on the same Draft PR."
+  "zeroMissAuditState": "REOPENED_UNVERIFIED",
+  "nextAction": "Close the earliest dependency band HOST-001..HOST-003 by binding reviewable provider-specific rights evidence and production-wiring fail-closed hosted rights/admissibility through the existing provider registration, Smart Provider Router v2, cache/persistence/serving boundaries; prove positive and adverse behavior plus required real hosted-process evidence, then obtain exact-head Fast before advancing."
 }
