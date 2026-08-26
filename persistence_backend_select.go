@@ -43,9 +43,10 @@ type postgresPersistenceConfig struct {
 
 func newPersistenceBackend(configDir string) PersistenceBackend {
 	mode := strings.ToLower(strings.TrimSpace(os.Getenv(persistenceBackendEnv)))
+	var backend PersistenceBackend
 	switch mode {
 	case "", "local", "sqlite":
-		return newLocalPersistenceBackend(configDir)
+		backend = newLocalPersistenceBackend(configDir)
 	case "postgres", "postgresql":
 		config := postgresPersistenceConfigFromEnv()
 		if isHostedRuntime() {
@@ -53,10 +54,11 @@ func newPersistenceBackend(configDir string) PersistenceBackend {
 				return newUnavailablePersistenceBackend("hosted PostgreSQL policy: " + err.Error())
 			}
 		}
-		return newPostgresPersistenceBackend(config)
+		backend = newPostgresPersistenceBackend(config)
 	default:
 		return newUnavailablePersistenceBackend(fmt.Sprintf("unsupported persistence backend %q", mode))
 	}
+	return wrapHostedRightsPersistenceBackend(backend)
 }
 
 func hostedPostgresRuntimeDeclaration(config postgresPersistenceConfig) hostedpersistence.RuntimeDeclaration {
