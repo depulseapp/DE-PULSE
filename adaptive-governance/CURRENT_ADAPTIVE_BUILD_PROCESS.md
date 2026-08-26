@@ -1,31 +1,14 @@
 # CURRENT Adaptive Build Process
 
 **Canonical machine state:** `governance/current-state.json`  
-**Certified Stable:** `v18.9.1-stable`  
-**Mandatory next release:** `v18.10.0` — **10/10 Future-Proof Final v18 Closure**  
-**Parent:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001`  
-**Program branch:** `adapt-v18-final-closure-10-10-001`  
-**Next child:** #114 / T1  
-**Future hosted umbrella:** #66 — BLOCKED.
+**Certified Stable:** `v18.10.0`  
+**Completed final-v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` on `adapt-v18-final-closure-10-10-001`  
+**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`.
 
-## Retained Data Health process
+The final-v18 execution loop is complete and remains permanent regression policy: discover from source -> map requirement/canonical owner/evidence -> fix smallest canonical-owner delta -> exact-head Fast -> identical-head Qualified -> immutable G11–G16 candidate -> same-run no-rebuild publication -> G16 handoff. No quality requirement was removed to achieve v18.10.0.
 
-The inherited **#81/#82/#83/#78/#84** process remains in force: unclassified provider/fetch paths **fail closed**, **canonical freshness** remains authoritative, and Smart Provider Router v2 remains the only general routing/admission owner.
+For the next program, do not begin implementation from roadmap labels. First compare live source and v18 canonical owners against all 72 conserved #66 requirements. Reuse/consolidate before creating new owners. Smart Provider Router v2, Data Health/freshness, cache/persistence/state, multi-feed subscription, telemetry/reconciliation/lifecycle, identity/session and direct SEC/EDGAR remain canonical.
 
-## v18.10 execution loop
+## Exactly one next action
 
-**FETCH live GitHub/source -> T1 DISCOVER every shipped feature -> MAP requirement + canonical owner + evidence classes -> OPEN named corrective for real miss -> FIX smallest canonical-owner delta -> RE-RUN affected T2–T8 evidence -> T9 package the unchanged candidate -> T10 prove durable regression ownership + zero gaps -> exact-head release certification.**
-
-Rules:
-- T1 inventory is source/evidence driven, never memory driven;
-- closed historical issue alone does not prove implementation;
-- every applicable feature row requires positive functional plus negative/edge/failure ownership;
-- user-visible rows require explicit UI/UX/IA/content disposition, not only renderer-pass status;
-- implementation misses are explicit corrective work, never hidden inside closure metadata;
-- tests are reused only if they materially prove the mapped requirement;
-- no vanity coverage target substitutes for meaningful behavior assertions;
-- macOS Apple Silicon and Windows x64 packaged evidence are mandatory for shared native v18 behavior;
-- one immutable final candidate must pass Fast/Qualified/Release; no retry branch/workflow family;
-- T10 must make future #66/v19 requirement conservation executable in CI and preserve GitHub-only continuation.
-
-Permanent canonical owners remain authoritative: Smart Provider Router v2; Data Health; canonical freshness/recovery; cache/persistence/state; multi-feed subscription; telemetry/reconciliation/lifecycle; identity/session; direct SEC/EDGAR. No parallel testing subsystem may become a second product owner.
+Execute the post-v18.10 source-overlap/residual audit and allow v19 G1 only after an explicit zero-unexplained-overlap PASS.
