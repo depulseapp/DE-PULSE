@@ -205,29 +205,51 @@ try:
     need(isinstance(stable.get("sourceFingerprint"), str) and re.fullmatch(r"[0-9a-f]{64}", stable.get("sourceFingerprint", "")), "current-state Stable sourceFingerprint invalid")
     need(stable.get("publication") == "PASS_NO_REBUILD", "current-state Stable publication must remain PASS_NO_REBUILD")
 
-    # Retained process-work authority remains independently durable after it has
-    # unblocked a later product reservation. Its historical Stable baseline is
-    # immutable evidence and is intentionally not rewritten for later products.
+    # activeWorkSlice is a durable current-state authority. It may be a retained
+    # process/release-engineering slice or the active product architecture slice;
+    # validate the declared class instead of silently forcing product work into a
+    # process-only shape.
     work_slice_id = str(active.get("workSliceId", "")).strip()
     active_status = str(active.get("status", "")).strip().upper()
-    completed_process = active_status in CLOSED_PROCESS_STATES
+    active_type = str(active.get("type", "")).strip().upper()
+    completed_process = active_type.startswith("PROCESS_") and active_status in CLOSED_PROCESS_STATES
+    active_process = active_type.startswith("PROCESS_")
+    active_product = active_type.startswith("PRODUCT_")
     need(bool(work_slice_id), "current-state active work slice missing")
-    need(active.get("publicProductVersion") is None, "process work slice must not consume a public product version")
-    need(active.get("productBehaviorChange") is False, "#70 process work slice must remain product-behavior neutral")
-    if completed_process:
-        need(gate.get("blocked") is False and gate.get("blockedByIssue") is None, "completed process work slice must unblock the next product capability")
-        need(gate.get("unblockedByCompletedWorkSlice") == work_slice_id, "completed process work slice must be named as the capability-gate unblock owner")
-    else:
-        need(gate.get("blocked") is True and gate.get("blockedByIssue") == active.get("issue"), "next product capability must remain blocked by the active process issue")
+    need(active_process or active_product, f"unsupported current-state active work-slice type: {active_type or '<empty>'}")
+    if active_process:
+        need(active.get("publicProductVersion") is None, "process work slice must not consume a public product version")
+        need(active.get("productBehaviorChange") is False, "process work slice must remain product-behavior neutral")
+        if completed_process:
+            need(gate.get("blocked") is False and gate.get("blockedByIssue") is None, "completed process work slice must unblock the next product capability")
+            need(gate.get("unblockedByCompletedWorkSlice") == work_slice_id, "completed process work slice must be named as the capability-gate unblock owner")
+        else:
+            need(gate.get("blocked") is True and gate.get("blockedByIssue") == active.get("issue"), "next product capability must remain blocked by the active process issue")
+    elif active_product:
+        need(bool(str(active.get("publicProductVersion") or "").strip()), "product work slice must name a public product version")
+        need(active.get("productBehaviorChange") is True, "product work slice must declare productBehaviorChange=true")
+        need(active.get("blocksNextProductCapability") is True, "active product work slice must block subsequent product capability work until closure")
+        if active_product_capability:
+            need(active.get("workSliceId") == product_work.get("workSliceId"), "active product current-state/work reservation ID drift")
+            need(active.get("issue") == product_work.get("issue"), "active product current-state/work reservation issue drift")
+            need(active.get("branch") == product_work.get("branch"), "active product current-state/work reservation branch drift")
 
     work_slice_path = ROOT / "governance" / "work-slices" / work_slice_id / "work-slice.json"
     work_slice = json.loads(work_slice_path.read_text())
     work_status = str(work_slice.get("status", "")).strip().upper()
+    work_type = str(work_slice.get("type", "")).strip().upper()
     need(work_slice.get("workSliceId") == work_slice_id, "current-state/work-slice ID mismatch")
     need(work_slice.get("issue") == active.get("issue"), "current-state/work-slice issue mismatch")
     need(work_slice.get("branch") == active.get("branch"), "current-state/work-slice branch mismatch")
-    need(work_slice.get("publicProductVersion") is None, "registered process work slice consumed a public product version")
-    need(work_slice.get("productBehaviorChange") is False, "registered process work slice must remain product-behavior neutral")
+    need(work_type == active_type, "current-state/work-slice type mismatch")
+    need(work_slice.get("publicProductVersion") == active.get("publicProductVersion"), "current-state/work-slice public product version mismatch")
+    need(work_slice.get("productBehaviorChange") == active.get("productBehaviorChange"), "current-state/work-slice product behavior classification mismatch")
+    if active_process:
+        need(work_slice.get("publicProductVersion") is None, "registered process work slice consumed a public product version")
+        need(work_slice.get("productBehaviorChange") is False, "registered process work slice must remain product-behavior neutral")
+    elif active_product:
+        need(bool(str(work_slice.get("publicProductVersion") or "").strip()), "registered product work slice missing public product version")
+        need(work_slice.get("productBehaviorChange") is True, "registered product work slice must declare productBehaviorChange=true")
     if not completed_process:
         need(work_slice.get("baselineCandidateSha") == stable.get("candidateSha"), "work-slice baseline candidate / Stable candidate drift")
         need(work_slice.get("baselineSourceFingerprint") == stable.get("sourceFingerprint"), "work-slice baseline fingerprint / Stable fingerprint drift")
