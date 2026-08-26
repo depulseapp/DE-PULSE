@@ -3,10 +3,10 @@
 **Canonical machine state:** `governance/current-state.json`  
 **Certified Stable:** `v18.10.0` — immutable  
 **Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
-**Post-v18 audit:** #145 / `adapt-post-v18-overlap-rebaseline-001` — PASS candidate pending exact-head qualification/merge  
-**Future hosted umbrella:** #66 — `PLANNED_UNSTARTED` until #145 is merged.
+**Completed post-v18 audit:** #145 / PR #146 — **PASS**  
+**Future hosted umbrella:** #66 — `PLANNED_UNSTARTED`; v19 G1 is permitted but not started.
 
-The v18.10.0 build contract remains closed: T1–T10, exact-head Fast/Qualified, macOS Apple Silicon + Windows x64 lifecycle, G15 provenance, SBOM, no-rebuild publication and G16 all passed. Future work must conserve those responsibilities without reproducing a new historical closure stack on every version.
+The v18.10.0 build contract remains closed: T1–T10, exact-head Fast/Qualified, macOS Apple Silicon + Windows x64 lifecycle, G15 provenance, SBOM, no-rebuild publication and G16 all passed. Future work conserves those responsibilities without reproducing a new historical closure stack on every version.
 
 ## Conserved Data Health build inputs
 
@@ -15,7 +15,7 @@ The inherited Data Health build inputs remain `governance/data-health/provider-c
 ## Rebaselined build rules
 
 ### Requirement/evidence binding at implementation time
-Every changed requirement must enter the slice with: canonical owner, consumers, reuse/consolidation disposition, positive evidence owner, adverse evidence owner, persistence/security/UI applicability, point-in-time/freshness semantics where data-bearing, and closure acceptance. Classify findings as `PRODUCT_BEHAVIOR_GAP`, `TEST_OR_EVIDENCE_GAP`, `OWNERSHIP_BINDING_GAP`, or `NOT_APPLICABLE` before changing product code.
+Every changed requirement enters its slice with canonical owner, consumers, reuse/consolidation disposition, positive evidence owner, adverse evidence owner, persistence/security/UI applicability, point-in-time/freshness semantics where data-bearing, and closure acceptance. Classify findings as `PRODUCT_BEHAVIOR_GAP`, `TEST_OR_EVIDENCE_GAP`, `OWNERSHIP_BINDING_GAP`, or `NOT_APPLICABLE` before changing product code.
 
 ### Coherent HOST implementation bands
 `HOST-001..HOST-072` remain row-level traceability requirements, not mandatory one-row/one-version release events. Build coherent dependency bands and batch related mutations before opening/advancing a PR where practical. Every band still closes with zero unexplained applicable row.
@@ -38,4 +38,4 @@ Do not reduce evidence for changed candidates. Reduce candidate churn and histor
 
 ## Exactly one next action
 
-Qualify and merge #145. After the audit is PASS on `main`, reserve one coherent first v19 G1 band—not a chain of requirement-sized micro-releases.
+Reserve one coherent first v19 G1 **Hosted Trust Foundation** slice from #66—not a chain of requirement-sized micro-releases—and bind its selected HOST rows to exact owners/evidence before coding.
