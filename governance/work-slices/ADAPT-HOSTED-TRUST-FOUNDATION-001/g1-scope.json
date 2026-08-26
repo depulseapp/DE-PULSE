@@ -4,6 +4,8 @@
   "issue": 148,
   "parentIssue": 66,
   "state": "G1_FROZEN",
+  "publicProductVersion": "19.0.0",
+  "rebaselineAuthority": "governance/V19_V20_REBASELINE.md",
   "baselineMainSha": "7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c",
   "stable": "v18.10.0",
   "requirements": [
@@ -17,7 +19,7 @@
     {"rows":"HOST-019..020","owner":"existing CI provenance/SBOM + new hosted supply-chain/deploy traceability residual","disposition":"EXTEND_EXISTING_WITH_HOSTED_RESIDUAL","consumers":["release/deploy/security operations"],"positiveEvidence":"dependency inventory/advisory/license/source policy/SBOM/source-build-artifact-environment traceability","adverseEvidence":"vulnerable/unapproved dependency or provenance break blocks delivery","persistence":"durable evidence/manifests","security":"patch/revoke/signing/attestation where supported","ui":"internal only"},
     {"rows":"HOST-021","owner":"Smart Router diagnostics + ProviderTelemetry/usefulness + Data Health","disposition":"EXTEND_EXISTING","consumers":["operations","rights/cost planning","Adaptive Intelligence evidence"],"positiveEvidence":"measured health/freshness/latency/disagreement/headroom/rights/cost/usefulness scorecards","adverseEvidence":"missing/unknown metrics do not become healthy or alter deterministic routing","persistence":"bounded provider scorecard evidence where useful","security":"privileged semantic telemetry; no secrets","ui":"privileged diagnostics; usefulness remains advisory"},
     {"rows":"HOST-022","owner":"provider reconciliation + canonical provenance/persistence owners","disposition":"EXTEND_EXISTING","consumers":["historical evaluation","Research","Adaptive Intelligence","institutional evidence later"],"positiveEvidence":"source/observed/effective/revision timestamps and point-in-time replay","adverseEvidence":"future/revised evidence cannot leak backward into historical decisions","persistence":"revision-aware immutable/effective-time records where applicable","security":"rights/retention preserved across revisions","ui":"truthful as-of/revision provenance in deep evidence where useful"},
-    {"rows":"HOST-023","owner":"G0-G16 coverage/closure owners","disposition":"PROCESS_CLOSURE","consumers":["v19.1 gateway activation gate"],"positiveEvidence":"HOST-001..022 all evidenced or explicit external blocker","adverseEvidence":"any unassigned/unexplained/unevidenced row blocks closure","persistence":"N/A","security":"all applicable security boundaries must be closed","ui":"N/A"}
+    {"rows":"HOST-023","owner":"G0-G16 coverage/closure owners","disposition":"PROCESS_CLOSURE","consumers":["v19.1.0 / later hosted activation gate"],"positiveEvidence":"HOST-001..022 all evidenced or explicit external blocker","adverseEvidence":"any unassigned/unexplained/unevidenced row blocks closure","persistence":"N/A","security":"all applicable security boundaries must be closed","ui":"N/A"}
   ],
   "crossCuttingAcceptance": [
     "no duplicate Router/freshness/cache/persistence/subscription/reconciliation/lifecycle/identity owner",
@@ -25,8 +27,9 @@
     "point-in-time/no-lookahead truth for historical/adaptive evidence",
     "PostgreSQL connection success alone never counts as hosted readiness",
     "v18.10.0 Stable identity/artifacts remain immutable",
-    "exact-head CI evidence for changed candidates"
+    "exact-head CI evidence for changed candidates",
+    "requirement rows are traceability units inside v19.0.0, not separate public versions or current planning packets"
   ],
-  "firstImplementationPacket": "HOST-001..HOST-003_PROVIDER_RIGHTS",
-  "g1Exit": "SATISFIED_ONCE_THIS_SCOPE_AND_WORK_SLICE_ARE_DURABLE_AND_EXACT_HEAD_FAST_PASSES"
+  "firstImplementationPacket": "DEPRECATED_BY_VERSION_REBASELINE; CURRENT_ACTIVE_STAGE=HOST-004..HOST-007_IDENTITY_SESSION",
+  "g1Exit": "G1_SCOPE_FROZEN; VERSION_EXIT_REQUIRES_HOST_001_023_G10_CLOSURE_AND_EXACT_HEAD_EVIDENCE"
 }
