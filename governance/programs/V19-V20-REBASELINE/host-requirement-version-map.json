@@ -1,0 +1,23 @@
+{
+  "schema": "DE.PULSE-HOST-REQUIREMENT-VERSION-REBASELINE-1",
+  "status": "AUTHORITATIVE_VERSION_OVERLAY",
+  "sourceLedger": "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json",
+  "rule": "The source ledger remains authoritative for requirement text, provenance, owner and dependency. Its legacy plannedVersion fields are superseded for future scheduling by this map. HOST rows are traceability units, not public releases.",
+  "versions": [
+    {"version":"v19.0.0","name":"Hosted Trust & Identity Foundation","requirements":["HOST-001","HOST-002","HOST-003","HOST-004","HOST-005","HOST-006","HOST-007","HOST-008","HOST-009","HOST-010","HOST-011","HOST-012","HOST-013","HOST-014","HOST-015","HOST-016","HOST-017","HOST-018","HOST-019","HOST-020","HOST-021","HOST-022","HOST-023"],"count":23,"reason":"One trust boundary must be complete before hosted serving. The active #148/PR #149 implementation is retained, not restarted."},
+    {"version":"v19.2.0","name":"Hosted Gateway, Shared Serving & Sync Core","requirements":["HOST-024","HOST-025","HOST-026","HOST-027","HOST-028","HOST-029","HOST-030","HOST-031","HOST-032","HOST-033","HOST-034","HOST-035","HOST-036","HOST-037","HOST-038","HOST-039"],"count":16,"reason":"Gateway/fan-out and sync are one coherent data-plane responsibility and must reuse v19.0/v19.1 canonical owners."},
+    {"version":"v19.3.0","name":"Cross-Platform Product, Roles & Information Architecture","requirements":["HOST-040","HOST-041","HOST-042","HOST-043","HOST-044","HOST-045","HOST-046","HOST-047","HOST-053"],"count":9,"reason":"Shared account/session/settings/preferences/watchlists/desks/research state and client compatibility land together across Mac/Windows/Web."},
+    {"version":"v19.4.0","name":"Market Intelligence & Research Workflow Quality","requirements":["HOST-049"],"count":1,"reason":"Market State/Modes/Readiness parity is closed with its actual Market Intelligence/Research product consumers rather than as a standalone micro-release."},
+    {"version":"v19.4.1","name":"Discovery & Opportunity Radar Effectiveness","requirements":["HOST-048"],"count":1,"reason":"Discovery parity closes with the heavy Discovery functional work and shared processing path."},
+    {"version":"v19.6.0","name":"Point-in-Time Evidence & Outcome-Ready Foundation","requirements":["HOST-057","HOST-058","HOST-059","HOST-060","HOST-061","HOST-062","HOST-063","HOST-064"],"count":8,"reason":"Institutional evidence, two-sided evidence and AODR lineage form the deterministic point-in-time substrate required before adaptive learning."},
+    {"version":"v19.6.1","name":"Hosted Reliability, Economics & Adaptive Readiness","requirements":["HOST-050","HOST-051","HOST-052","HOST-054","HOST-055","HOST-056","HOST-065","HOST-066","HOST-067","HOST-068","HOST-069","HOST-070","HOST-071"],"count":13,"reason":"Tenant observability/fairness/security, recovery/load and operational/adaptive readiness are reconciled together before Major Closure."},
+    {"version":"v19.7.0","name":"v19 Major Closure","requirements":["HOST-072"],"count":1,"reason":"No-feature final closure of all #66 requirements and v19-assigned backlog."}
+  ],
+  "coverage": {
+    "expectedRequirementCount": 72,
+    "mappedRequirementCount": 72,
+    "unmapped": [],
+    "duplicates": [],
+    "legacyMicroVersionAssignmentsSuperseded": true
+  }
+}
