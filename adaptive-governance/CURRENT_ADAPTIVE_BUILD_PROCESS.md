@@ -38,6 +38,19 @@ For each changed responsibility:
 10. prove persistence/restart/migration, load/backpressure and required platforms where applicable;
 11. bind durable regression ownership.
 
+## Conserved Data Health process
+
+Provider/data changes use the canonical #80 baseline and the dependency chain #81/#82/#83/#78/#84. This chain remains active as a process invariant even though its original issues are complete.
+
+- Smart Provider Router v2 remains the executable authority for general routable provider capabilities; explicit direct-authority evidence such as SEC/EDGAR is preserved rather than forced through a rank-swappable route.
+- Every new or changed provider/capability/fetch path is reconciled against `provider-capability-matrix.json`, `data-health-slo.json` and `provider-fetch-paths.json`; unclassified production network/provider behavior must fail closed.
+- `canonical freshness` is based on provider observation/event/publication/filing time. Retrieval/cache timestamps are bookkeeping, and unknown observation time stays unknown.
+- Before declaring degradation, reuse policy-valid canonical warm/cache evidence and eligible fallback; do not invent freshness or hide a genuinely missing required input.
+- Scope health at the smallest truthful capability/symbol/consumer level before escalation. Optional-provider failures do not create false app-global degradation.
+- Recovery is automatic when required canonical evidence becomes healthy, with hysteresis, anti-flapping and authority rules preserved.
+- Capability lifecycle remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; reachability, API-key presence or transient success never auto-promotes authority.
+- Under provider/runtime pressure, protect critical decision evidence first and shed optional/background work before core Data Health deteriorates.
+
 ## Intelligence process
 
 The target maturity is:
@@ -69,4 +82,4 @@ Frozen v18 T1-T10 remains baseline conservation evidence; do not rerun history m
 
 ## Exactly one next action
 
-Continue `v19.0.0`: resolve production reachability for the hosted identity/session helpers that caused Fast #1141 source-health failure, then obtain exact-head Fast on the new coherent candidate. Do not start `v19.1.0` while v19.0.0 remains unqualified.
+Continue `v19.0.0` on PR #149. Exact-head Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` cleared recursive helper/source ownership with zero unregistered orphan production Go helpers, but the recursive source-health lane remained red because CURRENT Adaptive Data Health conservation had drifted. Restore that CURRENT governance contract and obtain fresh exact-head Fast. Do not start `v19.1.0` while v19.0.0 remains unqualified.

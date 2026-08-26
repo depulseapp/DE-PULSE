@@ -44,6 +44,17 @@ For intelligence-bearing work also record:
 
 For visible work also record #171 disposition: `KEEP / IMPROVE / CONSOLIDATE / COLLAPSE / MOVE / REMOVE`.
 
+## Conserved Data Health build owners
+
+Every version that changes provider access, freshness, cache/persistence, consumer health, routing, lifecycle, recovery or load behavior must reuse the completed #80/#81/#82/#83/#78/#84 program rather than inventing a local substitute.
+
+The machine-readable build authorities are:
+- `governance/data-health/provider-capability-matrix.json` — provider/capability owner, consumers, authority, freshness, fallback, materiality, degraded impact, router dataset and lifecycle;
+- `governance/data-health/data-health-slo.json` — canonical evidence-time semantics, healthy coverage, freshness/fallback/degradation/recovery/load-protection metrics and truth rules;
+- `governance/data-health/provider-fetch-paths.json` — every production external fetch path classified and owned as `MIGRATE`, `DIRECT_AUTHORITY` or justified `N/A`.
+
+For applicable changes the Build Plan must reconcile these artifacts with the current Adaptive Roadmap, Build Process and Delivery Process. Smart Provider Router v2 remains the general routable authority; direct-authority rows are not silently rank-swapped. Any new provider/capability/fetch path must be classified in the canonical artifacts before the build can claim zero-miss coverage.
+
 ## v19 build plan
 
 - `v19.0.0` trust/identity: HOST-001..023, #164 core auth/session, security portions of #156.
@@ -92,4 +103,4 @@ No version closes with an unassigned applicable certified-v18 responsibility, ba
 
 ## Exactly one next action
 
-Continue `v19.0.0` on PR #149. Fetch the live head/checks, then resolve the known hosted identity/session production-reachability/source-health gap by production-wiring or correctly consolidating those helpers through the existing canonical auth/HTTP owners. Run exact-head Fast on the coherent candidate. Do not begin the next version until current-version closure criteria are met.
+Continue `v19.0.0` on PR #149. Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` proved the hosted identity/session helpers are production-reachable under recursive source health, but the run remained red because the CURRENT Adaptive documents had drifted from the conserved Data Health build contracts. Restore those contracts coherently across the Adaptive Roadmap, Build Plan, Build Process and Delivery Process, then run fresh exact-head Fast. Do not begin the next version until current-version closure criteria are met.

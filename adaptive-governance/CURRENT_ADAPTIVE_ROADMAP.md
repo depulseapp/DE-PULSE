@@ -46,6 +46,23 @@ Current source audit proves this is **not fully implemented today**. `computePla
 
 This is distinct from v19.6/v20.3 institutional **two-sided thesis/TDTI** evidence.
 
+## Conserved provider / Data Health program
+
+The completed Adaptive Data Health/provider-production chain remains a permanent cross-version contract and must not disappear from CURRENT planning merely because its original issues are closed:
+
+- #80 — executable provider/capability baseline, SLOs, ownership and fetch-path classification.
+- #81 — Smart Provider Router v2 production adoption for every routable capability, while preserving explicitly classified direct-authority paths.
+- #82 — one canonical runtime Data Health evaluation path with capability/symbol/consumer scoping, eligible cache/fallback recovery, hysteresis, workload priority and load shedding.
+- #83 — common capability lifecycle/readiness evidence (`SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`) with no automatic authority promotion.
+- #78 — TradeInsight production readiness is one provider-adoption case inside #81/#83, not a parallel router, freshness, cache, telemetry or lifecycle subsystem.
+- #84 — zero-gap fault injection, native proof and professional closure for the program.
+
+Canonical routing authority remains **Smart Provider Router v2** for general routable provider capabilities. Explicit direct authorities remain explicit; in particular direct SEC/EDGAR remains authoritative for Form 4 and other source-authority cases defined by the provider matrix/fetch-path contracts.
+
+Data-health truth is evidence-time based: provider observation/event/publication/filing time is authoritative; retrieval/cache time is bookkeeping; unknown observation time remains unknown. Valid warm/cache evidence and eligible fallback are reused before avoidable degradation. Optional-provider failure cannot contaminate unrelated symbols, desks, Market Modes or application-global health.
+
+`PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful, attributable and minimally scoped states for genuine unresolved required-evidence gaps. Recovery is automatic when canonical evidence becomes healthy under policy, with hysteresis and authority rules preserved; the product must never suppress a genuine data problem merely to appear healthy.
+
 ## Current v20 sequence
 
 1. `v20.0.0` — Outcome Learning & Adaptive Control Plane — #165 learning foundation plus conserved calibration/guardrails.
@@ -67,4 +84,4 @@ Hard UI protections remain: keep Day/Swing/Long Desk look-and-feel/workflow; kee
 
 ## Current exact state / next action
 
-The earlier product head `c5d0713d16f95522fd013123a78bc7cc58dc2422` was not qualified: Fast #1141 failed source-health because five hosted identity/session helpers lacked production references. Rebaseline governance work does not close that product defect. Fetch the live PR head/current checks, continue `v19.0.0` by wiring those capabilities through existing authenticated identity/HTTP owners (or removing/reworking helpers proven unnecessary), then obtain exact-head Fast. Do not start `v19.1.0` before `v19.0.0` exit criteria pass.
+The active head has moved beyond the earlier `c5d0713d16f95522fd013123a78bc7cc58dc2422` helper-reachability defect. On exact-head Fast #1165 for `f36417fda84e063d5a9cafcc31c464b051f5b3af`, recursive/package-aware source-health reported zero unregistered orphan production Go helpers and G2 passed; the remaining Fast blocker is CURRENT Adaptive Data Health contract drift inside the recursive source-health step. Restore the conserved Data Health contracts across the CURRENT Adaptive Roadmap / Build Plan / Build Process / Delivery Process, then obtain fresh exact-head Fast. Do not start `v19.1.0` before `v19.0.0` exit criteria pass.

@@ -13,13 +13,23 @@ Public planning and delivery are version-oriented. Requirement IDs, backlog acce
 
 For each version:
 - use one coherent development branch/PR unless governance explicitly requires otherwise;
-- exact-head Fast validates coherent changed candidates;
-- Qualified is impact/risk selected and mandatory at G10;
+- a **canonical Fast exact-head PASS** is required for the coherent candidate before it can be treated as Fast-qualified evidence;
+- a **Qualified exact-head PASS** is required at G10 and at other material risk boundaries selected by Impact Planner/current governance;
 - Release G11-G16 is used only for a release candidate, not every implementation checkpoint;
 - batch related small changes when they share owners/evidence;
 - split genuinely heavy/high-risk features into a real patch version rather than creating hidden pseudo-releases;
 - cancel/supersede obsolete candidate runs when supported, but never reuse evidence from the wrong head;
 - keep the three canonical workflow families: Fast, Qualified, Release.
+
+## Conserved Data Health delivery boundary
+
+Provider/Data Health delivery evidence remains governed by the completed #80/#81/#82/#83/#78/#84 program and its machine-readable matrix/SLO/fetch-path contracts. Delivery must prove that routable capabilities remain under Smart Provider Router v2, while explicit source-authority boundaries remain intact.
+
+Direct **SEC/EDGAR** remains authoritative where the canonical provider contract classifies it as direct authority, including Form 4. A secondary provider, router preference or AI/adaptive layer cannot silently replace that authority.
+
+Delivery evidence for affected provider/data surfaces must show truthful freshness, minimally scoped `PARTIAL COVERAGE` / `DATA DEGRADED`, eligible fallback/cache recovery, hysteresis/no-flapping, optional-provider isolation, workload/backpressure protection and capability-level lifecycle/readiness. Missing required evidence must remain visible rather than being normalized into false health.
+
+**No Execution** remains a permanent product boundary: no order routing, broker execution, paper execution, P&L, portfolio or execution-adjacent feature can be introduced or implied by provider/data-health, AI/agent or hosted-platform delivery work.
 
 ## Delivery acceptance beyond code correctness
 
@@ -52,4 +62,4 @@ Adaptive influence must progress through governed evidence states and remain bou
 
 ## Exactly one next action
 
-Continue `v19.0.0` on PR #149. Fix the source-health/product-reachability gap for hosted identity/session helpers, then obtain fresh exact-head Fast. Later versions remain blocked until current-version exit criteria are satisfied.
+Continue `v19.0.0` on PR #149. Exact-head Fast #1165 on `f36417fda84e063d5a9cafcc31c464b051f5b3af` proved the original hosted-helper orphan/source-health defect is resolved, but Fast remained red because the CURRENT Adaptive Data Health delivery contract had drifted. Restore the conserved Roadmap / Build Plan / Build Process / Delivery Process projection, then obtain fresh exact-head Fast and continue current-version closure only from that evidence. Do not advance to `v19.1.0` yet.
