@@ -8,11 +8,11 @@
   "gaps": [
     {
       "id": "HOST-001-003-PROVIDER-RIGHTS",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED",
       "owner": "provider_data_rights.go + provider registration + Smart Provider Router v2 + canonical cache/persistence rights decisions",
-      "implementationPaths": ["provider_data_rights.go", "provider_registration.go", "provider_router.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "implementationPaths": ["provider_data_rights.go", "provider_registration.go", "provider_router.go", "provider_rights_regression_test.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
       "evidenceRequired": ["commercial/multi-user proxy/cache/retention/redistribution/display/derived/AI/limits/attribution/environment/effective-expiry metadata", "provider-specific evidence binding/provenance", "working credential never implies rights", "rights downgrade/expiry fails closed across applicable routing/cache/persistence/future serving without a second router"],
-      "evidence": [],
+      "evidence": ["provider_data_rights.go extends the canonical rights owner with HOST-001 legal/data-rights dimensions and one purpose-specific fail-closed hosted eligibility decision", "provider_rights_regression_test.go proves HOST-001 metadata coverage, HOST-002 no inference from working credentials plus reviewable provenance binding, and HOST-003 purpose/environment/expiry/downgrade denial while preserving Smart Provider Router v2 scoring", "Fast #1136 / run 32927658584 PASS on exact implementation head 647e0d8e1b5e8af2ad916aa43edb185772ba729d: workflow policy, source/migration/closure/resume, v18 T1-T10 conservation, gofmt, go vet, full Go unit/package suite and exact-head status all PASS"],
       "closureCondition": "HOST-001..003 have executable positive and adverse evidence and preserve Smart Provider Router v2 sole routing authority.",
       "blocksIssueClosure": true
     },
