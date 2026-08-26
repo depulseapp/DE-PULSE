@@ -25,7 +25,7 @@ HANDOFF = ROOT / "handoff" / "CURRENT.md"
 AGENTS = ROOT / "AGENTS.md"
 CLAUDE = ROOT / "CLAUDE.md"
 PORTABILITY = ROOT / "governance" / "AI-ASSISTANT-PORTABILITY-CONTRACT.md"
-ADAPTIVE_RESUME = ROOT / Path("tools/ci/adaptive_resume_gate.py")
+ADAPTIVE_RESUME = ROOT / "tools" / "ci" / "adaptive_resume_gate.py"
 RETIRED_EQUIVALENCE = ROOT / "tools" / "ci" / "retired_test_equivalence_gate.py"
 WORKFLOW_POLICY = ROOT / "tools" / "ci" / "workflow_policy.py"
 IMPACT = ROOT / "tools" / "ci" / "impact_plan.py"
@@ -34,6 +34,7 @@ CI_FAST = ROOT / ".github" / "workflows" / "ci-fast.yml"
 CI_QUALIFIED = ROOT / ".github" / "workflows" / "ci-qualified.yml"
 RELEASE = ROOT / ".github" / "workflows" / "release.yml"
 MANIFEST = ROOT / "release" / "v18.10.0" / "certification-manifest.json"
+VERSIONING = ROOT / "governance" / "versioning-policy.json"
 
 PRIOR_TRACK_ROWS = (
     "T1-FEATURE-TRACEABILITY",
@@ -60,6 +61,22 @@ def load(path: Path) -> dict:
 
 def text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
+
+
+def parse_core(value: str) -> tuple[int, int, int]:
+    raw = str(value).strip().removeprefix("v").removesuffix("-stable")
+    parts = raw.split(".")
+    if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        raise ValueError(value)
+    return tuple(int(p) for p in parts)
+
+
+def stable_tag(version: str) -> str:
+    policy = load(VERSIONING)
+    v = str(version).strip().removeprefix("v").removesuffix("-stable")
+    cutover = str(policy.get("effectiveAfterProductVersion", "18.9.1"))
+    pattern = policy.get("legacyStableTagPattern") if parse_core(v) <= parse_core(cutover) else policy.get("futureStableTagPattern")
+    return str(pattern).format(productVersion=v)
 
 
 def closure_row(closure: dict, row_id: str) -> dict | None:
@@ -92,11 +109,7 @@ def regression_ownership_errors() -> tuple[list[str], int]:
     omissions2 = scan2.get("omissionsFound") or []
     exclusions = recon.get("excludedFutureSourceCarryForward") or []
     excluded_ids = {str(row.get("id") or "") for row in exclusions if isinstance(row, dict)}
-    physical = {
-        str(row.get("id") or ""): row
-        for row in features
-        if isinstance(row, dict) and str(row.get("id") or "")
-    }
+    physical = {str(row.get("id") or ""): row for row in features if isinstance(row, dict) and row.get("id")}
     parent_overrides = recon.get("scanParentOverrides") or {}
     parent_by_category = recon.get("scanParentByCategory") or {}
 
@@ -123,16 +136,11 @@ def regression_ownership_errors() -> tuple[list[str], int]:
             row_id = str(row.get("id") or "")
             category = str(row.get("category") or "")
             effective_ids.append(row_id)
-
             parent_id = str(parent_overrides.get(row_id) or parent_by_category.get(category) or "")
             parent = physical.get(parent_id)
             if not parent_id or not isinstance(parent, dict):
                 errors.append(f"{row_id}: omission-scan responsibility has no valid canonical parent")
                 continue
-
-            # Match the immutable T1 resolver: a scan may carry direct tests, but when
-            # discovery recorded only source owners (for example BACKGROUND_JOB rows),
-            # regression evidence is inherited only from its named canonical parent.
             tests = [str(x) for x in row.get("tests") or []]
             if not tests:
                 tests = [str(x) for x in parent.get("existingRegressionOwners") or []]
@@ -140,7 +148,6 @@ def regression_ownership_errors() -> tuple[list[str], int]:
                 errors.append(f"{row_id}: omission-scan responsibility and canonical parent have no regression tests")
             elif not any(owner_exists(test) for test in tests):
                 errors.append(f"{row_id}: omission-scan regression owner no longer exists")
-
             durable = [str(x) for x in parent.get("durableRegressionOwner") or []]
             if "#123" not in durable:
                 errors.append(f"{row_id}: canonical parent {parent_id} lost T10/#123 durable binding")
@@ -168,7 +175,7 @@ def main() -> int:
         T10, LEDGER, FREEZE, RECON, SCAN1, SCAN2, CURRENT, WORK_SLICE, CLOSURE,
         V19_GATE, V19_LEDGER, HANDOFF, AGENTS, CLAUDE, PORTABILITY, ADAPTIVE_RESUME,
         RETIRED_EQUIVALENCE, WORKFLOW_POLICY, IMPACT, IMPACT_TEST, CI_FAST,
-        CI_QUALIFIED, RELEASE, MANIFEST,
+        CI_QUALIFIED, RELEASE, MANIFEST, VERSIONING,
     )
     for path in required:
         if not path.is_file():
@@ -198,11 +205,7 @@ def main() -> int:
         if not isinstance(row, dict) or row.get("status") != "VERIFIED":
             errors.append(f"T10 requires immutable VERIFIED prior closure: {row_id}")
 
-    completed = {
-        str(row.get("track")): row
-        for row in product.get("completedChildTracks") or []
-        if isinstance(row, dict)
-    }
+    completed = {str(row.get("track")): row for row in product.get("completedChildTracks") or [] if isinstance(row, dict)}
     for number in range(1, 10):
         track = f"T{number}"
         row = completed.get(track)
@@ -212,13 +215,7 @@ def main() -> int:
     ownership_errors, ownership_count = regression_ownership_errors()
     errors.extend(ownership_errors)
 
-    conservation = subprocess.run(
-        [sys.executable, str(V19_GATE)],
-        cwd=ROOT,
-        check=False,
-        text=True,
-        capture_output=True,
-    )
+    conservation = subprocess.run([sys.executable, str(V19_GATE)], cwd=ROOT, check=False, text=True, capture_output=True)
     if conservation.returncode != 0:
         errors.append("permanent v19/#66 requirement-conservation gate failed: " + conservation.stdout.strip() + conservation.stderr.strip())
     v19 = load(V19_LEDGER)
@@ -248,18 +245,10 @@ def main() -> int:
 
     impact = text(IMPACT)
     impact_test = text(IMPACT_TEST)
-    for marker in (
-        "T9_CROSS_LAYER_ASSURANCE_FILES",
-        "release/v18.10.0/certification-manifest.json",
-        "native_macos_required",
-        "native_windows_required",
-    ):
+    for marker in ("T9_CROSS_LAYER_ASSURANCE_FILES", "release/v18.10.0/certification-manifest.json", "native_macos_required", "native_windows_required"):
         if marker not in impact:
             errors.append(f"Planner v3 lost final-v18 full-evidence routing marker: {marker}")
-    for marker in (
-        "T9 manifest must select both native packages",
-        "unknown path must select full evidence graph",
-    ):
+    for marker in ("T9 manifest must select both native packages", "unknown path must select full evidence graph"):
         if marker not in impact_test:
             errors.append(f"Planner v3 self-test lost final-v18 fail-closed invariant: {marker}")
 
@@ -314,14 +303,16 @@ def main() -> int:
         if t10_row.get("status") != "VERIFIED":
             errors.append("COMPLETE T10 closure row must be VERIFIED")
         stable = current.get("stable") or {}
-        if stable.get("productVersion") != "18.10.0" or stable.get("tag") != "v18.10.0-stable":
-            errors.append("COMPLETE T10 requires current-state Stable v18.10.0 publication")
+        if stable.get("productVersion") != "18.10.0" or stable.get("tag") != stable_tag("18.10.0"):
+            errors.append("COMPLETE T10 requires current-state Stable v18.10.0 publication under canonical tag policy")
         if product.get("reservationStatus") not in {"COMPLETE", "CLOSED"}:
             errors.append("COMPLETE T10 requires v18.10 closure reservation complete")
         if governed_status(product, "T10") not in {"COMPLETE", "VERIFIED"}:
             errors.append("COMPLETE T10 requires current-state T10 final status")
         if not t10.get("releaseRunId") or not t10.get("g16Evidence"):
             errors.append("COMPLETE T10 requires durable Release/G16 evidence")
+        if product.get("postClosureSourceOverlapAuditRequired") is not True:
+            errors.append("COMPLETE T10 must preserve mandatory post-v18.10 source-overlap audit before v19 G1")
 
     if t10.get("effectiveRegressionResponsibilityCount") != 180:
         errors.append("T10 artifact must record 180 durable regression responsibilities")
