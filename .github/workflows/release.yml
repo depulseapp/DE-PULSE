@@ -348,7 +348,8 @@ jobs:
             --artifact release-assets/macos/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-macOS-Apple-Silicon.zip \
             --artifact release-assets/windows/De-Pulse-v${{ needs.g11.outputs.version }}-Stable-Windows-x64.zip \
             --out release-assets/De-Pulse-v${{ needs.g11.outputs.version }}-SBOM.spdx.json
-      - name: Attest exact certified runnable artifacts
+      - name: Attest exact certified runnable artifacts when GitHub supports repository attestations
+        if: ${{ github.event.repository.private != true || github.event.repository.owner.type != 'User' }}
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
@@ -362,6 +363,7 @@ jobs:
           CANDIDATE_SHA: ${{ needs.g11.outputs.candidate_sha }}
           SOURCE_FP: ${{ needs.g11.outputs.fingerprint }}
           TARGET_TAG: ${{ needs.g11.outputs.target_tag }}
+          HOSTED_ATTESTATION: ${{ github.event.repository.private == true && github.event.repository.owner.type == 'User' && 'UNAVAILABLE_USER_OWNED_PRIVATE_REPOSITORY' || 'PASS' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -372,7 +374,7 @@ jobs:
             echo "ERROR: $tag already points to $existing_ref, expected $CANDIDATE_SHA" >&2
             exit 2
           fi
-          VERSION="$VERSION" BUILD_ID="$BUILD_ID" CANDIDATE_SHA="$CANDIDATE_SHA" SOURCE_FP="$SOURCE_FP" TARGET_TAG="$TARGET_TAG" python3 - <<'PY'
+          VERSION="$VERSION" BUILD_ID="$BUILD_ID" CANDIDATE_SHA="$CANDIDATE_SHA" SOURCE_FP="$SOURCE_FP" TARGET_TAG="$TARGET_TAG" HOSTED_ATTESTATION="$HOSTED_ATTESTATION" python3 - <<'PY'
           import os
           from pathlib import Path
           Path('release-notes.md').write_text(
@@ -381,7 +383,8 @@ jobs:
               "- macOS Apple Silicon G13/G14: PASS\n"
               "- Windows x64 G13/G14: PASS\n"
               "- G15 Release Assurance: PASS\n"
-              "- Runnable artifact provenance attestation: PASS\n"
+              "- Exact-artifact provenance manifest: promotion-verification.json ATTACHED\n"
+              f"- GitHub hosted provenance attestation: {os.environ['HOSTED_ATTESTATION']}\n"
               "- SPDX 2.3 SBOM: ATTACHED\n"
               "- No Execution Boundary: PRESERVED\n"
               f"- Certified source: {os.environ['CANDIDATE_SHA']}\n"
