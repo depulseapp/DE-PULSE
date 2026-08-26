@@ -54,9 +54,15 @@ Current public planning unit: coherent **version/build**.
 - A version cannot close with unassigned applicable requirements, source-discovered responsibilities or regression ownership.
 
 Machine conservation:
+- certified v18 responsibility baseline: `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`;
 - hosted requirement source: `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`;
 - current HOST version overlay: `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`;
-- current 22-issue version map: `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`.
+- current 22-issue version map: `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`;
+- legacy future-roadmap/build-plan commitments not represented solely by HOST/backlog IDs: `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`;
+- whole-product cross-integration: `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`;
+- whole-product surface/IA baseline: `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`.
+
+The four requirement families are therefore: 180 certified v18 responsibilities, 72 HOST rows, 22 testing/future backlog issues and explicitly mapped legacy future commitments. A broad version title is never sufficient conservation evidence by itself.
 
 ## 5. Permanent smart/intelligent product rule
 
@@ -103,7 +109,7 @@ Historical v18.9.x/v18.10.0 sequencing and evidence remain available in release/
 Current active version. Existing issue #148 / PR #149 continues; no restart. Owns HOST-001..023 plus core authentication/session audit #164 and required backend-security overlap from #156.
 
 ### `v19.1.0` — Canonical Data Runtime & Global Symbol Processing
-Owns #150, #151, #153, #154, canonical Maintenance truth from #155, Data Engine integration truth from #160, and Global Symbol Store/membership/lifecycle/priority core from #167.
+Owns #150, #151, #153, #154, canonical Maintenance truth from #155, Data Engine integration truth from #160, and Global Symbol Store/membership/lifecycle/priority core from #167. Conserves Smart Router residual-gap routing, canonical Data Health recurrence, Shared Symbol Intelligence and provider->Market Mode integration foundations.
 
 ### `v19.2.0` — Hosted Gateway, Shared Serving & Sync Core
 Owns HOST-024..039. Hosted Gateway, lawful shared cache/live fan-out, stream revocation, API lifecycle, outbox/idempotency/revision/checkpoint/bootstrap/conflict/sync scheduling and tenant-aware observability. Must reuse v19.1 shared processing.
@@ -111,11 +117,23 @@ Owns HOST-024..039. Hosted Gateway, lawful shared cache/live fan-out, stream rev
 ### `v19.3.0` — Cross-Platform Product, Roles & Information Architecture
 Owns HOST-040..047 and HOST-053 plus #152, #156, #159, Data Engine presentation verification from #160, Global Symbols Administration from #167, #171 whole-product audit rows and cross-platform auth/session UX from #164.
 
+Also owns `LEGACY-TRADER-SETUP-SHORT-001`, a source-confirmed deterministic Desk gap. Current source can label a plan bearish but still constructs long-oriented target/invalidation/action-state geometry and uses one numeric score as both direction and displayed setup quality. v19.3.0 must establish one canonical two-sided setup contract across applicable Day/Swing/Long horizons while preserving the approved Desk look-and-feel:
+- explicit `LONG / SHORT / NO_SETUP-WAIT` side;
+- separate directional evidence from side-independent 0–100 setup-quality score;
+- LONG target/trim above entry with invalidation below;
+- SHORT cover/target below entry with invalidation above;
+- side-aware positive R-multiple, entry-distance, action-state, sorting, chart overlays and replay/outcome snapshots;
+- Research/Discovery projections consume the same canonical side/geometry;
+- bearish evidence alone does not force a SHORT setup when readiness/quality is insufficient;
+- No Execution remains permanent.
+
+This deterministic Desk setup contract is distinct from institutional/TDTI two-sided thesis evidence in v19.6/v20.3.
+
 ### `v19.4.0` — Market Intelligence & Research Workflow Quality
 Owns HOST-049 plus #158, #161, #162 and relevant #171 rows. Research stays deterministic-first; AI second opinion is bounded/canonical/optional.
 
 ### `v19.4.1` — Discovery & Opportunity Radar Effectiveness
-Heavy separate patch. Owns HOST-048 plus #163 and relevant #171 rows, including session-aware detection/admission/ranking/actionability and explainable omissions.
+Heavy separate patch. Owns HOST-048 plus #163 and relevant #171 rows, including session-aware detection/admission/ranking/actionability, explainable omissions, and conserved halt/LULD/volatility-pause/resume semantics.
 
 ### `v19.5.0` — Price/Volume & Event-Anchored Intelligence
 Owns #168 and #169. Deterministic volume-at-price/POC/HVN/LVN/value-area, governed Fib/AVWAP/structural zones and generic NFP/CPI/PCE/FOMC/earnings/material-event anchored reaction evidence. No new page by default.
@@ -124,26 +142,26 @@ Owns #168 and #169. Deterministic volume-at-price/POC/HVN/LVN/value-area, govern
 Heavy separate patch. Owns #157: canonical options chain/Greeks/OI, truthful GEX proxy, Call Wall, Put Wall, Gamma Magnet/Pin, Gamma Flip and clusters through provider-agnostic Router-owned capability contracts.
 
 ### `v19.6.0` — Point-in-Time Evidence & Outcome-Ready Foundation
-Owns HOST-057..064 plus deterministic foundation of #165: 13F/institutional point-in-time evidence, two-sided substrate, AODR lineage and canonical outcome/evidence snapshots. Records outcomes but does not grant learned production influence.
+Owns HOST-057..064 plus deterministic foundation of #165: 13F/institutional point-in-time evidence, two-sided thesis substrate, AODR lineage and canonical outcome/evidence snapshots. Records outcomes but does not grant learned production influence. Conserved trader-quality evidence includes MFE/MAE, horizon outcomes and point-in-time inputs needed for later false-positive/miss/calibration/usefulness evaluation.
 
 ### `v19.6.1` — Hosted Reliability, Economics & Adaptive Readiness
-Owns HOST-050..056 and HOST-065..071 plus final v19 #170/#171 reconciliation: tenant fairness/security/recovery/load, SLO/runbook/capacity/economics/provider-gap/adaptive-readiness and full intelligence/cross-integration audit.
+Owns HOST-050..056 and HOST-065..071 plus final v19 #170/#171 reconciliation: tenant fairness/security/recovery/load, SLO/runbook/capacity/economics/provider-gap/adaptive-readiness, conserved ADR-GDI reliability/graceful-degradation obligations and full intelligence/cross-integration audit.
 
 ### `v19.7.0` — v19 Major Closure
-No feature scope. Owns HOST-072. Requires all 72 HOST rows, all v19-assigned backlog rows, required Mac/Windows/Web parity and zero unexplained material implementation/security/data-truth/UX/cross-integration/performance gaps before G0-G16 publication.
+No feature scope. Owns HOST-072. Requires all 72 HOST rows, all v19-assigned backlog rows, all applicable legacy-future conservation rows, required Mac/Windows/Web parity and zero unexplained material implementation/security/data-truth/UX/cross-integration/performance gaps before G0-G16 publication.
 
 ## 9. v20 — Governed Adaptive Intelligence
 
 v20 begins only after v19.7.0 and explicit v20 readiness evidence.
 
 ### `v20.0.0` — Outcome Learning & Adaptive Control Plane
-Adaptive-learning portion of #165: immutable experiments/evidence snapshots, model/prompt/version governance, champion/challenger/shadow evaluation, analogues, regime-conditioned outcomes, calibration, miss/contradiction/drift and bounded promotion/rollback.
+Adaptive-learning portion of #165: immutable experiments/evidence snapshots, model/prompt/version governance, champion/challenger/shadow evaluation, analogues, regime-conditioned outcomes, calibration, miss/contradiction/drift and bounded promotion/rollback. Conserves the old adaptive-control and learning-guardrail responsibilities.
 
 ### `v20.1.0` — Adaptive Chart Pattern & Similarity Intelligence
 Owns #166: historical bootstrap, multi-timeframe fingerprints, named + unlabeled recurring structures, outcome labels, similarity retrieval, Watchlist/Discovery/Research/Desk consumers and protected background scheduling.
 
 ### `v20.2.0` — Adaptive Market Synthesis, Regime & Discovery Learning
-Learn bounded usefulness of Market Regime contributors, Discovery ranking/misses, event/price-volume/options/catalyst evidence and horizon relevance. Shadow-first; no single-symbol regime control.
+Learn bounded usefulness of Market Regime contributors, Discovery ranking/misses, event/price-volume/options/catalyst evidence and horizon relevance. Conserves the old ASBI evidence normalization, candidate/signal synthesis, contradiction/abstention, confidence/explanation and outcome-feedback responsibilities on top of v20.0 control-plane guardrails. Shadow-first; no single-symbol regime control.
 
 ### `v20.3.0` — Adaptive Institutional & Two-Sided Thesis Intelligence
 Adaptive institutional/13F/TDTI features, revisions/lags, regime conditioning and outcome calibration on point-in-time truth.
@@ -172,4 +190,4 @@ A future G0 overlap audit may prove scope inherited/already complete or external
 
 G1 conserves requirements/platforms and freezes scope; G2 audits architecture/reuse; G3 binds contracts/tests; G4-G9 implement/integrate/security/load/functional/UI truth; G10 reconciles complete version coverage; G11-G15 certify the immutable candidate and required artifacts/deployments; G16 performs zero-gap learning/handoff.
 
-No additional top-level gate is introduced. #170/#171 intelligence/IA dimensions are enforced inside applicable existing gates.
+No additional top-level gate is introduced. #170/#171 intelligence/IA dimensions and the legacy-future commitment matrix are enforced inside applicable existing gates.
