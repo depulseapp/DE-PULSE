@@ -28,11 +28,11 @@
     },
     {
       "id": "HOST-008-009-PRODUCT-ENTITLEMENT-QUOTA",
-      "status": "OPEN",
-      "owner": "product-entitlement policy composed with existing auth/observability owners",
-      "implementationPaths": ["governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "owner": "identity_model.go + identity_reauth.go product-entitlement policy composed with http_auth.go/http_security.go and canonical identity persistence",
+      "implementationPaths": ["identity_model.go", "identity_reauth.go", "http_auth.go", "http_security.go", "http_health.go", "product_entitlement_regression_test.go", "governance/root-layout-policy.json", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
       "evidenceRequired": ["product plan/status/capability entitlement separate from RBAC/provider rights", "quota/metering truth", "grace/suspension/disabled and upgrade/downgrade transitions", "restricted serving denied before data projection"],
-      "evidence": [],
+      "evidence": ["Tenant product plan/status and 24-hour metering state persist inside canonical IdentityPersistentState without creating a second persistence stack; FOUNDATION_CORE and FOUNDATION_EXTENDED capabilities remain a separate namespace from RBAC and provider rights", "Canonical authenticated HTTP composition is product entitlement -> existing anti-abuse request limiter -> durable product metering -> protected projection; the v18 anti-abuse limiter remains independently testable and is not redefined as product entitlement", "product_entitlement_regression_test.go covers RBAC separation, deterministic upgrade/downgrade with usage preservation, ACTIVE/GRACE/SUSPENDED/DISABLED transitions, persistent quota exhaustion, fail-closed denial before protected projections, no double charge on anti-abuse rejection, authorized plan/status projection, and metering-window reset", "New production code was consolidated into existing root owners after Fast #1174 exposed permanent root-ownership recurrence; the package-main regression test is explicitly owned by the existing finalRootEvidenceFiles mechanism because it requires unexported persistence/auth integration access. Exact-head executable Fast verification remains pending."],
       "closureCondition": "One canonical product-entitlement/quota policy is executable and independently composable with RBAC/provider rights.",
       "blocksIssueClosure": true
     },
