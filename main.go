@@ -24,11 +24,16 @@ func main() {
 		}
 		return
 	}
+	hosted := isHostedRuntime()
+	if hosted {
+		if err := validateHostedEnvironment(); err != nil {
+			log.Fatalf("hosted environment validation failed: %v", err)
+		}
+	}
 	app, err := NewApplication()
 	if err != nil {
 		log.Fatal(err)
 	}
-	hosted := isHostedRuntime()
 	if !hosted {
 		logPath := filepath.Join(app.configDir, "De-Pulse.log")
 		if logFile, logErr := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600); logErr == nil {
