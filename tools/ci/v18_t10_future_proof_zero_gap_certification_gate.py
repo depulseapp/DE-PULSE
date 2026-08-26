@@ -305,8 +305,33 @@ def main() -> int:
         stable = current.get("stable") or {}
         if stable.get("productVersion") != "18.10.0" or stable.get("tag") != stable_tag("18.10.0"):
             errors.append("COMPLETE T10 requires current-state Stable v18.10.0 publication under canonical tag policy")
-        if product.get("reservationStatus") not in {"COMPLETE", "CLOSED"}:
-            errors.append("COMPLETE T10 requires v18.10 closure reservation complete")
+
+        reservation_complete = product.get("reservationStatus") in {"COMPLETE", "CLOSED"}
+        post_audit_pass = (
+            product.get("postClosureSourceOverlapAuditRequired") is True
+            and str(product.get("postClosureSourceOverlapAuditStatus") or "").upper() == "PASS"
+            and bool(product.get("postClosureSourceOverlapAuditMergeSha"))
+        )
+        later_reservation_active = (
+            product.get("reservedWorkSliceId") != "ADAPT-V18-FINAL-CLOSURE-10-10-001"
+            and product.get("reservationStatus") in {"ACTIVE", "IN_PROGRESS", "G1_RESERVED"}
+            and product.get("reservedIssue") not in {None, 113, 123}
+            and bool(product.get("reservedBranch"))
+        )
+        if not reservation_complete and not (post_audit_pass and later_reservation_active):
+            errors.append(
+                "COMPLETE T10 requires either the completed v18.10 closure reservation or a later governed reservation after PASS post-v18 source-overlap audit"
+            )
+        if later_reservation_active:
+            t10_completed = completed.get("T10")
+            if not t10_completed or t10_completed.get("status") != "COMPLETE" or not t10_completed.get("releaseRunId"):
+                errors.append("post-v18 reservation requires durable completed T10 child evidence")
+            downstream = product.get("downstreamAssuranceState") or {}
+            if downstream.get("T10State") != "COMPLETE" or downstream.get("T10ReleaseRunId") != t10.get("releaseRunId"):
+                errors.append("post-v18 reservation requires current-state T10 COMPLETE / release-run binding")
+            if product.get("nextChildIssue") is not None or product.get("nextChildTrack") is not None:
+                errors.append("post-v18 reservation may not reopen completed v18 T10 child progression")
+
         if governed_status(product, "T10") not in {"COMPLETE", "VERIFIED"}:
             errors.append("COMPLETE T10 requires current-state T10 final status")
         if not t10.get("releaseRunId") or not t10.get("g16Evidence"):
