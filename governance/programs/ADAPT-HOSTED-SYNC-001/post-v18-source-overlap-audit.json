@@ -5,12 +5,24 @@
   "scopeId": "ADAPT-HOSTED-SYNC-001",
   "baselineMainSha": "9253a20fac2580e9e5d6d4f7a0777761f724c679",
   "stable": "v18.10.0",
-  "state": "PASS_CANDIDATE_PENDING_EXACT_HEAD_QUALIFICATION_AND_MERGE",
+  "state": "PASS",
   "requirementsAudited": 72,
   "requiredRange": "HOST-001..HOST-072",
   "unexplainedOverlapCount": 0,
   "v18StableMutated": false,
   "v19G1Started": false,
+  "qualification": {
+    "sourceSha": "cabf476b9cb26102a36e5a8913b61c86bc357854",
+    "fastRunNumber": 1122,
+    "fastRunId": 32925719203,
+    "fast": "PASS",
+    "qualifiedRunNumber": 226,
+    "qualifiedRunId": 32925800749,
+    "qualified": "PASS",
+    "portability": ["ubuntu-24.04 PASS", "macos-15 PASS", "windows-2025 PASS"],
+    "mergedPullRequest": 146,
+    "mergeSha": "f5364888fad81114d1372d0d6d4975b282f83874"
+  },
   "rules": {
     "requirementsAreTraceabilityNotReleaseEvents": true,
     "coherentImplementationBandsRequired": true,
@@ -68,5 +80,5 @@
     "define PostgreSQL tenant isolation/migration/recovery acceptance",
     "define CI historical-conservation compaction without weakening affected tests"
   ],
-  "g1Permission": "PERMITTED_ONLY_AFTER_EXACT_HEAD_QUALIFICATION_AND_MERGE_TO_MAIN"
+  "g1Permission": "PERMITTED_NOT_STARTED"
 }

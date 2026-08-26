@@ -4,13 +4,17 @@
 **Parent future program:** #66 / `ADAPT-HOSTED-SYNC-001`  
 **Baseline main:** `9253a20fac2580e9e5d6d4f7a0777761f724c679`  
 **Certified Stable:** `v18.10.0` — immutable  
-**State:** `PASS_CANDIDATE_PENDING_EXACT_HEAD_QUALIFICATION_AND_MERGE`
+**State:** `PASS`  
+**Qualified source:** `cabf476b9cb26102a36e5a8913b61c86bc357854`  
+**Fast:** #1122 / `32925719203` — PASS  
+**Qualified:** #226 / `32925800749` — PASS, Ubuntu/macOS/Windows portability PASS  
+**Merged:** PR #146 -> `f5364888fad81114d1372d0d6d4975b282f83874`
 
 ## Audit conclusion
 
 The conserved `HOST-001..HOST-072` ledger is structurally sound for forward planning. No requirement requires a second Smart Provider Router, second freshness/cache/persistence/subscription/reconciliation/lifecycle engine, or a replacement for direct SEC/EDGAR authority. Existing v18 owners are reused wherever they already own the responsibility; genuinely hosted-only responsibilities remain explicit residuals around those owners.
 
-The audit therefore permits a future v19 G1 **only after this audit candidate passes exact-head CI and is merged to `main`**. This audit does not reserve a v19 branch, does not start implementation, and does not alter or republish v18.10.0 Stable.
+The audit passed exact-head Fast and Qualified, including process portability on Ubuntu, macOS and Windows, and was merged to `main`. **v19 G1 is now permitted but remains unstarted.** This audit did not reserve a v19 product branch, did not start implementation, and did not alter or republish v18.10.0 Stable.
 
 ## 72-row overlap disposition
 
@@ -89,13 +93,12 @@ Deterministic T8 CI budgets remain. Hosted operation additionally measures p50/p
 ### 12. Governance schema longevity
 Permanent registries should prefer stable `schemaVersion` plus `introducedIn` / `lastReviewedAgainst` metadata over treating old product-version strings as permanent schema identity. This is cleanup, not a reason for meaningless product-version churn.
 
-## Pre-v19 G1 exit conditions
+## v19 G1 entry conditions
 
-A future v19 G1 may be reserved only when:
-1. this audit is merged and machine/current adaptive state reflects `PASS`;
-2. no v18.10 Stable artifact/tag/source identity is changed;
-3. HOST requirements are grouped into coherent implementation bands rather than one-release-per-row;
-4. the first band names exact canonical owners and residuals before coding;
-5. point-in-time truth, hosted security negative tests, PostgreSQL tenant isolation and decision-usefulness measurement are carried forward where applicable;
-6. the halt/LULD residual is explicitly source-proven or added to governed scope;
-7. CI changes preserve exact-head evidence while avoiding historical assurance accumulation.
+The post-v18 audit conditions are now satisfied. A v19 G1 work slice may be reserved provided it:
+1. preserves v18.10 Stable artifact/tag/source identity;
+2. uses coherent implementation bands rather than one-release-per-row;
+3. names exact canonical owners and justified residuals before coding;
+4. carries point-in-time truth, hosted security negative tests, PostgreSQL tenant isolation and decision-usefulness measurement where applicable;
+5. explicitly source-proves or governs the halt/LULD residual;
+6. preserves exact-head evidence while avoiding historical assurance accumulation.
