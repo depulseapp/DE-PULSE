@@ -41,11 +41,15 @@ For every shared capability:
 4. one-platform validation is diagnostic only;
 5. no GA/Delivered state while material REQUIRED-platform parity debt remains.
 
-## 4. Zero-miss conservation and version sizing
+## 4. Zero-Miss Future-Version Conservation and version sizing
 
 Requirements, backlog issues and acceptance rows are traceability/evidence units; they are **not public releases**.
 
 Current public planning unit: coherent **version/build**.
+
+The version-first rebaseline does not retire the #66 zero-miss contract. Every applicable HOST responsibility remains bound to `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json` and the detailed conservation plan `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`. Before G1 implementation, source overlap is classified `INHERITED`, `EXTEND_EXISTING_OWNER`, `REPLACE_CONSOLIDATE`, `NEW_RESIDUAL`, or `EXTERNAL_BLOCKED`; a roadmap/version label never proves implementation.
+
+Dependency bands and versions may be consolidated into coherent builds, but the next dependency band may not begin while an applicable requirement is unassigned, unexplained, unevidenced, silently carried forward, or missing durable regression ownership. Zero-gap closure remains required before advancing beyond the band that owns the responsibility.
 
 - Combine smaller related changes when they share owners/dependencies/evidence.
 - Split feature-heavy/high-risk work into a real patch version when actual implementation risk warrants it.
