@@ -1,0 +1,130 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "issue": 148,
+  "branch": "adapt-hosted-trust-foundation-001",
+  "closurePolicy": "#148 closes only when every HOST-001..HOST-023 responsibility is implemented/evidenced through its canonical existing owner or justified hosted residual, all adverse hosted/security/data-truth/recovery requirements are VERIFIED, exact-head Fast and impact-selected Qualified pass on the final candidate, and v18.10.0 Stable remains immutable. Requirement-sized documentation or a working hosted connection cannot substitute for executable closure evidence.",
+  "allGapsMustBeVerified": true,
+  "gaps": [
+    {
+      "id": "HOST-001-003-PROVIDER-RIGHTS",
+      "status": "OPEN",
+      "owner": "provider_data_rights.go + provider registration + Smart Provider Router v2 + canonical cache/persistence rights decisions",
+      "implementationPaths": ["provider_data_rights.go", "provider_registration.go", "provider_router.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["commercial/multi-user proxy/cache/retention/redistribution/display/derived/AI/limits/attribution/environment/effective-expiry metadata", "provider-specific evidence binding/provenance", "working credential never implies rights", "rights downgrade/expiry fails closed across applicable routing/cache/persistence/future serving without a second router"],
+      "evidence": [],
+      "closureCondition": "HOST-001..003 have executable positive and adverse evidence and preserve Smart Provider Router v2 sole routing authority.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-004-007-TENANT-IDENTITY-SESSION",
+      "status": "OPEN",
+      "owner": "canonical identity/auth/session/reauth/workspace owners",
+      "implementationPaths": ["identity_model.go", "http_auth.go", "identity_reauth.go", "workspace_isolation_regression_test.go"],
+      "evidenceRequired": ["first-class tenant/account isolation independent of role/product entitlement/provider rights", "SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability semantics", "device registration/revocation/lost/stale lifecycle", "session expiry/refresh/revocation and sensitive reauth/MFA-class controls", "cross-tenant and revoked-state denial"],
+      "evidence": [],
+      "closureCondition": "Hosted tenant/account/device/session identity extends existing canonical identity owners with positive and negative authorization evidence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-008-009-PRODUCT-ENTITLEMENT-QUOTA",
+      "status": "OPEN",
+      "owner": "product-entitlement policy composed with existing auth/observability owners",
+      "implementationPaths": ["governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["product plan/status/capability entitlement separate from RBAC/provider rights", "quota/metering truth", "grace/suspension/disabled and upgrade/downgrade transitions", "restricted serving denied before data projection"],
+      "evidence": [],
+      "closureCondition": "One canonical product-entitlement/quota policy is executable and independently composable with RBAC/provider rights.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-010-012-PRIVACY-LIFECYCLE",
+      "status": "OPEN",
+      "owner": "hosted account data-governance/privacy lifecycle around canonical persistence/recovery owners",
+      "implementationPaths": ["governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json", "persistence.go", "persistence_backend_postgres.go"],
+      "evidenceRequired": ["account data inventory/classification/minimization/retention", "review/export/portability/deactivation/deletion/tombstone semantics", "deletion/expiry across Postgres/SQLite/cache/backups/PITR", "operator access/residency/audit and provider/legal retention compatibility"],
+      "evidence": [],
+      "closureCondition": "Product-owned account data has executable, cross-store privacy lifecycle semantics without destructive or silent divergence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
+      "status": "OPEN",
+      "owner": "hosted environment/IaC and service-trust owners",
+      "implementationPaths": ["governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["dev/test/stage/prod versioned desired-state isolation and drift contract", "service-to-service identity", "ingress/egress/network/TLS trust boundaries", "least privilege and reproducibility"],
+      "evidence": [],
+      "closureCondition": "Hosted environments and service trust are reproducible, isolated and fail closed without becoming market-data owners.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-015-016-POSTGRES-TENANCY-RECOVERY",
+      "status": "OPEN",
+      "owner": "persistence_backend_postgres.go + canonical migration/persistence/recovery owner",
+      "implementationPaths": ["persistence_backend_postgres.go", "persistence.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["tenant/account schema ownership and migration/expand-contract strategy", "application authorization plus explicit RLS disposition", "pool/index/capacity limits", "HA/failover/encrypted backup/PITR/restore drills/RPO-RTO", "partial-outage and rollback reconciliation", "cross-tenant denial"],
+      "evidence": [],
+      "closureCondition": "Existing PostgreSQL foundation is tenant-safe and recoverable; successful connection/ping alone never satisfies hosted readiness.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-017-018-MANAGED-SECRETS",
+      "status": "OPEN",
+      "owner": "hosted managed-secret/KMS lifecycle around the existing standalone local-secret owner",
+      "implementationPaths": ["secrets.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["server-side managed secret references and least-privilege resolution", "zero raw provider secrets in normal clients/sync rows/logs/traces/backups", "rotation/cutover/rollback/emergency revoke", "health-before-cutover and environment isolation", "privileged audit"],
+      "evidence": [],
+      "closureCondition": "Hosted provider-secret lifecycle is executable, rotatable and non-leaking without replacing standalone local-secret ownership.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-019-020-SUPPLY-CHAIN-PROVENANCE",
+      "status": "OPEN",
+      "owner": "existing CI provenance/SBOM owners plus hosted deploy/supply-chain traceability residual",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml", ".github/workflows/release.yml", "tools/release/source_fingerprint.py", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["direct/transitive dependency inventory and advisories", "license/source policy and approved sources", "SBOM where applicable", "source-build-artifact-environment traceability", "vulnerable component patch/revoke process", "signing/attestation/provenance where supported"],
+      "evidence": [],
+      "closureCondition": "Hosted supply-chain/deploy residual extends existing provenance owners and fails closed on unapproved/vulnerable/untraceable components.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-021-PROVIDER-SCORECARDS",
+      "status": "OPEN",
+      "owner": "Smart Router diagnostics + provider telemetry/usefulness + Data Health",
+      "implementationPaths": ["provider_router.go", "provider_telemetry.go", "governance/data-health/provider-capability-matrix.json"],
+      "evidenceRequired": ["measured health/freshness/latency/disagreement/headroom/rights/cost/usefulness", "unknown metrics remain unknown", "semantic usefulness remains advisory", "deterministic routing authority is unchanged"],
+      "evidence": [],
+      "closureCondition": "Provider scorecards are measured, rights/cost aware and operationally useful without silently changing deterministic routing.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-022-POINT-IN-TIME-TRUTH",
+      "status": "OPEN",
+      "owner": "provider reconciliation + canonical provenance/persistence owners",
+      "implementationPaths": ["provider_reconciliation.go", "persistence.go", "persistence_backend_postgres.go", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["source time/observed time/effective or report period/revision-amendment distinction", "point-in-time replay reconstructs genuinely knowable evidence", "later revisions cannot leak backward", "rights/retention/provenance remain bound"],
+      "evidence": [],
+      "closureCondition": "No-lookahead and revision-aware primitives are canonical before historical/adaptive evaluation uses hosted evidence.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "HOST-023-BAND-ZERO-GAP-CLOSURE",
+      "status": "OPEN",
+      "owner": "G0-G16 coverage/closure owners",
+      "implementationPaths": ["governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json", "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"],
+      "evidenceRequired": ["HOST-001..022 all VERIFIED or explicit named external blocker permitted by governance", "zero unexplained owner/evidence carry-forward", "Hosted Provider Gateway remains blocked until closure"],
+      "evidence": [],
+      "closureCondition": "The Hosted Trust Foundation closes with zero unexplained applicable gap before HOST-024 gateway activation.",
+      "blocksIssueClosure": true
+    },
+    {
+      "id": "EXACT-HEAD-FAST-QUALIFIED",
+      "status": "OPEN",
+      "owner": "canonical Fast/Qualified evidence",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS on final candidate", "impact-selected Qualified PASS on identical head", "expected-head merge binding", "no release/publication before governed completion"],
+      "evidence": [],
+      "closureCondition": "Final #148 candidate has exact-head Fast and identical-head Qualified success before expected-head merge.",
+      "blocksIssueClosure": true
+    }
+  ]
+}
