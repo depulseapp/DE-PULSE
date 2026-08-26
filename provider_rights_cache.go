@@ -1,6 +1,9 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 // hostedRightsFilteredMarketCache is deliberately narrower than the desktop
 // cache. HOST-001..003 cannot prove provider-specific legal provenance for the
@@ -16,8 +19,9 @@ func hostedRightsFilteredMarketCache(c MarketCache) MarketCache {
 		ProviderCapabilityStates: c.ProviderCapabilityStates,
 		SavedAt:                  c.SavedAt,
 	}
+	now := time.Now()
 	for symbol, q := range c.Quotes {
-		if providerQuoteHostedRightsAllowed(q, providerHostedUseProductionServing, evidenceNow()) {
+		if providerQuoteHostedRightsAllowed(q, providerHostedUseProductionServing, now) {
 			out.Quotes[symbol] = q
 		}
 	}
