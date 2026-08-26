@@ -4,7 +4,7 @@
 **Certified Stable:** `v18.10.0` — immutable  
 **Post-v18 audit:** #145 / `adapt-post-v18-overlap-rebaseline-001` — PASS candidate pending exact-head qualification/merge.
 
-v18.10.0 delivery remains authoritative and unchanged: Fast exact-head, identical-head Qualified, canonical Release G11–G16, macOS Apple Silicon + Windows x64 native evidence, G15 provenance/SBOM and no-rebuild publication.
+v18.10.0 delivery remains authoritative and unchanged: **canonical Fast exact-head PASS**, **Qualified exact-head PASS**, canonical Release G11–G16, macOS Apple Silicon + Windows x64 native evidence, G15 provenance/SBOM and no-rebuild publication.
 
 ## Rebaselined delivery rules
 

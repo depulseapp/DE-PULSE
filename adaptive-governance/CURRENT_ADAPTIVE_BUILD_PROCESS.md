@@ -6,6 +6,8 @@
 
 The permanent execution loop remains source-driven and exact-head: LOOKUP -> COMPARE -> CLASSIFY -> DECIDE -> UPDATE -> Fast -> Qualified -> G11–G16 when a release is actually being produced. v18.10.0 remains immutable and is not reopened by this audit.
 
+The inherited Data Health process remains in force: **#81/#82/#83/#78/#84** continue to govern Router adoption, common health/recovery, lifecycle, TradeInsight admission and zero-gap closure. Unclassified provider/fetch paths fail closed, and **canonical freshness** remains authoritative.
+
 ## Rebaselined process rules
 
 1. **Start from live source, not roadmap labels.** Before G1 implementation, compare the requirement to current canonical owners and classify it `REUSE`, `EXTEND_EXISTING`, `CONSOLIDATE`, `JUSTIFIED_RESIDUAL`, or `NOT_APPLICABLE`.

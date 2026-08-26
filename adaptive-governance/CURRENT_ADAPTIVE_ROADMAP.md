@@ -8,6 +8,10 @@
 
 v18.10.0 remains the certified 10/10 closure with 180 shipped responsibilities under durable regression ownership. The 72-row `HOST-001..HOST-072` ledger remains the conserved v19 traceability baseline. The post-v18 source-overlap audit found zero unexplained canonical-owner overlap and confirms v19 can reuse/extend existing Router, Data Health, persistence, subscription, identity/session, Research/Discovery, outcome/provenance and release owners instead of duplicating them.
 
+## Conserved Data Health/provider authority
+
+The inherited executable provider sequence remains permanent authority: **#80 baseline -> #81 Smart Provider Router v2 adoption -> #82 common health/recovery -> #83 lifecycle -> #78 TradeInsight admission -> #84 zero-gap closure**. Operator truth continues to use **PARTIAL COVERAGE** and **DATA DEGRADED**. Future work must not weaken, rename away, bypass or create parallel owners for these states.
+
 ## Rebaselined forward priorities
 
 1. **Hosted foundation, not parallel architecture.** PostgreSQL remains the existing hosted persistence foundation; Smart Provider Router v2 remains sole general provider routing/admission owner; direct SEC/EDGAR remains Form 4 authority; canonical freshness/cache/reconciliation/subscription/telemetry/lifecycle/identity owners remain authoritative.

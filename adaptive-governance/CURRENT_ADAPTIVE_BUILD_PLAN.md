@@ -7,6 +7,10 @@
 
 The v18.10.0 build contract remains closed: T1–T10, exact-head Fast/Qualified, macOS Apple Silicon + Windows x64 lifecycle, G15 provenance, SBOM, no-rebuild publication and G16 all passed. Future work must conserve those responsibilities without reproducing a new historical closure stack on every version.
 
+## Conserved Data Health build inputs
+
+The inherited Data Health build inputs remain `governance/data-health/provider-capability-matrix.json`, `governance/data-health/data-health-slo.json`, and `governance/data-health/provider-fetch-paths.json`. Their ownership and recurrence continue to project consistently through the **Adaptive Roadmap**, **Adaptive Build Plan**, **Build Process**, and **Delivery Process**. Future changes reuse the existing Router, Data Health, canonical freshness, cache, persistence, telemetry, reconciliation, subscription, identity and lifecycle owners.
+
 ## Rebaselined build rules
 
 ### Requirement/evidence binding at implementation time
