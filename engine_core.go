@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/sha256"
-	"encoding/json"
 	"os"
 	"sort"
 	"strings"
@@ -191,7 +190,7 @@ func (e *Engine) loadCache() {
 		return
 	}
 	var c MarketCache
-	if json.Unmarshal(data, &c) != nil {
+	if c.UnmarshalJSON(data) != nil {
 		return
 	}
 	e.quotes = c.Quotes
@@ -322,7 +321,7 @@ func (e *Engine) saveCache() error {
 	delete(lastUpdated, "cache")
 	base := MarketCache{Quotes: clone(e.quotes), History: clone(e.history), Bars: clone(e.bars), Fundamentals: clone(e.fundamentals), News: clone(e.news), Earnings: clone(e.earnings), Filings: clone(e.filings), SECIntelligence: clone(e.secIntelligence), Scanner: clone(e.scanner), GlobalDirect: clone(e.globalDirect), MacroMetrics: clone(e.macroMetrics), MacroEvents: clone(e.macroEvents), EventReactions: clone(e.eventReactions), Options: clone(e.options), SignalValidation: clone(e.signalValidation), Preparations: clone(e.preparations), CatalystReactions: clone(e.catalystReactions), MarketOpenFlags: clone(e.marketOpenFlags), MarketOpenCheckpoint: clone(e.marketOpenCheckpoint), CorporateActions: clone(e.corporateActions), RawHistoryCoverage: clone(e.rawHistoryCoverage), LiquidityBaselines: clone(e.liquidityBaselines), ProviderCapabilityStates: clone(e.providerCapabilityStates), RapidMoveEvents: clone(e.rapidMoveEvents), RapidMoveRecent: clone(e.rapidMoveRecent), RapidMoveScorecard: clone(e.rapidMoveScorecard), LastUpdated: lastUpdated, SavedAt: 0}
 	e.mu.RUnlock()
-	fingerprintData, err := json.Marshal(base)
+	fingerprintData, err := base.MarshalJSON()
 	if err != nil {
 		return err
 	}
@@ -334,7 +333,7 @@ func (e *Engine) saveCache() error {
 		return nil
 	}
 	base.SavedAt = time.Now().UnixMilli()
-	data, err := json.Marshal(base)
+	data, err := base.MarshalJSON()
 	if err != nil {
 		return err
 	}
