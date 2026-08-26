@@ -1,6 +1,11 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"os"
 	"strings"
 	"time"
 )
@@ -9,6 +14,9 @@ const (
 	providerDataRightsPolicyVersion          = "provider-data-rights-v19.0.0"
 	providerCommercialReadinessPolicyVersion = "provider-commercial-readiness-v18.4.0"
 	providerHostedRightsPolicyVersion        = "provider-hosted-rights-v19.0.0"
+	providerRightsBundlePolicyVersion        = "provider-rights-bundle-v19.0.0"
+	providerRightsBundlePathEnv              = "DEPULSE_PROVIDER_RIGHTS_BUNDLE_PATH"
+	providerRightsBundleSHA256Env            = "DEPULSE_PROVIDER_RIGHTS_BUNDLE_SHA256"
 	providerRightsUnreviewed                 = "UNREVIEWED"
 	providerRightsNotAsserted                = "NOT_ASSERTED"
 	providerRightsApproved                   = "APPROVED"
@@ -29,6 +37,11 @@ const (
 	providerHostedUseRedisplay           = "REDISTRIBUTION_DISPLAY"
 	providerHostedUseAI                  = "AI_DERIVED_USE"
 	providerHostedUseLiveFanout          = "LIVE_FANOUT"
+	// PRODUCTION_SERVING is the conservative hosted admission boundary used by
+	// executable provider routing. It requires every right needed to acquire,
+	// proxy, retain and redisplay shared hosted market data. AI use remains a
+	// separate purpose because not every provider payload is sent to AI.
+	providerHostedUseProductionServing = "PRODUCTION_SERVING"
 )
 
 // ProviderCommercialReadiness is the v18 fail-closed release-suitability view
@@ -49,6 +62,7 @@ type ProviderCommercialReadiness struct {
 // A working key or public endpoint never grants any field here by inference.
 type ProviderDataRightsMetadata struct {
 	PolicyVersion       string                      `json:"policyVersion"`
+	Provider            string                      `json:"provider"`
 	ReviewState         string                      `json:"reviewState"`
 	CommercialUse       string                      `json:"commercialUse"`
 	MultiUserUse        string                      `json:"multiUserUse"`
@@ -71,11 +85,17 @@ type ProviderDataRightsMetadata struct {
 	CommercialReadiness ProviderCommercialReadiness `json:"commercialReadiness"`
 }
 
+type ProviderDataRightsBundle struct {
+	PolicyVersion string                       `json:"policyVersion"`
+	Records       []ProviderDataRightsMetadata `json:"records"`
+}
+
 // ProviderHostedRightsDecision is the single fail-closed decision consumed by
-// later hosted serving/cache/persistence/live-fanout composition. It is not a
+// hosted routing/serving/cache/persistence/live-fanout composition. It is not a
 // provider rank, score or fallback decision and must not become a second router.
 type ProviderHostedRightsDecision struct {
 	PolicyVersion   string   `json:"policyVersion"`
+	Provider        string   `json:"provider"`
 	State           string   `json:"state"`
 	Allowed         bool     `json:"allowed"`
 	Purpose         string   `json:"purpose"`
@@ -85,8 +105,23 @@ type ProviderHostedRightsDecision struct {
 	BlockingReasons []string `json:"blockingReasons,omitempty"`
 }
 
+func normalizeProviderRightsDigest(value string) (string, bool) {
+	value = strings.ToLower(strings.TrimSpace(value))
+	value = strings.TrimPrefix(value, "sha256:")
+	if len(value) != sha256.Size*2 {
+		return "", false
+	}
+	if _, err := hex.DecodeString(value); err != nil {
+		return "", false
+	}
+	return value, true
+}
+
 func providerRightExplicitlyApproved(rights ProviderDataRightsMetadata, value string) bool {
+	_, digestOK := normalizeProviderRightsDigest(rights.EvidenceDigest)
 	return rights.EvidenceBound &&
+		digestOK &&
+		strings.TrimSpace(rights.Provider) != "" &&
 		strings.EqualFold(strings.TrimSpace(rights.ReviewState), providerRightsApproved) &&
 		strings.EqualFold(strings.TrimSpace(value), providerRightsApproved)
 }
@@ -121,10 +156,16 @@ func providerRightsEnvironmentAllowed(rights ProviderDataRightsMetadata, environ
 func evaluateProviderHostedRightsDecision(rights ProviderDataRightsMetadata, purpose, environment string, now time.Time) ProviderHostedRightsDecision {
 	purpose = strings.ToUpper(strings.TrimSpace(purpose))
 	environment = strings.ToLower(strings.TrimSpace(environment))
-	blocking := make([]string, 0, 10)
+	blocking := make([]string, 0, 12)
 
-	if !rights.EvidenceBound || strings.TrimSpace(rights.EvidenceRef) == "" || strings.TrimSpace(rights.EvidenceDigest) == "" {
+	if strings.TrimSpace(rights.Provider) == "" {
+		blocking = append(blocking, "provider identity is not bound to the rights record")
+	}
+	if !rights.EvidenceBound || strings.TrimSpace(rights.EvidenceRef) == "" {
 		blocking = append(blocking, "provider-specific rights evidence/provenance is not bound")
+	}
+	if _, ok := normalizeProviderRightsDigest(rights.EvidenceDigest); !ok {
+		blocking = append(blocking, "provider rights evidence digest is not a valid SHA-256 binding")
 	}
 	if !strings.EqualFold(strings.TrimSpace(rights.ReviewState), providerRightsApproved) {
 		blocking = append(blocking, "provider rights review is not approved")
@@ -183,6 +224,13 @@ func evaluateProviderHostedRightsDecision(rights ProviderDataRightsMetadata, pur
 		require(rights.Proxying, "proxying is not approved")
 		require(rights.Redistribution, "redistribution is not approved")
 		require(rights.Display, "display is not approved")
+	case providerHostedUseProductionServing:
+		require(rights.CommercialUse, "commercial use is not approved")
+		require(rights.MultiUserUse, "multi-user use is not approved")
+		require(rights.Proxying, "proxying is not approved")
+		require(rights.CachingRetention, "caching/retention is not approved")
+		require(rights.Redistribution, "redistribution is not approved")
+		require(rights.Display, "display is not approved")
 	default:
 		blocking = append(blocking, "unknown hosted rights purpose")
 	}
@@ -193,6 +241,7 @@ func evaluateProviderHostedRightsDecision(rights ProviderDataRightsMetadata, pur
 	}
 	return ProviderHostedRightsDecision{
 		PolicyVersion:   providerHostedRightsPolicyVersion,
+		Provider:        strings.TrimSpace(rights.Provider),
 		State:           state,
 		Allowed:         state == providerHostedRightsAllowed,
 		Purpose:         purpose,
@@ -211,9 +260,15 @@ func evaluateProviderCommercialReadiness(rights ProviderDataRightsMetadata) Prov
 	redistributionReady := providerRightExplicitlyApproved(rights, rights.Redistribution)
 	aiReady := providerRightExplicitlyApproved(rights, rights.AIUse)
 
-	blocking := make([]string, 0, 4)
+	blocking := make([]string, 0, 5)
+	if strings.TrimSpace(rights.Provider) == "" {
+		blocking = append(blocking, "provider identity is not bound")
+	}
 	if !rights.EvidenceBound {
 		blocking = append(blocking, "provider-specific rights evidence is not bound")
+	}
+	if _, ok := normalizeProviderRightsDigest(rights.EvidenceDigest); !ok {
+		blocking = append(blocking, "provider-specific evidence digest is invalid")
 	}
 	if !commercialReady {
 		blocking = append(blocking, "commercial-use approval is not bound")
@@ -241,12 +296,10 @@ func evaluateProviderCommercialReadiness(rights ProviderDataRightsMetadata) Prov
 	}
 }
 
-// providerDataRightsMetadata fails closed. Provider-specific approvals require
-// separately bound, reviewable evidence and are never inferred from a configured
-// credential, successful request, public endpoint, or inherited production route.
-func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
+func defaultProviderDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 	rights := ProviderDataRightsMetadata{
 		PolicyVersion:    providerDataRightsPolicyVersion,
+		Provider:         strings.TrimSpace(provider),
 		ReviewState:      providerRightsUnreviewed,
 		CommercialUse:    providerRightsNotAsserted,
 		MultiUserUse:     providerRightsNotAsserted,
@@ -263,4 +316,92 @@ func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 	}
 	rights.CommercialReadiness = evaluateProviderCommercialReadiness(rights)
 	return rights
+}
+
+func loadProviderDataRightsBundle() (ProviderDataRightsBundle, error) {
+	path := strings.TrimSpace(os.Getenv(providerRightsBundlePathEnv))
+	if path == "" {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle path is not configured")
+	}
+	expected, ok := normalizeProviderRightsDigest(os.Getenv(providerRightsBundleSHA256Env))
+	if !ok {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle SHA-256 pin is missing or invalid")
+	}
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle cannot be read: %w", err)
+	}
+	sum := sha256.Sum256(raw)
+	if hex.EncodeToString(sum[:]) != expected {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle SHA-256 pin mismatch")
+	}
+	var bundle ProviderDataRightsBundle
+	if err := json.Unmarshal(raw, &bundle); err != nil {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle is invalid JSON: %w", err)
+	}
+	if bundle.PolicyVersion != providerRightsBundlePolicyVersion {
+		return ProviderDataRightsBundle{}, fmt.Errorf("provider rights bundle policy version %q is not supported", bundle.PolicyVersion)
+	}
+	return bundle, nil
+}
+
+func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
+	fallback := defaultProviderDataRightsMetadata(provider)
+	bundle, err := loadProviderDataRightsBundle()
+	if err != nil {
+		if isHostedRuntime() {
+			fallback.Detail = "Hosted provider rights are blocked: " + err.Error()
+		}
+		return fallback
+	}
+	for _, candidate := range bundle.Records {
+		if !strings.EqualFold(strings.TrimSpace(candidate.Provider), strings.TrimSpace(provider)) {
+			continue
+		}
+		if candidate.PolicyVersion != providerDataRightsPolicyVersion {
+			fallback.Detail = "Hosted provider rights are blocked: provider rights record policy version is invalid."
+			return fallback
+		}
+		if strings.TrimSpace(candidate.Provider) == "" {
+			fallback.Detail = "Hosted provider rights are blocked: provider identity is missing from the bound record."
+			return fallback
+		}
+		candidate.Provider = strings.TrimSpace(candidate.Provider)
+		candidate.CommercialReadiness = evaluateProviderCommercialReadiness(candidate)
+		return candidate
+	}
+	if isHostedRuntime() {
+		fallback.Detail = "Hosted provider rights are blocked: no provider-specific record exists in the SHA-pinned rights bundle."
+	}
+	return fallback
+}
+
+func hostedProviderRightsDecision(provider, purpose string, now time.Time) ProviderHostedRightsDecision {
+	if !isHostedRuntime() {
+		return ProviderHostedRightsDecision{
+			PolicyVersion: providerHostedRightsPolicyVersion,
+			Provider:      strings.TrimSpace(provider),
+			State:         providerHostedRightsAllowed,
+			Allowed:       true,
+			Purpose:       strings.ToUpper(strings.TrimSpace(purpose)),
+			Environment:   "desktop",
+		}
+	}
+	environment := strings.ToLower(strings.TrimSpace(os.Getenv(hostedEnvironmentEnv)))
+	return evaluateProviderHostedRightsDecision(providerDataRightsMetadata(provider), purpose, environment, now)
+}
+
+func hostedProviderRightsAllowed(provider, purpose string, now time.Time) bool {
+	return hostedProviderRightsDecision(provider, purpose, now).Allowed
+}
+
+func providerQuoteHostedRightsAllowed(q Quote, purpose string, now time.Time) bool {
+	if !isHostedRuntime() {
+		return true
+	}
+	provider := sourceProvider(q.Source)
+	if provider == "" || provider == "—" {
+		return false
+	}
+	return hostedProviderRightsAllowed(provider, purpose, now)
 }
