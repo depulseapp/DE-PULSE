@@ -16,8 +16,9 @@ const (
 	hostedCapabilityStandardUse   = "STANDARD_USE"
 	hostedCapabilityDemoUse       = "DEMO_USE"
 	defaultHostedDeviceStaleTTL   = 30 * 24 * time.Hour
-	DeviceStale      DeviceStatus = "STALE"
 )
+
+const DeviceStale DeviceStatus = "STALE"
 
 type HostedIdentityRequirement struct {
 	TenantID                    string `json:"tenantId"`
