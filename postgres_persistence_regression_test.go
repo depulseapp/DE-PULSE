@@ -4,12 +4,20 @@ package main
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"net"
+	"net/url"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 	"time"
 )
+
+const host012ManagedRecoveryAck = "HOST012_MANAGED_PITR_OPERATOR_DRILL"
 
 func v183PostgresURL(t *testing.T) string {
 	t.Helper()
@@ -42,6 +50,100 @@ func resetV183Postgres(t *testing.T, backend *postgresPersistenceBackend) {
 	if err != nil {
 		t.Fatalf("reset postgres test database: %v", err)
 	}
+}
+
+func host012ManagedRecoveryEnv(t *testing.T, key string) string {
+	t.Helper()
+	value := strings.TrimSpace(os.Getenv(key))
+	if value == "" {
+		t.Fatalf("%s is required for the managed recovery drill", key)
+	}
+	return value
+}
+
+func host012ManagedRecoveryDatabaseURL(t *testing.T, key string) string {
+	t.Helper()
+	raw := host012ManagedRecoveryEnv(t, key)
+	parsed, err := url.Parse(raw)
+	if err != nil {
+		t.Fatalf("%s is not a valid PostgreSQL URL: %v", key, err)
+	}
+	if parsed.Scheme != "postgres" && parsed.Scheme != "postgresql" {
+		t.Fatalf("%s must use postgres/postgresql scheme", key)
+	}
+	host := strings.ToLower(strings.TrimSpace(parsed.Hostname()))
+	if host == "" || host == "localhost" || host == "host.docker.internal" {
+		t.Fatalf("%s must identify a remote managed PostgreSQL host", key)
+	}
+	if ip := net.ParseIP(host); ip != nil && ip.IsLoopback() {
+		t.Fatalf("%s loopback PostgreSQL is not managed recovery evidence", key)
+	}
+	if strings.TrimSpace(parsed.EscapedPath()) == "" || parsed.EscapedPath() == "/" {
+		t.Fatalf("%s must identify an explicit database", key)
+	}
+	if strings.ToLower(strings.TrimSpace(parsed.Query().Get("sslmode"))) != "verify-full" {
+		t.Fatalf("%s must use sslmode=verify-full", key)
+	}
+	return raw
+}
+
+func host012ManagedRecoveryDatabaseIdentity(t *testing.T, raw string) string {
+	t.Helper()
+	parsed, err := url.Parse(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return strings.ToLower(parsed.Scheme) + "://" + strings.ToLower(parsed.Host) + parsed.EscapedPath()
+}
+
+func host012ManagedRecoveryBackend(t *testing.T, databaseURL string) *postgresPersistenceBackend {
+	t.Helper()
+	backend := newPostgresPersistenceBackend(postgresPersistenceConfig{
+		DatabaseURL:     databaseURL,
+		MaxOpenConns:    2,
+		MaxIdleConns:    1,
+		ConnMaxLifetime: 5 * time.Minute,
+		ConnMaxIdleTime: time.Minute,
+	}).(*postgresPersistenceBackend)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := backend.Init(ctx); err != nil {
+		t.Fatalf("managed postgres init failed: %v", err)
+	}
+	return backend
+}
+
+func host012FindUser(state IdentityPersistentState, userID string) (UserRecord, bool) {
+	for _, user := range state.Users {
+		if user.ID == userID {
+			return user, true
+		}
+	}
+	return UserRecord{}, false
+}
+
+func host012WorkspaceContainsPersonalData(workspace UserWorkspace) bool {
+	workspace = normalizeUserWorkspace(workspace)
+	for _, watchlist := range workspace.Watchlists {
+		if len(watchlist.Symbols) > 0 {
+			return true
+		}
+	}
+	return workspace.UI.ScopeType != "watchlist" || workspace.UI.WatchlistID != "swing" || normalizeSymbol(workspace.UI.SelectedTicker) != "SPY"
+}
+
+func host012WorkspaceForUser(workspaces []UserWorkspace, userID string) (UserWorkspace, bool) {
+	for _, workspace := range workspaces {
+		if strings.TrimSpace(workspace.UserID) == userID {
+			return workspace, true
+		}
+	}
+	return UserWorkspace{}, false
+}
+
+func host012UserHash(userID string) string {
+	sum := sha256.Sum256([]byte(userID))
+	return hex.EncodeToString(sum[:])
 }
 
 func TestV183PostgresRepositoryParityAndWarmStart(t *testing.T) {
@@ -287,4 +389,224 @@ func TestV183PostgresHealthCheckReflectsClosedDatabase(t *testing.T) {
 	if err := backend.HealthCheck(context.Background()); err == nil {
 		t.Fatal("closed PostgreSQL backend reported healthy")
 	}
+}
+
+// TestHOST012ManagedRecoveryPrivacyReplayDrill is intentionally excluded from
+// ordinary CI execution by the postgres build tag plus an explicit operator ack.
+// It mutates only the throwaway PITR-restored target after first proving that the
+// target contains the pre-deletion live account. The source database is read only
+// and supplies the later authoritative deletion tombstone state. The canonical
+// archive anti-resurrection owner performs the replay; no test-only deletion path
+// is allowed to become a second privacy owner.
+func TestHOST012ManagedRecoveryPrivacyReplayDrill(t *testing.T) {
+	if strings.TrimSpace(os.Getenv("DEPULSE_MANAGED_RECOVERY_ACK")) != host012ManagedRecoveryAck {
+		t.Skip("managed PITR operator acknowledgement not present")
+	}
+	environmentClass := strings.ToLower(host012ManagedRecoveryEnv(t, "DEPULSE_MANAGED_RECOVERY_ENV_CLASS"))
+	if environmentClass == "production" {
+		t.Fatal("managed recovery drill refuses production targets")
+	}
+	if environmentClass != "development" && environmentClass != "test" && environmentClass != "stage" {
+		t.Fatal("DEPULSE_MANAGED_RECOVERY_ENV_CLASS must be development, test, or stage")
+	}
+	candidateSHA := strings.ToLower(host012ManagedRecoveryEnv(t, "DEPULSE_MANAGED_RECOVERY_CANDIDATE_SHA"))
+	if len(candidateSHA) != 40 {
+		t.Fatal("DEPULSE_MANAGED_RECOVERY_CANDIDATE_SHA must be a full Git SHA")
+	}
+	if _, err := hex.DecodeString(candidateSHA); err != nil {
+		t.Fatal("DEPULSE_MANAGED_RECOVERY_CANDIDATE_SHA must be hexadecimal")
+	}
+	userID := host012ManagedRecoveryEnv(t, "DEPULSE_MANAGED_RECOVERY_USER_ID")
+	artifactPath := host012ManagedRecoveryEnv(t, "DEPULSE_MANAGED_RECOVERY_PRIVACY_ARTIFACT_PATH")
+	sourceURL := host012ManagedRecoveryDatabaseURL(t, "DEPULSE_MANAGED_RECOVERY_SOURCE_URL")
+	restoredURL := host012ManagedRecoveryDatabaseURL(t, "DEPULSE_MANAGED_RECOVERY_RESTORED_URL")
+	if host012ManagedRecoveryDatabaseIdentity(t, sourceURL) == host012ManagedRecoveryDatabaseIdentity(t, restoredURL) {
+		t.Fatal("managed recovery source and restored target must be distinct databases")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	source := host012ManagedRecoveryBackend(t, sourceURL)
+	defer source.Close()
+	restored := host012ManagedRecoveryBackend(t, restoredURL)
+
+	sourceIdentity, err := source.LoadIdentityState(ctx)
+	if err != nil {
+		restored.Close()
+		t.Fatalf("load authoritative source identity: %v", err)
+	}
+	sourceTombstone, ok := accountDeletionTombstones(sourceIdentity)[userID]
+	if !ok {
+		restored.Close()
+		t.Fatal("authoritative source does not contain the required deletion tombstone")
+	}
+	if sourceTombstone.DisplayName != accountDeletionReasonUserRequest || sourceTombstone.UpdatedAt <= 0 {
+		restored.Close()
+		t.Fatal("authoritative source tombstone is not the controlled user-request deletion state")
+	}
+	for _, device := range sourceIdentity.Devices {
+		if device.UserID == userID {
+			restored.Close()
+			t.Fatal("authoritative source still contains a deleted-user device")
+		}
+	}
+	for _, session := range sourceIdentity.Sessions {
+		if session.UserID == userID {
+			restored.Close()
+			t.Fatal("authoritative source still contains a deleted-user session")
+		}
+	}
+	sourceWorkspaces, err := source.LoadUserWorkspaces(ctx)
+	if err != nil {
+		restored.Close()
+		t.Fatalf("load authoritative source workspaces: %v", err)
+	}
+	if sourceWorkspace, found := host012WorkspaceForUser(sourceWorkspaces, userID); !found || host012WorkspaceContainsPersonalData(sourceWorkspace) {
+		restored.Close()
+		t.Fatal("authoritative source does not contain the canonical privacy-blank workspace")
+	}
+
+	preReplayIdentity, err := restored.LoadIdentityState(ctx)
+	if err != nil {
+		restored.Close()
+		t.Fatalf("load PITR-restored identity: %v", err)
+	}
+	preReplayUser, found := host012FindUser(preReplayIdentity, userID)
+	if !found || isAccountDeletionTombstone(preReplayUser) || preReplayUser.Status != UserActive {
+		restored.Close()
+		t.Fatal("PITR target does not prove a point before deletion with the live account present")
+	}
+	if normalizedTenantID(preReplayUser.TenantID) != normalizedTenantID(sourceTombstone.TenantID) {
+		restored.Close()
+		t.Fatal("PITR-restored account tenant does not match the authoritative tombstone")
+	}
+
+	historicalArchive, err := restored.ExportPersistenceArchive(ctx)
+	if err != nil {
+		restored.Close()
+		t.Fatalf("export PITR-restored canonical archive: %v", err)
+	}
+	if !historicalArchive.HasIdentity {
+		restored.Close()
+		t.Fatal("PITR-restored archive has no canonical identity state")
+	}
+
+	replayStarted := time.Now()
+	replayedArchive := enforceArchiveAccountDeletionPrivacy(historicalArchive, sourceIdentity)
+	if _, present := accountDeletionTombstones(replayedArchive.Identity)[userID]; !present {
+		restored.Close()
+		t.Fatal("canonical anti-resurrection owner did not carry the authoritative tombstone")
+	}
+	if replayWorkspace, found := host012WorkspaceForUser(replayedArchive.UserWorkspaces, userID); !found || host012WorkspaceContainsPersonalData(replayWorkspace) {
+		restored.Close()
+		t.Fatal("canonical anti-resurrection owner did not privacy-blank the restored workspace")
+	}
+	if err := restored.RestorePersistenceArchive(ctx, replayedArchive, persistenceRestoreModeReplace); err != nil {
+		restored.Close()
+		t.Fatalf("apply canonical tombstone replay to PITR target: %v", err)
+	}
+	replayDurationMillis := time.Since(replayStarted).Milliseconds()
+	if err := restored.Close(); err != nil {
+		t.Fatalf("close restored target before restart proof: %v", err)
+	}
+
+	reopened := host012ManagedRecoveryBackend(t, restoredURL)
+	defer reopened.Close()
+	if err := reopened.HealthCheck(ctx); err != nil {
+		t.Fatalf("restored target health check after replay/restart: %v", err)
+	}
+	finalIdentity, err := reopened.LoadIdentityState(ctx)
+	if err != nil {
+		t.Fatalf("load final restored identity: %v", err)
+	}
+	finalWorkspaces, err := reopened.LoadUserWorkspaces(ctx)
+	if err != nil {
+		t.Fatalf("load final restored workspaces: %v", err)
+	}
+
+	tombstonesPresent := 0
+	liveProfiles := 0
+	for _, user := range finalIdentity.Users {
+		if user.ID != userID {
+			continue
+		}
+		if isAccountDeletionTombstone(user) {
+			tombstonesPresent++
+		} else {
+			liveProfiles++
+		}
+	}
+	activeDevices := 0
+	for _, device := range finalIdentity.Devices {
+		if device.UserID == userID {
+			activeDevices++
+		}
+	}
+	activeSessions := 0
+	for _, session := range finalIdentity.Sessions {
+		if session.UserID == userID {
+			activeSessions++
+		}
+	}
+	personalWorkspaceRows := 0
+	if finalWorkspace, found := host012WorkspaceForUser(finalWorkspaces, userID); !found {
+		t.Fatal("final restored target lost the canonical blank workspace row")
+	} else if host012WorkspaceContainsPersonalData(finalWorkspace) {
+		personalWorkspaceRows++
+	}
+	projection := &IdentityService{state: finalIdentity}
+	_, _, projectionErr := projection.accountPrivacyExport(userID)
+	accountProjectionChecked := projectionErr != nil
+
+	if tombstonesPresent < 1 || liveProfiles != 0 || activeDevices != 0 || activeSessions != 0 || personalWorkspaceRows != 0 || !accountProjectionChecked {
+		t.Fatalf("post-replay privacy verification failed: tombstones=%d liveProfiles=%d devices=%d sessions=%d personalWorkspaceRows=%d projectionDenied=%v", tombstonesPresent, liveProfiles, activeDevices, activeSessions, personalWorkspaceRows, accountProjectionChecked)
+	}
+
+	artifact := map[string]any{
+		"schema":           "DE.PULSE-HOST012-MANAGED-RECOVERY-PRIVACY-VERIFICATION-1",
+		"candidateSha":     candidateSHA,
+		"verificationMode": "CANONICAL_ARCHIVE_TOMBSTONE_REPLAY",
+		"environmentClass": environmentClass,
+		"verifiedAt":       time.Now().UTC().Format(time.RFC3339Nano),
+		"userIdSha256":     host012UserHash(userID),
+		"sourceTombstone": map[string]any{
+			"present":   true,
+			"updatedAt": sourceTombstone.UpdatedAt,
+			"reason":    sourceTombstone.DisplayName,
+		},
+		"beforeReplay": map[string]any{
+			"liveUserPresent": true,
+			"tombstonePresent": false,
+		},
+		"canonicalReplay": map[string]any{
+			"owner":                 "enforceArchiveAccountDeletionPrivacy",
+			"restoreMode":           persistenceRestoreModeReplace,
+			"durationMilliseconds":  replayDurationMillis,
+			"restartVerified":       true,
+			"sourceReadOnlyByDrill": true,
+		},
+		"privacyAssertions": map[string]any{
+			"deletedUsersResurrected":              0,
+			"liveDeletedProfiles":                  liveProfiles,
+			"personalWorkspaceRowsForDeletedUsers": personalWorkspaceRows,
+			"activeSessionsForDeletedUsers":        activeSessions,
+			"activeDevicesForDeletedUsers":         activeDevices,
+			"tombstonesPresentAfterReplay":         tombstonesPresent,
+			"canonicalHealthCheckPassed":           true,
+			"accountDataProjectionChecked":         accountProjectionChecked,
+		},
+	}
+	raw, err := json.MarshalIndent(artifact, "", "  ")
+	if err != nil {
+		t.Fatalf("encode managed recovery privacy artifact: %v", err)
+	}
+	if dir := filepath.Dir(artifactPath); dir != "." {
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			t.Fatalf("create privacy artifact directory: %v", err)
+		}
+	}
+	if err := os.WriteFile(artifactPath, append(raw, '\n'), 0600); err != nil {
+		t.Fatalf("write managed recovery privacy artifact: %v", err)
+	}
+	t.Log("HOST-012 managed PITR privacy replay drill: PASS (connection details suppressed)")
 }
