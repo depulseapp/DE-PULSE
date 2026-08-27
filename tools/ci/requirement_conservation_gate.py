@@ -16,6 +16,8 @@ CURRENT = ROOT / "governance" / "current-state.json"
 ROADMAP = ROOT / "governance" / "ROADMAP.md"
 HOST012_RECOVERY_GATE = ROOT / "tools" / "ci" / "host012_managed_recovery_evidence_gate.py"
 HOST012_RECOVERY_SELF_TEST = ROOT / "tools" / "ci" / "host012_managed_recovery_evidence_self_test.py"
+HOST012_NEON_OPERATOR = ROOT / "tools" / "ci" / "host012_neon_recovery_operator.py"
+HOST012_NEON_OPERATOR_SELF_TEST = ROOT / "tools" / "ci" / "host012_neon_recovery_operator_self_test.py"
 
 EXPECTED_IDS = [f"HOST-{n:03d}" for n in range(1, 73)]
 REQUIRED_RULES = (
@@ -40,21 +42,31 @@ def load(path: Path) -> dict:
 
 
 def run_host012_recovery_self_test(errors: list[str]) -> None:
-    for path in (HOST012_RECOVERY_GATE, HOST012_RECOVERY_SELF_TEST):
-        if not path.is_file():
-            errors.append(f"HOST-012 managed-recovery evidence owner missing: {path.relative_to(ROOT)}")
-    if errors and (not HOST012_RECOVERY_GATE.is_file() or not HOST012_RECOVERY_SELF_TEST.is_file()):
-        return
-    completed = subprocess.run(
-        [sys.executable, str(HOST012_RECOVERY_SELF_TEST)],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
+    owners = (
+        HOST012_RECOVERY_GATE,
+        HOST012_RECOVERY_SELF_TEST,
+        HOST012_NEON_OPERATOR,
+        HOST012_NEON_OPERATOR_SELF_TEST,
     )
-    if completed.returncode != 0:
-        detail = (completed.stdout + "\n" + completed.stderr).strip()
-        errors.append("HOST-012 managed-recovery evidence self-test failed" + (f": {detail}" if detail else ""))
+    missing = [path for path in owners if not path.is_file()]
+    for path in missing:
+        errors.append(f"HOST-012 managed-recovery evidence owner missing: {path.relative_to(ROOT)}")
+    if missing:
+        return
+    for self_test, label in (
+        (HOST012_RECOVERY_SELF_TEST, "managed-recovery evidence"),
+        (HOST012_NEON_OPERATOR_SELF_TEST, "Neon recovery operator"),
+    ):
+        completed = subprocess.run(
+            [sys.executable, str(self_test)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if completed.returncode != 0:
+            detail = (completed.stdout + "\n" + completed.stderr).strip()
+            errors.append(f"HOST-012 {label} self-test failed" + (f": {detail}" if detail else ""))
 
 
 def main() -> int:
@@ -162,6 +174,7 @@ def main() -> int:
     print("source-overlap before G1: REQUIRED")
     print("band zero-gap closure before next band: REQUIRED")
     print("HOST-012 managed-recovery evidence validator self-test: REQUIRED")
+    print("HOST-012 Neon recovery operator zero-network self-test: REQUIRED")
     if errors:
         print("V19 REQUIREMENT CONSERVATION GATE: FAIL", file=sys.stderr)
         for error in errors:
