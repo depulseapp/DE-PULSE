@@ -1,9 +1,12 @@
 # CURRENT Adaptive Roadmap
 
 **Canonical rebaseline:** `governance/V19_V20_REBASELINE.md`  
+**Provider-registry additive rebaseline:** `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`  
+**Provider-registry permanent contract:** `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`  
 **Machine current-state authority:** `governance/current-state.json`  
 **Backlog map:** `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`  
 **HOST map:** `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`  
+**Provider-registry machine map:** `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`  
 **Legacy future-commitment conservation:** `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`  
 **Cross-integration map:** `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`  
 **Whole-product surface map:** `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`  
@@ -21,15 +24,15 @@ The rebaseline now conserves four distinct requirement families: the 180 certifi
 ## Current v19 sequence
 
 1. `v19.0.0` — Hosted Trust & Identity Foundation — HOST-001..023 + core #164/#156 security/auth overlap.
-2. `v19.1.0` — Canonical Data Runtime & Global Symbol Processing — #150/#151/#153/#154/#155 runtime truth/#160 integration/#167 core.
+2. `v19.1.0` — Canonical Data Runtime & Global Symbol Processing — #150/#151/#153/#154/#155 runtime truth/#160 integration/#167 core + Adaptive Provider Registry / Market Data first adoption.
 3. `v19.2.0` — Hosted Gateway, Shared Serving & Sync Core — HOST-024..039.
-4. `v19.3.0` — Cross-Platform Product, Roles & Information Architecture — HOST-040..047/053 + #152/#156/#159/#160 UI verification/#167 Admin/#171 + #164 UX parity + `LEGACY-TRADER-SETUP-SHORT-001` two-sided deterministic Desk setup contract.
+4. `v19.3.0` — Cross-Platform Product, Roles & Information Architecture — HOST-040..047/053 + #152/#156/#159/#160 UI verification/#167 Admin/#171 + #164 UX parity + `LEGACY-TRADER-SETUP-SHORT-001` two-sided deterministic Desk setup contract + role-aware Mac/Windows/Web provider Settings presentation using the generic registry metadata contract.
 5. `v19.4.0` — Market Intelligence & Research Workflow Quality — HOST-049 + #158/#161/#162/#171.
 6. `v19.4.1` — Discovery & Opportunity Radar Effectiveness — HOST-048 + #163/#171.
 7. `v19.5.0` — Price/Volume & Event-Anchored Intelligence — #168/#169.
 8. `v19.5.1` — Options Structure & GEX Intelligence — #157.
 9. `v19.6.0` — Point-in-Time Evidence & Outcome-Ready Foundation — HOST-057..064 + deterministic #165 foundation + institutional/two-sided thesis substrate.
-10. `v19.6.1` — Hosted Reliability, Economics & Adaptive Readiness — HOST-050..056/065..071 + ADR-GDI/trader-quality readiness + final #170/#171 reconciliation.
+10. `v19.6.1` — Hosted Reliability, Economics & Adaptive Readiness — HOST-050..056/065..071 + ADR-GDI/trader-quality readiness + final #170/#171 reconciliation + provider reliability/coverage/economics/readiness scorecards across the full registry including Market Data.
 11. `v19.7.0` — v19 Major Closure — HOST-072; no feature scope.
 
 ### Two-sided Desk setup conservation
@@ -66,6 +69,28 @@ Data-health truth is evidence-time based: provider observation/event/publication
 
 `PARTIAL COVERAGE` and `DATA DEGRADED` remain truthful, attributable and minimally scoped states for genuine unresolved required-evidence gaps. Recovery is automatic when canonical evidence becomes healthy under policy, with hysteresis and authority rules preserved; the product must never suppress a genuine data problem merely to appear healthy.
 
+## Adaptive Provider Registry / future-proof provider onboarding
+
+The approved provider-onboarding direction is now a permanent extension of the conserved Data Health program:
+
+`Provider Adapter -> Adaptive Provider Registry -> capability/entitlement probes -> rights/authority + Data Health -> Smart Provider Router v2 -> canonical state -> all useful consumers`
+
+Permanent roadmap rules:
+- provider-specific implementation ends at one standards-compliant adapter;
+- the adapter self-registers with the Registry;
+- capability/configuration/effective-entitlement/freshness/history/quota/health observations become generic Router eligibility inputs where technically observable;
+- consumers request capabilities, never provider names;
+- technical eligibility, fallback, demotion, cooldown, recovery and subscription-plan reprobe may be automatic;
+- `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION` authority promotion remains governed and never automatic;
+- direct-authority sources and public/commercial rights cannot be replaced/inferred automatically;
+- every provider capability receives mandatory #170 cross-integration dispositions across applicable Research, Discovery/Radar, Desks, Prep, Market Intelligence/Regime contribution, alerts, history/options, Data Health/Maintenance and future Outcome Learning consumers;
+- provider-card/credential Settings UX becomes metadata-driven enough that adding another token/API-key adapter does not require another Settings architecture;
+- Market Data (`marketdata.app`) is the first concrete adopter, using the reusable secret/config/test/redaction pattern learned from TradeInsight #76;
+- effective Market Data entitlement changes (for example delayed trial/free to future paid/live access) should update technical eligibility through reprobe rather than require a DE.PULSE code release solely because the provider subscription changed;
+- v19.6.1 measures provider reliability/coverage/economics/readiness; v20.5 may add bounded learned provider-utility/cost priors, but Smart Provider Router v2 remains the sole routing authority.
+
+This approved future scope is implemented primarily in v19.1/#153 and may not be pulled forward to bypass unfinished v19.0 Development Production Ready work.
+
 ## Current v20 sequence
 
 1. `v20.0.0` — Outcome Learning & Adaptive Control Plane — #165 learning foundation plus conserved calibration/guardrails.
@@ -74,7 +99,7 @@ Data-health truth is evidence-time based: provider observation/event/publication
 4. `v20.3.0` — Adaptive Institutional & Two-Sided Thesis Intelligence.
 5. `v20.3.1` — AODR Adaptive Opportunity Intelligence.
 6. `v20.4.0` — Agent Orchestration & Controlled MCP/API — remaining #165.
-7. `v20.5.0` — Adaptive Operations.
+7. `v20.5.0` — Adaptive Operations — includes bounded provider usefulness/cost/reliability priors inside Router policy; no parallel router or automatic lifecycle/rights promotion.
 8. `v20.6.0` — Professional Adaptive Closure; no feature scope.
 
 ## Permanent intelligence direction
@@ -87,4 +112,4 @@ Hard UI protections remain: keep Day/Swing/Long Desk look-and-feel/workflow; kee
 
 ## Current exact state / next action
 
-Exact-head Fast #1166 / run `32979640028` on `08f0ffc64be8f05ad1dd6bb5155114d9cd60d3be` passed Canonical workflow policy and Recursive source-health, including zero orphan production helpers and the restored Adaptive Data Health contract. The current blocker is Repository migration safety/current-state projection convergence: all CURRENT/handoff surfaces must project the machine authority, active work-slice identity and closure ledger where required. Restore that convergence, then obtain fresh exact-head Fast. Do not start `v19.1.0` before `v19.0.0` exit criteria pass.
+The active release remains `v19.0.0` on #148 / PR #149. The Adaptive Provider Registry / Market Data rebaseline is approved **future** scope and does not change the current dependency band. Continue from live GitHub/executable evidence and close the current v19.0 exact next action before starting `v19.1.0`. Governance-only provider-rebaseline commits require fresh exact-head CI before any dependency-band advancement or release qualification.
