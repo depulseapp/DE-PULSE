@@ -35,7 +35,7 @@
     "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
     "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
     "rebaselineAuthority": "governance/V19_V20_REBASELINE.md",
-    "nextDependencyBand": "HOST-001..HOST-003 provider rights",
+    "nextDependencyBand": "HOST-004..HOST-007 tenant identity/device/session/reauth",
     "zeroMissAuditState": "REOPENED_UNVERIFIED",
     "externalControlWaivers": []
   },
@@ -135,6 +135,7 @@
     "DIRECT_SEC_EDGAR_FORM4_AUTHORITY",
     "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
     "NO_AUTOMATIC_PROVIDER_LIFECYCLE_PROMOTION",
+    "PROVIDER_RIGHTS_DEVELOPMENT_AUDIT_ONLY_PUBLIC_PRODUCTION_EXPLICIT_ACTIVATION",
     "NO_PARALLEL_PROVIDER_ROUTER_HEALTH_CACHE_PERSISTENCE_RECONCILIATION_OR_LIFECYCLE_OWNER"
   ]
 }
