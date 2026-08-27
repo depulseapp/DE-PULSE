@@ -1,210 +1,85 @@
 {
   "schema": "DE.PULSE-PROVIDER-PUBLIC-TERMS-REVIEW-1",
   "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
-  "policyVersion": "provider-public-terms-review-v19.0.0",
-  "reviewedAt": "2026-08-26T23:59:00Z",
+  "policyVersion": "provider-public-terms-review-v19.0.1",
+  "reviewedAt": "2026-08-27T01:00:00Z",
   "approvalEligible": false,
   "productionDecision": "BLOCKED",
-  "purpose": "Provider public-terms triage for HOST-001..003. This artifact records official public-source restrictions and missing evidence only. It is not a provider contract, order form, redistribution license, account entitlement, legal approval, or executable provider-rights bundle and must never promote hosted provider eligibility.",
-  "runtimePromotionRule": "Only a separately reviewed provider-specific agreement/license/order-form evidence package may be transformed into the SHA-256-pinned provider-rights-bundle-v19.0.0 executable contract. Public web terms and working API credentials are never sufficient.",
+  "purpose": "Provider public-terms triage for HOST-001..003. This artifact records official public-source restrictions, permissions and missing evidence only. It is not a provider contract, order form, redistribution license, account entitlement, legal approval, or executable provider-rights bundle and must never promote hosted provider eligibility.",
+  "runtimePromotionRule": "Only separately reviewed provider-specific legal/data-rights evidence applicable to DE.PULSE may be transformed into the SHA-256-pinned provider-rights-bundle-v19.0.0 executable contract. For private/commercial providers this may require an executed agreement/license/order form. For public-government providers, official reuse/API terms may be sufficient only after a documented legal review maps every required hosted-use dimension and operational obligation. Public web terms or working credentials alone never auto-promote rights.",
   "providers": [
     {
       "provider": "Alpaca",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "REDISTRIBUTION_RESTRICTED",
-      "rightsTriage": {
-        "commercialUse": "NOT_ASSERTED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "PUBLIC_TERMS_RESTRICT",
-        "display": "NOT_ASSERTED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Alpaca Support - Can I redistribute Alpaca API data via my platform?",
-          "url": "https://alpaca.markets/support/redistribute-alpaca-api",
-          "observedAt": "2026-08-26",
-          "finding": "Alpaca's official support guidance states that Alpaca API data cannot be redistributed via a platform. Public access therefore does not establish hosted redistribution or multi-user display rights."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "provider-specific commercial/enterprise agreement applicable to DE.PULSE",
-        "explicit redistribution/multi-user display grant",
-        "proxy/cache/retention and AI/derived-use terms",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"NOT_ASSERTED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"PUBLIC_TERMS_RESTRICT","display":"NOT_ASSERTED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Alpaca Support - Can I redistribute Alpaca API data via my platform?","url":"https://alpaca.markets/support/redistribute-alpaca-api","observedAt":"2026-08-26","finding":"Alpaca official support guidance says Alpaca API data cannot be redistributed via a platform. A working Alpaca account therefore does not establish hosted redistribution or multi-user display rights."}],
+      "missingApprovalEvidence": ["provider-specific commercial/enterprise agreement applicable to DE.PULSE","explicit redistribution/multi-user display grant","proxy/cache/retention and AI/derived-use terms","effective/expiry dates, environments, usage limits and attribution obligations"]
     },
     {
       "provider": "Finnhub",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "PLAN_ACCESS_VISIBLE_RIGHTS_GRANT_UNVERIFIED",
-      "rightsTriage": {
-        "commercialUse": "NOT_ASSERTED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "NOT_ASSERTED",
-        "display": "NOT_ASSERTED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Finnhub API Documentation",
-          "url": "https://finnhub.io/docs/api/quote",
-          "observedAt": "2026-08-26",
-          "finding": "Official API documentation exposes plan-specific and Enterprise access for datasets but the reviewed public page does not establish DE.PULSE-specific commercial redistribution, proxy, cache, multi-user display or AI/derived-use rights."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "Finnhub terms/agreement applicable to the DE.PULSE account and plan",
-        "explicit commercial and multi-user hosted-use grant",
-        "redistribution/display/proxy/cache/retention and AI/derived-use grant",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"NOT_ASSERTED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"NOT_ASSERTED","display":"NOT_ASSERTED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Finnhub API Documentation","url":"https://finnhub.io/docs/api/quote","observedAt":"2026-08-26","finding":"Official API documentation exposes plan-specific and Enterprise access but the reviewed public material does not establish DE.PULSE-specific commercial redistribution, proxy, cache, multi-user display or AI/derived-use rights."}],
+      "missingApprovalEvidence": ["Finnhub terms/agreement applicable to the DE.PULSE account and plan","explicit commercial and multi-user hosted-use grant","redistribution/display/proxy/cache/retention and AI/derived-use grant","effective/expiry dates, environments, usage limits and attribution obligations"]
+    },
+    {
+      "provider": "TradeInsight",
+      "approvalEligible": false,
+      "productionDecision": "BLOCKED",
+      "publicTermsClassification": "API_USE_CASES_DOCUMENTED_COMMERCIAL_REDISTRIBUTION_RIGHTS_UNVERIFIED",
+      "rightsTriage": {"commercialUse":"NOT_ASSERTED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"NOT_ASSERTED","display":"NOT_ASSERTED","aiDerivedUse":"DOCUMENTED_USE_CASE_NOT_RIGHTS_GRANT"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_DOCUMENT","title":"TradeInsight Data API - Getting started","url":"https://github.com/TradeInsight-Info/tradeinsight/blob/master/data-api/docs/getting-started.mdx","observedAt":"2026-08-26","finding":"Official TradeInsight documentation describes Beta/Paid API tiers and examples including backtests, alert pipelines and AI-agent queries, but does not establish DE.PULSE commercial multi-user redistribution, proxy, cache/retention or derived-data rights."}],
+      "missingApprovalEvidence": ["TradeInsight API terms applicable to the DE.PULSE Beta/Paid account","explicit commercial and multi-user hosted-use grant","redistribution/display/proxy/cache/retention and derived/AI-use terms","effective/expiry dates, environments, usage limits and attribution obligations"]
     },
     {
       "provider": "Twelve Data",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "BUSINESS_PLAN_AND_SEPARATE_REDISTRIBUTION_AGREEMENT_REQUIRED",
-      "rightsTriage": {
-        "commercialUse": "BUSINESS_PLAN_REQUIRED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "SEPARATE_AGREEMENT_REQUIRED",
-        "display": "BUSINESS_PLAN_REQUIRED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Twelve Data Support - Commercial and personal usage",
-          "url": "https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage",
-          "observedAt": "2026-08-26",
-          "finding": "Twelve Data distinguishes business plans from individual plans, disallows commercial third-party display/redistribution on individual plans, and states that redistribution requires a separate agreement."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "DE.PULSE business-plan entitlement",
-        "separate redistribution agreement",
-        "exchange-specific approvals applicable to selected U.S. data",
-        "proxy/cache/retention and AI/derived-use terms",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"BUSINESS_PLAN_REQUIRED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"SEPARATE_AGREEMENT_REQUIRED","display":"BUSINESS_PLAN_REQUIRED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Twelve Data Support - Commercial and personal usage","url":"https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage","observedAt":"2026-08-26","finding":"Twelve Data distinguishes business plans from individual plans, disallows commercial third-party display/redistribution on individual plans, and says redistribution requires a separate agreement."}],
+      "missingApprovalEvidence": ["DE.PULSE business-plan entitlement","separate redistribution agreement","exchange-specific approvals applicable to selected U.S. data","proxy/cache/retention and AI/derived-use terms","effective/expiry dates, environments, usage limits and attribution obligations"]
     },
     {
       "provider": "Marketaux",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "PUBLIC_TERMS_NONCOMMERCIAL_AND_AUTOMATION_CONFLICT_REQUIRES_PROVIDER_CONFIRMATION",
-      "rightsTriage": {
-        "commercialUse": "PUBLIC_TERMS_RESTRICT",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "NOT_ASSERTED",
-        "display": "NOT_ASSERTED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Marketaux Terms of Service",
-          "url": "https://www.marketaux.com/tos",
-          "observedAt": "2026-08-26",
-          "finding": "Published terms grant site/content access for personal non-commercial use and include restrictions that do not by themselves establish API automation or commercial hosted redistribution rights. Provider-specific written confirmation/agreement is required before hosted use."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "current API-specific terms applicable to the DE.PULSE subscription",
-        "explicit commercial automated-access grant",
-        "multi-user redistribution/display/proxy/cache/retention and AI/derived-use grant",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"PUBLIC_TERMS_RESTRICT","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"NOT_ASSERTED","display":"NOT_ASSERTED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Marketaux Terms of Service","url":"https://www.marketaux.com/tos","observedAt":"2026-08-26","finding":"Published terms grant site/content access for personal non-commercial use and do not by themselves establish API automation or commercial hosted redistribution rights."}],
+      "missingApprovalEvidence": ["current API-specific terms applicable to the DE.PULSE subscription","explicit commercial automated-access grant","multi-user redistribution/display/proxy/cache/retention and AI/derived-use grant","effective/expiry dates, environments, usage limits and attribution obligations"]
     },
     {
       "provider": "FRED",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "AI_CACHE_AND_THIRD_PARTY_RIGHTS_RESTRICTED",
-      "rightsTriage": {
-        "commercialUse": "SERIES_SPECIFIC_PERMISSION_REQUIRED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "PUBLIC_TERMS_RESTRICT",
-        "redistribution": "THIRD_PARTY_PERMISSION_MAY_BE_REQUIRED",
-        "display": "ATTRIBUTION_AND_SERIES_RIGHTS_REQUIRED",
-        "aiDerivedUse": "PUBLIC_TERMS_RESTRICT"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "FRED Services Terms of Use",
-          "url": "https://fred.stlouisfed.org/legal/terms/",
-          "observedAt": "2026-08-26",
-          "finding": "Current FRED terms require compliance with series-owner restrictions, prohibit commercial redistribution of third-party proprietary content without permission, prohibit AI/ML use, and restrict storing/caching/archiving FRED content through the API."
-        },
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "FRED API Terms of Use",
-          "url": "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
-          "observedAt": "2026-08-26",
-          "finding": "FRED API access does not override third-party copyrights or series restrictions; permission from data owners can be required for non-personal use."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "series-level rights inventory for every FRED series DE.PULSE uses",
-        "data-owner permissions where required",
-        "hosted caching/retention permission",
-        "AI/derived-use permission or a verified design proving prohibited content never enters AI processing",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"SERIES_SPECIFIC_PERMISSION_REQUIRED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"PUBLIC_TERMS_RESTRICT","redistribution":"THIRD_PARTY_PERMISSION_MAY_BE_REQUIRED","display":"ATTRIBUTION_AND_SERIES_RIGHTS_REQUIRED","aiDerivedUse":"PUBLIC_TERMS_RESTRICT"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"FRED Services Terms of Use","url":"https://fred.stlouisfed.org/legal/terms/","observedAt":"2026-08-26","finding":"Current FRED terms require compliance with series-owner restrictions, prohibit commercial redistribution of third-party proprietary content without permission, prohibit AI/ML use, and restrict storing/caching/archiving FRED content through the API."},{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"FRED API Terms of Use","url":"https://fred.stlouisfed.org/docs/api/terms_of_use.html","observedAt":"2026-08-26","finding":"FRED API access does not override third-party copyrights or series restrictions; permission from data owners can be required for non-personal use."}],
+      "missingApprovalEvidence": ["series-level rights inventory for every FRED series DE.PULSE uses","data-owner permissions where required","hosted caching/retention permission","AI/derived-use permission or verified exclusion from prohibited AI processing","effective/expiry dates, environments, usage limits and attribution obligations"]
+    },
+    {
+      "provider": "SEC",
+      "approvalEligible": false,
+      "productionDecision": "BLOCKED",
+      "publicTermsClassification": "PUBLIC_REUSE_PERMITTED_WITH_EXCEPTIONS_REQUIRES_DIMENSION_REVIEW",
+      "rightsTriage": {"commercialUse":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","multiUserUse":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"PUBLIC_REUSE_AVAILABLE_WITH_EXCEPTIONS","display":"PUBLIC_REUSE_AVAILABLE_WITH_EXCEPTIONS","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"SEC Webmaster Frequently Asked Questions","url":"https://www.sec.gov/about/webmaster-frequently-asked-questions","observedAt":"2026-08-26","finding":"SEC states Government-created sec.gov content and EDGAR public filing content are free to access and reuse, while some non-government materials remain exceptions."},{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"SEC Data and Research","url":"https://www.sec.gov/data-research","observedAt":"2026-08-26","finding":"SEC publishes filing-derived datasets for investors, market participants, developers and third parties to research and analyze."}],
+      "missingApprovalEvidence": ["documented DE.PULSE review mapping public reuse to hosted fundamentals serving/cache/retention/proxy dimensions","treatment of third-party copyrighted or licensed materials","AI/derived-use policy","fair-access identification/rate-limit obligations where SEC endpoints are used","effective review date and re-review trigger"]
     },
     {
       "provider": "SEC EDGAR",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
-      "publicTermsClassification": "PUBLIC_FILING_ACCESS_WITH_FAIR_ACCESS_CONTROLS_NOT_A_BLANKET_HOSTED_RIGHTS_GRANT",
+      "publicTermsClassification": "PUBLIC_FILING_REUSE_PERMITTED_WITH_FAIR_ACCESS_AND_CONTENT_EXCEPTIONS",
       "governedAuthority": "DIRECT_SEC_EDGAR",
-      "rightsTriage": {
-        "commercialUse": "NOT_ASSERTED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "NOT_ASSERTED_FOR_ALL_EMBEDDED_CONTENT",
-        "display": "NOT_ASSERTED_FOR_ALL_EMBEDDED_CONTENT",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "SEC - Accessing EDGAR Data",
-          "url": "https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data",
-          "observedAt": "2026-08-26",
-          "finding": "SEC states EDGAR filing information can be accessed and downloaded for free while automated access is governed by fair-access controls including a current 10-requests-per-second maximum."
-        },
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "SEC Developer Resources",
-          "url": "https://www.sec.gov/about/developer-resources",
-          "observedAt": "2026-08-26",
-          "finding": "SEC reiterates efficient scripted access and fair-access controls. Public filing availability is preserved as direct SEC/EDGAR authority but is not treated as a blanket approval for every hosted redistribution, embedded third-party-content or AI use case."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "formal DE.PULSE legal review defining permissible hosted filing display/retention/redistribution boundaries",
-        "treatment of third-party copyrighted material embedded in filings",
-        "AI/derived-use policy for filing content",
-        "documented fair-access identification/rate-limit obligations and retention policy",
-        "effective review date and renewal/re-review trigger"
-      ]
+      "rightsTriage": {"commercialUse":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","multiUserUse":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"PUBLIC_REUSE_AVAILABLE_WITH_EXCEPTIONS","display":"PUBLIC_REUSE_AVAILABLE_WITH_EXCEPTIONS","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"SEC - Accessing EDGAR Data","url":"https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data","observedAt":"2026-08-26","finding":"SEC states EDGAR filing information can be accessed and downloaded for free while automated access is governed by fair-access controls including the current request-rate ceiling."},{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"SEC Webmaster Frequently Asked Questions","url":"https://www.sec.gov/about/webmaster-frequently-asked-questions","observedAt":"2026-08-26","finding":"SEC says EDGAR public filing content is free to access and reuse, subject to limited non-government-content exceptions."}],
+      "missingApprovalEvidence": ["documented DE.PULSE legal review defining hosted filing display/retention/redistribution boundaries","treatment of third-party copyrighted material embedded in filings","AI/derived-use policy","documented fair-access identification/rate-limit obligations and retention policy","effective review date and re-review trigger"]
     },
     {
       "provider": "yfinance",
@@ -212,67 +87,36 @@
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "UNOFFICIAL_CLIENT_UPSTREAM_AUTOMATED_ACCESS_REQUIRES_PERMISSION",
-      "rightsTriage": {
-        "commercialUse": "NOT_ASSERTED",
-        "multiUserUse": "NOT_ASSERTED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "NOT_ASSERTED",
-        "redistribution": "NOT_ASSERTED",
-        "display": "NOT_ASSERTED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Yahoo Terms of Service",
-          "url": "https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html",
-          "observedAt": "2026-08-26",
-          "finding": "Yahoo's current terms prohibit automated collection from its services without express prior permission and restrict creating competing/substitute databases, feeds or services from Yahoo material/data. yfinance itself is not a market-data licensor, so its availability cannot create upstream rights."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "Yahoo/upstream express permission applicable to DE.PULSE automated access",
-        "commercial/multi-user redistribution/display rights",
-        "proxy/cache/retention and AI/derived-use rights",
-        "effective/expiry dates, environments, usage limits and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"NOT_ASSERTED","multiUserUse":"NOT_ASSERTED","proxying":"NOT_ASSERTED","cachingRetention":"NOT_ASSERTED","redistribution":"NOT_ASSERTED","display":"NOT_ASSERTED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Yahoo Terms of Service","url":"https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html","observedAt":"2026-08-26","finding":"Yahoo terms restrict automated collection without express prior permission and restrict creating competing/substitute databases, feeds or services. yfinance itself is not the upstream market-data licensor."}],
+      "missingApprovalEvidence": ["Yahoo/upstream express permission applicable to DE.PULSE automated access","commercial/multi-user redistribution/display rights","proxy/cache/retention and AI/derived-use rights","effective/expiry dates, environments, usage limits and attribution obligations"]
     },
     {
       "provider": "CBOE",
       "approvalEligible": false,
       "productionDecision": "BLOCKED",
       "publicTermsClassification": "DATA_AGREEMENT_AND_PRODUCT_SPECIFIC_LICENSING_REQUIRED",
-      "rightsTriage": {
-        "commercialUse": "LICENSE_REQUIRED",
-        "multiUserUse": "LICENSE_REQUIRED",
-        "proxying": "NOT_ASSERTED",
-        "cachingRetention": "PRODUCT_POLICY_DEPENDENT",
-        "redistribution": "LICENSE_OR_POLICY_SPECIFIC_RIGHT_REQUIRED",
-        "display": "LICENSE_OR_POLICY_SPECIFIC_RIGHT_REQUIRED",
-        "aiDerivedUse": "NOT_ASSERTED"
-      },
-      "evidence": [
-        {
-          "sourceType": "OFFICIAL_PUBLIC_WEB",
-          "title": "Cboe Market Data Services Document Library",
-          "url": "https://www.cboe.com/market_data_services/document_library",
-          "observedAt": "2026-08-26",
-          "finding": "Cboe directs customers to sign the Global Data Agreement and request data through onboarding; selected product use is governed by applicable data policies and fees."
-        },
-        {
-          "sourceType": "OFFICIAL_PUBLIC_DOCUMENT",
-          "title": "Cboe North American Market Data Policies - effective July 1, 2026",
-          "url": "https://cdn.cboe.com/resources/membership/Market_Data_Policies_july2026.pdf",
-          "observedAt": "2026-08-26",
-          "finding": "Current policy distinguishes distribution rights by product and states that recipients benefiting from agreement waivers are not thereby permitted to redistribute externally except as allowed by policy."
-        }
-      ],
-      "missingApprovalEvidence": [
-        "executed Cboe Global Data Agreement/order form applicable to DE.PULSE",
-        "specific Cboe product selection and internal/external distribution entitlement",
-        "display/proxy/cache/retention and AI/derived-use rights",
-        "effective/expiry dates, environments, usage limits, reporting, fees and attribution obligations"
-      ]
+      "rightsTriage": {"commercialUse":"LICENSE_REQUIRED","multiUserUse":"LICENSE_REQUIRED","proxying":"NOT_ASSERTED","cachingRetention":"PRODUCT_POLICY_DEPENDENT","redistribution":"LICENSE_OR_POLICY_SPECIFIC_RIGHT_REQUIRED","display":"LICENSE_OR_POLICY_SPECIFIC_RIGHT_REQUIRED","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"Cboe Market Data Services Document Library","url":"https://www.cboe.com/market_data_services/document_library","observedAt":"2026-08-26","finding":"Cboe directs customers to the Global Data Agreement/onboarding and governs selected product use through applicable policies and fees."},{"sourceType":"OFFICIAL_PUBLIC_DOCUMENT","title":"Cboe North American Market Data Policies - effective July 1, 2026","url":"https://cdn.cboe.com/resources/membership/Market_Data_Policies_july2026.pdf","observedAt":"2026-08-26","finding":"Current policy distinguishes distribution rights by product and does not make external redistribution generally available without the applicable agreement/policy right."}],
+      "missingApprovalEvidence": ["executed Cboe Global Data Agreement/order form applicable to DE.PULSE","specific product selection and internal/external distribution entitlement","display/proxy/cache/retention and AI/derived-use rights","effective/expiry dates, environments, usage limits, reporting, fees and attribution obligations"]
+    },
+    {
+      "provider": "BLS",
+      "approvalEligible": false,
+      "productionDecision": "BLOCKED",
+      "publicTermsClassification": "PUBLIC_API_SECONDARY_USE_PERMITTED_WITH_CITATION_AND_REPRESENTATION_OBLIGATIONS",
+      "rightsTriage": {"commercialUse":"PUBLIC_USE_AVAILABLE_REVIEW_REQUIRED","multiUserUse":"PUBLIC_USE_AVAILABLE_REVIEW_REQUIRED","proxying":"NOT_ASSERTED","cachingRetention":"SECONDARY_USE_AVAILABLE_REVIEW_REQUIRED","redistribution":"PUBLIC_USE_AVAILABLE_REVIEW_REQUIRED","display":"PUBLIC_USE_AVAILABLE_WITH_CITATION","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"BLS API Terms of Service","url":"https://www.bls.gov/developers/termsOfService.htm","observedAt":"2026-08-26","finding":"BLS says data accessed through BLS.gov do not include controls over end use once downloaded, while requiring access-date/source treatment, a BLS non-vouching statement, truthful representation and compliance with API limits."},{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"BLS Public Data API","url":"https://www.bls.gov/bls/api_features.htm","observedAt":"2026-08-26","finding":"BLS describes the Public Data API as open for third-party programmers, developers and organizations to retrieve and use published historical time-series data."}],
+      "missingApprovalEvidence": ["documented DE.PULSE review mapping BLS secondary-use terms to commercial/multi-user/proxy/cache/redistribution/AI dimensions","implemented citation/access-date/non-vouching obligations where BLS-derived content is displayed","API-rate/usage operational obligations","effective review date and re-review trigger"]
+    },
+    {
+      "provider": "EIA",
+      "approvalEligible": false,
+      "productionDecision": "BLOCKED",
+      "publicTermsClassification": "PUBLIC_DOMAIN_REUSE_PERMITTED_WITH_ATTRIBUTION_AND_PROTECTED_MATERIAL_EXCEPTIONS",
+      "rightsTriage": {"commercialUse":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","multiUserUse":"PUBLIC_SERVICE_USE_AVAILABLE_REVIEW_REQUIRED","proxying":"NOT_ASSERTED","cachingRetention":"PUBLIC_REUSE_AVAILABLE_REVIEW_REQUIRED","redistribution":"PUBLIC_DOMAIN_REUSE_PERMITTED_WITH_EXCEPTIONS","display":"PUBLIC_SERVICE_DISPLAY_PERMITTED_WITH_ATTRIBUTION","aiDerivedUse":"NOT_ASSERTED"},
+      "evidence": [{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"EIA Copyrights and Reuse","url":"https://www.eia.gov/about/copyrights_reuse.php","observedAt":"2026-08-26","finding":"EIA states U.S. government publications are public domain and permits use/distribution of its data, files, databases, reports, graphs, charts and other information products with source acknowledgment, while identifying protected third-party materials and logos as exceptions."},{"sourceType":"OFFICIAL_PUBLIC_WEB","title":"EIA API Terms of Service","url":"https://www.eia.gov/opendata/terms-of-service.php","observedAt":"2026-08-26","finding":"EIA permits use of its API to develop services that search, display, analyze, retrieve and view EIA data, requires attribution/non-endorsement handling and reserves API-limit enforcement."}],
+      "missingApprovalEvidence": ["documented DE.PULSE review mapping public-domain/API permissions to commercial/multi-user/proxy/cache/AI dimensions","filtering or exclusion rules for third-party protected materials and trademarks","implemented EIA attribution/non-endorsement obligations","API-rate/usage operational obligations","effective review date and re-review trigger"]
     }
   ]
 }

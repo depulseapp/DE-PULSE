@@ -10,8 +10,8 @@ import (
 )
 
 func TestV184CommercialReadinessDefaultsFailClosedForEveryProvider(t *testing.T) {
-	providers := []string{"Alpaca", "Finnhub", "Twelve Data", "Marketaux", "FRED", "SEC EDGAR", "yfinance", "CBOE"}
-	for _, provider := range providers {
+	for _, registration := range providerRegistrations() {
+		provider := registration.Name
 		rights := providerDataRightsMetadata(provider)
 		ready := rights.CommercialReadiness
 		if ready.PolicyVersion != providerCommercialReadinessPolicyVersion {
@@ -93,7 +93,16 @@ func TestHOST002PublicTermsReviewCannotGrantExecutableProviderRights(t *testing.
 		t.Fatalf("public terms review became approval-eligible: eligible=%v decision=%q", review.ApprovalEligible, review.ProductionDecision)
 	}
 
-	expected := map[string]bool{"Alpaca": false, "Finnhub": false, "Twelve Data": false, "Marketaux": false, "FRED": false, "SEC EDGAR": false, "yfinance": false, "CBOE": false}
+	expected := map[string]bool{}
+	for _, registration := range providerRegistrations() {
+		if _, exists := expected[registration.Name]; exists {
+			t.Fatalf("duplicate provider registration name: %q", registration.Name)
+		}
+		expected[registration.Name] = false
+	}
+	if len(review.Providers) != len(expected) {
+		t.Fatalf("public terms provider count=%d; canonical registration count=%d", len(review.Providers), len(expected))
+	}
 	for _, provider := range review.Providers {
 		if _, ok := expected[provider.Provider]; !ok {
 			t.Fatalf("unexpected provider in public terms review: %q", provider.Provider)
@@ -116,7 +125,7 @@ func TestHOST002PublicTermsReviewCannotGrantExecutableProviderRights(t *testing.
 	}
 	for provider, found := range expected {
 		if !found {
-			t.Fatalf("provider missing from public terms review: %s", provider)
+			t.Fatalf("registered provider missing from public terms review: %s", provider)
 		}
 	}
 
