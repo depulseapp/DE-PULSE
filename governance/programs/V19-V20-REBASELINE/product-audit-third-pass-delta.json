@@ -1,40 +1,42 @@
 {
   "schema": "DE.PULSE-PRODUCT-AUDIT-THIRD-PASS-DELTA-1",
   "effectiveDate": "2026-08-27",
+  "status": "HISTORICAL_RECONCILIATION_EVIDENCE",
   "auditReference": {
     "document": "DE-PULSE Full Product Audit 2026-08-27",
     "auditHead": "87baad3a90357b9af8e040a5ff34203a269fd861",
     "stableComparison": "v18.10.0"
   },
-  "purpose": "Third-pass line-by-line reconciliation of audit pages 1-13 and 37-42 plus live GitHub drift after the first full rebaseline. This file is additive mandatory conservation until its rows are folded into the canonical finding/section registers.",
-  "integrationRule": "Rows in newlyExplicitAuditRequirements are mandatory audit requirements. CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process already require full audit-row reconciliation; these rows therefore participate in that requirement even though they were discovered after the first canonical finding-register checkpoint.",
+  "purpose": "Historical evidence of the third-pass line-by-line reconciliation of audit pages 1-13 and 37-42 plus live GitHub drift after the first full rebaseline. It does not independently own current audit status.",
+  "authorityRule": "Current audit finding truth is owned by product-audit-finding-register.json and product-audit-section-coverage.json plus current machine/work-slice/executable evidence. This file records how third-pass gaps were discovered and reconciled.",
+  "canonicalFold": {
+    "findingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
+    "findingRegisterFoldCommit": "9bc9e2bbaa9114a4826191a84ee7fcb3e25817b9",
+    "sectionCoverage": "governance/programs/V19-V20-REBASELINE/product-audit-section-coverage.json",
+    "sectionCoverageFoldCommit": "e9e307dbc11fc44127210082da6790b4e02b1031",
+    "foldedRiskIds": ["AUDIT-RISK-23", "AUDIT-RISK-24", "AUDIT-RISK-25"]
+  },
   "newlyExplicitAuditRequirements": [
     {
       "id": "AUDIT-RISK-23",
       "title": "Observed liquidity/tradeability must be separated from modeled slippage",
-      "status": "OPEN",
+      "statusAtDiscovery": "OPEN",
       "auditSource": "Section 4 capability ledger: Liquidity/tradeability",
-      "requiredOutcome": "Treat spread, dollar volume, opening liquidity and other directly observed market inputs as observations. Any slippage estimate is a separate modeled output with model/policy version, inputs, as-of/freshness, uncertainty/coverage and explicit labeling. Never present an estimate as an observed market fact or use an unknown estimate as zero.",
-      "primaryVersions": ["v19.1.0", "v19.3.0", "v19.6.0"],
-      "maturityDomains": ["DETERMINISTIC_INTELLIGENCE", "CANONICAL_STATE", "LOCAL_PRODUCT_USEFULNESS"]
+      "requiredOutcome": "Treat spread, dollar volume, opening liquidity and other directly observed market inputs as observations. Any slippage estimate is a separate modeled output with model/policy version, inputs, as-of/freshness, uncertainty/coverage and explicit labeling. Never present an estimate as an observed market fact or use an unknown estimate as zero."
     },
     {
       "id": "AUDIT-RISK-24",
       "title": "Alternative/community evidence needs manipulation and provenance controls",
-      "status": "PARTIAL",
+      "statusAtDiscovery": "PARTIAL",
       "auditSource": "Section 4 capability ledger: Alternative/community",
-      "requiredOutcome": "Community/sentiment/social evidence remains supplemental and untrusted. Preserve source/provenance, rights, timestamp, entity/event linkage, coverage and confidence; detect or down-weight likely manipulation/coordinated amplification/bot/spam/duplicate evidence where feasible; isolate untrusted text from canonical facts and LLM instructions; never let community evidence become an authoritative market fact or bypass deterministic quality/rights gates.",
-      "primaryVersions": ["v19.5.0", "v19.6.0", "v20.2.0"],
-      "maturityDomains": ["PROVIDER_ARCHITECTURE", "DETERMINISTIC_INTELLIGENCE", "ADAPTIVE_INTELLIGENCE", "SECURITY_FOUNDATION"]
+      "requiredOutcome": "Community/sentiment/social evidence remains supplemental and untrusted. Preserve source/provenance, rights, timestamp, entity/event linkage, coverage and confidence; detect or down-weight likely manipulation/coordinated amplification/bot/spam/duplicate evidence where feasible; isolate untrusted text from canonical facts and LLM instructions; never let community evidence become an authoritative market fact or bypass deterministic quality/rights gates."
     },
     {
       "id": "AUDIT-RISK-25",
       "title": "Historical analogs/similarity can create false certainty or look-ahead",
-      "status": "OPEN",
+      "statusAtDiscovery": "OPEN",
       "auditSource": "Section 5 Research Decision Brief + Appendix E pattern learning",
-      "requiredOutcome": "Research historical analogs and future similarity features must use point-in-time, split-safe feature vectors and eligible historical universes including delisted names where required. Show cohort/sample count, uncertainty and regime/liquidity constraints; compare with simple baselines; never present a nearest historical analog as a deterministic forecast. The frozen Decision Brief records the exact snapshot/model/policy/as-of used for the analog context.",
-      "primaryVersions": ["v19.4.0", "v19.6.0", "v20.1.0"],
-      "maturityDomains": ["LOCAL_PRODUCT_USEFULNESS", "CANONICAL_STATE", "ADAPTIVE_INTELLIGENCE"]
+      "requiredOutcome": "Research historical analogs and future similarity features must use point-in-time, split-safe feature vectors and eligible historical universes including delisted names where required. Show cohort/sample count, uncertainty and regime/liquidity constraints; compare with simple baselines; never present a nearest historical analog as a deterministic forecast. The frozen Decision Brief records the exact snapshot/model/policy/as-of used for the analog context."
     }
   ],
   "alreadyConservedAndReverified": [
@@ -42,7 +44,7 @@
     "Legacy OpenAI configuration fields are compatibility-only and retire only after model-independent gateway migration and compatibility evidence.",
     "No-orphan policy evidence is not a complete reachability proof; deletion still requires reachability/usage/rights/replacement evidence.",
     "Exact-head Qualified remains a required checkpoint at G10/material risk boundaries; Fast alone is not full release qualification.",
-    "Default-branch required-check enforcement is now proven by active ruleset 21244583; CODEOWNER/approval policy and protected release tags remain separate open controls.",
+    "Default-branch required-check enforcement is proven by active ruleset 21244583; CODEOWNER/approval policy and protected release tags remain separate open controls.",
     "CI delivery-health baseline includes lead time, cancellation/amplification, lane duration, flake rate and cost; governance-gate counts are not behavioral coverage.",
     "Research Decision Brief remains immutable-as-of and includes What Changed, Why It Matters, Bull/Base/Bear evidence, contradictions, data quality, catalyst clock, levels, historical analog context, risks and policy/model lineage.",
     "Data Engine/operator machinery remains role/capability-gated and hidden from ordinary users.",
@@ -93,5 +95,5 @@
     "unexplainedAuditSubrequirementsAfterThirdPass": [],
     "claimBoundary": "This is conservation completeness, not implementation completeness or a 5/5 product claim."
   },
-  "nextAction": "Continue v19.0 at HOST-010..012: obtain real managed PostgreSQL backup/PITR/operator recovery deletion-retention evidence through HOST-016. Do not start HOST-013+, v19.1, Watchlist or Opportunity Lifecycle implementation while the dependency remains unresolved unless governance explicitly reclassifies it."
+  "nextActionAtReconciliation": "Continue v19.0 at HOST-010..012: obtain real managed PostgreSQL backup/PITR/operator recovery deletion-retention evidence through HOST-016. Do not start HOST-013+, v19.1, Watchlist or Opportunity Lifecycle implementation while the dependency remains unresolved unless governance explicitly reclassifies it."
 }
