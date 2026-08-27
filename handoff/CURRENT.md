@@ -4,7 +4,7 @@
 
 ## Stable authority
 
-- Certified Stable: `v18.10.0` — immutable.
+- **Certified Stable:** `v18.10.0` — immutable.
 - Stable candidate SHA: `584e9e0ce91ec08e08cfd52c7cf60392ab74dd12`.
 - Stable source fingerprint: `0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037`.
 - Stable build ID: `v18.10.0-stable-20260825`.
