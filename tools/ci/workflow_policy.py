@@ -103,7 +103,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return 1
 
     if require_tokens(
-        "CI Qualified Planner v3/exact-head/dependency/native evidence contract",
+        "CI Qualified Planner v3/exact-head/dependency/native/recovery evidence contract",
         qualified,
         (
             "types: [ready_for_review]",
@@ -135,6 +135,17 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "tools/release/native_windows.ps1",
             "name: Qualified persistence / DB integration",
             "name: Qualified security / data-rights contracts",
+            "host012_recovery_confirmation:",
+            "HOST012_MANAGED_PITR_OPERATOR_DRILL",
+            "cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}",
+            "name: HOST-012 managed Neon PITR operator drill",
+            "if: ${{ github.event_name == 'workflow_dispatch' && inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}",
+            "NEON_API_KEY: ${{ secrets.NEON_API_KEY }}",
+            "python3 tools/ci/host012_neon_recovery_operator.py",
+            "--confirm-source-mutation",
+            "--confirm-pitr-restore",
+            "DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
+            "include-hidden-files: true",
             "Require Planner v3 selected jobs to pass",
             "needs.context.outputs.selected_jobs",
             "actions: read",
@@ -232,6 +243,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("Chrome + WebKit browser evidence ownership: PASS")
     print("macOS + Windows native rehearsal ownership separation: PASS")
     print("Qualified DB + security/data-rights dependency evidence: PASS")
+    print("Qualified HOST-012 managed-recovery manual-only/concurrency-safe wiring: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release canonical version-neutral G12 executor/manifest: PASS")
