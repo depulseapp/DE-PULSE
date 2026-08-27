@@ -98,14 +98,14 @@ type SessionRecord struct {
 type IdentitySecurityEventType string
 
 const (
-	IdentitySecurityDeviceRegistered    IdentitySecurityEventType = "DEVICE_REGISTERED"
-	IdentitySecurityDeviceBound         IdentitySecurityEventType = "DEVICE_BOUND"
-	IdentitySecurityDeviceStale         IdentitySecurityEventType = "DEVICE_STALE"
-	IdentitySecurityDeviceLost          IdentitySecurityEventType = "DEVICE_LOST"
-	IdentitySecurityDeviceRevoked       IdentitySecurityEventType = "DEVICE_REVOKED"
-	IdentitySecurityDeviceReactivated   IdentitySecurityEventType = "DEVICE_REACTIVATED"
-	IdentitySecuritySessionRevoked      IdentitySecurityEventType = "SESSION_REVOKED"
-	maxIdentitySecurityEvents                                     = 512
+	IdentitySecurityDeviceRegistered  IdentitySecurityEventType = "DEVICE_REGISTERED"
+	IdentitySecurityDeviceBound       IdentitySecurityEventType = "DEVICE_BOUND"
+	IdentitySecurityDeviceStale       IdentitySecurityEventType = "DEVICE_STALE"
+	IdentitySecurityDeviceLost        IdentitySecurityEventType = "DEVICE_LOST"
+	IdentitySecurityDeviceRevoked     IdentitySecurityEventType = "DEVICE_REVOKED"
+	IdentitySecurityDeviceReactivated IdentitySecurityEventType = "DEVICE_REACTIVATED"
+	IdentitySecuritySessionRevoked    IdentitySecurityEventType = "SESSION_REVOKED"
+	maxIdentitySecurityEvents                                   = 512
 )
 
 type IdentitySecurityEvent struct {
