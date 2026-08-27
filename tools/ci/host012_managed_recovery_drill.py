@@ -7,10 +7,12 @@ so credentials are not placed in command history or emitted into evidence.
 
 This runner:
 1. binds the drill to the exact checked-out Git SHA;
-2. executes the canonical tagged PostgreSQL privacy replay regression against a
+2. optionally verifies the canonical lifecycle delete-fixture evidence for the
+   exact recovery user before touching the restored target;
+3. executes the canonical tagged PostgreSQL privacy replay regression against a
    current post-delete source and a distinct pre-delete PITR restore target;
-3. verifies the secret-free privacy artifact produced by that canonical test;
-4. optionally binds real backup/restore artifacts to the final managed recovery
+4. verifies the secret-free privacy artifact produced by that canonical test;
+5. optionally binds real backup/restore artifacts to the final managed recovery
    evidence packet and runs the fail-closed evidence gate.
 
 It never provisions, simulates, or claims a managed backup/PITR operation.
@@ -29,6 +31,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 PRIVACY_SCHEMA = "DE.PULSE-HOST012-MANAGED-RECOVERY-PRIVACY-VERIFICATION-1"
+FIXTURE_SCHEMA = "DE.PULSE-HOST012-MANAGED-RECOVERY-LIFECYCLE-FIXTURE-1"
 FINAL_SCHEMA = "DE.PULSE-HOST012-MANAGED-RECOVERY-EVIDENCE-1"
 ACK = "HOST012_MANAGED_PITR_OPERATOR_DRILL"
 REQUIRED_DATABASE_ENV = (
@@ -60,6 +63,10 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def user_sha256(user_id: str) -> str:
+    return hashlib.sha256(user_id.encode("utf-8")).hexdigest()
+
+
 def exact_head_sha() -> str:
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -72,6 +79,38 @@ def exact_head_sha() -> str:
     if len(sha) != 40 or any(ch not in "0123456789abcdef" for ch in sha):
         raise RuntimeError("git rev-parse HEAD did not return a full SHA")
     return sha
+
+
+def validate_fixture_evidence(data: dict[str, Any], candidate_sha: str, expected_user_id: str) -> list[str]:
+    errors: list[str] = []
+    if data.get("schema") != FIXTURE_SCHEMA:
+        errors.append(f"fixture evidence schema must be {FIXTURE_SCHEMA}")
+    if data.get("candidateSha") != candidate_sha:
+        errors.append("fixture evidence candidateSha does not match the exact checked-out head")
+    if data.get("phase") != "delete":
+        errors.append("fixture evidence must be the canonical delete phase")
+    if data.get("providerBackupPitrClaimed") is not False:
+        errors.append("fixture evidence must not claim provider backup/PITR truth")
+    if data.get("userId") != expected_user_id:
+        errors.append("fixture evidence userId does not match DEPULSE_MANAGED_RECOVERY_USER_ID")
+    if data.get("userIdSha256") != user_sha256(expected_user_id):
+        errors.append("fixture evidence userIdSha256 does not match the recovery user")
+    if data.get("accountStatus") != "DISABLED":
+        errors.append("fixture evidence accountStatus must be DISABLED")
+    if data.get("tombstoneReason") != "USER_REQUESTED":
+        errors.append("fixture evidence must contain the canonical USER_REQUESTED tombstone reason")
+    if not isinstance(data.get("tombstoneDeletedAt"), int) or data.get("tombstoneDeletedAt", 0) <= 0:
+        errors.append("fixture evidence must contain a durable tombstone timestamp")
+    if data.get("deviceCount") != 0:
+        errors.append("fixture evidence deviceCount must be 0")
+    if data.get("sessionCount") != 0:
+        errors.append("fixture evidence sessionCount must be 0")
+    if data.get("personalWorkspacePresent") is not False:
+        errors.append("fixture evidence must prove the current source workspace is privacy blank")
+    owner = data.get("canonicalLifecycleOwner")
+    if not isinstance(owner, str) or "Application.deleteAccountData" not in owner:
+        errors.append("fixture evidence must come from the canonical Application.deleteAccountData lifecycle")
+    return errors
 
 
 def validate_privacy_artifact(data: dict[str, Any], candidate_sha: str) -> list[str]:
@@ -187,6 +226,10 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Required acknowledgement that the distinct PITR-restored target may be replaced by the canonical replay",
     )
+    parser.add_argument(
+        "--fixture-evidence",
+        help="Optional canonical delete-fixture artifact to bind the drill to the prepared current-source lifecycle",
+    )
     parser.add_argument("--final-evidence", help="Optional operator/provider final evidence JSON to validate after the drill")
     parser.add_argument("--backup-artifact", help="Provider backup metadata artifact file; required with --final-evidence")
     parser.add_argument("--restore-artifact", help="Provider restore metadata artifact file; required with --final-evidence")
@@ -208,6 +251,22 @@ def main(argv: list[str] | None = None) -> int:
         candidate_sha = exact_head_sha()
     except (OSError, subprocess.CalledProcessError, RuntimeError) as exc:
         return fail(f"cannot resolve exact Git head: {exc}")
+
+    fixture_evidence_sha256: str | None = None
+    if args.fixture_evidence:
+        fixture_path = Path(args.fixture_evidence).expanduser().resolve()
+        try:
+            fixture = load_json(fixture_path)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            return fail(f"cannot read lifecycle fixture evidence: {exc}")
+        fixture_errors = validate_fixture_evidence(
+            fixture,
+            candidate_sha,
+            os.environ["DEPULSE_MANAGED_RECOVERY_USER_ID"].strip(),
+        )
+        if fixture_errors:
+            return fail("invalid lifecycle fixture evidence: " + "; ".join(fixture_errors))
+        fixture_evidence_sha256 = file_sha256(fixture_path)
 
     artifact_path = Path(args.artifact).expanduser().resolve()
     drill_env = os.environ.copy()
@@ -236,15 +295,21 @@ def main(argv: list[str] | None = None) -> int:
     privacy_errors = validate_privacy_artifact(privacy, candidate_sha)
     if privacy_errors:
         return fail("; ".join(privacy_errors))
+    expected_user_hash = user_sha256(os.environ["DEPULSE_MANAGED_RECOVERY_USER_ID"].strip())
+    if privacy.get("userIdSha256") != expected_user_hash:
+        return fail("privacy artifact userIdSha256 does not match DEPULSE_MANAGED_RECOVERY_USER_ID")
 
     result: dict[str, Any] = {
         "status": "PASS",
         "candidateSha": candidate_sha,
         "privacyArtifactSha256": file_sha256(artifact_path),
         "privacyReplayVerified": True,
+        "fixtureEvidenceValidated": fixture_evidence_sha256 is not None,
         "managedBackupPitrClaimed": False,
         "note": "The canonical privacy replay passed. Managed backup/PITR truth still comes from provider/operator artifacts and the final evidence gate.",
     }
+    if fixture_evidence_sha256 is not None:
+        result["fixtureEvidenceSha256"] = fixture_evidence_sha256
 
     if args.final_evidence:
         if not args.backup_artifact or not args.restore_artifact:
