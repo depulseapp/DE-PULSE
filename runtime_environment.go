@@ -8,21 +8,23 @@ import (
 )
 
 const (
-	runtimeModeEnv               = "DEPULSE_RUNTIME_MODE"
-	hostedListenAddrEnv          = "DEPULSE_LISTEN_ADDR"
-	hostedConfigDirEnv           = "DEPULSE_CONFIG_DIR"
-	hostedTrustProxyHeadersEnv   = "DEPULSE_TRUST_PROXY_HEADERS"
-	hostedPublicOriginEnv        = "DEPULSE_PUBLIC_ORIGIN"
-	hostedEnvironmentEnv         = "DEPULSE_HOSTED_ENVIRONMENT"
-	hostedDesiredStateVersionEnv = "DEPULSE_HOSTED_DESIRED_STATE_VERSION"
-	hostedDesiredStateSHA256Env  = "DEPULSE_HOSTED_DESIRED_STATE_SHA256"
-	hostedIsolationIDEnv         = "DEPULSE_HOSTED_ISOLATION_ID"
-	hostedServiceIdentityEnv     = "DEPULSE_HOSTED_SERVICE_IDENTITY"
-	hostedIngressPolicyEnv       = "DEPULSE_HOSTED_INGRESS_POLICY"
-	hostedEgressPolicyEnv        = "DEPULSE_HOSTED_EGRESS_POLICY"
-	hostedNetworkPolicyEnv       = "DEPULSE_HOSTED_NETWORK_POLICY"
-	hostedTLSPolicyEnv           = "DEPULSE_HOSTED_TLS_POLICY"
-	hostedInternalMTLSEnv        = "DEPULSE_HOSTED_INTERNAL_MTLS"
+	runtimeModeEnv                         = "DEPULSE_RUNTIME_MODE"
+	hostedListenAddrEnv                    = "DEPULSE_LISTEN_ADDR"
+	hostedConfigDirEnv                     = "DEPULSE_CONFIG_DIR"
+	hostedTrustProxyHeadersEnv             = "DEPULSE_TRUST_PROXY_HEADERS"
+	hostedPublicOriginEnv                  = "DEPULSE_PUBLIC_ORIGIN"
+	hostedEnvironmentEnv                   = "DEPULSE_HOSTED_ENVIRONMENT"
+	hostedDesiredStateVersionEnv           = "DEPULSE_HOSTED_DESIRED_STATE_VERSION"
+	hostedDesiredStateSHA256Env            = "DEPULSE_HOSTED_DESIRED_STATE_SHA256"
+	hostedIsolationIDEnv                   = "DEPULSE_HOSTED_ISOLATION_ID"
+	hostedServiceIdentityEnv               = "DEPULSE_HOSTED_SERVICE_IDENTITY"
+	hostedIngressPolicyEnv                 = "DEPULSE_HOSTED_INGRESS_POLICY"
+	hostedEgressPolicyEnv                  = "DEPULSE_HOSTED_EGRESS_POLICY"
+	hostedNetworkPolicyEnv                 = "DEPULSE_HOSTED_NETWORK_POLICY"
+	hostedTLSPolicyEnv                     = "DEPULSE_HOSTED_TLS_POLICY"
+	hostedInternalMTLSEnv                  = "DEPULSE_HOSTED_INTERNAL_MTLS"
+	providerRightsEnforcementModeEnv       = "DEPULSE_PROVIDER_RIGHTS_ENFORCEMENT_MODE"
+	providerRightsEnforcementPublicMode    = "PUBLIC_PRODUCTION"
 )
 
 func runtimeMode() string {
@@ -35,6 +37,19 @@ func runtimeMode() string {
 }
 
 func isHostedRuntime() bool { return runtimeMode() == "hosted" }
+
+// providerRightsEnforcementActive intentionally stays independent from hosted
+// runtime selection. During development and pre-public validation, provider
+// rights are evaluated and surfaced as governance/audit truth without reducing
+// configured provider capacity. Hard fail-closed routing, fanout, cache,
+// persistence and serving activate only when PUBLIC_PRODUCTION is explicitly
+// selected for a hosted runtime.
+func providerRightsEnforcementActive() bool {
+	return isHostedRuntime() && strings.EqualFold(
+		strings.TrimSpace(os.Getenv(providerRightsEnforcementModeEnv)),
+		providerRightsEnforcementPublicMode,
+	)
+}
 
 func hostedListenAddress() string {
 	if addr := strings.TrimSpace(os.Getenv(hostedListenAddrEnv)); addr != "" {
