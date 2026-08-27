@@ -42,7 +42,7 @@
     "Legacy OpenAI configuration fields are compatibility-only and retire only after model-independent gateway migration and compatibility evidence.",
     "No-orphan policy evidence is not a complete reachability proof; deletion still requires reachability/usage/rights/replacement evidence.",
     "Exact-head Qualified remains a required checkpoint at G10/material risk boundaries; Fast alone is not full release qualification.",
-    "Branch/ruleset/CODEOWNERS/protected-tag enforcement remains an open delivery control until executable repository enforcement is proven.",
+    "Default-branch required-check enforcement is now proven by active ruleset 21244583; CODEOWNER/approval policy and protected release tags remain separate open controls.",
     "CI delivery-health baseline includes lead time, cancellation/amplification, lane duration, flake rate and cost; governance-gate counts are not behavioral coverage.",
     "Research Decision Brief remains immutable-as-of and includes What Changed, Why It Matters, Bull/Base/Bear evidence, contradictions, data quality, catalyst clock, levels, historical analog context, risks and policy/model lineage.",
     "Data Engine/operator machinery remains role/capability-gated and hidden from ordinary users.",
@@ -57,7 +57,27 @@
     "action": "Active branch CLAUDE.md was aligned to the new main portability import without altering runtime/product logic.",
     "repositoryVisibilityObserved": "PUBLIC",
     "visibilityNote": "Public source visibility does not authorize provider-data redistribution or commercial activation. Secret-history/SCA/redaction controls remain mandatory and public-source sensitivity must be considered in support/governance artifacts.",
-    "branchProtectionObservation": "main reports protected=true but branch-protection required-status enforcement is off in the returned protection object; enforceable merge/ruleset controls remain not proven by this observation alone."
+    "branchRuleset": {
+      "id": 21244583,
+      "name": "DE.PULSE main protection",
+      "enforcement": "ACTIVE",
+      "scope": "DEFAULT_BRANCH",
+      "provenControls": [
+        "pull request required",
+        "strict required status DE.PULSE/fast-head",
+        "strict required status DE.PULSE/qualified-head",
+        "review-thread resolution required",
+        "branch deletion blocked",
+        "non-fast-forward blocked",
+        "no bypass actors"
+      ],
+      "remainingGaps": [
+        "required approving review count is 0",
+        "CODEOWNERS file not found and code-owner review is not required",
+        "no tag ruleset/protected Stable-tag enforcement was returned"
+      ],
+      "auditDisposition": "PARTIALLY_CLOSED: required-check/PR enforcement is proven; CODEOWNER/review and protected-release-tag controls remain open."
+    }
   },
   "qualificationReconciliation": {
     "rebaselineFastHead": "b4fb44e92f537946454fcc8969ed128f5df10374",
