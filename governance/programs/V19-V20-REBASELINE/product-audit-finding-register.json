@@ -1,0 +1,187 @@
+{
+  "schema": "DE.PULSE-PRODUCT-AUDIT-FINDING-REGISTER-1",
+  "effectiveDate": "2026-08-27",
+  "auditReference": {
+    "sha": "87baad3a90357b9af8e040a5ff34203a269fd861",
+    "stableComparison": "v18.10.0",
+    "document": "DE-PULSE Full Product Audit 2026-08-27"
+  },
+  "authorityRule": "Audit findings are planning/conservation requirements. Current source, machine state, active work-slice/closure ledgers and executable evidence determine present implementation status. No audit GAP becomes fixed by prose alone and no CURRENT claim survives contradictory executable evidence.",
+  "target": "Evidence-backed 5/5 maturity in every audit domain without capability loss, parallel intelligence truth, premature commercialization or premature learned production behavior.",
+  "executiveFindings": [
+    {
+      "id": "AUDIT-EXEC-01",
+      "title": "Canonical shared-intelligence boundary is wrong",
+      "auditState": "GAP",
+      "currentDisposition": "OPEN",
+      "requiredOutcome": "Engine/RuntimeSnapshot ceases to be the de-facto canonical domain boundary. Introduce versioned SymbolIntelligenceSnapshot, typed Evidence and material delta/event contracts with field-level provenance/freshness; retain compatibility adapters until consumers migrate.",
+      "primaryVersions": ["v19.1.0", "v19.2.0", "v19.7.0"],
+      "maturityDomains": ["CANONICAL_STATE", "WEB_MULTI_PLATFORM_READINESS", "DETERMINISTIC_INTELLIGENCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-02",
+      "title": "Opportunity Radar must seed a shared Opportunity Lifecycle",
+      "auditState": "TARGET",
+      "currentDisposition": "OPEN",
+      "requiredOutcome": "Preserve Radar detector/evidence logic but remove independent lifecycle authority. Rapid Move, Radar and Discovery feed one Opportunity aggregate/state machine consumed by projections.",
+      "primaryVersions": ["v19.3.0", "v19.4.1", "v19.7.0"],
+      "maturityDomains": ["CANONICAL_STATE", "LOCAL_PRODUCT_USEFULNESS", "DETERMINISTIC_INTELLIGENCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-03",
+      "title": "Watchlist is membership only, not first-class intelligence",
+      "auditState": "GAP",
+      "currentDisposition": "OPEN",
+      "requiredOutcome": "Dedicated Watchlist becomes the user-selected-universe projection of shared Symbol Intelligence and Opportunity Lifecycle with ranked attention, durable promotion/demotion transitions, explanations, contradictions, freshness/trust, Research-as-of handoff, alerts and sync. No Watchlist scorer or acquisition loop.",
+      "primaryVersions": ["v19.4.0", "v19.4.1", "v19.6.0"],
+      "maturityDomains": ["LOCAL_PRODUCT_USEFULNESS", "CANONICAL_STATE", "PERSISTENCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-04",
+      "title": "Adaptive intelligence is durable but not learned production behavior",
+      "auditState": "GAP",
+      "currentDisposition": "OPEN_BY_DESIGN",
+      "requiredOutcome": "Build point-in-time outcomes, explicit censoring, calibration/drift/model registry, shadow/champion-challenger evaluation, sample floors, human approval, bounded reversible rollout and deterministic fallback before learned production influence.",
+      "primaryVersions": ["v19.6.0", "v19.6.1", "v20.0.0", "v20.1.0", "v20.2.0", "v20.5.0"],
+      "maturityDomains": ["ADAPTIVE_INTELLIGENCE", "CANONICAL_STATE", "PERSISTENCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-05",
+      "title": "Renderer owns authoritative domain logic",
+      "auditState": "CRITICAL_GAP",
+      "currentDisposition": "OPEN",
+      "requiredOutcome": "Characterize current computePlan/technical/family/geometry behavior with golden vectors, move authoritative deterministic calculations into versioned Go domain packages, dual/shadow compare, migrate clients and retire client authority only after parity/evidence.",
+      "primaryVersions": ["v19.1.0", "v19.3.0", "v19.7.0"],
+      "maturityDomains": ["DETERMINISTIC_INTELLIGENCE", "WEB_MULTI_PLATFORM_READINESS", "TESTING_RELEASE_ASSURANCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-06",
+      "title": "Hosted trust is advanced but not production-ready",
+      "auditState": "GAP",
+      "currentDisposition": "PARTIAL_ACTIVE",
+      "requiredOutcome": "Finish development-grade hosted privacy/trust, real tenant isolation, normalized Postgres, managed secrets, service trust/IaC, backup/PITR/recovery, durable audit, observability and operator evidence without equating local/source tests with infrastructure proof.",
+      "primaryVersions": ["v19.0.0", "v19.2.0", "v19.6.1"],
+      "maturityDomains": ["SECURITY_FOUNDATION", "PERSISTENCE", "TESTING_RELEASE_ASSURANCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-07",
+      "title": "Desktop assurance is stronger than desktop distribution",
+      "auditState": "GAP",
+      "currentDisposition": "OPEN",
+      "requiredOutcome": "Provide macOS Developer ID/hardened-runtime/notarization/stapling and Windows trusted signing plus installer/update-channel/rollback strategy, secure storage, deep-link/auth handling and staged beta/stable delivery evidence.",
+      "primaryVersions": ["v19.3.0", "v19.6.1", "v19.7.0"],
+      "maturityDomains": ["WEB_MULTI_PLATFORM_READINESS", "COMMERCIAL_DISTRIBUTION_READINESS", "SECURITY_FOUNDATION"]
+    },
+    {
+      "id": "AUDIT-EXEC-08",
+      "title": "Commercial data rights are a P0 gate for public/commercial use",
+      "auditState": "EXTERNAL_GAP",
+      "currentDisposition": "CONTROL_IMPLEMENTED_APPROVAL_EXTERNAL",
+      "requiredOutcome": "Maintain executable capability-specific rights controls/provenance for display, cache, persistence, derived data, AI, multi-user and redistribution; obtain signed provider/legal evidence before relevant public/commercial activation. Credentials or successful calls never imply rights. Development lifecycle remains independent from commercial activation where approval is genuinely commercial-only.",
+      "primaryVersions": ["v19.0.0", "v19.1.0", "v19.6.1"],
+      "maturityDomains": ["PROVIDER_ARCHITECTURE", "COMMERCIAL_DISTRIBUTION_READINESS", "SECURITY_FOUNDATION"]
+    },
+    {
+      "id": "AUDIT-EXEC-09",
+      "title": "Documentation/current-state system is overgrown and drift-prone",
+      "auditState": "GAP",
+      "currentDisposition": "PARTIAL_REBASELINE_ACTIVE",
+      "requiredOutcome": "One canonical roadmap/architecture/build/release truth, machine-state precedence, generated CURRENT/handoff status, historical evidence immutable, duplicate base/CURRENT narrative files merged or demoted and no hand-edited narrative independently declaring current status.",
+      "primaryVersions": ["IMMEDIATE", "ALL_V19", "v19.7.0"],
+      "maturityDomains": ["DOCUMENTATION_COHERENCE", "TESTING_RELEASE_ASSURANCE"]
+    },
+    {
+      "id": "AUDIT-EXEC-10",
+      "title": "Modular monolith is the correct next architecture",
+      "auditState": "TARGET",
+      "currentDisposition": "ADOPTED",
+      "requiredOutcome": "Preserve Go and incrementally introduce domain/application/provider/persistence/platform package boundaries, Postgres + transactional outbox, stateless API/worker scale and thin typed clients. No Kubernetes/Kafka/microservice program without measured need.",
+      "primaryVersions": ["ALL_V19", "v20.6.0"],
+      "maturityDomains": ["CANONICAL_STATE", "PERSISTENCE", "WEB_MULTI_PLATFORM_READINESS", "TESTING_RELEASE_ASSURANCE"]
+    }
+  ],
+  "mandatoryAuditWideRisks": [
+    {"id":"AUDIT-RISK-01","title":"Instrument identity outlives ticker","status":"OPEN","requiredOutcome":"Stable instrument/listing identity with validity ranges for symbol reuse, mergers, class changes, delistings and ADR conversion."},
+    {"id":"AUDIT-RISK-02","title":"Point-in-time fundamentals and revised macro data","status":"OPEN","requiredOutcome":"Bitemporal/vintage-aware facts and strict as-of joins; historical evaluation must not see later revisions."},
+    {"id":"AUDIT-RISK-03","title":"Exchange calendar, DST and half-day truth","status":"PARTIAL","requiredOutcome":"Versioned exchange-calendar/session service used by freshness, events, outcome windows and scheduling."},
+    {"id":"AUDIT-RISK-04","title":"Clock skew and late/out-of-order events","status":"OPEN","requiredOutcome":"Material facts carry source/observed/ingested/effective/as-of/revision semantics and processing tolerates late ordering."},
+    {"id":"AUDIT-RISK-05","title":"Raw versus adjusted price semantics","status":"OPEN","requiredOutcome":"Explicit series basis/action/revision lineage at every feature/outcome boundary."},
+    {"id":"AUDIT-RISK-06","title":"Options open-interest is as-of, not intraday truth","status":"PARTIAL","requiredOutcome":"Expose OI as-of date, coverage/Greeks quality and never infer signed dealer positioning from gamma-by-OI proxy alone."},
+    {"id":"AUDIT-RISK-07","title":"Alert fatigue and causal incident chains","status":"OPEN","requiredOutcome":"Rapid Move+catalyst+breakout can correlate into one explained incident with dedupe, acknowledgement, quiet-hours and delivery audit."},
+    {"id":"AUDIT-RISK-08","title":"Provider correlation/shared upstream failure","status":"OPEN","requiredOutcome":"Provider agreement/redundancy carries upstream-independence metadata; correlated vendors do not overstate corroboration or resilience."},
+    {"id":"AUDIT-RISK-09","title":"Provider/data revision policy","status":"OPEN","requiredOutcome":"Corrections create revision/supersedes lineage; prior decision truth remains reconstructable."},
+    {"id":"AUDIT-RISK-10","title":"Privacy deletion versus immutable audit","status":"PARTIAL_ACTIVE","requiredOutcome":"Explicit pseudonymization/retention policy reconciles deletion rights with security/financial audit retention and backup recovery."},
+    {"id":"AUDIT-RISK-11","title":"Cross-device edit conflicts","status":"OPEN","requiredOutcome":"Revision/outbox/tombstone/conflict semantics for Watchlist/order/annotations/preferences and deterministic merge behavior."},
+    {"id":"AUDIT-RISK-12","title":"Offline semantics","status":"OPEN","requiredOutcome":"Desktop encrypted cache is last-known/read-only/degraded and never presents stale evidence as live confidence."},
+    {"id":"AUDIT-RISK-13","title":"AI egress residency and provider terms","status":"OPEN","requiredOutcome":"AI evidence egress has rights/privacy/residency policy independent from market-data display rights."},
+    {"id":"AUDIT-RISK-14","title":"Prompt injection through untrusted evidence","status":"PARTIAL","requiredOutcome":"Source isolation, adversarial evals, bounded schemas and evidence-ID grounding across news/filing/community inputs."},
+    {"id":"AUDIT-RISK-15","title":"Old-client/API schema evolution","status":"OPEN","requiredOutcome":"Version compatibility, deprecation, minimum-client and forced-upgrade rules for Web/macOS/Windows event/API contracts."},
+    {"id":"AUDIT-RISK-16","title":"Personalization can corrupt calibration","status":"OPEN","requiredOutcome":"User thresholds/views never mutate shared model truth; personalized projection remains separable/reproducible."},
+    {"id":"AUDIT-RISK-17","title":"Adaptive selection bias","status":"OPEN","requiredOutcome":"Collect unbiased/control outcomes beyond only promoted/hydrated symbols and measure policy-induced sampling bias."},
+    {"id":"AUDIT-RISK-18","title":"Censored outcomes","status":"OPEN","requiredOutcome":"Halts, missing bars, delistings, overnight gaps and insufficient horizon receive explicit outcome/censoring states."},
+    {"id":"AUDIT-RISK-19","title":"Full snapshot fanout cost/exposure","status":"OPEN","requiredOutcome":"User-scoped deltas/material references replace high-churn full snapshot distribution with compatibility migration."},
+    {"id":"AUDIT-RISK-20","title":"Operational ownership and market-open support","status":"OPEN","requiredOutcome":"Named on-call/escalation/provider incident/runbook/SLO/error-budget ownership before service commitments."},
+    {"id":"AUDIT-RISK-21","title":"Long King / Short King terminology is undefined","status":"OPEN","requiredOutcome":"Approve evidence-based domain definitions, horizon/side relationship, inputs, quality/freshness and outcome semantics before exposing as product labels or Watchlist columns; do not infer meaning from name alone."},
+    {"id":"AUDIT-RISK-22","title":"Call Wall / Put Wall are planned, not current semantics","status":"OPEN","requiredOutcome":"Define expiry-aware quality-gated options-wall semantics, OI as-of caveats, clustering/coverage rules and rights before product use; no dealer-positioning claim."}
+  ],
+  "surfaceDisposition": [
+    {"surface":"Dashboard","decision":"IMPROVE","target":"Only session/regime, data trust, material transitions, scheduled risks and required action; deep-link details."},
+    {"surface":"Market Intelligence","decision":"KEEP_IMPROVE","target":"Shared market/regime/liquidity context travels with symbol decisions and contradictions."},
+    {"surface":"Day/Swing/Long Desks","decision":"KEEP_REWRITE_DOMAIN_BOUNDARY","target":"Preserve horizon UX while server owns versioned two-sided deterministic policy/geometry."},
+    {"surface":"Discovery","decision":"KEEP_MERGE_PRODUCT_MODEL","target":"Broad-universe projection of shared Opportunity Lifecycle."},
+    {"surface":"Opportunity Radar","decision":"KEEP_DETECTOR_CONSOLIDATE_LIFECYCLE","target":"Detector/evidence producer, not independent user-level scorer/lifecycle."},
+    {"surface":"Watchlist","decision":"ADD_FIRST_CLASS","target":"User-selected-universe projection of same lifecycle; no duplicate acquisition/scoring."},
+    {"surface":"Research","decision":"KEEP_PROMOTE_TO_DECISION_BRIEF","target":"Frozen-as-of authoritative Decision Brief for every promotion/transition."},
+    {"surface":"AI Copilot","decision":"IMPROVE_CONSIDER_CONSOLIDATE","target":"Evidence-bounded synthesis service; common actions may live in Research/global command; never parallel truth."},
+    {"surface":"Administration/Maintenance/Settings","decision":"KEEP_ROLE_GATED","target":"Operator machinery and provider secrets/routing controls hidden from ordinary users."},
+    {"surface":"News/Earnings/Filings","decision":"MERGE_PRESENTATION","target":"Preserve data/intelligence services; symbol-specific detail belongs in Research, optional event explorer only if justified."}
+  ],
+  "temporalContract": {
+    "requiredFields": ["source_at","observed_at","ingested_at","effective_from","effective_to","as_of","expires_at_or_half_life","market_session","exchange_timezone","revision","supersedes_id","provider","dataset","rights_version","quality"],
+    "rule": "Retrieval/cache time is not evidence time. Unknown source/observation time remains unknown. Historical reconstruction must use as-of truth and revisions."
+  },
+  "adaptiveControl": {
+    "authorities": ["DETERMINISTIC_RULES","STATISTICAL_ADAPTIVE_MODELS","LLM_SYNTHESIS"],
+    "rule": "Rules calculate facts/safety/lifecycle; statistical models estimate registered relationships but require evaluation/approval; LLMs explain structured evidence and cannot calculate canonical market facts, weights, routing, rights or lifecycle transitions.",
+    "promotionFlow": ["FEATURE_SNAPSHOT","DECISION_TRANSITION","OUTCOME","EVALUATION","SHADOW_CHALLENGER","VALIDATED","APPROVED","PRODUCTION","ROLLBACK_IF_THRESHOLD"],
+    "evaluation": ["walk-forward/time-split","strict point-in-time joins","simple baseline comparison","sample counts and uncertainty","calibration/ranking lift/precision-at-attention/false-promotion cost/stability","decision quality separate from explanation grounding"]
+  },
+  "scaleConservation": [
+    {"scale":"100_USERS","firstRisks":["rights","full snapshot/SSE cost","local secrets","manual support","unsigned updates"],"minimumArchitecture":["rights gate","user-scoped deltas","managed secrets","signed beta channel","support runbooks"]},
+    {"scale":"1000_USERS","firstRisks":["provider rate/cost","duplicate ingestion","JSON workspace/identity locking","in-process sessions","alert fanout"],"minimumArchitecture":["shared ingestion","normalized tenant DB","outbox/workers","rate/cost budgets","durable alerts"]},
+    {"scale":"10000_USERS","firstRisks":["licensing economics","time-series partitions","event backlogs","DB hotspots","adaptive selection bias","on-call load"],"minimumArchitecture":["partition/retention","capability quotas","queue ownership","SLO/error budgets","unbiased sampling","model governance"]}
+  ],
+  "architectureDecisionsRequired": [
+    "ADR-001_CANONICAL_SYMBOL_INTELLIGENCE",
+    "ADR-002_SHARED_OPPORTUNITY_LIFECYCLE",
+    "ADR-003_SERVER_OWNED_DETERMINISTIC_POLICY",
+    "ADR-004_HOSTED_MODULAR_MONOLITH",
+    "ADR-005_PROVIDER_CAPABILITY_GATEWAY",
+    "ADR-006_POSTGRES_V2_TENANT_ISOLATION",
+    "ADR-007_WEB_DESKTOP_CLIENT_CONTRACT",
+    "ADR-008_DESKTOP_FRAMEWORK",
+    "ADR-009_HOSTED_AUTHENTICATION",
+    "ADR-010_SECRETS_KEY_MANAGEMENT",
+    "ADR-011_ALERT_DELIVERY",
+    "ADR-012_ADAPTIVE_CONTROL_PLANE",
+    "ADR-013_POINT_IN_TIME_DATA",
+    "ADR-014_AI_MODEL_GATEWAY_EVALS",
+    "ADR-015_DESKTOP_DISTRIBUTION",
+    "ADR-016_OBSERVABILITY_PRIVACY",
+    "ADR-017_COMMERCIAL_DATA_RIGHTS"
+  ],
+  "executionOrder": [
+    "REBASELINE_TRUTH_AND_ENFORCEMENT",
+    "SECURE_RIGHTS_AND_SECRETS",
+    "FREEZE_BEHAVIOR_WITH_GOLDEN_TESTS",
+    "EXTRACT_CANONICAL_DOMAIN_CONTRACTS",
+    "INTRODUCE_SHARED_OPPORTUNITY_LIFECYCLE",
+    "BUILD_TENANT_AWARE_PERSISTENCE",
+    "REPLACE_FULL_SNAPSHOTS_WITH_VERSIONED_USER_SCOPED_APIS_EVENTS",
+    "SHIP_WATCHLIST_AS_LIFECYCLE_PROJECTION",
+    "ESTABLISH_PLATFORM_FOUNDATION",
+    "LAUNCH_WEB_THEN_GUARDED_ADAPTATION"
+  ],
+  "compatibilityRule": "CHARACTERIZE -> ADD_NEW_OWNER -> DUAL_WRITE_OR_DUAL_READ_OR_SHADOW -> COMPARE -> MIGRATE_CONSUMERS -> PROVE_EQUIVALENCE_OR_IMPROVEMENT -> REMOVE_OLD_AUTHORITY -> KEEP_REGRESSION",
+  "zeroMissRule": "All executive findings, audit-wide risks, surface dispositions, temporal/adaptive/scale rules and architecture decisions remain OPEN/PARTIAL until explicitly assigned and evidenced. G10 cannot close with an unexplained applicable audit row."
+}
