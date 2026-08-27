@@ -1,0 +1,77 @@
+{
+  "schema": "DE.PULSE-PRODUCT-AUDIT-THIRD-PASS-DELTA-1",
+  "effectiveDate": "2026-08-27",
+  "auditReference": {
+    "document": "DE-PULSE Full Product Audit 2026-08-27",
+    "auditHead": "87baad3a90357b9af8e040a5ff34203a269fd861",
+    "stableComparison": "v18.10.0"
+  },
+  "purpose": "Third-pass line-by-line reconciliation of audit pages 1-13 and 37-42 plus live GitHub drift after the first full rebaseline. This file is additive mandatory conservation until its rows are folded into the canonical finding/section registers.",
+  "integrationRule": "Rows in newlyExplicitAuditRequirements are mandatory audit requirements. CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process already require full audit-row reconciliation; these rows therefore participate in that requirement even though they were discovered after the first canonical finding-register checkpoint.",
+  "newlyExplicitAuditRequirements": [
+    {
+      "id": "AUDIT-RISK-23",
+      "title": "Observed liquidity/tradeability must be separated from modeled slippage",
+      "status": "OPEN",
+      "auditSource": "Section 4 capability ledger: Liquidity/tradeability",
+      "requiredOutcome": "Treat spread, dollar volume, opening liquidity and other directly observed market inputs as observations. Any slippage estimate is a separate modeled output with model/policy version, inputs, as-of/freshness, uncertainty/coverage and explicit labeling. Never present an estimate as an observed market fact or use an unknown estimate as zero.",
+      "primaryVersions": ["v19.1.0", "v19.3.0", "v19.6.0"],
+      "maturityDomains": ["DETERMINISTIC_INTELLIGENCE", "CANONICAL_STATE", "LOCAL_PRODUCT_USEFULNESS"]
+    },
+    {
+      "id": "AUDIT-RISK-24",
+      "title": "Alternative/community evidence needs manipulation and provenance controls",
+      "status": "PARTIAL",
+      "auditSource": "Section 4 capability ledger: Alternative/community",
+      "requiredOutcome": "Community/sentiment/social evidence remains supplemental and untrusted. Preserve source/provenance, rights, timestamp, entity/event linkage, coverage and confidence; detect or down-weight likely manipulation/coordinated amplification/bot/spam/duplicate evidence where feasible; isolate untrusted text from canonical facts and LLM instructions; never let community evidence become an authoritative market fact or bypass deterministic quality/rights gates.",
+      "primaryVersions": ["v19.5.0", "v19.6.0", "v20.2.0"],
+      "maturityDomains": ["PROVIDER_ARCHITECTURE", "DETERMINISTIC_INTELLIGENCE", "ADAPTIVE_INTELLIGENCE", "SECURITY_FOUNDATION"]
+    },
+    {
+      "id": "AUDIT-RISK-25",
+      "title": "Historical analogs/similarity can create false certainty or look-ahead",
+      "status": "OPEN",
+      "auditSource": "Section 5 Research Decision Brief + Appendix E pattern learning",
+      "requiredOutcome": "Research historical analogs and future similarity features must use point-in-time, split-safe feature vectors and eligible historical universes including delisted names where required. Show cohort/sample count, uncertainty and regime/liquidity constraints; compare with simple baselines; never present a nearest historical analog as a deterministic forecast. The frozen Decision Brief records the exact snapshot/model/policy/as-of used for the analog context.",
+      "primaryVersions": ["v19.4.0", "v19.6.0", "v20.1.0"],
+      "maturityDomains": ["LOCAL_PRODUCT_USEFULNESS", "CANONICAL_STATE", "ADAPTIVE_INTELLIGENCE"]
+    }
+  ],
+  "alreadyConservedAndReverified": [
+    "Renderer end-of-file override/duplicate definitions are migration debt and must be modularized with characterization tests.",
+    "Legacy OpenAI configuration fields are compatibility-only and retire only after model-independent gateway migration and compatibility evidence.",
+    "No-orphan policy evidence is not a complete reachability proof; deletion still requires reachability/usage/rights/replacement evidence.",
+    "Exact-head Qualified remains a required checkpoint at G10/material risk boundaries; Fast alone is not full release qualification.",
+    "Branch/ruleset/CODEOWNERS/protected-tag enforcement remains an open delivery control until executable repository enforcement is proven.",
+    "CI delivery-health baseline includes lead time, cancellation/amplification, lane duration, flake rate and cost; governance-gate counts are not behavioral coverage.",
+    "Research Decision Brief remains immutable-as-of and includes What Changed, Why It Matters, Bull/Base/Bear evidence, contradictions, data quality, catalyst clock, levels, historical analog context, risks and policy/model lineage.",
+    "Data Engine/operator machinery remains role/capability-gated and hidden from ordinary users.",
+    "Market Activity remains an observation/seed feed rather than an independent qualification engine.",
+    "Current audit classification rules remain CURRENT/GAP/TARGET/UNVERIFIED with executable source evidence outranking prose."
+  ],
+  "liveRepositoryReconciliation": {
+    "activeBranchBeforeThirdPass": "b4fb44e92f537946454fcc8969ed128f5df10374",
+    "mainObservedDuringThirdPass": "6f272239e633d047d748d9b0c8daf5d334acae45",
+    "mergeBase": "7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c",
+    "mainDeltaSinceMergeBase": "CLAUDE.md only",
+    "action": "Active branch CLAUDE.md was aligned to the new main portability import without altering runtime/product logic.",
+    "repositoryVisibilityObserved": "PUBLIC",
+    "visibilityNote": "Public source visibility does not authorize provider-data redistribution or commercial activation. Secret-history/SCA/redaction controls remain mandatory and public-source sensitivity must be considered in support/governance artifacts.",
+    "branchProtectionObservation": "main reports protected=true but branch-protection required-status enforcement is off in the returned protection object; enforceable merge/ruleset controls remain not proven by this observation alone."
+  },
+  "qualificationReconciliation": {
+    "rebaselineFastHead": "b4fb44e92f537946454fcc8969ed128f5df10374",
+    "fastRunId": 33111030550,
+    "fastConclusion": "SUCCESS",
+    "exactHeadQualifiedAtThatCheckpoint": "ABSENT",
+    "rule": "Do not mislabel the governance rebaseline Fast PASS as final v19/G10/Release qualification. Obtain exact-head Qualified when current impact/G10 governance requires it."
+  },
+  "coverageConclusion": {
+    "numberedAuditSectionsStillCovered": "1-40",
+    "appendicesStillCovered": "A-G",
+    "newSubrequirementsPromoted": 3,
+    "unexplainedAuditSubrequirementsAfterThirdPass": [],
+    "claimBoundary": "This is conservation completeness, not implementation completeness or a 5/5 product claim."
+  },
+  "nextAction": "Continue v19.0 at HOST-010..012: obtain real managed PostgreSQL backup/PITR/operator recovery deletion-retention evidence through HOST-016. Do not start HOST-013+, v19.1, Watchlist or Opportunity Lifecycle implementation while the dependency remains unresolved unless governance explicitly reclassifies it."
+}
