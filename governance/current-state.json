@@ -35,7 +35,11 @@
     "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
     "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
     "rebaselineAuthority": "governance/V19_V20_REBASELINE.md",
-    "nextDependencyBand": "HOST-004..HOST-007 tenant identity/device/session/reauth",
+    "productAuditRebaseline": "governance/PRODUCT_AUDIT_REBASELINE_2026_08_27.md",
+    "productAuditCoverage": "governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md",
+    "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
+    "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
+    "nextDependencyBand": "HOST-010..HOST-012 privacy lifecycle: obtain real managed PostgreSQL backup/PITR/operator recovery deletion-retention evidence through the existing HOST-016 recovery owner; do not begin HOST-013+ while unresolved",
     "zeroMissAuditState": "REOPENED_UNVERIFIED",
     "externalControlWaivers": []
   },
