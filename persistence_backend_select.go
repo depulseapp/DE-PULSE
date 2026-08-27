@@ -254,6 +254,70 @@ func (b *hostedRightsPersistenceBackend) LoadQuotes(ctx context.Context) (map[st
 	return hostedRightsFilterQuotes(quotes, time.Now()), nil
 }
 
+func normalizeProviderRightsSource(value string) string {
+	replacer := strings.NewReplacer(
+		"_", " ",
+		"-", " ",
+		"/", " ",
+		":", " ",
+		".", " ",
+		"=", " ",
+		"|", " ",
+		"(", " ",
+		")", " ",
+	)
+	return strings.Join(strings.Fields(strings.ToLower(replacer.Replace(strings.TrimSpace(value)))), " ")
+}
+
+func providerRightsSourceContains(source, candidate string) bool {
+	candidate = normalizeProviderRightsSource(candidate)
+	return candidate != "" && strings.Contains(" "+source+" ", " "+candidate+" ")
+}
+
+// providerRightsSourceProvider resolves external evidence through the canonical
+// provider-registration inventory before hosted persistence applies legal/data
+// rights. Longest registered-name wins so SEC EDGAR remains distinct from SEC.
+// The aliases below exist only for known legacy/upstream source spellings; they
+// do not create provider registrations or grant rights.
+func providerRightsSourceProvider(source string) string {
+	normalized := normalizeProviderRightsSource(source)
+	if normalized == "" {
+		return "—"
+	}
+
+	bestProvider := ""
+	bestLength := 0
+	for _, registration := range providerRegistrations() {
+		candidate := normalizeProviderRightsSource(registration.Name)
+		if candidate == "" || !providerRightsSourceContains(normalized, candidate) {
+			continue
+		}
+		if len(candidate) > bestLength {
+			bestProvider = registration.Name
+			bestLength = len(candidate)
+		}
+	}
+	if bestProvider != "" {
+		return bestProvider
+	}
+
+	compact := strings.ReplaceAll(normalized, " ", "")
+	switch {
+	case strings.Contains(compact, "twelvedata"):
+		return "Twelve Data"
+	case providerRightsSourceContains(normalized, "yahoo"):
+		return "yfinance"
+	case providerRightsSourceContains(normalized, "edgar"):
+		return "SEC EDGAR"
+	case strings.Contains(normalized, "bureau of labor statistics"):
+		return "BLS"
+	case strings.Contains(normalized, "energy information administration"):
+		return "EIA"
+	default:
+		return "—"
+	}
+}
+
 func hostedRightsExternalEvidenceAllowed(record EvidenceRecord, now time.Time) bool {
 	if !isHostedRuntime() {
 		return true
@@ -262,12 +326,12 @@ func hostedRightsExternalEvidenceAllowed(record EvidenceRecord, now time.Time) b
 	if source == "" {
 		return true
 	}
-	provider := sourceProvider(source)
+	provider := providerRightsSourceProvider(source)
 	if provider == "—" {
 		// Some canonical/internal evidence uses semantic source labels rather
 		// than external-provider identities. HOST-022 owns full point-in-time
-		// provenance conservation; recognized external providers are enforced
-		// here without misclassifying internal evidence as provider data.
+		// provenance conservation; every registered external provider is
+		// resolved through providerRegistrations above and enforced here.
 		return true
 	}
 	return hostedProviderRightsAllowed(provider, providerHostedUseProductionServing, now)
