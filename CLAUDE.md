@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # DE.PULSE Claude Entry Instructions
 
 Claude must use the same GitHub-backed contract as every other assistant. Do not infer project state from Claude memory, a prior Claude Project, chat history or an uploaded summary.
@@ -5,7 +7,7 @@ Claude must use the same GitHub-backed contract as every other assistant. Do not
 Before planning, editing or claiming status:
 
 1. Read `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`.
-2. Read `AGENTS.md`; its repository constraints apply equally to Claude.
+2. Apply `AGENTS.md`; it is imported above and its repository constraints apply equally to Claude.
 3. Read `governance/README.md` and `handoff/CURRENT.md`.
 4. Inspect the actual GitHub default branch, active branch, open PR, current HEAD, latest Stable tag/release, checks and artifacts.
 5. Read `release_identity.json`, `.depulse-certification/resume/build-checkpoint.json` and `.depulse-certification/resume/release-evidence-checkpoint.json`.
