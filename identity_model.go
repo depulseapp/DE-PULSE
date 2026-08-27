@@ -66,33 +66,35 @@ type DeviceRecord struct {
 }
 
 type UserRecord struct {
-	ID              string     `json:"id"`
-	TenantID        string     `json:"tenantId,omitempty"`
-	Username        string     `json:"username"`
-	DisplayName     string     `json:"displayName,omitempty"`
-	Role            UserRole   `json:"role"`
-	Status          UserStatus `json:"status"`
-	PasswordHash    string     `json:"passwordHash,omitempty"`
-	MustSetPassword bool       `json:"mustSetPassword,omitempty"`
-	CreatedAt       int64      `json:"createdAt"`
-	UpdatedAt       int64      `json:"updatedAt"`
-	LastLoginAt     int64      `json:"lastLoginAt,omitempty"`
+	ID              string                      `json:"id"`
+	TenantID        string                      `json:"tenantId,omitempty"`
+	Username        string                      `json:"username"`
+	DisplayName     string                      `json:"displayName,omitempty"`
+	Role            UserRole                    `json:"role"`
+	Status          UserStatus                  `json:"status"`
+	PasswordHash    string                      `json:"passwordHash,omitempty"`
+	MustSetPassword bool                        `json:"mustSetPassword,omitempty"`
+	MFACredentials  []HostedMFACredentialRecord `json:"mfaCredentials,omitempty"`
+	CreatedAt       int64                       `json:"createdAt"`
+	UpdatedAt       int64                       `json:"updatedAt"`
+	LastLoginAt     int64                       `json:"lastLoginAt,omitempty"`
 }
 
 type SessionRecord struct {
-	ID                string `json:"id"`
-	TokenHash         string `json:"tokenHash"`
-	TenantID          string `json:"tenantId,omitempty"`
-	UserID            string `json:"userId"`
-	DeviceID          string `json:"deviceId,omitempty"`
-	CreatedAt         int64  `json:"createdAt"`
-	AuthenticatedAt   int64  `json:"authenticatedAt,omitempty"`
-	MFAVerifiedAt     int64  `json:"mfaVerifiedAt,omitempty"`
-	LastSeenAt        int64  `json:"lastSeenAt"`
-	IdleExpiresAt     int64  `json:"idleExpiresAt"`
-	AbsoluteExpiresAt int64  `json:"absoluteExpiresAt"`
-	RevokedAt         int64  `json:"revokedAt,omitempty"`
-	RotatedFrom       string `json:"rotatedFrom,omitempty"`
+	ID                string                    `json:"id"`
+	TokenHash         string                    `json:"tokenHash"`
+	TenantID          string                    `json:"tenantId,omitempty"`
+	UserID            string                    `json:"userId"`
+	DeviceID          string                    `json:"deviceId,omitempty"`
+	CreatedAt         int64                     `json:"createdAt"`
+	AuthenticatedAt   int64                     `json:"authenticatedAt,omitempty"`
+	MFAVerifiedAt     int64                     `json:"mfaVerifiedAt,omitempty"`
+	MFAChallenge      *HostedMFAChallengeRecord `json:"mfaChallenge,omitempty"`
+	LastSeenAt        int64                     `json:"lastSeenAt"`
+	IdleExpiresAt     int64                     `json:"idleExpiresAt"`
+	AbsoluteExpiresAt int64                     `json:"absoluteExpiresAt"`
+	RevokedAt         int64                     `json:"revokedAt,omitempty"`
+	RotatedFrom       string                    `json:"rotatedFrom,omitempty"`
 }
 
 type IdentitySecurityEventType string
@@ -225,7 +227,14 @@ func cloneDeviceRecords(in []DeviceRecord) []DeviceRecord {
 }
 
 func cloneSessionRecords(in []SessionRecord) []SessionRecord {
-	return append([]SessionRecord(nil), in...)
+	out := append([]SessionRecord(nil), in...)
+	for i := range out {
+		if in[i].MFAChallenge != nil {
+			challenge := *in[i].MFAChallenge
+			out[i].MFAChallenge = &challenge
+		}
+	}
+	return out
 }
 
 func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {

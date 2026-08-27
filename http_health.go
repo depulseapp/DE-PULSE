@@ -10,6 +10,7 @@ func (a *Application) registerHealthRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/health", a.handleHealth)
 	mux.HandleFunc("/api/ready", a.handleReady)
 	a.registerHostedIdentityRoutes(mux)
+	a.registerHostedMFARoutes(mux)
 	a.registerHostedProductRoutes(mux)
 }
 
