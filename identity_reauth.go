@@ -16,6 +16,7 @@ const (
 	hostedCapabilityStandardUse   = "STANDARD_USE"
 	hostedCapabilityDemoUse       = "DEMO_USE"
 	defaultHostedDeviceStaleTTL   = 30 * 24 * time.Hour
+	DeviceStale      DeviceStatus = "STALE"
 )
 
 type HostedIdentityRequirement struct {
@@ -123,10 +124,58 @@ func (s *IdentityService) reauthenticateSession(sessionID, password string) (boo
 	return false, nil
 }
 
+// retireStaleHostedDevices converts inactivity from an ephemeral authorization
+// check into durable device/session lifecycle truth. The transition is lazy at
+// trusted identity boundaries so desktop and hosted processes do not need a
+// second scheduler or lifecycle owner. If persistence fails, the in-memory
+// mutation is rolled back and callers fail closed rather than claiming a stale
+// transition that would disappear after restart.
+func (s *IdentityService) retireStaleHostedDevices() error {
+	if s == nil {
+		return errors.New("identity unavailable")
+	}
+	now := s.now().UnixMilli()
+	staleMillis := int64(defaultHostedDeviceStaleTTL / time.Millisecond)
+	if staleMillis <= 0 {
+		return nil
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	previousDevices := append([]DeviceRecord(nil), s.state.Devices...)
+	previousSessions := append([]SessionRecord(nil), s.state.Sessions...)
+	changed := false
+	for i := range s.state.Devices {
+		d := &s.state.Devices[i]
+		if d.Status != DeviceActive || d.RevokedAt != 0 || d.LastSeenAt <= 0 || now < d.LastSeenAt || now-d.LastSeenAt <= staleMillis {
+			continue
+		}
+		d.Status = DeviceStale
+		for j := range s.state.Sessions {
+			rec := &s.state.Sessions[j]
+			if rec.DeviceID == d.ID && rec.RevokedAt == 0 {
+				rec.RevokedAt = now
+			}
+		}
+		changed = true
+	}
+	if !changed {
+		return nil
+	}
+	if err := s.persistLocked(); err != nil {
+		s.state.Devices = previousDevices
+		s.state.Sessions = previousSessions
+		return err
+	}
+	return nil
+}
+
 func (s *IdentityService) registerHostedDevice(principal Principal, label, fingerprintHash string) (DeviceRecord, error) {
 	fingerprintHash = strings.TrimSpace(fingerprintHash)
 	if fingerprintHash == "" {
 		return DeviceRecord{}, errors.New("device fingerprint hash required")
+	}
+	if err := s.retireStaleHostedDevices(); err != nil {
+		return DeviceRecord{}, err
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -143,16 +192,20 @@ func (s *IdentityService) registerHostedDevice(principal Principal, label, finge
 		for j := range s.state.Devices {
 			d := &s.state.Devices[j]
 			if d.UserID == u.ID && normalizedTenantID(d.TenantID) == tenantID && d.FingerprintHash == fingerprintHash && d.Status == DeviceActive {
+				previousLastSeenAt := d.LastSeenAt
 				d.LastSeenAt = now
 				if err := s.persistLocked(); err != nil {
+					d.LastSeenAt = previousLastSeenAt
 					return DeviceRecord{}, err
 				}
 				return *d, nil
 			}
 		}
 		d := DeviceRecord{ID: randomID("dev"), TenantID: tenantID, UserID: u.ID, Label: strings.TrimSpace(label), FingerprintHash: fingerprintHash, Status: DeviceActive, CreatedAt: now, LastSeenAt: now}
+		previousLen := len(s.state.Devices)
 		s.state.Devices = append(s.state.Devices, d)
 		if err := s.persistLocked(); err != nil {
+			s.state.Devices = s.state.Devices[:previousLen]
 			return DeviceRecord{}, err
 		}
 		return d, nil
@@ -165,29 +218,41 @@ func (s *IdentityService) bindHostedDeviceToSession(principal Principal, deviceI
 	if principal.SessionID == "" || deviceID == "" {
 		return errors.New("session and device required")
 	}
+	if err := s.retireStaleHostedDevices(); err != nil {
+		return err
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	now := s.now().UnixMilli()
 	tenantID := normalizedTenantID(principal.TenantID)
-	deviceOK := false
+	deviceIndex := -1
+	previousLastSeenAt := int64(0)
 	for i := range s.state.Devices {
 		d := &s.state.Devices[i]
 		if d.ID == deviceID && d.UserID == principal.UserID && normalizedTenantID(d.TenantID) == tenantID && hostedDeviceActive(*d, now, defaultHostedDeviceStaleTTL) {
+			deviceIndex = i
+			previousLastSeenAt = d.LastSeenAt
 			d.LastSeenAt = now
-			deviceOK = true
 			break
 		}
 	}
-	if !deviceOK {
+	if deviceIndex < 0 {
 		return errors.New("device unavailable for tenant principal")
 	}
 	for i := range s.state.Sessions {
 		rec := &s.state.Sessions[i]
 		if rec.ID == principal.SessionID && rec.UserID == principal.UserID && normalizedTenantID(rec.TenantID) == tenantID && rec.RevokedAt == 0 && now < rec.IdleExpiresAt && now < rec.AbsoluteExpiresAt {
+			previousDeviceID := rec.DeviceID
 			rec.DeviceID = deviceID
-			return s.persistLocked()
+			if err := s.persistLocked(); err != nil {
+				s.state.Devices[deviceIndex].LastSeenAt = previousLastSeenAt
+				rec.DeviceID = previousDeviceID
+				return err
+			}
+			return nil
 		}
 	}
+	s.state.Devices[deviceIndex].LastSeenAt = previousLastSeenAt
 	return errors.New("session unavailable for tenant principal")
 }
 
@@ -195,7 +260,7 @@ func hostedDeviceActive(device DeviceRecord, now int64, staleTTL time.Duration) 
 	if device.Status != DeviceActive || device.RevokedAt != 0 || device.LastSeenAt <= 0 || staleTTL <= 0 {
 		return false
 	}
-	return now-device.LastSeenAt <= int64(staleTTL/time.Millisecond)
+	return now >= device.LastSeenAt && now-device.LastSeenAt <= int64(staleTTL/time.Millisecond)
 }
 
 func (s *IdentityService) setHostedDeviceStatus(principal Principal, deviceID string, status DeviceStatus) error {
@@ -214,6 +279,8 @@ func (s *IdentityService) setHostedDeviceStatus(principal Principal, deviceID st
 		if d.UserID != principal.UserID || normalizedTenantID(d.TenantID) != tenantID {
 			return errors.New("cross-tenant device mutation denied")
 		}
+		previousDevices := append([]DeviceRecord(nil), s.state.Devices...)
+		previousSessions := append([]SessionRecord(nil), s.state.Sessions...)
 		d.Status = status
 		if status == DeviceRevoked || status == DeviceLost {
 			d.RevokedAt = now
@@ -224,7 +291,12 @@ func (s *IdentityService) setHostedDeviceStatus(principal Principal, deviceID st
 				}
 			}
 		}
-		return s.persistLocked()
+		if err := s.persistLocked(); err != nil {
+			s.state.Devices = previousDevices
+			s.state.Sessions = previousSessions
+			return err
+		}
+		return nil
 	}
 	return errors.New("device not found")
 }
@@ -261,6 +333,11 @@ func (s *IdentityService) authorizeHostedIdentity(principal Principal, requireme
 	}
 	if decision.Capability == "" || !roleHasHostedCapability(principal.Role, decision.Capability) {
 		blocking = append(blocking, "role capability denied")
+	}
+	if requirement.RequireRegisteredDevice {
+		if err := s.retireStaleHostedDevices(); err != nil {
+			blocking = append(blocking, "device lifecycle persistence unavailable")
+		}
 	}
 
 	s.mu.Lock()
