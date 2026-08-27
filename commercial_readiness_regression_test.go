@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"strings"
@@ -56,6 +58,79 @@ func TestV184CommercialReadinessRequiresEvidenceAndExplicitApproval(t *testing.T
 	partial := evaluateProviderCommercialReadiness(base)
 	if partial.State != providerCommercialBlocked || partial.AIUseReady || !partial.CommercialUseReady || !partial.RedistributionReady {
 		t.Fatalf("partial rights review did not fail closed by dimension: %+v", partial)
+	}
+}
+
+func TestHOST002PublicTermsReviewCannotGrantExecutableProviderRights(t *testing.T) {
+	const path = "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/provider-public-terms-review.json"
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var review struct {
+		Schema             string `json:"schema"`
+		PolicyVersion      string `json:"policyVersion"`
+		ApprovalEligible   bool   `json:"approvalEligible"`
+		ProductionDecision string `json:"productionDecision"`
+		Providers          []struct {
+			Provider                string   `json:"provider"`
+			ApprovalEligible        bool     `json:"approvalEligible"`
+			ProductionDecision      string   `json:"productionDecision"`
+			MissingApprovalEvidence []string `json:"missingApprovalEvidence"`
+			Evidence                []struct {
+				SourceType string `json:"sourceType"`
+				URL        string `json:"url"`
+			} `json:"evidence"`
+		} `json:"providers"`
+	}
+	if err := json.Unmarshal(raw, &review); err != nil {
+		t.Fatal(err)
+	}
+	if review.Schema != "DE.PULSE-PROVIDER-PUBLIC-TERMS-REVIEW-1" || review.PolicyVersion == providerRightsBundlePolicyVersion {
+		t.Fatalf("public terms review is not isolated from executable provider-rights policy: %+v", review)
+	}
+	if review.ApprovalEligible || review.ProductionDecision != providerCommercialBlocked {
+		t.Fatalf("public terms review became approval-eligible: eligible=%v decision=%q", review.ApprovalEligible, review.ProductionDecision)
+	}
+
+	expected := map[string]bool{"Alpaca": false, "Finnhub": false, "Twelve Data": false, "Marketaux": false, "FRED": false, "SEC EDGAR": false, "yfinance": false, "CBOE": false}
+	for _, provider := range review.Providers {
+		if _, ok := expected[provider.Provider]; !ok {
+			t.Fatalf("unexpected provider in public terms review: %q", provider.Provider)
+		}
+		if expected[provider.Provider] {
+			t.Fatalf("duplicate provider in public terms review: %q", provider.Provider)
+		}
+		expected[provider.Provider] = true
+		if provider.ApprovalEligible || provider.ProductionDecision != providerCommercialBlocked {
+			t.Fatalf("%s public terms entry became approval-eligible: %+v", provider.Provider, provider)
+		}
+		if len(provider.Evidence) == 0 || len(provider.MissingApprovalEvidence) == 0 {
+			t.Fatalf("%s public terms entry lacks evidence or explicit missing approval evidence", provider.Provider)
+		}
+		for _, evidence := range provider.Evidence {
+			if evidence.SourceType == "" || !strings.HasPrefix(evidence.URL, "https://") {
+				t.Fatalf("%s has non-reviewable public evidence reference: %+v", provider.Provider, evidence)
+			}
+		}
+	}
+	for provider, found := range expected {
+		if !found {
+			t.Fatalf("provider missing from public terms review: %s", provider)
+		}
+	}
+
+	// Even if an operator accidentally points the executable bundle environment
+	// at this reviewed public-terms artifact and pins its exact digest, the
+	// different policy contract must fail closed rather than promote rights.
+	sum := sha256.Sum256(raw)
+	t.Setenv(providerRightsBundlePathEnv, path)
+	t.Setenv(providerRightsBundleSHA256Env, "sha256:"+hex.EncodeToString(sum[:]))
+	for provider := range expected {
+		rights := providerDataRightsMetadata(provider)
+		if rights.EvidenceBound || rights.ReviewState != providerRightsUnreviewed || rights.CommercialReadiness.State != providerCommercialBlocked {
+			t.Fatalf("%s public terms review leaked into executable rights: %+v", provider, rights)
+		}
 	}
 }
 
