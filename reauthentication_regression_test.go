@@ -453,7 +453,9 @@ func TestHOST006HostedDeviceHTTPStatusRevokesCurrentBoundSession(t *testing.T) {
 		t.Fatalf("device registration failed: code=%d body=%s", registered.Code, registered.Body.String())
 	}
 	var registration struct {
-		Device struct{ ID string `json:"id"` } `json:"device"`
+		Device struct {
+			ID string `json:"id"`
+		} `json:"device"`
 	}
 	if err := json.Unmarshal(registered.Body.Bytes(), &registration); err != nil || registration.Device.ID == "" {
 		t.Fatalf("missing registered device id: body=%s err=%v", registered.Body.String(), err)
@@ -504,7 +506,9 @@ func TestHOST006HostedDeviceHTTPDoesNotReactivateRevokedTrust(t *testing.T) {
 		t.Fatalf("device registration failed: code=%d body=%s", registered.Code, registered.Body.String())
 	}
 	var registration struct {
-		Device struct{ ID string `json:"id"` } `json:"device"`
+		Device struct {
+			ID string `json:"id"`
+		} `json:"device"`
 	}
 	if err := json.Unmarshal(registered.Body.Bytes(), &registration); err != nil {
 		t.Fatal(err)
@@ -569,7 +573,9 @@ func TestHOST007PublicKeyMFACeremonyEnforcesSensitiveAuthorizationAndRejectsRepl
 	if strings.Contains(enrolled.Body.String(), publicKey) {
 		t.Fatalf("MFA public key leaked from credential response: %s", enrolled.Body.String())
 	}
-	var enrollment struct{ Credential HostedMFACredentialView `json:"credential"` }
+	var enrollment struct {
+		Credential HostedMFACredentialView `json:"credential"`
+	}
 	if err := json.Unmarshal(enrolled.Body.Bytes(), &enrollment); err != nil || enrollment.Credential.ID == "" {
 		t.Fatalf("missing enrolled credential: body=%s err=%v", enrolled.Body.String(), err)
 	}
@@ -582,7 +588,9 @@ func TestHOST007PublicKeyMFACeremonyEnforcesSensitiveAuthorizationAndRejectsRepl
 	if challenged.Code != http.StatusOK {
 		t.Fatalf("MFA challenge failed: code=%d body=%s", challenged.Code, challenged.Body.String())
 	}
-	var challengeBody struct{ Challenge HostedMFAChallenge `json:"challenge"` }
+	var challengeBody struct {
+		Challenge HostedMFAChallenge `json:"challenge"`
+	}
 	if err := json.Unmarshal(challenged.Body.Bytes(), &challengeBody); err != nil {
 		t.Fatal(err)
 	}

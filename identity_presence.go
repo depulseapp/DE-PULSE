@@ -47,7 +47,7 @@ const (
 )
 
 var (
-	errHostedMFAInvalidProof        = errors.New("invalid MFA proof")
+	errHostedMFAInvalidProof       = errors.New("invalid MFA proof")
 	errHostedMFACredentialMissing  = errors.New("MFA credential unavailable")
 	errHostedMFAChallengeMissing   = errors.New("MFA challenge unavailable")
 	errHostedMFARecentAuthRequired = errors.New("recent authentication required")
