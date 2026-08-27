@@ -95,12 +95,36 @@ type SessionRecord struct {
 	RotatedFrom       string `json:"rotatedFrom,omitempty"`
 }
 
+type IdentitySecurityEventType string
+
+const (
+	IdentitySecurityDeviceRegistered    IdentitySecurityEventType = "DEVICE_REGISTERED"
+	IdentitySecurityDeviceBound         IdentitySecurityEventType = "DEVICE_BOUND"
+	IdentitySecurityDeviceStale         IdentitySecurityEventType = "DEVICE_STALE"
+	IdentitySecurityDeviceLost          IdentitySecurityEventType = "DEVICE_LOST"
+	IdentitySecurityDeviceRevoked       IdentitySecurityEventType = "DEVICE_REVOKED"
+	IdentitySecurityDeviceReactivated   IdentitySecurityEventType = "DEVICE_REACTIVATED"
+	IdentitySecuritySessionRevoked      IdentitySecurityEventType = "SESSION_REVOKED"
+	maxIdentitySecurityEvents                                     = 512
+)
+
+type IdentitySecurityEvent struct {
+	ID        string                    `json:"id"`
+	TenantID  string                    `json:"tenantId"`
+	UserID    string                    `json:"userId,omitempty"`
+	DeviceID  string                    `json:"deviceId,omitempty"`
+	SessionID string                    `json:"sessionId,omitempty"`
+	Type      IdentitySecurityEventType `json:"type"`
+	CreatedAt int64                     `json:"createdAt"`
+}
+
 type IdentityPersistentState struct {
 	Version             int                        `json:"version"`
 	Tenants             []TenantRecord             `json:"tenants,omitempty"`
 	Users               []UserRecord               `json:"users"`
 	Devices             []DeviceRecord             `json:"devices,omitempty"`
 	Sessions            []SessionRecord            `json:"sessions"`
+	SecurityEvents      []IdentitySecurityEvent    `json:"securityEvents,omitempty"`
 	ProductEntitlements []TenantProductEntitlement `json:"productEntitlements,omitempty"`
 	UpdatedAt           int64                      `json:"updatedAt"`
 }
@@ -186,12 +210,22 @@ const (
 )
 
 type IdentityService struct {
-	mu          sync.Mutex
-	persistence *PersistenceManager
-	state       IdentityPersistentState
-	now         func() time.Time
-	idleTTL     time.Duration
-	absoluteTTL time.Duration
+	mu                sync.Mutex
+	persistence       *PersistenceManager
+	state             IdentityPersistentState
+	persistedDevices  []DeviceRecord
+	persistedSessions []SessionRecord
+	now               func() time.Time
+	idleTTL           time.Duration
+	absoluteTTL       time.Duration
+}
+
+func cloneDeviceRecords(in []DeviceRecord) []DeviceRecord {
+	return append([]DeviceRecord(nil), in...)
+}
+
+func cloneSessionRecords(in []SessionRecord) []SessionRecord {
+	return append([]SessionRecord(nil), in...)
 }
 
 func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {
@@ -207,6 +241,8 @@ func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {
 		st.Version = 1
 	}
 	s.state = st
+	s.persistedDevices = cloneDeviceRecords(st.Devices)
+	s.persistedSessions = cloneSessionRecords(st.Sessions)
 	if s.normalizeHostedIdentityState() {
 		if err := s.persistLocked(); err != nil {
 			return nil, fmt.Errorf("persist identity tenant migration: %w", err)
@@ -274,10 +310,101 @@ func (s *IdentityService) ensureBootstrapOwnerLocked() error {
 	return s.persistLocked()
 }
 
+func (s *IdentityService) appendIdentitySecurityEventLocked(eventType IdentitySecurityEventType, tenantID, userID, deviceID, sessionID string, createdAt int64) {
+	s.state.SecurityEvents = append(s.state.SecurityEvents, IdentitySecurityEvent{
+		ID:        randomID("aud"),
+		TenantID:  normalizedTenantID(tenantID),
+		UserID:    strings.TrimSpace(userID),
+		DeviceID:  strings.TrimSpace(deviceID),
+		SessionID: strings.TrimSpace(sessionID),
+		Type:      eventType,
+		CreatedAt: createdAt,
+	})
+	if len(s.state.SecurityEvents) > maxIdentitySecurityEvents {
+		start := len(s.state.SecurityEvents) - maxIdentitySecurityEvents
+		trimmed := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents[start:]...)
+		s.state.SecurityEvents = trimmed
+	}
+}
+
+func (s *IdentityService) deriveIdentitySecurityEventsLocked(createdAt int64) {
+	previousDevices := make(map[string]DeviceRecord, len(s.persistedDevices))
+	for _, device := range s.persistedDevices {
+		previousDevices[device.ID] = device
+	}
+	for _, current := range s.state.Devices {
+		previous, found := previousDevices[current.ID]
+		if !found {
+			s.appendIdentitySecurityEventLocked(IdentitySecurityDeviceRegistered, current.TenantID, current.UserID, current.ID, "", createdAt)
+			continue
+		}
+		if current.Status == previous.Status {
+			continue
+		}
+		eventType := IdentitySecurityEventType("")
+		switch current.Status {
+		case DeviceStale:
+			eventType = IdentitySecurityDeviceStale
+		case DeviceLost:
+			eventType = IdentitySecurityDeviceLost
+		case DeviceRevoked:
+			eventType = IdentitySecurityDeviceRevoked
+		case DeviceActive:
+			eventType = IdentitySecurityDeviceReactivated
+		}
+		if eventType != "" {
+			s.appendIdentitySecurityEventLocked(eventType, current.TenantID, current.UserID, current.ID, "", createdAt)
+		}
+	}
+
+	previousSessions := make(map[string]SessionRecord, len(s.persistedSessions))
+	for _, session := range s.persistedSessions {
+		previousSessions[session.ID] = session
+	}
+	for _, current := range s.state.Sessions {
+		previous, found := previousSessions[current.ID]
+		if !found {
+			continue
+		}
+		if strings.TrimSpace(current.DeviceID) != "" && current.DeviceID != previous.DeviceID {
+			s.appendIdentitySecurityEventLocked(IdentitySecurityDeviceBound, current.TenantID, current.UserID, current.DeviceID, current.ID, createdAt)
+		}
+		if previous.RevokedAt == 0 && current.RevokedAt > 0 {
+			s.appendIdentitySecurityEventLocked(IdentitySecuritySessionRevoked, current.TenantID, current.UserID, current.DeviceID, current.ID, createdAt)
+		}
+	}
+}
+
 func (s *IdentityService) persistLocked() error {
+	previousEvents := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents...)
+	now := s.now().UnixMilli()
+	s.deriveIdentitySecurityEventsLocked(now)
 	s.state.Version = 1
-	s.state.UpdatedAt = s.now().UnixMilli()
-	return s.persistence.SaveIdentityState(context.Background(), s.state)
+	s.state.UpdatedAt = now
+	if err := s.persistence.SaveIdentityState(context.Background(), s.state); err != nil {
+		s.state.SecurityEvents = previousEvents
+		return err
+	}
+	s.persistedDevices = cloneDeviceRecords(s.state.Devices)
+	s.persistedSessions = cloneSessionRecords(s.state.Sessions)
+	return nil
+}
+
+func (s *IdentityService) adminSecurityEvents(actor Principal) ([]IdentitySecurityEvent, error) {
+	if !roleAtLeast(actor.Role, RoleAdmin) {
+		return nil, errors.New("insufficient authority")
+	}
+	tenantID := normalizedTenantID(actor.TenantID)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	out := make([]IdentitySecurityEvent, 0, len(s.state.SecurityEvents))
+	for i := len(s.state.SecurityEvents) - 1; i >= 0; i-- {
+		event := s.state.SecurityEvents[i]
+		if normalizedTenantID(event.TenantID) == tenantID {
+			out = append(out, event)
+		}
+	}
+	return out, nil
 }
 
 func (s *IdentityService) ownerNeedsPassword() bool {

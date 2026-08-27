@@ -35,7 +35,12 @@ func (a *Application) handleAdminIdentity(w http.ResponseWriter, r *http.Request
 		writeError(w, adminIdentityErrorStatus(err), err.Error())
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"users": users, "sessions": sessions, "presence": map[string]any{"activeWindowSeconds": int(adminPresenceActiveWindow.Seconds()), "source": "authenticated sessions", "states": []string{"ACTIVE", "IDLE", "OFFLINE"}}})
+	securityEvents, err := a.identity.adminSecurityEvents(p)
+	if err != nil {
+		writeError(w, adminIdentityErrorStatus(err), err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"users": users, "sessions": sessions, "securityEvents": securityEvents, "presence": map[string]any{"activeWindowSeconds": int(adminPresenceActiveWindow.Seconds()), "source": "authenticated sessions", "states": []string{"ACTIVE", "IDLE", "OFFLINE"}}})
 }
 
 func (a *Application) handleAdminUserCreate(w http.ResponseWriter, r *http.Request) {
