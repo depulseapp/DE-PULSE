@@ -68,7 +68,13 @@ Zero-miss rigor applies independently inside the readiness tier being claimed. A
 
 ## Current v19 re-audit truth
 
-The v19.0 core auth/session implementation checkpoint `de110ecfcbc6e385203eec90c631628871fd6e83` passed exact-head Fast #1254 / run `33049452646`. The canonical HOST-004..007 closure-ledger transition at `c964d303a4d2379972026844b3444fbef0ed9382` then passed exact-head Fast #1255 / run `33049748420`. These are dependency-band checkpoints, not final v19.0 qualification.
+Dependency-band executable checkpoints:
+
+- `de110ecfcbc6e385203eec90c631628871fd6e83` — HOST-007/applicable #164 core implementation; exact-head Fast #1254 / run `33049452646` PASS.
+- `c964d303a4d2379972026844b3444fbef0ed9382` — HOST-004..007 canonical closure-ledger transition; exact-head Fast #1255 / run `33049748420` PASS.
+- `5127b1599c052bb3c709b46bd7900cc46629d0ee` — HOST-010..012 application privacy lifecycle implementation/evidence; exact-head Fast #1257 / run `33051229439` FULL PASS, including canonical workflow/root/source/migration/closure gates, T1-T10, gofmt, go vet and `go test ./...`.
+
+These are dependency-band checkpoints, not final v19.0 qualification.
 
 - `HOST-001..003` provider-rights development/pre-public control plane: **VERIFIED FOR DEVELOPMENT**. Actual provider-specific public/commercial approvals remain a separate Commercial/Public activation gate and grant no rights today.
 - `HOST-004..007` tenant/account/device/session/reauth band: **VERIFIED FOR v19.0 DEVELOPMENT**.
@@ -78,9 +84,14 @@ The v19.0 core auth/session implementation checkpoint `de110ecfcbc6e385203eec90c
   - **HOST-007 VERIFIED for the v19.0 core:** canonical identity/session owners implement a production-wired Ed25519 public-key MFA ceremony with durable credentials, session-bound one-time challenges, domain-separated signing payload, persisted challenge hash, signature verification, replay/cross-session/expiry rejection, credential revocation and restart persistence. Applicable #164 login/bootstrap/session discovery/renewal failure cleanup/rotation/reauth/logout/device and session revocation/role-downgrade/product-entitlement propagation evidence is executable.
   - **#164 remains OPEN only for later v19.3 UX/client parity:** safe app-context restoration and platform-specific Mac/Windows/Web login/reauth/deep-link presentation. That residual does not reopen HOST-007 unless it discovers a core security defect.
 - `HOST-008..009` product entitlement/quota: **VERIFIED**.
-- `HOST-010..012` privacy lifecycle: **EARLIEST OPEN BAND / PARTIALLY IMPLEMENTED**. Existing production-wired evidence includes versioned data inventory/classification, secret-free account export, destructive account deletion, sanitized tombstones and archive anti-resurrection. Remaining Development work includes account deactivation lifecycle, durable privacy-request audit/evidence, cross-store deletion/retention proof, and real backup/PITR/operator recovery deletion behavior where dependent on HOST-016.
+- `HOST-010..012` privacy lifecycle: **EARLIEST OPEN BAND / APPLICATION PORTION IMPLEMENTED + EXACT-HEAD FAST VERIFIED**.
+  - Existing canonical account/workspace/persistence owners still provide secret-free export, destructive delete, sanitized tombstones and archive anti-resurrection.
+  - `5127b1599c052bb3c709b46bd7900cc46629d0ee` adds reversible self-deactivation through canonical `UserDisabled`, revokes active sessions, preserves account/workspace data for governed reactivation, fails closed for the last critical owner, and survives identity-service restart.
+  - Successful self-service export/deactivation/deletion now write minimal durable `PRIVACY_EXPORT_REQUESTED`, `ACCOUNT_DEACTIVATED`, and `ACCOUNT_DELETED` records into the existing bounded tenant-scoped identity-security event owner; no parallel privacy-audit subsystem was introduced.
+  - Positive/adverse/restart/privacy regressions and the updated versioned privacy inventory are included in Fast #1257 / run `33051229439` PASS.
+  - **Remaining Development blocker:** real managed-hosted backup/PITR/operator recovery deletion-retention evidence remains dependent on HOST-016. Application archive anti-resurrection, PostgreSQL policy declarations, ordinary Fast and the current source-level Qualified DB lane do not prove managed PostgreSQL failover/PITR/restore behavior.
 - `HOST-013..014` environment/service trust: **OPEN / CONTRACT IMPLEMENTED, REAL INFRASTRUCTURE NOT PROVEN**.
-- `HOST-015..016` PostgreSQL tenancy/recovery: **OPEN / PARTIALLY IMPLEMENTED**; tenant-owned DB isolation and executable HA/failover/backup/PITR/restore proof remain technical gaps.
+- `HOST-015..016` PostgreSQL tenancy/recovery: **OPEN / PARTIALLY IMPLEMENTED**; tenant-owned DB isolation and executable live migration/adverse/HA/failover/backup/PITR/restore/RPO-RTO evidence remain technical gaps.
 - `HOST-017..020`: **OPEN** for managed secrets/KMS and supply-chain/deploy provenance technical evidence.
 - `HOST-021..022`: **OPEN** for measured provider/Data Health scorecards and canonical point-in-time/revision/no-lookahead truth; these are technical/full-data-capability gaps, not provider-licensing paperwork.
 - `HOST-023`: **OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure.
@@ -136,7 +147,7 @@ Version placement:
 
 ## Exactly one next action
 
-Continue **HOST-010..012 — Privacy Lifecycle** through the existing canonical identity/account/workspace/persistence/archive/security-audit owners. Implement durable self-deactivation with session revocation and last-critical-owner protection; record minimal durable privacy-request audit evidence for export/deactivation/deletion; preserve existing export/delete/tombstone/anti-resurrection behavior; add positive/adverse/restart regressions; and keep real hosted backup/PITR/operator-recovery proof explicitly dependent on HOST-016 where current source cannot truthfully prove it. Do not start HOST-013+ until this band satisfies the Zero-Miss chain and exact-head CI/required real evidence disposition.
+Remain in **HOST-010..012 — Privacy Lifecycle**. Its application-level deactivation/privacy-request audit/delete/tombstone/restart responsibilities are now committed and exact-head Fast verified at `5127b1599c052bb3c709b46bd7900cc46629d0ee` / Fast #1257. Satisfy the remaining real hosted backup/PITR/operator recovery deletion-retention evidence through the existing HOST-016 persistence/recovery owner; do not infer that evidence from application archive tests or policy declarations. Do not mark HOST-010..012 VERIFIED or begin HOST-013+ until the real-infrastructure requirement is truthfully satisfied or governance explicitly records a permitted Development-tier external blocker.
 
 ## Later dependency bands
 
