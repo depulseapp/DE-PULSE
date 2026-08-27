@@ -118,6 +118,9 @@ jobs:
       - name: Go full unit/package suite
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         run: go test -count=1 ./...
+      - name: PostgreSQL tagged compile
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        run: go test -tags postgres -run '^$' ./...
       - name: Renderer JavaScript syntax
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         shell: bash
@@ -178,6 +181,7 @@ jobs:
             echo '- v19 requirement conservation: PASS'
             echo '- v18 T10 future-proof/zero-gap/portability assurance: PASS'
             echo '- Git-object provenance: PASS'
+            echo '- PostgreSQL tagged compile: PASS when Go lane is required; no live DB/PITR claim'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
           } >> "$GITHUB_STEP_SUMMARY"
