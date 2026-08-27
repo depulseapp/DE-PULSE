@@ -90,6 +90,16 @@ Only a fully verified release candidate may become `RELEASE_QUALIFIED`.
 
 If an audit discovers a previously missed mandatory integration/evidence link, the item automatically reopens and downstream completion claims are invalid until the miss is corrected and requalified.
 
+### 8.1 5/5 maturity and capability-conservation rule
+
+A DE.PULSE version, major closure or development program may be described as **5 / 5 maturity** only when every applicable Development maturity domain independently meets the target under current executable evidence. Averages, rounding, compensating strengths, documentation quality or a favorable architecture review cannot raise a weaker domain to 5 / 5.
+
+The Development maturity domains are: Local product usefulness, Deterministic intelligence, Provider architecture, Canonical state, Adaptive intelligence, Persistence, Security foundation, Testing / release assurance, and Web + multi-platform readiness. Known material implementation, integration, data-truth, persistence, security, adverse-path, platform, performance or usability gaps keep the affected domain below 5 / 5.
+
+**No capability may be sacrificed to obtain 5 / 5.** Existing certified/approved capabilities remain conserved through rebaseline and refactor. Consolidation or replacement is allowed only after all applicable consumers, roles, platforms, behavior, persistence/recovery semantics and regressions prove functional parity or improvement. Intentional capability removal requires explicit user approval and durable supersession evidence.
+
+Commercial/Public distribution remains a separate activation tier while the product is in Development. It is not used to lower the technical Development maturity score before the user explicitly activates commercial-readiness work. Once activated, Commercial/Public distribution also targets 5 / 5 and remains fail-closed until its licensing/rights, legal/compliance and activation-audit obligations are satisfied.
+
 ## 9. External-blocker rule
 
 A mandatory external dependency is not a reason to mark a requirement VERIFIED. It remains blocking until one of these occurs **before release advancement**:

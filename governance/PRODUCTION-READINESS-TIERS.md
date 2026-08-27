@@ -12,6 +12,28 @@
 
 These are two distinct readiness claims. They must never be collapsed into one gate.
 
+### 1.1 Evidence-based 5/5 maturity target
+
+The long-term technical/product target is **5 / 5 in every Development maturity domain**, not a rounded average and not a documentation score. The audit baseline domains are:
+
+- Local product usefulness;
+- Deterministic intelligence;
+- Provider architecture;
+- Canonical state;
+- Adaptive intelligence;
+- Persistence;
+- Security foundation;
+- Testing / release assurance;
+- Web + multi-platform readiness.
+
+A domain may be called `5 / 5` only when current-source, production-reachable behavior and required executable evidence show no known material gap for the intended Development target. Strong scores in other domains cannot compensate for a weaker domain. Missing real infrastructure/provider/platform evidence cannot be replaced by prose, mocks or a self-assigned score.
+
+**Capability conservation is mandatory while improving the score.** Rebaseline/refactor/consolidation may not silently drop, weaken, bypass or reduce an existing certified/approved capability to make architecture cleaner or scoring easier. A replacement must prove functional equivalence or improvement for all applicable consumers, roles, platforms, persistence/recovery behavior and regressions before the prior owner can be retired. Intentional capability removal requires an explicit user-approved product decision and durable traceability.
+
+DE.PULSE remains in **Development** until the user explicitly declares the product ready to enter Commercial/Public readiness work. Until that explicit declaration, **Commercial distribution is `NOT_ACTIVATED` rather than a Development maturity failure**. Commercial/Public distribution itself has the same target of `5 / 5` once activated, but provider licensing/rights, public-user legal/compliance and the commercial activation audit remain separate activation obligations and may not be used to cripple Development provider/data capability.
+
+The 5/5 target is governed by the Strict Zero-Miss Implementation & Closure Contract: no maturity claim may conceal an implementation miss, unconsumed helper, duplicate/parallel authority, untested adverse path, missing persistence/restart behavior, unresolved cross-platform gap, or known material defect.
+
 ## 2. Development Production Ready
 
 A Development Production Ready claim requires all applicable technical obligations to be closed through the normal zero-miss lifecycle and executable evidence. At minimum, where applicable, this includes:
@@ -107,6 +129,6 @@ All genuine technical HOST gaps remain blockers. In particular, reclassifying co
 
 ## 9. Governance conservation rule
 
-Every roadmap, work slice, closure ledger, handoff, issue, PR and release decision must preserve these two readiness tiers. If older wording conflicts, this contract wins and the conflicting artifact must be corrected at the next meaningful governance transition.
+Every roadmap, work slice, closure ledger, handoff, issue, PR and release decision must preserve these two readiness tiers and the evidence-based 5/5 maturity target. If older wording conflicts, this contract wins and the conflicting artifact must be corrected at the next meaningful governance transition.
 
-No future AI, account, implementation session or release process may reinterpret Commercial/Public-only obligations as Development technical blockers, or use this separation to waive genuine technical closure evidence.
+No future AI, account, implementation session or release process may reinterpret Commercial/Public-only obligations as Development technical blockers, use readiness separation to waive genuine technical closure evidence, or improve a maturity score by silently reducing product capability.
