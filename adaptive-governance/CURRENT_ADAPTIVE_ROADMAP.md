@@ -105,6 +105,8 @@ The completed #80/#81/#82/#83/#78/#84 chain remains permanent across versions:
 - TradeInsight/Market Data are provider-adoption cases, not alternate routers/health/caches/lifecycles;
 - zero-gap fault/native/professional evidence.
 
+Truthful unresolved required evidence remains visible at the smallest valid scope as **PARTIAL COVERAGE** or **DATA DEGRADED**. These states must not be suppressed or normalized away merely to make the product appear healthy; valid cache/fallback and automatic recovery may clear them only when canonical evidence is actually restored.
+
 New audit additions:
 - provider corroboration includes upstream-independence/correlation truth;
 - corrections use revision/supersedes lineage;
