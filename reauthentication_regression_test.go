@@ -233,10 +233,10 @@ func TestHOST006DeviceLifecycleRevokesBoundSessionsAndBlocksCrossTenantMutation(
 	}
 }
 
-func TestHOST006StaleRegisteredDeviceFailsClosed(t *testing.T) {
-	_, s := newIdentityTestService(t)
+func TestHOST006StaleRegisteredDevicePersistsLifecycleAndRevokesBoundSession(t *testing.T) {
+	store, s := newIdentityTestService(t)
 	base := time.Unix(2_350_000_000, 0)
-	_, p, _ := v184CredentialedOwner(t, s, base)
+	token, p, _ := v184CredentialedOwner(t, s, base)
 	device, err := s.registerHostedDevice(p, "browser", "sha256:stale-device")
 	if err != nil {
 		t.Fatal(err)
@@ -250,11 +250,55 @@ func TestHOST006StaleRegisteredDeviceFailsClosed(t *testing.T) {
 			s.state.Devices[i].LastSeenAt = base.Add(-31 * 24 * time.Hour).UnixMilli()
 		}
 	}
-	_ = s.persistLocked()
+	if err := s.persistLocked(); err != nil {
+		s.mu.Unlock()
+		t.Fatal(err)
+	}
 	s.mu.Unlock()
+
 	decision := s.authorizeHostedIdentity(p, HostedIdentityRequirement{TenantID: localTenantID, Capability: hostedCapabilityStandardUse, RequireRegisteredDevice: true})
 	if decision.Allowed {
 		t.Fatalf("stale registered device remained authorized: %+v", decision)
+	}
+	if _, err := s.resolve(token, false); err == nil {
+		t.Fatal("stale device transition did not revoke its bound session")
+	}
+
+	s.mu.Lock()
+	status := DeviceStatus("")
+	for _, candidate := range s.state.Devices {
+		if candidate.ID == device.ID {
+			status = candidate.Status
+			break
+		}
+	}
+	s.mu.Unlock()
+	if status != DeviceStale {
+		t.Fatalf("stale device was denied without durable STALE lifecycle state: status=%s", status)
+	}
+
+	reloaded, err := NewIdentityService(store)
+	if err != nil {
+		t.Fatal(err)
+	}
+	reloaded.mu.Lock()
+	defer reloaded.mu.Unlock()
+	persistedStatus := DeviceStatus("")
+	boundSessionRevoked := false
+	for _, candidate := range reloaded.state.Devices {
+		if candidate.ID == device.ID {
+			persistedStatus = candidate.Status
+			break
+		}
+	}
+	for _, session := range reloaded.state.Sessions {
+		if session.ID == p.SessionID {
+			boundSessionRevoked = session.RevokedAt > 0
+			break
+		}
+	}
+	if persistedStatus != DeviceStale || !boundSessionRevoked {
+		t.Fatalf("stale lifecycle did not survive restart: status=%s sessionRevoked=%v", persistedStatus, boundSessionRevoked)
 	}
 }
 
