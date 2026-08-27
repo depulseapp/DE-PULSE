@@ -269,6 +269,12 @@ const (
 	accountDeletionReasonUserRequest = "USER_REQUESTED"
 )
 
+const (
+	IdentitySecurityPrivacyExportRequested IdentitySecurityEventType = "PRIVACY_EXPORT_REQUESTED"
+	IdentitySecurityAccountDeactivated     IdentitySecurityEventType = "ACCOUNT_DEACTIVATED"
+	IdentitySecurityAccountDeleted         IdentitySecurityEventType = "ACCOUNT_DELETED"
+)
+
 type AccountDeletionTombstone struct {
 	UserID    string `json:"userId"`
 	TenantID  string `json:"tenantId"`
@@ -381,6 +387,71 @@ func (s *IdentityService) accountPrivacyExport(userID string) (AccountPrivacyPro
 	return profile, metadata, nil
 }
 
+func (s *IdentityService) recordAccountPrivacyEvent(eventType IdentitySecurityEventType, tenantID, userID string) error {
+	if s == nil {
+		return errors.New("identity unavailable")
+	}
+	userID = strings.TrimSpace(userID)
+	if userID == "" {
+		return errors.New("account user id is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	previousEvents := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents...)
+	s.appendIdentitySecurityEventLocked(eventType, tenantID, userID, "", "", s.now().UnixMilli())
+	if err := s.persistLocked(); err != nil {
+		s.state.SecurityEvents = previousEvents
+		return err
+	}
+	return nil
+}
+
+func (s *IdentityService) deactivateAccount(userID string) error {
+	if s == nil {
+		return errors.New("identity unavailable")
+	}
+	userID = strings.TrimSpace(userID)
+	if userID == "" {
+		return errors.New("account user id is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	idx := -1
+	var user UserRecord
+	for i := range s.state.Users {
+		if s.state.Users[i].ID == userID {
+			idx = i
+			user = s.state.Users[i]
+			break
+		}
+	}
+	if idx < 0 || isAccountDeletionTombstone(user) || user.Status != UserActive {
+		return errors.New("account unavailable")
+	}
+	if (user.Role == RoleOwner || user.Role == RoleSuperOwner) && s.activeCriticalOwnersLocked(userID, user.Role, UserDisabled) == 0 {
+		return errors.New("cannot deactivate the last active owner")
+	}
+	now := s.now().UnixMilli()
+	previousUsers := append([]UserRecord(nil), s.state.Users...)
+	previousSessions := append([]SessionRecord(nil), s.state.Sessions...)
+	previousEvents := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents...)
+	s.state.Users[idx].Status = UserDisabled
+	s.state.Users[idx].UpdatedAt = now
+	for i := range s.state.Sessions {
+		if s.state.Sessions[i].UserID == userID && s.state.Sessions[i].RevokedAt == 0 {
+			s.state.Sessions[i].RevokedAt = now
+		}
+	}
+	s.appendIdentitySecurityEventLocked(IdentitySecurityAccountDeactivated, user.TenantID, userID, "", "", now)
+	if err := s.persistLocked(); err != nil {
+		s.state.Users = previousUsers
+		s.state.Sessions = previousSessions
+		s.state.SecurityEvents = previousEvents
+		return err
+	}
+	return nil
+}
+
 func (s *IdentityService) deleteAccount(userID, rawReason string) (AccountDeletionTombstone, error) {
 	if s == nil {
 		return AccountDeletionTombstone{}, errors.New("identity unavailable")
@@ -414,6 +485,7 @@ func (s *IdentityService) deleteAccount(userID, rawReason string) (AccountDeleti
 	previousUsers := append([]UserRecord(nil), s.state.Users...)
 	previousDevices := append([]DeviceRecord(nil), s.state.Devices...)
 	previousSessions := append([]SessionRecord(nil), s.state.Sessions...)
+	previousEvents := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents...)
 	s.state.Users[idx] = UserRecord{ID: user.ID, TenantID: normalizedTenantID(user.TenantID), Username: accountDeletionTombstoneUsername, DisplayName: reason, Status: UserDisabled, UpdatedAt: now}
 	devices := make([]DeviceRecord, 0, len(s.state.Devices))
 	for _, device := range s.state.Devices {
@@ -429,10 +501,12 @@ func (s *IdentityService) deleteAccount(userID, rawReason string) (AccountDeleti
 	}
 	s.state.Devices = devices
 	s.state.Sessions = sessions
+	s.appendIdentitySecurityEventLocked(IdentitySecurityAccountDeleted, user.TenantID, userID, "", "", now)
 	if err := s.persistLocked(); err != nil {
 		s.state.Users = previousUsers
 		s.state.Devices = previousDevices
 		s.state.Sessions = previousSessions
+		s.state.SecurityEvents = previousEvents
 		return AccountDeletionTombstone{}, err
 	}
 	tombstone, _ := accountDeletionTombstoneFromUser(s.state.Users[idx])
@@ -609,19 +683,37 @@ func (a *Application) handleAccountDataExport(w http.ResponseWriter, r *http.Req
 		writeError(w, http.StatusServiceUnavailable, "Account export unavailable.")
 		return
 	}
+	if err := a.identity.recordAccountPrivacyEvent(IdentitySecurityPrivacyExportRequested, principal.TenantID, principal.UserID); err != nil {
+		writeError(w, http.StatusServiceUnavailable, "Account export audit unavailable.")
+		return
+	}
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Content-Disposition", `attachment; filename="depulse-account-export.json"`)
 	writeJSON(w, http.StatusOK, export)
 }
 
 func (a *Application) handleDeleteAccount(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		writeError(w, http.StatusMethodNotAllowed, "Method not allowed")
-		return
-	}
 	principal, ok := principalFromContext(r.Context())
 	if !ok {
 		writeError(w, http.StatusUnauthorized, "Authentication required.")
+		return
+	}
+	if r.Method == http.MethodPost {
+		if err := a.identity.deactivateAccount(principal.UserID); err != nil {
+			if strings.Contains(err.Error(), "last active owner") {
+				writeError(w, http.StatusConflict, "Another active owner is required before deactivating this account.")
+				return
+			}
+			writeError(w, http.StatusServiceUnavailable, "Account deactivation could not be completed.")
+			return
+		}
+		clearSessionCookie(w, r)
+		w.Header().Set("Cache-Control", "no-store")
+		writeJSON(w, http.StatusOK, map[string]any{"ok": true, "status": UserDisabled})
+		return
+	}
+	if r.Method != http.MethodDelete {
+		writeError(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
 	}
 	var req struct {

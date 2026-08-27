@@ -348,6 +348,14 @@ func hostPrivacyGET(path, token string) *http.Request {
 	return req
 }
 
+func hostPrivacyPOST(path, token, csrf string) *http.Request {
+	req := httptest.NewRequest(http.MethodPost, path, nil)
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
+	req.AddCookie(&http.Cookie{Name: csrfCookieName, Value: csrf})
+	req.Header.Set("X-DE-PULSE-CSRF", csrf)
+	return req
+}
+
 func hostPrivacyDELETE(path, token, csrf, body string) *http.Request {
 	req := httptest.NewRequest(http.MethodDelete, path, strings.NewReader(body))
 	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
@@ -357,8 +365,17 @@ func hostPrivacyDELETE(path, token, csrf, body string) *http.Request {
 	return req
 }
 
+func hasIdentitySecurityEvent(state IdentityPersistentState, eventType IdentitySecurityEventType, userID string) bool {
+	for _, event := range state.SecurityEvents {
+		if event.Type == eventType && event.UserID == userID {
+			return true
+		}
+	}
+	return false
+}
+
 func TestHOST010AccountExportIncludesPortableCategoriesAndExcludesSecrets(t *testing.T) {
-	_, identity, app, token, principal, _ := hostPrivacyUserFixture(t)
+	p, identity, app, token, principal, _ := hostPrivacyUserFixture(t)
 	fingerprint := "sha256:privacy-device-fingerprint-secret"
 	device, err := identity.registerHostedDevice(principal, "privacy browser", fingerprint)
 	if err != nil {
@@ -421,6 +438,92 @@ func TestHOST010AccountExportIncludesPortableCategoriesAndExcludesSecrets(t *tes
 	}
 	if len(exported.HostedSyncMetadata.Devices) != 1 || len(exported.HostedSyncMetadata.Sessions) == 0 {
 		t.Fatalf("safe hosted sync metadata missing: %+v", exported.HostedSyncMetadata)
+	}
+	persisted, err := p.LoadIdentityState(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasIdentitySecurityEvent(persisted, IdentitySecurityPrivacyExportRequested, principal.UserID) {
+		t.Fatalf("privacy export request was not durably audited: %+v", persisted.SecurityEvents)
+	}
+}
+
+func TestHOST011AccountDeactivationRevokesSessionPreservesDataAndSurvivesRestart(t *testing.T) {
+	p, identity, app, token, principal, password := hostPrivacyUserFixture(t)
+	csrf := "privacy-deactivate-csrf"
+	rr := httptest.NewRecorder()
+	hostedIdentityHTTPMux(app).ServeHTTP(rr, hostPrivacyPOST("/api/auth/account", token, csrf))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("account deactivation failed: code=%d body=%s", rr.Code, rr.Body.String())
+	}
+	if _, err := identity.resolve(token, false); err == nil {
+		t.Fatal("deactivated account session remained usable")
+	}
+
+	identity.mu.Lock()
+	var deactivated UserRecord
+	found := false
+	for _, user := range identity.state.Users {
+		if user.ID == principal.UserID {
+			deactivated = user
+			found = true
+			break
+		}
+	}
+	identity.mu.Unlock()
+	if !found || deactivated.Status != UserDisabled || isAccountDeletionTombstone(deactivated) {
+		t.Fatalf("deactivation did not preserve a disabled live profile: %+v", deactivated)
+	}
+	if deactivated.Username != principal.Username || deactivated.PasswordHash == "" || deactivated.Role != RoleUser {
+		t.Fatalf("deactivation destructively removed account data: %+v", deactivated)
+	}
+	if !contains(app.workspaceSymbols(principal.UserID), "NVDA") {
+		t.Fatal("deactivation scrubbed workspace data instead of preserving it for governed reactivation")
+	}
+	persisted, err := p.LoadIdentityState(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasIdentitySecurityEvent(persisted, IdentitySecurityAccountDeactivated, principal.UserID) {
+		t.Fatalf("deactivation request was not durably audited: %+v", persisted.SecurityEvents)
+	}
+
+	restarted, err := NewIdentityService(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := restarted.authenticate(principal.Username, password); err == nil {
+		t.Fatal("deactivated account became authenticatable after service restart")
+	}
+	restarted.mu.Lock()
+	owner := Principal{}
+	for _, user := range restarted.state.Users {
+		if user.Status == UserActive && (user.Role == RoleOwner || user.Role == RoleSuperOwner) {
+			owner = Principal{TenantID: normalizedTenantID(user.TenantID), UserID: user.ID, Username: user.Username, Role: user.Role}
+			break
+		}
+	}
+	restarted.mu.Unlock()
+	if owner.UserID == "" {
+		t.Fatal("fixture has no active owner for governed reactivation")
+	}
+	if err := restarted.adminSetUserStatus(owner, principal.UserID, UserActive); err != nil {
+		t.Fatalf("governed reactivation failed: %v", err)
+	}
+	if _, _, err := restarted.authenticate(principal.Username, password); err != nil {
+		t.Fatalf("reactivated account could not authenticate: %v", err)
+	}
+}
+
+func TestHOST011LastCriticalOwnerCannotSelfDeactivate(t *testing.T) {
+	_, identity := newIdentityTestService(t)
+	base := time.Unix(2_435_000_000, 0)
+	token, owner, _ := v184CredentialedOwner(t, identity, base)
+	if err := identity.deactivateAccount(owner.UserID); err == nil || !strings.Contains(err.Error(), "last active owner") {
+		t.Fatalf("sole critical owner deactivation was not rejected: %v", err)
+	}
+	if _, err := identity.resolve(token, false); err != nil {
+		t.Fatalf("rejected owner deactivation damaged current identity: %v", err)
 	}
 }
 
@@ -489,6 +592,13 @@ func TestHOST011AccountDeletionRevokesIdentityAndScrubsWorkspace(t *testing.T) {
 	if !workspaceFound {
 		t.Fatal("deleted account did not retain the expected minimal empty workspace row")
 	}
+	persisted, err := p.LoadIdentityState(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasIdentitySecurityEvent(persisted, IdentitySecurityAccountDeleted, principal.UserID) {
+		t.Fatalf("account deletion request was not durably audited: %+v", persisted.SecurityEvents)
+	}
 }
 
 func TestHOST011LastCriticalOwnerCannotSelfDelete(t *testing.T) {
@@ -546,6 +656,10 @@ func TestHOST012PrivacyDataHandlingInventoryCoversPersistentStoresAndREST(t *tes
 				Method string `json:"method"`
 				Path   string `json:"path"`
 			} `json:"export"`
+			Deactivate struct {
+				Method string `json:"method"`
+				Path   string `json:"path"`
+			} `json:"deactivate"`
 			Delete struct {
 				Method string `json:"method"`
 				Path   string `json:"path"`
@@ -570,10 +684,10 @@ func TestHOST012PrivacyDataHandlingInventoryCoversPersistentStoresAndREST(t *tes
 			t.Fatalf("privacy inventory missing complete %s behavior: %+v", required, stores)
 		}
 	}
-	if inventory.REST.Export.Method != http.MethodGet || inventory.REST.Export.Path != "/api/auth/account/export" || inventory.REST.Delete.Method != http.MethodDelete || inventory.REST.Delete.Path != "/api/auth/account" {
+	if inventory.REST.Export.Method != http.MethodGet || inventory.REST.Export.Path != "/api/auth/account/export" || inventory.REST.Deactivate.Method != http.MethodPost || inventory.REST.Deactivate.Path != "/api/auth/account" || inventory.REST.Delete.Method != http.MethodDelete || inventory.REST.Delete.Path != "/api/auth/account" {
 		t.Fatalf("privacy REST contract drifted: %+v", inventory.REST)
 	}
-	if inventory.OperatorAccess["restore"] == "" || inventory.OperatorAccess["deletedAccount"] == "" {
+	if inventory.OperatorAccess["restore"] == "" || inventory.OperatorAccess["deletedAccount"] == "" || inventory.OperatorAccess["privacyAudit"] == "" {
 		t.Fatalf("operator privacy behavior missing: %+v", inventory.OperatorAccess)
 	}
 }

@@ -4,7 +4,7 @@
   "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
   "requirements": ["HOST-010", "HOST-011", "HOST-012"],
   "principles": {
-    "minimize": "Account export and retained deletion records include only data required for portability, product operation, security, or deletion proof.",
+    "minimize": "Account export and retained privacy/deletion audit include only data required for portability, product operation, security, or lifecycle proof.",
     "secretsExcluded": ["passwordHash", "sessionTokenHash", "rawSessionToken", "deviceFingerprintHash", "providerSecrets", "privateKeys"],
     "noExecution": true
   },
@@ -16,7 +16,18 @@
       "productEntitlementRequired": false,
       "cacheControl": "no-store",
       "format": "application/json",
-      "scope": "current account only"
+      "scope": "current account only",
+      "audit": "successful export is not returned unless a minimal PRIVACY_EXPORT_REQUESTED event is durably recorded"
+    },
+    "deactivate": {
+      "method": "POST",
+      "path": "/api/auth/account",
+      "authentication": "authenticated account plus recent password reauthentication and CSRF",
+      "productEntitlementRequired": false,
+      "scope": "current account only",
+      "behavior": "preserve profile and workspace data, set canonical account status DISABLED, revoke all current sessions and require governed administrator reactivation before authentication can resume",
+      "lastCriticalOwner": "rejected until another active OWNER or SUPER_OWNER exists",
+      "audit": "successful deactivation durably records ACCOUNT_DEACTIVATED in the canonical identity security-event stream"
     },
     "delete": {
       "method": "DELETE",
@@ -25,105 +36,123 @@
       "productEntitlementRequired": false,
       "body": {"reason": "USER_REQUESTED"},
       "scope": "current account only",
-      "lastCriticalOwner": "rejected until another active OWNER or SUPER_OWNER exists"
+      "lastCriticalOwner": "rejected until another active OWNER or SUPER_OWNER exists",
+      "audit": "successful deletion durably records ACCOUNT_DELETED while the live profile is replaced by the sanitized tombstone"
     }
   },
   "stores": [
     {
       "id": "sqlite",
       "kind": "canonical desktop persistence",
-      "accountData": ["identity-profile", "workspace-preferences", "watchlists", "hosted-sync-metadata", "deletion-tombstone-audit"],
-      "deletion": "identity profile is replaced by a minimal tombstone; sessions/devices are removed; user workspace is overwritten with an empty canonical workspace",
-      "retention": "live personal account payload is removed at successful deletion; tombstone remains until an explicit governed retention policy supersedes this contract",
-      "export": "current-account export reads canonical identity and workspace state before deletion"
+      "accountData": ["identity-profile", "workspace-preferences", "watchlists", "hosted-sync-metadata", "privacy-request-audit", "deletion-tombstone-audit"],
+      "deletion": "identity profile is replaced by a minimal tombstone; sessions/devices are removed; user workspace is overwritten with an empty canonical workspace; minimal privacy/deletion audit remains bounded in canonical identity security events",
+      "retention": "deactivation preserves live account payload while disabling authentication; successful deletion removes live personal account payload; bounded privacy audit and tombstone proof remain until an explicit governed retention policy supersedes this contract",
+      "export": "current-account export reads canonical identity and workspace state before deletion and records a minimal durable export-request audit event"
     },
     {
       "id": "postgres",
       "kind": "canonical hosted persistence",
-      "accountData": ["identity-profile", "workspace-preferences", "watchlists", "hosted-sync-metadata", "deletion-tombstone-audit"],
+      "accountData": ["identity-profile", "workspace-preferences", "watchlists", "hosted-sync-metadata", "privacy-request-audit", "deletion-tombstone-audit"],
       "deletion": "same canonical SaveIdentityState/SaveUserWorkspace lifecycle as SQLite; no backend-specific privacy fork",
-      "retention": "live personal account payload is removed at successful deletion; tombstone remains until an explicit governed retention policy supersedes this contract",
-      "export": "same application-level export contract as SQLite"
+      "retention": "deactivation preserves live account payload while disabling authentication; successful deletion removes live personal account payload; bounded privacy audit and tombstone proof remain until an explicit governed retention policy supersedes this contract",
+      "export": "same application-level export and audit contract as SQLite"
     },
     {
       "id": "cache",
       "kind": "runtime and market-data cache",
       "accountData": [],
-      "deletion": "no account-owned personal payload is persistently cached; deleted sessions are removed and account endpoints return Cache-Control no-store",
+      "deletion": "no account-owned personal payload is persistently cached; deactivated/deleted sessions are denied and account endpoints return Cache-Control no-store",
       "retention": "shared market-data cache follows market-data freshness/retention policy and is not account-owned",
       "export": "not applicable to account export"
     },
     {
       "id": "pitr-backup",
       "kind": "persistence archive, backup and point-in-time recovery",
-      "accountData": ["historical identity/profile", "historical workspace", "historical hosted-sync metadata", "deletion-tombstone-audit"],
+      "accountData": ["historical identity/profile", "historical workspace", "historical hosted-sync metadata", "historical privacy-request-audit", "deletion-tombstone-audit"],
       "deletion": "immutable historical backups are not falsely claimed to be rewritten in place; current-target tombstones are carried forward during replace restore and tombstoned archived workspaces are scrubbed before restore",
       "retention": "backup/PITR copies expire under the operator backup-retention policy; a point older than deletion must not be reopened to service without replaying a later authoritative deletion tombstone state",
       "export": "backup archives are operator recovery artifacts and are not returned by the self-service account export"
     },
     {
       "id": "audit",
-      "kind": "minimal retained deletion proof in canonical identity state",
-      "accountData": ["deletion-tombstone-audit"],
-      "deletion": "the deleted UserRecord is sanitized to userId, tenantId, deletion timestamp, controlled reason code and tombstone marker; username/display profile/role/password/login/session/device secrets are cleared or removed",
-      "retention": "retained to prevent silent resurrection and prove deletion until a later governed legal/retention policy explicitly changes it",
-      "export": "not present before deletion; after deletion the account cannot authenticate to request self-export"
+      "kind": "bounded canonical identity security/privacy audit plus minimal retained deletion proof",
+      "accountData": ["privacy-request-audit", "deletion-tombstone-audit"],
+      "deletion": "the deleted UserRecord is sanitized to userId, tenantId, deletion timestamp, controlled reason code and tombstone marker; bounded privacy events retain only event id/type, tenant/user identifiers and timestamp for the implemented self-service privacy lifecycle",
+      "retention": "bounded security/privacy events provide operational evidence; deletion tombstone remains to prevent silent resurrection and prove deletion until a later governed legal/retention policy explicitly changes it",
+      "export": "privacy audit is operator evidence and is not injected into the self-service account payload; export itself records a durable request event before data is returned"
     }
   ],
   "dataClasses": [
     {
       "id": "identity-profile",
       "export": "included: userId, tenantId, username, displayName, role, status and non-secret account timestamps",
+      "deactivate": "preserved with status DISABLED; authentication is denied until governed reactivation",
       "delete": "removed and replaced by deletion-tombstone-audit",
       "tombstone": "original username, displayName, role, password hash and login history are not retained"
     },
     {
       "id": "workspace-preferences",
       "export": "included as current UI preference state",
+      "deactivate": "preserved",
       "delete": "overwritten with canonical empty defaults",
       "tombstone": "only the non-secret userId remains on the empty workspace row"
     },
     {
       "id": "watchlists",
       "export": "included",
+      "deactivate": "preserved",
       "delete": "all personal symbols are removed by the empty-workspace overwrite",
       "tombstone": "none"
     },
     {
       "id": "research-metadata",
       "export": "included as an empty array with categoryStatus=not-persisted-per-user because v19.0.0 has no canonical user-owned persisted research metadata",
+      "deactivate": "no user-owned persistent rows exist",
       "delete": "no user-owned persistent rows exist to delete",
       "tombstone": "none"
     },
     {
       "id": "feedback",
       "export": "included as an empty array with categoryStatus=not-persisted-per-user because v19.0.0 has no canonical user-owned feedback store",
+      "deactivate": "no user-owned persistent rows exist",
       "delete": "no user-owned persistent rows exist to delete",
       "tombstone": "none"
     },
     {
       "id": "hosted-sync-metadata",
       "export": "included as safe device/session identifiers, labels, state and timestamps",
+      "deactivate": "sessions are revoked; device records remain part of the preserved account security state",
       "delete": "all account device and session records are removed",
       "tombstone": "device fingerprints, token hashes, MFA proof and other credential material are never retained in the deletion tombstone"
     },
     {
       "id": "credential-secrets",
       "export": "never exported",
-      "delete": "password hash disappears with the live user profile; session token hashes and device fingerprint hashes disappear with session/device records",
+      "deactivate": "password/MFA credential state remains server-side only so governed reactivation does not require destructive reset; active sessions are revoked",
+      "delete": "password hash/MFA credentials disappear with the live user profile; session token hashes and device fingerprint hashes disappear with session/device records",
       "tombstone": "never retained"
+    },
+    {
+      "id": "privacy-request-audit",
+      "export": "not injected into the self-service payload; successful export records PRIVACY_EXPORT_REQUESTED before response",
+      "deactivate": "successful self-deactivation records ACCOUNT_DEACTIVATED",
+      "delete": "successful self-deletion records ACCOUNT_DELETED",
+      "tombstone": "bounded canonical audit retains event id/type, tenant/user identifiers and timestamp only for these privacy lifecycle events"
     },
     {
       "id": "deletion-tombstone-audit",
       "export": "not part of a pre-deletion self-export",
+      "deactivate": "not created by deactivation",
       "delete": "retained intentionally as minimal deletion proof and anti-resurrection state",
       "tombstone": "userId, tenantId, deletedAt and controlled reason code only"
     }
   ],
   "operatorAccess": {
     "normal": "operators use existing role/rights boundaries; there is no operator endpoint that exposes password hashes, raw tokens or device fingerprints",
+    "privacyAudit": "privacy lifecycle events reuse the existing bounded tenant-scoped privileged identity security-event projection; no parallel privacy audit store or secret-bearing event payload is introduced",
     "deletedAccount": "the sanitized identity tombstone may remain visible to authorized identity operators as deletion proof; no original profile, watchlist, session or device secret is recoverable from live canonical state",
     "restore": "replace restore automatically carries forward tombstones already present on the target; disaster recovery to a fresh target from a point older than deletion requires replay of a later authoritative tombstone state before service is enabled",
     "legalRetention": "provider/legal retention obligations remain separate from product-owned account data; any future legal hold must be explicit, scoped and added to this inventory rather than silently retaining user payload"
-  }
+  },
+  "host016Dependency": "Application-level archive anti-resurrection is executable now. Real managed-hosted backup/PITR retention, fresh-target recovery, operator replay and restore-drill proof remains a Development technical dependency on HOST-016 and must not be inferred from this contract alone."
 }
