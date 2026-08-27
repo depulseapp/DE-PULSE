@@ -20,8 +20,9 @@ Read before any v19.1 #153/provider implementation:
 1. `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`
 2. `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`
 3. `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`
-4. issue #153 — expanded title/body is the primary v19.1 implementation owner.
-5. existing #79/#80/#81/#82/#83/#84 provider/Data Health architecture and evidence remain inherited.
+4. `governance/programs/V19-V20-REBASELINE/provider-registry-build-slices.json`
+5. issue #153 — expanded title/body is the primary v19.1 implementation owner.
+6. existing #79/#80/#81/#82/#83/#84 provider/Data Health architecture and evidence remain inherited.
 
 ## Market Data first adopter
 
@@ -85,6 +86,24 @@ Governed only:
 - provider public/commercial rights activation;
 - protected deterministic logic changes;
 - product-boundary changes.
+
+## Efficient v19.1 implementation packets
+
+Do **not** implement the provider-registry/Market Data work as one giant change and do not create a branch/version/PR per packet. Use the machine plan in `provider-registry-build-slices.json`.
+
+- **APR-01 — Registry foundation:** owner audit, adapter manifest/schema, Registry + self-registration contract/tests.
+- **APR-02 — Generic credential UX:** metadata-driven Settings/secrets/test/clear/redaction + Market Data card/`MARKETDATA_TOKEN`.
+- **APR-03 — Market Data transport:** Bearer adapter, fixtures, HTTP 200/203, auth/rate/error/schema/delayed truth.
+- **APR-04 — Entitlement-aware Router eligibility:** runtime capability/plan reprobe, quota/headroom, fallback/demotion/recovery, delayed→live eligibility without code release.
+- **APR-05 — Cross-integration:** canonical state + Data Health/Maintenance + consumer matrix + duplicate-fetch/subscription prevention + recovery re-evaluation.
+- **APR-06 — Adaptive evidence/closure:** SHADOW quality/usefulness evidence, provider scorecard hooks, existing-provider #153 audit, platform reconciliation and v19.1 qualification.
+
+Efficiency rule:
+- focused/local/unit evidence after each packet;
+- batch **APR-01+02**, **APR-03+04**, and **APR-05+06** into coherent exact-head Fast checkpoints when practical;
+- run Qualified only at material risk boundaries and mandatory G10, not after every small packet;
+- deterministic fixtures first; bounded live provider smoke only when live entitlement/routing behavior itself is under test;
+- reuse acquired evidence and never fan out live provider calls merely for duplicate tests.
 
 ## Version placement
 
