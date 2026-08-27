@@ -81,7 +81,7 @@ Notable current distinctions:
 
 Do not create fictional approvals or convert the public-terms review into the executable provider-rights bundle.
 
-## Next action
+## Exactly one next action
 
 Stay on HOST-001..003.
 
