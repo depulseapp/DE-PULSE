@@ -88,6 +88,50 @@ No Commercial/Public-only approval may masquerade as a technical v19.0.0 blocker
 
 Do not begin v19.1.0 / Hosted Provider Gateway while #148 remains technically incomplete.
 
+## Approved future provider-registry / Market Data rebaseline
+
+A new provider-onboarding architecture decision is now **durable approved future scope**. It does not change the current v19.0 next action and must not be implemented early.
+
+Read these files before v19.1 G1/#153 provider work:
+1. `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`
+2. `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`
+3. `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`
+4. `handoff/PROVIDER-REGISTRY-REBASELINE.md`
+5. issue #153 current body/comments.
+
+Approved target:
+
+`Provider Adapter -> Adaptive Provider Registry -> capability/entitlement probes -> rights/authority + Data Health -> Smart Provider Router v2 -> canonical state -> all useful consumers`
+
+Permanent rules:
+- provider-specific implementation stops at one standards-compliant adapter;
+- adapters self-register with the Registry;
+- consumers request capabilities rather than provider names;
+- technical capability/configuration/entitlement/freshness/history/quota/health discovery is generic where observable;
+- Smart Provider Router v2 remains sole general routing/admission authority;
+- runtime technical eligibility, fallback, demotion, cooldown, recovery and plan/subscription reprobe may be automatic;
+- lifecycle/authority promotion (`SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`) remains explicitly governed and never automatic;
+- direct authorities and provider public/commercial rights cannot be replaced/inferred automatically;
+- every provider capability must cross-integrate through canonical state to every useful applicable consumer, including Research, Discovery/Radar, Desks, Prep, Market Intelligence/Regime contribution, alerts, history/options, Data Health/Maintenance and future Outcome Learning;
+- Settings provider cards/API-key UX should become metadata-driven and reuse canonical secrets/test/clear/redaction owners.
+
+Market Data (`marketdata.app`) is the first concrete adopter under v19.1/#153:
+- `MARKETDATA_TOKEN` environment fallback;
+- Bearer auth;
+- canonical Data Providers Settings token UX using the TradeInsight-derived preserve/replace/clear/test/redaction pattern;
+- current HTTP 200/203 success semantics;
+- current trial/delayed capability represented truthfully;
+- effective entitlement reprobe so a future paid/live subscription can expand technical eligibility without a DE.PULSE source release solely because the provider plan changed;
+- SHADOW-first initial lifecycle;
+- no automatic lifecycle/authority promotion;
+- Router scoring/eligibility remains capability/authority/freshness/health/latency/headroom/cost/utility/rights aware.
+
+Version placement:
+- v19.1: Registry runtime + generic adapter contract + Market Data + Router/cross-integration.
+- v19.3: role-aware Mac/Windows/Web provider Settings/Admin presentation using the same contract.
+- v19.6.1: provider reliability/coverage/economics/readiness scorecards including Market Data.
+- v20.5: bounded adaptive provider utility/cost/reliability priors; Router/lifecycle/rights authority remains intact.
+
 ## Exactly one next action
 
 Continue the existing HOST-004..007 dependency band by closing **HOST-007** through the canonical identity/session owners: implement and production-wire a real MFA/passkey-class verification ceremony and close the applicable #164 end-to-end session/auth/cross-platform evidence. Do not create a second identity/session system and do not start HOST-010+ or v19.1.0 until this band is VERIFIED.
@@ -104,15 +148,17 @@ After HOST-004..007 is VERIFIED:
 6. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
 7. HOST-023 + final identical-head Development Production Ready qualification.
 8. Commercial/Public activation remains a later separate gate: provider licensing/rights + public-user legal/compliance + commercial activation audit.
+9. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
 
 ## Permanent architecture/product boundaries
 
 - U.S. Equities Processing only; GLD/SLV/USO remain actionable tradable exceptions.
 - No Execution.
 - Smart Provider Router v2 is the sole general routing/admission owner.
+- Adaptive Provider Registry is a provider-registration/capability projection only; never a second Router.
 - Direct SEC/EDGAR remains the governed filing/Form 4 authority.
 - Extend canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners; never create parallel owners.
-- No automatic provider lifecycle promotion.
+- No automatic provider lifecycle/authority promotion.
 - Point-in-time/no-lookahead truth precedes adaptive learning.
 - Development provider-rights mode remains audit-only; public-production enforcement requires explicit Commercial/Public activation.
 - Preserve existing product look-and-feel unless a justified truthful integration/defect correction requires change.
@@ -122,9 +168,10 @@ After HOST-004..007 is VERIFIED:
 1. Read this file first.
 2. Read `governance/PRODUCTION-READINESS-TIERS.md` and its machine companion before interpreting any readiness/blocker status.
 3. Then read the strict zero-miss contract/decision, `governance/current-state.json`, `governance/ROADMAP.md`, `governance/V19_V20_REBASELINE.md`, the active work-slice `work-slice.json`, `g1-scope.json`, `closure.json`, issue #148/latest comments, issue #164, PR #149 and current Actions.
-4. Where older wording conflicts with the readiness-tier contract, the readiness-tier contract wins and the conflicting artifact must be corrected at the next meaningful governance transition.
-5. Fetch live `main` and active branch heads before making any change; another session may have advanced them.
-6. Inspect commits since the latest verified checkpoint so nothing already implemented is duplicated.
-7. Keep Stable v18.10.0 immutable.
-8. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
-9. Update durable GitHub state at meaningful dependency-band transitions so any AI/account can resume independently.
+4. The provider-registry addendum is approved future scope; read its four files above before any v19.1/#153 provider implementation. Do not use it to bypass v19.0 sequencing.
+5. Where older wording conflicts with the readiness-tier contract, the readiness-tier contract wins and the conflicting artifact must be corrected at the next meaningful governance transition.
+6. Fetch live `main` and active branch heads before making any change; another session may have advanced them.
+7. Inspect commits since the latest verified checkpoint so nothing already implemented is duplicated.
+8. Keep Stable v18.10.0 immutable.
+9. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
+10. Update durable GitHub state at meaningful dependency-band transitions so any AI/account can resume independently.
