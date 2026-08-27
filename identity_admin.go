@@ -71,18 +71,24 @@ func (s *IdentityService) adminSnapshot(actor Principal) ([]AdminUserView, []Adm
 	if !roleAtLeast(actor.Role, RoleAdmin) {
 		return nil, nil, errors.New("insufficient role")
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	now := s.now().UnixMilli()
 	usersByID := make(map[string]UserRecord, len(s.state.Users))
 	for _, u := range s.state.Users {
-		usersByID[u.ID] = u
+		if normalizedTenantID(u.TenantID) == actorTenantID {
+			usersByID[u.ID] = u
+		}
 	}
-	views := make([]AdminUserView, 0, len(s.state.Users))
+	views := make([]AdminUserView, 0, len(usersByID))
 	for _, u := range s.state.Users {
+		if normalizedTenantID(u.TenantID) != actorTenantID {
+			continue
+		}
 		v := AdminUserView{ID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, Status: u.Status, MustSetPassword: u.MustSetPassword, CreatedAt: u.CreatedAt, UpdatedAt: u.UpdatedAt, LastLoginAt: u.LastLoginAt, Presence: "OFFLINE", Manageable: actor.UserID != u.ID && canManageRole(actor.Role, u.Role)}
 		for _, rec := range s.state.Sessions {
-			if rec.UserID != u.ID {
+			if rec.UserID != u.ID || normalizedTenantID(rec.TenantID) != actorTenantID {
 				continue
 			}
 			if rec.LastSeenAt > v.LastSeenAt {
@@ -107,6 +113,9 @@ func (s *IdentityService) adminSnapshot(actor Principal) ([]AdminUserView, []Adm
 
 	sessions := make([]AdminSessionView, 0, len(s.state.Sessions))
 	for _, rec := range s.state.Sessions {
+		if normalizedTenantID(rec.TenantID) != actorTenantID {
+			continue
+		}
 		u, ok := usersByID[rec.UserID]
 		if !ok {
 			continue
@@ -134,6 +143,7 @@ func (s *IdentityService) adminCreateUser(actor Principal, username, displayName
 	if err != nil {
 		return AdminUserView{}, err
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	for _, u := range s.state.Users {
@@ -142,7 +152,7 @@ func (s *IdentityService) adminCreateUser(actor Principal, username, displayName
 		}
 	}
 	now := s.now().UnixMilli()
-	u := UserRecord{ID: randomID("usr"), Username: username, DisplayName: displayName, Role: role, Status: UserActive, PasswordHash: hash, MustSetPassword: true, CreatedAt: now, UpdatedAt: now}
+	u := UserRecord{ID: randomID("usr"), TenantID: actorTenantID, Username: username, DisplayName: displayName, Role: role, Status: UserActive, PasswordHash: hash, MustSetPassword: true, CreatedAt: now, UpdatedAt: now}
 	s.state.Users = append(s.state.Users, u)
 	if err := s.persistLocked(); err != nil {
 		s.state.Users = s.state.Users[:len(s.state.Users)-1]
@@ -151,9 +161,13 @@ func (s *IdentityService) adminCreateUser(actor Principal, username, displayName
 	return AdminUserView{ID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, Status: u.Status, MustSetPassword: true, CreatedAt: u.CreatedAt, UpdatedAt: u.UpdatedAt, Presence: "OFFLINE", Manageable: true}, nil
 }
 
-func (s *IdentityService) activeCriticalOwnersLocked(exceptID string, exceptRole UserRole, exceptStatus UserStatus) int {
+func (s *IdentityService) activeCriticalOwnersLocked(tenantID, exceptID string, exceptRole UserRole, exceptStatus UserStatus) int {
+	tenantID = normalizedTenantID(tenantID)
 	count := 0
 	for _, u := range s.state.Users {
+		if normalizedTenantID(u.TenantID) != tenantID {
+			continue
+		}
 		role, status := u.Role, u.Status
 		if u.ID == exceptID {
 			role, status = exceptRole, exceptStatus
@@ -169,6 +183,7 @@ func (s *IdentityService) adminSetUserRole(actor Principal, userID string, role 
 	if !validRole(role) || role == RoleSuperOwner || strings.TrimSpace(userID) == "" || actor.UserID == userID {
 		return errors.New("invalid role change")
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	idx := -1
@@ -178,10 +193,10 @@ func (s *IdentityService) adminSetUserRole(actor Principal, userID string, role 
 			break
 		}
 	}
-	if idx < 0 || !canManageRole(actor.Role, s.state.Users[idx].Role) || !canManageRole(actor.Role, role) {
+	if idx < 0 || normalizedTenantID(s.state.Users[idx].TenantID) != actorTenantID || !canManageRole(actor.Role, s.state.Users[idx].Role) || !canManageRole(actor.Role, role) {
 		return errors.New("role change outside actor authority")
 	}
-	if s.activeCriticalOwnersLocked(userID, role, s.state.Users[idx].Status) == 0 {
+	if s.activeCriticalOwnersLocked(actorTenantID, userID, role, s.state.Users[idx].Status) == 0 {
 		return errors.New("at least one active owner is required")
 	}
 	now := s.now().UnixMilli()
@@ -202,6 +217,7 @@ func (s *IdentityService) adminSetUserStatus(actor Principal, userID string, sta
 	if strings.TrimSpace(userID) == "" || actor.UserID == userID {
 		return errors.New("cannot change own account status")
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	idx := -1
@@ -211,10 +227,10 @@ func (s *IdentityService) adminSetUserStatus(actor Principal, userID string, sta
 			break
 		}
 	}
-	if idx < 0 || !canManageRole(actor.Role, s.state.Users[idx].Role) {
+	if idx < 0 || normalizedTenantID(s.state.Users[idx].TenantID) != actorTenantID || !canManageRole(actor.Role, s.state.Users[idx].Role) {
 		return errors.New("status change outside actor authority")
 	}
-	if s.activeCriticalOwnersLocked(userID, s.state.Users[idx].Role, status) == 0 {
+	if s.activeCriticalOwnersLocked(actorTenantID, userID, s.state.Users[idx].Role, status) == 0 {
 		return errors.New("at least one active owner is required")
 	}
 	now := s.now().UnixMilli()
@@ -238,6 +254,7 @@ func (s *IdentityService) adminResetPassword(actor Principal, userID, temporaryP
 	if err != nil {
 		return err
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	idx := -1
@@ -247,7 +264,7 @@ func (s *IdentityService) adminResetPassword(actor Principal, userID, temporaryP
 			break
 		}
 	}
-	if idx < 0 || !canManageRole(actor.Role, s.state.Users[idx].Role) || s.state.Users[idx].Status != UserActive {
+	if idx < 0 || normalizedTenantID(s.state.Users[idx].TenantID) != actorTenantID || !canManageRole(actor.Role, s.state.Users[idx].Role) || s.state.Users[idx].Status != UserActive {
 		return errors.New("password reset outside actor authority")
 	}
 	now := s.now().UnixMilli()
@@ -266,6 +283,7 @@ func (s *IdentityService) adminRevokeSession(actor Principal, sessionID string) 
 	if strings.TrimSpace(sessionID) == "" || sessionID == actor.SessionID {
 		return errors.New("cannot revoke current session here")
 	}
+	actorTenantID := normalizedTenantID(actor.TenantID)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	now := s.now().UnixMilli()
@@ -274,6 +292,9 @@ func (s *IdentityService) adminRevokeSession(actor Principal, sessionID string) 
 		if rec.ID != sessionID {
 			continue
 		}
+		if normalizedTenantID(rec.TenantID) != actorTenantID {
+			return errors.New("session revoke outside actor authority")
+		}
 		var target *UserRecord
 		for j := range s.state.Users {
 			if s.state.Users[j].ID == rec.UserID {
@@ -281,7 +302,7 @@ func (s *IdentityService) adminRevokeSession(actor Principal, sessionID string) 
 				break
 			}
 		}
-		if target == nil || !canManageRole(actor.Role, target.Role) {
+		if target == nil || normalizedTenantID(target.TenantID) != actorTenantID || !canManageRole(actor.Role, target.Role) {
 			return errors.New("session revoke outside actor authority")
 		}
 		if rec.RevokedAt == 0 {
