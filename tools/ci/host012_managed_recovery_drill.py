@@ -98,8 +98,8 @@ def validate_privacy_artifact(data: dict[str, Any], candidate_sha: str) -> list[
             errors.append("privacy replay must use canonical replace-restore semantics")
         if replay.get("restartVerified") is not True:
             errors.append("privacy replay restart verification is required")
-        if replay.get("sourceReadOnlyByDrill") is not True:
-            errors.append("privacy drill must keep the authoritative source read-only")
+        if replay.get("sourceNotRestoreTarget") is not True:
+            errors.append("privacy drill must keep the authoritative source distinct from the replay/restore target")
     privacy = data.get("privacyAssertions")
     if not isinstance(privacy, dict):
         errors.append("privacyAssertions is missing")
