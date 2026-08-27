@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 )
@@ -100,5 +102,88 @@ func TestV184LegacySessionAuthenticationFallsBackToCreationTime(t *testing.T) {
 	s.now = func() time.Time { return base.Add(6 * time.Minute) }
 	if s.sessionRecentlyAuthenticated(p.SessionID, 5*time.Minute) {
 		t.Fatal("legacy createdAt fallback exceeded recent-auth policy")
+	}
+}
+
+func TestHOST007And164FailedSessionRenewalFailsClosedAndClearsAuthCookies(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	base := time.Unix(2_500_000_000, 0)
+	s.now = func() time.Time { return base }
+	s.idleTTL = 2 * time.Hour
+	s.absoluteTTL = time.Hour
+
+	_, owner, err := s.bootstrapOwnerSession()
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, _, err := s.setPassword(owner.UserID, "v19 renewal failure passphrase")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s.now = func() time.Time { return base.Add(61 * time.Minute) }
+	app := &Application{identity: s}
+	csrf := "host164-renewal-csrf"
+	rr := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/api/auth/rotate", nil)
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: token})
+	req.AddCookie(&http.Cookie{Name: csrfCookieName, Value: csrf})
+	req.Header.Set("X-DE-PULSE-CSRF", csrf)
+	app.auth(postOnly(app.handleRotateSession))(rr, req)
+
+	if rr.Code != http.StatusUnauthorized {
+		t.Fatalf("expired session renewal did not require authentication: code=%d body=%s", rr.Code, rr.Body.String())
+	}
+	sessionCookie := cookieNamed(rr.Result(), sessionCookieName)
+	csrfCookie := cookieNamed(rr.Result(), csrfCookieName)
+	if sessionCookie == nil || sessionCookie.Value != "" || sessionCookie.MaxAge >= 0 {
+		t.Fatalf("failed renewal did not clear session cookie: %+v", sessionCookie)
+	}
+	if csrfCookie == nil || csrfCookie.Value != "" || csrfCookie.MaxAge >= 0 {
+		t.Fatalf("failed renewal did not clear CSRF cookie: %+v", csrfCookie)
+	}
+	if _, err := s.resolve(token, false); err == nil {
+		t.Fatal("expired renewal token remained usable")
+	}
+}
+
+func TestHOST007And164RoleDowngradeRevokesActiveSessionAndFreshLoginUsesNewRole(t *testing.T) {
+	_, s := newIdentityTestService(t)
+	_, owner, err := s.bootstrapOwnerSession()
+	if err != nil {
+		t.Fatal(err)
+	}
+	admin, err := s.adminCreateUser(owner, "host164.admin", "HOST 164 Admin", RoleAdmin, "temporary host164 admin password")
+	if err != nil {
+		t.Fatal(err)
+	}
+	activeToken, activePrincipal, err := s.setPassword(admin.ID, "host164 active admin passphrase")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if activePrincipal.Role != RoleAdmin || !roleHasHostedCapability(activePrincipal.Role, hostedCapabilityUserManage) {
+		t.Fatalf("active ADMIN principal missing expected capability: %+v", activePrincipal)
+	}
+
+	if err := s.adminSetUserRole(owner, admin.ID, RoleUser); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.resolve(activeToken, false); err == nil {
+		t.Fatal("role downgrade left the old privileged session valid")
+	}
+
+	freshToken, freshPrincipal, err := s.authenticate(admin.Username, "host164 active admin passphrase")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.revokeToken(freshToken)
+	if freshPrincipal.Role != RoleUser {
+		t.Fatalf("fresh login retained stale role after downgrade: %+v", freshPrincipal)
+	}
+	if roleHasHostedCapability(freshPrincipal.Role, hostedCapabilityUserManage) {
+		t.Fatalf("downgraded USER retained admin capability: %+v", freshPrincipal)
+	}
+	if !roleHasHostedCapability(freshPrincipal.Role, hostedCapabilityStandardUse) {
+		t.Fatalf("downgraded USER lost normal product capability: %+v", freshPrincipal)
 	}
 }
