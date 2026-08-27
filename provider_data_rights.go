@@ -25,6 +25,7 @@ const (
 	providerCommercialReady                  = "READY"
 	providerHostedRightsBlocked              = "BLOCKED"
 	providerHostedRightsAllowed              = "ALLOWED"
+	providerHostedRightsAuditOnly            = "AUDIT_ONLY"
 	providerRightsRenewalUnknown             = "UNKNOWN"
 	providerRightsRenewalCurrent             = "CURRENT"
 	providerRightsRenewalExpired             = "EXPIRED"
@@ -90,9 +91,11 @@ type ProviderDataRightsBundle struct {
 	Records       []ProviderDataRightsMetadata `json:"records"`
 }
 
-// ProviderHostedRightsDecision is the single fail-closed decision consumed by
-// hosted routing/serving/cache/persistence/live-fanout composition. It is not a
-// provider rank, score or fallback decision and must not become a second router.
+// ProviderHostedRightsDecision carries both the strict rights evaluation and
+// the current runtime enforcement disposition. During development a blocked
+// strict evaluation is surfaced as AUDIT_ONLY/Allowed so configured providers
+// retain full capacity. PUBLIC_PRODUCTION converts the same evaluation into the
+// hard fail-closed admission decision.
 type ProviderHostedRightsDecision struct {
 	PolicyVersion   string   `json:"policyVersion"`
 	Provider        string   `json:"provider"`
@@ -148,11 +151,11 @@ func providerRightsEnvironmentAllowed(rights ProviderDataRightsMetadata, environ
 	return false
 }
 
-// evaluateProviderHostedRightsDecision enforces HOST-001..003 independently of
-// operational provider availability. The caller supplies now so expiry/downgrade
-// behavior is deterministic and testable. Unknown purpose, missing provenance,
-// malformed/effective-future/expired evidence, an unapproved environment, or an
-// unapproved required right always blocks.
+// evaluateProviderHostedRightsDecision is the strict HOST-001..003 evaluator.
+// It is deliberately independent of runtime enforcement mode so development can
+// observe the exact production blockers without suppressing provider capacity.
+// Unknown purpose, missing provenance, malformed/effective-future/expired
+// evidence, an unapproved environment, or an unapproved required right blocks.
 func evaluateProviderHostedRightsDecision(rights ProviderDataRightsMetadata, purpose, environment string, now time.Time) ProviderHostedRightsDecision {
 	purpose = strings.ToUpper(strings.TrimSpace(purpose))
 	environment = strings.ToLower(strings.TrimSpace(environment))
@@ -350,7 +353,11 @@ func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 	bundle, err := loadProviderDataRightsBundle()
 	if err != nil {
 		if isHostedRuntime() {
-			fallback.Detail = "Hosted provider rights are blocked: " + err.Error()
+			if providerRightsEnforcementActive() {
+				fallback.Detail = "Hosted provider rights are blocked: " + err.Error()
+			} else {
+				fallback.Detail = "Hosted provider rights review pending (audit only; development capacity unchanged): " + err.Error()
+			}
 		}
 		return fallback
 	}
@@ -359,11 +366,19 @@ func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 			continue
 		}
 		if candidate.PolicyVersion != providerDataRightsPolicyVersion {
-			fallback.Detail = "Hosted provider rights are blocked: provider rights record policy version is invalid."
+			if providerRightsEnforcementActive() {
+				fallback.Detail = "Hosted provider rights are blocked: provider rights record policy version is invalid."
+			} else {
+				fallback.Detail = "Hosted provider rights review pending (audit only): provider rights record policy version is invalid."
+			}
 			return fallback
 		}
 		if strings.TrimSpace(candidate.Provider) == "" {
-			fallback.Detail = "Hosted provider rights are blocked: provider identity is missing from the bound record."
+			if providerRightsEnforcementActive() {
+				fallback.Detail = "Hosted provider rights are blocked: provider identity is missing from the bound record."
+			} else {
+				fallback.Detail = "Hosted provider rights review pending (audit only): provider identity is missing from the bound record."
+			}
 			return fallback
 		}
 		candidate.Provider = strings.TrimSpace(candidate.Provider)
@@ -371,7 +386,11 @@ func providerDataRightsMetadata(provider string) ProviderDataRightsMetadata {
 		return candidate
 	}
 	if isHostedRuntime() {
-		fallback.Detail = "Hosted provider rights are blocked: no provider-specific record exists in the SHA-pinned rights bundle."
+		if providerRightsEnforcementActive() {
+			fallback.Detail = "Hosted provider rights are blocked: no provider-specific record exists in the SHA-pinned rights bundle."
+		} else {
+			fallback.Detail = "Hosted provider rights review pending (audit only; development capacity unchanged): no provider-specific record exists in the SHA-pinned rights bundle."
+		}
 	}
 	return fallback
 }
@@ -388,7 +407,12 @@ func hostedProviderRightsDecision(provider, purpose string, now time.Time) Provi
 		}
 	}
 	environment := strings.ToLower(strings.TrimSpace(os.Getenv(hostedEnvironmentEnv)))
-	return evaluateProviderHostedRightsDecision(providerDataRightsMetadata(provider), purpose, environment, now)
+	decision := evaluateProviderHostedRightsDecision(providerDataRightsMetadata(provider), purpose, environment, now)
+	if !providerRightsEnforcementActive() && !decision.Allowed {
+		decision.State = providerHostedRightsAuditOnly
+		decision.Allowed = true
+	}
+	return decision
 }
 
 func hostedProviderRightsAllowed(provider, purpose string, now time.Time) bool {
@@ -396,7 +420,7 @@ func hostedProviderRightsAllowed(provider, purpose string, now time.Time) bool {
 }
 
 func providerQuoteHostedRightsAllowed(q Quote, purpose string, now time.Time) bool {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return true
 	}
 	provider := sourceProvider(q.Source)
@@ -406,12 +430,13 @@ func providerQuoteHostedRightsAllowed(q Quote, purpose string, now time.Time) bo
 	return hostedProviderRightsAllowed(provider, purpose, now)
 }
 
-// hostedRightsFilteredMarketCache extends the existing market-cache owner. In
-// hosted mode only provider-attributed quotes with current production-serving
-// and retention approval can cross the cache boundary. Legacy mixed collections
-// without per-row provider provenance fail closed; desktop remains unchanged.
+// hostedRightsFilteredMarketCache extends the existing market-cache owner. The
+// filter is audit-only during development. Once PUBLIC_PRODUCTION is explicitly
+// activated, only provider-attributed quotes with current production-serving
+// approval cross the cache boundary and legacy mixed collections without per-row
+// provider provenance fail closed.
 func hostedRightsFilteredMarketCache(c MarketCache) MarketCache {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return c
 	}
 	out := MarketCache{
