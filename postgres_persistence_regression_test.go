@@ -394,10 +394,11 @@ func TestV183PostgresHealthCheckReflectsClosedDatabase(t *testing.T) {
 // TestHOST012ManagedRecoveryPrivacyReplayDrill is intentionally excluded from
 // ordinary CI execution by the postgres build tag plus an explicit operator ack.
 // It mutates only the throwaway PITR-restored target after first proving that the
-// target contains the pre-deletion live account. The source database is read only
-// and supplies the later authoritative deletion tombstone state. The canonical
-// archive anti-resurrection owner performs the replay; no test-only deletion path
-// is allowed to become a second privacy owner.
+// target contains the pre-deletion live account. The current source supplies the
+// later authoritative deletion tombstone state and is never the replay/restore
+// target. Normal backend initialization may still perform canonical schema checks
+// or migrations. The canonical archive anti-resurrection owner performs the replay;
+// no test-only deletion path is allowed to become a second privacy owner.
 func TestHOST012ManagedRecoveryPrivacyReplayDrill(t *testing.T) {
 	if strings.TrimSpace(os.Getenv("DEPULSE_MANAGED_RECOVERY_ACK")) != host012ManagedRecoveryAck {
 		t.Skip("managed PITR operator acknowledgement not present")
@@ -575,15 +576,15 @@ func TestHOST012ManagedRecoveryPrivacyReplayDrill(t *testing.T) {
 			"reason":    sourceTombstone.DisplayName,
 		},
 		"beforeReplay": map[string]any{
-			"liveUserPresent": true,
+			"liveUserPresent":  true,
 			"tombstonePresent": false,
 		},
 		"canonicalReplay": map[string]any{
-			"owner":                 "enforceArchiveAccountDeletionPrivacy",
-			"restoreMode":           persistenceRestoreModeReplace,
-			"durationMilliseconds":  replayDurationMillis,
-			"restartVerified":       true,
-			"sourceReadOnlyByDrill": true,
+			"owner":                  "enforceArchiveAccountDeletionPrivacy",
+			"restoreMode":            persistenceRestoreModeReplace,
+			"durationMilliseconds":   replayDurationMillis,
+			"restartVerified":        true,
+			"sourceNotRestoreTarget": true,
 		},
 		"privacyAssertions": map[string]any{
 			"deletedUsersResurrected":              0,
