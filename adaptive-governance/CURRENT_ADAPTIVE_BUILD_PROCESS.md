@@ -159,10 +159,11 @@ Pattern work starts with structured split-safe multi-timeframe feature vectors a
 Provider/data changes use the canonical #80 baseline and dependency chain #81/#82/#83/#78/#84.
 
 - Smart Provider Router v2 remains the executable authority for general routable provider capabilities; explicit direct-authority evidence such as SEC/EDGAR is preserved.
-- Every new/changed provider/capability/fetch path is reconciled against `provider-capability-matrix.json`, `data-health-slo.json` and `provider-fetch-paths.json`; unclassified production network/provider behavior fails closed.
+- Every new/changed provider/capability/fetch path is reconciled against `provider-capability-matrix.json`, `data-health-slo.json` and `provider-fetch-paths.json`; unclassified, unsafe or missing required production network/provider behavior must **fail closed** rather than silently bypass canonical Data Health.
 - canonical freshness is based on provider observation/event/publication/filing time; retrieval/cache timestamps are bookkeeping.
 - before declaring degradation, reuse policy-valid canonical warm/cache evidence and eligible fallback.
 - scope health at the smallest truthful capability/symbol/consumer level before escalation.
+- genuine unresolved required evidence remains truthfully represented as `PARTIAL COVERAGE` / `DATA DEGRADED`; recovery clears it only when canonical evidence is actually healthy.
 - recovery is automatic with hysteresis/anti-flapping/authority rules.
 - capability lifecycle remains `SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`; reachability/key presence/transient success never auto-promotes authority.
 - under pressure, protect critical decision evidence and shed optional/background work first.
