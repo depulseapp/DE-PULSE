@@ -161,8 +161,21 @@ func (s *IdentityService) adminCreateUser(actor Principal, username, displayName
 	return AdminUserView{ID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, Status: u.Status, MustSetPassword: true, CreatedAt: u.CreatedAt, UpdatedAt: u.UpdatedAt, Presence: "OFFLINE", Manageable: true}, nil
 }
 
-func (s *IdentityService) activeCriticalOwnersLocked(tenantID, exceptID string, exceptRole UserRole, exceptStatus UserStatus) int {
-	tenantID = normalizedTenantID(tenantID)
+func (s *IdentityService) activeCriticalOwnersLocked(exceptID string, exceptRole UserRole, exceptStatus UserStatus, tenantIDs ...string) int {
+	tenantID := ""
+	if len(tenantIDs) > 0 {
+		tenantID = normalizedTenantID(tenantIDs[0])
+	} else {
+		for _, u := range s.state.Users {
+			if u.ID == exceptID {
+				tenantID = normalizedTenantID(u.TenantID)
+				break
+			}
+		}
+	}
+	if tenantID == "" {
+		return 0
+	}
 	count := 0
 	for _, u := range s.state.Users {
 		if normalizedTenantID(u.TenantID) != tenantID {
@@ -196,7 +209,7 @@ func (s *IdentityService) adminSetUserRole(actor Principal, userID string, role 
 	if idx < 0 || normalizedTenantID(s.state.Users[idx].TenantID) != actorTenantID || !canManageRole(actor.Role, s.state.Users[idx].Role) || !canManageRole(actor.Role, role) {
 		return errors.New("role change outside actor authority")
 	}
-	if s.activeCriticalOwnersLocked(actorTenantID, userID, role, s.state.Users[idx].Status) == 0 {
+	if s.activeCriticalOwnersLocked(userID, role, s.state.Users[idx].Status, actorTenantID) == 0 {
 		return errors.New("at least one active owner is required")
 	}
 	now := s.now().UnixMilli()
@@ -230,7 +243,7 @@ func (s *IdentityService) adminSetUserStatus(actor Principal, userID string, sta
 	if idx < 0 || normalizedTenantID(s.state.Users[idx].TenantID) != actorTenantID || !canManageRole(actor.Role, s.state.Users[idx].Role) {
 		return errors.New("status change outside actor authority")
 	}
-	if s.activeCriticalOwnersLocked(actorTenantID, userID, s.state.Users[idx].Role, status) == 0 {
+	if s.activeCriticalOwnersLocked(userID, s.state.Users[idx].Role, status, actorTenantID) == 0 {
 		return errors.New("at least one active owner is required")
 	}
 	now := s.now().UnixMilli()
