@@ -23,7 +23,7 @@
 - Permanent readiness authority: `governance/PRODUCTION-READINESS-TIERS.md` + `governance/production-readiness-tiers.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
 - Canonical work-slice state: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`.
-- GitHub objects and executable evidence outrank this file and all chat memory. Always fetch live `main`, the active branch, PR #149, issue #148/comments and Actions before writing.
+- GitHub objects and executable evidence outrank this file and all chat memory. Always fetch live `main`, active branch, PR #149, issue #148/comments and Actions before writing.
 
 ## Permanent production-readiness tiers
 
@@ -67,30 +67,30 @@ Zero-miss rigor applies independently inside the readiness tier being claimed. A
 
 ## Current v19 re-audit truth
 
-Re-audit basis includes current branch implementation through `346fb4da191ec06e18ca178fc42c02647831df54` and exact-head Fast #1229 / run `33036835281` PASS on that implementation head. Governance commits after that head require their own fresh exact-head CI before any dependency-band advancement or release qualification.
+Implementation evidence through `346fb4da191ec06e18ca178fc42c02647831df54` passed exact-head Fast #1229 / run `33036835281`. Readiness/governance commits after that implementation head require their own fresh exact-head Fast before dependency-band advancement or release qualification.
 
 - `HOST-001..003` provider-rights development/pre-public control plane: **VERIFIED FOR DEVELOPMENT**. Actual provider-specific public/commercial approvals remain a separate Commercial/Public activation gate and grant no rights today.
-- `HOST-004..007` tenant/account/device/session/reauth band: **OPEN AS A BAND, WITH MATERIAL TECHNICAL PROGRESS**.
-  - HOST-004 tenant-scoped privileged identity administration: production-integrated and adversely regression-tested; cross-tenant user/session visibility and mutations are denied and the critical-owner invariant is tenant-scoped.
-  - HOST-006 stale-device/security-audit residual: durable STALE retirement, bound-session revocation and persistent/privileged/tenant-scoped security-audit regressions are now implemented and passed exact-head Fast at the implementation head.
-  - HOST-007 remains a genuine Development blocker: `recordHostedMFAVerification` records externally established MFA-class proof and does **not** perform or verify an MFA/passkey ceremony itself. The applicable #164 end-to-end session/auth evidence also remains to be reconciled.
-  - HOST-005 must remain evidence-based inside this band; do not infer closure merely from neighboring HOST-004/HOST-006 progress.
+- `HOST-004..007` tenant/account/device/session/reauth band: **OPEN ONLY BECAUSE HOST-007/APPLICABLE #164 EVIDENCE REMAINS OPEN**.
+  - **HOST-004 VERIFIED:** tenant/account isolation is canonical; privileged admin visibility/mutations are actor-tenant scoped; user creation binds actor tenant; cross-tenant role/status/password/session mutations are denied; critical-owner invariant is per tenant.
+  - **HOST-005 VERIFIED:** canonical SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability truth is preserved. ADMIN is capability-scoped, `roleHasHostedCapability` feeds `authorizeHostedIdentity`, and the production `/api/auth/device/*` path consumes that authorization. Positive/negative role-capability regressions are present.
+  - **HOST-006 VERIFIED:** durable STALE device retirement, LOST/REVOKED handling, bound-session revocation, cross-tenant denial and persistent privileged/tenant-scoped security audit are implemented/regression-protected.
+  - **HOST-007 OPEN:** `recordHostedMFAVerification` records externally established MFA-class proof and does **not** perform or verify an MFA/passkey ceremony itself. Applicable #164 end-to-end login/session/silent-renewal/role-entitlement-refresh/logout/revocation/cross-platform assurance must also be reconciled.
 - `HOST-008..009` product entitlement/quota: **VERIFIED**.
 - `HOST-010..012` privacy lifecycle: **OPEN / PARTIALLY IMPLEMENTED** for technical reasons including deactivation/privacy-request audit and real backup/PITR/operator recovery deletion proof.
 - `HOST-013..014` environment/service trust: **OPEN / CONTRACT IMPLEMENTED, REAL INFRASTRUCTURE NOT PROVEN**.
-- `HOST-015..016` PostgreSQL tenancy/recovery: **OPEN / PARTIALLY IMPLEMENTED**; real tenant-owned database isolation and executable HA/failover/backup/PITR/restore proof remain technical gaps.
+- `HOST-015..016` PostgreSQL tenancy/recovery: **OPEN / PARTIALLY IMPLEMENTED**; tenant-owned DB isolation and executable HA/failover/backup/PITR/restore proof remain technical gaps.
 - `HOST-017..020`: **OPEN** for managed secrets/KMS and supply-chain/deploy provenance technical evidence.
-- `HOST-021..022`: **OPEN** for measured provider/Data Health scorecards and canonical point-in-time/revision/no-lookahead truth; these are technical data-capability gaps, not provider-licensing paperwork.
+- `HOST-021..022`: **OPEN** for measured provider/Data Health scorecards and canonical point-in-time/revision/no-lookahead truth; these are technical/full-data-capability gaps, not provider-licensing paperwork.
 - `HOST-023`: **OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure.
 - Final identical-head Fast + impact-selected Qualified: **OPEN**.
 
-No Commercial/Public-only approval is allowed to masquerade as a technical v19.0.0 blocker. Conversely, no readiness-tier separation may waive the genuine technical gaps above.
+No Commercial/Public-only approval may masquerade as a technical v19.0.0 blocker. Conversely, no readiness-tier separation may waive the genuine technical gaps above.
 
 Do not begin v19.1.0 / Hosted Provider Gateway while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Continue the existing `HOST-004..HOST-007` band on the existing branch/PR. Reconcile HOST-005 evidence explicitly, then close the actual MFA/passkey-class verification and applicable #164 end-to-end session lifecycle evidence through the existing canonical identity/session owners. Do not create a second identity/session system and do not start HOST-010+ or v19.1.0 until the band is VERIFIED.
+Continue the existing HOST-004..007 dependency band by closing **HOST-007** through the canonical identity/session owners: implement and production-wire a real MFA/passkey-class verification ceremony and close the applicable #164 end-to-end session/auth/cross-platform evidence. Do not create a second identity/session system and do not start HOST-010+ or v19.1.0 until this band is VERIFIED.
 
 ## Later dependency bands
 
