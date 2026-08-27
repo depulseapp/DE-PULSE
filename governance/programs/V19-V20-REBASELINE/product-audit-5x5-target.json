@@ -1,0 +1,158 @@
+{
+  "schema": "DE.PULSE-PRODUCT-AUDIT-5X5-1",
+  "effectiveDate": "2026-08-27",
+  "auditReferenceSha": "87baad3a90357b9af8e040a5ff34203a269fd861",
+  "stableComparison": "v18.10.0",
+  "currentLifecycle": "DEVELOPMENT",
+  "commercialActivation": {
+    "state": "OFF",
+    "policy": "OWNER_EXPLICIT_ONLY",
+    "automaticActivationForbidden": true,
+    "fiveOfFiveDoesNotActivateCommercial": true
+  },
+  "capabilityConservation": {
+    "certifiedV18Responsibilities": 180,
+    "hostRequirements": "HOST-001..HOST-072",
+    "requireAllBacklogRowsAssigned": true,
+    "requireLegacyFutureCommitmentsAssigned": true,
+    "requireWholeProductSurfaceMapAssigned": true,
+    "requireCrossIntegrationDisposition": true,
+    "requireAuditFindingDisposition": true,
+    "zeroUnexplainedApplicableRowsAtG10": true,
+    "silentCapabilityRemovalForbidden": true
+  },
+  "targetScore": 5,
+  "domains": [
+    {
+      "id": "LOCAL_PRODUCT_USEFULNESS",
+      "auditScore": 4.0,
+      "targetScore": 5.0,
+      "closure": [
+        "distinct coherent surface roles",
+        "first-class Watchlist lifecycle projection",
+        "no material UX fragmentation",
+        "useful deep evidence remains reachable"
+      ]
+    },
+    {
+      "id": "DETERMINISTIC_INTELLIGENCE",
+      "auditScore": 4.0,
+      "targetScore": 5.0,
+      "closure": [
+        "server-owned versioned replayable calculations",
+        "two-sided setup geometry",
+        "golden-vector parity",
+        "no client authority fork"
+      ]
+    },
+    {
+      "id": "PROVIDER_ARCHITECTURE",
+      "auditScore": 3.5,
+      "targetScore": 5.0,
+      "closure": [
+        "all provider capabilities classified",
+        "Adaptive Provider Registry plus Smart Provider Router v2 canonical path",
+        "direct authorities explicit",
+        "rights freshness health cost recovery and coalescing evidenced",
+        "no feature-owned provider bypass"
+      ]
+    },
+    {
+      "id": "CANONICAL_STATE",
+      "auditScore": 3.0,
+      "targetScore": 5.0,
+      "closure": [
+        "versioned SymbolIntelligenceSnapshot",
+        "typed evidence events and deltas",
+        "field-level freshness and provenance",
+        "shared Opportunity identity and lifecycle",
+        "compatibility migration completed"
+      ]
+    },
+    {
+      "id": "ADAPTIVE_INTELLIGENCE",
+      "auditScore": 2.5,
+      "targetScore": 5.0,
+      "closure": [
+        "point-in-time outcome corpus",
+        "calibration drift and model registry",
+        "shadow and champion-challenger governance",
+        "bounded reversible approved influence",
+        "deterministic fallback"
+      ]
+    },
+    {
+      "id": "PERSISTENCE",
+      "auditScore": 2.5,
+      "targetScore": 5.0,
+      "closure": [
+        "normalized tenant-aware Postgres v2",
+        "RLS and isolation",
+        "revision outbox conflict and tombstones",
+        "retention and partitioning",
+        "backup PITR restore and DR evidence",
+        "correct local SQLite path"
+      ]
+    },
+    {
+      "id": "SECURITY_FOUNDATION",
+      "auditScore": 3.0,
+      "targetScore": 5.0,
+      "closure": [
+        "hosted identity and device-session lifecycle",
+        "RBAC entitlement and tenant isolation",
+        "managed and OS secure secrets",
+        "negative tenant cache and stream tests",
+        "durable audit and supply-chain controls"
+      ]
+    },
+    {
+      "id": "TESTING_RELEASE_ASSURANCE",
+      "auditScore": 4.0,
+      "targetScore": 5.0,
+      "closure": [
+        "exact-head Fast Qualified and G0-G16",
+        "golden contract adverse chaos load hosted and client coverage",
+        "measured flake coverage and SLO evidence",
+        "zero unexplained responsibilities"
+      ]
+    },
+    {
+      "id": "COMMERCIAL_DISTRIBUTION_READINESS",
+      "auditScore": 1.5,
+      "targetScore": 5.0,
+      "activationStateAtTarget": "OFF_UNTIL_OWNER_EXPLICIT",
+      "closure": [
+        "provider rights evidence",
+        "signed notarized install update and rollback readiness",
+        "support operations privacy and billing readiness",
+        "release channel readiness",
+        "no automatic commercial activation"
+      ]
+    },
+    {
+      "id": "WEB_MULTI_PLATFORM_READINESS",
+      "auditScore": 2.0,
+      "targetScore": 5.0,
+      "closure": [
+        "versioned cloud API and client boundary",
+        "Web macOS and Windows semantic parity",
+        "auth deep link sync offline and degraded behavior",
+        "same canonical domain truth across clients"
+      ]
+    },
+    {
+      "id": "DOCUMENTATION_COHERENCE",
+      "auditScore": 2.0,
+      "targetScore": 5.0,
+      "closure": [
+        "one canonical current roadmap architecture build and release truth",
+        "generated current status",
+        "machine state precedence",
+        "immutable historical evidence",
+        "duplicate CURRENT and base narratives removed or demoted"
+      ]
+    }
+  ],
+  "maturityClaimRule": "A domain may be marked 5/5 only when objective current evidence satisfies every applicable closure item and no unresolved critical or high gap contradicts the score."
+}
