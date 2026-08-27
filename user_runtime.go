@@ -72,9 +72,9 @@ func filterRuntimeSymbols(items []string, allowed map[string]bool) []string {
 }
 
 func (a *Application) runtimeSnapshotForUserFrom(userID string, snap RuntimeSnapshot) RuntimeSnapshot {
-	// Legal/data-rights admission precedes the existing per-user privacy filter.
-	// This preserves one canonical shared engine while preventing an authenticated
-	// consumer from reaching provider data that the hosted process may not serve.
+	// Public-production provider-rights enforcement precedes the existing per-user
+	// privacy filter. Development/pre-public hosted runtimes remain audit-only and
+	// preserve the canonical shared engine payload.
 	snap = enforceHostedRuntimeRightsSnapshot(snap)
 	a.mu.RLock()
 	allowed := a.runtimeAllowedSymbolsLocked(userID)
@@ -355,7 +355,7 @@ func hostedSECDerivedServingAllowed(now time.Time) bool {
 }
 
 func hostedRightsFilteredOptions(options map[string]OptionsContext, now time.Time) map[string]OptionsContext {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return options
 	}
 	out := make(map[string]OptionsContext, len(options))
@@ -369,7 +369,7 @@ func hostedRightsFilteredOptions(options map[string]OptionsContext, now time.Tim
 }
 
 func hostedRightsBlockedProviders(router ProviderRouterSnapshot) []string {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return nil
 	}
 	seen := map[string]bool{}
@@ -388,14 +388,14 @@ func hostedRightsBlockedProviders(router ProviderRouterSnapshot) []string {
 	return out
 }
 
-// enforceHostedRuntimeRightsSnapshot is the final shared-data serving guard.
-// It extends the existing RuntimeSnapshot owner rather than introducing a new
-// serving model. Provider-attributed quotes/options/SEC data are admitted only
-// while their current rights evidence remains valid. Legacy mixed datasets that
-// do not carry provider identity per record fail closed in hosted mode until the
-// canonical provenance work can bind them (HOST-022); desktop remains unchanged.
+// enforceHostedRuntimeRightsSnapshot is the final shared-data public-serving
+// guard. Development and pre-public hosted runtimes remain audit-only and return
+// the canonical snapshot unchanged. Once PUBLIC_PRODUCTION is explicitly
+// activated, provider-attributed data are admitted only while current rights
+// evidence remains valid; legacy source-unbound collections fail closed until
+// canonical provenance work can bind them (HOST-022).
 func enforceHostedRuntimeRightsSnapshot(snap RuntimeSnapshot) RuntimeSnapshot {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return snap
 	}
 	now := time.Now()
@@ -473,13 +473,13 @@ func enforceHostedRuntimeRightsSnapshot(snap RuntimeSnapshot) RuntimeSnapshot {
 	blocked := hostedRightsBlockedProviders(out.ProviderRouter)
 	removedQuotes := len(out.Quotes) < len(snap.Quotes)
 	if len(blocked) > 0 || removedQuotes {
-		out.Health["provider-rights"] = "BLOCKED · hosted serving denied for unapproved/expired provider data"
+		out.Health["provider-rights"] = "BLOCKED · public production serving denied for unapproved/expired provider data"
 		if out.Status == "running" {
 			out.Status = "degraded"
 		}
-		out.Message = "Hosted provider rights are blocking unapproved market-data serving."
+		out.Message = "Public-production provider rights are blocking unapproved market-data serving."
 	} else {
-		out.Health["provider-rights"] = "READY · hosted provider-rights serving guard active"
+		out.Health["provider-rights"] = "READY · public-production provider-rights serving guard active"
 	}
 	return out
 }
@@ -493,7 +493,7 @@ func boolSliceToMap(values []string) map[string]bool {
 }
 
 func hostedQuoteServingAllowedForSymbol(a *Application, symbol string) bool {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return true
 	}
 	if a == nil || a.engine == nil {
@@ -507,28 +507,28 @@ func hostedQuoteServingAllowedForSymbol(a *Application, symbol string) bool {
 }
 
 func hostedNewsItemsForServing(items []NewsItem) []NewsItem {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return items
 	}
 	return nil
 }
 
 func hostedEarningsItemsForServing(items []EarningsItem) []EarningsItem {
-	if !isHostedRuntime() {
+	if !providerRightsEnforcementActive() {
 		return items
 	}
 	return nil
 }
 
 func hostedFilingItemsForServing(items []FilingItem) []FilingItem {
-	if !isHostedRuntime() || hostedSECServingAllowed(time.Now()) {
+	if !providerRightsEnforcementActive() || hostedSECServingAllowed(time.Now()) {
 		return items
 	}
 	return nil
 }
 
 func hostedSECIntelligenceForServing(items map[string]SECIntelligenceSummary) map[string]SECIntelligenceSummary {
-	if !isHostedRuntime() || hostedSECDerivedServingAllowed(time.Now()) {
+	if !providerRightsEnforcementActive() || hostedSECDerivedServingAllowed(time.Now()) {
 		return items
 	}
 	return nil
