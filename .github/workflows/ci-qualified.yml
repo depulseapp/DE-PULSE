@@ -30,6 +30,23 @@ on:
           - renderer
           - browser
           - ci-harness
+      host012_recovery_confirmation:
+        description: Type HOST012_MANAGED_PITR_OPERATOR_DRILL to run the destructive non-production Neon recovery drill
+        required: false
+        type: string
+      host012_neon_project_id:
+        description: Existing non-production Neon project ID for the HOST-012 drill
+        required: false
+        type: string
+      host012_neon_source_branch_id:
+        description: Existing non-production Neon source branch ID for the HOST-012 drill
+        required: false
+        type: string
+      host012_cleanup_restored_branch:
+        description: Delete the restored Neon branch after successful validation; failures always retain it for inspection
+        required: false
+        default: true
+        type: boolean
   workflow_call:
     inputs:
       candidate_sha:
@@ -52,8 +69,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}
-  cancel-in-progress: true
+  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}-${{ inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && github.run_id || 'replaceable' }}
+  cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}
 
 env:
   GO_VERSION: '1.26.6'
@@ -450,6 +467,59 @@ jobs:
           path: ${{ runner.temp }}/depulse-qualified-native-windows/G13-G14-Windows-x64.json
           if-no-files-found: error
           retention-days: 14
+
+  host012-neon-recovery:
+    name: HOST-012 managed Neon PITR operator drill
+    needs: [context, ci-harness]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Execute real managed Neon PITR anti-resurrection drill
+        shell: bash
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          HOST012_PROJECT_ID: ${{ inputs.host012_neon_project_id }}
+          HOST012_SOURCE_BRANCH_ID: ${{ inputs.host012_neon_source_branch_id }}
+          HOST012_CLEANUP: ${{ inputs.host012_cleanup_restored_branch }}
+        run: |
+          set -euo pipefail
+          test -n "${NEON_API_KEY:-}" || { echo 'ERROR: repository secret NEON_API_KEY is required' >&2; exit 2; }
+          test -n "${HOST012_PROJECT_ID:-}" || { echo 'ERROR: host012_neon_project_id is required' >&2; exit 2; }
+          test -n "${HOST012_SOURCE_BRANCH_ID:-}" || { echo 'ERROR: host012_neon_source_branch_id is required' >&2; exit 2; }
+          args=(
+            python3 tools/ci/host012_neon_recovery_operator.py
+            --project-id "$HOST012_PROJECT_ID"
+            --source-branch-id "$HOST012_SOURCE_BRANCH_ID"
+            --environment-class stage
+            --output-dir .depulse-host012-neon
+            --confirm-source-mutation
+            --confirm-pitr-restore
+          )
+          if [ "${HOST012_CLEANUP:-true}" = true ]; then
+            args+=(--delete-restored-branch-after-validation)
+          fi
+          "${args[@]}"
+      - name: Retain secret-free HOST-012 managed recovery evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host012-neon/**
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
 
   evidence:
     name: Qualified evidence summary
