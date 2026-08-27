@@ -1,0 +1,53 @@
+{
+  "schema": "DE.PULSE-PRODUCTION-READINESS-TIERS-1",
+  "authority": "governance/PRODUCTION-READINESS-TIERS.md",
+  "precedence": "SUPERSEDES_CONFLICTING_LEGACY_READINESS_WORDING",
+  "tiers": {
+    "DEVELOPMENT_PRODUCTION_READY": {
+      "definition": "technically robust, secure, persistent, cross-platform, tested, full provider/data capability",
+      "requires": [
+        "technical_production_reachability",
+        "security_and_tenant_isolation",
+        "persistent_lifecycle_and_recovery",
+        "required_cross_platform_parity",
+        "positive_and_adverse_executable_testing",
+        "full_configured_operational_provider_data_capability",
+        "provider_rights_control_plane_and_public_fail_closed_mechanism",
+        "applicable_privacy_infrastructure_database_secrets_supply_chain_data_truth_controls",
+        "exact_head_ci_and_applicable_qualification"
+      ],
+      "doesNotRequire": [
+        "final_provider_specific_commercial_public_licensing_approval",
+        "public_user_legal_compliance_approval",
+        "commercial_activation_audit"
+      ]
+    },
+    "COMMERCIAL_PUBLIC_READY": {
+      "definition": "Development Production Ready plus provider licensing/rights plus public-user legal/compliance plus commercial activation audit",
+      "requiresPriorTier": "DEVELOPMENT_PRODUCTION_READY",
+      "additionalRequires": [
+        "provider_specific_licensing_and_rights_for_intended_public_commercial_use",
+        "public_user_legal_and_compliance_approval",
+        "commercial_activation_audit"
+      ]
+    }
+  },
+  "rules": {
+    "commercialImpliesDevelopment": true,
+    "developmentAuthorizesPublicCommercialActivation": false,
+    "developmentPreservesFullProviderDataCapability": true,
+    "workingCredentialsImplyRights": false,
+    "commercialOnlyMissingArtifactsBlockDevelopment": false,
+    "technicalPrivacySecurityRightsControlsRemainDevelopment": true,
+    "zeroMissAppliesWithinEachTier": true,
+    "externalBlockersMustNameBlockedTier": true,
+    "publicProductionFailClosed": true
+  },
+  "currentTarget": {
+    "version": "19.0.0",
+    "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+    "targetTier": "DEVELOPMENT_PRODUCTION_READY",
+    "publicProductionAuthorized": false,
+    "providerRightsActivationGate": "PUBLIC_USER_PROVIDER_RIGHTS_ACTIVATION"
+  }
+}
