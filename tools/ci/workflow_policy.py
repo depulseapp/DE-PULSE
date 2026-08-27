@@ -85,6 +85,8 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "python3 tools/ci/post_stable_continuity_gate.py",
             "python3 tools/ci/stable_evidence_gate.py",
             "tools/ci/branch_hygiene.py --apply",
+            "name: PostgreSQL tagged compile",
+            "go test -tags postgres -run '^$' ./...",
             "node tests/renderer/surface_consolidation_test.js",
             "node tests/renderer/documentation_access_test.js",
             "DE.PULSE/fast-head",
@@ -224,6 +226,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return fail("branch hygiene squash/stable-line contract missing", missing)
 
     print("CI Fast single-event exact-head development contract: PASS")
+    print("CI Fast PostgreSQL tagged compile/no-live-evidence boundary: PASS")
     print("CI Qualified Planner v3 deterministic job selection: PASS")
     print("Qualified trustworthy merge-base/manual target binding: PASS")
     print("Chrome + WebKit browser evidence ownership: PASS")
