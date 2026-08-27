@@ -15,6 +15,10 @@ import (
 
 func clearProviderRightsBundleForTest(t *testing.T) {
 	t.Helper()
+	// Existing fail-closed regressions exercise the future public-production
+	// boundary explicitly. Development-mode regressions override this back to
+	// audit-only after clearing the bundle.
+	t.Setenv(providerRightsEnforcementModeEnv, providerRightsEnforcementPublicMode)
 	t.Setenv(providerRightsBundlePathEnv, "")
 	t.Setenv(providerRightsBundleSHA256Env, "")
 }
@@ -55,6 +59,7 @@ func bindHostedRightsBundleForTest(t *testing.T, records ...ProviderDataRightsMe
 	t.Helper()
 	t.Setenv(runtimeModeEnv, "hosted")
 	t.Setenv(hostedEnvironmentEnv, "prod")
+	t.Setenv(providerRightsEnforcementModeEnv, providerRightsEnforcementPublicMode)
 	bundle := ProviderDataRightsBundle{PolicyVersion: providerRightsBundlePolicyVersion, Records: records}
 	raw, err := json.Marshal(bundle)
 	if err != nil {
@@ -68,6 +73,108 @@ func bindHostedRightsBundleForTest(t *testing.T, records ...ProviderDataRightsMe
 	t.Setenv(providerRightsBundlePathEnv, path)
 	t.Setenv(providerRightsBundleSHA256Env, "sha256:"+hex.EncodeToString(sum[:]))
 	return path
+}
+
+func TestHOST003PublicProviderRightsEnforcementRequiresExplicitActivation(t *testing.T) {
+	t.Setenv(runtimeModeEnv, "hosted")
+	t.Setenv(hostedEnvironmentEnv, "prod")
+	t.Setenv(providerRightsEnforcementModeEnv, "")
+	if providerRightsEnforcementActive() {
+		t.Fatal("hosted development activated provider-rights enforcement without explicit public-production mode")
+	}
+	t.Setenv(providerRightsEnforcementModeEnv, providerRightsEnforcementPublicMode)
+	if !providerRightsEnforcementActive() {
+		t.Fatal("explicit PUBLIC_PRODUCTION mode did not activate provider-rights enforcement")
+	}
+	t.Setenv(runtimeModeEnv, "desktop")
+	if providerRightsEnforcementActive() {
+		t.Fatal("desktop runtime activated public provider-rights enforcement")
+	}
+}
+
+func TestHOST003HostedDevelopmentAuditsRightsWithoutBlockingRouter(t *testing.T) {
+	e := newV1801Engine(t)
+	e.app.mu.Lock()
+	e.app.secrets.Finnhub = "working-test-key"
+	e.app.mu.Unlock()
+	t.Setenv(runtimeModeEnv, "hosted")
+	t.Setenv(hostedEnvironmentEnv, "prod")
+	clearProviderRightsBundleForTest(t)
+	t.Setenv(providerRightsEnforcementModeEnv, "")
+
+	now := time.Date(2026, 8, 26, 12, 0, 0, 0, time.UTC)
+	strict := evaluateProviderHostedRightsDecision(providerDataRightsMetadata("Finnhub"), providerHostedUseProductionServing, "prod", now)
+	if strict.Allowed || strict.State != providerHostedRightsBlocked {
+		t.Fatalf("strict rights evaluation stopped reporting the unresolved production blocker: %+v", strict)
+	}
+	runtimeDecision := hostedProviderRightsDecision("Finnhub", providerHostedUseProductionServing, now)
+	if !runtimeDecision.Allowed || runtimeDecision.State != providerHostedRightsAuditOnly || len(runtimeDecision.BlockingReasons) == 0 {
+		t.Fatalf("hosted development did not preserve audit truth while allowing provider capacity: %+v", runtimeDecision)
+	}
+
+	called := 0
+	attempts := map[string]providerRouteAttempt{
+		"Finnhub": func(context.Context) bool { called++; return true },
+	}
+	if provider, ok := e.executeProviderRoute(context.Background(), "News", attempts); !ok || provider != "Finnhub" || called != 1 {
+		t.Fatalf("hosted development rights audit suppressed configured router capacity: provider=%q ok=%v called=%d", provider, ok, called)
+	}
+}
+
+func TestHOST003HostedDevelopmentDoesNotSuppressCachePersistenceStreamsOrServing(t *testing.T) {
+	e := newV1801Engine(t)
+	t.Setenv(runtimeModeEnv, "hosted")
+	t.Setenv(hostedEnvironmentEnv, "prod")
+	clearProviderRightsBundleForTest(t)
+	t.Setenv(providerRightsEnforcementModeEnv, "")
+
+	cache := MarketCache{
+		Quotes: map[string]Quote{
+			"SPY": {Symbol: "SPY", Price: 600, Source: "finnhub-rest", UpdatedAt: time.Now().UnixMilli()},
+			"QQQ": {Symbol: "QQQ", Price: 500, Source: "alpaca-iex", UpdatedAt: time.Now().UnixMilli()},
+		},
+		History: map[string][]HistoryPoint{"SPY": {{T: time.Now().UnixMilli(), P: 600}}},
+		News:    []NewsItem{{ID: "dev-news", Headline: "development provider capacity"}},
+		SavedAt: time.Now().UnixMilli(),
+	}
+	raw, err := json.Marshal(cache)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var replay MarketCache
+	if err := json.Unmarshal(raw, &replay); err != nil {
+		t.Fatal(err)
+	}
+	if len(replay.Quotes) != 2 || len(replay.History) != 1 || len(replay.News) != 1 {
+		t.Fatalf("hosted development cache was rights-filtered: quotes=%d history=%d news=%d", len(replay.Quotes), len(replay.History), len(replay.News))
+	}
+
+	inner := &providerRightsMemoryBackend{}
+	backend := wrapHostedRightsPersistenceBackend(inner)
+	if n, err := backend.SaveQuotes(context.Background(), cache.Quotes); err != nil || n != 2 || len(inner.quotes) != 2 {
+		t.Fatalf("hosted development persistence lost provider quotes: n=%d err=%v quotes=%+v", n, err, inner.quotes)
+	}
+	batch := PersistenceIntelligenceBatch{Evidence: []EvidenceRecord{{ID: "external-dev", Kind: "provider", Source: "Finnhub", ObservedAt: time.Now().UnixMilli()}}}
+	if n, err := backend.SaveIntelligence(context.Background(), batch); err != nil || n != 1 || len(inner.intelligence.Evidence) != 1 {
+		t.Fatalf("hosted development persistence lost provider evidence: n=%d err=%v evidence=%+v", n, err, inner.intelligence.Evidence)
+	}
+
+	if len(e.effectiveFinnhubSymbols()) == 0 || len(e.effectiveAlpacaIEXSymbols()) == 0 {
+		t.Fatal("hosted development rights audit collapsed live provider subscription capacity")
+	}
+
+	snap := RuntimeSnapshot{
+		Status:   "running",
+		Quotes:   cache.Quotes,
+		History:  cache.History,
+		News:     cache.News,
+		Earnings: []EarningsItem{{Symbol: "SPY", Date: "2026-08-26"}},
+		Health:   map[string]string{"existing": "healthy"},
+	}
+	served := enforceHostedRuntimeRightsSnapshot(snap)
+	if len(served.Quotes) != 2 || len(served.History) != 1 || len(served.News) != 1 || len(served.Earnings) != 1 || served.Status != "running" {
+		t.Fatalf("hosted development serving was rights-filtered: status=%s quotes=%d history=%d news=%d earnings=%d", served.Status, len(served.Quotes), len(served.History), len(served.News), len(served.Earnings))
+	}
 }
 
 func TestV184ProviderDataRightsDefaultFailsClosed(t *testing.T) {
