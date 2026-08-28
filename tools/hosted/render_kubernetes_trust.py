@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Render DE.PULSE HOST-013/014 Kubernetes + Istio trust resources.
 
-The canonical policy authority is internal/hostedenv/desired_state_v1.json.
+The canonical environment policy authority is internal/hostedenv/desired_state_v1.json.
+The canonical external egress authority is governance/hosted-infrastructure/external-egress-v1.json.
 This renderer is intentionally fail-closed and contains no cloud credentials.
 """
 from __future__ import annotations
@@ -12,10 +13,10 @@ import ipaddress
 import json
 import re
 from pathlib import Path
-from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 DESIRED_STATE = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
+EGRESS_INVENTORY = ROOT / "governance" / "hosted-infrastructure" / "external-egress-v1.json"
 CANONICAL_ENVIRONMENTS = ("dev", "test", "stage", "prod")
 HOST_RE = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$", re.I)
 
@@ -37,31 +38,59 @@ def canonical_digest(manifest: dict, environment: str) -> str:
         "environment": environment,
         "state": manifest["environments"][environment],
     }
-    # Match Go encoding/json for this structure: compact JSON, insertion order, no ASCII escaping changes needed here.
     encoded = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
 
+def validate_host(host: str) -> str:
+    host = host.strip().lower().rstrip(".")
+    if any(token in host for token in ("*", "/", ":")):
+        raise SystemExit(f"invalid egress host {host!r}: wildcards, URLs and ports are forbidden")
+    try:
+        ipaddress.ip_address(host)
+    except ValueError:
+        pass
+    else:
+        raise SystemExit(f"invalid egress host {host!r}: IP literals are forbidden")
+    if not HOST_RE.fullmatch(host):
+        raise SystemExit(f"invalid egress host {host!r}: expected concrete DNS hostname")
+    return host
+
+
 def parse_hosts(path: Path) -> list[str]:
+    """Legacy/test seam for explicit text-host fixtures; production uses canonical JSON."""
     hosts: list[str] = []
     seen: set[str] = set()
     for raw in path.read_text(encoding="utf-8").splitlines():
         host = raw.strip().lower()
         if not host or host.startswith("#"):
             continue
-        if any(token in host for token in ("*", "/", ":")):
-            raise SystemExit(f"invalid egress host {host!r}: wildcards, URLs and ports are forbidden")
-        try:
-            ipaddress.ip_address(host)
-        except ValueError:
-            pass
-        else:
-            raise SystemExit(f"invalid egress host {host!r}: IP literals are forbidden")
-        if not HOST_RE.fullmatch(host):
-            raise SystemExit(f"invalid egress host {host!r}: expected concrete DNS hostname")
+        host = validate_host(host)
         if host not in seen:
             seen.add(host)
             hosts.append(host)
+    if not hosts:
+        raise SystemExit("canonical external-host inventory is empty; refusing broad egress")
+    return sorted(hosts)
+
+
+def canonical_egress_hosts(path: Path = EGRESS_INVENTORY) -> list[str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("schema") != "DE.PULSE-HOSTED-EXTERNAL-EGRESS-1" or payload.get("version") != "v1":
+        raise SystemExit("unsupported hosted external-egress inventory")
+    if str(payload.get("defaultPolicy", "")).upper() != "DENY":
+        raise SystemExit("external egress inventory must default DENY")
+    allowed_protocols = payload.get("allowedProtocols")
+    if allowed_protocols != ["https", "wss"]:
+        raise SystemExit("external egress allowedProtocols must remain exactly https,wss")
+    hosts: set[str] = set()
+    for row in payload.get("rules", []):
+        if not isinstance(row, dict) or row.get("runtimeAllowed") is not True:
+            continue
+        protocols = [str(value).lower() for value in row.get("protocols", [])]
+        if not protocols or any(protocol not in allowed_protocols for protocol in protocols):
+            raise SystemExit("runtime-authorized egress entry uses a forbidden protocol")
+        hosts.add(validate_host(str(row.get("host", ""))))
     if not hosts:
         raise SystemExit("canonical external-host inventory is empty; refusing broad egress")
     return sorted(hosts)
@@ -75,6 +104,9 @@ def render(environment: str, hosts: list[str]) -> str:
     manifest = load_manifest()
     if environment not in CANONICAL_ENVIRONMENTS:
         raise SystemExit(f"unsupported environment {environment!r}")
+    hosts = sorted({validate_host(host) for host in hosts})
+    if not hosts:
+        raise SystemExit("canonical external-host inventory is empty; refusing broad egress")
     state = manifest["environments"][environment]
     required = {
         "ingressPolicy": "managed-edge:https:443->mesh-mtls:8080",
@@ -250,10 +282,12 @@ spec:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--environment", required=True, choices=CANONICAL_ENVIRONMENTS)
-    parser.add_argument("--egress-hosts-file", required=True, type=Path)
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--egress-hosts-file", type=Path, help="test/compatibility seam for explicit DNS-host fixtures")
+    source.add_argument("--egress-inventory", type=Path, default=EGRESS_INVENTORY, help="canonical JSON egress inventory")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    hosts = parse_hosts(args.egress_hosts_file)
+    hosts = parse_hosts(args.egress_hosts_file) if args.egress_hosts_file else canonical_egress_hosts(args.egress_inventory)
     rendered = render(args.environment, hosts)
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
