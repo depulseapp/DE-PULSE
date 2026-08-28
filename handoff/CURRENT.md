@@ -16,173 +16,152 @@
 - Current readiness target: **DEVELOPMENT_PRODUCTION_READY**.
 - Work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`.
 - Parent/closure issue: #148.
-- Auth/session evidence issue: #164; v19.0 core is verified, issue remains open only for its roadmap-assigned v19.3 UX/client-parity residual unless a new core defect is discovered.
-- Parent hosted program: #66 / `ADAPT-HOSTED-SYNC-001`.
 - Draft PR: #149.
 - Branch: `adapt-hosted-trust-foundation-001`.
 - Baseline `main`: `7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c`.
+- Auth/session issue #164 remains open only for roadmap-assigned v19.3 client/UX parity unless a new core security defect appears.
+- Parent hosted program: #66 / `ADAPT-HOSTED-SYNC-001`.
 - Permanent readiness authority: `governance/PRODUCTION-READINESS-TIERS.md` + `governance/production-readiness-tiers.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
-- Canonical work-slice state: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`.
-- GitHub objects and executable evidence outrank this file and all chat memory. Always fetch live `main`, active branch, PR #149, issue #148/comments and Actions before writing.
+- GitHub objects and executable evidence outrank this file and chat memory. Always fetch live branch/PR/issue/Actions before writing.
 
-## Permanent production-readiness tiers
+## Permanent readiness and zero-miss rules
 
-These definitions are authoritative and supersede conflicting older wording:
+Development Production Ready means technically robust, secure, persistent, cross-platform, tested and full provider/data-capable. Commercial/Public Ready additionally requires provider licensing/rights, public-user legal/compliance and the commercial activation audit.
 
-> **Development Production Ready = technically robust, secure, persistent, cross-platform, tested, full provider/data capability.**
->
-> **Commercial/Public Ready = Development Production Ready + provider licensing/rights + public-user legal/compliance + commercial activation audit.**
-
-Consequences:
-
-- v19.0.0 is currently being closed against **Development Production Ready**, not Commercial/Public Ready.
-- Development keeps full configured/operational provider and data capability needed for technical validation.
-- Technical provider-rights metadata/provenance/evaluator/audit/public fail-closed machinery remains a Development obligation.
-- Actual provider-specific licence/contract/formal public/commercial reuse approval is a **Commercial/Public activation-only gate**, not a Development technical blocker.
-- Public-user legal/compliance approval and the commercial activation audit are Commercial/Public-only gates.
-- Technical privacy/security/deletion/retention/tenant isolation/MFA/session/device/infrastructure/database/secrets/data-truth obligations remain Development blockers where applicable.
-- `Commercial/Public Ready => Development Production Ready`; the reverse is never implied.
-- `publicProductionAuthorized` remains false until Development Production Ready plus all Commercial/Public activation gates pass and explicit activation is recorded.
-- Missing Commercial/Public-only paperwork must be tracked separately; it must not make an otherwise satisfied Development technical row OPEN/BLOCKED_EXTERNAL/NOT_APPLICABLE for the wrong reason.
-
-## Permanent zero-miss lifecycle
+Lifecycle is:
 
 `PLANNED -> IMPLEMENTED -> PRODUCTION_INTEGRATED -> VERIFIED -> RELEASE_QUALIFIED`
 
-OPEN/PARTIAL/IMPLEMENTED_UNVERIFIED/CONTRACT_ONLY/FRAMEWORK_ONLY are incomplete states only. They never authorize dependency-band advancement, merge, release, Development Production Ready, Commercial/Public Ready, 10/10, or handoff-as-done claims.
-
 Before VERIFIED, prove the applicable chain:
 
-`requirement -> canonical owner -> production integration -> consumer reachability -> positive behavior -> adverse/fail-closed behavior -> persistence/restart/lifecycle -> security/rights/privacy -> observability -> executable regression -> real external/infrastructure evidence where required -> exact-head CI -> closure ledger`
+`requirement -> canonical owner -> production integration -> consumer reachability -> positive/adverse behavior -> persistence/restart/lifecycle -> security/rights/privacy -> observability -> executable regression -> real external/infrastructure evidence where required -> exact-head CI -> closure ledger`
 
-Zero-miss rigor applies independently inside the readiness tier being claimed. A newly discovered implementation miss automatically reopens the requirement and dependent completion claims.
+OPEN/PARTIAL/IMPLEMENTED_UNVERIFIED/CONTRACT_ONLY/FRAMEWORK_ONLY remain incomplete and never authorize merge/release/readiness claims.
 
-## Provider-rights development/public-production rule
+## Current v19.0 dependency-band truth
 
-- Development and pre-public hosted validation use all configured/operationally eligible providers at full available capacity. Unfinished provider licensing must not suppress Smart Router routes, live subscriptions, cache, persistence or serving during development.
-- Strict provider-rights evaluation remains active as audit/governance truth. Missing/unreviewed/expired/downgraded rights remain visible and never become fictional approval.
-- Hard fail-closed rights enforcement activates only when the hosted runtime explicitly sets `DEPULSE_PROVIDER_RIGHTS_ENFORCEMENT_MODE=PUBLIC_PRODUCTION` after Commercial/Public activation gates are satisfied and explicit public activation is authorized.
-- Actual provider-specific licence/contract/formal reuse approval remains mandatory before public/commercial use. Development disposition is not a waiver and never grants legal rights from credentials, successful calls or public terms.
-- `isHostedRuntime()` remains independent because identity/session/persistence/infrastructure development still needs hosted behavior before public-user activation.
+### HOST-001..003 — provider-rights control plane
 
-## Current v19 re-audit truth
+**VERIFIED FOR DEVELOPMENT.** Technical provenance/audit/public fail-closed machinery is implemented. Actual provider-specific public/commercial approvals remain separate Commercial/Public activation gates and do not grant legal rights today.
 
-Dependency-band executable checkpoints:
+### HOST-004..007 — tenant/account/device/session/MFA
 
-- `de110ecfcbc6e385203eec90c631628871fd6e83` — HOST-007/applicable #164 core implementation; exact-head Fast #1254 / run `33049452646` PASS.
-- `c964d303a4d2379972026844b3444fbef0ed9382` — HOST-004..007 canonical closure-ledger transition; exact-head Fast #1255 / run `33049748420` PASS.
-- `5127b1599c052bb3c709b46bd7900cc46629d0ee` — HOST-010..012 application privacy lifecycle implementation/evidence; exact-head Fast #1257 / run `33051229439` FULL PASS, including canonical workflow/root/source/migration/closure gates, T1-T10, gofmt, go vet and `go test ./...`.
+**VERIFIED FOR v19.0 DEVELOPMENT.** Tenant isolation, capability-scoped RBAC, device/session lifecycle and the production-wired Ed25519 MFA-class challenge/signature ceremony are executable. #164 remains open only for later v19.3 client/UX parity.
 
-These are dependency-band checkpoints, not final v19.0 qualification.
+### HOST-008..009 — product entitlement/quota
 
-- `HOST-001..003` provider-rights development/pre-public control plane: **VERIFIED FOR DEVELOPMENT**. Actual provider-specific public/commercial approvals remain a separate Commercial/Public activation gate and grant no rights today.
-- `HOST-004..007` tenant/account/device/session/reauth band: **VERIFIED FOR v19.0 DEVELOPMENT**.
-  - **HOST-004 VERIFIED:** tenant/account isolation is canonical; privileged admin visibility/mutations are actor-tenant scoped; user creation binds actor tenant; cross-tenant role/status/password/session mutations are denied; critical-owner invariant is per tenant.
-  - **HOST-005 VERIFIED:** canonical SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability truth is preserved. ADMIN is capability-scoped, `roleHasHostedCapability` feeds `authorizeHostedIdentity`, and the production `/api/auth/device/*` path consumes that authorization. Positive/negative role-capability regressions are executable.
-  - **HOST-006 VERIFIED:** durable STALE device retirement, LOST/REVOKED handling, bound-session revocation, cross-tenant denial and persistent privileged/tenant-scoped security audit are implemented/regression-protected.
-  - **HOST-007 VERIFIED for the v19.0 core:** canonical identity/session owners implement a production-wired Ed25519 public-key MFA ceremony with durable credentials, session-bound one-time challenges, domain-separated signing payload, persisted challenge hash, signature verification, replay/cross-session/expiry rejection, credential revocation and restart persistence. Applicable #164 login/bootstrap/session discovery/renewal failure cleanup/rotation/reauth/logout/device and session revocation/role-downgrade/product-entitlement propagation evidence is executable.
-  - **#164 remains OPEN only for later v19.3 UX/client parity:** safe app-context restoration and platform-specific Mac/Windows/Web login/reauth/deep-link presentation. That residual does not reopen HOST-007 unless it discovers a core security defect.
-- `HOST-008..009` product entitlement/quota: **VERIFIED**.
-- `HOST-010..012` privacy lifecycle: **EARLIEST OPEN BAND / APPLICATION PORTION IMPLEMENTED + EXACT-HEAD FAST VERIFIED**.
-  - Existing canonical account/workspace/persistence owners still provide secret-free export, destructive delete, sanitized tombstones and archive anti-resurrection.
-  - `5127b1599c052bb3c709b46bd7900cc46629d0ee` adds reversible self-deactivation through canonical `UserDisabled`, revokes active sessions, preserves account/workspace data for governed reactivation, fails closed for the last critical owner, and survives identity-service restart.
-  - Successful self-service export/deactivation/deletion now write minimal durable `PRIVACY_EXPORT_REQUESTED`, `ACCOUNT_DEACTIVATED`, and `ACCOUNT_DELETED` records into the existing bounded tenant-scoped identity-security event owner; no parallel privacy-audit subsystem was introduced.
-  - Positive/adverse/restart/privacy regressions and the updated versioned privacy inventory are included in Fast #1257 / run `33051229439` PASS.
-  - **Remaining Development blocker:** real managed-hosted backup/PITR/operator recovery deletion-retention evidence remains dependent on HOST-016. Application archive anti-resurrection, PostgreSQL policy declarations, ordinary Fast and the current source-level Qualified DB lane do not prove managed PostgreSQL failover/PITR/restore behavior.
-- `HOST-013..014` environment/service trust: **OPEN / CONTRACT IMPLEMENTED, REAL INFRASTRUCTURE NOT PROVEN**.
-- `HOST-015..016` PostgreSQL tenancy/recovery: **OPEN / PARTIALLY IMPLEMENTED**; tenant-owned DB isolation and executable live migration/adverse/HA/failover/backup/PITR/restore/RPO-RTO evidence remain technical gaps.
-- `HOST-017..020`: **OPEN** for managed secrets/KMS and supply-chain/deploy provenance technical evidence.
-- `HOST-021..022`: **OPEN** for measured provider/Data Health scorecards and canonical point-in-time/revision/no-lookahead truth; these are technical/full-data-capability gaps, not provider-licensing paperwork.
-- `HOST-023`: **OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure.
-- Final identical-head Fast + impact-selected Qualified: **OPEN**.
+**VERIFIED.** Product plan/status/capability/quota truth is independently composed with RBAC/provider rights and fails closed before protected projection.
 
-No Commercial/Public-only approval may masquerade as a technical v19.0.0 blocker. Conversely, no readiness-tier separation may waive the genuine technical gaps above.
+### HOST-010..012 — privacy lifecycle and managed recovery
 
-Do not begin v19.1.0 / Hosted Provider Gateway while #148 remains technically incomplete.
+**VERIFIED FOR v19.0 DEVELOPMENT.** This supersedes the stale earlier handoff wording that kept the band open.
 
-## Approved future provider-registry / Market Data rebaseline
+Application checkpoint:
+- `5127b1599c052bb3c709b46bd7900cc46629d0ee`
+- Fast #1257 / run `33051229439` PASS.
+- Secret-free export, reversible self-deactivation, session revocation, governed reactivation, destructive deletion, sanitized tombstones, durable privacy audit events, restart persistence and application archive anti-resurrection are executable.
 
-A new provider-onboarding architecture decision is now **durable approved future scope**. It does not change the current v19.0 next action and must not be implemented early.
+Managed recovery closure checkpoint:
+- recovery repair head `f357a1852640bf88aae69936d6593b63d9fd155d`
+- Fast #1303 / run `33138630810` PASS.
+- ordinary Qualified #231 / run `33139659529` PASS on the same head; manual HOST-012 operator job skipped there by design.
+- manual Qualified #232 / run `33154312937` PASS on exact head `f357a1852640bf88aae69936d6593b63d9fd155d`.
+- retained artifact `9678997463`, digest `sha256:15cddb9d278a9c469659c864cdb216d8d04cf348cbf2c3c00855bd29071e85f0`.
+- Real Neon PITR restored a point before deletion, canonical `enforceArchiveAccountDeletionPrivacy` replayed deletion truth, restart verification passed, deleted users/workspace/device/session state did not resurrect, tombstone remained, recovery was isolated, and measured RPO/RTO were within declared targets.
 
-Read these files before v19.1 G1/#153 provider work:
-1. `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`
-2. `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`
-3. `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`
-4. `handoff/PROVIDER-REGISTRY-REBASELINE.md`
-5. issue #153 current body/comments.
+This evidence closes HOST-010..012. It is also relevant evidence for HOST-016, but **does not close HOST-015..016 as a whole** because tenant-owned/scoped PostgreSQL isolation, live migration/adverse testing and broader HA/failover/recovery obligations remain open.
 
-Approved target:
+### HOST-013..014 — environment/service trust
 
-`Provider Adapter -> Adaptive Provider Registry -> capability/entitlement probes -> rights/authority + Data Health -> Smart Provider Router v2 -> canonical state -> all useful consumers`
+**IMPLEMENTED_UNVERIFIED — CURRENT ACTIVE BAND.**
 
-Permanent rules:
-- provider-specific implementation stops at one standards-compliant adapter;
-- adapters self-register with the Registry;
-- consumers request capabilities rather than provider names;
-- technical capability/configuration/entitlement/freshness/history/quota/health discovery is generic where observable;
-- Smart Provider Router v2 remains sole general routing/admission authority;
-- runtime technical eligibility, fallback, demotion, cooldown, recovery and plan/subscription reprobe may be automatic;
-- lifecycle/authority promotion (`SHADOW -> VALIDATED -> APPROVED -> PRODUCTION`) remains explicitly governed and never automatic;
-- direct authorities and provider public/commercial rights cannot be replaced/inferred automatically;
-- every provider capability must cross-integrate through canonical state to every useful applicable consumer, including Research, Discovery/Radar, Desks, Prep, Market Intelligence/Regime contribution, alerts, history/options, Data Health/Maintenance and future Outcome Learning;
-- Settings provider cards/API-key UX should become metadata-driven and reuse canonical secrets/test/clear/redaction owners.
+Canonical application policy remains `internal/hostedenv/desired_state_v1.json` and `internal/hostedenv/contract.go`; no second runtime authority was created.
 
-Market Data (`marketdata.app`) is the first concrete adopter under v19.1/#153:
-- `MARKETDATA_TOKEN` environment fallback;
-- Bearer auth;
-- canonical Data Providers Settings token UX using the TradeInsight-derived preserve/replace/clear/test/redaction pattern;
-- current HTTP 200/203 success semantics;
-- current trial/delayed capability represented truthfully;
-- effective entitlement reprobe so a future paid/live subscription can expand technical eligibility without a DE.PULSE source release solely because the provider plan changed;
-- SHADOW-first initial lifecycle;
-- no automatic lifecycle/authority promotion;
-- Router scoring/eligibility remains capability/authority/freshness/health/latency/headroom/cost/utility/rights aware.
+Repository implementation now includes:
+- portable Kubernetes/Istio trust projection under `governance/hosted-infrastructure/`;
+- canonical renderer `tools/hosted/render_kubernetes_trust.py`;
+- fail-closed contract gate `tools/ci/hosted_infrastructure_contract_gate.py` bound into the existing G2/source-health path;
+- namespace/environment isolation, dedicated service accounts, default-deny networking, explicit managed ingress, governed egress host registration, Istio STRICT mTLS, authorization policy and `REGISTRY_ONLY` outbound mesh behavior;
+- desired-state SHA-256 binding and broad-egress rejection;
+- Azure selected as the real hosted substrate while keeping the workload layer cloud-portable;
+- Terraform AKS adapter under `governance/hosted-infrastructure/azure/` with private AKS, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy, Azure network policy, Key Vault CSI hook, user-assigned control-plane identity and Network Contributor prerequisite for the BYO VNet.
 
-Version placement:
-- v19.1: Registry runtime + generic adapter contract + Market Data + Router/cross-integration.
-- v19.3: role-aware Mac/Windows/Web provider Settings/Admin presentation using the same contract.
-- v19.6.1: provider reliability/coverage/economics/readiness scorecards including Market Data.
-- v20.5: bounded adaptive provider utility/cost/reliability priors; Router/lifecycle/rights authority remains intact.
+Repository evidence checkpoints:
+- `bc3875ed0ff52d3fc18a2cc3938ed1834c8a4690` — portable HOST-013/014 gate integration; Fast #1305 / run `33155263302` PASS.
+- `f306b47093d1adb2f11b1f0c62e0dbb8d3a5b268` — machine-readable hosted-trust checkpoint; Fast #1306 / run `33155375900` PASS.
+- Azure substrate commits advanced through `ea5c83d8aaed0d8ecb9edfea127178bd13eb7cff`; Fast #1310 / run `33155849814` was triggered for that exact head and must be checked live before citing it as passed.
+
+**Remaining verification requirement:** deploy a real non-production Azure AKS environment and execute adverse/drift evidence proving the declared isolation, workload identity, ingress/egress denial, TLS/mTLS behavior and reproducibility against managed infrastructure. Repository IaC/CI cannot substitute for this live evidence.
+
+Azure/GitHub authentication policy for this verification is OIDC workload identity federation only. Do not store a long-lived Azure client secret. Expected GitHub configuration values are `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and `AZURE_SUBSCRIPTION_ID`, preferably environment-scoped with protection rules.
+
+### HOST-015..016 — PostgreSQL tenancy/recovery
+
+**OPEN / PARTIALLY IMPLEMENTED.** The successful HOST-012 Neon PITR drill is real managed recovery evidence and must be reused, but this band still requires tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof.
+
+### HOST-017..020
+
+**OPEN** for managed secrets/KMS and supply-chain/deploy provenance.
+
+### HOST-021..022
+
+**OPEN** for measured provider/Data Health scorecards and canonical point-in-time/revision/no-lookahead truth.
+
+### HOST-023
+
+**OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure.
+
+Do not begin v19.1/#153 while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Remain in **HOST-010..012 — Privacy Lifecycle**. Its application-level deactivation/privacy-request audit/delete/tombstone/restart responsibilities are now committed and exact-head Fast verified at `5127b1599c052bb3c709b46bd7900cc46629d0ee` / Fast #1257. Satisfy the remaining real hosted backup/PITR/operator recovery deletion-retention evidence through the existing HOST-016 persistence/recovery owner; do not infer that evidence from application archive tests or policy declarations. Do not mark HOST-010..012 VERIFIED or begin HOST-013+ until the real-infrastructure requirement is truthfully satisfied or governance explicitly records a permitted Development-tier external blocker.
+Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Finish exact-head repository qualification for the current Azure baseline, then provision an isolated non-production AKS environment using OIDC-federated GitHub/Azure identity and run real infrastructure adverse/drift tests. Do not mark HOST-013..014 VERIFIED until live managed-environment evidence exists.
 
 ## Later dependency bands
 
-After HOST-010..012 is VERIFIED:
-
-1. HOST-013..014: reproducible IaC/service identity/network/TLS/mTLS enforcement and real drift evidence.
-2. HOST-015..016: tenant-owned/scoped PostgreSQL persistence + tagged real DB isolation/migration/adverse/recovery/failover/PITR/restore proof; this band also closes any HOST-010..012 recovery evidence explicitly dependent on real backup/PITR/operator recovery.
-3. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance.
-4. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
-5. HOST-023 + final identical-head Development Production Ready qualification.
-6. Commercial/Public activation remains a later separate gate: provider licensing/rights + public-user legal/compliance + commercial activation audit.
-7. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
+1. HOST-015..016: tenant-owned/scoped PostgreSQL + live migration/isolation/adverse/HA/failover/recovery evidence, reusing the successful Neon PITR evidence rather than duplicating it.
+2. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance.
+3. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
+4. HOST-023 + final identical-head Development Production Ready qualification.
+5. Commercial/Public activation remains a separate later gate.
+6. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
 
 ## Permanent architecture/product boundaries
 
 - U.S. Equities Processing only; GLD/SLV/USO remain actionable tradable exceptions.
 - No Execution.
 - Smart Provider Router v2 is the sole general routing/admission owner.
-- Adaptive Provider Registry is a provider-registration/capability projection only; never a second Router.
+- Adaptive Provider Registry may register/project capabilities but never becomes a second Router.
 - Direct SEC/EDGAR remains the governed filing/Form 4 authority.
 - Extend canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners; never create parallel owners.
 - No automatic provider lifecycle/authority promotion.
 - Point-in-time/no-lookahead truth precedes adaptive learning.
 - Development provider-rights mode remains audit-only; public-production enforcement requires explicit Commercial/Public activation.
-- Preserve existing product look-and-feel unless a justified truthful integration/defect correction requires change.
+- Keep v18.10.0 Stable immutable.
+
+## Approved future provider-registry / Market Data scope
+
+Future v19.1/#153 remains governed by:
+1. `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`
+2. `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`
+3. `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`
+4. `handoff/PROVIDER-REGISTRY-REBASELINE.md`
+5. issue #153.
+
+Target remains:
+
+`Provider Adapter -> Adaptive Provider Registry -> capability/entitlement probes -> rights/authority + Data Health -> Smart Provider Router v2 -> canonical state -> all useful consumers`
+
+Do not implement this early.
 
 ## Resume rule
 
 1. Read this file first.
-2. Read `governance/PRODUCTION-READINESS-TIERS.md` and its machine companion before interpreting any readiness/blocker status.
-3. Then read the strict zero-miss contract/decision, `governance/current-state.json`, `governance/ROADMAP.md`, `governance/V19_V20_REBASELINE.md`, the active work-slice `work-slice.json`, `g1-scope.json`, `closure.json`, issue #148/latest comments, issue #164, PR #149 and current Actions.
-4. The provider-registry addendum is approved future scope; read its four files above before any v19.1/#153 provider implementation. Do not use it to bypass v19.0 sequencing.
-5. Where older wording conflicts with the readiness-tier contract, the readiness-tier contract wins and the conflicting artifact must be corrected at the next meaningful governance transition.
-6. Fetch live `main` and active branch heads before making any change; another session may have advanced them.
-7. Inspect commits since the latest verified checkpoint so nothing already implemented is duplicated.
-8. Keep Stable v18.10.0 immutable.
-9. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
-10. Update durable GitHub state at meaningful dependency-band transitions so any AI/account can resume independently.
+2. Read the readiness-tier and strict zero-miss authorities.
+3. Read `governance/current-state.json`, `governance/ROADMAP.md`, `governance/V19_V20_REBASELINE.md`, active work-slice metadata and `closure.json`.
+4. Fetch live `main`, active branch, PR #149, issue #148/latest comments, issue #164 and current Actions before writing.
+5. Inspect commits since the latest verified checkpoint; do not duplicate work.
+6. Keep Stable v18.10.0 immutable.
+7. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
+8. At each meaningful dependency-band transition, update durable GitHub state so any AI/account can resume independently.
