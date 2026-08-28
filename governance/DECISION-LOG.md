@@ -336,6 +336,18 @@ Routine implementation, testing, certification, packaging, cleanup, and build op
 
 ---
 
+## DEC-2026-08-28-001 — Canonical Adaptive Documentation Rebaseline
+
+**Status:** APPROVED / IMPLEMENTED IN GOVERNANCE
+
+Use one narrative authority per adaptive concern: `governance/ADAPTIVE-OPERATING-CONTRACT.md`, `governance/ROADMAP.md`, and the canonical adaptive Build Plan, Build Process and Delivery Process under `adaptive-governance/`.
+
+`CURRENT_ADAPTIVE_*` and `ADAPTIVE_ROADMAP.md` remain compatibility/status projections only. Exact progress and the one next action belong in machine current state, the active closure ledger and `handoff/CURRENT.md`. Preserve historical evidence; do not treat planned audit gaps as implemented.
+
+Full record: `governance/DECISION-2026-08-28-ADAPTIVE-DOCUMENTATION-REBASELINE.md`.
+
+---
+
 # Append Template
 
 ```text

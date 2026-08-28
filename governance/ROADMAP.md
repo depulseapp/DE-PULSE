@@ -1,197 +1,187 @@
 # DE.PULSE — Canonical Adaptive Roadmap
 
-**Status:** APPROVED / ADAPTIVE  
-**Authority:** canonical product sequencing and approved strategic workstreams  
-**Detailed v19/v20 rebaseline:** `governance/V19_V20_REBASELINE.md`  
-**Rule:** shipped releases are immutable truth; future placement may adapt only with durable rationale, complete requirement conservation and synchronized adaptive/handoff state.
+**Status:** ACTIVE / AUTHORITATIVE FOR PRODUCT PLACEMENT  
+**Rebaselined:** 2026-08-28 from the full-product audit  
+**Current execution status:** `governance/current-state.json` + active closure ledger + `handoff/CURRENT.md`
 
-## 1. Canonical truth model
+This file owns durable product sequencing. It deliberately does not duplicate a live branch SHA or next action; those change faster than roadmap intent.
 
-- Stable tags, release evidence, source/artifact provenance and current handoff define what actually shipped.
-- Historical provisional version labels do not prove implementation.
-- Current source and executable evidence outrank plans.
-- Corrective/security/reliability/privacy/supply-chain work may preempt future sequencing.
-- Known misses are fixed or durably assigned; nothing disappears because a version plan changes.
-- G0-G16 is the only release model.
+## 1. Canonical inputs
 
-## 2. Permanent product / architecture boundaries
+The roadmap conserves:
 
-DE.PULSE is a U.S.-equities research/intelligence/decision-support system.
+- `governance/APPROVED-SCOPE.md` and the permanent contracts;
+- certified v18 responsibilities and immutable Stable evidence;
+- `governance/V19_V20_REBASELINE.md` and its machine maps;
+- `governance/PRODUCT_AUDIT_REBASELINE_2026_08_27.md`;
+- `governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md`;
+- `governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json`;
+- `governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json`;
+- backlog, HOST, legacy-commitment, cross-integration and whole-product-surface maps under `governance/programs/V19-V20-REBASELINE/`;
+- `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json` and the **Zero-Miss Future-Version Conservation** rule;
+- approved material decisions in `governance/DECISION-LOG.md`.
 
-Permanent constraints:
-- No Execution;
-- U.S. Equities Processing with GLD/SLV/USO actionable exceptions;
-- Smart Provider Router v2 sole general executable routing/admission authority;
-- direct SEC/EDGAR authoritative for governed filing truth, including Form 4;
-- canonical freshness/Data Health/degradation, subscription, persistence/cache/state, identity/session/calendar, reconciliation and telemetry owners reused;
-- equivalent lawful evidence processed canonically once and reused/fanned out where permitted;
-- hosted serving keeps tenant identity, RBAC, DE.PULSE product entitlement, provider legal/data rights and privacy/data-governance policy distinct;
-- deterministic Day/Swing/Long and other market truth remains available without AI/adaptive dependencies;
-- adaptive influence follows governed evidence/promotion lifecycles and never silently self-modifies production truth;
-- missing/stale/withheld evidence is never fabricated into healthy or neutral evidence.
+Documentation never proves implementation. Code/runtime/package evidence defines CURRENT; this roadmap defines TARGET and dependency placement.
 
-## 3. Cross-platform lockstep
+## 2. North star
 
-DE.PULSE is one product across macOS, Windows and hosted Web.
+DE.PULSE becomes one market-intelligence operating system for U.S.-listed equities and approved U.S. ETFs:
 
-For every shared capability:
-1. one canonical domain/API/state contract;
-2. G1 marks Mac/Windows/Web REQUIRED or explicitly justified N/A;
-3. platform mechanics may differ, but business truth, authorization, entitlement, provider rights, freshness/provenance and intelligence meaning may not fork;
-4. one-platform validation is diagnostic only;
-5. no GA/Delivered state while material REQUIRED-platform parity debt remains.
+`observations -> rights/quality -> deterministic evidence -> SymbolIntelligenceSnapshot -> Opportunity Lifecycle -> product projections -> frozen Decision Brief -> outcomes -> governed adaptation`
 
-## 4. Zero-Miss Future-Version Conservation and version sizing
+Web, macOS Apple Silicon and Windows x64 consume the same domain truth. DE.PULSE remains decision support only; No Execution and hidden Data Engine internals remain permanent.
 
-Requirements, backlog issues and acceptance rows are traceability/evidence units; they are **not public releases**.
+## 3. Audit rebaseline decisions
 
-Current public planning unit: coherent **version/build**.
+The full-product audit established ten mandatory directions:
 
-The version-first rebaseline does not retire the #66 zero-miss contract. Every applicable HOST responsibility remains bound to `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json` and the detailed conservation plan `governance/programs/ADAPT-HOSTED-SYNC-001/V19_ZERO_MISS_PLAN.md`. Before G1 implementation, source overlap is classified `INHERITED`, `EXTEND_EXISTING_OWNER`, `REPLACE_CONSOLIDATE`, `NEW_RESIDUAL`, or `EXTERNAL_BLOCKED`; a roadmap/version label never proves implementation.
+1. Replace giant `RuntimeSnapshot` as the domain boundary with versioned symbol intelligence, typed evidence/events and deltas.
+2. Keep Opportunity Radar as a detector while one shared Opportunity Lifecycle owns state.
+3. Add first-class Watchlist as a selected-universe projection, never another scorer/scanner.
+4. Build point-in-time outcomes and controlled challenger/shadow learning before learned production influence.
+5. Golden-characterize and move renderer-owned technical/desk/side/geometry/scoring authority into Go domain owners.
+6. Finish hosted tenant persistence, managed secrets, service trust/IaC, recovery/PITR, audit and operations.
+7. Finish secure macOS/Windows distribution, updates, rollback and OS credential storage.
+8. Preserve executable provider-rights controls and require actual rights evidence before Commercial/Public activation.
+9. Keep one machine-led current truth and one canonical narrative per adaptive layer.
+10. Evolve as a Go modular monolith with Postgres/outbox/versioned APIs/thin clients; extract services only from measured need.
 
-Dependency bands and versions may be consolidated into coherent builds, but the next dependency band may not begin while an applicable requirement is unassigned, unexplained, unevidenced, silently carried forward, or missing durable regression ownership. Zero-gap closure remains required before advancing beyond the band that owns the responsibility.
+The complete risk register remains mandatory, including instrument identity, bitemporal/vintage facts, exchange calendars/DST, clock skew/late events, raw/adjusted basis, OI as-of quality, provider correlation/revisions, alert causal dedupe, privacy-vs-audit retention, cross-device conflicts, offline truth, AI egress/prompt injection, client-schema compatibility, personalization separation, adaptive selection bias, censored outcomes, snapshot fanout and operational ownership.
 
-- Combine smaller related changes when they share owners/dependencies/evidence.
-- Split feature-heavy/high-risk work into a real patch version when actual implementation risk warrants it.
-- Do not create a public version per requirement, card, defect or CI checkpoint.
-- Every moved/split issue retains explicit primary/secondary placement.
-- A version cannot close with unassigned applicable requirements, source-discovered responsibilities or regression ownership.
+## 4. Product surface model
 
-Machine conservation:
-- certified v18 responsibility baseline: `governance/programs/ADAPT-V18-FINAL-CLOSURE-10-10-001/feature-assurance-ledger.json`;
-- hosted requirement source: `governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json`;
-- current HOST version overlay: `governance/programs/V19-V20-REBASELINE/host-requirement-version-map.json`;
-- current 22-issue version map: `governance/programs/V19-V20-REBASELINE/backlog-version-matrix.json`;
-- legacy future-roadmap/build-plan commitments not represented solely by HOST/backlog IDs: `governance/programs/V19-V20-REBASELINE/legacy-future-commitment-conservation.json`;
-- whole-product cross-integration: `governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json`;
-- whole-product surface/IA baseline: `governance/programs/V19-V20-REBASELINE/whole-product-surface-rebaseline.json`.
+| Surface | Roadmap purpose | Disposition |
+|---|---|---|
+| Dashboard | Concise attention and operating summary | IMPROVE |
+| Market Intelligence | Shared regime, liquidity, macro and market context | KEEP / IMPROVE |
+| Day / Swing / Long | Horizon projections of shared evidence | KEEP UX / MOVE DOMAIN AUTHORITY |
+| Discovery | Broad-universe opportunity projection | KEEP / MERGE MODEL |
+| Opportunity Radar | Detection and evidence production | KEEP DETECTOR / CONSOLIDATE LIFECYCLE |
+| Watchlist | Selected-universe opportunity projection | ADD FIRST CLASS |
+| Research | Frozen-as-of Decision Brief and deep evidence | KEEP / PROMOTE |
+| Alerts | Material lifecycle transition/incident delivery | IMPROVE / NO RESCORING |
+| AI | Evidence-bounded synthesis and research interaction | IMPROVE / NO PARALLEL TRUTH |
+| Admin / Maintenance / Settings | Role-gated operation and configuration | KEEP ROLE-GATED |
+| News / Earnings / Filings | Symbol evidence and catalyst history | CONSOLIDATE PRESENTATION INTO RESEARCH |
 
-The four requirement families are therefore: 180 certified v18 responsibilities, 72 HOST rows, 22 testing/future backlog issues and explicitly mapped legacy future commitments. A broad version title is never sufficient conservation evidence by itself.
+Every feature must answer a distinct user question. Presentation may consolidate without deleting useful evidence or domain services.
 
-## 5. Permanent smart/intelligent product rule
+## 5. Shared opportunity and Watchlist direction
 
-Target maturity:
+One lifecycle serves Discovery, Watchlist, Radar, Alerts, Research and Desks:
 
-`canonical evidence -> deterministic intelligence -> cross-feature synthesis -> point-in-time outcome accumulation -> bounded adaptive learning -> optional AI/agent explanation or orchestration`
+`DETECTED -> OBSERVED -> QUALIFIED -> PROMOTED -> HIGH_PRIORITY -> COOLING -> DEMOTED -> RESOLVED`
 
-Every intelligence capability must explicitly resolve:
-- canonical owner/upstream evidence;
-- downstream consumers;
-- trader/investor decision value;
-- cross-integration `REQUIRED / CONDITIONAL / NOT_USEFUL`;
-- Market Regime contribution `YES / CONDITIONAL / NO`;
-- Outcome Learning contribution `YES / CONDITIONAL / NO`;
-- point-in-time/no-lookahead reproducibility;
-- stale/degraded/recovery re-evaluation;
-- role/entitlement/provider-right boundaries;
-- duplicate/isolation conflicts;
-- deterministic fallback and adaptive lifecycle where applicable.
+- Discovery evaluates the approved broad universe.
+- Watchlist evaluates only user-selected symbols.
+- Radar/Rapid Move contribute evidence and triggers.
+- Alerts deliver material transitions with causal dedupe.
+- Research opens the same frozen snapshot/transition as a Decision Brief.
 
-Specialized engines contribute normalized evidence; they do not create competing Market Regime owners. One ticker/level/options wall/pattern/catalyst cannot directly flip global regime without explicit breadth/materiality aggregation.
+Promotion/demotion uses multiple evidence families, temporal decay, contradictions, quality/freshness and market context. A numeric rank is never sufficient without explanation and lineage.
 
-## 6. Information architecture rule
+`Long King / Short King` remain undefined until an approved evidence/horizon/outcome contract exists. `Call Wall / Put Wall` remain planned until expiry, coverage, OI-as-of, cluster, quality and rights semantics are formalized.
 
-Every visible element is intentionally classified `KEEP / IMPROVE / CONSOLIDATE / COLLAPSE / MOVE / REMOVE`. Removing a card does not require deleting useful canonical evidence; retained evidence may continue to serve synthesis, learning or diagnostics.
+## 6. v19 — deterministic hosted product foundation
 
-Hard product decisions:
-- preserve Day/Swing/Long Desk look-and-feel/workflow;
-- preserve Dashboard Market Regime and Desk Control materially;
-- preserve Data Engine look-and-feel except genuine defects;
-- preserve current AI Copilot engine/header visual treatment unless separately justified.
+### v19.0.0 — Hosted Trust & Identity Foundation
 
-Backlog #170 is the whole-product cross-integration/Market-Regime contract. Backlog #171 is the whole-product data-density/IA/intelligence-maturity audit.
+HOST-001..023 plus the applicable core security/auth scope in #164/#156. Close technical Development Production Ready evidence for provider-rights controls, tenant identity/session/device/MFA, product entitlement, privacy lifecycle, managed environment/service trust, tenant persistence/recovery, secrets, supply chain, provider scorecards and point-in-time truth. Commercial/Public activation remains separate and OFF.
 
-## 7. Shipped v18 authority
+### v19.1.0 — Canonical Intelligence & Provider Foundation
 
-`v18.10.0` is the immutable final v18 Stable and completed 10/10 Future-Proof closure. The T1-T10 feature-assurance ledgers, packaged runtime evidence and release artifacts remain historical baseline authority and must not be reopened by future roadmap prose.
+Existing #150/#151/#153/#154/#155/#160/#167 core plus audit canonical-boundary/renderer-extraction foundations:
 
-Historical v18.9.x/v18.10.0 sequencing and evidence remain available in release/governance history. Future planning starts from the shipped v18.10.0 reality plus current source delta.
+- freeze golden vectors for `computePlan`, technical state, Rapid Move, Radar and Research;
+- define Observation, Evidence, `SymbolIntelligenceSnapshot`, Transition and DecisionBrief schemas;
+- introduce snapshot compatibility behind current consumers;
+- establish server-owned technical/horizon package boundaries;
+- adopt the Adaptive Provider Registry and Market Data through the generic capability/Router/Data Health path.
 
-## 8. v19 — Professional Hosted Product + Deterministic Intelligent Evidence
+### v19.2.0 — Hosted Serving, Sync & Postgres v2
 
-### `v19.0.0` — Hosted Trust & Identity Foundation
-Current active version. Existing issue #148 / PR #149 continues; no restart. Owns HOST-001..023 plus core authentication/session audit #164 and required backend-security overlap from #156.
+HOST-024..039. Add tenant-aware normalized Postgres v2, explicit RLS/isolation disposition, revisions, transactional outbox, conflict/tombstone policy, user-scoped versioned APIs/deltas, lawful hosted fanout and cross-device/offline foundations.
 
-### `v19.1.0` — Canonical Data Runtime & Global Symbol Processing
-Owns #150, #151, #153, #154, canonical Maintenance truth from #155, Data Engine integration truth from #160, and Global Symbol Store/membership/lifecycle/priority core from #167. Conserves Smart Router residual-gap routing, canonical Data Health recurrence, Shared Symbol Intelligence and provider->Market Mode integration foundations.
+### v19.3.0 — Shared Opportunity Lifecycle & Cross-Platform Contract
 
-### `v19.2.0` — Hosted Gateway, Shared Serving & Sync Core
-Owns HOST-024..039. Hosted Gateway, lawful shared cache/live fan-out, stream revocation, API lifecycle, outbox/idempotency/revision/checkpoint/bootstrap/conflict/sync scheduling and tenant-aware observability. Must reuse v19.1 shared processing.
+HOST-040..047/053, #152/#156/#159/#160/#167/#171/#164 UX and `LEGACY-TRADER-SETUP-SHORT-001`:
 
-### `v19.3.0` — Cross-Platform Product, Roles & Information Architecture
-Owns HOST-040..047 and HOST-053 plus #152, #156, #159, Data Engine presentation verification from #160, Global Symbols Administration from #167, #171 whole-product audit rows and cross-platform auth/session UX from #164.
+- introduce the shared Opportunity aggregate/state machine behind shadow/dual-read comparison;
+- adapt Radar/Rapid Move/Discovery instead of duplicating them;
+- move two-sided deterministic setup side/geometry/policy to the server;
+- establish shared authentication, roles, information architecture, API/event compatibility and minimum-client rules.
 
-Also owns `LEGACY-TRADER-SETUP-SHORT-001`, a source-confirmed deterministic Desk gap. Current source can label a plan bearish but still constructs long-oriented target/invalidation/action-state geometry and uses one numeric score as both direction and displayed setup quality. v19.3.0 must establish one canonical two-sided setup contract across applicable Day/Swing/Long horizons while preserving the approved Desk look-and-feel:
-- explicit `LONG / SHORT / NO_SETUP-WAIT` side;
-- separate directional evidence from side-independent 0–100 setup-quality score;
-- LONG target/trim above entry with invalidation below;
-- SHORT cover/target below entry with invalidation above;
-- side-aware positive R-multiple, entry-distance, action-state, sorting, chart overlays and replay/outcome snapshots;
-- Research/Discovery projections consume the same canonical side/geometry;
-- bearish evidence alone does not force a SHORT setup when readiness/quality is insufficient;
-- No Execution remains permanent.
+### v19.4.0 — Market Intelligence, Research Brief & Watchlist Foundation
 
-This deterministic Desk setup contract is distinct from institutional/TDTI two-sided thesis evidence in v19.6/v20.3.
+HOST-049, #158/#161/#162/#171 and audit Watchlist scope:
 
-### `v19.4.0` — Market Intelligence & Research Workflow Quality
-Owns HOST-049 plus #158, #161, #162 and relevant #171 rows. Research stays deterministic-first; AI second opinion is bounded/canonical/optional.
+- frozen-as-of Research Decision Brief identity;
+- first-class Watchlist selected-universe projection;
+- ranked attention, promotion/demotion explanation, contradictions, confidence, freshness and Research handoff;
+- no Watchlist scorer, provider loop or duplicate persistence owner.
 
-### `v19.4.1` — Discovery & Opportunity Radar Effectiveness
-Heavy separate patch. Owns HOST-048 plus #163 and relevant #171 rows, including session-aware detection/admission/ranking/actionability, explainable omissions, and conserved halt/LULD/volatility-pause/resume semantics.
+### v19.4.1 — Discovery / Watchlist / Radar Convergence
 
-### `v19.5.0` — Price/Volume & Event-Anchored Intelligence
-Owns #168 and #169. Deterministic volume-at-price/POC/HVN/LVN/value-area, governed Fib/AVWAP/structural zones and generic NFP/CPI/PCE/FOMC/earnings/material-event anchored reaction evidence. No new page by default.
+HOST-048, #163/#171 and conserved halt/LULD/pause/resume behavior. Prove both universe projections use one lifecycle, Radar remains a detector, and lifecycle transitions/alerts are durable and causally deduplicated.
 
-### `v19.5.1` — Options Structure & GEX Intelligence
-Heavy separate patch. Owns #157: canonical options chain/Greeks/OI, truthful GEX proxy, Call Wall, Put Wall, Gamma Magnet/Pin, Gamma Flip and clusters through provider-agnostic Router-owned capability contracts.
+### v19.5.0 — Price/Volume & Event-Anchored Intelligence
 
-### `v19.6.0` — Point-in-Time Evidence & Outcome-Ready Foundation
-Owns HOST-057..064 plus deterministic foundation of #165: 13F/institutional point-in-time evidence, two-sided thesis substrate, AODR lineage and canonical outcome/evidence snapshots. Records outcomes but does not grant learned production influence. Conserved trader-quality evidence includes MFE/MAE, horizon outcomes and point-in-time inputs needed for later false-positive/miss/calibration/usefulness evaluation.
+#168/#169. Add canonical event identity, revisions, temporal reaction context and incident correlation through shared snapshot/lifecycle/Brief owners.
 
-### `v19.6.1` — Hosted Reliability, Economics & Adaptive Readiness
-Owns HOST-050..056 and HOST-065..071 plus final v19 #170/#171 reconciliation: tenant fairness/security/recovery/load, SLO/runbook/capacity/economics/provider-gap/adaptive-readiness, conserved ADR-GDI reliability/graceful-degradation obligations and full intelligence/cross-integration audit.
+### v19.5.1 — Options Structure & GEX Intelligence
 
-### `v19.7.0` — v19 Major Closure
-No feature scope. Owns HOST-072. Requires all 72 HOST rows, all v19-assigned backlog rows, all applicable legacy-future conservation rows, required Mac/Windows/Web parity and zero unexplained material implementation/security/data-truth/UX/cross-integration/performance gaps before G0-G16 publication.
+#157. Formalize expiry-aware coverage, OI-as-of, strike clusters, quality and rights before Call/Put Wall. Do not infer signed dealer positioning from gamma multiplied by OI.
 
-## 9. v20 — Governed Adaptive Intelligence
+### v19.6.0 — Point-in-Time Evidence & Outcome-Ready Foundation
 
-v20 begins only after v19.7.0 and explicit v20 readiness evidence.
+HOST-057..064, deterministic #165 and institutional/two-sided substrate. Add stable instrument identity, bitemporal/vintage facts, raw/adjusted lineage, feature snapshot IDs, explicit censoring and unbiased/control outcome sampling.
 
-### `v20.0.0` — Outcome Learning & Adaptive Control Plane
-Adaptive-learning portion of #165: immutable experiments/evidence snapshots, model/prompt/version governance, champion/challenger/shadow evaluation, analogues, regime-conditioned outcomes, calibration, miss/contradiction/drift and bounded promotion/rollback. Conserves the old adaptive-control and learning-guardrail responsibilities.
+### v19.6.1 — Reliability, Economics, Observability & 5/5 Readiness
 
-### `v20.1.0` — Adaptive Chart Pattern & Similarity Intelligence
-Owns #166: historical bootstrap, multi-timeframe fingerprints, named + unlabeled recurring structures, outcome labels, similarity retrieval, Watchlist/Discovery/Research/Desk consumers and protected background scheduling.
+HOST-050..056/065..071, ADR-GDI, provider-gap, #170/#171 reconciliation, provider reliability/economics scorecards, external SLO/on-call/recovery/scale evidence and desktop distribution readiness. Review every 5/5 maturity residual without score inflation.
 
-### `v20.2.0` — Adaptive Market Synthesis, Regime & Discovery Learning
-Learn bounded usefulness of Market Regime contributors, Discovery ranking/misses, event/price-volume/options/catalyst evidence and horizon relevance. Conserves the old ASBI evidence normalization, candidate/signal synthesis, contradiction/abstention, confidence/explanation and outcome-feedback responsibilities on top of v20.0 control-plane guardrails. Shadow-first; no single-symbol regime control.
+### v19.7.0 — v19 Major Closure
 
-### `v20.3.0` — Adaptive Institutional & Two-Sided Thesis Intelligence
-Adaptive institutional/13F/TDTI features, revisions/lags, regime conditioning and outcome calibration on point-in-time truth.
+HOST-072; no feature scope. Zero unexplained audit/responsibility rows, compatibility migrations reconciled, exact-head G0–G16 evidence and Commercial/Public activation still OFF unless separately authorized.
 
-### `v20.3.1` — AODR Adaptive Opportunity Intelligence
-Heavy separate patch: adaptive candidate ranking/scoring, why/why-not, outcome/miss learning and stability/drift/fairness.
+## 7. v20 — governed adaptive intelligence
 
-### `v20.4.0` — Agent Orchestration & Controlled MCP/API
-Remaining #165 scope. Agents orchestrate canonical capabilities only; MCP/API is versioned, authenticated, rights/entitlement/provenance/rate-limit/audit controlled. No raw provider credentials/DB access or parallel routing.
+1. **v20.0.0 — Outcome Learning & Adaptive Control Plane:** point-in-time evaluation, model/policy registry, sample floors, challenger/shadow, drift, approval and rollback.
+2. **v20.1.0 — Pattern & Similarity Intelligence:** structured split-safe features and interpretable baselines before deep/image models.
+3. **v20.2.0 — Adaptive Market Synthesis, Regime & Discovery Learning:** conserved ASBI normalization, contradiction, abstention and outcomes.
+4. **v20.3.0 — Adaptive Institutional & Two-Sided Thesis Intelligence.**
+5. **v20.3.1 — AODR Adaptive Opportunity Intelligence.**
+6. **v20.4.0 — Agent Orchestration & Controlled MCP/API:** evidence-scoped, rights-aware and auditable.
+7. **v20.5.0 — Adaptive Operations:** bounded provider utility/cost/reliability priors inside Smart Provider Router v2; no parallel router or automatic authority/rights promotion.
+8. **v20.6.0 — Professional Adaptive Closure:** no feature scope.
 
-### `v20.5.0` — Adaptive Operations
-Adaptive provider/evidence selection in SHADOW, quality/cost/freshness utility, bounded budget/backpressure recommendations, governed promotion, rollback/drift/kill controls. Router v2/provider lifecycle remain authoritative.
+## 8. Platform and cloud boundary
 
-### `v20.6.0` — Professional Adaptive Closure
-No feature scope. Full zero-gap adaptive/AI/runtime/cross-platform G0-G16 closure with reproducible, calibrated, bounded, explainable and rollback-capable adaptive influence.
+Core/cloud owns provider secrets/rights, shared ingestion, canonical intelligence, lifecycle/Briefs, tenant persistence, alert delivery, outcomes/adaptive jobs, recovery/audit and AI gateway policy.
 
-## 10. Version dependency chain
+Web/macOS/Windows clients own interaction, rendering, charts, accessibility and typed schema validation. Desktop may use encrypted authorized last-known cache, OS deep links/notifications and secure credential storage. Offline state is visibly stale/degraded, never simulated as live.
 
-`v19.0.0 -> v19.1.0 -> v19.2.0 -> v19.3.0 -> v19.4.0 -> v19.4.1 -> v19.5.0 -> v19.5.1 -> v19.6.0 -> v19.6.1 -> v19.7.0`
+Default hosted topology remains Postgres + outbox + stateless API/workers. Kafka, Kubernetes and service extraction require measured throughput, isolation, replay or ownership evidence—not projected user counts alone.
 
-`v19.7.0 -> v20.0.0 -> v20.1.0 -> v20.2.0 -> v20.3.0 -> v20.3.1 -> v20.4.0 -> v20.5.0 -> v20.6.0`
+## 9. Maturity and commercial boundary
 
-A future G0 overlap audit may prove scope inherited/already complete or externally blocked and reduce implementation work, but it may not silently drop any conserved acceptance row.
+The eleven-domain 5/5 target is evidence-backed. A domain closes only when its machine criteria are satisfied and no Critical/High gap contradicts the claim. Adaptive maturity is earned over time; documentation or version naming cannot award it.
 
-## 11. G0-G16 enforcement
+Development Production Ready means technically robust, secure, persistent, cross-platform, tested and full provider/data capable. Commercial/Public Ready adds provider licensing/rights, public-user legal/compliance and a commercial activation audit. Development closure never grants public data rights or activates commerce.
 
-G1 conserves requirements/platforms and freezes scope; G2 audits architecture/reuse; G3 binds contracts/tests; G4-G9 implement/integrate/security/load/functional/UI truth; G10 reconciles complete version coverage; G11-G15 certify the immutable candidate and required artifacts/deployments; G16 performs zero-gap learning/handoff.
+## 10. Planning horizons
 
-No additional top-level gate is introduced. #170/#171 intelligence/IA dimensions and the legacy-future commitment matrix are enforced inside applicable existing gates.
+- **Immediate / active:** finish the machine-current v19.0 dependency band; never use future audit work to bypass it.
+- **Next 30–90 days:** close v19.0 technical trust, then golden-characterize and establish v19.1 canonical contracts/provider boundary.
+- **6 months:** Postgres v2/outbox/versioned serving plus shared Opportunity Lifecycle and server-owned deterministic policy.
+- **12 months:** first-class Watchlist, frozen Research Brief, Discovery/Radar convergence, event/options/temporal foundations and cross-platform beta distribution.
+- **24 months:** governed outcome learning, pattern/similarity challengers, adaptive synthesis and operational/commercial readiness based on evidence.
+- **Long term:** one explainable, lineage-preserving market-intelligence system whose shared evidence improves every product surface and client.
+
+The exact active dependency and next action always come from `governance/current-state.json`, the active closure ledger and `handoff/CURRENT.md`.
+
+## 11. Zero-miss and roadmap change rule
+
+No version closes with an unexplained applicable certified responsibility, HOST/backlog/legacy commitment, audit finding/risk, surface disposition, ADR, role/right/platform case, compatibility migration or regression owner.
+
+Roadmap changes require source-overlap review, explicit material Decision Log entry when scope or sequencing materially changes, and synchronized machine maps. A `CURRENT_*` projection or handoff cannot change this roadmap.

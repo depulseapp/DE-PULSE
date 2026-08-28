@@ -23,6 +23,7 @@
 - Parent hosted program: #66 / `ADAPT-HOSTED-SYNC-001`.
 - Permanent readiness authority: `governance/PRODUCTION-READINESS-TIERS.md` + `governance/production-readiness-tiers.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
+- Adaptive documentation baseline: `adaptive-governance/README.md`; canonical narratives are the operating contract, roadmap, build plan, build process and delivery process named there.
 - GitHub objects and executable evidence outrank this file and chat memory. Always fetch live branch/PR/issue/Actions before writing.
 
 ## Permanent readiness and zero-miss rules
@@ -127,6 +128,13 @@ Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Finish
 5. Commercial/Public activation remains a separate later gate.
 6. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
 
+## Adaptive documentation rebaseline
+
+- DEC-2026-08-28-001 makes the audit-rebaselined canonical operating contract, roadmap, build plan, build process and delivery process the only narrative authorities for their concerns.
+- `CURRENT_ADAPTIVE_*` and `ADAPTIVE_ROADMAP.md` are now compatibility/status projections only; they do not own scope, rules, gap status or a next action.
+- The full 2026-08-27 product audit, coverage, finding register and eleven-domain 5/5 target remain conserved; this documentation correction does not claim planned product gaps are implemented.
+- HOST-010..012 machine state/closure evidence is reconciled to successful managed recovery Qualified #232 / run `33154312937`; HOST-013..014 remains OPEN/IMPLEMENTED_UNVERIFIED pending real Azure AKS evidence.
+
 ## Permanent architecture/product boundaries
 
 - U.S. Equities Processing only; GLD/SLV/USO remain actionable tradable exceptions.
@@ -159,7 +167,7 @@ Do not implement this early.
 
 1. Read this file first.
 2. Read the readiness-tier and strict zero-miss authorities.
-3. Read `governance/current-state.json`, `governance/ROADMAP.md`, `governance/V19_V20_REBASELINE.md`, active work-slice metadata and `closure.json`.
+3. Read `governance/current-state.json`, `adaptive-governance/README.md`, the canonical roadmap/build plan/build process/delivery process, `governance/V19_V20_REBASELINE.md`, active work-slice metadata and `closure.json`.
 4. Fetch live `main`, active branch, PR #149, issue #148/latest comments, issue #164 and current Actions before writing.
 5. Inspect commits since the latest verified checkpoint; do not duplicate work.
 6. Keep Stable v18.10.0 immutable.

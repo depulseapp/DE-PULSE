@@ -22,6 +22,47 @@ WAIVER_PROJECTIONS = (
     "adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md",
     "adaptive-governance/CURRENT_ADAPTIVE_GAP_CLOSURE.md",
 )
+CANONICAL_ADAPTIVE_DOCS = {
+    "governance/ADAPTIVE-OPERATING-CONTRACT.md": (
+        "SymbolIntelligenceSnapshot",
+        "Opportunity Lifecycle",
+        "SHADOW -> VALIDATED -> APPROVED -> PRODUCTION",
+        "CURRENT_ADAPTIVE_*",
+    ),
+    "governance/ROADMAP.md": (
+        "Rebaselined:** 2026-08-28",
+        "Watchlist",
+        "v19.4.0",
+        "v20.0.0",
+        "governance/current-state.json",
+    ),
+    "adaptive-governance/ADAPTIVE_BUILD_PLAN.md": (
+        "RuntimeSnapshot",
+        "SymbolIntelligenceSnapshot",
+        "Opportunity Lifecycle",
+        "Watchlist",
+        "point-in-time",
+    ),
+    "adaptive-governance/ADAPTIVE_BUILD_PROCESS.md": (
+        "CHARACTERIZE -> NEW OWNER -> DUAL/SHADOW",
+        "Smart Provider Router v2",
+        "PARTIAL COVERAGE",
+        "CENSORED",
+    ),
+    "adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md": (
+        "actual artifact/runtime audit",
+        "Commercial/Public",
+        "macOS Apple Silicon",
+        "Windows x64",
+        "Web",
+    ),
+    "adaptive-governance/README.md": (
+        "DEC-2026-08-28-001",
+        "Canonical narrative authorities",
+        "Current projections",
+        "Historical evidence",
+    ),
+}
 
 
 def projected_active_state(state: dict) -> tuple[dict, str]:
@@ -79,11 +120,49 @@ def main() -> int:
         if f"#{issue}" not in text:
             errors.append(f"{rel} does not project active issue #{issue}")
 
+        if rel.startswith("adaptive-governance/CURRENT_ADAPTIVE_"):
+            if "COMPATIBILITY PROJECTION" not in text:
+                errors.append(f"{rel} is not marked as a compatibility projection")
+            if "## Exactly one next action" in text:
+                errors.append(f"{rel} duplicates the handoff next action")
+            if len(text.splitlines()) > 40:
+                errors.append(f"{rel} is no longer a thin current-state projection")
+
+    for rel, tokens in CANONICAL_ADAPTIVE_DOCS.items():
+        path = ROOT / rel
+        if not path.is_file():
+            errors.append(f"missing canonical adaptive document: {rel}")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for token in tokens:
+            if token not in text:
+                errors.append(f"{rel} is missing audit-rebaseline token: {token}")
+
+    compatibility_roadmap = ROOT / "adaptive-governance" / "ADAPTIVE_ROADMAP.md"
+    if not compatibility_roadmap.is_file():
+        errors.append("missing adaptive-governance/ADAPTIVE_ROADMAP.md compatibility path")
+    else:
+        text = compatibility_roadmap.read_text(encoding="utf-8", errors="replace")
+        if "COMPATIBILITY POINTER" not in text or "governance/ROADMAP.md" not in text:
+            errors.append("ADAPTIVE_ROADMAP.md must remain a pointer to the canonical roadmap")
+        if "## Exactly one next action" in text or len(text.splitlines()) > 30:
+            errors.append("ADAPTIVE_ROADMAP.md contains duplicate current roadmap/next-action narrative")
+
     handoff = texts.get("handoff/CURRENT.md", "")
     if stable_sha and stable_sha not in handoff:
         errors.append("handoff/CURRENT.md does not project certified Stable candidate SHA")
     if closure and closure not in handoff:
         errors.append("handoff/CURRENT.md does not name the canonical closure ledger")
+
+    next_band_id = str(process_active.get("nextDependencyBandId", "")).strip()
+    if next_band_id:
+        next_action = handoff.split("## Exactly one next action", 1)
+        next_action_text = next_action[1].split("\n## ", 1)[0] if len(next_action) == 2 else ""
+        if next_band_id not in next_action_text:
+            errors.append(
+                "handoff/CURRENT.md next action does not match "
+                f"activeWorkSlice.nextDependencyBandId: {next_band_id}"
+            )
 
     ci_projection = texts.get("adaptive-governance/CURRENT_ADAPTIVE_CI_CONVERGENCE.md", "")
     if closure and closure not in ci_projection:
