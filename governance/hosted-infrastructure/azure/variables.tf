@@ -43,6 +43,16 @@ variable "kubernetes_version" {
   default     = null
 }
 
+variable "istio_revisions" {
+  description = "Azure-supported AKS Istio add-on revisions. Resolve against az aks mesh get-revisions for the selected region/version before live apply."
+  type        = list(string)
+  default     = []
+  validation {
+    condition     = length(var.istio_revisions) <= 2 && alltrue([for r in var.istio_revisions : can(regex("^asm-[0-9]+-[0-9]+$", r))])
+    error_message = "istio_revisions must contain at most two Azure AKS asm-X-Y revisions"
+  }
+}
+
 variable "node_vm_size" {
   description = "Non-production node size."
   type        = string
