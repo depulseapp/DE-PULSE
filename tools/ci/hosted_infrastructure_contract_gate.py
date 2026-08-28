@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
 DESIRED = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
 AZURE_GATE = ROOT / "tools" / "ci" / "azure_hosted_infrastructure_gate.py"
+EGRESS_GATE = ROOT / "tools" / "ci" / "hosted_external_egress_gate.py"
 
 
 def fail(message: str) -> None:
@@ -28,11 +29,11 @@ def load_renderer():
     return module
 
 
-def run_azure_gate() -> None:
-    if not AZURE_GATE.is_file():
-        fail("Azure AKS hosted infrastructure gate missing")
+def run_gate(path: Path, pass_marker: str, label: str) -> None:
+    if not path.is_file():
+        fail(label + " gate missing")
     result = subprocess.run(
-        [sys.executable, str(AZURE_GATE)],
+        [sys.executable, str(path)],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
@@ -40,9 +41,9 @@ def run_azure_gate() -> None:
         check=False,
     )
     if result.returncode != 0:
-        fail("Azure AKS adapter validation failed:\n" + result.stdout)
-    if "PASS: Azure AKS HOST-013..014 adapter" not in result.stdout:
-        fail("Azure AKS gate did not emit canonical PASS marker")
+        fail(label + " validation failed:\n" + result.stdout)
+    if pass_marker not in result.stdout:
+        fail(label + " gate did not emit canonical PASS marker")
 
 
 def main() -> None:
@@ -109,7 +110,8 @@ def main() -> None:
         if result.returncode == 0 or "refusing broad egress" not in result.stdout:
             fail("renderer does not fail closed for empty egress inventory")
 
-    run_azure_gate()
+    run_gate(EGRESS_GATE, "HOST-014 external egress conservation: PASS", "HOST-014 external egress")
+    run_gate(AZURE_GATE, "PASS: Azure AKS HOST-013..014 adapter", "Azure AKS hosted infrastructure")
     print("HOST-013/014 infrastructure contract: PASS")
 
 
