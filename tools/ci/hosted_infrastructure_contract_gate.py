@@ -46,20 +46,7 @@ def run_gate(path: Path, pass_marker: str, label: str) -> None:
         fail(label + " gate did not emit canonical PASS marker")
 
 
-def main() -> None:
-    if not RENDERER.is_file():
-        fail("canonical renderer missing")
-    manifest = json.loads(DESIRED.read_text(encoding="utf-8"))
-    environments = manifest.get("environments", {})
-    if set(environments) != {"dev", "test", "stage", "prod"}:
-        fail("canonical desired state must contain exactly dev/test/stage/prod")
-    isolation_ids = [environments[e]["isolationId"] for e in ("dev", "test", "stage", "prod")]
-    service_ids = [environments[e]["serviceIdentity"] for e in ("dev", "test", "stage", "prod")]
-    if len(set(isolation_ids)) != 4 or len(set(service_ids)) != 4:
-        fail("environment isolation IDs and service identities must be unique")
-
-    module = load_renderer()
-    test_hosts = ["example.invalid", "second.example.invalid"]
+def verify_common(rendered: str, environment: str, state: dict, module, manifest: dict, test_hosts: list[str]) -> None:
     required_tokens = (
         "kind: Namespace",
         "kind: ServiceAccount",
@@ -77,24 +64,77 @@ def main() -> None:
         "port: 8080",
         "port: 443",
     )
+    for token in required_tokens:
+        if token not in rendered:
+            fail(f"{environment} render missing {token!r}")
+    if f"name: {state['isolationId']}" not in rendered:
+        fail(f"{environment} namespace not bound to canonical isolationId")
+    if f"name: {state['serviceIdentity']}" not in rendered:
+        fail(f"{environment} service account not bound to canonical serviceIdentity")
+    digest = module.canonical_digest(manifest, environment)
+    if f'depulse.io/desired-state-sha256: "{digest}"' not in rendered:
+        fail(f"{environment} render missing canonical desired-state digest")
+    for host in test_hosts:
+        if f'    - "{host}"' not in rendered:
+            fail(f"{environment} render missing explicit egress host")
+    if "0.0.0.0/0" in rendered or "::/0" in rendered or "hosts:\n    - \"*\"" in rendered:
+        fail(f"{environment} render contains broad egress authority")
+
+
+def main() -> None:
+    if not RENDERER.is_file():
+        fail("canonical renderer missing")
+    manifest = json.loads(DESIRED.read_text(encoding="utf-8"))
+    environments = manifest.get("environments", {})
+    if set(environments) != {"dev", "test", "stage", "prod"}:
+        fail("canonical desired state must contain exactly dev/test/stage/prod")
+    isolation_ids = [environments[e]["isolationId"] for e in ("dev", "test", "stage", "prod")]
+    service_ids = [environments[e]["serviceIdentity"] for e in ("dev", "test", "stage", "prod")]
+    if len(set(isolation_ids)) != 4 or len(set(service_ids)) != 4:
+        fail("environment isolation IDs and service identities must be unique")
+
+    module = load_renderer()
+    test_hosts = ["example.invalid", "second.example.invalid"]
     for environment in ("dev", "test", "stage", "prod"):
-        rendered = module.render(environment, test_hosts)
         state = environments[environment]
-        for token in required_tokens:
-            if token not in rendered:
-                fail(f"{environment} render missing {token!r}")
-        if f"name: {state['isolationId']}" not in rendered:
-            fail(f"{environment} namespace not bound to canonical isolationId")
-        if f"name: {state['serviceIdentity']}" not in rendered:
-            fail(f"{environment} service account not bound to canonical serviceIdentity")
-        digest = module.canonical_digest(manifest, environment)
-        if f'depulse.io/desired-state-sha256: "{digest}"' not in rendered:
-            fail(f"{environment} render missing canonical desired-state digest")
-        for host in test_hosts:
-            if f'    - "{host}"' not in rendered:
-                fail(f"{environment} render missing explicit egress host")
-        if "0.0.0.0/0" in rendered or "::/0" in rendered or "hosts:\n    - \"*\"" in rendered:
-            fail(f"{environment} render contains broad egress authority")
+        portable = module.render(environment, test_hosts)
+        verify_common(portable, environment, state, module, manifest, test_hosts)
+        if "istio-injection: enabled" not in portable or "kubernetes.io/metadata.name: istio-system" not in portable:
+            fail(f"{environment} portable mesh projection drift")
+
+        managed = module.render(
+            environment,
+            test_hosts,
+            mesh_profile="aks-managed",
+            istio_revision="asm-1-27",
+            workload_identity_client_id="11111111-1111-1111-1111-111111111111",
+        )
+        verify_common(managed, environment, state, module, manifest, test_hosts)
+        required_managed = (
+            'istio.io/rev: "asm-1-27"',
+            "kubernetes.io/metadata.name: aks-istio-ingress",
+            "istio: aks-istio-ingressgateway-external",
+            'namespaces: ["aks-istio-ingress"]',
+            'azure.workload.identity/client-id: "11111111-1111-1111-1111-111111111111"',
+        )
+        for token in required_managed:
+            if token not in managed:
+                fail(f"{environment} AKS managed render missing {token!r}")
+        if "istio-injection: enabled" in managed or "kubernetes.io/metadata.name: istio-system" in managed:
+            fail(f"{environment} AKS managed render leaked self-managed Istio conventions")
+
+    try:
+        module.render(
+            "dev",
+            test_hosts,
+            mesh_profile="aks-managed",
+            istio_revision="invalid",
+            workload_identity_client_id="11111111-1111-1111-1111-111111111111",
+        )
+    except SystemExit:
+        pass
+    else:
+        fail("AKS managed renderer accepted invalid Istio revision")
 
     with tempfile.TemporaryDirectory() as tmp:
         empty = Path(tmp) / "empty-hosts.txt"
