@@ -30,6 +30,41 @@ def test_force_verify_full() -> None:
         raise AssertionError("non-PostgreSQL URI must be rejected")
 
 
+def test_neon_async_branch_and_compute_retry() -> None:
+    original_api_request = operator.api_request
+    original_sleep = operator.time.sleep
+    calls = {"branch": 0, "compute": 0}
+
+    def fake_api_request(token: str, method: str, path: str, **kwargs: object) -> dict[str, object]:
+        del token, kwargs
+        if method == "GET" and path.endswith("/branches/br-restored"):
+            calls["branch"] += 1
+            state = "init" if calls["branch"] == 1 else "ready"
+            return {"branch": {"id": "br-restored", "name": "host012-pitr", "current_state": state}}
+        if method == "POST" and path.endswith("/endpoints"):
+            calls["compute"] += 1
+            if calls["compute"] == 1:
+                raise operator.OperatorError(
+                    "Neon API HTTP 423: project already has running conflicting operations, scheduling of new ones is prohibited"
+                )
+            return {"endpoint": {"id": "ep-restored"}}
+        raise AssertionError(f"unexpected zero-network API request: {method} {path}")
+
+    try:
+        operator.api_request = fake_api_request
+        operator.time.sleep = lambda _: None
+        branch = operator.wait_for_branch_ready("secret-not-used", "project-example", "br-restored", timeout_seconds=2)
+        endpoint = operator.create_compute("secret-not-used", "project-example", "br-restored", timeout_seconds=2)
+    finally:
+        operator.api_request = original_api_request
+        operator.time.sleep = original_sleep
+
+    require(branch["current_state"] == "ready", "PITR branch must be observed READY before compute creation")
+    require(endpoint["id"] == "ep-restored", "compute creation must succeed after transient provider conflict")
+    require(calls["branch"] == 2, "branch readiness polling must retry non-ready state")
+    require(calls["compute"] == 2, "HTTP 423 conflict must be retried exactly until successful in this fixture")
+
+
 def test_secret_free_metadata_and_final_evidence() -> None:
     candidate = "a" * 40
     project = {
@@ -134,9 +169,11 @@ def test_secret_free_metadata_and_final_evidence() -> None:
 
 def main() -> int:
     test_force_verify_full()
+    test_neon_async_branch_and_compute_retry()
     test_secret_free_metadata_and_final_evidence()
     print("HOST-012 Neon managed-recovery operator self-test: PASS")
     print("provider API network calls: NONE")
+    print("transient Neon HTTP 423 async conflicts: RETRIED")
     print("connection URI evidence persistence: PROHIBITED")
     print("canonical final evidence gate composition: PASS")
     return 0
