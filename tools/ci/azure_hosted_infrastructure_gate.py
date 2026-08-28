@@ -37,11 +37,12 @@ def main() -> int:
     require(main_tf, r'role_based_access_control_enabled\s*=\s*true', "Kubernetes RBAC")
     require(main_tf, r'azure_policy_enabled\s*=\s*true', "Azure Policy")
     require(main_tf, r'network_policy\s*=\s*"azure"', "network policy")
-    require(main_tf, r'resource\s+"azurerm_role_assignment"\s+"aks_network"', "AKS network role assignment")
-    require(main_tf, r'role_definition_name\s*=\s*"Network Contributor"', "Network Contributor role")
-    require(main_tf, r'scope\s*=\s*azurerm_virtual_network\.this\.id', "VNet-scoped network authority")
-    require(main_tf, r'depends_on\s*=\s*\[azurerm_role_assignment\.aks_network\]', "AKS dependency on network authority")
+    require(main_tf, r'service_mesh_profile\s*\{[\s\S]*?mode\s*=\s*"Istio"[\s\S]*?revisions\s*=\s*var\.istio_revisions', "managed AKS Istio profile")
+    require(vars_tf, r'variable\s+"istio_revisions"', "governed Istio revision input")
+    require(vars_tf, r'asm-\[0-9\]\+\-\[0-9\]\+', "Azure managed Istio revision format validation")
     require(main_tf, r'key_vault_secrets_provider\s*\{', "Key Vault CSI integration hook")
+    require(main_tf, r'role_definition_name\s*=\s*"Network Contributor"', "BYO-network role assignment")
+    require(main_tf, r'scope\s*=\s*azurerm_virtual_network\.this\.id', "network role least-privilege scope")
     require(main_tf, r'host_gate\s*=\s*"HOST-013-HOST-014"', "HOST ownership tag")
     require(readme, r'HOST-013\.\.014 may move to VERIFIED only after a real Azure deployment', "truthful live-verification boundary")
 
@@ -51,7 +52,7 @@ def main() -> int:
         if token.lower() in joined.lower():
             fail("Azure IaC contains forbidden secret/token material marker: " + token)
 
-    print("PASS: Azure AKS HOST-013..014 adapter is fail-closed and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter is fail-closed, managed-mesh aware and secret-free")
     return 0
 
 
