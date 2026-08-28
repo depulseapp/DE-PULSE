@@ -150,6 +150,7 @@ def run_gate(path: str) -> None:
 def run_data_health_gate() -> None:
     run_gate("tools/ci/data_health_policy_gate.py")
     run_gate("tools/ci/provider_registration_data_health_gate.py")
+    run_gate("tools/ci/hosted_infrastructure_contract_gate.py")
 
 
 def main() -> int:
