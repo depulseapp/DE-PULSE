@@ -65,7 +65,7 @@ def main() -> int:
     require(main_tf, r'internal_ingress_gateway_enabled\s*=\s*false', "single governed external ingress posture")
     require(vars_tf, r'variable\s+"istio_revisions"', "governed Istio revision input")
     require(vars_tf, r'asm-\[0-9\]\+\-\[0-9\]\+', "Azure managed Istio revision format validation")
-    require(main_tf, r'azurerm_federated_identity_credential\s+"workload"', "workload federated identity credential")
+    require(main_tf, r'resource\s+"azurerm_federated_identity_credential"\s+"workload"', "workload federated identity credential")
     require(main_tf, r'audience\s*=\s*\["api://AzureADTokenExchange"\]', "workload token-exchange audience")
     require(main_tf, r'subject\s*=\s*local\.workload_identity_subject', "canonical service-account federation subject")
     require(main_tf, r'key_vault_secrets_provider\s*\{', "Key Vault CSI integration hook")
