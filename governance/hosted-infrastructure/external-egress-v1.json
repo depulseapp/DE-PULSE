@@ -23,6 +23,7 @@
     {"host":"api.eia.gov","protocols":["https"],"consumer":"EIA official energy data","sourcePaths":["global_market_providers.go"],"runtimeAllowed":true},
     {"host":"home.treasury.gov","protocols":["https"],"consumer":"U.S. Treasury official rates","sourcePaths":["global_market_providers.go"],"runtimeAllowed":true},
     {"host":"api.fiscaldata.treasury.gov","protocols":["https"],"consumer":"U.S. Treasury fiscal-data API","sourcePaths":["global_market_providers.go"],"runtimeAllowed":true},
+    {"host":"www.twse.com.tw","protocols":["https"],"consumer":"Taiwan Stock Exchange official TAIEX close","sourcePaths":["global_market_providers.go"],"runtimeAllowed":true},
     {"host":"query1.finance.yahoo.com","protocols":["https"],"consumer":"yfinance-style recovery-only market context","sourcePaths":["fallback_providers.go","global_market_providers.go"],"runtimeAllowed":true},
     {"host":"query2.finance.yahoo.com","protocols":["https"],"consumer":"Yahoo recovery endpoint","sourcePaths":["fallback_providers.go"],"runtimeAllowed":true},
     {"host":"api.twelvedata.com","protocols":["https"],"consumer":"Twelve Data equity/global/VIX/history","sourcePaths":["fallback_providers.go","global_market_providers.go"],"runtimeAllowed":true},
