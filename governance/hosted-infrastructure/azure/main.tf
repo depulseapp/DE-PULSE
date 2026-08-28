@@ -38,8 +38,6 @@ resource "azurerm_user_assigned_identity" "aks" {
   tags                = local.common_tags
 }
 
-# AKS uses the user-assigned control-plane identity against a bring-your-own
-# VNet. Grant only the network authority required for that managed substrate.
 resource "azurerm_role_assignment" "aks_network" {
   scope                = azurerm_virtual_network.this.id
   role_definition_name = "Network Contributor"
@@ -53,12 +51,12 @@ resource "azurerm_kubernetes_cluster" "this" {
   dns_prefix          = local.prefix
   kubernetes_version  = var.kubernetes_version
 
-  private_cluster_enabled             = var.private_cluster_enabled
-  local_account_disabled              = true
-  oidc_issuer_enabled                 = true
-  workload_identity_enabled           = true
-  role_based_access_control_enabled   = true
-  azure_policy_enabled                = true
+  private_cluster_enabled           = var.private_cluster_enabled
+  local_account_disabled            = true
+  oidc_issuer_enabled               = true
+  workload_identity_enabled         = true
+  role_based_access_control_enabled = true
+  azure_policy_enabled              = true
 
   identity {
     type         = "UserAssigned"
@@ -82,6 +80,11 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin = "azure"
     network_policy = "azure"
     outbound_type  = "loadBalancer"
+  }
+
+  service_mesh_profile {
+    mode      = "Istio"
+    revisions = var.istio_revisions
   }
 
   key_vault_secrets_provider {
