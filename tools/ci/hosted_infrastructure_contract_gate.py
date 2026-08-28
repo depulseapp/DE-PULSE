@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
 DESIRED = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
+AZURE_GATE = ROOT / "tools" / "ci" / "azure_hosted_infrastructure_gate.py"
 
 
 def fail(message: str) -> None:
@@ -25,6 +26,23 @@ def load_renderer():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def run_azure_gate() -> None:
+    if not AZURE_GATE.is_file():
+        fail("Azure AKS hosted infrastructure gate missing")
+    result = subprocess.run(
+        [sys.executable, str(AZURE_GATE)],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+    )
+    if result.returncode != 0:
+        fail("Azure AKS adapter validation failed:\n" + result.stdout)
+    if "PASS: Azure AKS HOST-013..014 adapter" not in result.stdout:
+        fail("Azure AKS gate did not emit canonical PASS marker")
 
 
 def main() -> None:
@@ -91,6 +109,7 @@ def main() -> None:
         if result.returncode == 0 or "refusing broad egress" not in result.stdout:
             fail("renderer does not fail closed for empty egress inventory")
 
+    run_azure_gate()
     print("HOST-013/014 infrastructure contract: PASS")
 
 
