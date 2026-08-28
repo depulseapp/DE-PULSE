@@ -93,8 +93,10 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   service_mesh_profile {
-    mode      = "Istio"
-    revisions = var.istio_revisions
+    mode                             = "Istio"
+    revisions                        = var.istio_revisions
+    external_ingress_gateway_enabled = true
+    internal_ingress_gateway_enabled = false
   }
 
   key_vault_secrets_provider {
