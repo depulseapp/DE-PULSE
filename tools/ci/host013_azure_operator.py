@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AZURE_DIR = ROOT / "governance" / "hosted-infrastructure" / "azure"
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
 LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
+TRAFFIC_PROBE = ROOT / "tools" / "ci" / "host013_azure_traffic_probe.py"
 CONFIRMATION = "HOST013_AZURE_AKS_OPERATOR_DRILL"
 ISTIO_RE = re.compile(r"^asm-(\d+)-(\d+)$")
 
@@ -121,6 +122,20 @@ def output_value(outputs: dict[str, object], name: str) -> str:
 
 def fingerprint(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()[:16]
+
+
+def require_evidence(path: Path, expected_schema: str, expected_status: str) -> dict[str, object]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        fail(f"evidence unreadable {path.name}: {exc}")
+    if not isinstance(payload, dict):
+        fail(f"evidence must be an object: {path.name}")
+    if payload.get("schema") != expected_schema or payload.get("status") != expected_status:
+        fail(f"evidence did not reach required state: {path.name}")
+    if payload.get("containsSecrets") is not False:
+        fail(f"evidence must explicitly be secret-free: {path.name}")
+    return payload
 
 
 def self_test() -> None:
@@ -243,6 +258,22 @@ def main() -> int:
         "--workload-identity-client-id", workload_client_id,
         "--output", str(evidence_path),
     ])
+    require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
+
+    traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+    run([
+        sys.executable, str(TRAFFIC_PROBE),
+        "--resource-group", rg,
+        "--cluster-name", cluster,
+        "--environment", args.environment,
+        "--candidate-sha", args.candidate_sha,
+        "--istio-revision", istio_revision,
+        "--output", str(traffic_path),
+    ])
+    traffic = require_evidence(traffic_path, "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1", "PASS")
+    traffic_checks = traffic.get("checks")
+    if not isinstance(traffic_checks, dict) or not traffic_checks or not all(value is True for value in traffic_checks.values()):
+        fail("traffic probe evidence is incomplete")
 
     drift = subprocess.run(
         ["terraform", f"-chdir={AZURE_DIR}", "plan", "-input=false", "-detailed-exitcode"],
@@ -261,7 +292,8 @@ def main() -> int:
         "workloadIdentitySubject": workload_subject,
         "stateKey": state_key,
         "terraformPostApplyDriftExitCode": drift.returncode,
-        "liveEvidence": evidence_path.name,
+        "configurationIdentityEvidence": evidence_path.name,
+        "trafficEvidence": traffic_path.name,
         "containsSecrets": False,
         "status": "PASS",
     }
