@@ -2,10 +2,13 @@
 """Fail-closed repository gate for the Azure AKS HOST-013..014 adapter."""
 from pathlib import Path
 import re
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 AZ = ROOT / "governance" / "hosted-infrastructure" / "azure"
-REQUIRED = ["README.md", "versions.tf", "variables.tf", "main.tf", "outputs.tf"]
+REQUIRED = ["README.md", "versions.tf", "backend.tf", "variables.tf", "main.tf", "outputs.tf"]
+LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
 
 
 def fail(msg: str) -> None:
@@ -22,13 +25,19 @@ def main() -> int:
     for name in REQUIRED:
         if not (AZ / name).is_file():
             fail("missing Azure hosted infrastructure file: " + name)
+    if not LIVE_EVIDENCE.is_file():
+        fail("missing Azure live-evidence collector")
 
     main_tf = (AZ / "main.tf").read_text(encoding="utf-8")
     vars_tf = (AZ / "variables.tf").read_text(encoding="utf-8")
     versions_tf = (AZ / "versions.tf").read_text(encoding="utf-8")
+    backend_tf = (AZ / "backend.tf").read_text(encoding="utf-8")
     readme = (AZ / "README.md").read_text(encoding="utf-8")
 
     require(versions_tf, r'source\s*=\s*"hashicorp/azurerm"', "AzureRM provider")
+    require(backend_tf, r'backend\s+"azurerm"', "AzureRM remote state backend")
+    require(backend_tf, r'use_oidc\s*=\s*true', "OIDC state authentication")
+    require(backend_tf, r'use_azuread_auth\s*=\s*true', "Microsoft Entra state data-plane authentication")
     require(main_tf, r'private_cluster_enabled\s*=\s*var\.private_cluster_enabled', "private AKS control-plane binding")
     require(vars_tf, r'condition\s*=\s*var\.private_cluster_enabled', "fail-closed private-cluster validation")
     require(main_tf, r'local_account_disabled\s*=\s*true', "disabled local AKS accounts")
@@ -52,7 +61,11 @@ def main() -> int:
         if token.lower() in joined.lower():
             fail("Azure IaC contains forbidden secret/token material marker: " + token)
 
-    print("PASS: Azure AKS HOST-013..014 adapter is fail-closed, managed-mesh aware and secret-free")
+    self_test = subprocess.run([sys.executable, str(LIVE_EVIDENCE), "--self-test"], cwd=ROOT, check=False)
+    if self_test.returncode != 0:
+        fail("Azure live-evidence collector self-test failed")
+
+    print("PASS: Azure AKS HOST-013..014 adapter is fail-closed, OIDC-state-backed, managed-mesh aware and secret-free")
     return 0
 
 
