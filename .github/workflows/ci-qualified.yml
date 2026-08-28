@@ -47,6 +47,10 @@ on:
         required: false
         default: true
         type: boolean
+      host013_azure_confirmation:
+        description: Type HOST013_AZURE_AKS_OPERATOR_DRILL to provision/verify the isolated non-production Azure AKS trust environment
+        required: false
+        type: string
   workflow_call:
     inputs:
       candidate_sha:
@@ -69,13 +73,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}-${{ inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && github.run_id || 'replaceable' }}
-  cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}
+  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}-${{ (inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' || inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL') && github.run_id || 'replaceable' }}
+  cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && inputs.host013_azure_confirmation != 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}
 
 env:
   GO_VERSION: '1.26.6'
   NODE_VERSION: '24'
   PYTHON_VERSION: '3.13'
+  TERRAFORM_VERSION: '1.13.5'
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
@@ -518,6 +523,81 @@ jobs:
           name: DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}
           path: .depulse-host012-neon/**
           include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
+
+  host013-azure-trust:
+    name: HOST-013/014 Azure AKS trust operator drill
+    needs: [context, ci-harness]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Validate non-secret Azure OIDC/state identifiers
+        shell: bash
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_STATE_RESOURCE_GROUP: ${{ vars.AZURE_STATE_RESOURCE_GROUP }}
+          AZURE_STATE_STORAGE_ACCOUNT: ${{ vars.AZURE_STATE_STORAGE_ACCOUNT }}
+          AZURE_STATE_CONTAINER: ${{ vars.AZURE_STATE_CONTAINER }}
+        run: |
+          set -euo pipefail
+          for name in AZURE_CLIENT_ID AZURE_TENANT_ID AZURE_SUBSCRIPTION_ID AZURE_STATE_RESOURCE_GROUP AZURE_STATE_STORAGE_ACCOUNT AZURE_STATE_CONTAINER; do
+            test -n "${!name:-}" || { echo "ERROR: repository/environment variable $name is required" >&2; exit 2; }
+          done
+      - name: Azure OIDC login
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Setup pinned Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - name: Execute governed Azure AKS trust operator
+        shell: bash
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_STATE_RESOURCE_GROUP: ${{ vars.AZURE_STATE_RESOURCE_GROUP }}
+          AZURE_STATE_STORAGE_ACCOUNT: ${{ vars.AZURE_STATE_STORAGE_ACCOUNT }}
+          AZURE_STATE_CONTAINER: ${{ vars.AZURE_STATE_CONTAINER }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ needs.context.outputs.sha }}'
+          python3 tools/ci/host013_azure_operator.py \
+            --confirmation HOST013_AZURE_AKS_OPERATOR_DRILL \
+            --candidate-sha '${{ needs.context.outputs.sha }}' \
+            --client-id "$AZURE_CLIENT_ID" \
+            --tenant-id "$AZURE_TENANT_ID" \
+            --subscription-id "$AZURE_SUBSCRIPTION_ID" \
+            --state-resource-group "$AZURE_STATE_RESOURCE_GROUP" \
+            --state-storage-account "$AZURE_STATE_STORAGE_ACCOUNT" \
+            --state-container "$AZURE_STATE_CONTAINER" \
+            --environment dev \
+            --location canadacentral \
+            --evidence-dir .depulse-host013-azure
+      - name: Retain secret-free HOST-013/014 Azure evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST013-Azure-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host013-azure/*.json
           if-no-files-found: warn
           retention-days: 30
 
