@@ -262,17 +262,54 @@ def create_pitr_branch(token: str, project_id: str, source_branch_id: str, resto
     return branch
 
 
-def create_compute(token: str, project_id: str, branch_id: str) -> dict[str, Any]:
-    response = api_request(
-        token,
-        "POST",
-        f"/projects/{project_id}/endpoints",
-        body={"endpoint": {"branch_id": branch_id, "type": "read_write"}},
-    )
-    endpoint = response.get("endpoint")
-    if not isinstance(endpoint, dict) or not endpoint.get("id"):
-        raise OperatorError("Neon restored branch compute creation returned no endpoint id")
-    return endpoint
+def is_provider_conflict(exc: OperatorError) -> bool:
+    return str(exc).startswith("Neon API HTTP 423")
+
+
+def wait_for_branch_ready(
+    token: str, project_id: str, branch_id: str, *, timeout_seconds: int = 180
+) -> dict[str, Any]:
+    deadline = time.monotonic() + timeout_seconds
+    last_state = "unknown"
+    while time.monotonic() < deadline:
+        try:
+            response = api_request(token, "GET", f"/projects/{project_id}/branches/{branch_id}")
+            branch = response.get("branch")
+            if isinstance(branch, dict):
+                last_state = str(branch.get("current_state") or "unknown")
+                if last_state == "ready":
+                    return branch
+        except OperatorError as exc:
+            if not is_provider_conflict(exc):
+                raise
+            last_state = str(exc)
+        time.sleep(3)
+    raise OperatorError(f"Neon PITR branch did not become ready: {last_state}")
+
+
+def create_compute(
+    token: str, project_id: str, branch_id: str, *, timeout_seconds: int = 180
+) -> dict[str, Any]:
+    deadline = time.monotonic() + timeout_seconds
+    last_error = ""
+    while time.monotonic() < deadline:
+        try:
+            response = api_request(
+                token,
+                "POST",
+                f"/projects/{project_id}/endpoints",
+                body={"endpoint": {"branch_id": branch_id, "type": "read_write"}},
+            )
+            endpoint = response.get("endpoint")
+            if not isinstance(endpoint, dict) or not endpoint.get("id"):
+                raise OperatorError("Neon restored branch compute creation returned no endpoint id")
+            return endpoint
+        except OperatorError as exc:
+            if not is_provider_conflict(exc):
+                raise
+            last_error = str(exc)
+            time.sleep(3)
+    raise OperatorError(f"Neon restored branch compute did not become schedulable: {last_error}")
 
 
 def wait_for_connection_uri(
@@ -552,6 +589,7 @@ def main(argv: list[str] | None = None) -> int:
         restored_branch_id = str(restored_branch["id"])
         if restored_branch_id == args.source_branch_id:
             raise OperatorError("Neon PITR target must be a distinct branch")
+        restored_branch = wait_for_branch_ready(token, args.project_id, restored_branch_id)
         endpoint = create_compute(token, args.project_id, restored_branch_id)
         restored_uri = wait_for_connection_uri(token, args.project_id, restored_branch_id, database, role)
 
