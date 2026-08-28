@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CI-DEPENDENCY-LOCK-1",
-  "updated_at": "2026-08-22",
+  "updated_at": "2026-08-28",
   "scope": {
     "immutable_action_pin_workflows": [
       ".github/workflows/ci-fast.yml",
@@ -36,6 +36,14 @@
     "actions/attest-build-provenance": {
       "label": "v4.2.2",
       "sha": "4d101475d8b20a2381f78447822ac1eab6504dd8"
+    },
+    "azure/login": {
+      "label": "v3.0.0",
+      "sha": "532459ea530d8321f2fb9bb10d1e0bcf23869a43"
+    },
+    "hashicorp/setup-terraform": {
+      "label": "v4.0.1",
+      "sha": "dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     }
   },
   "browser": {
@@ -50,6 +58,7 @@
       "ci-fast.yml:fast": ["statuses: write"],
       "ci-fast.yml:branch-hygiene": ["contents: write"],
       "ci-qualified.yml:evidence": ["statuses: write"],
+      "ci-qualified.yml:host013-azure-trust": ["id-token: write"],
       "release.yml:publish": ["contents: write", "id-token: write", "attestations: write"]
     },
     "forbidden_in_scoped_workflows": [
@@ -60,6 +69,7 @@
       "security-events: write",
       "write-all"
     ],
-    "release_provenance_exception": "release.yml publish may use id-token: write and attestations: write only to create signed provenance attestations for the exact same-run certified runnable artifacts; all other jobs retain read-only defaults unless separately enumerated above."
+    "release_provenance_exception": "release.yml publish may use id-token: write and attestations: write only to create signed provenance attestations for the exact same-run certified runnable artifacts; all other jobs retain read-only defaults unless separately enumerated above.",
+    "qualified_azure_oidc_exception": "ci-qualified.yml host013-azure-trust may use id-token: write only when the explicit manual HOST013_AZURE_AKS_OPERATOR_DRILL confirmation is present, solely for GitHub OIDC federation to the non-production Azure deployment identity; no client secret is permitted and ordinary Qualified jobs remain read-only except evidence status publication."
   }
 }
