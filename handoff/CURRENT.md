@@ -23,14 +23,14 @@
 - Parent hosted program: #66 / `ADAPT-HOSTED-SYNC-001`.
 - Permanent readiness authority: `governance/PRODUCTION-READINESS-TIERS.md` + `governance/production-readiness-tiers.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
-- Adaptive documentation baseline: `adaptive-governance/README.md`; canonical narratives are the operating contract, roadmap, build plan, build process and delivery process named there.
+- Latest HOST-013/014 Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
 - GitHub objects and executable evidence outrank this file and chat memory. Always fetch live branch/PR/issue/Actions before writing.
 
 ## Permanent readiness and zero-miss rules
 
 Development Production Ready means technically robust, secure, persistent, cross-platform, tested and full provider/data-capable. Commercial/Public Ready additionally requires provider licensing/rights, public-user legal/compliance and the commercial activation audit.
 
-Lifecycle is:
+Lifecycle:
 
 `PLANNED -> IMPLEMENTED -> PRODUCTION_INTEGRATED -> VERIFIED -> RELEASE_QUALIFIED`
 
@@ -56,22 +56,17 @@ OPEN/PARTIAL/IMPLEMENTED_UNVERIFIED/CONTRACT_ONLY/FRAMEWORK_ONLY remain incomple
 
 ### HOST-010..012 — privacy lifecycle and managed recovery
 
-**VERIFIED FOR v19.0 DEVELOPMENT.** This supersedes the stale earlier handoff wording that kept the band open.
+**VERIFIED FOR v19.0 DEVELOPMENT.**
 
-Application checkpoint:
-- `5127b1599c052bb3c709b46bd7900cc46629d0ee`
-- Fast #1257 / run `33051229439` PASS.
-- Secret-free export, reversible self-deactivation, session revocation, governed reactivation, destructive deletion, sanitized tombstones, durable privacy audit events, restart persistence and application archive anti-resurrection are executable.
-
-Managed recovery closure checkpoint:
-- recovery repair head `f357a1852640bf88aae69936d6593b63d9fd155d`
+- Application checkpoint `5127b1599c052bb3c709b46bd7900cc46629d0ee`; Fast #1257 / run `33051229439` PASS.
+- Managed recovery exact head `f357a1852640bf88aae69936d6593b63d9fd155d`.
 - Fast #1303 / run `33138630810` PASS.
-- ordinary Qualified #231 / run `33139659529` PASS on the same head; manual HOST-012 operator job skipped there by design.
-- manual Qualified #232 / run `33154312937` PASS on exact head `f357a1852640bf88aae69936d6593b63d9fd155d`.
-- retained artifact `9678997463`, digest `sha256:15cddb9d278a9c469659c864cdb216d8d04cf348cbf2c3c00855bd29071e85f0`.
-- Real Neon PITR restored a point before deletion, canonical `enforceArchiveAccountDeletionPrivacy` replayed deletion truth, restart verification passed, deleted users/workspace/device/session state did not resurrect, tombstone remained, recovery was isolated, and measured RPO/RTO were within declared targets.
+- Ordinary Qualified #231 / run `33139659529` PASS on the same head; manual recovery job skipped by design.
+- Manual Qualified #232 / run `33154312937` PASS.
+- Retained artifact `9678997463`, digest `sha256:15cddb9d278a9c469659c864cdb216d8d04cf348cbf2c3c00855bd29071e85f0`.
+- Real Neon PITR restored a point before deletion, replayed canonical privacy enforcement, passed restart verification, resurrected zero deleted profile/workspace/device/session state, preserved the tombstone and measured RPO 7.753s / RTO 13.926746s within declared targets.
 
-This evidence closes HOST-010..012. It is also relevant evidence for HOST-016, but **does not close HOST-015..016 as a whole** because tenant-owned/scoped PostgreSQL isolation, live migration/adverse testing and broader HA/failover/recovery obligations remain open.
+This evidence closes HOST-010..012 and is reusable for HOST-016. It does **not** close HOST-015..016 tenant-owned/scoped PostgreSQL isolation, migration, HA/failover and broader recovery obligations.
 
 ### HOST-013..014 — environment/service trust
 
@@ -79,27 +74,43 @@ This evidence closes HOST-010..012. It is also relevant evidence for HOST-016, b
 
 Canonical application policy remains `internal/hostedenv/desired_state_v1.json` and `internal/hostedenv/contract.go`; no second runtime authority was created.
 
-Repository implementation now includes:
+Repository implementation includes:
 - portable Kubernetes/Istio trust projection under `governance/hosted-infrastructure/`;
 - canonical renderer `tools/hosted/render_kubernetes_trust.py`;
-- fail-closed contract gate `tools/ci/hosted_infrastructure_contract_gate.py` bound into the existing G2/source-health path;
-- namespace/environment isolation, dedicated service accounts, default-deny networking, explicit managed ingress, governed egress host registration, Istio STRICT mTLS, authorization policy and `REGISTRY_ONLY` outbound mesh behavior;
-- desired-state SHA-256 binding and broad-egress rejection;
-- Azure selected as the real hosted substrate while keeping the workload layer cloud-portable;
-- Terraform AKS adapter under `governance/hosted-infrastructure/azure/` with private AKS, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy, Azure network policy, Key Vault CSI hook, user-assigned control-plane identity and Network Contributor prerequisite for the BYO VNet.
+- fail-closed hosted infrastructure and external-egress conservation gates in the existing G2/source-health path;
+- unique environment namespaces/service identities, default-deny networking, explicit managed ingress, canonical external-host allowlist, Istio STRICT mTLS, AuthorizationPolicy and `REGISTRY_ONLY` outbound behavior;
+- Azure AKS Terraform substrate in Canada Central with private cluster, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy/network policy, Key Vault CSI hook and scoped BYO-VNet Network Contributor authority;
+- dedicated workload managed identity plus federated Kubernetes service-account credential and exported non-secret client/principal/subject binding evidence;
+- Microsoft-managed Istio with governed `asm-X-Y` revision selection;
+- AzureRM remote Terraform state using OIDC + Microsoft Entra data-plane authentication;
+- `tools/ci/host013_azure_operator.py` and secret-free live evidence collector;
+- private-cluster inspection via `az aks command invoke`;
+- mandatory post-verification `terraform plan -detailed-exitcode` zero-drift proof;
+- manual-only Azure operator job inside the existing `.github/workflows/ci-qualified.yml` with `id-token: write`, pinned `azure/login` and `hashicorp/setup-terraform`, exact-head/dev-only enforcement and 30-day secret-free evidence retention;
+- no fourth workflow and no long-lived Azure client-secret path.
 
-Repository evidence checkpoints:
-- `bc3875ed0ff52d3fc18a2cc3938ed1834c8a4690` — portable HOST-013/014 gate integration; Fast #1305 / run `33155263302` PASS.
-- `f306b47093d1adb2f11b1f0c62e0dbb8d3a5b268` — machine-readable hosted-trust checkpoint; Fast #1306 / run `33155375900` PASS.
-- Azure substrate commits advanced through `ea5c83d8aaed0d8ecb9edfea127178bd13eb7cff`; Fast #1310 / run `33155849814` was triggered for that exact head and must be checked live before citing it as passed.
+Repository implementation checkpoint before governance reconciliation:
+- `f2c003a444744bfd193ef7cef421b6b044734af8`.
+- Exact-head Fast #1336 / run `33179213802`: **PASS**.
+- The six commits after the prior Azure checkpoint touched only the planned integration surface: `ci-qualified.yml`, Azure workload identity/federated binding, dependency lock, reproducibility gate, workflow policy and Azure outputs.
 
-**Remaining verification requirement:** deploy a real non-production Azure AKS environment and execute adverse/drift evidence proving the declared isolation, workload identity, ingress/egress denial, TLS/mTLS behavior and reproducibility against managed infrastructure. Repository IaC/CI cannot substitute for this live evidence.
+The subsequent checkpoint/handoff reconciliation commits are governance-only and require their own exact-head Fast before being cited as final current-head evidence.
 
-Azure/GitHub authentication policy for this verification is OIDC workload identity federation only. Do not store a long-lived Azure client secret. Expected GitHub configuration values are `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and `AZURE_SUBSCRIPTION_ID`, preferably environment-scoped with protection rules.
+**Remaining HOST-013/014 verification requirement:** run the existing manual `CI Qualified` Azure operator against a real isolated non-production Azure subscription and prove:
+- actual workload identity token acquisition/service-account binding;
+- ingress TLS/certificate lifecycle;
+- strict internal mTLS positive/adverse traffic;
+- managed-ingress authorization and unauthorized ingress denial;
+- canonical allowed egress success and unregistered-egress denial;
+- cross-environment isolation/denial;
+- secret-free live evidence;
+- zero post-apply Terraform drift.
+
+Repository IaC/CI cannot substitute for real managed infrastructure evidence.
 
 ### HOST-015..016 — PostgreSQL tenancy/recovery
 
-**OPEN / PARTIALLY IMPLEMENTED.** The successful HOST-012 Neon PITR drill is real managed recovery evidence and must be reused, but this band still requires tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof.
+**OPEN / PARTIALLY IMPLEMENTED.** Reuse HOST-012 Neon PITR evidence, but tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof remain open.
 
 ### HOST-017..020
 
@@ -117,23 +128,16 @@ Do not begin v19.1/#153 while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Finish exact-head repository qualification for the current Azure baseline, then provision an isolated non-production AKS environment using OIDC-federated GitHub/Azure identity and run real infrastructure adverse/drift tests. Do not mark HOST-013..014 VERIFIED until live managed-environment evidence exists.
+Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Obtain/configure the non-secret Azure OIDC/state identifiers for an isolated non-production subscription/environment, run the existing manual `CI Qualified` Azure operator on the exact candidate head, and retain live adverse/drift evidence. Do not mark HOST-013..014 VERIFIED or begin HOST-015+ until this managed-environment evidence passes, unless governance explicitly records an allowed Development-tier external blocker.
 
 ## Later dependency bands
 
-1. HOST-015..016: tenant-owned/scoped PostgreSQL + live migration/isolation/adverse/HA/failover/recovery evidence, reusing the successful Neon PITR evidence rather than duplicating it.
+1. HOST-015..016: tenant-owned/scoped PostgreSQL + live migration/isolation/adverse/HA/failover/recovery evidence.
 2. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance.
 3. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
 4. HOST-023 + final identical-head Development Production Ready qualification.
 5. Commercial/Public activation remains a separate later gate.
 6. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
-
-## Adaptive documentation rebaseline
-
-- DEC-2026-08-28-001 makes the audit-rebaselined canonical operating contract, roadmap, build plan, build process and delivery process the only narrative authorities for their concerns.
-- `CURRENT_ADAPTIVE_*` and `ADAPTIVE_ROADMAP.md` are now compatibility/status projections only; they do not own scope, rules, gap status or a next action.
-- The full 2026-08-27 product audit, coverage, finding register and eleven-domain 5/5 target remain conserved; this documentation correction does not claim planned product gaps are implemented.
-- HOST-010..012 machine state/closure evidence is reconciled to successful managed recovery Qualified #232 / run `33154312937`; HOST-013..014 remains OPEN/IMPLEMENTED_UNVERIFIED pending real Azure AKS evidence.
 
 ## Permanent architecture/product boundaries
 
@@ -148,26 +152,11 @@ Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Finish
 - Development provider-rights mode remains audit-only; public-production enforcement requires explicit Commercial/Public activation.
 - Keep v18.10.0 Stable immutable.
 
-## Approved future provider-registry / Market Data scope
-
-Future v19.1/#153 remains governed by:
-1. `adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md`
-2. `governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md`
-3. `governance/programs/V19-V20-REBASELINE/adaptive-provider-registry.json`
-4. `handoff/PROVIDER-REGISTRY-REBASELINE.md`
-5. issue #153.
-
-Target remains:
-
-`Provider Adapter -> Adaptive Provider Registry -> capability/entitlement probes -> rights/authority + Data Health -> Smart Provider Router v2 -> canonical state -> all useful consumers`
-
-Do not implement this early.
-
 ## Resume rule
 
 1. Read this file first.
 2. Read the readiness-tier and strict zero-miss authorities.
-3. Read `governance/current-state.json`, `adaptive-governance/README.md`, the canonical roadmap/build plan/build process/delivery process, `governance/V19_V20_REBASELINE.md`, active work-slice metadata and `closure.json`.
+3. Read `governance/current-state.json`, the canonical roadmap/build plan/build process/delivery process, `governance/V19_V20_REBASELINE.md`, active work-slice metadata and `closure.json`.
 4. Fetch live `main`, active branch, PR #149, issue #148/latest comments, issue #164 and current Actions before writing.
 5. Inspect commits since the latest verified checkpoint; do not duplicate work.
 6. Keep Stable v18.10.0 immutable.
