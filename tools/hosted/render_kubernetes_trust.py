@@ -19,6 +19,8 @@ DESIRED_STATE = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
 EGRESS_INVENTORY = ROOT / "governance" / "hosted-infrastructure" / "external-egress-v1.json"
 CANONICAL_ENVIRONMENTS = ("dev", "test", "stage", "prod")
 HOST_RE = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$", re.I)
+ISTIO_REVISION_RE = re.compile(r"^asm-[0-9]+-[0-9]+$")
+AZURE_CLIENT_ID_RE = re.compile(r"^[0-9a-fA-F-]{36}$")
 
 
 def load_manifest() -> dict:
@@ -58,7 +60,6 @@ def validate_host(host: str) -> str:
 
 
 def parse_hosts(path: Path) -> list[str]:
-    """Legacy/test seam for explicit text-host fixtures; production uses canonical JSON."""
     hosts: list[str] = []
     seen: set[str] = set()
     for raw in path.read_text(encoding="utf-8").splitlines():
@@ -100,10 +101,27 @@ def q(value: str) -> str:
     return json.dumps(value)
 
 
-def render(environment: str, hosts: list[str]) -> str:
+def render(
+    environment: str,
+    hosts: list[str],
+    *,
+    mesh_profile: str = "portable",
+    istio_revision: str | None = None,
+    workload_identity_client_id: str | None = None,
+) -> str:
     manifest = load_manifest()
     if environment not in CANONICAL_ENVIRONMENTS:
         raise SystemExit(f"unsupported environment {environment!r}")
+    if mesh_profile not in {"portable", "aks-managed"}:
+        raise SystemExit(f"unsupported mesh profile {mesh_profile!r}")
+    if mesh_profile == "aks-managed":
+        if not istio_revision or not ISTIO_REVISION_RE.fullmatch(istio_revision):
+            raise SystemExit("AKS managed Istio requires an explicit asm-X-Y revision")
+        if not workload_identity_client_id or not AZURE_CLIENT_ID_RE.fullmatch(workload_identity_client_id):
+            raise SystemExit("AKS managed workload identity requires a concrete Azure client ID")
+    elif istio_revision or workload_identity_client_id:
+        raise SystemExit("Istio revision/workload identity client ID are valid only for aks-managed rendering")
+
     hosts = sorted({validate_host(host) for host in hosts})
     if not hosts:
         raise SystemExit("canonical external-host inventory is empty; refusing broad egress")
@@ -129,7 +147,19 @@ def render(environment: str, hosts: list[str]) -> str:
     )
     host_yaml = "\n".join(f"    - {q(host)}" for host in hosts)
     host_csv = ",".join(hosts)
-    ingress_principal = "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+
+    if mesh_profile == "aks-managed":
+        namespace_mesh_label = f"    istio.io/rev: {q(istio_revision or '')}"
+        ingress_namespace = "aks-istio-ingress"
+        ingress_pod_selector = "              istio: aks-istio-ingressgateway-external"
+        auth_from = "            namespaces: [\"aks-istio-ingress\"]"
+        service_account_extra = f"\n    azure.workload.identity/client-id: {q(workload_identity_client_id or '')}"
+    else:
+        namespace_mesh_label = "    istio-injection: enabled"
+        ingress_namespace = "istio-system"
+        ingress_pod_selector = "              app: istio-ingressgateway"
+        auth_from = "            principals: [\"cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account\"]"
+        service_account_extra = ""
 
     docs = [
         f"""apiVersion: v1
@@ -138,7 +168,7 @@ metadata:
   name: {namespace}
   labels:
     depulse.io/environment: {environment}
-    istio-injection: enabled
+{namespace_mesh_label}
   annotations:
 {annotations}
 """,
@@ -148,7 +178,7 @@ metadata:
   name: {service_account}
   namespace: {namespace}
   annotations:
-{annotations}
+{annotations}{service_account_extra}
 automountServiceAccountToken: false
 """,
         f"""apiVersion: networking.k8s.io/v1
@@ -178,10 +208,10 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: istio-system
+              kubernetes.io/metadata.name: {ingress_namespace}
           podSelector:
             matchLabels:
-              app: istio-ingressgateway
+{ingress_pod_selector}
       ports:
         - protocol: TCP
           port: 8080
@@ -238,7 +268,7 @@ spec:
   rules:
     - from:
         - source:
-            principals: [{q(ingress_principal)}]
+{auth_from}
       to:
         - operation:
             ports: ["8080"]
@@ -285,10 +315,19 @@ def main() -> None:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--egress-hosts-file", type=Path, help="test/compatibility seam for explicit DNS-host fixtures")
     source.add_argument("--egress-inventory", type=Path, default=EGRESS_INVENTORY, help="canonical JSON egress inventory")
+    parser.add_argument("--mesh-profile", choices=["portable", "aks-managed"], default="portable")
+    parser.add_argument("--istio-revision")
+    parser.add_argument("--workload-identity-client-id")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     hosts = parse_hosts(args.egress_hosts_file) if args.egress_hosts_file else canonical_egress_hosts(args.egress_inventory)
-    rendered = render(args.environment, hosts)
+    rendered = render(
+        args.environment,
+        hosts,
+        mesh_profile=args.mesh_profile,
+        istio_revision=args.istio_revision,
+        workload_identity_client_id=args.workload_identity_client_id,
+    )
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
     else:
