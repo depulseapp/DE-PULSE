@@ -1,0 +1,72 @@
+{
+  "schema": "DE.PULSE-HOST013-014-AZURE-CHECKPOINT-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "issue": 148,
+  "pullRequest": 149,
+  "branch": "adapt-hosted-trust-foundation-001",
+  "requirements": ["HOST-013", "HOST-014"],
+  "readinessTier": "DEVELOPMENT_PRODUCTION_READY",
+  "status": "IMPLEMENTED_UNVERIFIED",
+  "selectedSubstrate": {
+    "provider": "Azure",
+    "service": "AKS",
+    "defaultRegion": "canadacentral",
+    "serviceMesh": "Microsoft-managed Istio add-on",
+    "portablePolicyOwner": "tools/hosted/render_kubernetes_trust.py"
+  },
+  "canonicalOwners": {
+    "environmentDesiredState": "internal/hostedenv/desired_state_v1.json",
+    "externalEgress": "governance/hosted-infrastructure/external-egress-v1.json",
+    "azureInfrastructure": "governance/hosted-infrastructure/azure/",
+    "azureOperator": "tools/ci/host013_azure_operator.py",
+    "azureLiveEvidence": "tools/ci/host013_azure_live_evidence.py",
+    "repositoryGate": "tools/ci/hosted_infrastructure_contract_gate.py"
+  },
+  "implementedControls": [
+    "unique dev/test/stage/prod environment isolation and service identities",
+    "private AKS control plane",
+    "local AKS accounts disabled",
+    "user-assigned AKS control-plane identity",
+    "OIDC issuer and Azure Workload Identity",
+    "Kubernetes RBAC and Azure Policy",
+    "Azure network policy",
+    "BYO VNet Network Contributor role scoped to the environment VNet",
+    "Microsoft-managed Istio with governed asm-X-Y revision input",
+    "strict internal mTLS policy",
+    "managed-ingress-only Istio authorization policy",
+    "Istio REGISTRY_ONLY outbound mode",
+    "canonical DNS external-host ServiceEntry",
+    "default-deny external egress inventory with production-source recurrence scanning",
+    "Azure Key Vault Secrets Provider integration hook without application secret values",
+    "AzureRM remote Terraform state using OIDC and Microsoft Entra data-plane authentication",
+    "GitHub-to-Azure federated identity bootstrap/deployment separation",
+    "dev-only exact-head Azure operator acknowledgement",
+    "private-cluster live inspection through az aks command invoke",
+    "secret-free Azure live-evidence collector",
+    "mandatory post-verification terraform plan -detailed-exitcode zero-drift proof"
+  ],
+  "exactHeadEvidence": {
+    "candidateSha": "fc23a72ebc1ef8c1f00d84e375dc054a6240552c",
+    "workflow": "DE.PULSE | CI Fast",
+    "runNumber": 1329,
+    "runId": 33159267635,
+    "conclusion": "SUCCESS",
+    "evidenceMeaning": "Repository implementation, conservation gates, operator/live-evidence self-tests and exact-head source tests only; not real Azure infrastructure evidence."
+  },
+  "knownFailClosedDiscovery": {
+    "runNumber": 1324,
+    "runId": 33158930507,
+    "result": "FAILED_AS_DESIGNED",
+    "reason": "The first egress conservation scan rejected unclassified external destinations. Comment-only crypto documentation URLs were removed from executable scanning and the real TWSE production endpoint was explicitly classified rather than widening policy."
+  },
+  "knownHostedResiduals": [
+    "Real Azure subscription/federated identity/state-container identifiers have not yet been supplied or provisioned.",
+    "The Azure operator is not yet wired into the existing ci-qualified.yml manual workflow_dispatch path; no fourth workflow is permitted.",
+    "The legacy PBOC macro calendar source still contains a plaintext HTTP URL and is deliberately classified runtimeAllowed=false; hosted runtime must not authorize HTTP. Migrate it to verified HTTPS or retire that source before relying on PBOC hosted retrieval.",
+    "Live positive/adverse service-to-service mTLS, ingress authorization and unregistered-egress denial must be proven on the real AKS environment.",
+    "Real post-apply Terraform zero-drift evidence must be retained from the exact candidate head."
+  ],
+  "closureBoundary": "HOST-013..014 may become VERIFIED only after a real non-production Azure AKS deployment on an exact source head proves private-cluster identity/isolation, managed Istio, strict mTLS, ingress authorization, canonical allowed egress success, unregistered egress denial, secret-free live evidence and zero post-verification Terraform drift. Repository Fast success alone cannot close these requirements.",
+  "commercialPublicActivationImplied": false,
+  "mergeReleaseOrV191Authorized": false
+}
