@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """Fail-closed HOST-014 external egress conservation gate.
 
-Every literal external http/https/wss destination in production Go source must be
-classified in the canonical hosted egress inventory. Runtime authorization is
-separate: only inventory rows with runtimeAllowed=true and an allowed protocol
-(https/wss) may be emitted to the hosted trust renderer.
+Every literal external http/https/wss destination in production Go string literals
+must be classified in the canonical hosted egress inventory. Comments/documentation
+are intentionally excluded. Runtime authorization is separate: only inventory rows
+with runtimeAllowed=true and an allowed protocol (https/wss) may be emitted.
 """
 from __future__ import annotations
 
 import json
 import re
 from pathlib import Path
-from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 INVENTORY = ROOT / "governance" / "hosted-infrastructure" / "external-egress-v1.json"
 URL_RE = re.compile(r"(?P<scheme>https?|wss)://(?P<host>[A-Za-z0-9.-]+)(?::\d+)?(?:[/\"'?]|$)", re.IGNORECASE)
+GO_STRING_RE = re.compile(r'"(?:\\.|[^"\\])*"|`[^`]*`', re.DOTALL)
 IGNORED_HOSTS = {"localhost", "127.0.0.1", "::1", "example.invalid"}
 
 
@@ -47,12 +47,14 @@ def discovered_urls() -> dict[tuple[str, str], set[str]]:
     for path in production_go_files():
         text = path.read_text(encoding="utf-8", errors="strict")
         rel = path.relative_to(ROOT).as_posix()
-        for match in URL_RE.finditer(text):
-            scheme = match.group("scheme").lower()
-            host = normalize_host(match.group("host"))
-            if host in IGNORED_HOSTS or host.endswith(".example.invalid"):
-                continue
-            found.setdefault((host, scheme), set()).add(rel)
+        for literal_match in GO_STRING_RE.finditer(text):
+            literal = literal_match.group(0)
+            for match in URL_RE.finditer(literal):
+                scheme = match.group("scheme").lower()
+                host = normalize_host(match.group("host"))
+                if host in IGNORED_HOSTS or host.endswith(".example.invalid"):
+                    continue
+                found.setdefault((host, scheme), set()).add(rel)
     return found
 
 
