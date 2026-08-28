@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AZ = ROOT / "governance" / "hosted-infrastructure" / "azure"
 REQUIRED = ["README.md", "versions.tf", "backend.tf", "variables.tf", "main.tf", "outputs.tf"]
 LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
+OPERATOR = ROOT / "tools" / "ci" / "host013_azure_operator.py"
 
 
 def fail(msg: str) -> None:
@@ -21,12 +22,18 @@ def require(text: str, pattern: str, label: str) -> None:
         fail("Azure hosted infrastructure missing " + label)
 
 
+def run_self_test(path: Path, label: str) -> None:
+    if not path.is_file():
+        fail("missing " + label)
+    result = subprocess.run([sys.executable, str(path), "--self-test"], cwd=ROOT, check=False)
+    if result.returncode != 0:
+        fail(label + " self-test failed")
+
+
 def main() -> int:
     for name in REQUIRED:
         if not (AZ / name).is_file():
             fail("missing Azure hosted infrastructure file: " + name)
-    if not LIVE_EVIDENCE.is_file():
-        fail("missing Azure live-evidence collector")
 
     main_tf = (AZ / "main.tf").read_text(encoding="utf-8")
     vars_tf = (AZ / "variables.tf").read_text(encoding="utf-8")
@@ -61,11 +68,18 @@ def main() -> int:
         if token.lower() in joined.lower():
             fail("Azure IaC contains forbidden secret/token material marker: " + token)
 
-    self_test = subprocess.run([sys.executable, str(LIVE_EVIDENCE), "--self-test"], cwd=ROOT, check=False)
-    if self_test.returncode != 0:
-        fail("Azure live-evidence collector self-test failed")
+    run_self_test(LIVE_EVIDENCE, "Azure live-evidence collector")
+    run_self_test(OPERATOR, "Azure AKS operator")
 
-    print("PASS: Azure AKS HOST-013..014 adapter is fail-closed, OIDC-state-backed, managed-mesh aware and secret-free")
+    operator_text = OPERATOR.read_text(encoding="utf-8")
+    require(operator_text, r'HOST013_AZURE_AKS_OPERATOR_DRILL', "explicit destructive/non-production operator acknowledgement")
+    require(operator_text, r'choices=\["dev"\]', "dev-only operator scope")
+    require(operator_text, r'ARM_USE_OIDC.*true', "operator OIDC Terraform authentication")
+    require(operator_text, r'plan.*-detailed-exitcode', "post-verification Terraform drift check")
+    if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
+        fail("Azure operator must not expose a client-secret path")
+
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, OIDC-state-backed, managed-mesh aware and secret-free")
     return 0
 
 
