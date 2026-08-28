@@ -491,6 +491,10 @@ func TestHOST012ManagedRecoveryPrivacyReplayDrill(t *testing.T) {
 		restored.Close()
 		t.Fatal("PITR-restored archive has no canonical identity state")
 	}
+	// Backend exports are raw consistent snapshots. The canonical manager normally
+	// stamps archive metadata before restore; this direct managed-recovery drill must
+	// do the same while preserving RestorePersistenceArchive's strict schema check.
+	historicalArchive.SchemaVersion = persistenceArchiveSchemaVersion
 
 	replayStarted := time.Now()
 	replayedArchive := enforceArchiveAccountDeletionPrivacy(historicalArchive, sourceIdentity)
