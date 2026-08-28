@@ -103,7 +103,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return 1
 
     if require_tokens(
-        "CI Qualified Planner v3/exact-head/dependency/native/recovery evidence contract",
+        "CI Qualified Planner v3/exact-head/dependency/native/recovery/Azure evidence contract",
         qualified,
         (
             "types: [ready_for_review]",
@@ -137,7 +137,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "name: Qualified security / data-rights contracts",
             "host012_recovery_confirmation:",
             "HOST012_MANAGED_PITR_OPERATOR_DRILL",
-            "cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}",
+            "inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && inputs.host013_azure_confirmation != 'HOST013_AZURE_AKS_OPERATOR_DRILL'",
             "name: HOST-012 managed Neon PITR operator drill",
             "if: ${{ github.event_name == 'workflow_dispatch' && inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}",
             "NEON_API_KEY: ${{ secrets.NEON_API_KEY }}",
@@ -146,6 +146,16 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "--confirm-pitr-restore",
             "DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
             "include-hidden-files: true",
+            "host013_azure_confirmation:",
+            "HOST013_AZURE_AKS_OPERATOR_DRILL",
+            "name: HOST-013/014 Azure AKS trust operator drill",
+            "if: ${{ github.event_name == 'workflow_dispatch' && inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}",
+            "id-token: write",
+            "azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43",
+            "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+            "python3 tools/ci/host013_azure_operator.py",
+            "--environment dev",
+            "DE-PULSE-HOST013-Azure-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
             "Require Planner v3 selected jobs to pass",
             "needs.context.outputs.selected_jobs",
             "actions: read",
@@ -163,6 +173,8 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "browser: [chromium, webkit]",
             "playwright install --with-deps firefox",
             "run: python3 tools/ci/webkit_targeted_test.py",
+            "AZURE_CLIENT_SECRET",
+            "ARM_CLIENT_SECRET",
         ),
     ) != 0:
         return 1
@@ -244,6 +256,7 @@ def canonical_workflow_contract(workflows: Path) -> int:
     print("macOS + Windows native rehearsal ownership separation: PASS")
     print("Qualified DB + security/data-rights dependency evidence: PASS")
     print("Qualified HOST-012 managed-recovery manual-only/concurrency-safe wiring: PASS")
+    print("Qualified HOST-013/014 Azure OIDC operator manual-only/dev-only/concurrency-safe wiring: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release canonical version-neutral G12 executor/manifest: PASS")
