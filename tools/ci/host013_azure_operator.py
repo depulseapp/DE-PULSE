@@ -8,6 +8,7 @@ installed. It never accepts a client secret, storage key, SAS token or kubeconfi
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -53,6 +54,7 @@ def run_json(args: list[str]) -> object:
 
 def revision_names(value: object) -> list[str]:
     names: set[str] = set()
+
     def walk(node: object) -> None:
         if isinstance(node, str) and ISTIO_RE.fullmatch(node):
             names.add(node)
@@ -62,6 +64,7 @@ def revision_names(value: object) -> list[str]:
         elif isinstance(node, dict):
             for item in node.values():
                 walk(item)
+
     walk(value)
     return sorted(names, key=lambda item: tuple(int(v) for v in ISTIO_RE.fullmatch(item).groups()))
 
@@ -91,8 +94,33 @@ def terraform_env(args: argparse.Namespace, istio_revision: str) -> dict[str, st
     return env
 
 
-def terraform(args: argparse.Namespace, env: dict[str, str], *extra: str) -> None:
-    run(["terraform", f"-chdir={AZURE_DIR}", *extra], env=env)
+def terraform(args: argparse.Namespace, env: dict[str, str], *extra: str, capture: bool = False) -> subprocess.CompletedProcess[str]:
+    return run(["terraform", f"-chdir={AZURE_DIR}", *extra], env=env, capture=capture)
+
+
+def terraform_outputs(args: argparse.Namespace, env: dict[str, str]) -> dict[str, object]:
+    result = terraform(args, env, "output", "-json", capture=True)
+    try:
+        payload = json.loads(result.stdout or "{}")
+    except json.JSONDecodeError as exc:
+        fail("Terraform output was not valid JSON: " + str(exc))
+    if not isinstance(payload, dict):
+        fail("Terraform output JSON must be an object")
+    return payload
+
+
+def output_value(outputs: dict[str, object], name: str) -> str:
+    row = outputs.get(name)
+    if not isinstance(row, dict):
+        fail("missing Terraform output: " + name)
+    value = str(row.get("value") or "").strip()
+    if not value:
+        fail("empty Terraform output: " + name)
+    return value
+
+
+def fingerprint(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()[:16]
 
 
 def self_test() -> None:
@@ -111,6 +139,14 @@ def self_test() -> None:
         pass
     else:
         fail("empty managed Istio revision set did not fail closed")
+    if output_value({"x": {"value": "abc"}}, "x") != "abc":
+        fail("Terraform output extraction self-test failed")
+    try:
+        output_value({}, "missing")
+    except SystemExit:
+        pass
+    else:
+        fail("missing Terraform output did not fail closed")
     print("HOST-013/014 Azure operator self-test: PASS")
 
 
@@ -170,18 +206,27 @@ def main() -> int:
     terraform(args, env, "plan", "-input=false", "-out=" + str(plan_path))
     terraform(args, env, "apply", "-input=false", "-auto-approve", str(plan_path))
 
+    outputs = terraform_outputs(args, env)
+    workload_client_id = output_value(outputs, "workload_identity_client_id")
+    workload_subject = output_value(outputs, "workload_identity_subject")
+    expected_subject = f"system:serviceaccount:depulse-{args.environment}:depulse-web-{args.environment}"
+    if workload_subject != expected_subject:
+        fail(f"workload identity subject drift: expected={expected_subject} actual={workload_subject}")
+
     rg = f"rg-depulse-{args.environment}"
     cluster = f"aks-depulse-{args.environment}"
-    manifest_path = evidence_dir / "host013-portable-trust.yaml"
+    manifest_path = evidence_dir / "host013-aks-managed-trust.yaml"
     run([
-        sys.executable, str(RENDERER), "--environment", args.environment,
+        sys.executable, str(RENDERER),
+        "--environment", args.environment,
+        "--mesh-profile", "aks-managed",
+        "--istio-revision", istio_revision,
+        "--workload-identity-client-id", workload_client_id,
         "--output", str(manifest_path),
     ])
-    # Run Command keeps the private AKS API private. The manifest is passed as a
-    # temporary command file; kubeconfig is never retrieved or retained.
     run([
         "az", "aks", "command", "invoke", "--resource-group", rg,
-        "--name", cluster, "--command", "kubectl apply -f host013-portable-trust.yaml",
+        "--name", cluster, "--command", "kubectl apply -f host013-aks-managed-trust.yaml",
         "--file", str(manifest_path), "-o", "json",
     ], capture=True)
 
@@ -194,11 +239,11 @@ def main() -> int:
         "--environment", args.environment,
         "--location", args.location,
         "--candidate-sha", args.candidate_sha,
+        "--expected-istio-revision", istio_revision,
+        "--workload-identity-client-id", workload_client_id,
         "--output", str(evidence_path),
     ])
 
-    # A clean post-apply plan is the minimum drift proof. Terraform exit code 2
-    # means drift/change and must remain a failure rather than being normalized.
     drift = subprocess.run(
         ["terraform", f"-chdir={AZURE_DIR}", "plan", "-input=false", "-detailed-exitcode"],
         cwd=ROOT, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
@@ -212,6 +257,8 @@ def main() -> int:
         "environment": args.environment,
         "location": args.location,
         "managedIstioRevision": istio_revision,
+        "workloadIdentityClientFingerprint": fingerprint(workload_client_id),
+        "workloadIdentitySubject": workload_subject,
         "stateKey": state_key,
         "terraformPostApplyDriftExitCode": drift.returncode,
         "liveEvidence": evidence_path.name,
@@ -221,8 +268,6 @@ def main() -> int:
     (evidence_dir / "host013-azure-operator-summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    # The binary plan may contain sensitive values or provider internals; never
-    # retain it as CI evidence.
     plan_path.unlink(missing_ok=True)
     manifest_path.unlink(missing_ok=True)
     print("HOST-013/014 Azure operator: PASS")
