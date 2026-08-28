@@ -74,36 +74,40 @@ This evidence closes HOST-010..012 and is reusable for HOST-016. It does **not**
 
 Canonical application policy remains `internal/hostedenv/desired_state_v1.json` and `internal/hostedenv/contract.go`; no second runtime authority was created.
 
-Repository implementation includes:
-- portable Kubernetes/Istio trust projection under `governance/hosted-infrastructure/`;
-- canonical renderer `tools/hosted/render_kubernetes_trust.py`;
-- fail-closed hosted infrastructure and external-egress conservation gates in the existing G2/source-health path;
+Repository implementation now includes:
+- portable Kubernetes/Istio trust projection plus an explicit AKS-managed projection profile;
+- AKS managed-Istio revision labeling with `istio.io/rev: asm-X-Y`; self-managed `istio-injection` conventions are rejected for the Azure profile;
+- AKS managed ingress namespace/selector conventions (`aks-istio-ingress` / external managed gateway) and managed external ingress enabled in Terraform;
 - unique environment namespaces/service identities, default-deny networking, explicit managed ingress, canonical external-host allowlist, Istio STRICT mTLS, AuthorizationPolicy and `REGISTRY_ONLY` outbound behavior;
 - Azure AKS Terraform substrate in Canada Central with private cluster, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy/network policy, Key Vault CSI hook and scoped BYO-VNet Network Contributor authority;
-- dedicated workload managed identity plus federated Kubernetes service-account credential and exported non-secret client/principal/subject binding evidence;
-- Microsoft-managed Istio with governed `asm-X-Y` revision selection;
+- dedicated workload managed identity, Azure federated credential, exact canonical service-account subject and `azure.workload.identity/client-id` binding;
 - AzureRM remote Terraform state using OIDC + Microsoft Entra data-plane authentication;
-- `tools/ci/host013_azure_operator.py` and secret-free live evidence collector;
+- canonical egress governance extended for Azure Workload Identity OAuth token exchange without broad HTTPS authority;
+- `tools/ci/host013_azure_operator.py` as the single real-Azure operator owner;
+- `tools/ci/host013_azure_live_evidence.py` for real cluster configuration, managed-mesh and workload-federation evidence;
+- `tools/ci/host013_azure_traffic_probe.py` for digest-pinned ephemeral positive/adverse live traffic evidence;
+- real probe contract for managed edge TLS 1.2 success / TLS 1.1 denial, managed ingress to strict-mTLS workload success, cross-environment direct-ingress denial, canonical allowed egress, unregistered HTTPS egress denial and actual Azure Workload Identity OAuth token exchange without retaining the bearer token;
+- ephemeral probe TLS/Kubernetes cleanup and secret-free JSON evidence only;
 - private-cluster inspection via `az aks command invoke`;
 - mandatory post-verification `terraform plan -detailed-exitcode` zero-drift proof;
 - manual-only Azure operator job inside the existing `.github/workflows/ci-qualified.yml` with `id-token: write`, pinned `azure/login` and `hashicorp/setup-terraform`, exact-head/dev-only enforcement and 30-day secret-free evidence retention;
 - no fourth workflow and no long-lived Azure client-secret path.
 
-Repository implementation checkpoint before governance reconciliation:
-- `f2c003a444744bfd193ef7cef421b6b044734af8`.
-- Exact-head Fast #1336 / run `33179213802`: **PASS**.
-- The six commits after the prior Azure checkpoint touched only the planned integration surface: `ci-qualified.yml`, Azure workload identity/federated binding, dependency lock, reproducibility gate, workflow policy and Azure outputs.
+Zero-miss repository checkpoint:
+- exact implementation head `c334f8088994a0a53094f4a440a1cbdb23eb31d3`;
+- Fast #1349 / run `33180772521`: **PASS**;
+- workflow policy, hosted source-health/architecture gates, managed-Istio projection, traffic-probe self-test, all v18 T1-T10 conservation, Python syntax, gofmt, go vet, full Go suite and PostgreSQL tagged compile passed.
 
-The subsequent checkpoint/handoff reconciliation commits are governance-only and require their own exact-head Fast before being cited as final current-head evidence.
+The zero-miss audit found and corrected four substantive repository misses before this checkpoint: stale Qualified wiring status, self-managed Istio conventions in the Azure projection, incomplete service-account workload-identity binding, and absence of real positive/adverse traffic evidence. The current machine checkpoint records those corrections and keeps the band unverified because no live Azure run has occurred.
 
-**Remaining HOST-013/014 verification requirement:** run the existing manual `CI Qualified` Azure operator against a real isolated non-production Azure subscription and prove:
-- actual workload identity token acquisition/service-account binding;
-- ingress TLS/certificate lifecycle;
-- strict internal mTLS positive/adverse traffic;
-- managed-ingress authorization and unauthorized ingress denial;
-- canonical allowed egress success and unregistered-egress denial;
-- cross-environment isolation/denial;
-- secret-free live evidence;
+**Remaining HOST-013/014 verification requirement:** run the existing manual `CI Qualified` Azure operator against a real isolated non-production Azure subscription and retain the resulting secret-free configuration/identity/traffic/drift artifact. The operator must prove:
+- actual workload identity projected-token and OAuth token exchange;
+- ingress TLS >=1.2 and legacy TLS rejection;
+- managed ingress to strict internal mTLS workload;
+- unauthorized/cross-environment direct ingress denial;
+- canonical allowed egress success and unregistered HTTPS egress denial;
+- managed-Istio revision/injection truth;
+- secret-free evidence and cleanup;
 - zero post-apply Terraform drift.
 
 Repository IaC/CI cannot substitute for real managed infrastructure evidence.
@@ -128,7 +132,7 @@ Do not begin v19.1/#153 while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Obtain/configure the non-secret Azure OIDC/state identifiers for an isolated non-production subscription/environment, run the existing manual `CI Qualified` Azure operator on the exact candidate head, and retain live adverse/drift evidence. Do not mark HOST-013..014 VERIFIED or begin HOST-015+ until this managed-environment evidence passes, unless governance explicitly records an allowed Development-tier external blocker.
+Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Obtain/configure the non-secret Azure OIDC/state identifiers for an isolated non-production subscription/environment, run the existing manual `CI Qualified` Azure operator on the exact candidate head, and retain the required live configuration/identity/traffic/drift evidence. Do not mark HOST-013..014 VERIFIED or begin HOST-015+ until this managed-environment evidence passes, unless governance explicitly records an allowed Development-tier external blocker.
 
 ## Later dependency bands
 
