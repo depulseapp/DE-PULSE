@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AZ = ROOT / "governance" / "hosted-infrastructure" / "azure"
 REQUIRED = ["README.md", "versions.tf", "backend.tf", "variables.tf", "main.tf", "outputs.tf"]
 LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
+TRAFFIC_PROBE = ROOT / "tools" / "ci" / "host013_azure_traffic_probe.py"
 OPERATOR = ROOT / "tools" / "ci" / "host013_azure_operator.py"
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
 
@@ -35,7 +36,7 @@ def main() -> int:
     for name in REQUIRED:
         if not (AZ / name).is_file():
             fail("missing Azure hosted infrastructure file: " + name)
-    for path in (LIVE_EVIDENCE, OPERATOR, RENDERER):
+    for path in (LIVE_EVIDENCE, TRAFFIC_PROBE, OPERATOR, RENDERER):
         if not path.is_file():
             fail("missing Azure hosted trust owner: " + path.name)
 
@@ -45,6 +46,7 @@ def main() -> int:
     backend_tf = (AZ / "backend.tf").read_text(encoding="utf-8")
     readme = (AZ / "README.md").read_text(encoding="utf-8")
     renderer = RENDERER.read_text(encoding="utf-8")
+    probe_text = TRAFFIC_PROBE.read_text(encoding="utf-8")
 
     require(versions_tf, r'source\s*=\s*"hashicorp/azurerm"', "AzureRM provider")
     require(backend_tf, r'backend\s+"azurerm"', "AzureRM remote state backend")
@@ -78,6 +80,15 @@ def main() -> int:
     require(renderer, r'aks-istio-ingressgateway-external', "AKS managed external ingress selector")
     require(renderer, r'azure\.workload\.identity/client-id', "Kubernetes workload identity service-account annotation")
 
+    require(probe_text, r'python:3\.13-alpine@sha256:[0-9a-f]{64}', "digest-pinned live probe image")
+    require(probe_text, r'minProtocolVersion: TLSV1_2', "TLS 1.2 managed-edge minimum probe")
+    require(probe_text, r'azure\.workload\.identity/use', "workload identity pod mutation probe")
+    require(probe_text, r'WORKLOAD_IDENTITY_TOKEN_OK', "real workload identity token-exchange probe")
+    require(probe_text, r'UNREGISTERED_EGRESS_DENIED', "unregistered egress adverse probe")
+    require(probe_text, r'DIRECT_INGRESS_DENIED', "cross-environment/direct-ingress adverse probe")
+    require(probe_text, r'cleanup\(', "ephemeral probe cleanup")
+    require(probe_text, r'containsSecrets.*False', "secret-free traffic evidence")
+
     forbidden = ["client_secret", "password", "api_key", "MARKETDATA_TOKEN", "FINNHUB"]
     joined = "\n".join((AZ / name).read_text(encoding="utf-8") for name in REQUIRED)
     for token in forbidden:
@@ -85,6 +96,7 @@ def main() -> int:
             fail("Azure IaC contains forbidden secret/token material marker: " + token)
 
     run_self_test(LIVE_EVIDENCE, "Azure live-evidence collector")
+    run_self_test(TRAFFIC_PROBE, "Azure live traffic probe")
     run_self_test(OPERATOR, "Azure AKS operator")
 
     operator_text = OPERATOR.read_text(encoding="utf-8")
@@ -93,11 +105,13 @@ def main() -> int:
     require(operator_text, r'ARM_USE_OIDC.*true', "operator OIDC Terraform authentication")
     require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
+    require(operator_text, r'host013_azure_traffic_probe', "operator live traffic probe binding")
+    require(operator_text, r'DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1', "operator traffic evidence validation")
     require(operator_text, r'plan.*-detailed-exitcode', "post-verification Terraform drift check")
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, OIDC-state-backed, managed-Istio-correct, workload-identity-bound and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested and secret-free")
     return 0
 
 
