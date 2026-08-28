@@ -20,13 +20,16 @@
     "azureInfrastructure": "governance/hosted-infrastructure/azure/",
     "azureOperator": "tools/ci/host013_azure_operator.py",
     "azureLiveEvidence": "tools/ci/host013_azure_live_evidence.py",
-    "repositoryGate": "tools/ci/hosted_infrastructure_contract_gate.py"
+    "qualifiedWorkflow": ".github/workflows/ci-qualified.yml",
+    "repositoryGate": "tools/ci/hosted_infrastructure_contract_gate.py",
+    "workflowPolicyGate": "tools/ci/workflow_policy.py"
   },
   "implementedControls": [
     "unique dev/test/stage/prod environment isolation and service identities",
     "private AKS control plane",
     "local AKS accounts disabled",
     "user-assigned AKS control-plane identity",
+    "dedicated workload managed identity and federated Kubernetes service-account binding",
     "OIDC issuer and Azure Workload Identity",
     "Kubernetes RBAC and Azure Policy",
     "Azure network policy",
@@ -40,18 +43,27 @@
     "Azure Key Vault Secrets Provider integration hook without application secret values",
     "AzureRM remote Terraform state using OIDC and Microsoft Entra data-plane authentication",
     "GitHub-to-Azure federated identity bootstrap/deployment separation",
+    "existing CI Qualified manual-only Azure operator wiring with id-token write permission",
+    "pinned azure/login and hashicorp/setup-terraform actions covered by dependency lock/reproducibility policy",
     "dev-only exact-head Azure operator acknowledgement",
     "private-cluster live inspection through az aks command invoke",
     "secret-free Azure live-evidence collector",
-    "mandatory post-verification terraform plan -detailed-exitcode zero-drift proof"
+    "mandatory post-verification terraform plan -detailed-exitcode zero-drift proof",
+    "workload identity client/principal/subject outputs for live evidence binding"
   ],
-  "exactHeadEvidence": {
-    "candidateSha": "fc23a72ebc1ef8c1f00d84e375dc054a6240552c",
+  "repositoryImplementationHead": {
+    "candidateSha": "f2c003a444744bfd193ef7cef421b6b044734af8",
     "workflow": "DE.PULSE | CI Fast",
+    "runNumber": 1336,
+    "runId": 33179213802,
+    "conclusion": "SUCCESS",
+    "evidenceMeaning": "Repository implementation, Qualified-workflow wiring, dependency pinning/reproducibility, workload identity binding, conservation gates, operator/live-evidence self-tests and exact-head source tests only; not real Azure infrastructure evidence."
+  },
+  "priorRepositoryCheckpoint": {
+    "candidateSha": "fc23a72ebc1ef8c1f00d84e375dc054a6240552c",
     "runNumber": 1329,
     "runId": 33159267635,
-    "conclusion": "SUCCESS",
-    "evidenceMeaning": "Repository implementation, conservation gates, operator/live-evidence self-tests and exact-head source tests only; not real Azure infrastructure evidence."
+    "conclusion": "SUCCESS"
   },
   "knownFailClosedDiscovery": {
     "runNumber": 1324,
@@ -61,12 +73,23 @@
   },
   "knownHostedResiduals": [
     "Real Azure subscription/federated identity/state-container identifiers have not yet been supplied or provisioned.",
-    "The Azure operator is not yet wired into the existing ci-qualified.yml manual workflow_dispatch path; no fourth workflow is permitted.",
     "The legacy PBOC macro calendar source still contains a plaintext HTTP URL and is deliberately classified runtimeAllowed=false; hosted runtime must not authorize HTTP. Migrate it to verified HTTPS or retire that source before relying on PBOC hosted retrieval.",
-    "Live positive/adverse service-to-service mTLS, ingress authorization and unregistered-egress denial must be proven on the real AKS environment.",
-    "Real post-apply Terraform zero-drift evidence must be retained from the exact candidate head."
+    "Live positive/adverse service-to-service mTLS, ingress authorization, cross-environment denial and unregistered-egress denial must be proven on the real AKS environment.",
+    "Real post-apply Terraform zero-drift evidence must be retained from the exact candidate head.",
+    "Ingress certificate/TLS lifecycle and actual Azure workload identity token acquisition must be proven from managed infrastructure."
   ],
-  "closureBoundary": "HOST-013..014 may become VERIFIED only after a real non-production Azure AKS deployment on an exact source head proves private-cluster identity/isolation, managed Istio, strict mTLS, ingress authorization, canonical allowed egress success, unregistered egress denial, secret-free live evidence and zero post-verification Terraform drift. Repository Fast success alone cannot close these requirements.",
+  "zeroMissRepositoryAudit": {
+    "qualifiedAzureOperatorWired": true,
+    "fourthWorkflowCreated": false,
+    "longLivedAzureClientSecretRequired": false,
+    "workflowDependencyPinsGoverned": true,
+    "canonicalExternalEgressInventoryBound": true,
+    "workloadIdentityBindingImplemented": true,
+    "realManagedEnvironmentEvidencePresent": false,
+    "repositoryImplementationMissCount": 0,
+    "remainingExternalVerificationMissCount": 1
+  },
+  "closureBoundary": "HOST-013..014 may become VERIFIED only after a real non-production Azure AKS deployment on an exact source head proves private-cluster identity/isolation, workload identity token acquisition, managed Istio, strict mTLS, ingress authorization and TLS lifecycle, canonical allowed egress success, unregistered egress denial, cross-environment denial, secret-free live evidence and zero post-verification Terraform drift. Repository Fast success alone cannot close these requirements.",
   "commercialPublicActivationImplied": false,
   "mergeReleaseOrV191Authorized": false
 }
