@@ -39,10 +39,10 @@
     "productAuditCoverage": "governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md",
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
-    "nextDependencyBand": "HOST-013..HOST-014 Azure-backed Environment / Service Trust: finish exact-head repository qualification, then provision an isolated non-production AKS environment with OIDC-federated GitHub/Azure identity and run live adverse/drift tests; keep UNVERIFIED until real managed-environment evidence passes",
-    "zeroMissAuditState": "REOPENED_UNVERIFIED",
+    "nextDependencyBand": "HOST-013..HOST-014 Azure-backed Environment / Service Trust: repository implementation and verification harness are exact-head Fast-qualified; configure isolated non-production Azure OIDC/Terraform-state identifiers and run the existing manual CI Qualified Azure operator; keep UNVERIFIED until real managed-environment configuration/identity/traffic/drift evidence passes",
+    "zeroMissAuditState": "REPOSITORY_IMPLEMENTED_LIVE_AZURE_UNVERIFIED",
     "externalControlWaivers": [],
-    "latestDependencyCheckpoint": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/hosted-trust-checkpoint-2026-08-28.json",
+    "latestDependencyCheckpoint": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
     "nextDependencyBandId": "HOST-013..014"
   },
   "latestCompletedWorkSlice": {
