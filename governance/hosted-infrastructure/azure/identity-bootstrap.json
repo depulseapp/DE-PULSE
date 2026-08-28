@@ -1,0 +1,53 @@
+{
+  "schema": "DE.PULSE-AZURE-HOST013-IDENTITY-BOOTSTRAP-1",
+  "lifecycle": "DEVELOPMENT",
+  "environment": "dev",
+  "authentication": {
+    "githubToAzure": "OIDC_WORKLOAD_IDENTITY_FEDERATION_ONLY",
+    "longLivedClientSecretAllowed": false,
+    "storageKeyAllowed": false,
+    "sasTokenAllowed": false,
+    "kubeconfigRetentionAllowed": false
+  },
+  "separationOfDuties": {
+    "bootstrapIdentity": {
+      "purpose": "one-time creation of deployment/state scopes and constrained delegation",
+      "persistentOwnerRoleRequired": false,
+      "rule": "Use a human/admin bootstrap identity only long enough to create the dedicated DE.PULSE development resource/state scopes and assign the federated deployment identity its bounded roles; remove unnecessary bootstrap elevation afterward."
+    },
+    "deploymentIdentity": {
+      "purpose": "repeatable Terraform plan/apply/drift and AKS live verification",
+      "subscriptionOwner": false,
+      "subscriptionUserAccessAdministrator": false,
+      "requiredCapabilities": [
+        "manage resources inside the dedicated DE.PULSE development environment scope",
+        "read/write Terraform state blobs in the dedicated state container",
+        "create only the bounded Network Contributor assignment required by the AKS user-assigned control-plane identity",
+        "invoke/read AKS run-command results for private-cluster verification"
+      ]
+    }
+  },
+  "recommendedRoleModel": [
+    {
+      "role": "Contributor",
+      "scope": "dedicated DE.PULSE development resource scope",
+      "reason": "manage AKS/VNet/identity resources without general Azure RBAC assignment authority"
+    },
+    {
+      "role": "Storage Blob Data Contributor",
+      "scope": "dedicated Terraform state container",
+      "reason": "OIDC/Entra-authenticated AzureRM backend state access"
+    },
+    {
+      "role": "Role Based Access Control Administrator",
+      "scope": "dedicated DE.PULSE development resource scope",
+      "condition": "constrain assignment capability to the AKS managed identity and the Network Contributor role when Azure ABAC conditions are available",
+      "reason": "Terraform must bind the AKS control-plane identity to its BYO VNet without granting broad Owner authority"
+    }
+  ],
+  "verification": {
+    "realAzureRequired": true,
+    "repositoryPolicyAloneClosesHost013014": false,
+    "publicCommercialActivationImplied": false
+  }
+}
