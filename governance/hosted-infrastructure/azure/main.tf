@@ -38,6 +38,14 @@ resource "azurerm_user_assigned_identity" "aks" {
   tags                = local.common_tags
 }
 
+# AKS uses the user-assigned control-plane identity against a bring-your-own
+# VNet. Grant only the network authority required for that managed substrate.
+resource "azurerm_role_assignment" "aks_network" {
+  scope                = azurerm_virtual_network.this.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.aks.principal_id
+}
+
 resource "azurerm_kubernetes_cluster" "this" {
   name                = "aks-${local.prefix}"
   location            = azurerm_resource_group.this.location
@@ -45,12 +53,12 @@ resource "azurerm_kubernetes_cluster" "this" {
   dns_prefix          = local.prefix
   kubernetes_version  = var.kubernetes_version
 
-  private_cluster_enabled = var.private_cluster_enabled
-  local_account_disabled  = true
-  oidc_issuer_enabled     = true
-  workload_identity_enabled = true
-  role_based_access_control_enabled = true
-  azure_policy_enabled            = true
+  private_cluster_enabled             = var.private_cluster_enabled
+  local_account_disabled              = true
+  oidc_issuer_enabled                 = true
+  workload_identity_enabled           = true
+  role_based_access_control_enabled   = true
+  azure_policy_enabled                = true
 
   identity {
     type         = "UserAssigned"
@@ -58,12 +66,12 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name           = "system"
-    vm_size        = var.node_vm_size
-    node_count     = var.node_count
-    vnet_subnet_id = azurerm_subnet.aks.id
-    os_disk_type   = "Managed"
-    type           = "VirtualMachineScaleSets"
+    name                         = "system"
+    vm_size                      = var.node_vm_size
+    node_count                   = var.node_count
+    vnet_subnet_id               = azurerm_subnet.aks.id
+    os_disk_type                 = "Managed"
+    type                         = "VirtualMachineScaleSets"
     only_critical_addons_enabled = true
     upgrade_settings {
       max_surge = "33%"
@@ -88,5 +96,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     }
   }
 
-  tags = local.common_tags
+  depends_on = [azurerm_role_assignment.aks_network]
+  tags       = local.common_tags
 }
