@@ -1,5 +1,8 @@
 locals {
-  prefix = "depulse-${var.environment}"
+  prefix                    = "depulse-${var.environment}"
+  workload_namespace        = "depulse-${var.environment}"
+  workload_service_account  = "depulse-web-${var.environment}"
+  workload_identity_subject = "system:serviceaccount:${local.workload_namespace}:${local.workload_service_account}"
   common_tags = merge({
     application = "DE.PULSE"
     environment = var.environment
@@ -36,6 +39,13 @@ resource "azurerm_user_assigned_identity" "aks" {
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   tags                = local.common_tags
+}
+
+resource "azurerm_user_assigned_identity" "workload" {
+  name                = "id-${local.prefix}-workload"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  tags                = merge(local.common_tags, { identity_role = "depulse-workload" })
 }
 
 resource "azurerm_role_assignment" "aks_network" {
@@ -101,4 +111,13 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   depends_on = [azurerm_role_assignment.aks_network]
   tags       = local.common_tags
+}
+
+resource "azurerm_federated_identity_credential" "workload" {
+  name                = "fic-${local.prefix}-workload"
+  resource_group_name = azurerm_resource_group.this.name
+  parent_id           = azurerm_user_assigned_identity.workload.id
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.this.oidc_issuer_url
+  subject             = local.workload_identity_subject
 }
