@@ -47,6 +47,7 @@ def validate_cluster(cluster: dict[str, Any], expected_location: str) -> dict[st
     identity = cluster.get("identity") or {}
     checks = {
         "privateControlPlane": enabled(pick(cluster, "apiServerAccessProfile", "enablePrivateCluster")),
+        "privateFqdnPresent": bool(cluster.get("privateFqdn")),
         "localAccountsDisabled": enabled(cluster.get("disableLocalAccounts")),
         "oidcIssuerEnabled": enabled(pick(cluster, "oidcIssuerProfile", "enabled")),
         "workloadIdentityEnabled": enabled(pick(cluster, "securityProfile", "workloadIdentity", "enabled")),
@@ -67,7 +68,8 @@ def validate_run_command(result: dict[str, Any]) -> dict[str, bool]:
     exit_code = result.get("exitCode")
     logs = str(result.get("logs") or "")
     checks = {
-        "runCommandSucceeded": str(exit_code) in {"0", "None"} or exit_code == 0,
+        "runCommandExitCodePresent": exit_code is not None,
+        "runCommandSucceeded": exit_code == 0 or str(exit_code).strip() == "0",
         "managedIstioNamespaceReachable": "aks-istio-system" in logs,
     }
     failed = [name for name, ok in checks.items() if not ok]
@@ -100,7 +102,7 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
     ])
     checks.update(validate_run_command(command_result))
 
-    evidence = {
+    return {
         "schema": SCHEMA,
         "requirements": ["HOST-013", "HOST-014"],
         "candidateSha": args.candidate_sha,
@@ -111,7 +113,6 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
         "subscriptionFingerprint": sanitize_id(active_subscription),
         "resourceGroup": args.resource_group,
         "clusterName": args.cluster_name,
-        "privateFqdnPresent": bool(cluster.get("privateFqdn")),
         "kubernetesVersion": cluster.get("kubernetesVersion"),
         "installedIstioRevisions": installed_revisions,
         "availableIstioRevisionRecords": len(revisions) if isinstance(revisions, list) else None,
@@ -121,12 +122,12 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
         "kubeconfigRetained": False,
         "status": "PASS",
     }
-    return evidence
 
 
 def self_test() -> None:
     fixture = {
         "location": "canadacentral",
+        "privateFqdn": "private.example.invalid",
         "apiServerAccessProfile": {"enablePrivateCluster": True},
         "disableLocalAccounts": True,
         "oidcIssuerProfile": {"enabled": True},
@@ -142,14 +143,20 @@ def self_test() -> None:
     checks = validate_cluster(fixture, "canadacentral")
     assert all(checks.values())
     validate_run_command({"exitCode": 0, "logs": "namespace/aks-istio-system\npod ready"})
-    broken = json.loads(json.dumps(fixture))
-    broken["apiServerAccessProfile"]["enablePrivateCluster"] = False
-    try:
-        validate_cluster(broken, "canadacentral")
-    except RuntimeError:
-        pass
-    else:
-        raise AssertionError("private-cluster adverse self-test did not fail closed")
+
+    for broken_case in ("private", "missing-exit"):
+        if broken_case == "private":
+            broken = json.loads(json.dumps(fixture))
+            broken["apiServerAccessProfile"]["enablePrivateCluster"] = False
+            target = lambda: validate_cluster(broken, "canadacentral")
+        else:
+            target = lambda: validate_run_command({"logs": "namespace/aks-istio-system"})
+        try:
+            target()
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError(f"{broken_case} adverse self-test did not fail closed")
     print("HOST-013/014 Azure live-evidence self-test: PASS")
 
 
