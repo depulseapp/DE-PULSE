@@ -12,6 +12,7 @@ import base64
 import hashlib
 import json
 from pathlib import Path
+import socket
 import subprocess
 import tempfile
 import time
@@ -216,15 +217,81 @@ def ingress_ip(rg: str, cluster: str) -> str:
     return ""
 
 
-def test_edge_tls(ip: str, cert: Path) -> dict[str, bool]:
+def openssl_tls11_client(target: str, cert: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            "openssl", "s_client",
+            "-connect", target,
+            "-servername", PROBE_HOST,
+            "-tls1_1",
+            "-cipher", "DEFAULT:@SECLEVEL=0",
+            "-CAfile", str(cert),
+            "-verify_return_error",
+            "-verify_hostname", PROBE_HOST,
+            "-brief",
+        ],
+        input="",
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=15,
+    )
+
+
+def prove_tls11_client_capability(cert: Path, key: Path) -> None:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as reservation:
+        reservation.bind(("127.0.0.1", 0))
+        port = reservation.getsockname()[1]
+    server = subprocess.Popen(
+        [
+            "openssl", "s_server",
+            "-accept", str(port),
+            "-cert", str(cert),
+            "-key", str(key),
+            "-tls1_1",
+            "-cipher", "DEFAULT:@SECLEVEL=0",
+            "-naccept", "1",
+        ],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    try:
+        time.sleep(0.5)
+        if server.poll() is not None:
+            output = server.communicate(timeout=1)[0] if server.stdout is not None else ""
+            fail("local TLS 1.1 capability server could not start: " + output)
+        client = openssl_tls11_client(f"127.0.0.1:{port}", cert)
+        output = client.stdout or ""
+        if client.returncode != 0 or "TLSv1.1" not in output:
+            fail("runner cannot prove TLS 1.1 client capability before edge rejection test: " + output)
+    finally:
+        if server.poll() is None:
+            server.terminate()
+            try:
+                server.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                server.kill()
+                server.wait(timeout=3)
+
+
+def test_edge_tls(ip: str, cert: Path, key: Path) -> dict[str, bool]:
     base = ["curl", "--silent", "--show-error", "--fail", "--cacert", str(cert), "--resolve", f"{PROBE_HOST}:443:{ip}"]
     positive = local_run(base + ["--tlsv1.2", "--tls-max", "1.2", f"https://{PROBE_HOST}/"], capture=True, check=False)
     if positive.returncode != 0:
         fail("TLS 1.2 managed ingress probe failed: " + (positive.stdout or ""))
-    legacy = local_run(base + ["--tlsv1.1", "--tls-max", "1.1", f"https://{PROBE_HOST}/"], capture=True, check=False)
+
+    prove_tls11_client_capability(cert, key)
+    legacy = openssl_tls11_client(f"{ip}:443", cert)
     if legacy.returncode == 0:
-        fail("TLS 1.1 unexpectedly succeeded at managed ingress")
-    return {"edgeTls12Succeeded": True, "edgeTls11Rejected": True}
+        fail("TLS 1.1 unexpectedly negotiated at managed ingress: " + (legacy.stdout or ""))
+    return {
+        "edgeTls12Succeeded": True,
+        "tls11ClientCapabilityProved": True,
+        "edgeTls11Rejected": True,
+    }
 
 
 def test_direct_ingress_denial(rg: str, cluster: str, environment: str) -> bool:
@@ -331,6 +398,9 @@ def cleanup(rg: str, cluster: str, environment: str) -> bool:
 def self_test() -> None:
     if "@sha256:" not in PROBE_IMAGE:
         fail("probe image must remain digest pinned")
+    with tempfile.TemporaryDirectory(prefix="depulse-host013-tls11-selftest-") as tmp:
+        cert, key = generate_cert(Path(tmp))
+        prove_tls11_client_capability(cert, key)
     rendered = manifest("dev", "asm-1-27", b"certificate", b"private-key")
     required = (
         "istio: aks-istio-ingressgateway-external",
@@ -393,7 +463,7 @@ def main() -> int:
             wait_ready(args.resource_group, args.cluster_name, namespace)
             checks["managedIstioSidecarInjected"] = True
             ip = ingress_ip(args.resource_group, args.cluster_name)
-            checks.update(test_edge_tls(ip, cert))
+            checks.update(test_edge_tls(ip, cert, key))
             checks["managedIngressToStrictMtlsWorkloadSucceeded"] = True
             checks["crossEnvironmentDirectIngressRejected"] = test_direct_ingress_denial(
                 args.resource_group, args.cluster_name, args.environment
