@@ -20,6 +20,7 @@ PROBE_IMAGE = "python:3.13-alpine@sha256:540c7d91f98ff6880174c40e99067bf5941eb54
 PROBE_HOST = "depulse-probe.invalid"
 ALLOWED_EGRESS = "https://api.twelvedata.com/"
 DENIED_EGRESS = "https://example.com/"
+CLEANUP_MARKER = "PROBE_CLEANUP_VERIFIED"
 
 
 def fail(message: str) -> None:
@@ -296,20 +297,35 @@ print("WORKLOAD_IDENTITY_TOKEN_OK")'''
     return True
 
 
-def cleanup(rg: str, cluster: str, environment: str) -> None:
+def cleanup_command(environment: str) -> str:
     namespace = f"depulse-{environment}"
-    command = (
-        f"kubectl delete gateway depulse-probe-gateway -n {namespace} --ignore-not-found && "
-        f"kubectl delete virtualservice depulse-probe-vs -n {namespace} --ignore-not-found && "
-        f"kubectl delete service depulse-trust-probe -n {namespace} --ignore-not-found && "
-        f"kubectl delete deployment depulse-trust-probe -n {namespace} --ignore-not-found && "
-        "kubectl delete secret depulse-probe-tls -n aks-istio-ingress --ignore-not-found && "
-        "kubectl delete namespace depulse-crossenv-probe --ignore-not-found"
+    return (
+        f"kubectl delete gateway depulse-probe-gateway -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        f"kubectl delete virtualservice depulse-probe-vs -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        f"kubectl delete service depulse-trust-probe -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        f"kubectl delete deployment depulse-trust-probe -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        "kubectl delete secret depulse-probe-tls -n aks-istio-ingress --ignore-not-found --wait=true --timeout=120s && "
+        "kubectl delete namespace depulse-crossenv-probe --ignore-not-found --wait=true --timeout=120s && "
+        f"test -z \"$(kubectl get gateway depulse-probe-gateway -n {namespace} --ignore-not-found -o name)\" && "
+        f"test -z \"$(kubectl get virtualservice depulse-probe-vs -n {namespace} --ignore-not-found -o name)\" && "
+        f"test -z \"$(kubectl get service depulse-trust-probe -n {namespace} --ignore-not-found -o name)\" && "
+        f"test -z \"$(kubectl get deployment depulse-trust-probe -n {namespace} --ignore-not-found -o name)\" && "
+        "test -z \"$(kubectl get secret depulse-probe-tls -n aks-istio-ingress --ignore-not-found -o name)\" && "
+        "test -z \"$(kubectl get namespace depulse-crossenv-probe --ignore-not-found -o name)\" && "
+        f"echo {CLEANUP_MARKER}"
     )
+
+
+def cleanup(rg: str, cluster: str, environment: str) -> bool:
     try:
-        aks_command(rg, cluster, command)
+        payload = aks_command(rg, cluster, cleanup_command(environment))
     except Exception as exc:
-        print("WARNING: HOST-013/014 probe cleanup requires operator inspection:", exc)
+        print("WARNING: HOST-013/014 probe cleanup verification failed:", exc)
+        return False
+    if CLEANUP_MARKER not in str(payload.get("logs") or ""):
+        print("WARNING: HOST-013/014 probe cleanup verification marker missing")
+        return False
+    return True
 
 
 def self_test() -> None:
@@ -327,6 +343,16 @@ def self_test() -> None:
     for token in required:
         if token not in rendered:
             fail("probe manifest self-test missing " + token)
+    cleanup_text = cleanup_command("dev")
+    cleanup_required = (
+        "--wait=true --timeout=120s",
+        "kubectl get gateway depulse-probe-gateway",
+        "kubectl get namespace depulse-crossenv-probe",
+        CLEANUP_MARKER,
+    )
+    for token in cleanup_required:
+        if token not in cleanup_text:
+            fail("probe cleanup self-test missing " + token)
     print("HOST-013/014 Azure traffic probe self-test: PASS")
 
 
@@ -377,7 +403,7 @@ def main() -> int:
                 args.resource_group, args.cluster_name, args.environment
             )
         finally:
-            cleanup(args.resource_group, args.cluster_name, args.environment)
+            checks["probeCleanupVerified"] = cleanup(args.resource_group, args.cluster_name, args.environment)
 
     evidence = {
         "schema": "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1",
@@ -391,10 +417,11 @@ def main() -> int:
         "ephemeralTlsCredentialRetained": False,
         "containsSecrets": False,
         "cleanupAttempted": True,
+        "cleanupVerified": checks.get("probeCleanupVerified") is True,
         "status": "PASS",
     }
-    if not checks or not all(checks.values()):
-        fail("not all live trust probes passed")
+    if not checks or not all(checks.values()) or evidence["cleanupVerified"] is not True:
+        fail("not all live trust probes and cleanup checks passed")
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
