@@ -68,6 +68,11 @@ resource "azurerm_kubernetes_cluster" "this" {
   role_based_access_control_enabled = true
   azure_policy_enabled              = true
 
+  azure_active_directory_role_based_access_control {
+    tenant_id          = var.tenant_id
+    azure_rbac_enabled = true
+  }
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.aks.id]
@@ -116,10 +121,9 @@ resource "azurerm_kubernetes_cluster" "this" {
 }
 
 resource "azurerm_federated_identity_credential" "workload" {
-  name                = "fic-${local.prefix}-workload"
-  resource_group_name = azurerm_resource_group.this.name
-  parent_id           = azurerm_user_assigned_identity.workload.id
-  audience            = ["api://AzureADTokenExchange"]
-  issuer              = azurerm_kubernetes_cluster.this.oidc_issuer_url
-  subject             = local.workload_identity_subject
+  name      = "fic-${local.prefix}-workload"
+  parent_id = azurerm_user_assigned_identity.workload.id
+  audience  = ["api://AzureADTokenExchange"]
+  issuer    = azurerm_kubernetes_cluster.this.oidc_issuer_url
+  subject   = local.workload_identity_subject
 }
