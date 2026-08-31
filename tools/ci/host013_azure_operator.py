@@ -16,6 +16,8 @@ import re
 import subprocess
 import sys
 
+from azure_oidc_cli import refresh_azure_cli_oidc
+
 ROOT = Path(__file__).resolve().parents[2]
 AZURE_DIR = ROOT / "governance" / "hosted-infrastructure" / "azure"
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
@@ -30,6 +32,11 @@ def fail(message: str) -> None:
 
 
 def run(args: list[str], *, env: dict[str, str] | None = None, capture: bool = False) -> subprocess.CompletedProcess[str]:
+    if args and args[0] == "az":
+        try:
+            refresh_azure_cli_oidc()
+        except RuntimeError as exc:
+            fail("Azure CLI OIDC refresh failed: " + str(exc))
     result = subprocess.run(
         args,
         cwd=ROOT,
@@ -246,6 +253,10 @@ def main() -> int:
     ], capture=True)
 
     evidence_path = evidence_dir / "host013-azure-live-evidence.json"
+    try:
+        refresh_azure_cli_oidc()
+    except RuntimeError as exc:
+        fail("Azure CLI OIDC refresh before live evidence failed: " + str(exc))
     run([
         sys.executable, str(LIVE_EVIDENCE),
         "--subscription-id", args.subscription_id,
@@ -261,6 +272,10 @@ def main() -> int:
     require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
 
     traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+    try:
+        refresh_azure_cli_oidc()
+    except RuntimeError as exc:
+        fail("Azure CLI OIDC refresh before traffic evidence failed: " + str(exc))
     run([
         sys.executable, str(TRAFFIC_PROBE),
         "--resource-group", rg,
