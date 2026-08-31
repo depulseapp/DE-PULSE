@@ -56,7 +56,7 @@ variable "istio_revisions" {
 variable "node_vm_size" {
   description = "Non-production node size."
   type        = string
-  default     = "Standard_D2as_v5"
+  default     = "Standard_DC2s_v3"
 }
 
 variable "node_count" {
