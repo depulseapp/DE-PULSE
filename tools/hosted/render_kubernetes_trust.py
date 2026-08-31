@@ -151,12 +151,14 @@ def render(
     if mesh_profile == "aks-managed":
         namespace_mesh_label = f"    istio.io/rev: {q(istio_revision or '')}"
         ingress_namespace = "aks-istio-ingress"
+        control_plane_namespace = "aks-istio-system"
         ingress_pod_selector = "              istio: aks-istio-ingressgateway-external"
         auth_from = "            namespaces: [\"aks-istio-ingress\"]"
         service_account_extra = f"\n    azure.workload.identity/client-id: {q(workload_identity_client_id or '')}"
     else:
         namespace_mesh_label = "    istio-injection: enabled"
         ingress_namespace = "istio-system"
+        control_plane_namespace = "istio-system"
         ingress_pod_selector = "              app: istio-ingressgateway"
         auth_from = "            principals: [\"cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account\"]"
         service_account_extra = ""
@@ -238,6 +240,13 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {control_plane_namespace}
+      ports:
+        - protocol: TCP
+          port: 15012
     - ports:
         - protocol: TCP
           port: 443
