@@ -88,6 +88,10 @@ def main() -> int:
 
     require(probe_text, r'python:3\.13-alpine@sha256:[0-9a-f]{64}', "digest-pinned live probe image")
     require(probe_text, r'minProtocolVersion: TLSV1_2', "TLS 1.2 managed-edge minimum probe")
+    require(probe_text, r'prove_tls11_client_capability', "positive TLS 1.1 client capability proof")
+    require(probe_text, r'"-tls1_1"', "explicit TLS 1.1 OpenSSL edge probe")
+    require(probe_text, r'DEFAULT:@SECLEVEL=0', "legacy TLS client security-level override for proof")
+    require(probe_text, r'tls11ClientCapabilityProved', "retained TLS 1.1 client capability evidence")
     require(probe_text, r'azure\.workload\.identity/use', "workload identity pod mutation probe")
     require(probe_text, r'WORKLOAD_IDENTITY_TOKEN_OK', "real workload identity token-exchange probe")
     require(probe_text, r'UNREGISTERED_EGRESS_DENIED', "unregistered egress adverse probe")
@@ -118,7 +122,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, XDS-reachable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
     return 0
 
 
