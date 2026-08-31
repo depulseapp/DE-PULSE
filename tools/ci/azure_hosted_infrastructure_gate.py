@@ -82,6 +82,8 @@ def main() -> int:
     require(renderer, r'istio\.io/rev', "AKS managed revision namespace label")
     require(renderer, r'aks-istio-ingress', "AKS managed ingress namespace")
     require(renderer, r'aks-istio-ingressgateway-external', "AKS managed external ingress selector")
+    require(renderer, r'control_plane_namespace\s*=\s*"aks-istio-system"', "AKS managed Istio control-plane namespace")
+    require(renderer, r'port:\s*15012', "secure Istio XDS/CA NetworkPolicy egress")
     require(renderer, r'azure\.workload\.identity/client-id', "Kubernetes workload identity service-account annotation")
 
     require(probe_text, r'python:3\.13-alpine@sha256:[0-9a-f]{64}', "digest-pinned live probe image")
@@ -116,7 +118,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, XDS-reachable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
     return 0
 
 
