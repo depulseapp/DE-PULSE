@@ -55,6 +55,8 @@ def main() -> int:
     require(main_tf, r'private_cluster_enabled\s*=\s*var\.private_cluster_enabled', "private AKS control-plane binding")
     require(vars_tf, r'condition\s*=\s*var\.private_cluster_enabled', "fail-closed private-cluster validation")
     require(main_tf, r'local_account_disabled\s*=\s*true', "disabled local AKS accounts")
+    require(main_tf, r'azure_active_directory_role_based_access_control\s*\{', "AKS-managed Microsoft Entra integration")
+    require(main_tf, r'azure_active_directory_role_based_access_control\s*\{[\s\S]*?tenant_id\s*=\s*var\.tenant_id[\s\S]*?azure_rbac_enabled\s*=\s*true', "tenant-bound Azure RBAC")
     require(main_tf, r'oidc_issuer_enabled\s*=\s*true', "OIDC issuer")
     require(main_tf, r'workload_identity_enabled\s*=\s*true', "Azure Workload Identity")
     require(main_tf, r'role_based_access_control_enabled\s*=\s*true', "Kubernetes RBAC")
@@ -111,7 +113,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested and secret-free")
     return 0
 
 
