@@ -85,7 +85,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     vnet_subnet_id               = azurerm_subnet.aks.id
     os_disk_type                 = "Managed"
     type                         = "VirtualMachineScaleSets"
-    only_critical_addons_enabled = true
+    only_critical_addons_enabled = false
     upgrade_settings {
       max_surge = "33%"
     }
