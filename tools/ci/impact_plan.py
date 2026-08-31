@@ -151,6 +151,15 @@ def explicit_classes(path: str) -> set[str]:
     if path.startswith(("adaptive-governance/", "governance/", "handoff/", ".depulse-certification/")):
         classes.add("CERTIFICATION_GOVERNANCE")
 
+    # Hosted environment desired state and trust rendering are production-facing
+    # security/infrastructure owners, not renderer/UI changes. Classify them
+    # explicitly so Planner v3 stays fail-closed for truly unknown paths without
+    # forcing unrelated browser evidence for HOST-013/014 infrastructure work.
+    if path.startswith("internal/hostedenv/"):
+        classes.update({"BACKEND", "AUTH_SECURITY", "RELIABILITY_PERFORMANCE"})
+    if path.startswith("tools/hosted/"):
+        classes.update({"AUTH_SECURITY", "CERTIFICATION_GOVERNANCE"})
+
     if (
         path.startswith(("renderer/", "tests/renderer/", "tests/browser/"))
         or path.endswith((".html", ".css"))
