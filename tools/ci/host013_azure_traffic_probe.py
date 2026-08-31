@@ -218,6 +218,7 @@ def ingress_ip(rg: str, cluster: str) -> str:
 
 
 def openssl_tls11_client(target: str, cert: Path) -> subprocess.CompletedProcess[str]:
+    request = f"GET / HTTP/1.0\r\nHost: {PROBE_HOST}\r\nConnection: close\r\n\r\n"
     return subprocess.run(
         [
             "openssl", "s_client",
@@ -230,7 +231,7 @@ def openssl_tls11_client(target: str, cert: Path) -> subprocess.CompletedProcess
             "-verify_hostname", PROBE_HOST,
             "-brief",
         ],
-        input="",
+        input=request,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
@@ -251,6 +252,7 @@ def prove_tls11_client_capability(cert: Path, key: Path) -> None:
             "-key", str(key),
             "-tls1_1",
             "-cipher", "DEFAULT:@SECLEVEL=0",
+            "-www",
             "-naccept", "1",
         ],
         stdin=subprocess.DEVNULL,
@@ -265,8 +267,15 @@ def prove_tls11_client_capability(cert: Path, key: Path) -> None:
             fail("local TLS 1.1 capability server could not start: " + output)
         client = openssl_tls11_client(f"127.0.0.1:{port}", cert)
         output = client.stdout or ""
-        if client.returncode != 0 or "TLSv1.1" not in output:
-            fail("runner cannot prove TLS 1.1 client capability before edge rejection test: " + output)
+        if "TLSv1.1" not in output:
+            server_output = ""
+            if server.poll() is not None and server.stdout is not None:
+                server_output = server.stdout.read() or ""
+            fail(
+                "runner cannot prove TLS 1.1 client capability before edge rejection test: "
+                + output
+                + ("\nserver: " + server_output if server_output else "")
+            )
     finally:
         if server.poll() is None:
             server.terminate()
@@ -285,8 +294,9 @@ def test_edge_tls(ip: str, cert: Path, key: Path) -> dict[str, bool]:
 
     prove_tls11_client_capability(cert, key)
     legacy = openssl_tls11_client(f"{ip}:443", cert)
-    if legacy.returncode == 0:
-        fail("TLS 1.1 unexpectedly negotiated at managed ingress: " + (legacy.stdout or ""))
+    legacy_output = legacy.stdout or ""
+    if legacy.returncode == 0 or "TLSv1.1" in legacy_output:
+        fail("TLS 1.1 unexpectedly negotiated at managed ingress: " + legacy_output)
     return {
         "edgeTls12Succeeded": True,
         "tls11ClientCapabilityProved": True,
