@@ -49,6 +49,7 @@ def main() -> int:
     probe_text = TRAFFIC_PROBE.read_text(encoding="utf-8")
 
     require(versions_tf, r'source\s*=\s*"hashicorp/azurerm"', "AzureRM provider")
+    require(versions_tf, r'version\s*=\s*"=\s*4\.81\.0"', "exact live-tested AzureRM 4.81.0 pin")
     require(backend_tf, r'backend\s+"azurerm"', "AzureRM remote state backend")
     require(backend_tf, r'use_oidc\s*=\s*true', "OIDC state authentication")
     require(backend_tf, r'use_azuread_auth\s*=\s*true', "Microsoft Entra state data-plane authentication")
@@ -61,6 +62,7 @@ def main() -> int:
     require(main_tf, r'workload_identity_enabled\s*=\s*true', "Azure Workload Identity")
     require(main_tf, r'role_based_access_control_enabled\s*=\s*true', "Kubernetes RBAC")
     require(main_tf, r'azure_policy_enabled\s*=\s*true', "Azure Policy")
+    require(main_tf, r'only_critical_addons_enabled\s*=\s*false', "schedulable single-pool dev verification workloads")
     require(main_tf, r'network_policy\s*=\s*"azure"', "network policy")
     require(main_tf, r'service_mesh_profile\s*\{[\s\S]*?mode\s*=\s*"Istio"[\s\S]*?revisions\s*=\s*var\.istio_revisions', "managed AKS Istio profile")
     require(main_tf, r'external_ingress_gateway_enabled\s*=\s*true', "managed external Istio ingress gateway")
@@ -88,7 +90,8 @@ def main() -> int:
     require(probe_text, r'WORKLOAD_IDENTITY_TOKEN_OK', "real workload identity token-exchange probe")
     require(probe_text, r'UNREGISTERED_EGRESS_DENIED', "unregistered egress adverse probe")
     require(probe_text, r'DIRECT_INGRESS_DENIED', "cross-environment/direct-ingress adverse probe")
-    require(probe_text, r'cleanup\(', "ephemeral probe cleanup")
+    require(probe_text, r'PROBE_CLEANUP_VERIFIED', "verified ephemeral probe cleanup marker")
+    require(probe_text, r'cleanupVerified.*True', "fail-closed cleanup evidence")
     require(probe_text, r'containsSecrets.*False', "secret-free traffic evidence")
 
     forbidden = ["client_secret", "password", "api_key", "MARKETDATA_TOKEN", "FINNHUB"]
@@ -113,7 +116,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
     return 0
 
 
