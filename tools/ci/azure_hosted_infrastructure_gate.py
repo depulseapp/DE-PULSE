@@ -11,6 +11,7 @@ REQUIRED = ["README.md", "versions.tf", "backend.tf", "variables.tf", "main.tf",
 LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
 TRAFFIC_PROBE = ROOT / "tools" / "ci" / "host013_azure_traffic_probe.py"
 OPERATOR = ROOT / "tools" / "ci" / "host013_azure_operator.py"
+OIDC_HELPER = ROOT / "tools" / "ci" / "azure_oidc_cli.py"
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
 
 
@@ -36,7 +37,7 @@ def main() -> int:
     for name in REQUIRED:
         if not (AZ / name).is_file():
             fail("missing Azure hosted infrastructure file: " + name)
-    for path in (LIVE_EVIDENCE, TRAFFIC_PROBE, OPERATOR, RENDERER):
+    for path in (LIVE_EVIDENCE, TRAFFIC_PROBE, OPERATOR, OIDC_HELPER, RENDERER):
         if not path.is_file():
             fail("missing Azure hosted trust owner: " + path.name)
 
@@ -106,14 +107,29 @@ def main() -> int:
         if token.lower() in joined.lower():
             fail("Azure IaC contains forbidden secret/token material marker: " + token)
 
+    run_self_test(OIDC_HELPER, "Azure GitHub OIDC CLI refresh helper")
     run_self_test(LIVE_EVIDENCE, "Azure live-evidence collector")
     run_self_test(TRAFFIC_PROBE, "Azure live traffic probe")
     run_self_test(OPERATOR, "Azure AKS operator")
+
+    oidc_text = OIDC_HELPER.read_text(encoding="utf-8")
+    require(oidc_text, r'ACTIONS_ID_TOKEN_REQUEST_URL', "GitHub Actions OIDC request URL binding")
+    require(oidc_text, r'ACTIONS_ID_TOKEN_REQUEST_TOKEN', "GitHub Actions OIDC request authorization binding")
+    require(oidc_text, r'api://AzureADTokenExchange', "GitHub-to-Azure token-exchange audience")
+    require(oidc_text, r'--federated-token', "Azure CLI federated-token renewal")
+    require(oidc_text, r'--service-principal', "Azure CLI service-principal federation mode")
+    require(oidc_text, r'stdout=subprocess\.DEVNULL', "OIDC login output suppression")
+    if "client-secret" in oidc_text.lower() or "client_secret" in oidc_text.lower():
+        fail("Azure OIDC refresh helper must not expose a client-secret path")
 
     operator_text = OPERATOR.read_text(encoding="utf-8")
     require(operator_text, r'HOST013_AZURE_AKS_OPERATOR_DRILL', "explicit destructive/non-production operator acknowledgement")
     require(operator_text, r'choices=\["dev"\]', "dev-only operator scope")
     require(operator_text, r'ARM_USE_OIDC.*true', "operator OIDC Terraform authentication")
+    require(operator_text, r'from azure_oidc_cli import refresh_azure_cli_oidc', "renewable Azure CLI OIDC helper binding")
+    require(operator_text, r'args\s+and\s+args\[0\]\s*==\s*"az"[\s\S]*?refresh_azure_cli_oidc\(\)', "per-Azure-CLI just-in-time OIDC refresh")
+    if operator_text.count("refresh_azure_cli_oidc()") < 3:
+        fail("Azure operator must refresh OIDC for direct Azure CLI and both child evidence phases")
     require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
     require(operator_text, r'host013_azure_traffic_probe', "operator live traffic probe binding")
@@ -122,7 +138,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, OIDC-state-backed, managed-Istio-correct, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-correct, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
     return 0
 
 
