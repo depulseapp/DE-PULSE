@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import hashlib
 import json
 from pathlib import Path
 import socket
@@ -22,6 +21,7 @@ PROBE_HOST = "depulse-probe.invalid"
 ALLOWED_EGRESS = "https://api.twelvedata.com/"
 DENIED_EGRESS = "https://example.com/"
 CLEANUP_MARKER = "PROBE_CLEANUP_VERIFIED"
+SCHEMA = "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1"
 
 
 def fail(message: str) -> None:
@@ -59,7 +59,8 @@ def aks_command(rg: str, cluster: str, command: str, *, file: Path | None = None
     exit_code = payload.get("exitCode")
     succeeded = exit_code == 0 or str(exit_code).strip() == "0"
     if expect_success and not succeeded:
-        fail("AKS command failed: " + str(payload.get("logs") or ""))
+        logs = str(payload.get("logs") or "").strip()
+        fail(f"AKS command failed: exitCode={exit_code!r}; logs={logs[:8000] if logs else '<no remote logs>'}")
     if not expect_success and succeeded:
         fail("AKS adverse command unexpectedly succeeded")
     return payload
@@ -191,11 +192,12 @@ def wait_ready(rg: str, cluster: str, namespace: str) -> None:
     command = (
         f"kubectl rollout status deployment/depulse-trust-probe -n {namespace} --timeout=180s && "
         "kubectl wait --for=condition=Ready pod/crossenv-client -n depulse-crossenv-probe --timeout=180s && "
-        f"kubectl get pod -n {namespace} -l app=depulse-trust-probe -o jsonpath='{{.items[0].spec.containers[*].name}}'"
+        f"printf 'CONTAINERS=' && kubectl get pod -n {namespace} -l app=depulse-trust-probe "
+        "-o jsonpath='{.items[0].spec.containers[*].name}' && echo"
     )
     payload = aks_command(rg, cluster, command)
     logs = str(payload.get("logs") or "")
-    if "istio-proxy" not in logs or "probe" not in logs:
+    if "CONTAINERS=" not in logs or "istio-proxy" not in logs or "probe" not in logs:
         fail("managed Istio sidecar was not injected into the probe workload")
 
 
@@ -377,14 +379,14 @@ print("WORKLOAD_IDENTITY_TOKEN_OK")'''
 def cleanup_command(environment: str) -> str:
     namespace = f"depulse-{environment}"
     return (
-        f"kubectl delete gateway depulse-probe-gateway -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
-        f"kubectl delete virtualservice depulse-probe-vs -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        f"kubectl delete gateways.networking.istio.io depulse-probe-gateway -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
+        f"kubectl delete virtualservices.networking.istio.io depulse-probe-vs -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
         f"kubectl delete service depulse-trust-probe -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
         f"kubectl delete deployment depulse-trust-probe -n {namespace} --ignore-not-found --wait=true --timeout=120s && "
         "kubectl delete secret depulse-probe-tls -n aks-istio-ingress --ignore-not-found --wait=true --timeout=120s && "
         "kubectl delete namespace depulse-crossenv-probe --ignore-not-found --wait=true --timeout=120s && "
-        f"test -z \"$(kubectl get gateway depulse-probe-gateway -n {namespace} --ignore-not-found -o name)\" && "
-        f"test -z \"$(kubectl get virtualservice depulse-probe-vs -n {namespace} --ignore-not-found -o name)\" && "
+        f"test -z \"$(kubectl get gateways.networking.istio.io depulse-probe-gateway -n {namespace} --ignore-not-found -o name)\" && "
+        f"test -z \"$(kubectl get virtualservices.networking.istio.io depulse-probe-vs -n {namespace} --ignore-not-found -o name)\" && "
         f"test -z \"$(kubectl get service depulse-trust-probe -n {namespace} --ignore-not-found -o name)\" && "
         f"test -z \"$(kubectl get deployment depulse-trust-probe -n {namespace} --ignore-not-found -o name)\" && "
         "test -z \"$(kubectl get secret depulse-probe-tls -n aks-istio-ingress --ignore-not-found -o name)\" && "
@@ -403,6 +405,37 @@ def cleanup(rg: str, cluster: str, environment: str) -> bool:
         print("WARNING: HOST-013/014 probe cleanup verification marker missing")
         return False
     return True
+
+
+def write_evidence(
+    output: Path,
+    *,
+    candidate_sha: str,
+    environment: str,
+    istio_revision: str,
+    checks: dict[str, bool],
+    cleanup_verified: bool,
+    probe_error: BaseException | None,
+) -> None:
+    passed = probe_error is None and bool(checks) and all(checks.values()) and cleanup_verified
+    evidence = {
+        "schema": SCHEMA,
+        "requirements": ["HOST-013", "HOST-014"],
+        "candidateSha": candidate_sha,
+        "environment": environment,
+        "managedIstioRevision": istio_revision,
+        "probeImage": PROBE_IMAGE,
+        "probeHost": PROBE_HOST,
+        "checks": checks,
+        "probeFailure": str(probe_error)[:12000] if probe_error is not None else None,
+        "ephemeralTlsCredentialRetained": False,
+        "containsSecrets": False,
+        "cleanupAttempted": True,
+        "cleanupVerified": cleanup_verified,
+        "status": "PASS" if passed else "FAIL",
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def self_test() -> None:
@@ -426,13 +459,31 @@ def self_test() -> None:
     cleanup_text = cleanup_command("dev")
     cleanup_required = (
         "--wait=true --timeout=120s",
-        "kubectl get gateway depulse-probe-gateway",
+        "gateways.networking.istio.io",
+        "virtualservices.networking.istio.io",
         "kubectl get namespace depulse-crossenv-probe",
         CLEANUP_MARKER,
     )
     for token in cleanup_required:
         if token not in cleanup_text:
             fail("probe cleanup self-test missing " + token)
+    with tempfile.TemporaryDirectory(prefix="depulse-host013-evidence-selftest-") as tmp:
+        path = Path(tmp) / "evidence.json"
+        synthetic = RuntimeError("synthetic traffic failure")
+        write_evidence(
+            path,
+            candidate_sha="a" * 40,
+            environment="dev",
+            istio_revision="asm-1-27",
+            checks={"probeCleanupVerified": True},
+            cleanup_verified=True,
+            probe_error=synthetic,
+        )
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("status") != "FAIL" or "synthetic traffic failure" not in str(payload.get("probeFailure")):
+            fail("traffic failure evidence self-test failed")
+        if payload.get("containsSecrets") is not False or payload.get("ephemeralTlsCredentialRetained") is not False:
+            fail("traffic failure evidence secret-retention self-test failed")
     print("HOST-013/014 Azure traffic probe self-test: PASS")
 
 
@@ -455,6 +506,10 @@ def main() -> int:
 
     namespace = f"depulse-{args.environment}"
     checks: dict[str, bool] = {}
+    probe_error: BaseException | None = None
+    cleanup_verified = False
+    output = Path(args.output)
+
     with tempfile.TemporaryDirectory(prefix="depulse-host013-probe-") as tmp:
         directory = Path(tmp)
         cert, key = generate_cert(directory)
@@ -482,29 +537,25 @@ def main() -> int:
             checks["workloadIdentityTokenExchangeSucceeded"] = test_workload_identity_token(
                 args.resource_group, args.cluster_name, args.environment
             )
+        except BaseException as exc:
+            probe_error = exc
         finally:
-            checks["probeCleanupVerified"] = cleanup(args.resource_group, args.cluster_name, args.environment)
+            cleanup_verified = cleanup(args.resource_group, args.cluster_name, args.environment)
+            checks["probeCleanupVerified"] = cleanup_verified
 
-    evidence = {
-        "schema": "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1",
-        "requirements": ["HOST-013", "HOST-014"],
-        "candidateSha": args.candidate_sha,
-        "environment": args.environment,
-        "managedIstioRevision": args.istio_revision,
-        "probeImage": PROBE_IMAGE,
-        "probeHost": PROBE_HOST,
-        "checks": checks,
-        "ephemeralTlsCredentialRetained": False,
-        "containsSecrets": False,
-        "cleanupAttempted": True,
-        "cleanupVerified": checks.get("probeCleanupVerified") is True,
-        "status": "PASS",
-    }
-    if not checks or not all(checks.values()) or evidence["cleanupVerified"] is not True:
+    write_evidence(
+        output,
+        candidate_sha=args.candidate_sha,
+        environment=args.environment,
+        istio_revision=args.istio_revision,
+        checks=checks,
+        cleanup_verified=cleanup_verified,
+        probe_error=probe_error,
+    )
+    if probe_error is not None:
+        raise probe_error
+    if not checks or not all(checks.values()) or cleanup_verified is not True:
         fail("not all live trust probes and cleanup checks passed")
-    output = Path(args.output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print("HOST-013/014 Azure traffic evidence: PASS ->", output)
     return 0
 
