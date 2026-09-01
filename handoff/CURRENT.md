@@ -38,7 +38,7 @@ Before VERIFIED, prove the applicable chain:
 
 `requirement -> canonical owner -> production integration -> consumer reachability -> positive/adverse behavior -> persistence/restart/lifecycle -> security/rights/privacy -> observability -> executable regression -> real external/infrastructure evidence where required -> exact-head CI -> closure ledger`
 
-OPEN/PARTIAL/IMPLEMENTED_UNVERIFIED/CONTRACT_ONLY/FRAMEWORK_ONLY remain incomplete and never authorize merge/release/readiness claims.
+OPEN/PARTIAL/IMPLEMENTED_UNVERIFIED/CONTRACT_ONLY/FRAMEWORK_ONLY remain incomplete and never authorize a false verification claim. A specifically named Development-tier external blocker may permit dependency-band advancement only when governance records the blocker, preserves the missing evidence truth and forbids architecture/security weakening.
 
 ## Current v19.0 dependency-band truth
 
@@ -70,51 +70,31 @@ This evidence closes HOST-010..012 and is reusable for HOST-016. It does **not**
 
 ### HOST-013..014 — environment/service trust
 
-**IMPLEMENTED_UNVERIFIED — CURRENT ACTIVE BAND.**
+**IMPLEMENTED_UNVERIFIED — ALLOWED DEVELOPMENT-TIER EXTERNAL RESIDUAL.**
 
-Canonical application policy remains `internal/hostedenv/desired_state_v1.json` and `internal/hostedenv/contract.go`; no second runtime authority was created.
+Repository implementation remains fail-closed and includes the complete Azure/AKS verification harness: private AKS, Entra/Azure RBAC, OIDC/Workload Identity, managed Istio, strict mTLS, governed ingress/egress, TLS adverse evidence, workload token exchange, temporary verification RBAC cleanup, managed-Istio rollout convergence, managed external ingress readiness, secret-free retained evidence and post-verification zero-drift.
 
-Repository implementation now includes:
-- portable Kubernetes/Istio trust projection plus an explicit AKS-managed projection profile;
-- AKS managed-Istio revision labeling with `istio.io/rev: asm-X-Y`; self-managed `istio-injection` conventions are rejected for the Azure profile;
-- AKS managed ingress namespace/selector conventions (`aks-istio-ingress` / external managed gateway) and managed external ingress enabled in Terraform;
-- unique environment namespaces/service identities, default-deny networking, explicit managed ingress, canonical external-host allowlist, Istio STRICT mTLS, AuthorizationPolicy and `REGISTRY_ONLY` outbound behavior;
-- Azure AKS Terraform substrate in Canada Central with private cluster, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy/network policy, Key Vault CSI hook and scoped BYO-VNet Network Contributor authority;
-- dedicated workload managed identity, Azure federated credential, exact canonical service-account subject and `azure.workload.identity/client-id` binding;
-- AzureRM remote Terraform state using OIDC + Microsoft Entra data-plane authentication;
-- canonical egress governance extended for Azure Workload Identity OAuth token exchange without broad HTTPS authority;
-- `tools/ci/host013_azure_operator.py` as the single real-Azure operator owner;
-- `tools/ci/host013_azure_live_evidence.py` for real cluster configuration, managed-mesh and workload-federation evidence;
-- `tools/ci/host013_azure_traffic_probe.py` for digest-pinned ephemeral positive/adverse live traffic evidence;
-- real probe contract for managed edge TLS 1.2 success / TLS 1.1 denial, managed ingress to strict-mTLS workload success, cross-environment direct-ingress denial, canonical allowed egress, unregistered HTTPS egress denial and actual Azure Workload Identity OAuth token exchange without retaining the bearer token;
-- ephemeral probe TLS/Kubernetes cleanup and secret-free JSON evidence only;
-- private-cluster inspection via `az aks command invoke`;
-- mandatory post-verification `terraform plan -detailed-exitcode` zero-drift proof;
-- manual-only Azure operator job inside the existing `.github/workflows/ci-qualified.yml` with `id-token: write`, pinned `azure/login` and `hashicorp/setup-terraform`, exact-head/dev-only enforcement and 30-day secret-free evidence retention;
+Latest exact repository checkpoint:
+- exact head `475ef25d51360093a558f9b28024c89b75e547f5`;
+- Fast #1391 / run `33562863732`: **PASS**;
 - no fourth workflow and no long-lived Azure client-secret path.
 
-Zero-miss repository checkpoint:
-- exact implementation head `c334f8088994a0a53094f4a440a1cbdb23eb31d3`;
-- Fast #1349 / run `33180772521`: **PASS**;
-- workflow policy, hosted source-health/architecture gates, managed-Istio projection, traffic-probe self-test, all v18 T1-T10 conservation, Python syntax, gofmt, go vet, full Go suite and PostgreSQL tagged compile passed.
+Real Azure attempts materially progressed the evidence chain and exposed the final external constraint:
+- Qualified #244 / run `33560870545` exposed managed-Istio CPU pressure on the two-node system pool; failure evidence was retained and temporary AKS verification RBAC cleanup succeeded.
+- The repository was corrected to a three-node managed-Istio rollout target with full deployment-convergence checks.
+- Qualified #245 / run `33563399097` on exact head `475ef25d...` produced a Terraform plan of **0 add, 1 change, 0 destroy**, changing only AKS system `node_count` from 2 to 3.
+- Azure rejected that in-place scale with `ErrCode_InsufficientVCPUQuota`: Canada Central regional quota was **4/4**, with **0 vCPUs remaining** and **2 additional vCPUs required**.
+- Azure Portal confirmed the subscription is a **Free Trial** and is ineligible for quota adjustment unless upgraded to a paid subscription.
 
-The zero-miss audit found and corrected four substantive repository misses before this checkpoint: stale Qualified wiring status, self-managed Istio conventions in the Azure projection, incomplete service-account workload-identity binding, and absence of real positive/adverse traffic evidence. The current machine checkpoint records those corrections and keeps the band unverified because no live Azure run has occurred.
+Canonical disposition ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`.
 
-**Remaining HOST-013/014 verification requirement:** run the existing manual `CI Qualified` Azure operator against a real isolated non-production Azure subscription and retain the resulting secret-free configuration/identity/traffic/drift artifact. The operator must prove:
-- actual workload identity projected-token and OAuth token exchange;
-- ingress TLS >=1.2 and legacy TLS rejection;
-- managed ingress to strict internal mTLS workload;
-- unauthorized/cross-environment direct ingress denial;
-- canonical allowed egress success and unregistered HTTPS egress denial;
-- managed-Istio revision/injection truth;
-- secret-free evidence and cleanup;
-- zero post-apply Terraform drift.
+This is explicitly accepted as an **ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER** for dependency advancement because the owner is not required to purchase Azure quota solely to generate external verification evidence. It does **not** verify HOST-013/014, does **not** weaken the required architecture, and does **not** authorize Commercial/Public activation. If sufficient no-cost quota or a later explicitly authorized paid environment becomes available, rerun the full live AKS configuration/identity/traffic/cleanup/drift proof.
 
-Repository IaC/CI cannot substitute for real managed infrastructure evidence.
+**HOST-013/014 therefore no longer blocks HOST-015+ work.** It remains a named residual that must stay visible through HOST-023/final closure.
 
 ### HOST-015..016 — PostgreSQL tenancy/recovery
 
-**OPEN / PARTIALLY IMPLEMENTED.** Reuse HOST-012 Neon PITR evidence, but tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof remain open.
+**OPEN / PARTIALLY IMPLEMENTED — CURRENT ACTIVE BAND.** Reuse HOST-012 Neon PITR evidence, but tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof remain open.
 
 ### HOST-017..020
 
@@ -126,21 +106,21 @@ Repository IaC/CI cannot substitute for real managed infrastructure evidence.
 
 ### HOST-023
 
-**OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure.
+**OPEN** for aggregate Development Production Ready qualification after applicable HOST-001..022 technical closure. The named HOST-013/014 Azure quota residual is eligible for explicit carry-forward under the existing Development-tier external-blocker rule; it must never be silently rewritten as VERIFIED.
 
 Do not begin v19.1/#153 while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Obtain/configure the non-secret Azure OIDC/state identifiers for an isolated non-production subscription/environment, run the existing manual `CI Qualified` Azure operator on the exact candidate head, and retain the required live configuration/identity/traffic/drift evidence. Do not mark HOST-013..014 VERIFIED or begin HOST-015+ until this managed-environment evidence passes, unless governance explicitly records an allowed Development-tier external blocker.
+Proceed with **HOST-015..016 — PostgreSQL Tenancy / Recovery** on the existing branch and PR. Reuse the verified HOST-012 managed Neon PITR evidence where applicable, then close the remaining tenant-owned/scoped PostgreSQL isolation, migration/adverse integration, HA/failover/rollback/recovery obligations through the existing persistence owner. Do not restart HOST-013/014 Azure runs unless sufficient no-cost quota or an explicitly authorized paid environment becomes available.
 
 ## Later dependency bands
 
 1. HOST-015..016: tenant-owned/scoped PostgreSQL + live migration/isolation/adverse/HA/failover/recovery evidence.
 2. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance.
 3. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
-4. HOST-023 + final identical-head Development Production Ready qualification.
-5. Commercial/Public activation remains a separate later gate.
+4. HOST-023 + final identical-head Development Production Ready qualification, with the Azure quota residual explicitly carried if still unresolved.
+5. Commercial/Public activation remains a separate later gate and cannot cite the HOST-013/014 waiver as live infrastructure proof.
 6. Only after v19.0 Development closure may v19.1 begin, including #153 Adaptive Provider Registry / Market Data work.
 
 ## Permanent architecture/product boundaries
@@ -165,4 +145,5 @@ Remain in **HOST-013..014 — Azure-backed Environment / Service Trust**. Obtain
 5. Inspect commits since the latest verified checkpoint; do not duplicate work.
 6. Keep Stable v18.10.0 immutable.
 7. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
-8. At each meaningful dependency-band transition, update durable GitHub state so any AI/account can resume independently.
+8. Preserve `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01` as an explicit residual until real managed-AKS evidence is later available; do not pay for Azure or weaken controls solely to erase the residual.
+9. At each meaningful dependency-band transition, update durable GitHub state so any AI/account can resume independently.
