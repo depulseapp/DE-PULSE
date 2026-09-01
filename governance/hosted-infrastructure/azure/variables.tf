@@ -60,12 +60,12 @@ variable "node_vm_size" {
 }
 
 variable "node_count" {
-  description = "Initial system pool size."
+  description = "Initial system pool size. AKS system pools require at least two nodes; managed Istio also defaults istiod to two replicas."
   type        = number
-  default     = 1
+  default     = 2
   validation {
-    condition     = var.node_count >= 1 && var.node_count <= 3
-    error_message = "non-production node_count must remain between 1 and 3"
+    condition     = var.node_count >= 2 && var.node_count <= 3
+    error_message = "non-production system node_count must remain between 2 and 3"
   }
 }
 
