@@ -1,0 +1,101 @@
+{
+  "schema": "DE.PULSE-DEVELOPMENT-EXTERNAL-BLOCKER-WAIVER-1",
+  "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+  "status": "APPROVED",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "issue": 148,
+  "gapId": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
+  "scope": "AZURE_FREE_TRIAL_MANAGED_AKS_VCPU_QUOTA_ONLY",
+  "effectiveDate": "2026-09-01",
+  "readinessTier": "DEVELOPMENT_PRODUCTION_READY",
+  "actualState": {
+    "provider": "Azure",
+    "subscriptionClass": "FREE_TRIAL",
+    "region": "canadacentral",
+    "regionalVcpuUsage": 4,
+    "regionalVcpuLimit": 4,
+    "regionalVcpuRemaining": 0,
+    "additionalVcpuRequired": 2,
+    "quotaAdjustmentAvailableWithoutPaidUpgrade": false,
+    "targetSystemPoolNodes": 3,
+    "targetNodeVmSize": "Standard_DC2s_v3",
+    "latestRepositoryHeadBeforeWaiver": "475ef25d51360093a558f9b28024c89b75e547f5",
+    "repositoryFastRun": 33562863732,
+    "realAzureQualifiedRun": 33563399097,
+    "terraformPlan": "0 add, 1 change, 0 destroy; AKS system node_count 2 -> 3",
+    "azureFailureCode": "ErrCode_InsufficientVCPUQuota"
+  },
+  "limitation": {
+    "provider": "Azure",
+    "category": "FREE_TRIAL_REGIONAL_VCPU_QUOTA",
+    "additionalCapacityAvailableWithoutPaidUpgrade": false,
+    "detail": "The real Azure Qualified drill reached an in-place AKS system-pool scale from two to three Standard_DC2s_v3 nodes, but Canada Central had 4/4 regional vCPUs consumed and required 2 additional vCPUs. Azure Portal reports Free Trial subscriptions are ineligible for quota adjustment unless upgraded."
+  },
+  "ownerDecision": {
+    "approved": true,
+    "paidUpgradeDecision": "DECLINED",
+    "decisionRecordedAt": "2026-09-01",
+    "decisionSource": "Explicit repository-owner instruction in the active DE.PULSE continuation session",
+    "scopeLimited": true
+  },
+  "riskAcceptance": {
+    "acceptedForDevelopmentDependencyAdvancement": true,
+    "residualRisks": [
+      "HOST-013/014 lacks a complete successful real managed-AKS configuration/identity/traffic/cleanup/zero-drift evidence chain.",
+      "The declared three-node managed-Istio rollout target has not been realized on the current Azure Free Trial subscription.",
+      "Commercial/Public activation cannot rely on this waiver as evidence of managed-environment readiness."
+    ]
+  },
+  "compensatingControls": [
+    {
+      "id": "REQUIREMENT_REMAINS_UNVERIFIED",
+      "mandatory": true,
+      "detail": "HOST-013/014 remains explicitly UNVERIFIED/BLOCKED_EXTERNAL in closure truth; the waiver is not verification evidence."
+    },
+    {
+      "id": "NO_ARCHITECTURE_SECURITY_WEAKENING",
+      "mandatory": true,
+      "detail": "Do not reduce Istio, TLS, mTLS, ingress/egress, Workload Identity, cleanup, private-cluster or zero-drift requirements to fit the Free Trial quota."
+    },
+    {
+      "id": "REPOSITORY_HARNESS_REMAINS_FAIL_CLOSED",
+      "mandatory": true,
+      "detail": "The existing exact-head Azure verification harness and source-health gates remain active and fail closed; no fourth workflow or bypass path is introduced."
+    },
+    {
+      "id": "NO_COMMERCIAL_PUBLIC_ACTIVATION",
+      "mandatory": true,
+      "detail": "This Development-tier waiver cannot authorize public/commercial managed-environment activation or be cited as a successful Qualified infrastructure proof."
+    },
+    {
+      "id": "VISIBLE_HOST023_CARRY_FORWARD",
+      "mandatory": true,
+      "detail": "If unresolved at HOST-023, the residual must remain named and visible in final Development closure rather than being rewritten as VERIFIED."
+    },
+    {
+      "id": "REVISIT_ON_ELIGIBLE_CAPACITY",
+      "mandatory": true,
+      "detail": "Rerun the full real-Azure drill if sufficient no-cost quota or a later explicitly authorized paid managed environment becomes available."
+    },
+    {
+      "id": "EXACT_REPOSITORY_EVIDENCE_PRESERVED",
+      "mandatory": true,
+      "detail": "Fast #1391 / run 33562863732 on exact head 475ef25d51360093a558f9b28024c89b75e547f5 remains the repository implementation checkpoint; failed Qualified #244/#245 remain factual external evidence, not passes."
+    }
+  ],
+  "revalidationTriggers": [
+    "Azure subscription class changes",
+    "Canada Central regional vCPU quota increases without paid owner action",
+    "An eligible no-cost Azure subscription/environment becomes available",
+    "The owner later explicitly authorizes a paid managed environment",
+    "AKS managed-Istio capacity requirements materially change"
+  ],
+  "retirementCondition": "Retire this waiver only after a sufficiently resourced isolated non-production managed AKS environment passes the exact-head HOST-013/014 configuration/identity/traffic/adverse/cleanup/zero-drift evidence chain and the closure ledger can truthfully move the gap to VERIFIED.",
+  "requirementsRemainUnverified": true,
+  "developmentDependencyAdvancementOnly": true,
+  "noArchitectureOrSecurityWeakening": true,
+  "commercialPublicActivationAllowed": false,
+  "paidUpgradeRequiredByGovernance": false,
+  "noProductBehaviorChange": true,
+  "noReleaseEvidenceInvalidation": true
+}
