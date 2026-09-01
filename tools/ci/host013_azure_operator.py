@@ -31,6 +31,7 @@ AKS_RBAC_PROPAGATION_TIMEOUT_SECONDS = 300
 AKS_RBAC_POLL_SECONDS = 10
 ISTIO_READY_TIMEOUT_SECONDS = 240
 ISTIO_READY_POLL_SECONDS = 10
+ISTIO_READY_STABLE_PASSES = 3
 
 
 def fail(message: str) -> None:
@@ -229,12 +230,16 @@ def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str) -> str
         "kubectl get pods -n aks-istio-system -o wide || true; "
         "printf '%s\\n' '=== MANAGED ISTIO DEPLOYMENTS ==='; "
         "kubectl get deployments -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== MANAGED ISTIO HPA ==='; "
+        "kubectl get hpa -n aks-istio-system -o wide || true; "
         f"printf '%s\\n' '=== {service} SERVICE ==='; "
         f"kubectl get service {service} -n aks-istio-system -o wide || true; "
         f"printf '%s\\n' '=== {service} ENDPOINTS ==='; "
         f"kubectl get endpoints {service} -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== AKS NODES ==='; "
+        "kubectl get nodes -o custom-columns='NAME:.metadata.name,READY:.status.conditions[?(@.type==\"Ready\")].status,CPU:.status.allocatable.cpu,MEMORY:.status.allocatable.memory' || true; "
         "printf '%s\\n' '=== RECENT MANAGED ISTIO EVENTS ==='; "
-        "kubectl get events -n aks-istio-system --sort-by=.lastTimestamp | tail -n 30 || true"
+        "kubectl get events -n aks-istio-system --sort-by=.lastTimestamp | tail -n 40 || true"
     )
     payload = run_json([
         "az", "aks", "command", "invoke",
@@ -246,17 +251,22 @@ def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str) -> str
     if not isinstance(payload, dict):
         return "<managed Istio diagnostics unavailable>"
     logs = str(payload.get("logs") or "").strip()
-    return logs[:4000] if logs else "<managed Istio diagnostics empty>"
+    return logs[:8000] if logs else "<managed Istio diagnostics empty>"
 
 
 def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> None:
     service = f"istiod-{istio_revision}"
     command = (
-        f"kubectl get endpoints {service} -n aks-istio-system "
-        "-o jsonpath='{.subsets[0].addresses[0].ip}'"
+        f"endpoint=\"$(kubectl get endpoints {service} -n aks-istio-system "
+        "-o jsonpath='{.subsets[0].addresses[0].ip}' 2>/dev/null || true)\"; "
+        "ready=\"$(kubectl get pods -n aks-istio-system -l app=istiod "
+        "-o jsonpath='{range .items[*]}{.status.containerStatuses[0].ready}{\"\\n\"}{end}' 2>/dev/null | grep -c true || true)\"; "
+        "test -n \"$endpoint\" && test \"${ready:-0}\" -ge 1 && "
+        "printf 'ISTIO_READY endpoint=%s readyPods=%s\\n' \"$endpoint\" \"$ready\""
     )
     deadline = time.monotonic() + ISTIO_READY_TIMEOUT_SECONDS
     last_logs = ""
+    stable_passes = 0
     while time.monotonic() < deadline:
         payload = run_json([
             "az", "aks", "command", "invoke",
@@ -267,15 +277,24 @@ def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> 
         ])
         if aks_remote_succeeded(payload):
             logs = str((payload or {}).get("logs") or "").strip() if isinstance(payload, dict) else ""
-            if logs:
-                return
-        if isinstance(payload, dict):
-            last_logs = str(payload.get("logs") or "").strip()[:1000]
+            if "ISTIO_READY" in logs:
+                stable_passes += 1
+                last_logs = logs[:1000]
+                if stable_passes >= ISTIO_READY_STABLE_PASSES:
+                    return
+            else:
+                stable_passes = 0
+                last_logs = logs[:1000]
+        else:
+            stable_passes = 0
+            if isinstance(payload, dict):
+                last_logs = str(payload.get("logs") or "").strip()[:1000]
         time.sleep(ISTIO_READY_POLL_SECONDS)
     diagnostic = managed_istio_diagnostics(rg, cluster, istio_revision)
     fail(
-        f"managed Istio revision {istio_revision} did not expose a ready istiod endpoint within "
-        f"{ISTIO_READY_TIMEOUT_SECONDS}s; last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
+        f"managed Istio revision {istio_revision} did not remain ready for "
+        f"{ISTIO_READY_STABLE_PASSES} consecutive checks within {ISTIO_READY_TIMEOUT_SECONDS}s; "
+        f"last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
     )
 
 
@@ -322,6 +341,7 @@ def write_failure_evidence(
     verification_stage: str,
     verification_error: BaseException | None,
     cleanup_error: BaseException | None,
+    istio_diagnostics: str | None,
 ) -> None:
     payload = {
         "schema": "DE.PULSE-HOST013-AZURE-FAILURE-1",
@@ -331,6 +351,7 @@ def write_failure_evidence(
         "verificationStage": verification_stage,
         "verificationFailure": str(verification_error)[:8000] if verification_error is not None else None,
         "cleanupFailure": str(cleanup_error)[:4000] if cleanup_error is not None else None,
+        "managedIstioDiagnostics": istio_diagnostics[:8000] if istio_diagnostics else None,
         "temporaryKubernetesAdminRemoved": cleanup_error is None,
         "containsSecrets": False,
         "status": "FAIL",
@@ -376,6 +397,8 @@ def self_test() -> None:
         fail("temporary AKS RBAC assignment presence self-test failed")
     if role_assignment_present([], assignment):
         fail("temporary AKS RBAC assignment absence self-test failed")
+    if ISTIO_READY_STABLE_PASSES < 2:
+        fail("managed Istio readiness must require more than one consecutive pass")
     print("HOST-013/014 Azure operator self-test: PASS")
 
 
@@ -464,6 +487,7 @@ def main() -> int:
     verification_stage = "temporary-aks-rbac-propagation"
     evidence_path = evidence_dir / "host013-azure-live-evidence.json"
     traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+    istio_diagnostics: str | None = None
     try:
         wait_for_aks_verification_access(rg, cluster)
 
@@ -517,6 +541,11 @@ def main() -> int:
             fail("traffic probe evidence is incomplete")
     except BaseException as exc:
         verification_error = exc
+        if verification_stage in {"managed-istio-readiness", "canonical-trust-manifest-apply"}:
+            try:
+                istio_diagnostics = managed_istio_diagnostics(rg, cluster, istio_revision)
+            except BaseException as diagnostic_exc:
+                istio_diagnostics = "managed Istio diagnostics collection failed: " + str(diagnostic_exc)[:2000]
 
     cleanup_error: BaseException | None = None
     try:
@@ -533,6 +562,7 @@ def main() -> int:
             verification_stage=verification_stage,
             verification_error=verification_error,
             cleanup_error=cleanup_error,
+            istio_diagnostics=istio_diagnostics,
         )
     if cleanup_error is not None:
         detail = str(cleanup_error)
@@ -556,6 +586,7 @@ def main() -> int:
         "location": args.location,
         "managedIstioRevision": istio_revision,
         "managedIstioReadinessProved": True,
+        "managedIstioReadinessStablePasses": ISTIO_READY_STABLE_PASSES,
         "operatorIdentityFingerprint": fingerprint(operator_object_id),
         "temporaryKubernetesAdminRole": AKS_VERIFY_ROLE,
         "temporaryKubernetesAdminRemoved": True,
