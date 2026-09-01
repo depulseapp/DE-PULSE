@@ -118,7 +118,12 @@ def validate_run_command(
     }
     failed = [name for name, ok in checks.items() if not ok]
     if failed:
-        raise RuntimeError("AKS private-cluster command evidence failed: " + ", ".join(failed))
+        diagnostic = logs.strip()[:4000] if logs.strip() else "<no remote logs>"
+        raise RuntimeError(
+            "AKS private-cluster command evidence failed: "
+            + ", ".join(failed)
+            + f"; exitCode={exit_code!r}; logs={diagnostic}"
+        )
     return checks
 
 
@@ -234,6 +239,17 @@ def self_test() -> None:
         expected_revision="asm-1-27",
         expected_client_id="11111111-1111-1111-1111-111111111111",
     )
+    try:
+        validate_run_command(
+            {"exitCode": 1, "logs": "synthetic kubectl failure"},
+            expected_revision="asm-1-27",
+            expected_client_id="11111111-1111-1111-1111-111111111111",
+        )
+    except RuntimeError as exc:
+        if "synthetic kubectl failure" not in str(exc) or "exitCode=1" not in str(exc):
+            raise AssertionError("AKS command diagnostics self-test did not preserve remote failure detail") from exc
+    else:
+        raise AssertionError("AKS command diagnostics self-test did not fail closed")
 
     adverse = [
         lambda: validate_cluster({**fixture, "privateFqdn": ""}, "canadacentral"),
