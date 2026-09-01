@@ -41,10 +41,18 @@ def sanitize_id(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()[:16]
 
 
+def installed_istio_revisions(cluster: dict[str, Any]) -> list[str]:
+    revisions = pick(cluster, "serviceMeshProfile", "istio", "revisions") or []
+    if not isinstance(revisions, list):
+        return []
+    return [str(value) for value in revisions if str(value).strip()]
+
+
 def validate_cluster(cluster: dict[str, Any], expected_location: str) -> dict[str, bool]:
     addon = cluster.get("addonProfiles") or {}
     mesh = cluster.get("serviceMeshProfile") or {}
     identity = cluster.get("identity") or {}
+    mesh_revisions = installed_istio_revisions(cluster)
     checks = {
         "privateControlPlane": enabled(pick(cluster, "apiServerAccessProfile", "enablePrivateCluster")),
         "privateFqdnPresent": bool(cluster.get("privateFqdn")),
@@ -55,7 +63,7 @@ def validate_cluster(cluster: dict[str, Any], expected_location: str) -> dict[st
         "azurePolicyEnabled": enabled(pick(addon, "azurepolicy", "enabled")),
         "keyVaultSecretsProviderEnabled": enabled(pick(addon, "azureKeyvaultSecretsProvider", "enabled")),
         "azureNetworkPolicy": str(pick(cluster, "networkProfile", "networkPolicy") or "").lower() == "azure",
-        "managedIstioEnabled": str(mesh.get("mode") or "").lower() == "istio" and bool(mesh.get("revisions")),
+        "managedIstioEnabled": str(mesh.get("mode") or "").lower() == "istio" and bool(mesh_revisions),
         "userAssignedControlPlaneIdentity": "userassigned" in str(identity.get("type") or "").lower(),
         "locationMatches": str(cluster.get("location") or "").replace(" ", "").lower() == expected_location.replace(" ", "").lower(),
     }
@@ -125,8 +133,7 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
         "--name", args.cluster_name, "-o", "json",
     ])
     checks = validate_cluster(cluster, args.location)
-    mesh_profile = cluster.get("serviceMeshProfile") or {}
-    installed_revisions = list(mesh_profile.get("revisions") or [])
+    installed_revisions = installed_istio_revisions(cluster)
     if args.expected_istio_revision not in installed_revisions:
         raise RuntimeError("expected managed Istio revision is not installed")
 
@@ -205,11 +212,18 @@ def self_test() -> None:
             "azureKeyvaultSecretsProvider": {"enabled": True},
         },
         "networkProfile": {"networkPolicy": "azure"},
-        "serviceMeshProfile": {"mode": "Istio", "revisions": ["asm-1-27"]},
+        "serviceMeshProfile": {
+            "mode": "Istio",
+            "istio": {
+                "revisions": ["asm-1-27"],
+                "components": {"ingressGateways": [{"mode": "External"}]},
+            },
+        },
         "identity": {"type": "UserAssigned"},
     }
     checks = validate_cluster(fixture, "canadacentral")
     assert all(checks.values())
+    assert installed_istio_revisions(fixture) == ["asm-1-27"]
     validate_federated_credential(
         [{"subject": "system:serviceaccount:depulse-dev:depulse-web-dev", "issuer": "https://issuer.example.invalid/", "audiences": ["api://AzureADTokenExchange"]}],
         expected_subject="system:serviceaccount:depulse-dev:depulse-web-dev",
@@ -223,6 +237,7 @@ def self_test() -> None:
 
     adverse = [
         lambda: validate_cluster({**fixture, "privateFqdn": ""}, "canadacentral"),
+        lambda: validate_cluster({**fixture, "serviceMeshProfile": {"mode": "Istio", "istio": {"revisions": []}}}, "canadacentral"),
         lambda: validate_federated_credential([], expected_subject="x", expected_issuer="y"),
         lambda: validate_run_command(
             {"logs": "namespace/aks-istio-system"},
