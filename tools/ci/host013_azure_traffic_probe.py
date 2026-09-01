@@ -434,6 +434,8 @@ def write_evidence(
         "cleanupVerified": cleanup_verified,
         "status": "PASS" if passed else "FAIL",
     }
+    if evidence["status"] == "PASS" and evidence["cleanupVerified"] is not True:
+        fail("PASS evidence requires cleanupVerified to be True")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
