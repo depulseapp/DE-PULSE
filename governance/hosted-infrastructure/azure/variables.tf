@@ -60,9 +60,9 @@ variable "node_vm_size" {
 }
 
 variable "node_count" {
-  description = "Initial system pool size. AKS system pools require at least two nodes; managed Istio also defaults istiod to two replicas."
+  description = "Managed-Istio development system-pool baseline. Real HOST-013 verification proved two nodes insufficient during an Istiod rolling update before external ingress materialization, so dev keeps three nodes for rollout/surge headroom."
   type        = number
-  default     = 2
+  default     = 3
   validation {
     condition     = var.node_count >= 2 && var.node_count <= 3
     error_message = "non-production system node_count must remain between 2 and 3"
