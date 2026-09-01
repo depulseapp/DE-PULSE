@@ -24,6 +24,7 @@
 - Permanent readiness authority: `governance/PRODUCTION-READINESS-TIERS.md` + `governance/production-readiness-tiers.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
 - Latest HOST-013/014 Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
+- Canonical HOST-013/014 external-waiver artifact: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`.
 - GitHub objects and executable evidence outrank this file and chat memory. Always fetch live branch/PR/issue/Actions before writing.
 
 ## Permanent readiness and zero-miss rules
@@ -70,7 +71,7 @@ This evidence closes HOST-010..012 and is reusable for HOST-016. It does **not**
 
 ### HOST-013..014 — environment/service trust
 
-**IMPLEMENTED_UNVERIFIED — ALLOWED DEVELOPMENT-TIER EXTERNAL RESIDUAL.**
+**BLOCKED_EXTERNAL / UNVERIFIED — ALLOWED DEVELOPMENT-TIER EXTERNAL RESIDUAL.**
 
 Repository implementation remains fail-closed and includes the complete Azure/AKS verification harness: private AKS, Entra/Azure RBAC, OIDC/Workload Identity, managed Istio, strict mTLS, governed ingress/egress, TLS adverse evidence, workload token exchange, temporary verification RBAC cleanup, managed-Istio rollout convergence, managed external ingress readiness, secret-free retained evidence and post-verification zero-drift.
 
@@ -88,11 +89,12 @@ Real Azure attempts materially progressed the evidence chain and exposed the fin
 
 Canonical disposition ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`.
 Canonical closure gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`.
-Canonical residual evidence path: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
+Canonical residual waiver path: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`.
+Supporting Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
 
 This is explicitly accepted as an **ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER** for dependency advancement because the owner is not required to purchase Azure quota solely to generate external verification evidence. It does **not** verify HOST-013/014, does **not** weaken the required architecture, and does **not** authorize Commercial/Public activation. If sufficient no-cost quota or a later explicitly authorized paid environment becomes available, rerun the full live AKS configuration/identity/traffic/cleanup/drift proof.
 
-**HOST-013/014 therefore no longer blocks HOST-015+ work.** It remains a named residual that must stay visible through HOST-023/final closure.
+**HOST-013/014 therefore no longer blocks HOST-015+ work while the scope-limited waiver validates.** It remains a named residual that must stay visible through HOST-023/final closure.
 
 ### HOST-015..016 — PostgreSQL tenancy/recovery
 
@@ -147,5 +149,5 @@ Proceed with **HOST-015..016 — PostgreSQL Tenancy / Recovery** on the existing
 5. Inspect commits since the latest verified checkpoint; do not duplicate work.
 6. Keep Stable v18.10.0 immutable.
 7. Do not create another branch/PR, merge/release, start v19.1.0, or weaken G0-G16/source/data-truth/security/platform/CI gates.
-8. Preserve `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01` as an explicit residual until real managed-AKS evidence is later available; do not pay for Azure or weaken controls solely to erase the residual.
+8. Preserve `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01` and `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json` as explicit residual authority until real managed-AKS evidence is later available; do not pay for Azure or weaken controls solely to erase the residual.
 9. At each meaningful dependency-band transition, update durable GitHub state so any AI/account can resume independently.
