@@ -145,6 +145,17 @@ def main() -> int:
     require(operator_text, r'delete_temporary_aks_verification_role', "temporary AKS RBAC cleanup owner")
     require(operator_text, r'"az",\s*"role",\s*"assignment",\s*"delete"', "temporary AKS RBAC deletion")
     require(operator_text, r'--ids",\s*assignment_id', "exact role-assignment deletion by ID")
+    if '"--all"' in operator_text:
+        fail("temporary AKS RBAC cleanup must not combine Azure CLI --all with a scoped role-assignment query")
+    require(operator_text, r'"role",\s*"assignment",\s*"list"[\s\S]*?"--scope",\s*cluster_id', "scoped temporary AKS RBAC deletion verification")
+    require(operator_text, r'wait_for_managed_istio_ready', "managed Istio control-plane readiness gate")
+    require(operator_text, r'kubectl get endpoints', "managed Istio endpoint readiness proof")
+    require(operator_text, r'managed_istio_diagnostics', "managed Istio failure diagnostics")
+    require(operator_text, r'kubectl get pods -n aks-istio-system', "managed Istio pod diagnostics")
+    require(operator_text, r'kubectl get events -n aks-istio-system', "managed Istio event diagnostics")
+    require(operator_text, r'DE\.PULSE-HOST013-AZURE-FAILURE-1', "retained structured failure evidence")
+    require(operator_text, r'host013-azure-failure-evidence\.json', "failure artifact path")
+    require(operator_text, r'managedIstioReadinessProved.*True', "retained managed Istio readiness evidence")
     require(operator_text, r'temporaryKubernetesAdminRemoved.*True', "retained temporary AKS RBAC cleanup evidence")
     require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
@@ -154,7 +165,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-correct, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-readiness-gated, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, failure-evidence-retaining, cleanup-verified and secret-free")
     return 0
 
 
