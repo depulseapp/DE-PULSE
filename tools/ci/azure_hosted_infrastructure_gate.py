@@ -49,7 +49,9 @@ def main() -> int:
     backend_tf = (AZ / "backend.tf").read_text(encoding="utf-8")
     readme = (AZ / "README.md").read_text(encoding="utf-8")
     renderer = RENDERER.read_text(encoding="utf-8")
+    live_text = LIVE_EVIDENCE.read_text(encoding="utf-8")
     probe_text = TRAFFIC_PROBE.read_text(encoding="utf-8")
+    operator_text = OPERATOR.read_text(encoding="utf-8")
     qualified_workflow = QUALIFIED_WORKFLOW.read_text(encoding="utf-8")
 
     require(versions_tf, r'source\s*=\s*"hashicorp/azurerm"', "AzureRM provider")
@@ -98,6 +100,29 @@ def main() -> int:
     require(renderer, r'port:\s*15012', "secure Istio XDS/CA NetworkPolicy egress")
     require(renderer, r'azure\.workload\.identity/client-id', "Kubernetes workload identity service-account annotation")
 
+    # Live configuration/identity evidence must validate Azure declaration and Kubernetes
+    # realization independently so one missing resource cannot mask later identity checks.
+    require(live_text, r'external_ingress_configured', "Azure service-mesh external-ingress declaration validation")
+    require(live_text, r'managedExternalIngressConfigured', "retained external-ingress declaration evidence")
+    for marker, label in (
+        (r'INGRESS_HTTPS_PORT=', "managed ingress HTTPS-port marker"),
+        (r'INGRESS_IP=', "managed ingress load-balancer IP marker"),
+        (r'INGRESS_ENDPOINT=', "managed ingress endpoint marker"),
+        (r'INGRESS_READY_PODS=', "managed ingress ready-pod marker"),
+        (r'REV=', "workload namespace revision marker"),
+        (r'CLIENT=', "workload identity client marker"),
+    ):
+        require(live_text, marker, label)
+    require(live_text, r'status=0', "independent Kubernetes evidence accumulator")
+    require(live_text, r'exit\s+\\?"\$status\\?"', "aggregate Kubernetes evidence exit")
+    require(live_text, r'managedExternalIngressGatewayHttpsPort', "managed ingress HTTPS-port evidence")
+    require(live_text, r'managedExternalIngressGatewayPublicIpPresent', "managed ingress public-IP evidence")
+    require(live_text, r'managedExternalIngressGatewayEndpointReady', "managed ingress endpoint evidence")
+    require(live_text, r'managedExternalIngressGatewayPodReady', "managed ingress pod-readiness evidence")
+    require(live_text, r'workloadNamespaceRevisionMatches', "workload namespace revision evidence")
+    require(live_text, r'serviceAccountWorkloadIdentityClientMatches', "service-account workload identity evidence")
+
+    # Live traffic proof must retain both positive/adverse results and its own failure state.
     require(probe_text, r'python:3\.13-alpine@sha256:[0-9a-f]{64}', "digest-pinned live probe image")
     require(probe_text, r'minProtocolVersion: TLSV1_2', "TLS 1.2 managed-edge minimum probe")
     require(probe_text, r'prove_tls11_client_capability', "positive TLS 1.1 client capability proof")
@@ -109,7 +134,12 @@ def main() -> int:
     require(probe_text, r'UNREGISTERED_EGRESS_DENIED', "unregistered egress adverse probe")
     require(probe_text, r'DIRECT_INGRESS_DENIED', "cross-environment/direct-ingress adverse probe")
     require(probe_text, r'PROBE_CLEANUP_VERIFIED', "verified ephemeral probe cleanup marker")
+    require(probe_text, r'gateways\.networking\.istio\.io', "unambiguous Istio Gateway cleanup")
+    require(probe_text, r'virtualservices\.networking\.istio\.io', "unambiguous Istio VirtualService cleanup")
+    require(probe_text, r'probeFailure', "retained traffic failure evidence")
+    require(probe_text, r'cleanupAttempted.*True', "retained cleanup-attempt evidence")
     require(probe_text, r'cleanupVerified.*True', "fail-closed cleanup evidence")
+    require(probe_text, r'ephemeralTlsCredentialRetained.*False', "ephemeral TLS credential non-retention evidence")
     require(probe_text, r'containsSecrets.*False', "secret-free traffic evidence")
 
     forbidden = ["client_secret", "password", "api_key", "MARKETDATA_TOKEN", "FINNHUB"]
@@ -133,7 +163,6 @@ def main() -> int:
     if "client-secret" in oidc_text.lower() or "client_secret" in oidc_text.lower():
         fail("Azure OIDC refresh helper must not expose a client-secret path")
 
-    operator_text = OPERATOR.read_text(encoding="utf-8")
     require(operator_text, r'HOST013_AZURE_AKS_OPERATOR_DRILL', "explicit destructive/non-production operator acknowledgement")
     require(operator_text, r'choices=\["dev"\]', "dev-only operator scope")
     require(operator_text, r'ARM_USE_OIDC.*true', "operator OIDC Terraform authentication")
@@ -152,26 +181,41 @@ def main() -> int:
     if '"--all"' in operator_text:
         fail("temporary AKS RBAC cleanup must not combine Azure CLI --all with a scoped role-assignment query")
     require(operator_text, r'"role",\s*"assignment",\s*"list"[\s\S]*?"--scope",\s*cluster_id', "scoped temporary AKS RBAC deletion verification")
+
     require(operator_text, r'ISTIO_READY_STABLE_PASSES\s*=\s*3', "three-pass managed Istio stability threshold")
-    require(operator_text, r'stable_passes\s*\+=\s*1', "consecutive managed Istio readiness accumulation")
-    require(operator_text, r'stable_passes\s*=\s*0', "managed Istio readiness streak reset")
+    require(operator_text, r'INGRESS_READY_STABLE_PASSES\s*=\s*3', "three-pass managed ingress stability threshold")
+    require(operator_text, r'INGRESS_READY_TIMEOUT_SECONDS\s*=\s*600', "bounded managed ingress readiness timeout")
+    require(operator_text, r'stable_passes\s*\+=\s*1', "consecutive managed readiness accumulation")
+    require(operator_text, r'stable_passes\s*=\s*0', "managed readiness streak reset")
     require(operator_text, r'wait_for_managed_istio_ready', "managed Istio control-plane readiness gate")
-    require(operator_text, r'kubectl get endpoints', "managed Istio endpoint readiness proof")
-    require(operator_text, r'kubectl get hpa -n aks-istio-system', "managed Istio HPA diagnostics")
+    require(operator_text, r'wait_for_managed_external_ingress_ready', "managed external ingress readiness gate")
+    require(operator_text, r'reconcile_external_ingress_gateway', "managed external ingress reconciliation owner")
+    require(operator_text, r'"enable-ingress-gateway"', "supported AKS managed ingress reconciliation command")
+    require(operator_text, r'--ingress-gateway-type",\s*"external"', "supported external ingress gateway type")
+    require(operator_text, r'aks-istio-ingressgateway-external', "managed external ingress service identity")
+    require(operator_text, r'endpointslices\.discovery\.k8s\.io', "EndpointSlice ingress readiness fallback")
+    require(operator_text, r'kubectl get endpoints', "managed Istio/ingress endpoint readiness proof")
+    require(operator_text, r'kubectl get deployments,hpa,daemonsets -n aks-istio-system', "managed Istio deployment/HPA/daemonset diagnostics")
+    require(operator_text, r'kubectl get pods,deployments,hpa,services,endpoints -n aks-istio-ingress', "managed ingress workload/service diagnostics")
     require(operator_text, r'kubectl get nodes', "AKS node capacity diagnostics")
-    require(operator_text, r'managed_istio_diagnostics', "managed Istio failure diagnostics")
+    require(operator_text, r'managed_istio_diagnostics', "managed Istio/ingress failure diagnostics")
     require(operator_text, r'kubectl get pods -n aks-istio-system', "managed Istio pod diagnostics")
     require(operator_text, r'kubectl get events -n aks-istio-system', "managed Istio event diagnostics")
+    require(operator_text, r'kubectl get events -n aks-istio-ingress', "managed ingress event diagnostics")
+
     require(operator_text, r'DE\.PULSE-HOST013-AZURE-FAILURE-1', "retained structured failure evidence")
     require(operator_text, r'host013-azure-failure-evidence\.json', "failure artifact path")
-    require(operator_text, r'managedIstioDiagnostics', "retained managed Istio diagnostics")
+    require(operator_text, r'managedIstioDiagnostics', "retained managed Istio/ingress diagnostics")
     require(operator_text, r'managedIstioReadinessProved.*True', "retained managed Istio readiness evidence")
     require(operator_text, r'managedIstioReadinessStablePasses.*ISTIO_READY_STABLE_PASSES', "retained stable managed Istio readiness count")
+    require(operator_text, r'managedExternalIngressReadinessProved.*True', "retained managed ingress readiness evidence")
+    require(operator_text, r'managedExternalIngressReadinessStablePasses.*INGRESS_READY_STABLE_PASSES', "retained stable managed ingress readiness count")
     require(operator_text, r'temporaryKubernetesAdminRemoved.*True', "retained temporary AKS RBAC cleanup evidence")
-    require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
+    require(operator_text, r'--mesh-profile",\s*"aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
     require(operator_text, r'host013_azure_traffic_probe', "operator live traffic probe binding")
     require(operator_text, r'DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1', "operator traffic evidence validation")
+    require(operator_text, r'capture=True', "child evidence diagnostic capture")
     require(operator_text, r'plan.*-detailed-exitcode', "post-verification Terraform drift check")
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
@@ -182,7 +226,14 @@ def main() -> int:
         "hidden HOST-013/014 evidence retention",
     )
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, supported-system-pool-sized, schedulable, renewable-OIDC-backed, OIDC-state-backed, stable-managed-Istio-readiness-gated, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, hidden-failure-evidence-retaining, cleanup-verified and secret-free")
+    print(
+        "PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, "
+        "reproducibly pinned, supported-system-pool-sized, renewable-OIDC-backed, OIDC-state-backed, "
+        "stable-managed-Istio-and-ingress-readiness-gated, managed-ingress-reconciling, "
+        "temporary-Kubernetes-admin-cleaned, identity-independent, TLS-adverse-proof-capable, "
+        "workload-identity-bound, live-traffic-tested, failure-evidence-retaining, cleanup-verified, "
+        "zero-drift-gated and secret-free"
+    )
     return 0
 
 
