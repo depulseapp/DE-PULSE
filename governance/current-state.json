@@ -40,12 +40,12 @@
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
     "nextDependencyBand": "HOST-015..HOST-016 PostgreSQL tenancy/recovery: extend the existing PostgreSQL persistence owner with tenant-owned/scoped isolation, live migration/adverse database evidence and broader HA/failover/rollback/recovery proof; reuse the already-verified HOST-012 Neon PITR evidence where applicable",
-    "zeroMissAuditState": "HOST013_014_IMPLEMENTED_UNVERIFIED_EXTERNAL_QUOTA_RESIDUAL_ACCEPTED_ADVANCING_HOST015_016",
+    "zeroMissAuditState": "HOST013_014_BLOCKED_EXTERNAL_SCOPED_WAIVER_ADVANCING_HOST015_016",
     "externalControlWaivers": [
       {
         "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
         "gapId": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
-        "path": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
+        "path": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json",
         "requirements": ["HOST-013", "HOST-014"],
         "classification": "ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER",
         "status": "ACTIVE_RESIDUAL",
