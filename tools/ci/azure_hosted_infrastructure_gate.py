@@ -13,6 +13,7 @@ TRAFFIC_PROBE = ROOT / "tools" / "ci" / "host013_azure_traffic_probe.py"
 OPERATOR = ROOT / "tools" / "ci" / "host013_azure_operator.py"
 OIDC_HELPER = ROOT / "tools" / "ci" / "azure_oidc_cli.py"
 RENDERER = ROOT / "tools" / "hosted" / "render_kubernetes_trust.py"
+QUALIFIED_WORKFLOW = ROOT / ".github" / "workflows" / "ci-qualified.yml"
 
 
 def fail(msg: str) -> None:
@@ -37,7 +38,7 @@ def main() -> int:
     for name in REQUIRED:
         if not (AZ / name).is_file():
             fail("missing Azure hosted infrastructure file: " + name)
-    for path in (LIVE_EVIDENCE, TRAFFIC_PROBE, OPERATOR, OIDC_HELPER, RENDERER):
+    for path in (LIVE_EVIDENCE, TRAFFIC_PROBE, OPERATOR, OIDC_HELPER, RENDERER, QUALIFIED_WORKFLOW):
         if not path.is_file():
             fail("missing Azure hosted trust owner: " + path.name)
 
@@ -49,6 +50,7 @@ def main() -> int:
     readme = (AZ / "README.md").read_text(encoding="utf-8")
     renderer = RENDERER.read_text(encoding="utf-8")
     probe_text = TRAFFIC_PROBE.read_text(encoding="utf-8")
+    qualified_workflow = QUALIFIED_WORKFLOW.read_text(encoding="utf-8")
 
     require(versions_tf, r'source\s*=\s*"hashicorp/azurerm"', "AzureRM provider")
     require(versions_tf, r'version\s*=\s*"=\s*4\.81\.0"', "exact live-tested AzureRM 4.81.0 pin")
@@ -69,6 +71,8 @@ def main() -> int:
     require(main_tf, r'role_based_access_control_enabled\s*=\s*true', "Kubernetes RBAC")
     require(main_tf, r'azure_policy_enabled\s*=\s*true', "Azure Policy")
     require(main_tf, r'only_critical_addons_enabled\s*=\s*false', "schedulable single-pool dev verification workloads")
+    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?default\s*=\s*2\b', "two-node AKS system-pool baseline")
+    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?condition\s*=\s*var\.node_count\s*>=\s*2\s*&&\s*var\.node_count\s*<=\s*3', "AKS system-pool minimum-two validation")
     require(main_tf, r'network_policy\s*=\s*"azure"', "network policy")
     require(main_tf, r'service_mesh_profile\s*\{[\s\S]*?mode\s*=\s*"Istio"[\s\S]*?revisions\s*=\s*var\.istio_revisions', "managed AKS Istio profile")
     require(main_tf, r'external_ingress_gateway_enabled\s*=\s*true', "managed external Istio ingress gateway")
@@ -148,14 +152,21 @@ def main() -> int:
     if '"--all"' in operator_text:
         fail("temporary AKS RBAC cleanup must not combine Azure CLI --all with a scoped role-assignment query")
     require(operator_text, r'"role",\s*"assignment",\s*"list"[\s\S]*?"--scope",\s*cluster_id', "scoped temporary AKS RBAC deletion verification")
+    require(operator_text, r'ISTIO_READY_STABLE_PASSES\s*=\s*3', "three-pass managed Istio stability threshold")
+    require(operator_text, r'stable_passes\s*\+=\s*1', "consecutive managed Istio readiness accumulation")
+    require(operator_text, r'stable_passes\s*=\s*0', "managed Istio readiness streak reset")
     require(operator_text, r'wait_for_managed_istio_ready', "managed Istio control-plane readiness gate")
     require(operator_text, r'kubectl get endpoints', "managed Istio endpoint readiness proof")
+    require(operator_text, r'kubectl get hpa -n aks-istio-system', "managed Istio HPA diagnostics")
+    require(operator_text, r'kubectl get nodes', "AKS node capacity diagnostics")
     require(operator_text, r'managed_istio_diagnostics', "managed Istio failure diagnostics")
     require(operator_text, r'kubectl get pods -n aks-istio-system', "managed Istio pod diagnostics")
     require(operator_text, r'kubectl get events -n aks-istio-system', "managed Istio event diagnostics")
     require(operator_text, r'DE\.PULSE-HOST013-AZURE-FAILURE-1', "retained structured failure evidence")
     require(operator_text, r'host013-azure-failure-evidence\.json', "failure artifact path")
+    require(operator_text, r'managedIstioDiagnostics', "retained managed Istio diagnostics")
     require(operator_text, r'managedIstioReadinessProved.*True', "retained managed Istio readiness evidence")
+    require(operator_text, r'managedIstioReadinessStablePasses.*ISTIO_READY_STABLE_PASSES', "retained stable managed Istio readiness count")
     require(operator_text, r'temporaryKubernetesAdminRemoved.*True', "retained temporary AKS RBAC cleanup evidence")
     require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
@@ -165,7 +176,13 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-readiness-gated, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, failure-evidence-retaining, cleanup-verified and secret-free")
+    require(
+        qualified_workflow,
+        r'name:\s*Retain secret-free HOST-013/014 Azure evidence[\s\S]*?path:\s*\.depulse-host013-azure/\*\.json[\s\S]*?include-hidden-files:\s*true',
+        "hidden HOST-013/014 evidence retention",
+    )
+
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, supported-system-pool-sized, schedulable, renewable-OIDC-backed, OIDC-state-backed, stable-managed-Istio-readiness-gated, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, hidden-failure-evidence-retaining, cleanup-verified and secret-free")
     return 0
 
 
