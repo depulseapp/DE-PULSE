@@ -324,3 +324,197 @@ func TestHOST012ManagedRecoveryLifecycleFixture(t *testing.T) {
 		t.Fatalf("unsupported managed recovery fixture phase %q", phase)
 	}
 }
+
+func host015PostgresConfig(t *testing.T) postgresPersistenceConfig {
+	t.Helper()
+	return postgresPersistenceConfig{
+		DatabaseURL:     v183PostgresURL(t),
+		MaxOpenConns:    4,
+		MaxIdleConns:    2,
+		ConnMaxLifetime: 10 * time.Minute,
+		ConnMaxIdleTime: 2 * time.Minute,
+	}
+}
+
+func host015PreparePostgresTenancy(t *testing.T) postgresPersistenceConfig {
+	t.Helper()
+	config := host015PostgresConfig(t)
+	raw := newPostgresPersistenceBackend(config).(*postgresPersistenceBackend)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	if err := raw.Init(ctx); err != nil {
+		t.Fatalf("prepare HOST-015 postgres: %v", err)
+	}
+	defer raw.Close()
+	if _, err := raw.db.ExecContext(ctx, `DROP TABLE IF EXISTS tenant_user_workspaces`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := raw.db.ExecContext(ctx, `DROP TABLE IF EXISTS tenant_identity_state`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := raw.db.ExecContext(ctx, `DELETE FROM schema_migrations WHERE version=$1`, hostedTenantPostgresSchemaVersion); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := raw.db.ExecContext(ctx, `TRUNCATE TABLE user_workspaces, identity_state`); err != nil {
+		t.Fatal(err)
+	}
+	return config
+}
+
+func host015OpenPostgresTenancy(t *testing.T, config postgresPersistenceConfig) *hostedTenantPostgresBackend {
+	t.Helper()
+	t.Setenv(runtimeModeEnv, "hosted")
+	raw := newPostgresPersistenceBackend(config).(*postgresPersistenceBackend)
+	wrapped, ok := wrapHostedTenantPostgresBackend(raw).(*hostedTenantPostgresBackend)
+	if !ok {
+		t.Fatalf("hosted postgres tenant wrapper not selected: %T", wrapHostedTenantPostgresBackend(raw))
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	if err := wrapped.Init(ctx); err != nil {
+		t.Fatalf("open HOST-015 postgres tenancy backend: %v", err)
+	}
+	return wrapped
+}
+
+func host015CleanupPostgresTenancy(t *testing.T, backend *hostedTenantPostgresBackend) {
+	t.Helper()
+	if backend == nil || backend.pg == nil || backend.pg.db == nil {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	_, _ = backend.pg.db.ExecContext(ctx, `DROP TABLE IF EXISTS tenant_user_workspaces`)
+	_, _ = backend.pg.db.ExecContext(ctx, `DROP TABLE IF EXISTS tenant_identity_state`)
+	_, _ = backend.pg.db.ExecContext(ctx, `DELETE FROM schema_migrations WHERE version=$1`, hostedTenantPostgresSchemaVersion)
+	_, _ = backend.pg.db.ExecContext(ctx, `TRUNCATE TABLE user_workspaces, identity_state`)
+	_ = backend.Close()
+}
+
+func TestHOST015PostgresTenantPersistenceSurvivesRestart(t *testing.T) {
+	config := host015PreparePostgresTenancy(t)
+	backend := host015OpenPostgresTenancy(t, config)
+	ctx := context.Background()
+	state := host015TenantFixture()
+	if err := backend.SaveIdentityState(ctx, state); err != nil {
+		host015CleanupPostgresTenancy(t, backend)
+		t.Fatal(err)
+	}
+	for _, userID := range []string{"user-a", "user-b"} {
+		workspace := defaultUserWorkspace(userID)
+		workspace.UpdatedAt = 10
+		if err := backend.SaveUserWorkspace(ctx, workspace); err != nil {
+			host015CleanupPostgresTenancy(t, backend)
+			t.Fatal(err)
+		}
+	}
+	stats, err := backend.Stats(ctx)
+	if err != nil || stats.SchemaVersion != hostedTenantPostgresSchemaVersion || stats.UserCount != 2 || stats.SessionCount != 2 {
+		host015CleanupPostgresTenancy(t, backend)
+		t.Fatalf("tenant postgres stats mismatch: stats=%+v err=%v", stats, err)
+	}
+	if err := backend.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	reopened := host015OpenPostgresTenancy(t, config)
+	defer host015CleanupPostgresTenancy(t, reopened)
+	loaded, err := reopened.LoadIdentityState(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	index, err := hostedTenantUserIndex(loaded)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if index["user-a"] != "tenant-a" || index["user-b"] != "tenant-b" {
+		t.Fatalf("tenant identity ownership did not survive restart: %+v", index)
+	}
+	workspaces, err := reopened.LoadUserWorkspaces(ctx)
+	if err != nil || len(workspaces) != 2 {
+		t.Fatalf("tenant workspaces did not survive restart: workspaces=%+v err=%v", workspaces, err)
+	}
+	var legacyIdentity, legacyWorkspaces int
+	if err := reopened.pg.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM identity_state`).Scan(&legacyIdentity); err != nil {
+		t.Fatal(err)
+	}
+	if err := reopened.pg.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM user_workspaces`).Scan(&legacyWorkspaces); err != nil {
+		t.Fatal(err)
+	}
+	if legacyIdentity != 0 || legacyWorkspaces != 0 {
+		t.Fatalf("legacy cross-tenant authorities remain: identity=%d workspaces=%d", legacyIdentity, legacyWorkspaces)
+	}
+}
+
+func TestHOST015PostgresRejectsCrossTenantWorkspaceRow(t *testing.T) {
+	config := host015PreparePostgresTenancy(t)
+	backend := host015OpenPostgresTenancy(t, config)
+	defer host015CleanupPostgresTenancy(t, backend)
+	ctx := context.Background()
+	if err := backend.SaveIdentityState(ctx, host015TenantFixture()); err != nil {
+		t.Fatal(err)
+	}
+	workspace := defaultUserWorkspace("user-a")
+	workspace.UpdatedAt = 10
+	if err := backend.SaveUserWorkspace(ctx, workspace); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := backend.pg.db.ExecContext(ctx, `UPDATE tenant_user_workspaces SET tenant_id='tenant-b' WHERE user_id='user-a'`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := backend.LoadUserWorkspaces(ctx); err == nil || !strings.Contains(err.Error(), "crosses tenant boundary") {
+		t.Fatalf("tampered cross-tenant workspace unexpectedly loaded: %v", err)
+	}
+}
+
+func TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace(t *testing.T) {
+	config := host015PreparePostgresTenancy(t)
+	ctx := context.Background()
+	raw := newPostgresPersistenceBackend(config).(*postgresPersistenceBackend)
+	if err := raw.Init(ctx); err != nil {
+		t.Fatal(err)
+	}
+	legacy := IdentityPersistentState{
+		Version:   1,
+		Users:     []UserRecord{{ID: "legacy-user", Username: "legacy", Role: RoleOwner, Status: UserActive, CreatedAt: 1, UpdatedAt: 2}},
+		Sessions:  []SessionRecord{{ID: "legacy-session", UserID: "legacy-user", CreatedAt: 1, LastSeenAt: 2, IdleExpiresAt: 100, AbsoluteExpiresAt: 200}},
+		UpdatedAt: 2,
+	}
+	if err := raw.SaveIdentityState(ctx, legacy); err != nil {
+		raw.Close()
+		t.Fatal(err)
+	}
+	workspace := defaultUserWorkspace("legacy-user")
+	workspace.UpdatedAt = 2
+	if err := raw.SaveUserWorkspace(ctx, workspace); err != nil {
+		raw.Close()
+		t.Fatal(err)
+	}
+	if err := raw.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	backend := host015OpenPostgresTenancy(t, config)
+	defer host015CleanupPostgresTenancy(t, backend)
+	loaded, err := backend.LoadIdentityState(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	index, err := hostedTenantUserIndex(loaded)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if index["legacy-user"] != localTenantID {
+		t.Fatalf("legacy user was not deterministically bound to local tenant: %+v", index)
+	}
+	workspaces, err := backend.LoadUserWorkspaces(ctx)
+	if err != nil || len(workspaces) != 1 || workspaces[0].UserID != "legacy-user" {
+		t.Fatalf("legacy workspace migration failed: workspaces=%+v err=%v", workspaces, err)
+	}
+	var legacyIdentity, legacyWorkspaces int
+	_ = backend.pg.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM identity_state`).Scan(&legacyIdentity)
+	_ = backend.pg.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM user_workspaces`).Scan(&legacyWorkspaces)
+	if legacyIdentity != 0 || legacyWorkspaces != 0 {
+		t.Fatalf("legacy authority survived expand migration: identity=%d workspaces=%d", legacyIdentity, legacyWorkspaces)
+	}
+}
