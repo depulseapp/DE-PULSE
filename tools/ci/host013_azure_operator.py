@@ -29,6 +29,8 @@ ISTIO_RE = re.compile(r"^asm-(\d+)-(\d+)$")
 AKS_VERIFY_ROLE = "Azure Kubernetes Service RBAC Cluster Admin"
 AKS_RBAC_PROPAGATION_TIMEOUT_SECONDS = 300
 AKS_RBAC_POLL_SECONDS = 10
+ISTIO_READY_TIMEOUT_SECONDS = 240
+ISTIO_READY_POLL_SECONDS = 10
 
 
 def fail(message: str) -> None:
@@ -220,6 +222,63 @@ def wait_for_aks_verification_access(rg: str, cluster: str) -> None:
     fail("temporary AKS verification RBAC did not propagate within 300s" + (f"; last logs={last_logs}" if last_logs else ""))
 
 
+def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str) -> str:
+    service = f"istiod-{istio_revision}"
+    command = (
+        "printf '%s\\n' '=== MANAGED ISTIO PODS ==='; "
+        "kubectl get pods -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== MANAGED ISTIO DEPLOYMENTS ==='; "
+        "kubectl get deployments -n aks-istio-system -o wide || true; "
+        f"printf '%s\\n' '=== {service} SERVICE ==='; "
+        f"kubectl get service {service} -n aks-istio-system -o wide || true; "
+        f"printf '%s\\n' '=== {service} ENDPOINTS ==='; "
+        f"kubectl get endpoints {service} -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== RECENT MANAGED ISTIO EVENTS ==='; "
+        "kubectl get events -n aks-istio-system --sort-by=.lastTimestamp | tail -n 30 || true"
+    )
+    payload = run_json([
+        "az", "aks", "command", "invoke",
+        "--resource-group", rg,
+        "--name", cluster,
+        "--command", command,
+        "-o", "json",
+    ])
+    if not isinstance(payload, dict):
+        return "<managed Istio diagnostics unavailable>"
+    logs = str(payload.get("logs") or "").strip()
+    return logs[:4000] if logs else "<managed Istio diagnostics empty>"
+
+
+def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> None:
+    service = f"istiod-{istio_revision}"
+    command = (
+        f"kubectl get endpoints {service} -n aks-istio-system "
+        "-o jsonpath='{.subsets[0].addresses[0].ip}'"
+    )
+    deadline = time.monotonic() + ISTIO_READY_TIMEOUT_SECONDS
+    last_logs = ""
+    while time.monotonic() < deadline:
+        payload = run_json([
+            "az", "aks", "command", "invoke",
+            "--resource-group", rg,
+            "--name", cluster,
+            "--command", command,
+            "-o", "json",
+        ])
+        if aks_remote_succeeded(payload):
+            logs = str((payload or {}).get("logs") or "").strip() if isinstance(payload, dict) else ""
+            if logs:
+                return
+        if isinstance(payload, dict):
+            last_logs = str(payload.get("logs") or "").strip()[:1000]
+        time.sleep(ISTIO_READY_POLL_SECONDS)
+    diagnostic = managed_istio_diagnostics(rg, cluster, istio_revision)
+    fail(
+        f"managed Istio revision {istio_revision} did not expose a ready istiod endpoint within "
+        f"{ISTIO_READY_TIMEOUT_SECONDS}s; last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
+    )
+
+
 def delete_temporary_aks_verification_role(assignment_id: str, cluster_id: str, rg: str, cluster: str) -> None:
     run([
         "az", "role", "assignment", "delete",
@@ -229,7 +288,6 @@ def delete_temporary_aks_verification_role(assignment_id: str, cluster_id: str, 
 
     rows = run_json([
         "az", "role", "assignment", "list",
-        "--all",
         "--scope", cluster_id,
         "-o", "json",
     ])
@@ -253,6 +311,31 @@ def delete_temporary_aks_verification_role(assignment_id: str, cluster_id: str, 
             return
         time.sleep(AKS_RBAC_POLL_SECONDS)
     fail("temporary AKS verification RBAC remained effective after deletion timeout")
+
+
+def write_failure_evidence(
+    path: Path,
+    *,
+    candidate_sha: str,
+    environment: str,
+    istio_revision: str,
+    verification_stage: str,
+    verification_error: BaseException | None,
+    cleanup_error: BaseException | None,
+) -> None:
+    payload = {
+        "schema": "DE.PULSE-HOST013-AZURE-FAILURE-1",
+        "candidateSha": candidate_sha,
+        "environment": environment,
+        "managedIstioRevision": istio_revision,
+        "verificationStage": verification_stage,
+        "verificationFailure": str(verification_error)[:8000] if verification_error is not None else None,
+        "cleanupFailure": str(cleanup_error)[:4000] if cleanup_error is not None else None,
+        "temporaryKubernetesAdminRemoved": cleanup_error is None,
+        "containsSecrets": False,
+        "status": "FAIL",
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def self_test() -> None:
@@ -378,9 +461,16 @@ def main() -> int:
 
     temporary_assignment_id = create_temporary_aks_verification_role(operator_object_id, cluster_id)
     verification_error: BaseException | None = None
+    verification_stage = "temporary-aks-rbac-propagation"
+    evidence_path = evidence_dir / "host013-azure-live-evidence.json"
+    traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
     try:
         wait_for_aks_verification_access(rg, cluster)
 
+        verification_stage = "managed-istio-readiness"
+        wait_for_managed_istio_ready(rg, cluster, istio_revision)
+
+        verification_stage = "canonical-trust-manifest-apply"
         apply_result = run_json([
             "az", "aks", "command", "invoke", "--resource-group", rg,
             "--name", cluster, "--command", "kubectl apply -f host013-aks-managed-trust.yaml",
@@ -388,7 +478,7 @@ def main() -> int:
         ])
         require_aks_command_success(apply_result, "canonical trust manifest apply")
 
-        evidence_path = evidence_dir / "host013-azure-live-evidence.json"
+        verification_stage = "configuration-and-identity-evidence"
         try:
             refresh_azure_cli_oidc()
         except RuntimeError as exc:
@@ -407,7 +497,7 @@ def main() -> int:
         ])
         require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
 
-        traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+        verification_stage = "live-traffic-and-adverse-evidence"
         try:
             refresh_azure_cli_oidc()
         except RuntimeError as exc:
@@ -434,6 +524,16 @@ def main() -> int:
     except BaseException as exc:
         cleanup_error = exc
 
+    if verification_error is not None or cleanup_error is not None:
+        write_failure_evidence(
+            evidence_dir / "host013-azure-failure-evidence.json",
+            candidate_sha=args.candidate_sha,
+            environment=args.environment,
+            istio_revision=istio_revision,
+            verification_stage=verification_stage,
+            verification_error=verification_error,
+            cleanup_error=cleanup_error,
+        )
     if cleanup_error is not None:
         detail = str(cleanup_error)
         if verification_error is not None:
@@ -455,6 +555,7 @@ def main() -> int:
         "environment": args.environment,
         "location": args.location,
         "managedIstioRevision": istio_revision,
+        "managedIstioReadinessProved": True,
         "operatorIdentityFingerprint": fingerprint(operator_object_id),
         "temporaryKubernetesAdminRole": AKS_VERIFY_ROLE,
         "temporaryKubernetesAdminRemoved": True,
