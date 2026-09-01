@@ -60,6 +60,18 @@ def run_json(args: list[str]) -> object:
         fail(f"non-JSON command response from {' '.join(args)}: {exc}")
 
 
+def require_aks_command_success(payload: object, label: str) -> dict[str, object]:
+    if not isinstance(payload, dict):
+        fail(f"{label} returned a non-object AKS command result")
+    exit_code = payload.get("exitCode")
+    succeeded = exit_code == 0 or str(exit_code).strip() == "0"
+    if not succeeded:
+        logs = str(payload.get("logs") or "").strip()
+        diagnostic = logs[:4000] if logs else "<no remote logs>"
+        fail(f"{label} remote command failed: exitCode={exit_code!r}; logs={diagnostic}")
+    return payload
+
+
 def revision_names(value: object) -> list[str]:
     names: set[str] = set()
 
@@ -169,6 +181,15 @@ def self_test() -> None:
         pass
     else:
         fail("missing Terraform output did not fail closed")
+    if require_aks_command_success({"exitCode": 0, "logs": "ok"}, "self-test").get("exitCode") != 0:
+        fail("AKS remote command success self-test failed")
+    try:
+        require_aks_command_success({"exitCode": 1, "logs": "synthetic kubectl failure"}, "self-test")
+    except SystemExit as exc:
+        if "synthetic kubectl failure" not in str(exc):
+            fail("AKS remote command failure diagnostics were not preserved")
+    else:
+        fail("AKS remote command nonzero exit did not fail closed")
     print("HOST-013/014 Azure operator self-test: PASS")
 
 
@@ -246,11 +267,12 @@ def main() -> int:
         "--workload-identity-client-id", workload_client_id,
         "--output", str(manifest_path),
     ])
-    run([
+    apply_result = run_json([
         "az", "aks", "command", "invoke", "--resource-group", rg,
         "--name", cluster, "--command", "kubectl apply -f host013-aks-managed-trust.yaml",
         "--file", str(manifest_path), "-o", "json",
-    ], capture=True)
+    ])
+    require_aks_command_success(apply_result, "canonical trust manifest apply")
 
     evidence_path = evidence_dir / "host013-azure-live-evidence.json"
     try:
