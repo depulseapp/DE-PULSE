@@ -3,7 +3,7 @@
   "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
   "issue": 148,
   "branch": "adapt-hosted-trust-foundation-001",
-  "closurePolicy": "#148 closes the v19.0.0 DEVELOPMENT_PRODUCTION_READY target only when every HOST-001..HOST-023 technical responsibility is implemented/evidenced through its canonical existing owner or justified hosted residual, all adverse hosted/security/data-truth/recovery requirements are VERIFIED, exact-head Fast and impact-selected Qualified pass on the final candidate, and v18.10.0 Stable remains immutable. Commercial/Public-only provider licensing/rights approval, public-user legal/compliance approval and commercial activation audit are separate activation gates and cannot be misclassified as Development technical blockers. Requirement-sized documentation, self-declared runtime policy, a passing unit test, a working hosted connection or readiness-tier relabeling cannot substitute for executable closure evidence.",
+  "closurePolicy": "#148 closes the v19.0.0 DEVELOPMENT_PRODUCTION_READY target only when every HOST-001..HOST-023 technical responsibility is implemented/evidenced through its canonical existing owner or is carried as an explicitly named Development-tier external blocker permitted by governance, all non-waived adverse hosted/security/data-truth/recovery requirements are VERIFIED, exact-head Fast and impact-selected Qualified pass on the final candidate, and v18.10.0 Stable remains immutable. A named external blocker never becomes VERIFIED evidence, never authorizes architecture/security weakening, and never authorizes Commercial/Public activation. Commercial/Public-only provider licensing/rights approval, public-user legal/compliance approval and commercial activation audit are separate activation gates and cannot be misclassified as Development technical blockers. Requirement-sized documentation, self-declared runtime policy, a passing unit test, a working hosted connection or readiness-tier relabeling cannot substitute for executable closure evidence.",
   "allGapsMustBeVerified": true,
   "gaps": [
     {
@@ -149,7 +149,7 @@
     },
     {
       "id": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED_EXTERNAL_BLOCKER_ACCEPTED",
       "owner": "hosted environment/IaC and service-trust owners",
       "implementationPaths": [
         "internal/hostedenv/contract.go",
@@ -164,7 +164,10 @@
         "tools/hosted/render_kubernetes_trust.py",
         "tools/ci/hosted_infrastructure_contract_gate.py",
         "tools/ci/azure_hosted_infrastructure_gate.py",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/hosted-trust-checkpoint-2026-08-28.json"
+        "tools/ci/host013_azure_operator.py",
+        "tools/ci/host013_azure_live_evidence.py",
+        "tools/ci/host013_azure_traffic_probe.py",
+        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json"
       ],
       "evidenceRequired": [
         "dev/test/stage/prod versioned desired-state isolation and drift contract",
@@ -174,12 +177,15 @@
       ],
       "evidence": [
         "Embedded desired-state contract remains the sole application policy owner for unique dev/test/stage/prod isolation, service identities, ingress/egress/network/TLS/internal-mTLS expectations and fail-closed declaration drift.",
-        "Repository implementation now projects the canonical contract into Kubernetes/Istio controls: environment namespaces/service accounts, default-deny networking, explicit managed ingress and egress hosts, STRICT mTLS, AuthorizationPolicy, REGISTRY_ONLY outbound behavior and desired-state SHA binding. The existing G2/source-health path runs fail-closed contract tests.",
-        "Azure is the selected verification substrate through a Terraform AKS adapter with private cluster, OIDC issuer, Microsoft Entra Workload Identity, local accounts disabled, Kubernetes RBAC, Azure Policy/network policy, Key Vault CSI hook, governed BYO-network authority and managed AKS Istio revision contract.",
-        "Repository evidence is implementation-only. HOST-013..014 remains OPEN because no isolated non-production AKS deployment has yet proven workload identity, ingress TLS/certificate lifecycle, internal mTLS positive/adverse traffic, default-deny and explicit egress, cross-environment denial, or live desired-state drift/remediation."
+        "Repository implementation projects the canonical contract into Kubernetes/Istio controls and owns a fail-closed real-Azure operator with private AKS, Entra/Azure RBAC, OIDC/Workload Identity, managed Istio, strict mTLS, governed ingress/egress, TLS adverse evidence, workload token exchange, temporary verification RBAC cleanup, secret-free retained evidence and post-verification zero drift.",
+        "Exact-head repository checkpoint: Fast #1391 / run 33562863732 PASS on 475ef25d51360093a558f9b28024c89b75e547f5 after managed-Istio rollout convergence, external ingress readiness, three-node capacity target and failure-diagnostic hardening.",
+        "Real Azure Qualified #244 / run 33560870545 exposed managed-Istio CPU pressure on the two-node system pool; failure evidence was retained and temporary AKS verification RBAC cleanup succeeded.",
+        "Real Azure Qualified #245 / run 33563399097 on exact head 475ef25d51360093a558f9b28024c89b75e547f5 produced a Terraform plan of 0 add, 1 change, 0 destroy, changing only AKS system node_count 2->3. Azure rejected apply with ErrCode_InsufficientVCPUQuota because Canada Central regional quota was 4/4, 0 vCPUs remained and 2 more were required.",
+        "Azure Portal confirmed the subscription is a Free Trial and is ineligible for quota adjustment unless upgraded to a paid subscription. The owner declined paid upgrade; Development governance does not require purchasing Azure quota solely to erase an external verification residual.",
+        "Named residual HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is accepted as an ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER. It does not verify HOST-013/014, does not authorize weakening Istio/TLS/network/identity/cleanup/drift controls, and does not authorize Commercial/Public activation."
       ],
-      "closureCondition": "Keep OPEN until an isolated non-production Azure AKS environment is provisioned through OIDC-federated GitHub/Azure identity and live managed-environment adverse/drift evidence proves isolation, workload identity, ingress/egress, TLS/mTLS and reproducibility. Repository IaC, rendering and CI gates are necessary but not sufficient.",
-      "blocksIssueClosure": true
+      "closureCondition": "Remain explicitly IMPLEMENTED_UNVERIFIED until a sufficiently resourced isolated AKS environment later passes the full live configuration/identity/traffic/cleanup/zero-drift chain. For v19.0 Development dependency advancement and HOST-023 accounting, the named Azure Free Trial vCPU quota residual is permitted as an explicit external blocker. Revisit when sufficient no-cost quota or a later explicitly authorized paid environment becomes available.",
+      "blocksIssueClosure": false
     },
     {
       "id": "HOST-015-016-POSTGRES-TENANCY-RECOVERY",
@@ -205,7 +211,8 @@
       "evidence": [
         "Existing PostgreSQL backend remains the sole hosted persistence stack; startup validates environment search_path, sslmode=verify-full, pool bounds, migration/RLS disposition and declared recovery policy before backend construction.",
         "Development technical gap: environment search_path isolates environments, not tenants; identity_state remains a global id=1 JSON document and user_workspaces are keyed only by user_id, without tenant-owned database keys/isolation.",
-        "Development technical gap: HA/backup/PITR/RPO/RTO/restore/rollback readiness is currently declaration-based; no real managed-Postgres failover/backup/PITR evidence is verified. Tagged PostgreSQL regression skips without DEPULSE_TEST_POSTGRES_URL, so ordinary Fast does not constitute live DB integration/recovery proof."
+        "Development technical gap: HA/backup/PITR/RPO/RTO/restore/rollback readiness is currently declaration-based; no real managed-Postgres failover/backup/PITR evidence is verified. Tagged PostgreSQL regression skips without DEPULSE_TEST_POSTGRES_URL, so ordinary Fast does not constitute live DB integration/recovery proof.",
+        "HOST-012 managed Neon PITR/operator evidence is reusable for applicable recovery/anti-resurrection obligations but does not substitute for the remaining HOST-015/016 tenant-owned/scoped isolation, migration/adverse and HA/failover/rollback evidence."
       ],
       "closureCondition": "Implement tenant-owned/scoped PostgreSQL persistence plus real tagged database integration, migration/isolation/adverse tests, and executable HA/failover/backup/PITR/restore/RPO-RTO/rollback evidence.",
       "blocksIssueClosure": true
@@ -312,9 +319,10 @@
         "Hosted Provider Gateway remains blocked until Development closure"
       ],
       "evidence": [
-        "COMMERCIAL_PUBLIC_READY gates are explicitly outside this Development closure row. Their absence neither satisfies nor blocks HOST-023 Development technical closure, and Development closure never authorizes public/commercial activation."
+        "COMMERCIAL_PUBLIC_READY gates are explicitly outside this Development closure row. Their absence neither satisfies nor blocks HOST-023 Development technical closure, and Development closure never authorizes public/commercial activation.",
+        "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is an explicitly named Development-tier external blocker. If still unresolved at final closure it must be carried visibly, remain UNVERIFIED, and cannot be cited as real AKS readiness or Commercial/Public activation evidence."
       ],
-      "closureCondition": "The Hosted Trust Foundation closes DEVELOPMENT_PRODUCTION_READY with zero unexplained applicable technical gap before HOST-024 gateway activation. Commercial/Public activation remains a separate later authorization.",
+      "closureCondition": "The Hosted Trust Foundation closes DEVELOPMENT_PRODUCTION_READY with zero unexplained applicable technical gap; explicitly named Development-tier external blockers may remain only when their missing evidence, non-verified state and revisit trigger are durable. Commercial/Public activation remains a separate later authorization.",
       "blocksIssueClosure": true
     },
     {
@@ -334,7 +342,9 @@
       "evidence": [
         "Dependency-band implementation checkpoint: Fast #1254 / run 33049452646 PASS on de110ecfcbc6e385203eec90c631628871fd6e83 after HOST-007/applicable #164 core evidence completion.",
         "Governance transition checkpoint: Fast #1255 / run 33049748420 PASS on c964d303a4d2379972026844b3444fbef0ed9382 after recording HOST-004..007 VERIFIED.",
-        "Latest application privacy-lifecycle checkpoint: Fast #1257 / run 33051229439 FULL PASS on 5127b1599c052bb3c709b46bd7900cc46629d0ee after HOST-010..012 deactivation/privacy-audit/restart implementation. These are dependency-band checkpoints, not the final v19.0.0 candidate and do not satisfy the identical-head Qualified requirement."
+        "Application privacy-lifecycle checkpoint: Fast #1257 / run 33051229439 FULL PASS on 5127b1599c052bb3c709b46bd7900cc46629d0ee after HOST-010..012 deactivation/privacy-audit/restart implementation.",
+        "Latest HOST-013/014 repository checkpoint before residual disposition: Fast #1391 / run 33562863732 PASS on 475ef25d51360093a558f9b28024c89b75e547f5. Manual Qualified #245 / run 33563399097 failed only at Azure apply due the named Free Trial regional vCPU quota residual; it is external evidence of the blocker, not a Qualified PASS and not final release evidence.",
+        "These are dependency-band checkpoints, not the final v19.0.0 candidate and do not satisfy the final identical-head Qualified requirement."
       ],
       "closureCondition": "Final #148 DEVELOPMENT_PRODUCTION_READY candidate has exact-head Fast and identical-head Qualified success before expected-head merge. Commercial/Public activation remains separately gated after Development closure.",
       "blocksIssueClosure": true
