@@ -73,8 +73,9 @@ def main() -> int:
     require(main_tf, r'role_based_access_control_enabled\s*=\s*true', "Kubernetes RBAC")
     require(main_tf, r'azure_policy_enabled\s*=\s*true', "Azure Policy")
     require(main_tf, r'only_critical_addons_enabled\s*=\s*false', "schedulable single-pool dev verification workloads")
-    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?default\s*=\s*2\b', "two-node AKS system-pool baseline")
-    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?condition\s*=\s*var\.node_count\s*>=\s*2\s*&&\s*var\.node_count\s*<=\s*3', "AKS system-pool minimum-two validation")
+    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?default\s*=\s*3\b', "three-node managed-Istio rollout system-pool baseline")
+    require(vars_tf, r'variable\s+"node_count"\s*\{[\s\S]*?condition\s*=\s*var\.node_count\s*>=\s*2\s*&&\s*var\.node_count\s*<=\s*3', "AKS system-pool bounded validation")
+    require(vars_tf, r'two nodes insufficient during an Istiod rolling update', "real-capacity-failure rationale")
     require(main_tf, r'network_policy\s*=\s*"azure"', "network policy")
     require(main_tf, r'service_mesh_profile\s*\{[\s\S]*?mode\s*=\s*"Istio"[\s\S]*?revisions\s*=\s*var\.istio_revisions', "managed AKS Istio profile")
     require(main_tf, r'external_ingress_gateway_enabled\s*=\s*true', "managed external Istio ingress gateway")
@@ -187,6 +188,12 @@ def main() -> int:
     require(operator_text, r'INGRESS_READY_TIMEOUT_SECONDS\s*=\s*600', "bounded managed ingress readiness timeout")
     require(operator_text, r'stable_passes\s*\+=\s*1', "consecutive managed readiness accumulation")
     require(operator_text, r'stable_passes\s*=\s*0', "managed readiness streak reset")
+    require(operator_text, r'managed_istio_ready_command', "managed Istio rollout-aware readiness command owner")
+    require(operator_text, r'kubectl rollout status deployment/', "managed Istio rollout completion proof")
+    require(operator_text, r'updatedReplicas', "managed Istio updated-replica convergence proof")
+    require(operator_text, r'readyReplicas', "managed Istio ready-replica convergence proof")
+    require(operator_text, r'availableReplicas', "managed Istio available-replica convergence proof")
+    require(operator_text, r'unavailableReplicas', "managed Istio zero-unavailable convergence proof")
     require(operator_text, r'wait_for_managed_istio_ready', "managed Istio control-plane readiness gate")
     require(operator_text, r'wait_for_managed_external_ingress_ready', "managed external ingress readiness gate")
     require(operator_text, r'reconcile_external_ingress_gateway', "managed external ingress reconciliation owner")
@@ -196,6 +203,7 @@ def main() -> int:
     require(operator_text, r'endpointslices\.discovery\.k8s\.io', "EndpointSlice ingress readiness fallback")
     require(operator_text, r'kubectl get endpoints', "managed Istio/ingress endpoint readiness proof")
     require(operator_text, r'kubectl get deployments,hpa,daemonsets -n aks-istio-system', "managed Istio deployment/HPA/daemonset diagnostics")
+    require(operator_text, r'kubectl get replicasets -n aks-istio-system -l app=istiod', "managed Istio ReplicaSet rollout diagnostics")
     require(operator_text, r'kubectl get pods,deployments,hpa,services,endpoints -n aks-istio-ingress', "managed ingress workload/service diagnostics")
     require(operator_text, r'kubectl get nodes', "AKS node capacity diagnostics")
     require(operator_text, r'managed_istio_diagnostics', "managed Istio/ingress failure diagnostics")
@@ -228,8 +236,8 @@ def main() -> int:
 
     print(
         "PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, "
-        "reproducibly pinned, supported-system-pool-sized, renewable-OIDC-backed, OIDC-state-backed, "
-        "stable-managed-Istio-and-ingress-readiness-gated, managed-ingress-reconciling, "
+        "reproducibly pinned, three-node-managed-Istio-rollout-sized, renewable-OIDC-backed, OIDC-state-backed, "
+        "rollout-converged-stable-managed-Istio-and-ingress-readiness-gated, managed-ingress-reconciling, "
         "temporary-Kubernetes-admin-cleaned, identity-independent, TLS-adverse-proof-capable, "
         "workload-identity-bound, live-traffic-tested, failure-evidence-retaining, cleanup-verified, "
         "zero-drift-gated and secret-free"
