@@ -39,11 +39,26 @@
     "productAuditCoverage": "governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md",
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
-    "nextDependencyBand": "HOST-013..HOST-014 Azure-backed Environment / Service Trust: repository implementation and verification harness are exact-head Fast-qualified; configure isolated non-production Azure OIDC/Terraform-state identifiers and run the existing manual CI Qualified Azure operator; keep UNVERIFIED until real managed-environment configuration/identity/traffic/drift evidence passes",
-    "zeroMissAuditState": "REPOSITORY_IMPLEMENTED_LIVE_AZURE_UNVERIFIED",
-    "externalControlWaivers": [],
+    "nextDependencyBand": "HOST-015..HOST-016 PostgreSQL tenancy/recovery: extend the existing PostgreSQL persistence owner with tenant-owned/scoped isolation, live migration/adverse database evidence and broader HA/failover/rollback/recovery proof; reuse the already-verified HOST-012 Neon PITR evidence where applicable",
+    "zeroMissAuditState": "HOST013_014_IMPLEMENTED_UNVERIFIED_EXTERNAL_QUOTA_RESIDUAL_ACCEPTED_ADVANCING_HOST015_016",
+    "externalControlWaivers": [
+      {
+        "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+        "requirements": ["HOST-013", "HOST-014"],
+        "classification": "ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER",
+        "status": "ACTIVE_RESIDUAL",
+        "evidence": "Qualified #245 / run 33563399097 on 475ef25d51360093a558f9b28024c89b75e547f5: Terraform planned only AKS system-pool node_count 2->3, but Azure returned ErrCode_InsufficientVCPUQuota because Canada Central regional quota was 4/4 with 0 vCPUs left and 2 additional required. Azure Portal confirmed the Free Trial subscription is ineligible for quota adjustment without paid upgrade.",
+        "repositoryEvidence": "Fast #1391 / run 33562863732 PASS on 475ef25d51360093a558f9b28024c89b75e547f5",
+        "doesNotVerifyRequirements": true,
+        "architectureWeakeningAuthorized": false,
+        "blocksDependencyAdvancement": false,
+        "eligibleAsNamedHost023Residual": true,
+        "commercialPublicActivationAllowed": false,
+        "revisitWhen": "Sufficient no-cost quota or a later explicitly authorized paid managed environment becomes available."
+      }
+    ],
     "latestDependencyCheckpoint": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
-    "nextDependencyBandId": "HOST-013..014"
+    "nextDependencyBandId": "HOST-015..016"
   },
   "latestCompletedWorkSlice": {
     "workSliceId": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
@@ -262,7 +277,7 @@
     },
     "futureProgramBlockerIssue": 148,
     "futureBlockedIssue": 148,
-    "futureBlockedReason": "HOST-024 Hosted Provider Gateway and later #66 bands remain blocked until #148 HOST-001..HOST-023 closes with executable evidence.",
+    "futureBlockedReason": "HOST-024 Hosted Provider Gateway and later #66 bands remain blocked until #148 HOST-001..HOST-023 closes with executable evidence or explicitly governed Development-tier residuals. The HOST-013/014 Azure Free Trial quota residual does not block work on HOST-015..023 but does not authorize v19.1 early.",
     "postClosureSourceOverlapAuditRequired": true,
     "postClosureSourceOverlapAuditStatus": "PASS",
     "postClosureSourceOverlapAuditIssue": 145,
