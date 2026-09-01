@@ -2,7 +2,44 @@
   "schema": "DE.PULSE-WORK-SLICE-REPOSITORY-MIGRATIONS-1",
   "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
   "repositoryMigrationBaselineCommit": "e55d8d25b15cec2ffb0f5411bc358bc40b359cf9",
-  "moves": [],
+  "moves": [
+    {
+      "oldPath": "persistence_tenant_scope.go",
+      "newPath": "hosted_tenant_persistence.go",
+      "owner": "HOST-015 / canonical hosted tenant persistence boundary",
+      "reason": "Replace the temporary implementation filename with the explicit hosted tenant-persistence capability owner while preserving application identity as the authorization authority.",
+      "removalCondition": "Move from package-main root only when the tenant-persistence capability can be extracted without duplicating canonical identity/persistence owners or creating test-only production exports.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "persistence_tenant_scope_regression_test.go",
+      "newPath": "hosted_tenant_persistence_regression_test.go",
+      "owner": "HOST-015 / tenant persistence isolation regression evidence",
+      "reason": "Name the package-main regression owner by the hosted tenant-persistence capability it proves while preserving exact test identities.",
+      "removalCondition": "Move with the hosted tenant-persistence capability when private package-main access can be preserved without artificial production test seams.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "persistence_backend_postgres_tenant.go",
+      "newPath": "hosted_postgres_tenant_persistence.go",
+      "owner": "HOST-015 / canonical PostgreSQL hosted-tenancy adapter",
+      "reason": "Replace the temporary backend-oriented name with the explicit hosted PostgreSQL tenancy capability owner; the adapter extends rather than replaces the canonical PostgreSQL backend.",
+      "removalCondition": "Consolidate into a non-root hosted persistence package only when the PostgreSQL build-tag boundary and canonical backend private access can move without a parallel persistence stack.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    },
+    {
+      "oldPath": "persistence_backend_postgres_tenant_stub.go",
+      "newPath": "hosted_postgres_tenant_persistence_stub.go",
+      "owner": "HOST-015 / non-PostgreSQL compatibility boundary",
+      "reason": "Keep the build-tagged non-PostgreSQL compatibility stub paired with the hosted PostgreSQL tenancy capability without changing SQLite or native desktop behavior.",
+      "removalCondition": "Move or remove only with the hosted PostgreSQL tenancy adapter when cross-build symbol ownership can be preserved without changing non-PostgreSQL behavior.",
+      "referenceScope": "ACTIVE_RUNTIME_AND_CONTROL",
+      "allowedReferenceFiles": []
+    }
+  ],
   "temporaryAliases": [],
   "removedGoTestIdentities": [],
   "retiredExecutablePaths": [],
