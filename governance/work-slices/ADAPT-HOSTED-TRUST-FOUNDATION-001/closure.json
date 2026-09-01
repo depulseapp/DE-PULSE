@@ -149,7 +149,7 @@
     },
     {
       "id": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
-      "status": "IMPLEMENTED_UNVERIFIED_EXTERNAL_BLOCKER_ACCEPTED",
+      "status": "BLOCKED_EXTERNAL",
       "owner": "hosted environment/IaC and service-trust owners",
       "implementationPaths": [
         "internal/hostedenv/contract.go",
@@ -167,7 +167,8 @@
         "tools/ci/host013_azure_operator.py",
         "tools/ci/host013_azure_live_evidence.py",
         "tools/ci/host013_azure_traffic_probe.py",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json"
+        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
+        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json"
       ],
       "evidenceRequired": [
         "dev/test/stage/prod versioned desired-state isolation and drift contract",
@@ -182,10 +183,10 @@
         "Real Azure Qualified #244 / run 33560870545 exposed managed-Istio CPU pressure on the two-node system pool; failure evidence was retained and temporary AKS verification RBAC cleanup succeeded.",
         "Real Azure Qualified #245 / run 33563399097 on exact head 475ef25d51360093a558f9b28024c89b75e547f5 produced a Terraform plan of 0 add, 1 change, 0 destroy, changing only AKS system node_count 2->3. Azure rejected apply with ErrCode_InsufficientVCPUQuota because Canada Central regional quota was 4/4, 0 vCPUs remained and 2 more were required.",
         "Azure Portal confirmed the subscription is a Free Trial and is ineligible for quota adjustment unless upgraded to a paid subscription. The owner declined paid upgrade; Development governance does not require purchasing Azure quota solely to erase an external verification residual.",
-        "Named residual HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is accepted as an ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER. It does not verify HOST-013/014, does not authorize weakening Istio/TLS/network/identity/cleanup/drift controls, and does not authorize Commercial/Public activation."
+        "Named residual HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is accepted through a scope-limited executable waiver contract. It does not verify HOST-013/014, does not authorize weakening Istio/TLS/network/identity/cleanup/drift controls, and does not authorize Commercial/Public activation."
       ],
-      "closureCondition": "Remain explicitly IMPLEMENTED_UNVERIFIED until a sufficiently resourced isolated AKS environment later passes the full live configuration/identity/traffic/cleanup/zero-drift chain. For v19.0 Development dependency advancement and HOST-023 accounting, the named Azure Free Trial vCPU quota residual is permitted as an explicit external blocker. Revisit when sufficient no-cost quota or a later explicitly authorized paid environment becomes available.",
-      "blocksIssueClosure": false
+      "closureCondition": "Remain explicitly BLOCKED_EXTERNAL and UNVERIFIED until a sufficiently resourced isolated AKS environment later passes the full live configuration/identity/traffic/cleanup/zero-drift chain. For v19.0 Development dependency advancement and HOST-023 accounting, the named Azure Free Trial vCPU quota residual is permitted only while its scope-limited waiver validates. Revisit when sufficient no-cost quota or a later explicitly authorized paid environment becomes available.",
+      "blocksIssueClosure": true
     },
     {
       "id": "HOST-015-016-POSTGRES-TENANCY-RECOVERY",
