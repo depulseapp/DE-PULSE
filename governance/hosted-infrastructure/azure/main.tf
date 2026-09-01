@@ -13,6 +13,8 @@ locals {
   }, var.tags)
 }
 
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_resource_group" "this" {
   name     = "rg-${local.prefix}"
   location = var.location
