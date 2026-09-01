@@ -44,6 +44,8 @@
     "externalControlWaivers": [
       {
         "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+        "gapId": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
+        "path": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
         "requirements": ["HOST-013", "HOST-014"],
         "classification": "ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER",
         "status": "ACTIVE_RESIDUAL",
