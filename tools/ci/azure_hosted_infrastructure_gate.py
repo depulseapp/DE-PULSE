@@ -43,6 +43,7 @@ def main() -> int:
 
     main_tf = (AZ / "main.tf").read_text(encoding="utf-8")
     vars_tf = (AZ / "variables.tf").read_text(encoding="utf-8")
+    outputs_tf = (AZ / "outputs.tf").read_text(encoding="utf-8")
     versions_tf = (AZ / "versions.tf").read_text(encoding="utf-8")
     backend_tf = (AZ / "backend.tf").read_text(encoding="utf-8")
     readme = (AZ / "README.md").read_text(encoding="utf-8")
@@ -54,6 +55,10 @@ def main() -> int:
     require(backend_tf, r'backend\s+"azurerm"', "AzureRM remote state backend")
     require(backend_tf, r'use_oidc\s*=\s*true', "OIDC state authentication")
     require(backend_tf, r'use_azuread_auth\s*=\s*true', "Microsoft Entra state data-plane authentication")
+    require(main_tf, r'data\s+"azurerm_client_config"\s+"current"', "authenticated operator identity introspection")
+    require(outputs_tf, r'output\s+"aks_cluster_id"', "exact AKS verification scope output")
+    require(outputs_tf, r'output\s+"operator_identity_client_id"[\s\S]*?data\.azurerm_client_config\.current\.client_id', "OIDC operator client-ID output")
+    require(outputs_tf, r'output\s+"operator_identity_object_id"[\s\S]*?data\.azurerm_client_config\.current\.object_id', "OIDC operator object-ID output")
     require(main_tf, r'private_cluster_enabled\s*=\s*var\.private_cluster_enabled', "private AKS control-plane binding")
     require(vars_tf, r'condition\s*=\s*var\.private_cluster_enabled', "fail-closed private-cluster validation")
     require(main_tf, r'local_account_disabled\s*=\s*true', "disabled local AKS accounts")
@@ -77,6 +82,8 @@ def main() -> int:
     require(main_tf, r'role_definition_name\s*=\s*"Network Contributor"', "BYO-network role assignment")
     require(main_tf, r'scope\s*=\s*azurerm_virtual_network\.this\.id', "network role least-privilege scope")
     require(main_tf, r'host_gate\s*=\s*"HOST-013-HOST-014"', "HOST ownership tag")
+    if "Azure Kubernetes Service RBAC Cluster Admin" in main_tf:
+        fail("verification-only AKS Cluster Admin must never become standing Terraform infrastructure")
     require(readme, r'HOST-013\.\.014 may move to VERIFIED only after a real Azure deployment', "truthful live-verification boundary")
 
     require(renderer, r'"aks-managed"', "AKS-managed mesh renderer profile")
@@ -130,6 +137,15 @@ def main() -> int:
     require(operator_text, r'args\s+and\s+args\[0\]\s*==\s*"az"[\s\S]*?refresh_azure_cli_oidc\(\)', "per-Azure-CLI just-in-time OIDC refresh")
     if operator_text.count("refresh_azure_cli_oidc()") < 3:
         fail("Azure operator must refresh OIDC for direct Azure CLI and both child evidence phases")
+    require(operator_text, r'AKS_VERIFY_ROLE\s*=\s*"Azure Kubernetes Service RBAC Cluster Admin"', "temporary AKS verification role definition")
+    require(operator_text, r'create_temporary_aks_verification_role', "temporary AKS RBAC creation owner")
+    require(operator_text, r'--assignee-object-id', "Graph-independent temporary AKS RBAC principal binding")
+    require(operator_text, r'--assignee-principal-type",\s*"ServicePrincipal"', "service-principal constrained temporary AKS RBAC binding")
+    require(operator_text, r'wait_for_aks_verification_access', "AKS RBAC propagation proof")
+    require(operator_text, r'delete_temporary_aks_verification_role', "temporary AKS RBAC cleanup owner")
+    require(operator_text, r'"az",\s*"role",\s*"assignment",\s*"delete"', "temporary AKS RBAC deletion")
+    require(operator_text, r'--ids",\s*assignment_id', "exact role-assignment deletion by ID")
+    require(operator_text, r'temporaryKubernetesAdminRemoved.*True', "retained temporary AKS RBAC cleanup evidence")
     require(operator_text, r'--mesh-profile", "aks-managed"', "operator AKS-managed rendering")
     require(operator_text, r'workload_identity_client_id', "operator workload identity output binding")
     require(operator_text, r'host013_azure_traffic_probe', "operator live traffic probe binding")
@@ -138,7 +154,7 @@ def main() -> int:
     if "client-secret" in operator_text.lower() or "client_secret" in operator_text.lower():
         fail("Azure operator must not expose a client-secret path")
 
-    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-correct, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
+    print("PASS: Azure AKS HOST-013..014 adapter/operator is fail-closed, Entra-integrated, reproducibly pinned, schedulable, renewable-OIDC-backed, OIDC-state-backed, managed-Istio-correct, temporary-Kubernetes-admin-cleaned, XDS-reachable, TLS-adverse-proof-capable, workload-identity-bound, live-traffic-tested, cleanup-verified and secret-free")
     return 0
 
 
