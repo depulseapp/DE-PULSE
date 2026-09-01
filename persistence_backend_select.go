@@ -54,7 +54,7 @@ func newPersistenceBackend(configDir string) PersistenceBackend {
 				return newUnavailablePersistenceBackend("hosted PostgreSQL policy: " + err.Error())
 			}
 		}
-		backend = newPostgresPersistenceBackend(config)
+		backend = wrapHostedTenantPostgresBackend(newPostgresPersistenceBackend(config))
 	default:
 		return newUnavailablePersistenceBackend(fmt.Sprintf("unsupported persistence backend %q", mode))
 	}
