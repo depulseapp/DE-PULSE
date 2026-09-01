@@ -87,6 +87,8 @@ Real Azure attempts materially progressed the evidence chain and exposed the fin
 - Azure Portal confirmed the subscription is a **Free Trial** and is ineligible for quota adjustment unless upgraded to a paid subscription.
 
 Canonical disposition ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`.
+Canonical closure gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`.
+Canonical residual evidence path: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
 
 This is explicitly accepted as an **ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER** for dependency advancement because the owner is not required to purchase Azure quota solely to generate external verification evidence. It does **not** verify HOST-013/014, does **not** weaken the required architecture, and does **not** authorize Commercial/Public activation. If sufficient no-cost quota or a later explicitly authorized paid environment becomes available, rerun the full live AKS configuration/identity/traffic/cleanup/drift proof.
 
