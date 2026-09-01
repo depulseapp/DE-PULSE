@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 from typing import Any
 
@@ -48,6 +49,19 @@ def installed_istio_revisions(cluster: dict[str, Any]) -> list[str]:
     return [str(value) for value in revisions if str(value).strip()]
 
 
+def external_ingress_configured(cluster: dict[str, Any]) -> bool:
+    gateways = pick(cluster, "serviceMeshProfile", "istio", "components", "ingressGateways") or []
+    if not isinstance(gateways, list):
+        return False
+    for row in gateways:
+        if not isinstance(row, dict):
+            continue
+        mode = str(row.get("mode") or "").strip().lower()
+        if mode == "external" and row.get("enabled") is not False:
+            return True
+    return False
+
+
 def validate_cluster(cluster: dict[str, Any], expected_location: str) -> dict[str, bool]:
     addon = cluster.get("addonProfiles") or {}
     mesh = cluster.get("serviceMeshProfile") or {}
@@ -64,6 +78,7 @@ def validate_cluster(cluster: dict[str, Any], expected_location: str) -> dict[st
         "keyVaultSecretsProviderEnabled": enabled(pick(addon, "azureKeyvaultSecretsProvider", "enabled")),
         "azureNetworkPolicy": str(pick(cluster, "networkProfile", "networkPolicy") or "").lower() == "azure",
         "managedIstioEnabled": str(mesh.get("mode") or "").lower() == "istio" and bool(mesh_revisions),
+        "managedExternalIngressConfigured": external_ingress_configured(cluster),
         "userAssignedControlPlaneIdentity": "userassigned" in str(identity.get("type") or "").lower(),
         "locationMatches": str(cluster.get("location") or "").replace(" ", "").lower() == expected_location.replace(" ", "").lower(),
     }
@@ -99,6 +114,11 @@ def validate_federated_credential(
     return checks
 
 
+def marker_value(logs: str, marker: str) -> str:
+    match = re.search(rf"(?:^|\n){re.escape(marker)}([^\n]*)", logs)
+    return match.group(1).strip() if match else ""
+
+
 def validate_run_command(
     result: dict[str, Any],
     *,
@@ -107,24 +127,61 @@ def validate_run_command(
 ) -> dict[str, bool]:
     exit_code = result.get("exitCode")
     logs = str(result.get("logs") or "")
+    ready_pods = marker_value(logs, "INGRESS_READY_PODS=")
+    try:
+        ready_pod_count = int(ready_pods)
+    except ValueError:
+        ready_pod_count = 0
     checks = {
         "runCommandExitCodePresent": exit_code is not None,
         "runCommandSucceeded": exit_code == 0 or str(exit_code).strip() == "0",
         "managedIstioSystemNamespaceReachable": "namespace/aks-istio-system" in logs,
         "managedIstioIngressNamespaceReachable": "namespace/aks-istio-ingress" in logs,
         "managedExternalIngressGatewayPresent": "service/aks-istio-ingressgateway-external" in logs,
-        "workloadNamespaceRevisionMatches": f"REV={expected_revision}" in logs,
-        "serviceAccountWorkloadIdentityClientMatches": f"CLIENT={expected_client_id}" in logs,
+        "managedExternalIngressGatewayHttpsPort": marker_value(logs, "INGRESS_HTTPS_PORT=") == "443",
+        "managedExternalIngressGatewayPublicIpPresent": bool(marker_value(logs, "INGRESS_IP=")),
+        "managedExternalIngressGatewayEndpointReady": bool(marker_value(logs, "INGRESS_ENDPOINT=")),
+        "managedExternalIngressGatewayPodReady": ready_pod_count >= 1,
+        "workloadNamespaceRevisionMatches": marker_value(logs, "REV=") == expected_revision,
+        "serviceAccountWorkloadIdentityClientMatches": marker_value(logs, "CLIENT=") == expected_client_id,
     }
     failed = [name for name, ok in checks.items() if not ok]
     if failed:
-        diagnostic = logs.strip()[:4000] if logs.strip() else "<no remote logs>"
+        diagnostic = logs.strip()[:8000] if logs.strip() else "<no remote logs>"
         raise RuntimeError(
             "AKS private-cluster command evidence failed: "
             + ", ".join(failed)
             + f"; exitCode={exit_code!r}; logs={diagnostic}"
         )
     return checks
+
+
+def kubernetes_evidence_command(namespace: str, service_account: str) -> str:
+    service = "aks-istio-ingressgateway-external"
+    return (
+        "status=0; "
+        "system_ns=\"$(kubectl get namespace aks-istio-system -o name 2>/dev/null || true)\"; "
+        "if test \"$system_ns\" = namespace/aks-istio-system; then echo \"$system_ns\"; else echo SYSTEM_NAMESPACE_MISSING; status=1; fi; "
+        "ingress_ns=\"$(kubectl get namespace aks-istio-ingress -o name 2>/dev/null || true)\"; "
+        "if test \"$ingress_ns\" = namespace/aks-istio-ingress; then echo \"$ingress_ns\"; else echo INGRESS_NAMESPACE_MISSING; status=1; fi; "
+        f"svc=\"$(kubectl get service {service} -n aks-istio-ingress -o name 2>/dev/null || true)\"; "
+        f"if test \"$svc\" = service/{service}; then echo \"$svc\"; else echo EXTERNAL_INGRESS_SERVICE_MISSING; status=1; fi; "
+        f"port=\"$(kubectl get service {service} -n aks-istio-ingress -o jsonpath='{{.spec.ports[?(@.port==443)].port}}' 2>/dev/null || true)\"; "
+        "printf 'INGRESS_HTTPS_PORT=%s\\n' \"$port\"; test \"$port\" = 443 || status=1; "
+        f"ip=\"$(kubectl get service {service} -n aks-istio-ingress -o jsonpath='{{.status.loadBalancer.ingress[0].ip}}' 2>/dev/null || true)\"; "
+        "printf 'INGRESS_IP=%s\\n' \"$ip\"; test -n \"$ip\" || status=1; "
+        f"endpoint=\"$(kubectl get endpoints {service} -n aks-istio-ingress -o jsonpath='{{.subsets[0].addresses[0].ip}}' 2>/dev/null || true)\"; "
+        f"if test -z \"$endpoint\"; then endpoint=\"$(kubectl get endpointslices.discovery.k8s.io -n aks-istio-ingress -l kubernetes.io/service-name={service} -o jsonpath='{{.items[0].endpoints[0].addresses[0]}}' 2>/dev/null || true)\"; fi; "
+        "printf 'INGRESS_ENDPOINT=%s\\n' \"$endpoint\"; test -n \"$endpoint\" || status=1; "
+        "ready=\"$(kubectl get pods -n aks-istio-ingress -l istio=aks-istio-ingressgateway-external "
+        "-o jsonpath='{range .items[*]}{.status.containerStatuses[0].ready}{\"\\n\"}{end}' 2>/dev/null | grep -c true || true)\"; "
+        "printf 'INGRESS_READY_PODS=%s\\n' \"${ready:-0}\"; test \"${ready:-0}\" -ge 1 || status=1; "
+        f"rev=\"$(kubectl get namespace {namespace} -o jsonpath='{{.metadata.labels.istio\\.io/rev}}' 2>/dev/null || true)\"; "
+        "printf 'REV=%s\\n' \"$rev\"; test -n \"$rev\" || status=1; "
+        f"client=\"$(kubectl get serviceaccount {service_account} -n {namespace} -o jsonpath='{{.metadata.annotations.azure\\.workload\\.identity/client-id}}' 2>/dev/null || true)\"; "
+        "printf 'CLIENT=%s\\n' \"$client\"; test -n \"$client\" || status=1; "
+        "exit \"$status\""
+    )
 
 
 def collect(args: argparse.Namespace) -> dict[str, Any]:
@@ -159,18 +216,10 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
     revisions = run_json(["az", "aks", "mesh", "get-revisions", "--location", args.location, "-o", "json"])
     namespace = f"depulse-{args.environment}"
     service_account = f"depulse-web-{args.environment}"
-    command = (
-        "kubectl get namespace aks-istio-system -o name && "
-        "kubectl get namespace aks-istio-ingress -o name && "
-        "kubectl get service aks-istio-ingressgateway-external -n aks-istio-ingress -o name && "
-        f"printf 'REV=' && kubectl get namespace {namespace} -o jsonpath='{{.metadata.labels.istio\\.io/rev}}' && echo && "
-        f"printf 'CLIENT=' && kubectl get serviceaccount {service_account} -n {namespace} "
-        "-o jsonpath='{.metadata.annotations.azure\\.workload\\.identity/client-id}' && echo"
-    )
     command_result = run_json([
         "az", "aks", "command", "invoke", "--resource-group", args.resource_group,
         "--name", args.cluster_name,
-        "--command", command,
+        "--command", kubernetes_evidence_command(namespace, service_account),
         "-o", "json",
     ])
     checks.update(validate_run_command(
@@ -221,7 +270,7 @@ def self_test() -> None:
             "mode": "Istio",
             "istio": {
                 "revisions": ["asm-1-27"],
-                "components": {"ingressGateways": [{"mode": "External"}]},
+                "components": {"ingressGateways": [{"mode": "External", "enabled": True}]},
             },
         },
         "identity": {"type": "UserAssigned"},
@@ -229,31 +278,59 @@ def self_test() -> None:
     checks = validate_cluster(fixture, "canadacentral")
     assert all(checks.values())
     assert installed_istio_revisions(fixture) == ["asm-1-27"]
+    assert external_ingress_configured(fixture)
     validate_federated_credential(
         [{"subject": "system:serviceaccount:depulse-dev:depulse-web-dev", "issuer": "https://issuer.example.invalid/", "audiences": ["api://AzureADTokenExchange"]}],
         expected_subject="system:serviceaccount:depulse-dev:depulse-web-dev",
         expected_issuer="https://issuer.example.invalid/",
     )
+    success_logs = (
+        "namespace/aks-istio-system\n"
+        "namespace/aks-istio-ingress\n"
+        "service/aks-istio-ingressgateway-external\n"
+        "INGRESS_HTTPS_PORT=443\n"
+        "INGRESS_IP=203.0.113.10\n"
+        "INGRESS_ENDPOINT=10.0.0.20\n"
+        "INGRESS_READY_PODS=2\n"
+        "REV=asm-1-27\n"
+        "CLIENT=11111111-1111-1111-1111-111111111111\n"
+    )
     validate_run_command(
-        {"exitCode": 0, "logs": "namespace/aks-istio-system\nnamespace/aks-istio-ingress\nservice/aks-istio-ingressgateway-external\nREV=asm-1-27\nCLIENT=11111111-1111-1111-1111-111111111111\n"},
+        {"exitCode": 0, "logs": success_logs},
         expected_revision="asm-1-27",
         expected_client_id="11111111-1111-1111-1111-111111111111",
     )
+    independent_failure_logs = (
+        "namespace/aks-istio-system\n"
+        "namespace/aks-istio-ingress\n"
+        "EXTERNAL_INGRESS_SERVICE_MISSING\n"
+        "INGRESS_HTTPS_PORT=\nINGRESS_IP=\nINGRESS_ENDPOINT=\nINGRESS_READY_PODS=0\n"
+        "REV=asm-1-27\nCLIENT=11111111-1111-1111-1111-111111111111\n"
+    )
     try:
         validate_run_command(
-            {"exitCode": 1, "logs": "synthetic kubectl failure"},
+            {"exitCode": 1, "logs": independent_failure_logs},
             expected_revision="asm-1-27",
             expected_client_id="11111111-1111-1111-1111-111111111111",
         )
     except RuntimeError as exc:
-        if "synthetic kubectl failure" not in str(exc) or "exitCode=1" not in str(exc):
-            raise AssertionError("AKS command diagnostics self-test did not preserve remote failure detail") from exc
+        message = str(exc)
+        if "managedExternalIngressGatewayPresent" not in message:
+            raise AssertionError("independent ingress failure was not retained") from exc
+        if "workloadNamespaceRevisionMatches" in message or "serviceAccountWorkloadIdentityClientMatches" in message:
+            raise AssertionError("independent ingress failure incorrectly masked later workload checks") from exc
     else:
-        raise AssertionError("AKS command diagnostics self-test did not fail closed")
+        raise AssertionError("independent ingress failure did not fail closed")
+
+    command = kubernetes_evidence_command("depulse-dev", "depulse-web-dev")
+    for token in ("status=0", "INGRESS_HTTPS_PORT=", "INGRESS_ENDPOINT=", "INGRESS_READY_PODS=", "REV=", "CLIENT=", "exit \"$status\""):
+        if token not in command:
+            raise AssertionError("Kubernetes evidence command self-test missing " + token)
 
     adverse = [
         lambda: validate_cluster({**fixture, "privateFqdn": ""}, "canadacentral"),
         lambda: validate_cluster({**fixture, "serviceMeshProfile": {"mode": "Istio", "istio": {"revisions": []}}}, "canadacentral"),
+        lambda: validate_cluster({**fixture, "serviceMeshProfile": {"mode": "Istio", "istio": {"revisions": ["asm-1-27"], "components": {"ingressGateways": []}}}}, "canadacentral"),
         lambda: validate_federated_credential([], expected_subject="x", expected_issuer="y"),
         lambda: validate_run_command(
             {"logs": "namespace/aks-istio-system"},
