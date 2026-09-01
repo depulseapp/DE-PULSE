@@ -32,13 +32,23 @@ AKS_RBAC_POLL_SECONDS = 10
 ISTIO_READY_TIMEOUT_SECONDS = 240
 ISTIO_READY_POLL_SECONDS = 10
 ISTIO_READY_STABLE_PASSES = 3
+INGRESS_READY_TIMEOUT_SECONDS = 600
+INGRESS_READY_POLL_SECONDS = 10
+INGRESS_READY_STABLE_PASSES = 3
+INGRESS_RECONCILE_AFTER_SECONDS = 30
 
 
 def fail(message: str) -> None:
     raise SystemExit("HOST-013/014 Azure operator: " + message)
 
 
-def run(args: list[str], *, env: dict[str, str] | None = None, capture: bool = False) -> subprocess.CompletedProcess[str]:
+def run(
+    args: list[str],
+    *,
+    env: dict[str, str] | None = None,
+    capture: bool = False,
+    check: bool = True,
+) -> subprocess.CompletedProcess[str]:
     if args and args[0] == "az":
         try:
             refresh_azure_cli_oidc()
@@ -53,7 +63,7 @@ def run(args: list[str], *, env: dict[str, str] | None = None, capture: bool = F
         stderr=subprocess.STDOUT if capture else None,
         check=False,
     )
-    if result.returncode != 0:
+    if check and result.returncode != 0:
         detail = (result.stdout or "").strip() if capture else ""
         fail(f"command failed ({result.returncode}): {' '.join(args)}" + ("\n" + detail if detail else ""))
     return result
@@ -80,7 +90,7 @@ def require_aks_command_success(payload: object, label: str) -> dict[str, object
     if not aks_remote_succeeded(payload):
         exit_code = payload.get("exitCode")
         logs = str(payload.get("logs") or "").strip()
-        diagnostic = logs[:4000] if logs else "<no remote logs>"
+        diagnostic = logs[:8000] if logs else "<no remote logs>"
         fail(f"{label} remote command failed: exitCode={exit_code!r}; logs={diagnostic}")
     return payload
 
@@ -223,35 +233,55 @@ def wait_for_aks_verification_access(rg: str, cluster: str) -> None:
     fail("temporary AKS verification RBAC did not propagate within 300s" + (f"; last logs={last_logs}" if last_logs else ""))
 
 
-def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str) -> str:
+def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str, environment: str = "dev") -> str:
+    namespace = f"depulse-{environment}"
+    profile_text = "<service mesh profile unavailable>"
+    try:
+        profile = run_json([
+            "az", "aks", "show", "--resource-group", rg, "--name", cluster,
+            "--query", "serviceMeshProfile", "-o", "json",
+        ])
+        profile_text = json.dumps(profile, sort_keys=True)
+    except BaseException as exc:
+        profile_text = "profile collection failed: " + str(exc)[:1200]
+
     service = f"istiod-{istio_revision}"
     command = (
-        "printf '%s\\n' '=== MANAGED ISTIO PODS ==='; "
+        "printf '%s\\n' '=== MANAGED ISTIO SYSTEM PODS ==='; "
         "kubectl get pods -n aks-istio-system -o wide || true; "
-        "printf '%s\\n' '=== MANAGED ISTIO DEPLOYMENTS ==='; "
-        "kubectl get deployments -n aks-istio-system -o wide || true; "
-        "printf '%s\\n' '=== MANAGED ISTIO HPA ==='; "
-        "kubectl get hpa -n aks-istio-system -o wide || true; "
-        f"printf '%s\\n' '=== {service} SERVICE ==='; "
-        f"kubectl get service {service} -n aks-istio-system -o wide || true; "
-        f"printf '%s\\n' '=== {service} ENDPOINTS ==='; "
-        f"kubectl get endpoints {service} -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== MANAGED ISTIO SYSTEM DEPLOYMENTS/HPA/DAEMONSETS ==='; "
+        "kubectl get deployments,hpa,daemonsets -n aks-istio-system -o wide || true; "
+        f"printf '%s\\n' '=== {service} SERVICE/ENDPOINTS ==='; "
+        f"kubectl get service,endpoints {service} -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== MANAGED ISTIO INGRESS WORKLOADS ==='; "
+        "kubectl get pods,deployments,hpa,services,endpoints -n aks-istio-ingress -o wide || true; "
+        "printf '%s\\n' '=== DE.PULSE WORKLOAD TRUST OBJECTS ==='; "
+        f"kubectl get namespace {namespace} --show-labels || true; "
+        f"kubectl get serviceaccount depulse-web-{environment} -n {namespace} "
+        "-o custom-columns='NAME:.metadata.name,WI_CLIENT:.metadata.annotations.azure\\.workload\\.identity/client-id' || true; "
+        f"kubectl get networkpolicies -n {namespace} -o name || true; "
+        f"kubectl get peerauthentications.security.istio.io,authorizationpolicies.security.istio.io,sidecars.networking.istio.io,serviceentries.networking.istio.io -n {namespace} -o name || true; "
         "printf '%s\\n' '=== AKS NODES ==='; "
         "kubectl get nodes -o custom-columns='NAME:.metadata.name,READY:.status.conditions[?(@.type==\"Ready\")].status,CPU:.status.allocatable.cpu,MEMORY:.status.allocatable.memory' || true; "
-        "printf '%s\\n' '=== RECENT MANAGED ISTIO EVENTS ==='; "
-        "kubectl get events -n aks-istio-system --sort-by=.lastTimestamp | tail -n 40 || true"
+        "printf '%s\\n' '=== RECENT ISTIO SYSTEM EVENTS ==='; "
+        "kubectl get events -n aks-istio-system --sort-by=.lastTimestamp | tail -n 40 || true; "
+        "printf '%s\\n' '=== RECENT ISTIO INGRESS EVENTS ==='; "
+        "kubectl get events -n aks-istio-ingress --sort-by=.lastTimestamp | tail -n 40 || true; "
+        "printf '%s\\n' '=== RECENT WORKLOAD EVENTS ==='; "
+        f"kubectl get events -n {namespace} --sort-by=.lastTimestamp | tail -n 40 || true"
     )
-    payload = run_json([
-        "az", "aks", "command", "invoke",
-        "--resource-group", rg,
-        "--name", cluster,
-        "--command", command,
-        "-o", "json",
-    ])
-    if not isinstance(payload, dict):
-        return "<managed Istio diagnostics unavailable>"
-    logs = str(payload.get("logs") or "").strip()
-    return logs[:8000] if logs else "<managed Istio diagnostics empty>"
+    try:
+        payload = run_json([
+            "az", "aks", "command", "invoke",
+            "--resource-group", rg,
+            "--name", cluster,
+            "--command", command,
+            "-o", "json",
+        ])
+        logs = str(payload.get("logs") or "").strip() if isinstance(payload, dict) else ""
+    except BaseException as exc:
+        logs = "Kubernetes diagnostics collection failed: " + str(exc)[:2000]
+    return ("=== AZURE SERVICE MESH PROFILE ===\n" + profile_text + "\n" + logs)[:16000]
 
 
 def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> None:
@@ -295,6 +325,81 @@ def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> 
         f"managed Istio revision {istio_revision} did not remain ready for "
         f"{ISTIO_READY_STABLE_PASSES} consecutive checks within {ISTIO_READY_TIMEOUT_SECONDS}s; "
         f"last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
+    )
+
+
+def external_ingress_ready_command() -> str:
+    service = "aks-istio-ingressgateway-external"
+    return (
+        f"svc=\"$(kubectl get service {service} -n aks-istio-ingress -o name 2>/dev/null || true)\"; "
+        f"port=\"$(kubectl get service {service} -n aks-istio-ingress -o jsonpath='{{.spec.ports[?(@.port==443)].port}}' 2>/dev/null || true)\"; "
+        f"ip=\"$(kubectl get service {service} -n aks-istio-ingress -o jsonpath='{{.status.loadBalancer.ingress[0].ip}}' 2>/dev/null || true)\"; "
+        f"endpoint=\"$(kubectl get endpoints {service} -n aks-istio-ingress -o jsonpath='{{.subsets[0].addresses[0].ip}}' 2>/dev/null || true)\"; "
+        f"if test -z \"$endpoint\"; then endpoint=\"$(kubectl get endpointslices.discovery.k8s.io -n aks-istio-ingress -l kubernetes.io/service-name={service} -o jsonpath='{{.items[0].endpoints[0].addresses[0]}}' 2>/dev/null || true)\"; fi; "
+        "ready=\"$(kubectl get pods -n aks-istio-ingress -l istio=aks-istio-ingressgateway-external "
+        "-o jsonpath='{range .items[*]}{.status.containerStatuses[0].ready}{\"\\n\"}{end}' 2>/dev/null | grep -c true || true)\"; "
+        f"test \"$svc\" = \"service/{service}\" && test \"$port\" = \"443\" && test -n \"$ip\" && test -n \"$endpoint\" && test \"${{ready:-0}}\" -ge 1 && "
+        "printf 'INGRESS_READY service=%s httpsPort=%s ip=%s endpoint=%s readyPods=%s\\n' \"$svc\" \"$port\" \"$ip\" \"$endpoint\" \"$ready\""
+    )
+
+
+def reconcile_external_ingress_gateway(rg: str, cluster: str) -> None:
+    result = run([
+        "az", "aks", "mesh", "enable-ingress-gateway",
+        "--resource-group", rg,
+        "--name", cluster,
+        "--ingress-gateway-type", "External",
+        "--only-show-errors",
+        "-o", "none",
+    ], capture=True, check=False)
+    if result.returncode == 0:
+        return
+    detail = (result.stdout or "").strip()
+    lowered = detail.lower()
+    if "already" in lowered and ("enabled" in lowered or "exist" in lowered):
+        return
+    fail("managed external Istio ingress reconciliation failed" + (": " + detail[:4000] if detail else ""))
+
+
+def wait_for_managed_external_ingress_ready(rg: str, cluster: str, istio_revision: str, environment: str) -> None:
+    command = external_ingress_ready_command()
+    deadline = time.monotonic() + INGRESS_READY_TIMEOUT_SECONDS
+    started = time.monotonic()
+    stable_passes = 0
+    reconciled = False
+    last_logs = ""
+    while time.monotonic() < deadline:
+        payload = run_json([
+            "az", "aks", "command", "invoke",
+            "--resource-group", rg,
+            "--name", cluster,
+            "--command", command,
+            "-o", "json",
+        ])
+        if aks_remote_succeeded(payload):
+            logs = str((payload or {}).get("logs") or "").strip() if isinstance(payload, dict) else ""
+            if "INGRESS_READY" in logs:
+                stable_passes += 1
+                last_logs = logs[:1200]
+                if stable_passes >= INGRESS_READY_STABLE_PASSES:
+                    return
+            else:
+                stable_passes = 0
+                last_logs = logs[:1200]
+        else:
+            stable_passes = 0
+            if isinstance(payload, dict):
+                last_logs = str(payload.get("logs") or "").strip()[:1200]
+        if not reconciled and time.monotonic() - started >= INGRESS_RECONCILE_AFTER_SECONDS:
+            reconcile_external_ingress_gateway(rg, cluster)
+            reconciled = True
+            stable_passes = 0
+        time.sleep(INGRESS_READY_POLL_SECONDS)
+    diagnostic = managed_istio_diagnostics(rg, cluster, istio_revision, environment)
+    fail(
+        "managed external Istio ingress did not remain ready for "
+        f"{INGRESS_READY_STABLE_PASSES} consecutive checks within {INGRESS_READY_TIMEOUT_SECONDS}s; "
+        f"reconciled={reconciled}; last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
     )
 
 
@@ -349,9 +454,9 @@ def write_failure_evidence(
         "environment": environment,
         "managedIstioRevision": istio_revision,
         "verificationStage": verification_stage,
-        "verificationFailure": str(verification_error)[:8000] if verification_error is not None else None,
+        "verificationFailure": str(verification_error)[:12000] if verification_error is not None else None,
         "cleanupFailure": str(cleanup_error)[:4000] if cleanup_error is not None else None,
-        "managedIstioDiagnostics": istio_diagnostics[:8000] if istio_diagnostics else None,
+        "managedIstioDiagnostics": istio_diagnostics[:16000] if istio_diagnostics else None,
         "temporaryKubernetesAdminRemoved": cleanup_error is None,
         "containsSecrets": False,
         "status": "FAIL",
@@ -397,8 +502,12 @@ def self_test() -> None:
         fail("temporary AKS RBAC assignment presence self-test failed")
     if role_assignment_present([], assignment):
         fail("temporary AKS RBAC assignment absence self-test failed")
-    if ISTIO_READY_STABLE_PASSES < 2:
-        fail("managed Istio readiness must require more than one consecutive pass")
+    if ISTIO_READY_STABLE_PASSES < 2 or INGRESS_READY_STABLE_PASSES < 2:
+        fail("managed Istio and ingress readiness must require consecutive passes")
+    ingress_command = external_ingress_ready_command()
+    for token in ("aks-istio-ingressgateway-external", "httpsPort=%s", "INGRESS_READY", "endpointslices.discovery.k8s.io"):
+        if token not in ingress_command:
+            fail("managed ingress readiness self-test missing " + token)
     print("HOST-013/014 Azure operator self-test: PASS")
 
 
@@ -494,6 +603,9 @@ def main() -> int:
         verification_stage = "managed-istio-readiness"
         wait_for_managed_istio_ready(rg, cluster, istio_revision)
 
+        verification_stage = "managed-external-ingress-readiness"
+        wait_for_managed_external_ingress_ready(rg, cluster, istio_revision, args.environment)
+
         verification_stage = "canonical-trust-manifest-apply"
         apply_result = run_json([
             "az", "aks", "command", "invoke", "--resource-group", rg,
@@ -518,7 +630,7 @@ def main() -> int:
             "--expected-istio-revision", istio_revision,
             "--workload-identity-client-id", workload_client_id,
             "--output", str(evidence_path),
-        ])
+        ], capture=True)
         require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
 
         verification_stage = "live-traffic-and-adverse-evidence"
@@ -534,18 +646,17 @@ def main() -> int:
             "--candidate-sha", args.candidate_sha,
             "--istio-revision", istio_revision,
             "--output", str(traffic_path),
-        ])
+        ], capture=True)
         traffic = require_evidence(traffic_path, "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1", "PASS")
         traffic_checks = traffic.get("checks")
         if not isinstance(traffic_checks, dict) or not traffic_checks or not all(value is True for value in traffic_checks.values()):
             fail("traffic probe evidence is incomplete")
     except BaseException as exc:
         verification_error = exc
-        if verification_stage in {"managed-istio-readiness", "canonical-trust-manifest-apply"}:
-            try:
-                istio_diagnostics = managed_istio_diagnostics(rg, cluster, istio_revision)
-            except BaseException as diagnostic_exc:
-                istio_diagnostics = "managed Istio diagnostics collection failed: " + str(diagnostic_exc)[:2000]
+        try:
+            istio_diagnostics = managed_istio_diagnostics(rg, cluster, istio_revision, args.environment)
+        except BaseException as diagnostic_exc:
+            istio_diagnostics = "managed Istio diagnostics collection failed: " + str(diagnostic_exc)[:2000]
 
     cleanup_error: BaseException | None = None
     try:
@@ -587,6 +698,8 @@ def main() -> int:
         "managedIstioRevision": istio_revision,
         "managedIstioReadinessProved": True,
         "managedIstioReadinessStablePasses": ISTIO_READY_STABLE_PASSES,
+        "managedExternalIngressReadinessProved": True,
+        "managedExternalIngressReadinessStablePasses": INGRESS_READY_STABLE_PASSES,
         "operatorIdentityFingerprint": fingerprint(operator_object_id),
         "temporaryKubernetesAdminRole": AKS_VERIFY_ROLE,
         "temporaryKubernetesAdminRemoved": True,
