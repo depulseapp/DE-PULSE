@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Governed HOST-013..014 Azure AKS operator.
 
-This is the single repository owner for the future manual Azure infrastructure run.
+This is the single repository owner for the manual Azure infrastructure run.
 It assumes GitHub/Azure OIDC authentication is already established and Terraform is
 installed. It never accepts a client secret, storage key, SAS token or kubeconfig.
 """
@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import time
 
 from azure_oidc_cli import refresh_azure_cli_oidc
 
@@ -25,6 +26,9 @@ LIVE_EVIDENCE = ROOT / "tools" / "ci" / "host013_azure_live_evidence.py"
 TRAFFIC_PROBE = ROOT / "tools" / "ci" / "host013_azure_traffic_probe.py"
 CONFIRMATION = "HOST013_AZURE_AKS_OPERATOR_DRILL"
 ISTIO_RE = re.compile(r"^asm-(\d+)-(\d+)$")
+AKS_VERIFY_ROLE = "Azure Kubernetes Service RBAC Cluster Admin"
+AKS_RBAC_PROPAGATION_TIMEOUT_SECONDS = 300
+AKS_RBAC_POLL_SECONDS = 10
 
 
 def fail(message: str) -> None:
@@ -60,12 +64,18 @@ def run_json(args: list[str]) -> object:
         fail(f"non-JSON command response from {' '.join(args)}: {exc}")
 
 
+def aks_remote_succeeded(payload: object) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    exit_code = payload.get("exitCode")
+    return exit_code == 0 or str(exit_code).strip() == "0"
+
+
 def require_aks_command_success(payload: object, label: str) -> dict[str, object]:
     if not isinstance(payload, dict):
         fail(f"{label} returned a non-object AKS command result")
-    exit_code = payload.get("exitCode")
-    succeeded = exit_code == 0 or str(exit_code).strip() == "0"
-    if not succeeded:
+    if not aks_remote_succeeded(payload):
+        exit_code = payload.get("exitCode")
         logs = str(payload.get("logs") or "").strip()
         diagnostic = logs[:4000] if logs else "<no remote logs>"
         fail(f"{label} remote command failed: exitCode={exit_code!r}; logs={diagnostic}")
@@ -157,6 +167,94 @@ def require_evidence(path: Path, expected_schema: str, expected_status: str) -> 
     return payload
 
 
+def role_assignment_present(rows: object, assignment_id: str) -> bool:
+    if not isinstance(rows, list):
+        return False
+    target = assignment_id.rstrip("/").lower()
+    for row in rows:
+        if isinstance(row, dict) and str(row.get("id") or "").rstrip("/").lower() == target:
+            return True
+    return False
+
+
+def create_temporary_aks_verification_role(principal_object_id: str, cluster_id: str) -> str:
+    payload = run_json([
+        "az", "role", "assignment", "create",
+        "--assignee-object-id", principal_object_id,
+        "--assignee-principal-type", "ServicePrincipal",
+        "--role", AKS_VERIFY_ROLE,
+        "--scope", cluster_id,
+        "-o", "json",
+    ])
+    if not isinstance(payload, dict):
+        fail("temporary AKS verification RBAC assignment returned a non-object response")
+    assignment_id = str(payload.get("id") or "").strip()
+    if not assignment_id:
+        fail("temporary AKS verification RBAC assignment returned no assignment id")
+    return assignment_id
+
+
+def wait_for_aks_verification_access(rg: str, cluster: str) -> None:
+    deadline = time.monotonic() + AKS_RBAC_PROPAGATION_TIMEOUT_SECONDS
+    command = (
+        "kubectl auth can-i create namespaces && "
+        "kubectl auth can-i get namespaces && "
+        "kubectl auth can-i create peerauthentications.security.istio.io -n depulse-dev"
+    )
+    last_logs = ""
+    while time.monotonic() < deadline:
+        payload = run_json([
+            "az", "aks", "command", "invoke",
+            "--resource-group", rg,
+            "--name", cluster,
+            "--command", command,
+            "-o", "json",
+        ])
+        if aks_remote_succeeded(payload):
+            logs = str((payload or {}).get("logs") or "").lower() if isinstance(payload, dict) else ""
+            if logs.count("yes") >= 3:
+                return
+        if isinstance(payload, dict):
+            last_logs = str(payload.get("logs") or "").strip()[:1000]
+        time.sleep(AKS_RBAC_POLL_SECONDS)
+    fail("temporary AKS verification RBAC did not propagate within 300s" + (f"; last logs={last_logs}" if last_logs else ""))
+
+
+def delete_temporary_aks_verification_role(assignment_id: str, cluster_id: str, rg: str, cluster: str) -> None:
+    run([
+        "az", "role", "assignment", "delete",
+        "--ids", assignment_id,
+        "--only-show-errors",
+    ], capture=True)
+
+    rows = run_json([
+        "az", "role", "assignment", "list",
+        "--all",
+        "--scope", cluster_id,
+        "-o", "json",
+    ])
+    if role_assignment_present(rows, assignment_id):
+        fail("temporary AKS verification RBAC assignment still exists after delete")
+
+    deadline = time.monotonic() + AKS_RBAC_PROPAGATION_TIMEOUT_SECONDS
+    command = "kubectl auth can-i create namespaces"
+    while time.monotonic() < deadline:
+        payload = run_json([
+            "az", "aks", "command", "invoke",
+            "--resource-group", rg,
+            "--name", cluster,
+            "--command", command,
+            "-o", "json",
+        ])
+        if not aks_remote_succeeded(payload):
+            return
+        logs = str((payload or {}).get("logs") or "").strip().lower() if isinstance(payload, dict) else ""
+        if logs == "no" or "\nno" in logs:
+            return
+        time.sleep(AKS_RBAC_POLL_SECONDS)
+    fail("temporary AKS verification RBAC remained effective after deletion timeout")
+
+
 def self_test() -> None:
     fixture = {
         "revisions": [
@@ -190,6 +288,11 @@ def self_test() -> None:
             fail("AKS remote command failure diagnostics were not preserved")
     else:
         fail("AKS remote command nonzero exit did not fail closed")
+    assignment = "/subscriptions/x/providers/Microsoft.Authorization/roleAssignments/abc"
+    if not role_assignment_present([{"id": assignment}], assignment + "/"):
+        fail("temporary AKS RBAC assignment presence self-test failed")
+    if role_assignment_present([], assignment):
+        fail("temporary AKS RBAC assignment absence self-test failed")
     print("HOST-013/014 Azure operator self-test: PASS")
 
 
@@ -252,6 +355,11 @@ def main() -> int:
     outputs = terraform_outputs(args, env)
     workload_client_id = output_value(outputs, "workload_identity_client_id")
     workload_subject = output_value(outputs, "workload_identity_subject")
+    operator_client_id = output_value(outputs, "operator_identity_client_id")
+    operator_object_id = output_value(outputs, "operator_identity_object_id")
+    cluster_id = output_value(outputs, "aks_cluster_id")
+    if operator_client_id.lower() != args.client_id.lower():
+        fail("Terraform authenticated operator client ID does not match requested GitHub OIDC client ID")
     expected_subject = f"system:serviceaccount:depulse-{args.environment}:depulse-web-{args.environment}"
     if workload_subject != expected_subject:
         fail(f"workload identity subject drift: expected={expected_subject} actual={workload_subject}")
@@ -267,50 +375,72 @@ def main() -> int:
         "--workload-identity-client-id", workload_client_id,
         "--output", str(manifest_path),
     ])
-    apply_result = run_json([
-        "az", "aks", "command", "invoke", "--resource-group", rg,
-        "--name", cluster, "--command", "kubectl apply -f host013-aks-managed-trust.yaml",
-        "--file", str(manifest_path), "-o", "json",
-    ])
-    require_aks_command_success(apply_result, "canonical trust manifest apply")
 
-    evidence_path = evidence_dir / "host013-azure-live-evidence.json"
+    temporary_assignment_id = create_temporary_aks_verification_role(operator_object_id, cluster_id)
+    verification_error: BaseException | None = None
     try:
-        refresh_azure_cli_oidc()
-    except RuntimeError as exc:
-        fail("Azure CLI OIDC refresh before live evidence failed: " + str(exc))
-    run([
-        sys.executable, str(LIVE_EVIDENCE),
-        "--subscription-id", args.subscription_id,
-        "--resource-group", rg,
-        "--cluster-name", cluster,
-        "--environment", args.environment,
-        "--location", args.location,
-        "--candidate-sha", args.candidate_sha,
-        "--expected-istio-revision", istio_revision,
-        "--workload-identity-client-id", workload_client_id,
-        "--output", str(evidence_path),
-    ])
-    require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
+        wait_for_aks_verification_access(rg, cluster)
 
-    traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+        apply_result = run_json([
+            "az", "aks", "command", "invoke", "--resource-group", rg,
+            "--name", cluster, "--command", "kubectl apply -f host013-aks-managed-trust.yaml",
+            "--file", str(manifest_path), "-o", "json",
+        ])
+        require_aks_command_success(apply_result, "canonical trust manifest apply")
+
+        evidence_path = evidence_dir / "host013-azure-live-evidence.json"
+        try:
+            refresh_azure_cli_oidc()
+        except RuntimeError as exc:
+            fail("Azure CLI OIDC refresh before live evidence failed: " + str(exc))
+        run([
+            sys.executable, str(LIVE_EVIDENCE),
+            "--subscription-id", args.subscription_id,
+            "--resource-group", rg,
+            "--cluster-name", cluster,
+            "--environment", args.environment,
+            "--location", args.location,
+            "--candidate-sha", args.candidate_sha,
+            "--expected-istio-revision", istio_revision,
+            "--workload-identity-client-id", workload_client_id,
+            "--output", str(evidence_path),
+        ])
+        require_evidence(evidence_path, "DE.PULSE-HOST013-AZURE-LIVE-EVIDENCE-1", "PASS_CONFIGURATION_AND_IDENTITY")
+
+        traffic_path = evidence_dir / "host013-azure-traffic-evidence.json"
+        try:
+            refresh_azure_cli_oidc()
+        except RuntimeError as exc:
+            fail("Azure CLI OIDC refresh before traffic evidence failed: " + str(exc))
+        run([
+            sys.executable, str(TRAFFIC_PROBE),
+            "--resource-group", rg,
+            "--cluster-name", cluster,
+            "--environment", args.environment,
+            "--candidate-sha", args.candidate_sha,
+            "--istio-revision", istio_revision,
+            "--output", str(traffic_path),
+        ])
+        traffic = require_evidence(traffic_path, "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1", "PASS")
+        traffic_checks = traffic.get("checks")
+        if not isinstance(traffic_checks, dict) or not traffic_checks or not all(value is True for value in traffic_checks.values()):
+            fail("traffic probe evidence is incomplete")
+    except BaseException as exc:
+        verification_error = exc
+
+    cleanup_error: BaseException | None = None
     try:
-        refresh_azure_cli_oidc()
-    except RuntimeError as exc:
-        fail("Azure CLI OIDC refresh before traffic evidence failed: " + str(exc))
-    run([
-        sys.executable, str(TRAFFIC_PROBE),
-        "--resource-group", rg,
-        "--cluster-name", cluster,
-        "--environment", args.environment,
-        "--candidate-sha", args.candidate_sha,
-        "--istio-revision", istio_revision,
-        "--output", str(traffic_path),
-    ])
-    traffic = require_evidence(traffic_path, "DE.PULSE-HOST013-AZURE-TRAFFIC-EVIDENCE-1", "PASS")
-    traffic_checks = traffic.get("checks")
-    if not isinstance(traffic_checks, dict) or not traffic_checks or not all(value is True for value in traffic_checks.values()):
-        fail("traffic probe evidence is incomplete")
+        delete_temporary_aks_verification_role(temporary_assignment_id, cluster_id, rg, cluster)
+    except BaseException as exc:
+        cleanup_error = exc
+
+    if cleanup_error is not None:
+        detail = str(cleanup_error)
+        if verification_error is not None:
+            detail += "; original verification failure=" + str(verification_error)
+        fail("temporary AKS verification RBAC cleanup failed: " + detail)
+    if verification_error is not None:
+        raise verification_error
 
     drift = subprocess.run(
         ["terraform", f"-chdir={AZURE_DIR}", "plan", "-input=false", "-detailed-exitcode"],
@@ -325,6 +455,9 @@ def main() -> int:
         "environment": args.environment,
         "location": args.location,
         "managedIstioRevision": istio_revision,
+        "operatorIdentityFingerprint": fingerprint(operator_object_id),
+        "temporaryKubernetesAdminRole": AKS_VERIFY_ROLE,
+        "temporaryKubernetesAdminRemoved": True,
         "workloadIdentityClientFingerprint": fingerprint(workload_client_id),
         "workloadIdentitySubject": workload_subject,
         "stateKey": state_key,
