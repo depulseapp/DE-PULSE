@@ -251,6 +251,8 @@ def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str, enviro
         "kubectl get pods -n aks-istio-system -o wide || true; "
         "printf '%s\\n' '=== MANAGED ISTIO SYSTEM DEPLOYMENTS/HPA/DAEMONSETS ==='; "
         "kubectl get deployments,hpa,daemonsets -n aks-istio-system -o wide || true; "
+        "printf '%s\\n' '=== MANAGED ISTIO SYSTEM REPLICASETS ==='; "
+        "kubectl get replicasets -n aks-istio-system -l app=istiod -o wide || true; "
         f"printf '%s\\n' '=== {service} SERVICE/ENDPOINTS ==='; "
         f"kubectl get service,endpoints {service} -n aks-istio-system -o wide || true; "
         "printf '%s\\n' '=== MANAGED ISTIO INGRESS WORKLOADS ==='; "
@@ -284,16 +286,28 @@ def managed_istio_diagnostics(rg: str, cluster: str, istio_revision: str, enviro
     return ("=== AZURE SERVICE MESH PROFILE ===\n" + profile_text + "\n" + logs)[:16000]
 
 
-def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> None:
-    service = f"istiod-{istio_revision}"
-    command = (
-        f"endpoint=\"$(kubectl get endpoints {service} -n aks-istio-system "
+def managed_istio_ready_command(istio_revision: str) -> str:
+    deployment = f"istiod-{istio_revision}"
+    return (
+        f"rollout=\"$(kubectl rollout status deployment/{deployment} -n aks-istio-system --timeout=5s 2>&1)\" || "
+        "{ printf '%s\\n' \"$rollout\"; exit 1; }; "
+        f"endpoint=\"$(kubectl get endpoints {deployment} -n aks-istio-system "
         "-o jsonpath='{.subsets[0].addresses[0].ip}' 2>/dev/null || true)\"; "
-        "ready=\"$(kubectl get pods -n aks-istio-system -l app=istiod "
-        "-o jsonpath='{range .items[*]}{.status.containerStatuses[0].ready}{\"\\n\"}{end}' 2>/dev/null | grep -c true || true)\"; "
-        "test -n \"$endpoint\" && test \"${ready:-0}\" -ge 1 && "
-        "printf 'ISTIO_READY endpoint=%s readyPods=%s\\n' \"$endpoint\" \"$ready\""
+        f"desired=\"$(kubectl get deployment {deployment} -n aks-istio-system -o jsonpath='{{.status.replicas}}' 2>/dev/null || true)\"; "
+        f"updated=\"$(kubectl get deployment {deployment} -n aks-istio-system -o jsonpath='{{.status.updatedReplicas}}' 2>/dev/null || true)\"; "
+        f"ready=\"$(kubectl get deployment {deployment} -n aks-istio-system -o jsonpath='{{.status.readyReplicas}}' 2>/dev/null || true)\"; "
+        f"available=\"$(kubectl get deployment {deployment} -n aks-istio-system -o jsonpath='{{.status.availableReplicas}}' 2>/dev/null || true)\"; "
+        f"unavailable=\"$(kubectl get deployment {deployment} -n aks-istio-system -o jsonpath='{{.status.unavailableReplicas}}' 2>/dev/null || true)\"; "
+        "test -n \"$endpoint\" && test \"${desired:-0}\" -ge 1 && "
+        "test \"${updated:-0}\" = \"$desired\" && test \"${ready:-0}\" = \"$desired\" && "
+        "test \"${available:-0}\" = \"$desired\" && test \"${unavailable:-0}\" = \"0\" && "
+        "printf 'ISTIO_READY deployment=%s endpoint=%s desired=%s updated=%s ready=%s available=%s unavailable=%s\\n' "
+        f"'{deployment}' \"$endpoint\" \"$desired\" \"$updated\" \"$ready\" \"$available\" \"${{unavailable:-0}}\""
     )
+
+
+def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> None:
+    command = managed_istio_ready_command(istio_revision)
     deadline = time.monotonic() + ISTIO_READY_TIMEOUT_SECONDS
     last_logs = ""
     stable_passes = 0
@@ -309,20 +323,20 @@ def wait_for_managed_istio_ready(rg: str, cluster: str, istio_revision: str) -> 
             logs = str((payload or {}).get("logs") or "").strip() if isinstance(payload, dict) else ""
             if "ISTIO_READY" in logs:
                 stable_passes += 1
-                last_logs = logs[:1000]
+                last_logs = logs[:1200]
                 if stable_passes >= ISTIO_READY_STABLE_PASSES:
                     return
             else:
                 stable_passes = 0
-                last_logs = logs[:1000]
+                last_logs = logs[:1200]
         else:
             stable_passes = 0
             if isinstance(payload, dict):
-                last_logs = str(payload.get("logs") or "").strip()[:1000]
+                last_logs = str(payload.get("logs") or "").strip()[:1200]
         time.sleep(ISTIO_READY_POLL_SECONDS)
     diagnostic = managed_istio_diagnostics(rg, cluster, istio_revision)
     fail(
-        f"managed Istio revision {istio_revision} did not remain ready for "
+        f"managed Istio revision {istio_revision} did not complete its rollout and remain ready for "
         f"{ISTIO_READY_STABLE_PASSES} consecutive checks within {ISTIO_READY_TIMEOUT_SECONDS}s; "
         f"last readiness logs={last_logs or '<none>'}; diagnostics={diagnostic}"
     )
@@ -504,6 +518,10 @@ def self_test() -> None:
         fail("temporary AKS RBAC assignment absence self-test failed")
     if ISTIO_READY_STABLE_PASSES < 2 or INGRESS_READY_STABLE_PASSES < 2:
         fail("managed Istio and ingress readiness must require consecutive passes")
+    istio_command = managed_istio_ready_command("asm-1-30")
+    for token in ("kubectl rollout status deployment/istiod-asm-1-30", "updatedReplicas", "readyReplicas", "availableReplicas", "unavailableReplicas", "ISTIO_READY"):
+        if token not in istio_command:
+            fail("managed Istio rollout-readiness self-test missing " + token)
     ingress_command = external_ingress_ready_command()
     for token in ("aks-istio-ingressgateway-external", "httpsPort=%s", "INGRESS_READY", "endpointslices.discovery.k8s.io"):
         if token not in ingress_command:
