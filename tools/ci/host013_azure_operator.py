@@ -348,7 +348,7 @@ def reconcile_external_ingress_gateway(rg: str, cluster: str) -> None:
         "az", "aks", "mesh", "enable-ingress-gateway",
         "--resource-group", rg,
         "--name", cluster,
-        "--ingress-gateway-type", "External",
+        "--ingress-gateway-type", "external",
         "--only-show-errors",
         "-o", "none",
     ], capture=True, check=False)
