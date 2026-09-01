@@ -598,6 +598,7 @@ jobs:
         with:
           name: DE-PULSE-HOST013-Azure-${{ github.run_id }}-${{ needs.context.outputs.sha }}
           path: .depulse-host013-azure/*.json
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30
 
