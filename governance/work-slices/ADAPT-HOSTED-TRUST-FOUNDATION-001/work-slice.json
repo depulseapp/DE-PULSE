@@ -21,6 +21,9 @@
   "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
   "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
   "rebaselineAuthority": "governance/V19_V20_REBASELINE.md",
+  "externalControlWaivers": {
+    "HOST-013-014-ENVIRONMENT-SERVICE-TRUST": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json"
+  },
   "implementationOrder": [
     "HOST-001..HOST-003 provider rights",
     "HOST-004..HOST-007 tenant identity/device/session/reauth",
@@ -50,6 +53,6 @@
     "NO_PARALLEL_CANONICAL_SUBSYSTEMS"
   ],
   "deliveryRule": "one development branch -> one Draft PR -> dependency-correct commits/evidence -> coherent candidate batching -> exact-head Fast per coherent changed candidate -> risk-based Qualified checkpoints -> G10 whole-version closure -> merge/release only when governed",
-  "zeroMissAuditState": "REOPENED_UNVERIFIED",
-  "nextAction": "HOST-010..HOST-012 remains the earliest open dependency band. Its application-level privacy lifecycle remains production-integrated and exact-head Fast verified at 5127b1599c052bb3c709b46bd7900cc46629d0ee / Fast #1257 run 33051229439. Repository-side recovery acceptance plus provider-neutral operator drill machinery is now implemented: tools/ci/host012_managed_recovery_evidence_gate.py fail-closes non-managed/simulated evidence; tools/ci/host012_managed_recovery_drill.py binds the drill to exact Git head and real provider/operator artifacts; postgres_persistence_regression_test.go contains the explicitly acknowledged non-production managed PITR privacy replay that proves a restored pre-deletion live account, reuses canonical enforceArchiveAccountDeletionPrivacy + replace restore, restarts the restored target, and asserts zero profile/workspace/session/device resurrection. The normal Fast workflow permanently compiles all postgres-tagged code with zero tagged tests so build proof cannot masquerade as live recovery proof. Exact-head Fast #1268 / run 33094767126 PASS on 14a0139313360b475d167810765e213d29ee7c73, including workflow policy, source/migration/closure gates, T1-T10, Python syntax, gofmt, go vet, full Go suite, PostgreSQL tagged compile and DE.PULSE/fast-head recording. This verifies drill machinery only. HOST-010..012 remains OPEN until a real managed PostgreSQL provider/operator creates a distinct PITR restore from before deletion, runs the drill, supplies encrypted backup/restore metadata plus measured RPO/RTO and artifact hashes, and the final evidence gate passes. Do not substitute Docker/local PostgreSQL, policy declarations, or compile-only evidence; do not begin HOST-013+ until that real infrastructure evidence exists or governance explicitly records a permitted Development-tier external blocker."
+  "zeroMissAuditState": "HOST013_014_BLOCKED_EXTERNAL_SCOPED_WAIVER_ADVANCING_HOST015_016",
+  "nextAction": "Proceed with HOST-015..HOST-016 PostgreSQL tenancy/recovery on the existing branch/PR. Reuse the verified HOST-012 managed Neon PITR evidence where applicable, then close tenant-owned/scoped PostgreSQL isolation, migration/adverse integration, HA/failover/rollback/recovery obligations through the existing persistence owner. HOST-013..014 remains BLOCKED_EXTERNAL/UNVERIFIED under the narrowly scoped HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 waiver; do not pay for Azure or weaken Istio/TLS/network/identity/cleanup/drift controls solely to erase that residual, and do not begin v19.1/#153 until truthful v19.0 Development closure."
 }
