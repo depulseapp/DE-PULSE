@@ -6,6 +6,11 @@ output "aks_cluster_name" {
   value = azurerm_kubernetes_cluster.this.name
 }
 
+output "aks_cluster_id" {
+  value       = azurerm_kubernetes_cluster.this.id
+  description = "Exact AKS resource scope used for temporary verification-only Kubernetes RBAC."
+}
+
 output "oidc_issuer_url" {
   value = azurerm_kubernetes_cluster.this.oidc_issuer_url
 }
@@ -16,6 +21,16 @@ output "kubelet_identity_object_id" {
 
 output "deployment_identity_client_id" {
   value = azurerm_user_assigned_identity.aks.client_id
+}
+
+output "operator_identity_client_id" {
+  value       = data.azurerm_client_config.current.client_id
+  description = "Non-secret client ID of the OIDC-authenticated deployment operator."
+}
+
+output "operator_identity_object_id" {
+  value       = data.azurerm_client_config.current.object_id
+  description = "Non-secret Entra object ID of the OIDC-authenticated deployment operator."
 }
 
 output "workload_identity_client_id" {
