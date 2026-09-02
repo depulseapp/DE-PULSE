@@ -1,0 +1,56 @@
+{
+  "schema": "DE.PULSE-HOST016-POSTGRES-HA-CHECKPOINT-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "requirements": ["HOST-016"],
+  "recordedAt": "2026-09-02T21:16:42Z",
+  "verificationTier": "DEVELOPMENT_PRODUCTION_READY",
+  "status": "VERIFIED",
+  "implementationHead": "fe9a99910b10ff994ea1082f94a33a18007afc8b",
+  "qualifiedEvidence": {
+    "workflow": "DE.PULSE | CI Qualified",
+    "runNumber": 252,
+    "runId": 33683891569,
+    "headSha": "fe9a99910b10ff994ea1082f94a33a18007afc8b",
+    "conclusion": "success",
+    "job": "Qualified persistence / DB integration",
+    "jobId": 100427316171,
+    "steps": [
+      "HOST-015/016 live PostgreSQL tenant and recovery integration",
+      "HOST-016 physical PostgreSQL streaming failover",
+      "Retain secret-free HOST-016 PostgreSQL HA evidence"
+    ]
+  },
+  "evidence": {
+    "fixture": "tools/ci/host016_postgres_ha_drill.py",
+    "schema": "DE.PULSE-HOST016-POSTGRES-HA-EVIDENCE-1",
+    "postgres": "17.6 digest-pinned container images",
+    "environmentClass": "github-actions-ephemeral",
+    "proved": [
+      "real PostgreSQL primary plus physical streaming standby",
+      "canonical application fixture persisted through the existing PostgreSQL backend",
+      "standby WAL replay convergence before failover",
+      "primary outage observed by the application path",
+      "standby promotion with application reconnection through the same application DSN",
+      "tenant identity and workspace ownership preserved after promotion",
+      "privacy tombstone and anti-resurrection state preserved after promotion",
+      "tampered cross-tenant canonical archive restore rejected fail-closed",
+      "legacy aggregate authority remains retired",
+      "application recovery time measured by the executable drill"
+    ],
+    "reusedRecoveryEvidence": {
+      "provider": "Neon",
+      "qualifiedRunId": 33154312937,
+      "artifactId": 9678997463,
+      "rpoSeconds": 7.753,
+      "rtoSeconds": 13.926746,
+      "scope": "managed PITR/operator recovery, deletion replay and anti-resurrection"
+    }
+  },
+  "claimBoundary": {
+    "providerManagedAutomaticFailoverClaimed": false,
+    "statement": "HOST-016 Development verification proves actual PostgreSQL physical streaming failover and canonical application reconnection plus reusable managed PITR recovery. It does not claim that Neon or another managed provider automatically failed over a production compute endpoint.",
+    "commercialPublicActivationEvidence": false
+  },
+  "closureDisposition": "HOST-016 is VERIFIED for the v19.0 Development dependency band. Managed-provider automatic failover is not a frozen G1 requirement and is not claimed; any later Commercial/Public provider-specific availability promise requires its own infrastructure/SLA evidence.",
+  "nextRequirementBand": ["HOST-017", "HOST-018"]
+}
