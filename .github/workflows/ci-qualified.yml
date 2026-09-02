@@ -2,7 +2,7 @@ name: DE.PULSE | CI Qualified
 
 on:
   pull_request:
-    types: [ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       candidate_sha:
@@ -84,8 +84,61 @@ env:
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
+  fast-gate:
+    name: Require exact-head Fast before qualification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      actions: read
+      contents: read
+      statuses: read
+    steps:
+      - name: Await matching successful Fast run
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          terminal_failures='failure cancelled timed_out action_required stale'
+          for attempt in $(seq 1 120); do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/statuses?per_page=100" \
+              --jq '[.[] | select(.context == "DE.PULSE/fast-head")][0].state // ""')"
+            if [ "$state" = success ]; then
+              echo "PASS: exact-head Fast status found for $HEAD_SHA"
+              exit 0
+            fi
+
+            run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?event=pull_request&head_sha=$HEAD_SHA&per_page=100" \
+              --jq '[.workflow_runs[] | select(.name == "DE.PULSE | CI Fast")][0] | [.status // "", .conclusion // ""] | @tsv')"
+            run_status="${run%%$'\t'*}"
+            run_conclusion="${run#*$'\t'}"
+            if [ "$run_status" = completed ]; then
+              if [ "$run_conclusion" = success ]; then
+                echo "ERROR: Fast completed successfully without the required exact-head status" >&2
+                exit 1
+              fi
+              case " $terminal_failures " in
+                *" $run_conclusion "*)
+                  echo "ERROR: exact-head Fast concluded $run_conclusion" >&2
+                  exit 1
+                  ;;
+              esac
+            fi
+            echo "Waiting for exact-head Fast ($attempt/120): status=${run_status:-not-started} conclusion=${run_conclusion:-pending}"
+            sleep 10
+          done
+          echo "ERROR: timed out waiting for exact-head Fast on $HEAD_SHA" >&2
+          exit 1
+
+      - name: Preserve explicit operator and reusable entry points
+        if: ${{ github.event_name != 'pull_request' }}
+        run: echo 'Exact-head identity is resolved by the workflow inputs for this governed entry point.'
+
   context:
     name: Resolve qualification identity and Planner v3 impact
+    needs: fast-gate
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:

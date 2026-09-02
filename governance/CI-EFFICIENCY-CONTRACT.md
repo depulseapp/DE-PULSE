@@ -32,7 +32,7 @@ A fresh Fast run is expected for every genuinely new candidate SHA; this is a qu
 
 Multiple commits while a PR is open are acceptable only when they are genuinely independent review units or when CI discovers a real defect requiring a corrected candidate. Metadata-only or handoff-only commits must not be created merely to manufacture a CI event.
 
-Normal target: `one development branch → batch coherent work → one Draft PR → one Fast → Ready → one Qualified → merge`; additional Fast/Qualified runs require an actual candidate change or an explicitly classified same-SHA infrastructure retry.
+Normal target: `one development branch → batch coherent work → one Draft PR → one exact-head Fast → one automatically gated Qualified → merge`; additional Fast/Qualified runs require an actual candidate change or an explicitly classified same-SHA infrastructure retry.
 
 ## CI Fast
 
@@ -48,7 +48,7 @@ On a `main` push only branch hygiene is intended to execute.
 
 ## CI Qualified / G10
 
-A release PR remains Draft during active development. Marking the exact candidate `Ready for review` is the normal automatic G10 trigger.
+A release PR may remain Draft during active development. Opening, reopening or advancing its head automatically starts a replaceable Qualified run, but qualification is fail-closed behind the matching `DE.PULSE/fast-head` success status. Marking an unchanged candidate `Ready for review` remains a supported trigger. The Qualified concurrency group cancels obsolete head runs so only the current candidate consumes the selected qualification lanes.
 
 Qualified checks out the exact PR head. Process-only CI/harness candidates use Ubuntu/macOS/Windows portability; product candidates run affected/full backend, renderer and browser qualification according to Impact Planner.
 
@@ -56,7 +56,7 @@ Qualified checks out the exact PR head. Process-only CI/harness candidates use U
 
 A successful Qualified evidence job records `DE.PULSE/qualified-head` on the exact candidate SHA.
 
-If the candidate changes after a product/test failure, return the PR to Draft, fix the same branch, obtain new Fast, then mark the same PR Ready again. If the SHA is unchanged and the failure is infrastructure-only, rerun only failed work when there is a reasonable recovery signal. Do not create a retry branch and do not loop same-SHA retries indefinitely.
+If the candidate changes after a product/test failure, keep or return the PR to Draft, fix the same branch and let the matching Fast-to-Qualified gate evaluate the new exact head. If the SHA is unchanged and the failure is infrastructure-only, rerun only failed work when there is a reasonable recovery signal. Do not create a retry branch and do not loop same-SHA retries indefinitely.
 
 ## Qualified telemetry contract
 
