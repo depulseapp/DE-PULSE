@@ -190,16 +190,20 @@
     },
     {
       "id": "HOST-015-016-POSTGRES-TENANCY-RECOVERY",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED",
       "owner": "existing PostgreSQL persistence backend + canonical migration/persistence/recovery owner",
       "implementationPaths": [
         "persistence_backend_postgres.go",
         "persistence_backend_select.go",
+        "hosted_postgres_tenant_persistence.go",
         "postgres_persistence_regression_test.go",
+        "postgres_managed_recovery_fixture_test.go",
         "hosted_persistence_foundation_regression_test.go",
         "internal/hostedpersistence/contract.go",
         "internal/hostedpersistence/postgres_policy_v1.json",
-        "internal/hostedpersistence/contract_test.go"
+        "internal/hostedpersistence/contract_test.go",
+        ".github/workflows/ci-qualified.yml",
+        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host015-016-postgres-checkpoint-2026-09-02.json"
       ],
       "evidenceRequired": [
         "tenant/account schema ownership and migration/expand-contract strategy",
@@ -210,12 +214,15 @@
         "cross-tenant denial"
       ],
       "evidence": [
-        "Existing PostgreSQL backend remains the sole hosted persistence stack; startup validates environment search_path, sslmode=verify-full, pool bounds, migration/RLS disposition and declared recovery policy before backend construction.",
-        "Development technical gap: environment search_path isolates environments, not tenants; identity_state remains a global id=1 JSON document and user_workspaces are keyed only by user_id, without tenant-owned database keys/isolation.",
-        "Development technical gap: HA/backup/PITR/RPO/RTO/restore/rollback readiness is currently declaration-based; no real managed-Postgres failover/backup/PITR evidence is verified. Tagged PostgreSQL regression skips without DEPULSE_TEST_POSTGRES_URL, so ordinary Fast does not constitute live DB integration/recovery proof.",
-        "HOST-012 managed Neon PITR/operator evidence is reusable for applicable recovery/anti-resurrection obligations but does not substitute for the remaining HOST-015/016 tenant-owned/scoped isolation, migration/adverse and HA/failover/rollback evidence."
+        "HOST-015 VERIFIED FOR DEVELOPMENT: the hosted-only tenant wrapper extends the existing PostgreSQL backend; canonical identity and workspace rows are tenant-owned; application identity remains authorization authority; RLS disposition is explicit; ambiguous/orphaned/tampered/cross-tenant ownership fails closed.",
+        "Schema v5 deterministic expand migration runs in one serializable advisory-locked transaction, validates existing and legacy tenant rows, inserts only validated missing rows, and retires legacy identity/workspace authority only after all tenant-owned state validates. Any conflict or orphan rolls the transaction back and leaves legacy authority intact.",
+        "Exact-head Fast #1426 / run 33674304024 and automatically Fast-gated Qualified #248 / run 33674303982 passed on 0a527239caf2354588cde41e009e7069611e2d30. Qualified used digest-pinned PostgreSQL 17.6 and executed all named HOST-015 and HOST-016 tagged tests, not compile-only skips.",
+        "HOST-015 live tests prove two tenants persist independently, restart/reopen preserves both, workspaces remain bound to canonical tenant owners, tampering and reassignment fail closed, legacy expansion is deterministic, legacy authority retires only after validation, and no tenant record is silently merged or reassigned.",
+        "HOST-016 live tests prove tenant-aware atomic archive recovery, restart, deletion tombstone and privacy lifecycle preservation, failed-restore no-mutation behavior, and failed-migration rollback with legacy authority preserved.",
+        "HOST-012 managed Neon PITR/operator evidence is legitimately reused for managed restore, anti-resurrection and measured RPO/RTO: run 33154312937, artifact 9678997463, RPO 7.753 seconds and RTO 13.926746 seconds.",
+        "HOST-016 remains IMPLEMENTED_UNVERIFIED: actual provider HA/failover with application reconnection and tenant-boundary preservation has not been exercised. The available no-cost Neon project reports a single-compute group (min/max 1, no readable secondaries), so no provider failover claim or silent Development scope reduction is permitted."
       ],
-      "closureCondition": "Implement tenant-owned/scoped PostgreSQL persistence plus real tagged database integration, migration/isolation/adverse tests, and executable HA/failover/backup/PITR/restore/RPO-RTO/rollback evidence.",
+      "closureCondition": "HOST-015 is closed for Development. Keep HOST-016 IMPLEMENTED_UNVERIFIED until an actual provider HA/failover event proves application reconnection, tenant ownership/boundaries and lifecycle data survive, or G1 is explicitly rebaselined with durable user-approved Development scope disposition. PITR, scale-to-zero resume, connection success and architecture documentation are not substitutes for that missing failover evidence.",
       "blocksIssueClosure": true
     },
     {

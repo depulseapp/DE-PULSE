@@ -1,0 +1,75 @@
+{
+  "schema": "DE.PULSE-HOST015-016-POSTGRES-CHECKPOINT-1",
+  "generatedAt": "2026-09-02T19:45:00Z",
+  "status": "HOST015_VERIFIED_HOST016_IMPLEMENTED_UNVERIFIED",
+  "implementationHead": "cb7ae30052a5a8fa98c1c919b024809efff65d4d",
+  "qualifiedHead": "0a527239caf2354588cde41e009e7069611e2d30",
+  "canonicalOwner": "existing PostgreSQL persistence backend plus canonical migration/persistence/recovery owner",
+  "host015": {
+    "status": "VERIFIED_FOR_DEVELOPMENT",
+    "implementation": [
+      "Hosted-only tenant wrapper extends the existing PostgreSQL backend without changing the general PersistenceBackend contract.",
+      "Canonical identity and user-workspace rows are tenant-owned and fail closed on ambiguous, orphaned, tampered or cross-tenant ownership.",
+      "Schema v5 legacy aggregate expansion is deterministic, serializable and advisory-lock protected; legacy authority is retired only after every tenant-owned row validates.",
+      "Application identity remains the tenant authorization authority and the RLS disposition remains application-authorization-canonical-identity.",
+      "SQLite, Desktop and non-hosted behavior remain unchanged."
+    ],
+    "executableEvidence": {
+      "fast": {
+        "runNumber": 1426,
+        "runId": 33674304024,
+        "head": "0a527239caf2354588cde41e009e7069611e2d30",
+        "result": "PASS"
+      },
+      "qualified": {
+        "runNumber": 248,
+        "runId": 33674303982,
+        "head": "0a527239caf2354588cde41e009e7069611e2d30",
+        "result": "PASS",
+        "postgresService": "postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
+        "tests": [
+          "TestHOST015PostgresTenantPersistenceSurvivesRestart",
+          "TestHOST015PostgresRejectsCrossTenantWorkspaceRow",
+          "TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace"
+        ]
+      }
+    }
+  },
+  "host016": {
+    "status": "IMPLEMENTED_UNVERIFIED",
+    "verifiedEvidence": [
+      "Tenant-aware archive export and restore are atomic and validate all canonical tenant/workspace ownership before mutation.",
+      "Live PostgreSQL tests prove two-tenant recovery, restart/reopen, canonical workspace ownership, deletion tombstone replay, privacy projection denial and failed-restore rollback without live-state mutation.",
+      "Live PostgreSQL tests prove failed legacy migration rolls back tenant inserts and preserves legacy authority for safe retry.",
+      "HOST-012 managed Neon PITR evidence remains applicable to managed restore, anti-resurrection and measured RPO/RTO: run 33154312937, artifact 9678997463, RPO 7.753 seconds, RTO 13.926746 seconds."
+    ],
+    "qualifiedTests": [
+      "TestHOST016PostgresTenantArchiveRecoveryAndRollback",
+      "TestHOST016PostgresLegacyMigrationFailureRollsBackAuthority"
+    ],
+    "remainingEvidence": [
+      "An actual provider HA/failover event with application reconnection and preserved tenant boundaries has not been exercised.",
+      "Do not use Neon architecture documentation, a connection success, PITR, scale-to-zero resume or a single-compute restart as substitute evidence for provider HA failover."
+    ]
+  },
+  "managedEnvironmentObservation": {
+    "provider": "Neon",
+    "project": "de-pulse-host012-recovery-drill",
+    "plan": "free",
+    "projectId": "purple-glitter-37238695",
+    "branchId": "br-crimson-heart-aykb1ynb",
+    "computeGroupMin": 1,
+    "computeGroupMax": 1,
+    "readableSecondaries": false,
+    "mutationPerformed": false,
+    "disposition": "The available no-cost project cannot truthfully exercise a multi-compute provider HA failover. No paid capacity was requested and no failover claim is made."
+  },
+  "automationEvidence": {
+    "behavior": "Every opened, synchronized or reopened PR head starts Qualified automatically; its fast-gate waits for the matching DE.PULSE/fast-head success and fails closed on Fast failure or missing exact-head status.",
+    "fastRunId": 33674304024,
+    "qualifiedRunId": 33674303982,
+    "prRemainedDraft": true,
+    "workflowCount": 3
+  },
+  "closureBoundary": "HOST-015 is VERIFIED FOR DEVELOPMENT. HOST-016 remains IMPLEMENTED_UNVERIFIED and blocks dependency advancement until real provider HA/failover evidence is obtained or G1 is explicitly rebaselined with a durable user-approved Development scope disposition."
+}

@@ -25,6 +25,7 @@
 - Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
 - Latest HOST-013/014 Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`.
 - Canonical HOST-013/014 external-waiver artifact: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`.
+- Latest HOST-015/016 PostgreSQL checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host015-016-postgres-checkpoint-2026-09-02.json`.
 - GitHub objects and executable evidence outrank this file and chat memory. Always fetch live branch/PR/issue/Actions before writing.
 
 ## Permanent readiness and zero-miss rules
@@ -98,7 +99,16 @@ This is explicitly accepted as an **ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER** 
 
 ### HOST-015..016 — PostgreSQL tenancy/recovery
 
-**OPEN / PARTIALLY IMPLEMENTED — CURRENT ACTIVE BAND.** Reuse HOST-012 Neon PITR evidence, but tenant-owned/scoped PostgreSQL persistence, live migration/isolation/adverse testing and broader HA/failover/rollback/recovery proof remain open.
+**HOST-015 VERIFIED FOR DEVELOPMENT; HOST-016 IMPLEMENTED_UNVERIFIED — CURRENT ACTIVE BAND.**
+
+- Hosted tenant persistence extends the existing PostgreSQL backend; it does not create a second persistence architecture or change the general `PersistenceBackend` contract.
+- Canonical identity/workspace rows are tenant-owned. Ambiguous, orphaned, tampered and cross-tenant ownership fails closed, including attempted workspace reassignment.
+- Schema v5 legacy expansion is deterministic, serializable and advisory-lock protected; legacy authority retires only after all tenant rows validate, and failures roll back without partial tenant authority.
+- Tenant-aware archive restore is atomic and proves restart, workspace ownership, deletion tombstone/privacy lifecycle and failed-restore no-mutation behavior.
+- Exact-head Fast #1426 / run `33674304024` and automatically Fast-gated Qualified #248 / run `33674303982` passed on `0a527239caf2354588cde41e009e7069611e2d30`; the digest-pinned PostgreSQL 17.6 service executed all named HOST-015/016 tests.
+- HOST-012 Neon PITR evidence is reused only for managed restore, anti-resurrection and measured RPO/RTO.
+
+HOST-016 remains unverified because an actual provider HA/failover event with application reconnection and preserved tenant boundaries has not been exercised. The available no-cost Neon project is a single-compute group with no readable secondaries; PITR, scale-to-zero resume and provider architecture documentation are not being misrepresented as failover evidence.
 
 ### HOST-017..020
 
@@ -116,12 +126,12 @@ Do not begin v19.1/#153 while #148 remains technically incomplete.
 
 ## Exactly one next action
 
-Proceed with **HOST-015..016 — PostgreSQL Tenancy / Recovery** on the existing branch and PR. Reuse the verified HOST-012 managed Neon PITR evidence where applicable, then close the remaining tenant-owned/scoped PostgreSQL isolation, migration/adverse integration, HA/failover/rollback/recovery obligations through the existing persistence owner. Do not restart HOST-013/014 Azure runs unless sufficient no-cost quota or an explicitly authorized paid environment becomes available.
+Close **HOST-016 PostgreSQL HA/failover** with an actual no-cost provider failover exercise proving application reconnection and preserved tenant/workspace/tombstone/privacy state. If no suitable Development environment exists, stop for explicit G1 scope disposition rather than claiming PITR, scale-to-zero resume or a single-compute restart as failover. Do not restart HOST-013/014 Azure runs without sufficient no-cost quota or explicit paid authorization.
 
 ## Later dependency bands
 
-1. HOST-015..016: tenant-owned/scoped PostgreSQL + live migration/isolation/adverse/HA/failover/recovery evidence.
-2. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance.
+1. HOST-016: actual provider HA/failover evidence; tenant recovery/rollback and HOST-015 are otherwise complete.
+2. HOST-017..020: managed secrets/KMS and supply-chain/deploy provenance after HOST-016 closure or explicit G1 disposition.
 3. HOST-021..022: measured provider scorecards/Data Health and canonical point-in-time/no-lookahead truth.
 4. HOST-023 + final identical-head Development Production Ready qualification, with the Azure quota residual explicitly carried if still unresolved.
 5. Commercial/Public activation remains a separate later gate and cannot cite the HOST-013/014 waiver as live infrastructure proof.

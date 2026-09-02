@@ -39,8 +39,8 @@
     "productAuditCoverage": "governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md",
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
-    "nextDependencyBand": "HOST-015..HOST-016 PostgreSQL tenancy/recovery: extend the existing PostgreSQL persistence owner with tenant-owned/scoped isolation, live migration/adverse database evidence and broader HA/failover/rollback/recovery proof; reuse the already-verified HOST-012 Neon PITR evidence where applicable",
-    "zeroMissAuditState": "HOST013_014_BLOCKED_EXTERNAL_SCOPED_WAIVER_ADVANCING_HOST015_016",
+    "nextDependencyBand": "HOST-016 PostgreSQL HA/failover closure: HOST-015 is VERIFIED FOR DEVELOPMENT and HOST-016 tenant-aware recovery/rollback is implemented and live-PostgreSQL tested, but actual provider HA/failover with application reconnection and preserved tenant ownership remains unverified",
+    "zeroMissAuditState": "HOST015_VERIFIED_HOST016_IMPLEMENTED_UNVERIFIED_HA_FAILOVER_REQUIRED",
     "externalControlWaivers": [
       {
         "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
@@ -59,8 +59,8 @@
         "revisitWhen": "Sufficient no-cost quota or a later explicitly authorized paid managed environment becomes available."
       }
     ],
-    "latestDependencyCheckpoint": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
-    "nextDependencyBandId": "HOST-015..016"
+    "latestDependencyCheckpoint": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host015-016-postgres-checkpoint-2026-09-02.json",
+    "nextDependencyBandId": "HOST-016"
   },
   "latestCompletedWorkSlice": {
     "workSliceId": "ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001",
