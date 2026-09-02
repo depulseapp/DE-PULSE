@@ -304,7 +304,7 @@ jobs:
     needs: [context, ci-harness]
     if: ${{ needs.context.outputs.db_integration_required == 'true' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     services:
       postgres:
         image: postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
@@ -342,6 +342,27 @@ jobs:
           grep -q '^--- PASS: TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace' host015-016-postgres-test.log
           grep -q '^--- PASS: TestHOST016PostgresTenantArchiveRecoveryAndRollback' host015-016-postgres-test.log
           grep -q '^--- PASS: TestHOST016PostgresLegacyMigrationFailureRollsBackAuthority' host015-016-postgres-test.log
+      - name: HOST-016 physical PostgreSQL streaming failover
+        shell: bash
+        env:
+          DEPULSE_CANDIDATE_SHA: ${{ needs.context.outputs.sha }}
+          DEPULSE_POSTGRES_IMAGE: postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+        run: |
+          set -euo pipefail
+          python3 tools/ci/host016_postgres_ha_drill.py \
+            --candidate-sha "$DEPULSE_CANDIDATE_SHA" \
+            --database-url "$DEPULSE_TEST_POSTGRES_URL" \
+            --postgres-image "$DEPULSE_POSTGRES_IMAGE" \
+            --output-dir .depulse-host016-postgres-ha
+      - name: Retain secret-free HOST-016 PostgreSQL HA evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST016-Postgres-HA-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host016-postgres-ha/*.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
 
   security-rights:
     name: Qualified security / data-rights contracts

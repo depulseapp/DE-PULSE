@@ -749,3 +749,167 @@ func TestHOST016PostgresLegacyMigrationFailureRollsBackAuthority(t *testing.T) {
 		t.Fatalf("failed migration partially contracted authority: legacyIdentity=%d legacyWorkspaces=%d tenantIdentity=%d tenantWorkspaces=%d", legacyIdentityRows, legacyWorkspaceRows, tenantIdentityRows, tenantWorkspaceRows)
 	}
 }
+
+func host016PhysicalFailoverState() IdentityPersistentState {
+	state := host015TenantFixture()
+	for i := range state.Users {
+		if state.Users[i].ID == "user-b" {
+			state.Users[i] = UserRecord{
+				ID:          "user-b",
+				TenantID:    "tenant-b",
+				Username:    accountDeletionTombstoneUsername,
+				DisplayName: accountDeletionReasonUserRequest,
+				Status:      UserDisabled,
+				UpdatedAt:   50,
+			}
+		}
+	}
+	state.Devices = state.Devices[:1]
+	state.Sessions = state.Sessions[:1]
+	state.UpdatedAt = 50
+	return state
+}
+
+func host016RequireCandidateSHA(t *testing.T) {
+	t.Helper()
+	candidateSHA := strings.ToLower(strings.TrimSpace(os.Getenv("DEPULSE_HOST016_CANDIDATE_SHA")))
+	if len(candidateSHA) != 40 {
+		t.Fatal("DEPULSE_HOST016_CANDIDATE_SHA must be a full 40-character Git SHA")
+	}
+	for _, r := range candidateSHA {
+		if !strings.ContainsRune("0123456789abcdef", r) {
+			t.Fatal("DEPULSE_HOST016_CANDIDATE_SHA must be hexadecimal")
+		}
+	}
+}
+
+func host016SeedPhysicalFailoverFixture(t *testing.T) {
+	t.Helper()
+	config := host015PreparePostgresTenancy(t)
+	backend := host015OpenPostgresTenancy(t, config)
+	defer backend.Close()
+	ctx := context.Background()
+	if err := backend.SaveIdentityState(ctx, host016PhysicalFailoverState()); err != nil {
+		t.Fatal(err)
+	}
+	workspaceA := v181WorkspaceWithSymbols("user-a", "NVDA", "AMD")
+	workspaceA.UpdatedAt = 50
+	if err := backend.SaveUserWorkspace(ctx, workspaceA); err != nil {
+		t.Fatal(err)
+	}
+	workspaceB := defaultUserWorkspace("user-b")
+	workspaceB.UpdatedAt = 50
+	if err := backend.SaveUserWorkspace(ctx, workspaceB); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := backend.pg.db.ExecContext(ctx, `SELECT pg_switch_wal()`); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func host016VerifyPhysicalFailoverFixture(t *testing.T) {
+	t.Helper()
+	config := host015PostgresConfig(t)
+	backend := host015OpenPostgresTenancy(t, config)
+	ctx := context.Background()
+	if err := backend.Close(); err != nil {
+		t.Fatal(err)
+	}
+	backend = host015OpenPostgresTenancy(t, config)
+	defer host015CleanupPostgresTenancy(t, backend)
+
+	recovered, err := backend.LoadIdentityState(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	index, err := hostedTenantUserIndex(recovered)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(recovered.Tenants) != 2 || index["user-a"] != "tenant-a" || index["user-b"] != "tenant-b" {
+		t.Fatalf("physical failover changed canonical tenant ownership: tenants=%d index=%+v", len(recovered.Tenants), index)
+	}
+	if _, present := accountDeletionTombstones(recovered)["user-b"]; !present {
+		t.Fatal("physical failover lost the tenant deletion tombstone")
+	}
+	for _, device := range recovered.Devices {
+		if device.UserID == "user-b" {
+			t.Fatal("physical failover resurrected a deleted tenant device")
+		}
+	}
+	for _, session := range recovered.Sessions {
+		if session.UserID == "user-b" {
+			t.Fatal("physical failover resurrected a deleted tenant session")
+		}
+	}
+	workspaces, err := backend.LoadUserWorkspaces(ctx)
+	if err != nil || len(workspaces) != 2 {
+		t.Fatalf("physical failover lost tenant workspaces: workspaces=%+v err=%v", workspaces, err)
+	}
+	workspaceA, found := host012WorkspaceForUser(workspaces, "user-a")
+	if !found || !host012WorkspaceContainsPersonalData(workspaceA) || !contains(trackedSymbolsFromWatchlists(workspaceA.Watchlists), "NVDA") {
+		t.Fatal("physical failover lost the active tenant workspace")
+	}
+	workspaceB, found := host012WorkspaceForUser(workspaces, "user-b")
+	if !found || host012WorkspaceContainsPersonalData(workspaceB) {
+		t.Fatal("physical failover resurrected deleted tenant workspace data")
+	}
+	projection := &IdentityService{state: recovered}
+	if _, _, err := projection.accountPrivacyExport("user-b"); err == nil {
+		t.Fatal("physically recovered tombstone remained visible through account projection")
+	}
+
+	archive, err := backend.ExportPersistenceArchive(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tampered := archive
+	tampered.Identity.Sessions = append([]SessionRecord(nil), archive.Identity.Sessions...)
+	if len(tampered.Identity.Sessions) == 0 {
+		t.Fatal("physical failover fixture lost its active tenant session")
+	}
+	tampered.Identity.Sessions[0].TenantID = "tenant-b"
+	if err := backend.RestorePersistenceArchive(ctx, tampered, persistenceRestoreModeReplace); err == nil || !strings.Contains(err.Error(), "crosses tenant boundary") {
+		t.Fatalf("cross-tenant restore did not fail closed after physical failover: %v", err)
+	}
+	unchanged, err := backend.LoadIdentityState(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, present := accountDeletionTombstones(unchanged)["user-b"]; !present {
+		t.Fatal("failed cross-tenant restore mutated recovered state")
+	}
+
+	var tenantIdentityRows, tenantWorkspaceRows, legacyIdentityRows, legacyWorkspaceRows int
+	for query, target := range map[string]*int{
+		`SELECT COUNT(*) FROM tenant_identity_state`:    &tenantIdentityRows,
+		`SELECT COUNT(*) FROM tenant_user_workspaces`:   &tenantWorkspaceRows,
+		`SELECT COUNT(*) FROM identity_state`:           &legacyIdentityRows,
+		`SELECT COUNT(*) FROM user_workspaces`:          &legacyWorkspaceRows,
+	} {
+		if err := backend.pg.db.QueryRowContext(ctx, query).Scan(target); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if tenantIdentityRows != 2 || tenantWorkspaceRows != 2 || legacyIdentityRows != 0 || legacyWorkspaceRows != 0 {
+		t.Fatalf("physical failover changed persistence authority: tenantIdentity=%d tenantWorkspaces=%d legacyIdentity=%d legacyWorkspaces=%d", tenantIdentityRows, tenantWorkspaceRows, legacyIdentityRows, legacyWorkspaceRows)
+	}
+}
+
+func TestHOST016PostgresPhysicalFailoverFixture(t *testing.T) {
+	phase := strings.ToLower(strings.TrimSpace(os.Getenv("DEPULSE_HOST016_FAILOVER_PHASE")))
+	if phase == "" {
+		t.Skip("governed HOST-016 physical failover operator sets DEPULSE_HOST016_FAILOVER_PHASE")
+	}
+	host016RequireCandidateSHA(t)
+	t.Run(phase, func(t *testing.T) {
+		switch phase {
+		case "seed":
+			host016SeedPhysicalFailoverFixture(t)
+		case "verify":
+			host016VerifyPhysicalFailoverFixture(t)
+		default:
+			t.Fatalf("unsupported DEPULSE_HOST016_FAILOVER_PHASE %q", phase)
+		}
+	})
+}
