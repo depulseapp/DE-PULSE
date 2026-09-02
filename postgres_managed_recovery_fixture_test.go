@@ -882,10 +882,10 @@ func host016VerifyPhysicalFailoverFixture(t *testing.T) {
 
 	var tenantIdentityRows, tenantWorkspaceRows, legacyIdentityRows, legacyWorkspaceRows int
 	for query, target := range map[string]*int{
-		`SELECT COUNT(*) FROM tenant_identity_state`:    &tenantIdentityRows,
-		`SELECT COUNT(*) FROM tenant_user_workspaces`:   &tenantWorkspaceRows,
-		`SELECT COUNT(*) FROM identity_state`:           &legacyIdentityRows,
-		`SELECT COUNT(*) FROM user_workspaces`:          &legacyWorkspaceRows,
+		`SELECT COUNT(*) FROM tenant_identity_state`:  &tenantIdentityRows,
+		`SELECT COUNT(*) FROM tenant_user_workspaces`: &tenantWorkspaceRows,
+		`SELECT COUNT(*) FROM identity_state`:         &legacyIdentityRows,
+		`SELECT COUNT(*) FROM user_workspaces`:        &legacyWorkspaceRows,
 	} {
 		if err := backend.pg.db.QueryRowContext(ctx, query).Scan(target); err != nil {
 			t.Fatal(err)
