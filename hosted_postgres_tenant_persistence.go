@@ -384,14 +384,16 @@ func (b *hostedTenantPostgresBackend) SaveUserWorkspace(ctx context.Context, wor
 	if err != nil {
 		return err
 	}
+	// A row for this user under any other tenant is evidence of ambiguous or
+	// tampered ownership. Never silently delete/reassign it during a save.
+	if _, err := b.tenantWorkspaceExists(ctx, tenantID, workspace.UserID); err != nil {
+		return err
+	}
 	tx, err := b.pg.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	if _, err := tx.ExecContext(ctx, `DELETE FROM tenant_user_workspaces WHERE user_id=$1 AND tenant_id<>$2`, workspace.UserID, tenantID); err != nil {
-		return err
-	}
 	if _, err := tx.ExecContext(ctx, `INSERT INTO tenant_user_workspaces(tenant_id,user_id,payload_json,updated_at_ms) VALUES($1,$2,$3::jsonb,$4)
 ON CONFLICT(tenant_id,user_id) DO UPDATE SET payload_json=EXCLUDED.payload_json,updated_at_ms=EXCLUDED.updated_at_ms`, tenantID, workspace.UserID, string(raw), workspace.UpdatedAt); err != nil {
 		return err

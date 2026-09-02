@@ -462,6 +462,16 @@ func TestHOST015PostgresRejectsCrossTenantWorkspaceRow(t *testing.T) {
 	if _, err := backend.pg.db.ExecContext(ctx, `UPDATE tenant_user_workspaces SET tenant_id='tenant-b' WHERE user_id='user-a'`); err != nil {
 		t.Fatal(err)
 	}
+	if err := backend.SaveUserWorkspace(ctx, workspace); err == nil || !strings.Contains(err.Error(), "conflicting tenant") {
+		t.Fatalf("tampered cross-tenant workspace was silently reassigned: %v", err)
+	}
+	var storedTenant string
+	if err := backend.pg.db.QueryRowContext(ctx, `SELECT tenant_id FROM tenant_user_workspaces WHERE user_id='user-a'`).Scan(&storedTenant); err != nil {
+		t.Fatal(err)
+	}
+	if storedTenant != "tenant-b" {
+		t.Fatalf("failed save mutated tampered ownership row: tenant=%q", storedTenant)
+	}
 	if _, err := backend.LoadUserWorkspaces(ctx); err == nil || !strings.Contains(err.Error(), "crosses tenant boundary") {
 		t.Fatalf("tampered cross-tenant workspace unexpectedly loaded: %v", err)
 	}
