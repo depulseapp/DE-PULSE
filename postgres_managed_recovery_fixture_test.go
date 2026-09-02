@@ -863,6 +863,7 @@ func host016VerifyPhysicalFailoverFixture(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	archive.SchemaVersion = persistenceArchiveSchemaVersion
 	tampered := archive
 	tampered.Identity.Sessions = append([]SessionRecord(nil), archive.Identity.Sessions...)
 	if len(tampered.Identity.Sessions) == 0 {
