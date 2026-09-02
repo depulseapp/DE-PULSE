@@ -20,6 +20,10 @@ type hostedTenantPostgresBackend struct {
 	pg *postgresPersistenceBackend
 }
 
+type hostedTenantPostgresQueryer interface {
+	QueryContext(context.Context, string, ...any) (*sql.Rows, error)
+}
+
 func wrapHostedTenantPostgresBackend(inner PersistenceBackend) PersistenceBackend {
 	if inner == nil || !isHostedRuntime() {
 		return inner
@@ -28,6 +32,7 @@ func wrapHostedTenantPostgresBackend(inner PersistenceBackend) PersistenceBacken
 	if !ok {
 		return newUnavailablePersistenceBackend("hosted PostgreSQL tenancy requires the canonical PostgreSQL backend")
 	}
+	pg.tenantScopedArchive = true
 	return &hostedTenantPostgresBackend{PersistenceBackend: inner, pg: pg}
 }
 
@@ -36,7 +41,21 @@ func (b *hostedTenantPostgresBackend) Capabilities() []string {
 		return nil
 	}
 	out := append([]string(nil), b.PersistenceBackend.Capabilities()...)
-	return append(out, "tenant-scoped-identity", "tenant-scoped-user-workspaces", "expand-contract-tenancy")
+	return append(out, "tenant-scoped-identity", "tenant-scoped-user-workspaces", "expand-contract-tenancy", "tenant-aware-archive-recovery")
+}
+
+func (b *hostedTenantPostgresBackend) ExportPersistenceArchive(ctx context.Context) (PersistenceArchive, error) {
+	if b == nil || b.pg == nil {
+		return PersistenceArchive{}, errors.New("postgres database is not open")
+	}
+	return b.pg.ExportPersistenceArchive(ctx)
+}
+
+func (b *hostedTenantPostgresBackend) RestorePersistenceArchive(ctx context.Context, archive PersistenceArchive, mode string) error {
+	if b == nil || b.pg == nil {
+		return errors.New("postgres database is not open")
+	}
+	return b.pg.RestorePersistenceArchive(ctx, archive, mode)
 }
 
 func (b *hostedTenantPostgresBackend) Init(ctx context.Context) error {
@@ -133,63 +152,156 @@ func (b *hostedTenantPostgresBackend) migrateLegacyHostedTenantState(ctx context
 	if b.pg == nil || b.pg.db == nil {
 		return errors.New("postgres database is not open")
 	}
-	var tenantRows int
-	if err := b.pg.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM tenant_identity_state`).Scan(&tenantRows); err != nil {
-		return fmt.Errorf("count tenant identity rows: %w", err)
+	tx, err := b.pg.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return fmt.Errorf("begin hosted tenant data migration: %w", err)
 	}
-	if tenantRows == 0 {
-		legacy, err := b.pg.LoadIdentityState(ctx)
-		if err != nil {
-			return fmt.Errorf("load legacy identity state: %w", err)
-		}
-		if hostedTenantStateHasData(legacy) {
-			if err := b.writeHostedTenantIdentityState(ctx, legacy, true); err != nil {
-				return fmt.Errorf("migrate legacy identity state: %w", err)
-			}
-		}
-	} else {
-		if _, err := b.LoadIdentityState(ctx); err != nil {
-			return fmt.Errorf("validate tenant identity state: %w", err)
-		}
-		if _, err := b.pg.db.ExecContext(ctx, `DELETE FROM identity_state`); err != nil {
-			return fmt.Errorf("retire legacy identity aggregate: %w", err)
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock($1)`, postgresSchemaLockKey+1); err != nil {
+		return fmt.Errorf("lock hosted tenant data migration: %w", err)
+	}
+
+	tenantState, tenantPresent, err := loadHostedTenantIdentityArchive(ctx, tx)
+	if err != nil {
+		return fmt.Errorf("validate tenant identity state: %w", err)
+	}
+	var legacy IdentityPersistentState
+	var legacyRaw []byte
+	legacyErr := tx.QueryRowContext(ctx, `SELECT payload_json FROM identity_state WHERE id=1`).Scan(&legacyRaw)
+	switch {
+	case errors.Is(legacyErr, sql.ErrNoRows):
+	case legacyErr != nil:
+		return fmt.Errorf("load legacy identity state: %w", legacyErr)
+	default:
+		if err := json.Unmarshal(legacyRaw, &legacy); err != nil {
+			return fmt.Errorf("decode legacy identity state: %w", err)
 		}
 	}
 
-	legacyWorkspaces, err := b.pg.LoadUserWorkspaces(ctx)
+	if hostedTenantStateHasData(legacy) {
+		legacyPartitions, err := hostedTenantIdentityPartitions(legacy, true)
+		if err != nil {
+			return fmt.Errorf("validate legacy identity ownership: %w", err)
+		}
+		normalizedLegacy, err := hostedTenantIdentityFromPartitions(legacyPartitions)
+		if err != nil {
+			return fmt.Errorf("normalize legacy identity ownership: %w", err)
+		}
+		if tenantPresent {
+			tenantPartitions, err := hostedTenantIdentityPartitions(tenantState, false)
+			if err != nil {
+				return fmt.Errorf("validate existing tenant identity ownership: %w", err)
+			}
+			existingJSON, err := json.Marshal(tenantPartitions)
+			if err != nil {
+				return err
+			}
+			legacyJSON, err := json.Marshal(legacyPartitions)
+			if err != nil {
+				return err
+			}
+			if string(existingJSON) != string(legacyJSON) {
+				return errors.New("legacy and tenant identity authorities conflict")
+			}
+		} else {
+			keys := make([]string, 0, len(legacyPartitions))
+			for tenantID := range legacyPartitions {
+				keys = append(keys, tenantID)
+			}
+			sort.Strings(keys)
+			for _, tenantID := range keys {
+				part := legacyPartitions[tenantID]
+				raw, err := json.Marshal(part)
+				if err != nil {
+					return err
+				}
+				if _, err := tx.ExecContext(ctx, `INSERT INTO tenant_identity_state(tenant_id,payload_json,updated_at_ms) VALUES($1,$2::jsonb,$3)`, tenantID, string(raw), part.UpdatedAt); err != nil {
+					return fmt.Errorf("migrate legacy identity tenant %q: %w", tenantID, err)
+				}
+			}
+			tenantState = normalizedLegacy
+			tenantPresent = true
+		}
+	}
+
+	if !tenantPresent {
+		tenantState = IdentityPersistentState{}
+	}
+	userIndex, err := hostedTenantUserIndex(tenantState)
+	if err != nil {
+		return fmt.Errorf("validate canonical tenant owners: %w", err)
+	}
+	tenantWorkspaces, err := loadHostedTenantWorkspaceArchive(ctx, tx, tenantState)
+	if err != nil {
+		return fmt.Errorf("validate tenant workspaces: %w", err)
+	}
+	tenantWorkspaceByUser := make(map[string]UserWorkspace, len(tenantWorkspaces))
+	for _, workspace := range tenantWorkspaces {
+		tenantWorkspaceByUser[strings.TrimSpace(workspace.UserID)] = workspace
+	}
+	rows, err := tx.QueryContext(ctx, `SELECT payload_json FROM user_workspaces ORDER BY user_id`)
 	if err != nil {
 		return fmt.Errorf("load legacy workspaces: %w", err)
 	}
-	if len(legacyWorkspaces) == 0 {
-		return nil
+	legacyWorkspaces := []UserWorkspace{}
+	for rows.Next() {
+		var raw []byte
+		var workspace UserWorkspace
+		if err := rows.Scan(&raw); err != nil {
+			rows.Close()
+			return err
+		}
+		if err := json.Unmarshal(raw, &workspace); err != nil {
+			rows.Close()
+			return fmt.Errorf("decode legacy workspace: %w", err)
+		}
+		legacyWorkspaces = append(legacyWorkspaces, workspace)
 	}
-	state, err := b.LoadIdentityState(ctx)
-	if err != nil {
+	if err := rows.Err(); err != nil {
+		rows.Close()
 		return err
 	}
-	userIndex, err := hostedTenantUserIndex(state)
-	if err != nil {
-		return err
-	}
+	rows.Close()
 	for _, workspace := range legacyWorkspaces {
 		userID := strings.TrimSpace(workspace.UserID)
 		tenantID, ok := userIndex[userID]
 		if !ok {
 			return fmt.Errorf("legacy workspace %q has no canonical tenant owner", userID)
 		}
-		exists, err := b.tenantWorkspaceExists(ctx, tenantID, userID)
-		if err != nil {
-			return err
-		}
-		if !exists {
-			if err := b.SaveUserWorkspace(ctx, workspace); err != nil {
-				return fmt.Errorf("migrate legacy workspace %q: %w", userID, err)
+		workspace.UserID = userID
+		if existing, exists := tenantWorkspaceByUser[userID]; exists {
+			existing.UserID = strings.TrimSpace(existing.UserID)
+			existingJSON, err := json.Marshal(existing)
+			if err != nil {
+				return err
+			}
+			legacyJSON, err := json.Marshal(workspace)
+			if err != nil {
+				return err
+			}
+			if string(existingJSON) != string(legacyJSON) {
+				return fmt.Errorf("legacy workspace %q conflicts with tenant-owned state", userID)
 			}
 			continue
 		}
-		if _, err := b.pg.db.ExecContext(ctx, `DELETE FROM user_workspaces WHERE user_id=$1`, userID); err != nil {
-			return fmt.Errorf("retire migrated legacy workspace %q: %w", userID, err)
+		raw, err := json.Marshal(workspace)
+		if err != nil {
+			return err
 		}
+		if _, err := tx.ExecContext(ctx, `INSERT INTO tenant_user_workspaces(tenant_id,user_id,payload_json,updated_at_ms) VALUES($1,$2,$3::jsonb,$4)`, tenantID, userID, string(raw), workspace.UpdatedAt); err != nil {
+			return fmt.Errorf("migrate legacy workspace %q: %w", userID, err)
+		}
+		tenantWorkspaceByUser[userID] = workspace
+	}
+	// Contract only after every tenant-owned identity/workspace row validates.
+	if _, err := tx.ExecContext(ctx, `DELETE FROM user_workspaces`); err != nil {
+		return fmt.Errorf("retire legacy workspaces: %w", err)
+	}
+	if _, err := tx.ExecContext(ctx, `DELETE FROM identity_state`); err != nil {
+		return fmt.Errorf("retire legacy identity aggregate: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit hosted tenant data migration: %w", err)
 	}
 	return nil
 }
@@ -226,38 +338,50 @@ func (b *hostedTenantPostgresBackend) LoadIdentityState(ctx context.Context) (st
 	if b == nil || b.pg == nil || b.pg.db == nil {
 		return IdentityPersistentState{}, errors.New("postgres database is not open")
 	}
-	rows, err := b.pg.db.QueryContext(ctx, `SELECT tenant_id,payload_json FROM tenant_identity_state ORDER BY tenant_id`)
+	state, present, err := loadHostedTenantIdentityArchive(ctx, b.pg.db)
 	if err != nil {
 		return IdentityPersistentState{}, err
+	}
+	if !present {
+		return b.pg.LoadIdentityState(ctx)
+	}
+	return state, nil
+}
+
+func loadHostedTenantIdentityArchive(ctx context.Context, queryer hostedTenantPostgresQueryer) (IdentityPersistentState, bool, error) {
+	rows, err := queryer.QueryContext(ctx, `SELECT tenant_id,payload_json FROM tenant_identity_state ORDER BY tenant_id`)
+	if err != nil {
+		return IdentityPersistentState{}, false, err
 	}
 	defer rows.Close()
 	partitions := map[string]IdentityPersistentState{}
 	for rows.Next() {
 		var tenantID string
 		var raw []byte
-		if err = rows.Scan(&tenantID, &raw); err != nil {
-			return IdentityPersistentState{}, err
+		if err := rows.Scan(&tenantID, &raw); err != nil {
+			return IdentityPersistentState{}, false, err
 		}
 		tenantID = strings.TrimSpace(tenantID)
 		if tenantID == "" {
-			return IdentityPersistentState{}, errors.New("tenant identity row has empty tenant id")
+			return IdentityPersistentState{}, false, errors.New("tenant identity row has empty tenant id")
 		}
 		if _, exists := partitions[tenantID]; exists {
-			return IdentityPersistentState{}, fmt.Errorf("duplicate tenant identity row %q", tenantID)
+			return IdentityPersistentState{}, false, fmt.Errorf("duplicate tenant identity row %q", tenantID)
 		}
 		var part IdentityPersistentState
-		if err = json.Unmarshal(raw, &part); err != nil {
-			return IdentityPersistentState{}, fmt.Errorf("decode tenant identity %q: %w", tenantID, err)
+		if err := json.Unmarshal(raw, &part); err != nil {
+			return IdentityPersistentState{}, false, fmt.Errorf("decode tenant identity %q: %w", tenantID, err)
 		}
 		partitions[tenantID] = part
 	}
-	if err = rows.Err(); err != nil {
-		return IdentityPersistentState{}, err
+	if err := rows.Err(); err != nil {
+		return IdentityPersistentState{}, false, err
 	}
 	if len(partitions) == 0 {
-		return b.pg.LoadIdentityState(ctx)
+		return IdentityPersistentState{}, false, nil
 	}
-	return hostedTenantIdentityFromPartitions(partitions)
+	state, err := hostedTenantIdentityFromPartitions(partitions)
+	return state, true, err
 }
 
 func (b *hostedTenantPostgresBackend) SaveIdentityState(ctx context.Context, state IdentityPersistentState) (err error) {
@@ -313,20 +437,25 @@ func (b *hostedTenantPostgresBackend) LoadUserWorkspaces(ctx context.Context) (o
 	if err != nil {
 		return nil, err
 	}
+	return loadHostedTenantWorkspaceArchive(ctx, b.pg.db, state)
+}
+
+func loadHostedTenantWorkspaceArchive(ctx context.Context, queryer hostedTenantPostgresQueryer, state IdentityPersistentState) ([]UserWorkspace, error) {
 	userIndex, err := hostedTenantUserIndex(state)
 	if err != nil {
 		return nil, err
 	}
-	rows, err := b.pg.db.QueryContext(ctx, `SELECT tenant_id,user_id,payload_json FROM tenant_user_workspaces ORDER BY tenant_id,user_id`)
+	rows, err := queryer.QueryContext(ctx, `SELECT tenant_id,user_id,payload_json FROM tenant_user_workspaces ORDER BY tenant_id,user_id`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
+	out := []UserWorkspace{}
 	seen := map[string]struct{}{}
 	for rows.Next() {
 		var tenantID, userID string
 		var raw []byte
-		if err = rows.Scan(&tenantID, &userID, &raw); err != nil {
+		if err := rows.Scan(&tenantID, &userID, &raw); err != nil {
 			return nil, err
 		}
 		tenantID = strings.TrimSpace(tenantID)
@@ -343,7 +472,7 @@ func (b *hostedTenantPostgresBackend) LoadUserWorkspaces(ctx context.Context) (o
 		}
 		seen[userID] = struct{}{}
 		var workspace UserWorkspace
-		if err = json.Unmarshal(raw, &workspace); err != nil {
+		if err := json.Unmarshal(raw, &workspace); err != nil {
 			return nil, err
 		}
 		if strings.TrimSpace(workspace.UserID) != userID {
@@ -351,7 +480,7 @@ func (b *hostedTenantPostgresBackend) LoadUserWorkspaces(ctx context.Context) (o
 		}
 		out = append(out, workspace)
 	}
-	if err = rows.Err(); err != nil {
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	sort.Slice(out, func(i, j int) bool { return strings.TrimSpace(out[i].UserID) < strings.TrimSpace(out[j].UserID) })

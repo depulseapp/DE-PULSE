@@ -279,14 +279,16 @@ jobs:
           cache: true
       - name: Persistence-focused regression
         run: go test -count=1 ./... -run 'Test.*(SQLite|Persistence|Migration|Canonical|Cache)'
-      - name: HOST-015 live PostgreSQL tenant integration
+      - name: HOST-015/016 live PostgreSQL tenant and recovery integration
         shell: bash
         run: |
           set -euo pipefail
-          go test -tags postgres -count=1 -v . -run '^TestHOST015Postgres' | tee host015-postgres-test.log
-          grep -q '^--- PASS: TestHOST015PostgresTenantPersistenceSurvivesRestart' host015-postgres-test.log
-          grep -q '^--- PASS: TestHOST015PostgresRejectsCrossTenantWorkspaceRow' host015-postgres-test.log
-          grep -q '^--- PASS: TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace' host015-postgres-test.log
+          go test -tags postgres -count=1 -v . -run '^TestHOST0(15|16)Postgres' | tee host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresTenantPersistenceSurvivesRestart' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresRejectsCrossTenantWorkspaceRow' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST016PostgresTenantArchiveRecoveryAndRollback' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST016PostgresLegacyMigrationFailureRollsBackAuthority' host015-016-postgres-test.log
 
   security-rights:
     name: Qualified security / data-rights contracts

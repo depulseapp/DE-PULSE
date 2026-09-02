@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -20,8 +21,11 @@ const postgresSchemaLockKey int64 = 18030001
 type postgresPersistenceBackend struct {
 	config postgresPersistenceConfig
 	db     *sql.DB
-	mu     sync.Mutex
-	diag   PersistenceDatabaseDiagnostics
+	// Set once by the hosted tenant wrapper so archive operations use tenant
+	// tables inside the same database transaction as all other canonical data.
+	tenantScopedArchive bool
+	mu                  sync.Mutex
+	diag                PersistenceDatabaseDiagnostics
 }
 
 func newPostgresPersistenceBackend(config postgresPersistenceConfig) PersistenceBackend {
@@ -801,41 +805,63 @@ func (b *postgresPersistenceBackend) ExportPersistenceArchive(ctx context.Contex
 		return PersistenceArchive{}, err
 	}
 	rows.Close()
-	var identityRaw []byte
-	err = tx.QueryRowContext(ctx, `SELECT payload_json FROM identity_state WHERE id=1`).Scan(&identityRaw)
-	switch {
-	case errors.Is(err, sql.ErrNoRows):
-		err = nil
-	case err != nil:
-		return PersistenceArchive{}, err
-	default:
-		if err := json.Unmarshal(identityRaw, &archive.Identity); err != nil {
+	if b.tenantScopedArchive {
+		var present bool
+		archive.Identity, present, err = loadHostedTenantIdentityArchive(ctx, tx)
+		if err != nil {
 			return PersistenceArchive{}, err
 		}
-		archive.HasIdentity = true
-	}
-	rows, err = tx.QueryContext(ctx, `SELECT payload_json FROM user_workspaces ORDER BY user_id`)
-	if err != nil {
-		return PersistenceArchive{}, err
-	}
-	for rows.Next() {
-		var raw []byte
-		var w UserWorkspace
-		if err := rows.Scan(&raw); err != nil {
+		if !present {
+			var legacyCount int64
+			if err := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM identity_state`).Scan(&legacyCount); err != nil {
+				return PersistenceArchive{}, err
+			}
+			if legacyCount != 0 {
+				return PersistenceArchive{}, errors.New("hosted tenant archive found unretired legacy identity authority")
+			}
+		}
+		archive.HasIdentity = present
+		archive.UserWorkspaces, err = loadHostedTenantWorkspaceArchive(ctx, tx, archive.Identity)
+		if err != nil {
+			return PersistenceArchive{}, err
+		}
+	} else {
+		var identityRaw []byte
+		err = tx.QueryRowContext(ctx, `SELECT payload_json FROM identity_state WHERE id=1`).Scan(&identityRaw)
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			err = nil
+		case err != nil:
+			return PersistenceArchive{}, err
+		default:
+			if err := json.Unmarshal(identityRaw, &archive.Identity); err != nil {
+				return PersistenceArchive{}, err
+			}
+			archive.HasIdentity = true
+		}
+		rows, err = tx.QueryContext(ctx, `SELECT payload_json FROM user_workspaces ORDER BY user_id`)
+		if err != nil {
+			return PersistenceArchive{}, err
+		}
+		for rows.Next() {
+			var raw []byte
+			var w UserWorkspace
+			if err := rows.Scan(&raw); err != nil {
+				rows.Close()
+				return PersistenceArchive{}, err
+			}
+			if err := json.Unmarshal(raw, &w); err != nil {
+				rows.Close()
+				return PersistenceArchive{}, err
+			}
+			archive.UserWorkspaces = append(archive.UserWorkspaces, w)
+		}
+		if err := rows.Err(); err != nil {
 			rows.Close()
 			return PersistenceArchive{}, err
 		}
-		if err := json.Unmarshal(raw, &w); err != nil {
-			rows.Close()
-			return PersistenceArchive{}, err
-		}
-		archive.UserWorkspaces = append(archive.UserWorkspaces, w)
-	}
-	if err := rows.Err(); err != nil {
 		rows.Close()
-		return PersistenceArchive{}, err
 	}
-	rows.Close()
 	if err := tx.Commit(); err != nil {
 		return PersistenceArchive{}, err
 	}
@@ -851,20 +877,56 @@ func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Conte
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
 		return errors.New("unsupported persistence archive schema")
 	}
+	var tenantPartitions map[string]IdentityPersistentState
+	workspaceOwners := map[string]string{}
+	if b.tenantScopedArchive {
+		if archive.HasIdentity {
+			var validationErr error
+			tenantPartitions, validationErr = hostedTenantIdentityPartitions(archive.Identity, false)
+			if validationErr != nil {
+				return fmt.Errorf("hosted tenant archive identity invalid: %w", validationErr)
+			}
+		} else if len(archive.UserWorkspaces) != 0 {
+			return errors.New("hosted tenant archive has workspaces without canonical identity")
+		}
+		userIndex, validationErr := hostedTenantUserIndex(archive.Identity)
+		if validationErr != nil {
+			return fmt.Errorf("hosted tenant archive ownership invalid: %w", validationErr)
+		}
+		for _, workspace := range archive.UserWorkspaces {
+			userID := strings.TrimSpace(workspace.UserID)
+			tenantID, ok := userIndex[userID]
+			if userID == "" || !ok {
+				return fmt.Errorf("hosted tenant archive workspace %q has no canonical tenant owner", userID)
+			}
+			if _, duplicate := workspaceOwners[userID]; duplicate {
+				return fmt.Errorf("hosted tenant archive workspace %q is duplicated", userID)
+			}
+			workspaceOwners[userID] = tenantID
+		}
+	}
 	tx, err := b.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
 	var count int64
-	if err := tx.QueryRowContext(ctx, `SELECT (SELECT COUNT(*) FROM symbol_registry)+(SELECT COUNT(*) FROM canonical_quotes)+(SELECT COUNT(*) FROM quote_history)+(SELECT COUNT(*) FROM evidence_records)+(SELECT COUNT(*) FROM decision_lineage)+(SELECT COUNT(*) FROM outcome_history)+(SELECT COUNT(*) FROM derived_features)+(SELECT COUNT(*) FROM identity_state)+(SELECT COUNT(*) FROM user_workspaces)`).Scan(&count); err != nil {
+	countQuery := `SELECT (SELECT COUNT(*) FROM symbol_registry)+(SELECT COUNT(*) FROM canonical_quotes)+(SELECT COUNT(*) FROM quote_history)+(SELECT COUNT(*) FROM evidence_records)+(SELECT COUNT(*) FROM decision_lineage)+(SELECT COUNT(*) FROM outcome_history)+(SELECT COUNT(*) FROM derived_features)+(SELECT COUNT(*) FROM identity_state)+(SELECT COUNT(*) FROM user_workspaces)`
+	if b.tenantScopedArchive {
+		countQuery += `+(SELECT COUNT(*) FROM tenant_identity_state)+(SELECT COUNT(*) FROM tenant_user_workspaces)`
+	}
+	if err := tx.QueryRowContext(ctx, countQuery).Scan(&count); err != nil {
 		return err
 	}
 	if mode == persistenceRestoreModeEmpty && count > 0 {
 		return errors.New("persistence restore target is not empty; use explicit replace mode")
 	}
 	if mode == persistenceRestoreModeReplace {
-		if _, err := tx.ExecContext(ctx, `TRUNCATE TABLE user_workspaces, identity_state, derived_features, outcome_history, decision_lineage, evidence_records, quote_history, canonical_quotes, symbol_registry`); err != nil {
+		tables := `user_workspaces, identity_state, derived_features, outcome_history, decision_lineage, evidence_records, quote_history, canonical_quotes, symbol_registry`
+		if b.tenantScopedArchive {
+			tables = `tenant_user_workspaces, tenant_identity_state, ` + tables
+		}
+		if _, err := tx.ExecContext(ctx, `TRUNCATE TABLE `+tables); err != nil {
 			return err
 		}
 	}
@@ -908,12 +970,30 @@ func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Conte
 		}
 	}
 	if archive.HasIdentity {
-		raw, e := json.Marshal(archive.Identity)
-		if e != nil {
-			return e
-		}
-		if _, err := tx.ExecContext(ctx, `INSERT INTO identity_state(id,payload_json,updated_at_ms) VALUES(1,$1,$2)`, raw, archive.Identity.UpdatedAt); err != nil {
-			return err
+		if b.tenantScopedArchive {
+			keys := make([]string, 0, len(tenantPartitions))
+			for tenantID := range tenantPartitions {
+				keys = append(keys, tenantID)
+			}
+			sort.Strings(keys)
+			for _, tenantID := range keys {
+				part := tenantPartitions[tenantID]
+				raw, e := json.Marshal(part)
+				if e != nil {
+					return e
+				}
+				if _, err := tx.ExecContext(ctx, `INSERT INTO tenant_identity_state(tenant_id,payload_json,updated_at_ms) VALUES($1,$2,$3)`, tenantID, raw, part.UpdatedAt); err != nil {
+					return err
+				}
+			}
+		} else {
+			raw, e := json.Marshal(archive.Identity)
+			if e != nil {
+				return e
+			}
+			if _, err := tx.ExecContext(ctx, `INSERT INTO identity_state(id,payload_json,updated_at_ms) VALUES(1,$1,$2)`, raw, archive.Identity.UpdatedAt); err != nil {
+				return err
+			}
 		}
 	}
 	for _, w := range archive.UserWorkspaces {
@@ -921,8 +1001,14 @@ func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Conte
 		if e != nil {
 			return e
 		}
-		if _, err := tx.ExecContext(ctx, `INSERT INTO user_workspaces(user_id,payload_json,updated_at_ms) VALUES($1,$2,$3)`, w.UserID, raw, w.UpdatedAt); err != nil {
-			return err
+		if b.tenantScopedArchive {
+			if _, err := tx.ExecContext(ctx, `INSERT INTO tenant_user_workspaces(tenant_id,user_id,payload_json,updated_at_ms) VALUES($1,$2,$3,$4)`, workspaceOwners[strings.TrimSpace(w.UserID)], strings.TrimSpace(w.UserID), raw, w.UpdatedAt); err != nil {
+				return err
+			}
+		} else {
+			if _, err := tx.ExecContext(ctx, `INSERT INTO user_workspaces(user_id,payload_json,updated_at_ms) VALUES($1,$2,$3)`, w.UserID, raw, w.UpdatedAt); err != nil {
+				return err
+			}
 		}
 	}
 	return tx.Commit()
