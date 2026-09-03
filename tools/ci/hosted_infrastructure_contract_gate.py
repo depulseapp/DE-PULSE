@@ -21,12 +21,24 @@ def fail(message: str) -> None:
 
 
 def load_renderer():
-    spec = importlib.util.spec_from_file_location("depulse_hosted_renderer", RENDERER)
-    if spec is None or spec.loader is None:
-        fail("cannot load renderer")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    # The renderer intentionally composes sibling hosted renderers. Dynamic
+    # import by absolute file path does not automatically expose that sibling
+    # directory on sys.path, so make the renderer directory explicit only for
+    # module initialization and then restore the caller's import path.
+    renderer_dir = str(RENDERER.parent)
+    added_path = renderer_dir not in sys.path
+    if added_path:
+        sys.path.insert(0, renderer_dir)
+    try:
+        spec = importlib.util.spec_from_file_location("depulse_hosted_renderer", RENDERER)
+        if spec is None or spec.loader is None:
+            fail("cannot load renderer")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        if added_path:
+            sys.path.remove(renderer_dir)
 
 
 def run_gate(path: Path, pass_marker: str, label: str) -> None:
