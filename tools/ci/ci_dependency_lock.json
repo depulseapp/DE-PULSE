@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CI-DEPENDENCY-LOCK-1",
-  "updated_at": "2026-08-28",
+  "updated_at": "2026-09-03",
   "scope": {
     "immutable_action_pin_workflows": [
       ".github/workflows/ci-fast.yml",
@@ -51,6 +51,84 @@
     "playwright": "1.62.0",
     "cache": "setup-python pip cache keyed by browser-requirements.txt",
     "system_browser": "Google Chrome supplied by ubuntu-24.04 runner through CHROME_BIN"
+  },
+  "go_supply_chain": {
+    "schema": "DE.PULSE-GO-SUPPLY-CHAIN-1",
+    "module_file": "go.mod",
+    "approved_source_prefixes": [
+      "github.com/jackc/",
+      "golang.org/x/"
+    ],
+    "approved_licenses": [
+      "MIT",
+      "BSD-3-Clause"
+    ],
+    "advisory": {
+      "scanner": "golang.org/x/vuln/cmd/govulncheck",
+      "version": "v1.1.4",
+      "database": "https://vuln.go.dev",
+      "policy": "fail-closed on scanner/database error or reachable vulnerability"
+    },
+    "components": {
+      "github.com/jackc/pgx/v5": {
+        "version": "v5.7.6",
+        "direct": true,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgx",
+        "revoked": false
+      },
+      "github.com/jackc/pgpassfile": {
+        "version": "v1.0.0",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgpassfile",
+        "revoked": false
+      },
+      "github.com/jackc/pgservicefile": {
+        "version": "v0.0.0-20240606120523-5a60cdf6a761",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgservicefile",
+        "revoked": false
+      },
+      "github.com/jackc/puddle/v2": {
+        "version": "v2.2.2",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/puddle",
+        "revoked": false
+      },
+      "golang.org/x/crypto": {
+        "version": "v0.37.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/crypto",
+        "revoked": false
+      },
+      "golang.org/x/sync": {
+        "version": "v0.13.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/sync",
+        "revoked": false
+      },
+      "golang.org/x/text": {
+        "version": "v0.24.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/text",
+        "revoked": false
+      }
+    },
+    "deployment_admission": {
+      "requires_exact_source_sha": true,
+      "requires_immutable_artifact_digest": true,
+      "requires_source_bound_spdx": true,
+      "requires_supported_provenance_attestation": true,
+      "requires_successful_advisory_scan": true,
+      "requires_target_environment": true,
+      "revoked_component_blocks_admission": true
+    }
   },
   "permission_policy": {
     "default": "contents: read",
