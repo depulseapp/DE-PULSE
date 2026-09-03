@@ -158,6 +158,9 @@ func (p *PersistenceManager) ExportArchiveFile(ctx context.Context, path string)
 			archive.SourceStoreSchema = stats.SchemaVersion
 		}
 	}
+	if _, err := EvidenceAsKnownAt(archive.Evidence, 1<<63-1); err != nil {
+		return PersistenceArchive{}, fmt.Errorf("archive temporal evidence validation: %w", err)
+	}
 	if err := writePersistenceArchiveFile(path, archive); err != nil {
 		return PersistenceArchive{}, err
 	}
@@ -179,6 +182,9 @@ func (p *PersistenceManager) RestoreArchiveFile(ctx context.Context, path, mode 
 	archive, err := readPersistenceArchiveFile(path)
 	if err != nil {
 		return PersistenceArchive{}, err
+	}
+	if _, err := EvidenceAsKnownAt(archive.Evidence, 1<<63-1); err != nil {
+		return PersistenceArchive{}, fmt.Errorf("restore temporal evidence validation: %w", err)
 	}
 	currentIdentity := IdentityPersistentState{}
 	if normalizedMode == persistenceRestoreModeReplace {
