@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -39,6 +41,37 @@ func writeManagedSecretReferenceManifest(t *testing.T, environment string, refer
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(path, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func writeHostedDeploymentAdmissionFixture(t *testing.T, environment, image string) string {
+	t.Helper()
+	policy, err := os.ReadFile("tools/ci/ci_dependency_lock.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	policyDigest := sha256.Sum256(policy)
+	imageParts := strings.Split(image, "@sha256:")
+	if len(imageParts) != 2 {
+		t.Fatalf("fixture image is not immutable: %s", image)
+	}
+	payload := map[string]any{
+		"schema": "DE.PULSE-HOSTED-DEPLOYMENT-ADMISSION-1", "status": "PASS",
+		"sourceSha": strings.Repeat("b", 40), "targetEnvironment": environment,
+		"image": image, "imageSha256": imageParts[1], "dependencyPolicySha256": hex.EncodeToString(policyDigest[:]),
+		"sbomStatus": "PASS", "sbomSha256": strings.Repeat("c", 64),
+		"advisoryStatus": "PASS", "advisoryEvidenceSha256": strings.Repeat("d", 64),
+		"provenanceStatus": "PASS", "provenanceEvidenceSha256": strings.Repeat("e", 64),
+		"revokedComponents": []string{}, "noRebuild": true,
+	}
+	raw, err := json.Marshal(payload)
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(t.TempDir(), "deployment-admission.json")
+	if err := os.WriteFile(path, raw, 0600); err != nil {
 		t.Fatal(err)
 	}
 	return path
@@ -278,6 +311,7 @@ func TestHostedManagedSecretAzureCSIAndWorkloadContracts(t *testing.T) {
 	}
 
 	image := "ghcr.io/depulseapp/de-pulse@sha256:" + strings.Repeat("a", 64)
+	admission := writeHostedDeploymentAdmissionFixture(t, "dev", image)
 	cmd := exec.Command(
 		"python3", "tools/hosted/render_kubernetes_trust.py",
 		"--environment", "dev",
@@ -287,6 +321,7 @@ func TestHostedManagedSecretAzureCSIAndWorkloadContracts(t *testing.T) {
 		"--workload-image", image,
 		"--public-origin", "https://dev.depulse.invalid",
 		"--managed-secret-reference-manifest", oldManifest,
+		"--deployment-admission-manifest", admission,
 	)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -298,6 +333,9 @@ func TestHostedManagedSecretAzureCSIAndWorkloadContracts(t *testing.T) {
 		"driver: secrets-store.csi.k8s.io", "mountPath: /var/run/depulse/secrets",
 		"name: DEPULSE_HOSTED_REQUIRED_SECRETS", "value: \"finnhub,alpaca-secret\"",
 		"name: DEPULSE_HOSTED_SECRET_GENERATION", "path: /api/ready", oldClass,
+		"depulse.io/source-sha: \"" + strings.Repeat("b", 40) + "\"", "depulse.io/image-sha256: \"" + strings.Repeat("a", 64) + "\"",
+		"depulse.io/sbom-sha256: \"" + strings.Repeat("c", 64) + "\"", "depulse.io/advisory-evidence-sha256: \"" + strings.Repeat("d", 64) + "\"",
+		"depulse.io/provenance-evidence-sha256: \"" + strings.Repeat("e", 64) + "\"", "depulse.io/deployment-admission-sha256:",
 	} {
 		if !strings.Contains(workload, required) {
 			t.Fatalf("hosted workload contract missing %q", required)

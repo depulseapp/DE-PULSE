@@ -22,6 +22,7 @@ from render_managed_secrets import (
     required_aliases,
     secret_provider_class_name,
 )
+from deployment_admission import load_deployment_admission
 
 ROOT = Path(__file__).resolve().parents[2]
 DESIRED_STATE = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
@@ -138,6 +139,7 @@ def render(
     workload_image: str | None = None,
     public_origin: str | None = None,
     managed_secret_reference_manifest: Path | None = None,
+    deployment_admission_manifest: Path | None = None,
 ) -> str:
     manifest = load_manifest()
     if environment not in CANONICAL_ENVIRONMENTS:
@@ -152,7 +154,7 @@ def render(
     elif istio_revision or workload_identity_client_id:
         raise SystemExit("Istio revision/workload identity client ID are valid only for aks-managed rendering")
 
-    workload_requested = any(value is not None for value in (workload_image, public_origin, managed_secret_reference_manifest))
+    workload_requested = any(value is not None for value in (workload_image, public_origin, managed_secret_reference_manifest, deployment_admission_manifest))
     if workload_requested:
         if mesh_profile != "aks-managed":
             raise SystemExit("managed hosted workload rendering requires the aks-managed profile")
@@ -163,6 +165,8 @@ def render(
         public_origin = validate_public_origin(public_origin)
         if managed_secret_reference_manifest is None:
             raise SystemExit("hosted workload rendering requires --managed-secret-reference-manifest")
+        if deployment_admission_manifest is None:
+            raise SystemExit("hosted workload rendering requires --deployment-admission-manifest")
 
     hosts = sorted({validate_host(host) for host in hosts})
     if not hosts:
@@ -359,6 +363,7 @@ spec:
     ]
 
     if workload_requested:
+        admission, admission_digest = load_deployment_admission(deployment_admission_manifest, environment, workload_image or "")
         references = load_reference_manifest(managed_secret_reference_manifest, environment)
         secret_generation = reference_generation(environment, references)
         secret_aliases = required_aliases(references)
@@ -366,7 +371,13 @@ spec:
         workload_annotations = (
             f"        depulse.io/desired-state-version: {q(manifest['version'])}\n"
             f"        depulse.io/desired-state-sha256: {q(digest)}\n"
-            f"        depulse.io/secret-generation-sha256: {q(secret_generation)}"
+            f"        depulse.io/secret-generation-sha256: {q(secret_generation)}\n"
+            f"        depulse.io/deployment-admission-sha256: {q(admission_digest)}\n"
+            f"        depulse.io/source-sha: {q(str(admission['sourceSha']))}\n"
+            f"        depulse.io/image-sha256: {q(str(admission['imageSha256']))}\n"
+            f"        depulse.io/sbom-sha256: {q(str(admission['sbomSha256']))}\n"
+            f"        depulse.io/advisory-evidence-sha256: {q(str(admission['advisoryEvidenceSha256']))}\n"
+            f"        depulse.io/provenance-evidence-sha256: {q(str(admission['provenanceEvidenceSha256']))}"
         )
         docs.extend([
             f"""apiVersion: apps/v1
@@ -498,6 +509,7 @@ def main() -> None:
     parser.add_argument("--workload-image")
     parser.add_argument("--public-origin")
     parser.add_argument("--managed-secret-reference-manifest", type=Path)
+    parser.add_argument("--deployment-admission-manifest", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     hosts = parse_hosts(args.egress_hosts_file) if args.egress_hosts_file else canonical_egress_hosts(args.egress_inventory)
@@ -510,6 +522,7 @@ def main() -> None:
         workload_image=args.workload_image,
         public_origin=args.public_origin,
         managed_secret_reference_manifest=args.managed_secret_reference_manifest,
+        deployment_admission_manifest=args.deployment_admission_manifest,
     )
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")

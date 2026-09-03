@@ -91,6 +91,8 @@ jobs:
         run: python3 tools/release/release_identity.py --verify
       - name: Python syntax
         run: python3 -m compileall -q tools/ci tools/release tools/release/source_fingerprint.py
+      - name: HOST-020 hosted deployment admission
+        run: python3 tools/ci/hosted_deployment_admission_self_test.py
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -204,6 +206,7 @@ jobs:
             echo '- v18 T10 future-proof/zero-gap/portability assurance: PASS'
             echo '- Git-object provenance: PASS'
             echo '- HOST-019 live govulncheck advisory scan: PASS (fail-closed)'
+            echo '- HOST-020 source/SBOM/advisory/provenance/environment admission: PASS (fail-closed)'
             echo '- PostgreSQL tagged compile: PASS when Go lane is required; no live DB/PITR claim'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'

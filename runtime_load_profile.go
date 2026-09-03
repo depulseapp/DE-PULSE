@@ -35,7 +35,7 @@ type RuntimeLoadDiagnostics struct {
 	Workload                 []WorkClassDiagnostics              `json:"workload"`
 	ProviderRequests         []ProviderRequestDiagnostics        `json:"providerRequests,omitempty"`
 	ProviderUsefulness       []ProviderUsefulnessDiagnostic      `json:"providerUsefulness,omitempty"`
-	ProviderScorecards       []ProviderOperationalScorecard       `json:"providerScorecards,omitempty"`
+	ProviderScorecards       []ProviderOperationalScorecard      `json:"providerScorecards,omitempty"`
 	LiveSubscriptions        []LiveSubscriptionBudgetDiagnostics `json:"liveSubscriptions,omitempty"`
 	BroadSnapshots           BroadSnapshotBrokerDiagnostics      `json:"broadSnapshots"`
 	HTTP                     HTTPRuntimeDiagnostics              `json:"http"`

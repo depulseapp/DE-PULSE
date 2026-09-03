@@ -40,46 +40,46 @@ type ProviderUsefulnessDiagnostic struct {
 // usefulness. It is deliberately not an input to routing. Pointer-valued
 // metrics preserve the distinction between a measured zero and no evidence.
 type ProviderOperationalScorecard struct {
-	Provider                    string   `json:"provider"`
-	State                       string   `json:"state"`
-	Configured                  bool     `json:"configured"`
-	Capabilities                []string `json:"capabilities,omitempty"`
-	CoverageDatasets            []string `json:"coverageDatasets,omitempty"`
-	ServingDatasets             []string `json:"servingDatasets,omitempty"`
-	HealthMeasurementState      string   `json:"healthMeasurementState"`
-	HealthStates                []string `json:"healthStates,omitempty"`
-	FreshnessMeasurementState   string   `json:"freshnessMeasurementState"`
-	FreshnessStates             []string `json:"freshnessStates,omitempty"`
-	TransportMeasurementState   string   `json:"transportMeasurementState"`
-	CompletedRequests           int64    `json:"completedRequests"`
-	SuccessPct                  *float64 `json:"successPct,omitempty"`
-	P50LatencyMs                *int64   `json:"p50LatencyMs,omitempty"`
-	P95LatencyMs                *int64   `json:"p95LatencyMs,omitempty"`
-	RateLimited                 int64    `json:"rateLimited"`
-	HeadroomMeasurementState    string   `json:"headroomMeasurementState"`
-	RequestBudgetRemaining      *int     `json:"requestBudgetRemaining,omitempty"`
-	LiveSubscriptionAvailable   *int     `json:"liveSubscriptionAvailable,omitempty"`
-	RightsMeasurementState      string   `json:"rightsMeasurementState"`
-	RightsReviewState           string   `json:"rightsReviewState"`
-	RightsEvidenceBound         bool     `json:"rightsEvidenceBound"`
-	CommercialReadinessState    string   `json:"commercialReadinessState"`
-	CostClass                   string   `json:"costClass"`
-	CostMeasurementState        string   `json:"costMeasurementState"`
-	ObservedCostUSD             *float64 `json:"observedCostUsd,omitempty"`
-	UsefulnessMeasurementState  string   `json:"usefulnessMeasurementState"`
-	CrossSourceSamples          int64    `json:"crossSourceSamples"`
-	AgreementPct                *float64 `json:"agreementPct,omitempty"`
-	RoutingImpact               string   `json:"routingImpact"`
-	UpdatedAt                   int64    `json:"updatedAt"`
+	Provider                   string   `json:"provider"`
+	State                      string   `json:"state"`
+	Configured                 bool     `json:"configured"`
+	Capabilities               []string `json:"capabilities,omitempty"`
+	CoverageDatasets           []string `json:"coverageDatasets,omitempty"`
+	ServingDatasets            []string `json:"servingDatasets,omitempty"`
+	HealthMeasurementState     string   `json:"healthMeasurementState"`
+	HealthStates               []string `json:"healthStates,omitempty"`
+	FreshnessMeasurementState  string   `json:"freshnessMeasurementState"`
+	FreshnessStates            []string `json:"freshnessStates,omitempty"`
+	TransportMeasurementState  string   `json:"transportMeasurementState"`
+	CompletedRequests          int64    `json:"completedRequests"`
+	SuccessPct                 *float64 `json:"successPct,omitempty"`
+	P50LatencyMs               *int64   `json:"p50LatencyMs,omitempty"`
+	P95LatencyMs               *int64   `json:"p95LatencyMs,omitempty"`
+	RateLimited                int64    `json:"rateLimited"`
+	HeadroomMeasurementState   string   `json:"headroomMeasurementState"`
+	RequestBudgetRemaining     *int     `json:"requestBudgetRemaining,omitempty"`
+	LiveSubscriptionAvailable  *int     `json:"liveSubscriptionAvailable,omitempty"`
+	RightsMeasurementState     string   `json:"rightsMeasurementState"`
+	RightsReviewState          string   `json:"rightsReviewState"`
+	RightsEvidenceBound        bool     `json:"rightsEvidenceBound"`
+	CommercialReadinessState   string   `json:"commercialReadinessState"`
+	CostClass                  string   `json:"costClass"`
+	CostMeasurementState       string   `json:"costMeasurementState"`
+	ObservedCostUSD            *float64 `json:"observedCostUsd,omitempty"`
+	UsefulnessMeasurementState string   `json:"usefulnessMeasurementState"`
+	CrossSourceSamples         int64    `json:"crossSourceSamples"`
+	AgreementPct               *float64 `json:"agreementPct,omitempty"`
+	RoutingImpact              string   `json:"routingImpact"`
+	UpdatedAt                  int64    `json:"updatedAt"`
 }
 
 type providerOperationalScorecardBuilder struct {
-	row          ProviderOperationalScorecard
-	healthSeen   bool
-	freshSeen    bool
+	row           ProviderOperationalScorecard
+	healthSeen    bool
+	freshSeen     bool
 	transportSeen bool
-	headroomSeen bool
-	degraded     bool
+	headroomSeen  bool
+	degraded      bool
 }
 
 func providerScorecardSameProvider(left, right string) bool {
@@ -101,8 +101,8 @@ func providerScorecardAppendUnique(values []string, value string) []string {
 	return append(values, value)
 }
 
-func providerScorecardInt64Pointer(value int64) *int64 { v := value; return &v }
-func providerScorecardIntPointer(value int) *int       { v := value; return &v }
+func providerScorecardInt64Pointer(value int64) *int64     { v := value; return &v }
+func providerScorecardIntPointer(value int) *int           { v := value; return &v }
 func providerScorecardFloatPointer(value float64) *float64 { v := value; return &v }
 
 // buildProviderOperationalScorecards never scores or orders providers. It only
@@ -127,7 +127,7 @@ func buildProviderOperationalScorecards(registrations []ProviderRegistration, se
 				HeadroomMeasurementState: "UNKNOWN", RightsMeasurementState: rightsState,
 				RightsReviewState: defaultString(rights.ReviewState, "UNKNOWN"), RightsEvidenceBound: rights.EvidenceBound,
 				CommercialReadinessState: defaultString(rights.CommercialReadiness.State, "UNKNOWN"),
-				CostClass: providerCostFromRegistration(provider), CostMeasurementState: "DECLARED_CLASS_ONLY",
+				CostClass:                providerCostFromRegistration(provider), CostMeasurementState: "DECLARED_CLASS_ONLY",
 				UsefulnessMeasurementState: "UNKNOWN", RoutingImpact: "OBSERVABILITY_ONLY", UpdatedAt: now,
 			}}
 		}
