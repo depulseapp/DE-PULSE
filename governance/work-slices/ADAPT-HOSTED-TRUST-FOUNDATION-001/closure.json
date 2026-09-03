@@ -3,358 +3,127 @@
   "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
   "issue": 148,
   "branch": "adapt-hosted-trust-foundation-001",
-  "closurePolicy": "#148 closes the v19.0.0 DEVELOPMENT_PRODUCTION_READY target only when every HOST-001..HOST-023 technical responsibility is implemented/evidenced through its canonical existing owner or is carried as an explicitly named Development-tier external blocker permitted by governance, all non-waived adverse hosted/security/data-truth/recovery requirements are VERIFIED, exact-head Fast and impact-selected Qualified pass on the final candidate, and v18.10.0 Stable remains immutable. A named external blocker never becomes VERIFIED evidence, never authorizes architecture/security weakening, and never authorizes Commercial/Public activation. Commercial/Public-only provider licensing/rights approval, public-user legal/compliance approval and commercial activation audit are separate activation gates and cannot be misclassified as Development technical blockers. Requirement-sized documentation, self-declared runtime policy, a passing unit test, a working hosted connection or readiness-tier relabeling cannot substitute for executable closure evidence.",
+  "closurePolicy": "#148 closes the v19.0.0 DEVELOPMENT_PRODUCTION_READY target only when every HOST-001..HOST-023 technical responsibility is implemented/evidenced through its canonical existing owner or is carried as an explicitly named Development-tier external blocker permitted by governance, all non-waived adverse hosted/security/data-truth/recovery requirements are VERIFIED, exact-head Fast and impact-selected Qualified pass on the final candidate, and v18.10.0 Stable remains immutable. A named external blocker never becomes VERIFIED evidence, never authorizes architecture/security weakening, and never authorizes Commercial/Public activation. Commercial/Public-only provider licensing/rights approval, public-user legal/compliance approval and commercial activation audit are separate activation gates and cannot be misclassified as Development technical blockers.",
   "allGapsMustBeVerified": true,
   "gaps": [
     {
       "id": "HOST-001-003-PROVIDER-RIGHTS",
       "status": "VERIFIED",
       "owner": "provider_data_rights.go + provider registration + Smart Provider Router v2 + canonical cache/persistence/subscription/serving rights decisions",
-      "implementationPaths": [
-        "runtime_environment.go",
-        "provider_data_rights.go",
-        "provider_registration.go",
-        "provider_router.go",
-        "live_subscription_manager.go",
-        "persistence_backend_select.go",
-        "user_runtime.go",
-        "provider_rights_regression_test.go",
-        "commercial_readiness_regression_test.go",
-        "governance/PRODUCTION-READINESS-TIERS.md",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/provider-public-terms-review.json",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "rights dimensions/provenance needed by the technical public-production control plane",
-        "provider-specific evidence binding/provenance mechanism",
-        "working credential never implies rights",
-        "development/pre-public provider capacity remains available while strict rights blockers remain observable",
-        "explicit public-production activation applies rights downgrade/expiry fail-closed across applicable routing/cache/persistence/live-fanout/serving without a second router"
-      ],
-      "evidence": [
-        "Development Production Ready classification is governed by governance/PRODUCTION-READINESS-TIERS.md: technical provider-rights control/provenance/audit/public fail-closed behavior is a Development obligation, while actual provider-specific licence/contract/formal public/commercial reuse approval is a separately tracked Commercial/Public activation gate.",
-        "provider_data_rights.go models required rights dimensions, binds provider identity, supports a reviewable SHA-256-pinned provider-rights bundle, and keeps default provider metadata UNREVIEWED/NOT_ASSERTED; a working credential, successful request or public terms never grant legal rights.",
-        "Development/pre-public retains maximum configured-provider capacity. DEPULSE_PROVIDER_RIGHTS_ENFORCEMENT_MODE defaults to audit-only; strict hard enforcement requires explicit PUBLIC_PRODUCTION in hosted runtime.",
-        "Audit-only decisions preserve strict blocking reasons while allowing Smart Provider Router v2, live subscriptions, cache, canonical persistence and serving to retain development capacity. Explicit PUBLIC_PRODUCTION reuses the same evaluator and fails closed across router/live/cache/persistence/serving for missing/tampered/unreviewed/expired/downgraded rights.",
-        "All 12 canonical provider registrations remain covered by the rights review/audit inventory, including TradeInsight, SEC, BLS and EIA; source identity remediation preserves SEC vs SEC EDGAR and registered external evidence identity.",
-        "Regression evidence proves explicit public-production activation, audit-only development visibility without route suppression, development cache/persistence/live-subscription/serving capacity, and strict public fail-closed behavior.",
-        "Exact-head implementation evidence: Fast #1229 / run 33036835281 PASS on 346fb4da191ec06e18ca178fc42c02647831df54. Governance commits after that implementation head require fresh exact-head Fast before dependency advancement.",
-        "Actual provider-specific approval evidence remains mandatory before PUBLIC_USER_PROVIDER_RIGHTS_ACTIVATION / PUBLIC_PRODUCTION. This VERIFIED state is Development technical verification only and must never be cited as provider legal approval or public-production authorization."
-      ],
-      "closureCondition": "VERIFIED for DEVELOPMENT_PRODUCTION_READY: strict provider-rights governance remains observable without reducing configured development capacity, while explicit PUBLIC_PRODUCTION reuses the same fail-closed evaluator across router/live/cache/persistence/serving. Actual provider-specific legal/commercial approval remains a separate mandatory COMMERCIAL_PUBLIC_READY activation gate.",
+      "implementationPaths": ["runtime_environment.go", "provider_data_rights.go", "provider_registration.go", "provider_router.go", "live_subscription_manager.go", "provider_rights_regression_test.go", "commercial_readiness_regression_test.go"],
+      "evidenceRequired": ["development audit-only provider-rights control", "explicit PUBLIC_PRODUCTION fail-closed activation", "working credentials never imply rights"],
+      "evidence": ["Development technical rights/provenance control is production integrated and regression protected. Configured-provider capacity remains available in development/pre-public mode while explicit PUBLIC_PRODUCTION reuses the canonical evaluator to fail closed across routing, live subscriptions, cache, persistence and serving. Actual provider-specific legal/commercial approval remains a separate Commercial/Public activation gate."],
+      "closureCondition": "Verified for DEVELOPMENT_PRODUCTION_READY without claiming provider legal approval or public-production authorization.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-004-007-TENANT-IDENTITY-SESSION",
       "status": "VERIFIED",
       "owner": "canonical identity/auth/session/reauth/workspace owners",
-      "implementationPaths": [
-        "identity_model.go",
-        "identity_admin.go",
-        "identity_presence.go",
-        "http_auth.go",
-        "http_health.go",
-        "identity_reauth.go",
-        "admin_identity_regression_test.go",
-        "reauthentication_regression_test.go",
-        "session_security_regression_test.go",
-        "product_entitlement_regression_test.go",
-        "workspace_isolation_regression_test.go"
-      ],
-      "evidenceRequired": [
-        "first-class tenant/account isolation independent of role/product entitlement/provider rights",
-        "SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability semantics",
-        "device registration/revocation/lost/stale lifecycle",
-        "session expiry/refresh/revocation and sensitive reauth/MFA-class controls",
-        "cross-tenant and revoked-state denial"
-      ],
-      "evidence": [
-        "HOST-004 VERIFIED: tenant IDs/status and session binding are canonical; privileged admin snapshots are actor-tenant scoped; created users bind actor.TenantID; cross-tenant role/status/password/session mutation is denied; and the critical-owner invariant is tenant-scoped. Dedicated adverse regressions cover visibility, creation, mutations and last-owner protection.",
-        "HOST-005 VERIFIED: the conserved canonical SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability model is implemented by roleHasHostedCapability. ADMIN is capability-scoped (user/session/device/standard use) and is denied tenant/account authority. authorizeHostedIdentity consumes this capability truth, and the production /api/auth/device/register and /api/auth/device/status path invokes it through authorizeHostedDeviceManagement. Positive and negative role-capability regressions remain executable.",
-        "HOST-006 VERIFIED: registered-device lifecycle includes ACTIVE/LOST/REVOKED/STALE handling; stale active devices durably transition to STALE at trusted identity boundaries, bound sessions are revoked, and identity-security events persist. Regressions prove stale retirement/session revocation survives restart, cross-tenant device mutation denial, privileged bounded tenant-scoped audit and canonical admin HTTP projection without secret material.",
-        "HOST-007 VERIFIED for the v19.0 Development core: identity_presence.go now performs a production-wired Ed25519 public-key MFA ceremony with durable per-user credentials, session-bound one-time challenges, domain-separated signing payload, persisted payload hash, signature verification, replay consumption, expiry bounded by session lifetime, credential revocation and security events. identity_reauth.go remains the sole MFA-assurance timestamp owner after verified proof.",
-        "HOST-007 adverse evidence covers invalid signatures, cross-session challenge use, replay, stale MFA, password reauth without MFA, credential revocation, session rotation and restart persistence. The implementation is MFA-class public-key proof; it is not overclaimed as WebAuthn/FIDO.",
-        "Applicable v19.0 #164 core evidence is executable: bootstrap/login, persisted session discovery after service reload, secure token hashing/persistence, successful rotation/silent renewal without extending absolute/authentication lifetime, failed/expired renewal -> 401 plus session/CSRF cookie cleanup, explicit password reauthentication, logout/revocation, device/session revocation, live ADMIN->USER downgrade revoking the old privileged session and fresh-login capability refresh, and live product-entitlement transition enforcement independent from RBAC/provider rights.",
-        "Backlog #164 remains OPEN only for its roadmap-assigned v19.3 UX/client-parity residual such as safe app-context restoration, platform-specific login/reauth presentation/deep-link behavior and Mac/Windows/Web user-flow parity. That later presentation/client work does not keep HOST-007's v19.0 core security responsibility open.",
-        "Exact-head implementation/evidence checkpoint: Fast #1254 / run 33049452646 PASS on de110ecfcbc6e385203eec90c631628871fd6e83, including canonical workflow/root policy, source health, T1-T10, gofmt, go vet and go test ./...."
-      ],
-      "closureCondition": "VERIFIED for the v19.0 Development dependency band: tenant/role/device/session security and an actual canonical MFA-class public-key ceremony are production-integrated with applicable #164 core lifecycle evidence. The separately scheduled #164 v19.3 UX/client-parity residual remains open without reopening HOST-004..007 unless it discovers a core security defect.",
+      "implementationPaths": ["identity_model.go", "identity_admin.go", "identity_presence.go", "http_auth.go", "identity_reauth.go", "admin_identity_regression_test.go", "reauthentication_regression_test.go", "session_security_regression_test.go", "workspace_isolation_regression_test.go"],
+      "evidenceRequired": ["tenant/account isolation", "capability-scoped RBAC", "device/session lifecycle", "MFA-class reauthentication", "cross-tenant and revoked-state denial"],
+      "evidence": ["Tenant isolation, SUPER_OWNER/OWNER/ADMIN/USER/DEMO capability semantics, device lifecycle, session expiry/refresh/revocation and Ed25519 public-key MFA-class proof are production integrated with adverse cross-tenant/replay/revocation/restart evidence. #164 remains a later v19.3 client/UX parity residual only."],
+      "closureCondition": "Verified for the v19.0 Development core security boundary.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-008-009-PRODUCT-ENTITLEMENT-QUOTA",
       "status": "VERIFIED",
-      "owner": "identity_model.go + identity_reauth.go product-entitlement policy composed with http_auth.go/http_security.go and canonical identity persistence",
-      "implementationPaths": [
-        "identity_model.go",
-        "identity_reauth.go",
-        "http_auth.go",
-        "http_security.go",
-        "http_health.go",
-        "product_entitlement_regression_test.go",
-        "governance/root-layout-policy.json",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "product plan/status/capability entitlement separate from RBAC/provider rights",
-        "quota/metering truth",
-        "grace/suspension/disabled and upgrade/downgrade transitions",
-        "restricted serving denied before data projection"
-      ],
-      "evidence": [
-        "Tenant product plan/status and 24-hour metering persist inside canonical IdentityPersistentState; product capability remains separate from RBAC/provider rights.",
-        "Canonical authenticated HTTP composition validates identity/password setup/CSRF before product entitlement, anti-abuse quota and durable product metering, then reaches protected projection.",
-        "product_entitlement_regression_test.go covers RBAC separation, upgrade/downgrade usage preservation, ACTIVE/GRACE/SUSPENDED/DISABLED transitions, quota exhaustion/reload, fail-closed projection denial, metering reset and no double-charge on anti-abuse rejection.",
-        "Fast #1184 / run 33012762244 PASS on the original verified head; unchanged HOST-008/009 behavior and the #164 live-entitlement propagation audit are also included in Fast #1254 / run 33049452646 PASS on de110ecfcbc6e385203eec90c631628871fd6e83."
-      ],
-      "closureCondition": "One canonical product-entitlement/quota policy is executable and independently composable with RBAC/provider rights.",
+      "owner": "canonical product-entitlement/quota policy composed with identity/auth and provider-rights owners",
+      "implementationPaths": ["identity_model.go", "identity_reauth.go", "http_auth.go", "http_security.go", "product_entitlement_regression_test.go"],
+      "evidenceRequired": ["plan/status/capability entitlement", "quota/metering truth", "upgrade/downgrade/suspension transitions", "fail-closed protected projection"],
+      "evidence": ["Canonical tenant product plan/status/metering persists independently from RBAC/provider rights and is enforced before protected projection; regressions cover transitions, quota exhaustion, reload and anti-abuse composition."],
+      "closureCondition": "One canonical entitlement/quota policy is executable and independently composable with RBAC/provider rights.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-010-012-PRIVACY-LIFECYCLE",
       "status": "VERIFIED",
-      "owner": "hosted account data-governance/privacy lifecycle around canonical persistence/recovery owners",
-      "implementationPaths": [
-        "governance/programs/ADAPT-HOSTED-SYNC-001/privacy-data-handling.json",
-        "user_workspace.go",
-        "http_auth.go",
-        "workspace_isolation_regression_test.go",
-        "persistence_archive.go",
-        "persistence_backend_postgres.go",
-        "postgres_managed_recovery_fixture_test.go",
-        "tools/ci/host012_managed_recovery_drill.py",
-        "tools/ci/host012_managed_recovery_evidence_gate.py",
-        "tools/ci/host012_neon_recovery_operator.py",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/hosted-trust-checkpoint-2026-08-28.json"
-      ],
-      "evidenceRequired": [
-        "account data inventory/classification/minimization/retention",
-        "review/export/portability/deactivation/deletion/tombstone semantics",
-        "deletion/expiry across Postgres/SQLite/cache/backups/PITR",
-        "operator access/residency/audit and provider/legal retention compatibility"
-      ],
-      "evidence": [
-        "Versioned data inventory/classification, secret-free account export, destructive account deletion, sanitized tombstone lifecycle and application archive anti-resurrection restore behavior remain production-wired through the existing account/workspace/persistence owners.",
-        "Commit 5127b1599c052bb3c709b46bd7900cc46629d0ee production-wires reversible self-deactivation through the same canonical /api/auth/account lifecycle: POST requires the existing authenticated + recent-reauth + CSRF policy, transitions the live UserRecord to DISABLED, revokes active sessions, preserves profile/workspace/security data for governed administrator reactivation, and denies deactivation of the last active critical owner.",
-        "The existing bounded canonical IdentitySecurityEvent stream now records minimal durable PRIVACY_EXPORT_REQUESTED, ACCOUNT_DEACTIVATED and ACCOUNT_DELETED events. Export fails closed if its audit event cannot persist; deactivation and deletion roll back mutated identity/security-event state when persistence fails. The existing tenant-scoped privileged identity-security projection remains the operator audit consumer; no parallel privacy audit or secret-bearing event payload was created.",
-        "Executable privacy regressions prove secret-free export plus durable audit, successful deactivation, revoked prior session, preserved workspace/profile, disabled authentication across IdentityService restart, governed reactivation and fresh login, last-critical-owner adverse denial without damaging the session, destructive deletion plus durable audit, and replace-restore tombstone anti-resurrection.",
-        "Exact-head application/evidence checkpoint: Fast #1257 / run 33051229439 FULL PASS on 5127b1599c052bb3c709b46bd7900cc46629d0ee, including closure/source/root/migration gates, T1-T10, gofmt, go vet and go test ./....",
-        "Managed recovery closure: exact-head Fast #1303 / run 33138630810 and ordinary Qualified #231 / run 33139659529 passed on f357a1852640bf88aae69936d6593b63d9fd155d; the ordinary Qualified run intentionally skipped the manual operator job.",
-        "Manual Qualified #232 / run 33154312937 completed SUCCESS on exact head f357a1852640bf88aae69936d6593b63d9fd155d. Retained artifact 9678997463 (sha256:15cddb9d278a9c469659c864cdb216d8d04cf348cbf2c3c00855bd29071e85f0) passed the DE.PULSE-HOST012-MANAGED-RECOVERY-EVIDENCE-1 validator.",
-        "The real Neon PITR drill restored a point before deletion, replayed canonical deletion/tombstone privacy enforcement, restarted successfully, resurrected zero deleted profiles/workspaces/devices/sessions, preserved the tombstone, isolated recovery, and measured RPO 7.753s / RTO 13.926746s within the declared 300s / 900s targets.",
-        "This verifies HOST-010..012 for v19.0 Development. It is reusable evidence for HOST-016 but does not close tenant-owned/scoped PostgreSQL isolation, live migration/adverse, HA/failover or broader rollback/recovery obligations in HOST-015..016."
-      ],
-      "closureCondition": "VERIFIED for v19.0 Development: application privacy lifecycle plus real managed Neon PITR/operator recovery prove deletion-retention and anti-resurrection behavior through restart within declared RPO/RTO. Reuse this evidence in HOST-016; do not overclaim broader HOST-015..016 tenancy/HA/failover closure.",
+      "owner": "hosted privacy/account lifecycle around canonical persistence and recovery owners",
+      "implementationPaths": ["user_workspace.go", "http_auth.go", "persistence_archive.go", "persistence_backend_postgres.go", "tools/ci/host012_managed_recovery_drill.py", "tools/ci/host012_neon_recovery_operator.py"],
+      "evidenceRequired": ["inventory/classification/export/deactivation/deletion/tombstone", "anti-resurrection across restore", "managed recovery and measured RPO/RTO"],
+      "evidence": ["Application privacy lifecycle is production wired and restart durable. Manual Qualified #232 / run 33154312937 proved real Neon PITR, deletion replay, zero resurrection, preserved tombstone and measured RPO 7.753s / RTO 13.926746s within declared targets."],
+      "closureCondition": "Verified for v19.0 Development privacy lifecycle and managed recovery.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
       "status": "BLOCKED_EXTERNAL",
       "owner": "hosted environment/IaC and service-trust owners",
-      "implementationPaths": [
-        "internal/hostedenv/contract.go",
-        "internal/hostedenv/desired_state_v1.json",
-        "internal/hostedenv/contract_test.go",
-        "runtime_environment.go",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json",
-        "governance/hosted-infrastructure/README.md",
-        "governance/hosted-infrastructure/azure/README.md",
-        "governance/hosted-infrastructure/azure/main.tf",
-        "governance/hosted-infrastructure/azure/variables.tf",
-        "tools/hosted/render_kubernetes_trust.py",
-        "tools/ci/hosted_infrastructure_contract_gate.py",
-        "tools/ci/azure_hosted_infrastructure_gate.py",
-        "tools/ci/host013_azure_operator.py",
-        "tools/ci/host013_azure_live_evidence.py",
-        "tools/ci/host013_azure_traffic_probe.py",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json"
-      ],
-      "evidenceRequired": [
-        "dev/test/stage/prod versioned desired-state isolation and drift contract",
-        "service-to-service identity",
-        "ingress/egress/network/TLS trust boundaries",
-        "least privilege and reproducibility"
-      ],
-      "evidence": [
-        "Embedded desired-state contract remains the sole application policy owner for unique dev/test/stage/prod isolation, service identities, ingress/egress/network/TLS/internal-mTLS expectations and fail-closed declaration drift.",
-        "Repository implementation projects the canonical contract into Kubernetes/Istio controls and owns a fail-closed real-Azure operator with private AKS, Entra/Azure RBAC, OIDC/Workload Identity, managed Istio, strict mTLS, governed ingress/egress, TLS adverse evidence, workload token exchange, temporary verification RBAC cleanup, secret-free retained evidence and post-verification zero drift.",
-        "Exact-head repository checkpoint: Fast #1391 / run 33562863732 PASS on 475ef25d51360093a558f9b28024c89b75e547f5 after managed-Istio rollout convergence, external ingress readiness, three-node capacity target and failure-diagnostic hardening.",
-        "Real Azure Qualified #244 / run 33560870545 exposed managed-Istio CPU pressure on the two-node system pool; failure evidence was retained and temporary AKS verification RBAC cleanup succeeded.",
-        "Real Azure Qualified #245 / run 33563399097 on exact head 475ef25d51360093a558f9b28024c89b75e547f5 produced a Terraform plan of 0 add, 1 change, 0 destroy, changing only AKS system node_count 2->3. Azure rejected apply with ErrCode_InsufficientVCPUQuota because Canada Central regional quota was 4/4, 0 vCPUs remained and 2 more were required.",
-        "Azure Portal confirmed the subscription is a Free Trial and is ineligible for quota adjustment unless upgraded to a paid subscription. The owner declined paid upgrade; Development governance does not require purchasing Azure quota solely to erase an external verification residual.",
-        "Named residual HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is accepted through a scope-limited executable waiver contract. It does not verify HOST-013/014, does not authorize weakening Istio/TLS/network/identity/cleanup/drift controls, and does not authorize Commercial/Public activation."
-      ],
-      "closureCondition": "Remain explicitly BLOCKED_EXTERNAL and UNVERIFIED until a sufficiently resourced isolated AKS environment later passes the full live configuration/identity/traffic/cleanup/zero-drift chain. For v19.0 Development dependency advancement and HOST-023 accounting, the named Azure Free Trial vCPU quota residual is permitted only while its scope-limited waiver validates. Revisit when sufficient no-cost quota or a later explicitly authorized paid environment becomes available.",
+      "implementationPaths": ["internal/hostedenv/contract.go", "governance/hosted-infrastructure/azure/main.tf", "tools/hosted/render_kubernetes_trust.py", "tools/ci/azure_hosted_infrastructure_gate.py", "tools/ci/host013_azure_operator.py", "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json"],
+      "evidenceRequired": ["versioned environment/service-trust contract", "private AKS/workload identity/mTLS/ingress-egress controls", "real Azure verification when eligible capacity exists"],
+      "evidence": ["Repository harness remains fail closed. Real Azure Qualified #245 / run 33563399097 reached the in-place AKS 2->3 node plan but Azure Free Trial Canada Central quota was 4/4 with 0 vCPU remaining and 2 additional vCPU required. The narrowly governed HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 waiver preserves this requirement as UNVERIFIED, forbids architecture/security weakening and forbids Commercial/Public activation."],
+      "closureCondition": "Named Development-tier external residual only; rerun full live AKS proof when sufficient eligible capacity exists.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-015-016-POSTGRES-TENANCY-RECOVERY",
-      "status": "IMPLEMENTED_UNVERIFIED",
-      "owner": "existing PostgreSQL persistence backend + canonical migration/persistence/recovery owner",
-      "implementationPaths": [
-        "persistence_backend_postgres.go",
-        "persistence_backend_select.go",
-        "hosted_postgres_tenant_persistence.go",
-        "postgres_persistence_regression_test.go",
-        "postgres_managed_recovery_fixture_test.go",
-        "hosted_persistence_foundation_regression_test.go",
-        "internal/hostedpersistence/contract.go",
-        "internal/hostedpersistence/postgres_policy_v1.json",
-        "internal/hostedpersistence/contract_test.go",
-        ".github/workflows/ci-qualified.yml",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host015-016-postgres-checkpoint-2026-09-02.json"
-      ],
-      "evidenceRequired": [
-        "tenant/account schema ownership and migration/expand-contract strategy",
-        "application authorization plus explicit RLS disposition",
-        "pool/index/capacity limits",
-        "HA/failover/encrypted backup/PITR/restore drills/RPO-RTO",
-        "partial-outage and rollback reconciliation",
-        "cross-tenant denial"
-      ],
-      "evidence": [
-        "HOST-015 VERIFIED FOR DEVELOPMENT: the hosted-only tenant wrapper extends the existing PostgreSQL backend; canonical identity and workspace rows are tenant-owned; application identity remains authorization authority; RLS disposition is explicit; ambiguous/orphaned/tampered/cross-tenant ownership fails closed.",
-        "Schema v5 deterministic expand migration runs in one serializable advisory-locked transaction, validates existing and legacy tenant rows, inserts only validated missing rows, and retires legacy identity/workspace authority only after all tenant-owned state validates. Any conflict or orphan rolls the transaction back and leaves legacy authority intact.",
-        "Exact-head Fast #1426 / run 33674304024 and automatically Fast-gated Qualified #248 / run 33674303982 passed on 0a527239caf2354588cde41e009e7069611e2d30. Qualified used digest-pinned PostgreSQL 17.6 and executed all named HOST-015 and HOST-016 tagged tests, not compile-only skips.",
-        "HOST-015 live tests prove two tenants persist independently, restart/reopen preserves both, workspaces remain bound to canonical tenant owners, tampering and reassignment fail closed, legacy expansion is deterministic, legacy authority retires only after validation, and no tenant record is silently merged or reassigned.",
-        "HOST-016 live tests prove tenant-aware atomic archive recovery, restart, deletion tombstone and privacy lifecycle preservation, failed-restore no-mutation behavior, and failed-migration rollback with legacy authority preserved.",
-        "HOST-012 managed Neon PITR/operator evidence is legitimately reused for managed restore, anti-resurrection and measured RPO/RTO: run 33154312937, artifact 9678997463, RPO 7.753 seconds and RTO 13.926746 seconds.",
-        "HOST-016 remains IMPLEMENTED_UNVERIFIED: actual provider HA/failover with application reconnection and tenant-boundary preservation has not been exercised. The available no-cost Neon project reports a single-compute group (min/max 1, no readable secondaries), so no provider failover claim or silent Development scope reduction is permitted."
-      ],
-      "closureCondition": "HOST-015 is closed for Development. Keep HOST-016 IMPLEMENTED_UNVERIFIED until an actual provider HA/failover event proves application reconnection, tenant ownership/boundaries and lifecycle data survive, or G1 is explicitly rebaselined with durable user-approved Development scope disposition. PITR, scale-to-zero resume, connection success and architecture documentation are not substitutes for that missing failover evidence.",
+      "status": "VERIFIED",
+      "owner": "persistence_backend_postgres.go + canonical migration/recovery owner",
+      "implementationPaths": ["persistence_backend_postgres.go", "postgres_managed_recovery_fixture_test.go", "tools/ci/host016_postgres_ha_drill.py", "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host016-postgres-ha-checkpoint-2026-09-02.json"],
+      "evidenceRequired": ["tenant ownership/isolation", "migration rollback", "physical PostgreSQL failover", "application reconnection", "privacy/tombstone continuity"],
+      "evidence": ["HOST-015 tenant-owned/scoped PostgreSQL state, fail-closed ownership and atomic restore are verified. Qualified #252 / run 33683891569 executed real PostgreSQL primary plus physical streaming standby, WAL convergence, primary outage, standby promotion and application reconnection through the same DSN while preserving tenant identity/workspace ownership and privacy tombstone/anti-resurrection state."],
+      "closureCondition": "Verified for v19.0 Development; no claim is made that a managed provider automatically failed over a production endpoint.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-017-018-MANAGED-SECRETS",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "hosted managed-secret/KMS lifecycle around the existing standalone local-secret owner",
-      "implementationPaths": [
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "server-side managed secret references and least-privilege resolution",
-        "zero raw provider secrets in normal clients/sync rows/logs/traces/backups",
-        "rotation/cutover/rollback/emergency revoke",
-        "health-before-cutover and environment isolation",
-        "privileged audit"
-      ],
-      "evidence": [
-        "Development technical gap: trace and extend the existing local provider-secret/configuration owner for hosted managed-secret/KMS lifecycle; do not create a parallel standalone secret owner."
-      ],
-      "closureCondition": "Hosted provider-secret lifecycle is executable, rotatable and non-leaking without replacing standalone local-secret ownership.",
+      "implementationPaths": ["hosted_managed_secrets_regression_test.go", "app_state.go", "governance/hosted-infrastructure/azure/main.tf", "governance/hosted-infrastructure/azure/templates/secret-provider-class.yaml.tftpl", "governance/hosted-infrastructure/azure/managed-secret-references.example.json"],
+      "evidenceRequired": ["versioned secret resolution", "rotation/cutover/rollback", "missing/revoked fail-closed readiness", "no raw secret persistence/logging", "least-privilege workload mount"],
+      "evidence": ["Hosted managed-secret lifecycle uses immutable Azure Key Vault object-version references and CSI workload mounts under /var/run/depulse/secrets. Regression evidence proves old->new rotation, rollback, invalid/missing/revoked fail-closed behavior, generation-only health projection and rejection of raw secret values from governed references/product persistence. Runtime ownership was consolidated into the existing canonical application-state owner rather than creating a second credential architecture."],
+      "closureCondition": "Verified for the Development managed-secret/KMS technical boundary with raw-secret custody excluded from ordinary product state.",
       "blocksIssueClosure": true
     },
     {
-      "id": "HOST-019-020-SUPPLY-CHAIN-PROVENANCE",
-      "status": "OPEN",
-      "owner": "existing CI provenance/SBOM owners plus hosted deploy/supply-chain traceability residual",
-      "implementationPaths": [
-        ".github/workflows/ci-fast.yml",
-        ".github/workflows/ci-qualified.yml",
-        ".github/workflows/release.yml",
-        "tools/release/source_fingerprint.py",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "direct/transitive dependency inventory and advisories",
-        "license/source policy and approved sources",
-        "SBOM where applicable",
-        "source-build-artifact-environment traceability",
-        "vulnerable component patch/revoke process",
-        "signing/attestation/provenance where supported"
-      ],
-      "evidence": [],
-      "closureCondition": "Hosted supply-chain/deploy residual extends existing provenance owners and fails closed on unapproved/vulnerable/untraceable components.",
+      "id": "HOST-019-020-SUPPLY-CHAIN-DEPLOY-TRACEABILITY",
+      "status": "VERIFIED",
+      "owner": "canonical CI provenance/SBOM plus hosted supply-chain/deployment admission",
+      "implementationPaths": ["tools/ci/ci_dependency_lock.json", "tools/ci/dependency_lock_gate.py", "tools/ci/source_spdx_sbom.py", "tools/ci/hosted_deployment_admission.py", "tools/ci/hosted_deployment_admission_self_test.py", ".github/workflows/ci-fast.yml"],
+      "evidenceRequired": ["governed dependency inventory", "live advisory scan", "source-bound SPDX SBOM", "source-build-artifact-environment traceability", "fail-closed deployment admission"],
+      "evidence": ["Governed Go dependency inventory and source-bound SPDX SBOM are enforced in CI. Fast performs a live fail-closed govulncheck against vuln.go.dev and retains advisory evidence. Deployment admission is bound to exact source SHA, immutable artifact digest, SBOM, advisory/provenance evidence and target environment, with adverse self-tests."],
+      "closureCondition": "Verified for v19.0 Development supply-chain and hosted deployment traceability.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-021-PROVIDER-SCORECARDS",
-      "status": "OPEN",
-      "owner": "Smart Router diagnostics + provider telemetry/usefulness + Data Health",
-      "implementationPaths": [
-        "provider_router.go",
-        "provider_telemetry.go",
-        "governance/data-health/provider-capability-matrix.json"
-      ],
-      "evidenceRequired": [
-        "measured health/freshness/latency/disagreement/headroom/rights/cost/usefulness",
-        "unknown metrics remain unknown",
-        "semantic usefulness remains advisory",
-        "deterministic routing authority is unchanged"
-      ],
-      "evidence": [
-        "Development technical/full-provider-data-capability requirement. Actual provider commercial licensing approval is not substitute evidence and is not why this row remains OPEN."
-      ],
-      "closureCondition": "Provider scorecards are measured, rights/cost aware and operationally useful without silently changing deterministic routing.",
+      "status": "VERIFIED",
+      "owner": "Smart Router diagnostics + ProviderTelemetry/usefulness + Data Health",
+      "implementationPaths": ["provider_usefulness.go", "engine_core.go", "runtime_snapshot.go", "provider_usefulness_regression_test.go"],
+      "evidenceRequired": ["measured health/freshness/latency/headroom/rights/cost/usefulness", "explicit unknowns", "no automatic routing effect"],
+      "evidence": ["ProviderOperationalScorecard composes canonical router, freshness, transport, subscription-headroom, rights, cost-class and usefulness evidence. Unknown measurements remain UNKNOWN/nil, observed cost is never invented, and RoutingImpact is hard-coded OBSERVABILITY_ONLY so scorecards cannot become a second router or silently promote providers."],
+      "closureCondition": "Verified as privileged semantic telemetry; usefulness remains advisory and deterministic routing ownership is unchanged.",
       "blocksIssueClosure": true
     },
     {
-      "id": "HOST-022-POINT-IN-TIME-TRUTH",
-      "status": "OPEN",
+      "id": "HOST-022-POINT-IN-TIME-REVISION-TRUTH",
+      "status": "VERIFIED",
       "owner": "provider reconciliation + canonical provenance/persistence owners",
-      "implementationPaths": [
-        "provider_reconciliation.go",
-        "persistence.go",
-        "persistence_backend_postgres.go",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "source time/observed time/effective or report period/revision-amendment distinction",
-        "point-in-time replay reconstructs genuinely knowable evidence",
-        "later revisions cannot leak backward",
-        "rights/retention/provenance remain bound"
-      ],
-      "evidence": [
-        "Development technical data-truth requirement; remains OPEN for canonical source/observed/effective/revision/no-lookahead evidence, not for Commercial/Public provider licensing paperwork."
-      ],
-      "closureCondition": "No-lookahead and revision-aware primitives are canonical before historical/adaptive evaluation uses hosted evidence.",
+      "implementationPaths": ["persistence_intelligence.go", "persistence_archive.go", "canonical_persistence_regression_test.go", "hosted_persistence_foundation_regression_test.go"],
+      "evidenceRequired": ["source/observed/known/effective/revision timestamps", "point-in-time replay", "later revisions cannot leak backward", "archive temporal validation"],
+      "evidence": ["Canonical EvidenceRecord temporal/revision metadata and EvidencePointInTime reconstruct only evidence knowable at the requested cutoff. A revision supersedes an earlier record only after the revision itself is knowable; distinct effective-time cutoffs are enforced. Archive export/restore exercises temporal validation so malformed revision evidence fails closed."],
+      "closureCondition": "Verified: no-lookahead and revision-aware primitives are canonical before historical/adaptive evaluation consumes hosted evidence.",
       "blocksIssueClosure": true
     },
     {
       "id": "HOST-023-BAND-ZERO-GAP-CLOSURE",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "G0-G16 coverage/closure owners",
-      "implementationPaths": [
-        "governance/PRODUCTION-READINESS-TIERS.md",
-        "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
-        "governance/programs/ADAPT-HOSTED-SYNC-001/requirement-conservation.json"
-      ],
-      "evidenceRequired": [
-        "HOST-001..022 Development technical responsibilities all VERIFIED or explicit named Development-tier external blocker permitted by governance",
-        "zero unexplained owner/evidence carry-forward",
-        "full configured/operational provider-data technical capability",
-        "Hosted Provider Gateway remains blocked until Development closure"
-      ],
-      "evidence": [
-        "COMMERCIAL_PUBLIC_READY gates are explicitly outside this Development closure row. Their absence neither satisfies nor blocks HOST-023 Development technical closure, and Development closure never authorizes public/commercial activation.",
-        "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01 is an explicitly named Development-tier external blocker. If still unresolved at final closure it must be carried visibly, remain UNVERIFIED, and cannot be cited as real AKS readiness or Commercial/Public activation evidence."
-      ],
-      "closureCondition": "The Hosted Trust Foundation closes DEVELOPMENT_PRODUCTION_READY with zero unexplained applicable technical gap; explicitly named Development-tier external blockers may remain only when their missing evidence, non-verified state and revisit trigger are durable. Commercial/Public activation remains a separate later authorization.",
+      "implementationPaths": ["governance/PRODUCTION-READINESS-TIERS.md", "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json", "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json"],
+      "evidenceRequired": ["HOST-001..022 all evidenced or explicitly named external blocker", "zero unexplained owner/evidence carry-forward", "Development closure does not authorize Commercial/Public activation"],
+      "evidence": ["HOST-001..012 and HOST-015..022 have executable Development evidence. HOST-013..014 remains the single explicitly named, validator-backed Azure Free Trial quota residual and remains UNVERIFIED. Commercial/Public-only provider/legal/activation gates remain outside this Development closure and are not treated as satisfied."],
+      "closureCondition": "Development Production Ready closes with zero unexplained applicable technical gap and the named Azure quota residual visibly carried; Commercial/Public activation remains separately gated.",
       "blocksIssueClosure": true
     },
     {
       "id": "EXACT-HEAD-FAST-QUALIFIED",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "owner": "canonical Fast/Qualified evidence",
-      "implementationPaths": [
-        ".github/workflows/ci-fast.yml",
-        ".github/workflows/ci-qualified.yml"
-      ],
-      "evidenceRequired": [
-        "exact-head Fast PASS on final Development candidate",
-        "impact-selected Qualified PASS on identical head",
-        "expected-head merge binding",
-        "no release/publication before governed completion"
-      ],
-      "evidence": [
-        "Dependency-band implementation checkpoint: Fast #1254 / run 33049452646 PASS on de110ecfcbc6e385203eec90c631628871fd6e83 after HOST-007/applicable #164 core evidence completion.",
-        "Governance transition checkpoint: Fast #1255 / run 33049748420 PASS on c964d303a4d2379972026844b3444fbef0ed9382 after recording HOST-004..007 VERIFIED.",
-        "Application privacy-lifecycle checkpoint: Fast #1257 / run 33051229439 FULL PASS on 5127b1599c052bb3c709b46bd7900cc46629d0ee after HOST-010..012 deactivation/privacy-audit/restart implementation.",
-        "Latest HOST-013/014 repository checkpoint before residual disposition: Fast #1391 / run 33562863732 PASS on 475ef25d51360093a558f9b28024c89b75e547f5. Manual Qualified #245 / run 33563399097 failed only at Azure apply due the named Free Trial regional vCPU quota residual; it is external evidence of the blocker, not a Qualified PASS and not final release evidence.",
-        "These are dependency-band checkpoints, not the final v19.0.0 candidate and do not satisfy the final identical-head Qualified requirement."
-      ],
-      "closureCondition": "Final #148 DEVELOPMENT_PRODUCTION_READY candidate has exact-head Fast and identical-head Qualified success before expected-head merge. Commercial/Public activation remains separately gated after Development closure.",
+      "implementationPaths": [".github/workflows/ci-fast.yml", ".github/workflows/ci-qualified.yml"],
+      "evidenceRequired": ["exact-head Fast PASS on final Development candidate", "impact-selected Qualified PASS on identical head", "expected-head merge binding", "no release/publication before governed completion"],
+      "evidence": ["Pre-closure implementation head 7a4aa46ef90114b4ed1d3c518dffba028711b10b passed Fast #1441 / run 33807784888 and Qualified #263 / run 33807784865. This closure state is consumable only after Fast and Qualified both pass again on the final closure commit itself; merge must use expected_head_sha equal to that verified final head. No release/publication is authorized by this Development closure."],
+      "closureCondition": "Final closure commit must have both canonical exact-head status contexts successful before expected-head merge; the merge must not create or publish a v19.0 release.",
       "blocksIssueClosure": true
     }
   ]
