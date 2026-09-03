@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Render DE.PULSE HOST-013/014 Kubernetes + Istio trust resources.
+"""Render DE.PULSE hosted Kubernetes + Istio trust resources.
 
 The canonical environment policy authority is internal/hostedenv/desired_state_v1.json.
 The canonical external egress authority is governance/hosted-infrastructure/external-egress-v1.json.
-This renderer is intentionally fail-closed and contains no cloud credentials.
+HOST-017/018 workload rendering composes the version-pinned managed-secret reference
+contract without accepting or serializing secret values.
 """
 from __future__ import annotations
 
@@ -13,6 +14,14 @@ import ipaddress
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
+
+from render_managed_secrets import (
+    load_reference_manifest,
+    reference_generation,
+    required_aliases,
+    secret_provider_class_name,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 DESIRED_STATE = ROOT / "internal" / "hostedenv" / "desired_state_v1.json"
@@ -21,6 +30,7 @@ CANONICAL_ENVIRONMENTS = ("dev", "test", "stage", "prod")
 HOST_RE = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$", re.I)
 ISTIO_REVISION_RE = re.compile(r"^asm-[0-9]+-[0-9]+$")
 AZURE_CLIENT_ID_RE = re.compile(r"^[0-9a-fA-F-]{36}$")
+IMMUTABLE_IMAGE_RE = re.compile(r"^[^\s]+@sha256:[0-9a-fA-F]{64}$")
 
 
 def load_manifest() -> dict:
@@ -101,6 +111,23 @@ def q(value: str) -> str:
     return json.dumps(value)
 
 
+def validate_public_origin(value: str) -> str:
+    value = value.strip()
+    parts = urlsplit(value)
+    if (
+        parts.scheme != "https"
+        or not parts.netloc
+        or parts.username is not None
+        or parts.password is not None
+        or parts.path not in ("", "/")
+        or parts.query
+        or parts.fragment
+        or "*" in parts.netloc
+    ):
+        raise SystemExit("hosted workload public origin must be one explicit HTTPS origin")
+    return value.rstrip("/")
+
+
 def render(
     environment: str,
     hosts: list[str],
@@ -108,6 +135,9 @@ def render(
     mesh_profile: str = "portable",
     istio_revision: str | None = None,
     workload_identity_client_id: str | None = None,
+    workload_image: str | None = None,
+    public_origin: str | None = None,
+    managed_secret_reference_manifest: Path | None = None,
 ) -> str:
     manifest = load_manifest()
     if environment not in CANONICAL_ENVIRONMENTS:
@@ -121,6 +151,18 @@ def render(
             raise SystemExit("AKS managed workload identity requires a concrete Azure client ID")
     elif istio_revision or workload_identity_client_id:
         raise SystemExit("Istio revision/workload identity client ID are valid only for aks-managed rendering")
+
+    workload_requested = any(value is not None for value in (workload_image, public_origin, managed_secret_reference_manifest))
+    if workload_requested:
+        if mesh_profile != "aks-managed":
+            raise SystemExit("managed hosted workload rendering requires the aks-managed profile")
+        if not workload_image or not IMMUTABLE_IMAGE_RE.fullmatch(workload_image):
+            raise SystemExit("hosted workload image must be pinned by sha256 digest")
+        if not public_origin:
+            raise SystemExit("hosted workload rendering requires --public-origin")
+        public_origin = validate_public_origin(public_origin)
+        if managed_secret_reference_manifest is None:
+            raise SystemExit("hosted workload rendering requires --managed-secret-reference-manifest")
 
     hosts = sorted({validate_host(host) for host in hosts})
     if not hosts:
@@ -315,6 +357,132 @@ spec:
       protocol: TLS
 """,
     ]
+
+    if workload_requested:
+        references = load_reference_manifest(managed_secret_reference_manifest, environment)
+        secret_generation = reference_generation(environment, references)
+        secret_aliases = required_aliases(references)
+        provider_class = secret_provider_class_name(secret_generation)
+        workload_annotations = (
+            f"        depulse.io/desired-state-version: {q(manifest['version'])}\n"
+            f"        depulse.io/desired-state-sha256: {q(digest)}\n"
+            f"        depulse.io/secret-generation-sha256: {q(secret_generation)}"
+        )
+        docs.extend([
+            f"""apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: depulse-web
+  namespace: {namespace}
+  annotations:
+{annotations}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: depulse
+      app.kubernetes.io/component: hosted-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: depulse
+        app.kubernetes.io/component: hosted-web
+        azure.workload.identity/use: "true"
+      annotations:
+{workload_annotations}
+    spec:
+      serviceAccountName: {service_account}
+      containers:
+        - name: depulse
+          image: {q(workload_image or '')}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DEPULSE_RUNTIME_MODE
+              value: "hosted"
+            - name: DEPULSE_LISTEN_ADDR
+              value: ":8080"
+            - name: DEPULSE_TRUST_PROXY_HEADERS
+              value: "true"
+            - name: DEPULSE_PUBLIC_ORIGIN
+              value: {q(public_origin or '')}
+            - name: DEPULSE_HOSTED_ENVIRONMENT
+              value: {q(environment)}
+            - name: DEPULSE_HOSTED_DESIRED_STATE_VERSION
+              value: {q(str(manifest['version']))}
+            - name: DEPULSE_HOSTED_DESIRED_STATE_SHA256
+              value: {q(digest)}
+            - name: DEPULSE_HOSTED_ISOLATION_ID
+              value: {q(str(state['isolationId']))}
+            - name: DEPULSE_HOSTED_SERVICE_IDENTITY
+              value: {q(str(state['serviceIdentity']))}
+            - name: DEPULSE_HOSTED_INGRESS_POLICY
+              value: {q(str(state['ingressPolicy']))}
+            - name: DEPULSE_HOSTED_EGRESS_POLICY
+              value: {q(str(state['egressPolicy']))}
+            - name: DEPULSE_HOSTED_NETWORK_POLICY
+              value: {q(str(state['networkPolicy']))}
+            - name: DEPULSE_HOSTED_TLS_POLICY
+              value: {q(str(state['tlsPolicy']))}
+            - name: DEPULSE_HOSTED_INTERNAL_MTLS
+              value: "true"
+            - name: DEPULSE_HOSTED_SECRETS_DIR
+              value: "/var/run/depulse/secrets"
+            - name: DEPULSE_HOSTED_REQUIRED_SECRETS
+              value: {q(secret_aliases)}
+            - name: DEPULSE_HOSTED_SECRET_GENERATION
+              value: {q(secret_generation)}
+            - name: XDG_CONFIG_HOME
+              value: "/var/lib/depulse"
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
+          volumeMounts:
+            - name: managed-secrets
+              mountPath: /var/run/depulse/secrets
+              readOnly: true
+            - name: runtime-config
+              mountPath: /var/lib/depulse
+      volumes:
+        - name: managed-secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {provider_class}
+        - name: runtime-config
+          emptyDir: {{}}
+""",
+            f"""apiVersion: v1
+kind: Service
+metadata:
+  name: depulse-web
+  namespace: {namespace}
+  annotations:
+{annotations}
+spec:
+  selector:
+    app.kubernetes.io/name: depulse
+    app.kubernetes.io/component: hosted-web
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+""",
+        ])
     return "---\n".join(doc.rstrip() + "\n" for doc in docs)
 
 
@@ -327,6 +495,9 @@ def main() -> None:
     parser.add_argument("--mesh-profile", choices=["portable", "aks-managed"], default="portable")
     parser.add_argument("--istio-revision")
     parser.add_argument("--workload-identity-client-id")
+    parser.add_argument("--workload-image")
+    parser.add_argument("--public-origin")
+    parser.add_argument("--managed-secret-reference-manifest", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     hosts = parse_hosts(args.egress_hosts_file) if args.egress_hosts_file else canonical_egress_hosts(args.egress_inventory)
@@ -336,6 +507,9 @@ def main() -> None:
         mesh_profile=args.mesh_profile,
         istio_revision=args.istio_revision,
         workload_identity_client_id=args.workload_identity_client_id,
+        workload_image=args.workload_image,
+        public_origin=args.public_origin,
+        managed_secret_reference_manifest=args.managed_secret_reference_manifest,
     )
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")

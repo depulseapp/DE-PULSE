@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"io"
 	"log"
@@ -35,6 +36,8 @@ const (
 	providerRightsEnforcementPublicMode = "PUBLIC_PRODUCTION"
 	hostedManagedSecretsContractVersion = "v1"
 	hostedManagedSecretsDirEnv          = "DEPULSE_HOSTED_SECRETS_DIR"
+	hostedManagedSecretsRequiredEnv     = "DEPULSE_HOSTED_REQUIRED_SECRETS"
+	hostedManagedSecretGenerationEnv    = "DEPULSE_HOSTED_SECRET_GENERATION"
 	hostedManagedSecretsDefaultDir      = "/var/run/depulse/secrets"
 )
 
@@ -159,6 +162,49 @@ func hostedManagedSecretsDir() string {
 	return hostedManagedSecretsDefaultDir
 }
 
+func hostedManagedSecretGeneration() (string, bool) {
+	generation := strings.ToLower(strings.TrimSpace(os.Getenv(hostedManagedSecretGenerationEnv)))
+	if len(generation) != 64 {
+		return "", false
+	}
+	if _, err := hex.DecodeString(generation); err != nil {
+		return "", false
+	}
+	return generation, true
+}
+
+func requiredHostedManagedSecretFiles() ([]hostedManagedSecretFile, bool) {
+	raw := strings.TrimSpace(os.Getenv(hostedManagedSecretsRequiredEnv))
+	if raw == "" {
+		return nil, false
+	}
+	known := make(map[string]hostedManagedSecretFile, len(hostedManagedSecretFiles))
+	for _, spec := range hostedManagedSecretFiles {
+		known[spec.logicalName] = spec
+	}
+	seen := map[string]struct{}{}
+	required := make([]hostedManagedSecretFile, 0, len(hostedManagedSecretFiles))
+	for _, token := range strings.Split(raw, ",") {
+		name := strings.ToLower(strings.TrimSpace(token))
+		if name == "" {
+			return nil, false
+		}
+		spec, ok := known[name]
+		if !ok {
+			return nil, false
+		}
+		if _, duplicate := seen[name]; duplicate {
+			return nil, false
+		}
+		seen[name] = struct{}{}
+		required = append(required, spec)
+	}
+	if len(required) == 0 {
+		return nil, false
+	}
+	return required, true
+}
+
 func normalizeHostedManagedSecret(data []byte) string {
 	value := strings.TrimSpace(string(data))
 	value = strings.ReplaceAll(value, "\r", "")
@@ -200,39 +246,37 @@ func readHostedManagedSecrets() (Secrets, hostedManagedSecretHealth) {
 	health := hostedManagedSecretHealth{
 		ContractVersion: hostedManagedSecretsContractVersion,
 		Source:          "managed-mounted",
-		Status:          "ready",
+		Status:          "unavailable",
 	}
+	required, requiredOK := requiredHostedManagedSecretFiles()
+	generation, generationOK := hostedManagedSecretGeneration()
+	if !requiredOK || !generationOK {
+		return Secrets{}, health
+	}
+	health.Generation = generation
 	dir := hostedManagedSecretsDir()
 	info, err := os.Stat(dir)
 	if err != nil || !info.IsDir() {
-		health.Status = "unavailable"
 		return Secrets{}, health
 	}
 
 	var secrets Secrets
-	var latest time.Time
-	for _, spec := range hostedManagedSecretFiles {
+	for _, spec := range required {
 		path := filepath.Join(dir, spec.fileName)
 		data, readErr := os.ReadFile(path)
-		if os.IsNotExist(readErr) {
-			continue
-		}
 		if readErr != nil {
-			health.Status = "degraded"
-			continue
+			if !os.IsNotExist(readErr) {
+				health.Status = "degraded"
+			}
+			return Secrets{}, health
 		}
-		if value := normalizeHostedManagedSecret(data); value != "" {
-			assignHostedManagedSecret(&secrets, spec.logicalName, value)
+		value := normalizeHostedManagedSecret(data)
+		if value == "" {
+			return Secrets{}, health
 		}
-		if stat, statErr := os.Stat(path); statErr == nil && stat.ModTime().After(latest) {
-			latest = stat.ModTime()
-		}
+		assignHostedManagedSecret(&secrets, spec.logicalName, value)
 	}
-	if latest.IsZero() {
-		health.Generation = "empty"
-	} else {
-		health.Generation = latest.UTC().Format(time.RFC3339Nano)
-	}
+	health.Status = "ready"
 	return secrets, health
 }
 
@@ -311,6 +355,13 @@ func hostedManagedSecretBoundary(next http.Handler) http.Handler {
 			w.WriteHeader(status)
 			_ = json.NewEncoder(w).Encode(health)
 			return
+		}
+		if r.URL.Path == "/api/ready" {
+			_, health := readHostedManagedSecrets()
+			if health.Status != "ready" {
+				writeJSON(w, http.StatusServiceUnavailable, map[string]any{"ok": false, "managedSecrets": health})
+				return
+			}
 		}
 		if r.URL.Path == "/api/settings/clear-secret" {
 			writeError(w, http.StatusConflict, "Hosted credentials are managed by the server secret lifecycle and cannot be cleared through product state.")
