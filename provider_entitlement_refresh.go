@@ -13,8 +13,13 @@ var providerConfigurationObservations sync.Map // map[*Engine]map[string][32]byt
 
 func providerConfigurationSnapshot(settings Settings, secrets Secrets) map[string][32]byte {
 	out := map[string][32]byte{}
+	registry := adaptiveProviderRegistrySnapshot(settings, secrets)
+	registered := make(map[string]bool, len(registry.Providers))
+	for _, manifest := range registry.Providers {
+		registered[manifest.ProviderID] = true
+	}
 	for _, reg := range providerRegistrations() {
-		if reg.ConfigurationFingerprint == nil {
+		if !registered[providerKey(reg.Name)] || reg.ConfigurationFingerprint == nil {
 			continue
 		}
 		out[reg.Name] = reg.ConfigurationFingerprint(settings, secrets)
@@ -121,9 +126,20 @@ func (e *Engine) forceProviderEntitlementRevalidation(settings Settings, secrets
 	}
 	providerConfigurationObservations.Store(e, providerConfigurationSnapshot(settings, secrets))
 	changed := map[string]bool{}
-	for _, reg := range providerRegistrations() {
-		if reg.Configured != nil && reg.Configured(settings, secrets) {
-			changed[providerKey(reg.Name)] = true
+	registry := adaptiveProviderRegistrySnapshot(settings, secrets)
+	for _, manifest := range registry.Providers {
+		if !manifest.Configured {
+			continue
+		}
+		consistent := true
+		for _, route := range manifest.Routes {
+			if adaptiveProviderRegistryCapabilityState(manifest.Name, route.Dataset, settings, secrets) == providerCapabilityNotConfigured {
+				consistent = false
+				break
+			}
+		}
+		if consistent {
+			changed[manifest.ProviderID] = true
 		}
 	}
 	return e.reopenProviderEntitlementStates(changed, "manual capability recheck requested; entitlement requires fresh evidence")
