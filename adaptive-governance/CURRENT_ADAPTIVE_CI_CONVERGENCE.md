@@ -8,15 +8,14 @@
 Current projected identity:
 
 - Certified Stable: `v18.10.0`
-- Active work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`
-- Active issue / PR: #148 / PR #149
-- Active branch: `adapt-hosted-trust-foundation-001`
-- Closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
-- Active external residual: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`
-- Closure gap: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`
-- Residual waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`
-- Supporting Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`
+- Active version: `v19.1.0` Development
+- Active work slice: `ADAPT-V19-1-CANONICAL-FOUNDATION-001`
+- Primary active issue: #153
+- Active branch: `v19.1.0-development`
+- Closure ledger: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/closure.json`
+- Carried residual: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01` / `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`
+- Residual evidence: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`
 
-The Azure residual is BLOCKED_EXTERNAL / UNVERIFIED external infrastructure evidence and does not block HOST-015+ Development work while the scope-limited waiver validates; it is not a Qualified PASS or Commercial/Public activation proof.
+HOST-013/014 remains BLOCKED_EXTERNAL / UNVERIFIED and is not a v19.1 closure waiver. Fast/Qualified status must always be read from live GitHub on the exact current head.
 
-Fast, Qualified and Release status is read from live GitHub on the exact head. Do not add a next action or duplicate workflow policy here.
+Do not add a next action or duplicate workflow policy here.
