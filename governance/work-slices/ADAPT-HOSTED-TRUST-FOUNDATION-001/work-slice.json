@@ -6,7 +6,7 @@
   "parentProgramScopeId": "ADAPT-HOSTED-SYNC-001",
   "type": "PRODUCT_ARCHITECTURE_FOUNDATION",
   "subtype": "HOSTED_TRUST_TENANT_RIGHTS_PERSISTENCE_SECURITY_FOUNDATION",
-  "status": "BUILDING",
+  "status": "COMPLETE",
   "publicProductVersion": "19.0.0",
   "versionStrategy": "one coherent v19.0.0 Hosted Trust & Identity Foundation build; HOST rows and commits are requirement/evidence traceability, not separate public versions or planning packets",
   "stableProductVersionAtStart": "18.10.0",
@@ -15,8 +15,15 @@
   "baselineBuildId": "v18.10.0-stable-20260825",
   "baselineMainSha": "7c8d0c6614ff4e8c14fc1fabb6aeadcf28a9e92c",
   "branch": "adapt-hosted-trust-foundation-001",
+  "mergedPullRequest": 149,
+  "mergedCommitSha": "ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796",
+  "qualifiedCandidateSha": "de0d3f165f66935ee0ef4b638f7dc7c1840710fc",
+  "fastRunId": 33810591291,
+  "fastRunNumber": 1449,
+  "qualifiedRunId": 33810591277,
+  "qualifiedRunNumber": 271,
   "productBehaviorChange": true,
-  "blocksNextProductCapability": true,
+  "blocksNextProductCapability": false,
   "targetRequirements": "HOST-001..HOST-023",
   "g1ScopeLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json",
   "closureLedger": "governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json",
@@ -52,7 +59,23 @@
     "POSTGRES_FOUNDATION_EXTEND_NOT_REPLACE",
     "NO_PARALLEL_CANONICAL_SUBSYSTEMS"
   ],
-  "deliveryRule": "one development branch -> one Draft PR -> dependency-correct commits/evidence -> coherent candidate batching -> exact-head Fast per coherent changed candidate -> risk-based Qualified checkpoints -> G10 whole-version closure -> merge/release only when governed",
+  "completionEvidence": [
+    "candidate de0d3f165f66935ee0ef4b638f7dc7c1840710fc",
+    "Fast #1449 / run 33810591291 PASS on exact candidate",
+    "Qualified #271 / run 33810591277 PASS on identical candidate",
+    "PR #149 expected-head merge ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796",
+    "issue #148 closed after merge"
+  ],
+  "carriedResidual": {
+    "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+    "gapId": "HOST-013-014-ENVIRONMENT-SERVICE-TRUST",
+    "status": "BLOCKED_EXTERNAL_UNVERIFIED",
+    "requirementsRemainUnverified": true,
+    "developmentDependencyAdvancementOnly": true,
+    "commercialPublicActivationAllowed": false,
+    "paidUpgradeRequiredByGovernance": false
+  },
   "zeroMissAuditState": "DEVELOPMENT_PRODUCTION_READY_ZERO_UNEXPLAINED_GAPS_WITH_HOST013_014_NAMED_AZURE_EXTERNAL_RESIDUAL",
-  "nextAction": "Require Fast and Qualified PASS on the final closure candidate, then mark PR #149 ready and merge only with expected_head_sha equal to that verified head. Until that merge succeeds this active product slice remains BUILDING, the product reservation remains IN_PROGRESS, and v19.1/#153 stays blocked. Close #148 only after merge; do not publish/release v19.0; then reconcile completed v19.0 state as part of the governed v19.1 transition."
+  "completionDisposition": "COMPLETE_DEVELOPMENT_NO_V19_0_STABLE_RELEASE_HOST013_014_RESIDUAL_CARRIED",
+  "releaseBoundary": "v19.0 Development closure was merged. No v19.0 tag, Stable publication or Commercial/Public activation was created; HOST-013/014 remains explicitly UNVERIFIED."
 }
