@@ -204,6 +204,7 @@ func NewApplication() (*Application, error) {
 		return nil, fmt.Errorf("persistence export: %w", err)
 	}
 	app.engine = NewEngine(app)
+	app.startHostedManagedSecretRefresh()
 	return app, nil
 }
 
@@ -222,7 +223,9 @@ func (a *Application) load() {
 			a.state = mergeState(st)
 		}
 	}
-	if data, err := os.ReadFile(a.secretsPath()); err == nil {
+	if isHostedRuntime() {
+		a.refreshHostedManagedSecretsLocked()
+	} else if data, err := os.ReadFile(a.secretsPath()); err == nil {
 		_ = json.Unmarshal(data, &a.secrets)
 	}
 
@@ -388,12 +391,16 @@ func (a *Application) saveLocked() error {
 	if err := atomicWrite(a.statePath(), data, 0600); err != nil {
 		return err
 	}
-	secretData, err := json.MarshalIndent(a.secrets, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err := atomicWrite(a.secretsPath(), secretData, 0600); err != nil {
-		return err
+	if isHostedRuntime() {
+		a.refreshHostedManagedSecretsLocked()
+	} else {
+		secretData, err := json.MarshalIndent(a.secrets, "", "  ")
+		if err != nil {
+			return err
+		}
+		if err := atomicWrite(a.secretsPath(), secretData, 0600); err != nil {
+			return err
+		}
 	}
 	if a.persistence != nil {
 		a.persistence.EnqueueSymbols(symbolRegistryRecords(a.processingStateLocked(), time.Now()))
@@ -410,6 +417,9 @@ func atomicWrite(path string, data []byte, mode fs.FileMode) error {
 }
 
 func keyHint(v string) string {
+	if isHostedRuntime() {
+		return ""
+	}
 	v = strings.TrimSpace(v)
 	if len(v) < 7 {
 		return ""
