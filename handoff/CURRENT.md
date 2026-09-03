@@ -2,53 +2,81 @@
 
 **SUPERSEDES ALL PRIOR CHAT HANDOFFS**
 
-**Canonical machine state:** `governance/current-state.json`  
-**Certified Stable:** `v18.10.0`  
-**Published Stable candidate:** `584e9e0ce91ec08e08cfd52c7cf60392ab74dd12`  
-**Published Stable qualified source:** `ec39319c86dee5e5976751abc42bc96a402a6d46`  
-**Published Stable source fingerprint:** `0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037`  
-**Published Stable build ID:** `v18.10.0-stable-20260825`  
-**Canonical release run:** #41 / `32917159547` — G11–G16 PASS / no-rebuild publication  
-**Final v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` — COMPLETE  
-**T10:** #123 — COMPLETE / VERIFIED  
-**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001` / `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`  
-**Post-v18 overlap audit:** #145 / PR #146 — **PASS**  
-**Audit qualified source:** `cabf476b9cb26102a36e5a8913b61c86bc357854`  
-**Audit Fast:** #1122 / `32925719203` — PASS  
-**Audit Qualified:** #226 / `32925800749` — PASS, Ubuntu/macOS/Windows portability PASS  
-**Audit merge:** `f5364888fad81114d1372d0d6d4975b282f83874`  
-**Future hosted umbrella:** #66 / `ADAPT-HOSTED-SYNC-001` — `PLANNED_UNSTARTED`; **v19 G1 is permitted but not started**.
+## Stable authority
 
-## Final v18.10.0 authority
+- **Certified Stable:** `v18.10.0` — immutable.
+- Stable candidate SHA: `584e9e0ce91ec08e08cfd52c7cf60392ab74dd12`.
+- Stable source fingerprint: `0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037`.
+- Stable build ID: `v18.10.0-stable-20260825`.
+- Do not rebuild, republish, overwrite or reinterpret v18.10.0 from v19 work.
 
-v18.10.0 remains the immutable **10/10 Future-Proof Final v18 Closure**. T1–T10 are complete with zero unexplained P0/P1 gaps. The effective shipped-v18 inventory remains exactly 180 responsibilities with durable executable regression ownership. No post-v18 audit/rebaseline change rebuilt, republished, overwrote or redefined the Stable candidate or binaries.
+## v19.0 Hosted Trust & Identity Foundation
 
-## Post-v18 audit authority
+- Canonical machine state: `governance/current-state.json`.
+- Work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`.
+- Issue: #148.
+- PR: #149.
+- Branch: `adapt-hosted-trust-foundation-001`.
+- Target: **DEVELOPMENT_PRODUCTION_READY** only.
+- Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
+- Work-slice contract: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`.
+- G1 scope: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json`.
+- GitHub objects and executable evidence outrank this handoff. Always fetch the live PR head and Actions before writing or merging.
 
-The mandatory source-overlap/residual audit against #66 is complete. Every conserved `HOST-001..HOST-072` requirement has an inherited/extended/residual/process disposition and `unexplainedOverlapCount = 0`. The durable audit owners are:
-- `governance/programs/ADAPT-HOSTED-SYNC-001/post-v18-source-overlap-audit.json`
-- `governance/programs/ADAPT-HOSTED-SYNC-001/post-v18-source-overlap-audit.md`
-- `adaptive-governance/ADAPTIVE_CI_V19_REBASELINE.md`
-- the four CURRENT adaptive projections.
+## Closure truth
 
-The audit permanently carries forward these lessons: requirements are traceability rather than forced micro-releases; evidence ownership is bound during implementation; frozen v18 history is conserved rather than multiplied into ever-growing CI chains; PostgreSQL is extended rather than replaced; hosted multi-tenant adverse security is mandatory; point-in-time/no-lookahead truth precedes adaptive evaluation; decision usefulness/outcome calibration becomes first-class where applicable; halt/LULD/volatility-pause semantics must be explicitly resolved; hosted production telemetry complements deterministic CI SLOs.
+The v19.0 technical bands are closed for Development as follows:
 
-## Permanent architecture boundaries
+- **HOST-001..003 VERIFIED** — provider-rights provenance/control plane; Development remains audit-only and configured-provider capable. Actual provider-specific public/commercial approval is a separate later activation gate.
+- **HOST-004..007 VERIFIED** — tenant/account isolation, capability-scoped RBAC, device/session lifecycle and production-wired Ed25519 MFA-class proof. #164 remains open only for later v19.3 client/UX parity unless a new core security defect appears.
+- **HOST-008..009 VERIFIED** — product entitlement/quota remains separate from RBAC/provider rights and fails closed before protected projection.
+- **HOST-010..012 VERIFIED** — privacy lifecycle plus real Neon PITR recovery, deletion replay, anti-resurrection, RPO 7.753s and RTO 13.926746s.
+- **HOST-013..014 BLOCKED_EXTERNAL / UNVERIFIED** — single named Development residual. Residual ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`; gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`; canonical waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`. Azure Free Trial Canada Central quota was 4/4 with 0 vCPU remaining and 2 additional vCPU required for the governed 2->3 AKS system-pool scale. The waiver never verifies live AKS readiness, never weakens architecture/security, never requires paid upgrade, and never authorizes Commercial/Public activation.
+- **HOST-015..016 VERIFIED** — tenant-owned/scoped PostgreSQL state plus real physical streaming failover. Qualified #252 / run `33683891569` proved primary outage, standby promotion, application reconnection through the same DSN and preservation of tenant/workspace/privacy state. This does not claim managed-provider automatic production endpoint failover.
+- **HOST-017..018 VERIFIED** — immutable Key Vault object-version references, CSI workload mount, rotation/rollback, missing/revoked fail-closed behavior, generation-only health and no raw hosted-secret persistence in ordinary product state.
+- **HOST-019..020 VERIFIED** — governed dependency inventory, source-bound SPDX SBOM, live fail-closed `govulncheck`, and deployment admission bound to source SHA, immutable artifact digest, SBOM, advisory/provenance evidence and target environment.
+- **HOST-021 VERIFIED** — measured provider/Data Health scorecards preserve unknowns and are `OBSERVABILITY_ONLY`; they do not become a second router or automatically promote providers.
+- **HOST-022 VERIFIED** — canonical known/effective/revision-time evidence and point-in-time replay prevent later revisions/future evidence from leaking backward into historical decisions.
+- **HOST-023 VERIFIED FOR DEVELOPMENT** — zero unexplained applicable technical gaps; the named HOST-013/014 Azure quota residual remains visibly UNVERIFIED. Commercial/Public activation remains separately gated.
 
-U.S. Equities Processing only; No Execution; Smart Provider Router v2 remains sole provider routing/admission authority; direct SEC/EDGAR remains Form 4 authority; canonical Data Health/freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners remain authoritative; GLD/SLV/USO remain actionable tradable exceptions; no automatic provider lifecycle promotion; no parallel routing/health/cache/persistence/reconciliation/lifecycle subsystem. macOS Apple Silicon + Windows x64 remain required native targets; Linux is CI/test only; hosted Web is v19 scope.
+## Final v19.0 merge gate
 
-## Portable continuation
+The implementation head immediately before closure reconciliation was `7a4aa46ef90114b4ed1d3c518dffba028711b10b`; Fast #1441 / run `33807784888` and Qualified #263 / run `33807784865` both passed on that exact head.
 
-GitHub remains the source of truth. `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`, this handoff, `governance/current-state.json`, immutable Stable evidence, the #66 conservation ledger and `tools/ci/adaptive_resume_gate.py` are the vendor-neutral continuation owners. A new ChatGPT account, Codex, Claude or human developer must fetch live GitHub state first; old chat memory is not required.
+Closure reconciliation changes governance/handoff files, so those runs are not the final merge authority. Before merging PR #149:
+
+1. Fetch the live PR #149 head after the final reconciliation commit.
+2. Require **Fast and Qualified both PASS on that identical final head**.
+3. Mark the Draft PR ready only after those exact-head checks pass.
+4. Merge with `expected_head_sha` equal to that verified final head.
+5. Do **not** create or publish a v19.0 release/tag/build from this closure.
+6. Close #148 only after the expected-head merge succeeds.
 
 ## Exactly one next action
 
-Reserve the first coherent v19 G1 **Hosted Trust Foundation** work slice under #66. Before implementation, map the selected HOST rows to exact existing canonical owners/justified residuals, evidence owners, hosted adverse-security expectations, point-in-time semantics and PostgreSQL activation boundaries. Do not create one work slice or release per HOST row.
+**HOST-023 final Development closure:** certify the live PR #149 head with canonical exact-head Fast and Qualified, then perform only the expected-head merge/issue-closure sequence above. Until that merge succeeds, v19.1/#153 remains blocked and this work slice remains active.
+
+## Next governed transition
+
+Only after the v19.0 expected-head merge and #148 closure may v19.1 begin. The next roadmap target is #153 / Adaptive Provider Registry & Market Data work. At that transition, re-fetch live `main`, #153 and the current roadmap/build-plan authority before creating the v19.1 branch/PR; do not reuse the v19.0 branch.
+
+The v19.1 transition must preserve these permanent boundaries:
+
+- U.S. Equities Processing only; GLD/SLV/USO remain actionable tradable exceptions.
+- No Execution.
+- Smart Provider Router v2 remains the sole general routing/admission owner.
+- Adaptive Provider Registry may register/project capabilities but never becomes a second Router.
+- Direct SEC/EDGAR remains the governed filing/Form 4 authority.
+- Extend canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners; never create parallel canonical owners.
+- No hidden automatic provider lifecycle/authority promotion.
+- Point-in-time/no-lookahead truth precedes adaptive learning.
+- Development provider-rights mode remains audit-only; Commercial/Public enforcement/authorization is separate.
+- Preserve the named HOST-013/014 Azure residual until real eligible managed-AKS evidence is later available.
+- Keep v18.10.0 Stable immutable.
 
 ## Resume rule
 
-1. Fetch live `main`, remaining branches, issue #66, `handoff/CURRENT.md`, `governance/current-state.json`, current Stable tag/release and the post-v18 audit evidence before modifying anything.
-2. Read the AI-assistant portability contract, CI-efficiency/rebaseline contracts, #66 requirement-conservation ledger and executable continuity/conservation gates.
-3. GitHub objects and executable evidence outrank prose and chat memory.
-4. Preserve v18.10.0 Stable immutability.
-5. v19 G1 is permitted but must be explicitly reserved as one coherent governed work slice before product implementation begins.
+1. Fetch live `main`, PR #149/head, issue #148 and Actions first.
+2. If PR #149 is not yet merged, require exact-head Fast + Qualified and perform only the expected-head v19.0 merge/issue closure sequence above.
+3. If PR #149 is already merged and #148 is closed, re-fetch #153 and the current roadmap/build-plan/current-state authority, then begin the governed v19.1 transition on a new v19.1 branch/PR.
+4. Never treat the HOST-013/014 waiver as live infrastructure proof or public/commercial authorization.

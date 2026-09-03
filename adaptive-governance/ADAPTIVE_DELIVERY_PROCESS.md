@@ -1,406 +1,184 @@
 # DE.PULSE — Adaptive Delivery Process
 
-**Status:** ACTIVE / GOVERNED  
-**Authority:** `governance/ADAPTIVE-OPERATING-CONTRACT.md` and the certified immutable RC. This file defines efficient trustworthy delivery inside G13–G16.
+**Status:** PERMANENT DELIVERY CONTRACT / AUDIT-REBASELINED  
+**Authority:** `governance/ADAPTIVE-OPERATING-CONTRACT.md` + immutable candidate evidence  
+**Live state:** `governance/current-state.json` + active closure ledger + `handoff/CURRENT.md`
 
-Delivery principle:
+Delivery flow:
 
-**certified source → independent package lanes → actual artifact audit → assurance → promotion → user delivery → G16 learning.**
+`qualified source -> immutable RC -> native/Web build -> provenance/SBOM -> actual artifact/runtime audit -> signing/notarization -> release assurance -> authorized promotion -> health checks -> G16 handoff`
 
-G0–G16 remains permanent. No delivery workflow may create G17+.
+## 1. Delivery truth
 
----
+A source test does not prove a package, installer, update, hosted deployment or user workflow. Delivery claims bind to the exact source fingerprint, toolchain, artifact SHA, configuration, migration state, platform and test evidence.
 
-## 1. Delivery Resume Reconciliation
+Historical Stable tags, artifacts and provenance are immutable. A failed TEST/RC cannot overwrite or destabilize the known-good Stable installation. Publication uses certified artifacts without rebuilding them.
 
-When delivery resumes after interruption:
+## 2. Version-oriented delivery
 
-**read immutable RC identity → inspect actual workflow/artifact/release state → verify package hashes/provenance → preserve unchanged PASS evidence → resume only incomplete/affected lanes.**
+- one coherent development branch/PR per version unless explicitly superseded;
+- exact-head Fast for the coherent development candidate;
+- impact-selected exact-head Qualified at material risk boundaries and G10;
+- Release workflow only for an actual G11–G16 candidate;
+- related small changes may share a version; heavy/high-risk behavior gets a real version split;
+- commits, issue rows, audit findings and test cases remain internal traceability—not pseudo-releases;
+- obsolete runs may be cancelled/superseded, but evidence from a different head is never reused as current.
 
-Never assume a failed/stopped conversation or wrapper means nothing was produced. Inspect durable GitHub objects first.
+The canonical workflow families remain Fast, Qualified and Release. Fast never dispatches Release.
 
-Never duplicate tags/releases/assets without checking existing state.
+## 3. Audit closure at delivery
 
----
+A version is not delivery-complete until every applicable audit finding/risk, 5/5 row, surface disposition, ADR and compatibility migration is reconciled against real evidence.
 
-## 2. Exact-artifact evidence inheritance
+Where applicable prove:
 
-Delivery evidence is reusable only when its relevant:
-- immutable RC/source identity;
-- package/artifact identity/hash;
-- packaging/toolchain contract;
-- runtime audit definition;
-- platform assumptions
+- server-owned deterministic policy and no client truth fork;
+- versioned symbol/evidence/event/delta contracts;
+- one Opportunity identity/lifecycle across detectors, Discovery, Watchlist, Alerts, Research and Desks;
+- Watchlist as selected-universe projection with no duplicate scanner/scorer/provider loop;
+- frozen-as-of Decision Brief lineage from the transition that caused attention;
+- point-in-time/vintage/revision/raw-adjusted/censoring truth;
+- adaptive selection-bias controls and deterministic fallback;
+- tenant persistence/outbox/isolation/conflicts/tombstones/retention and real recovery;
+- managed/OS secrets, audit, signed updates and package trust;
+- old-client compatibility, deprecation and forced-upgrade behavior;
+- offline/last-known cache truth;
+- alert causal dedupe, delivery, quiet-hours and acknowledgement;
+- provider correlation/revision/rights/freshness truth;
+- SLO, runbook, recovery and operational ownership.
 
-remain equivalent.
+Documentation or a feature happy path cannot satisfy these requirements.
 
-If one platform is PASS and the other fails/interruption occurs, preserve the PASS platform when the exact RC/package identity is unchanged.
+## 4. Compatibility-first delivery
 
-Metadata/checkpoint/documentation commits that do not alter immutable RC/package/test contract do not justify rebuilding native artifacts or rerunning full G12.
+Authority migration is delivered only when evidence proves:
 
----
+`old behavior characterized -> new owner present -> dual/shadow comparison -> consumers migrated -> parity/approved improvement -> old authority retired -> rollback/regression retained`
 
-## 3. G13 — Native Packaging / Provenance
+This applies to renderer calculations, `RuntimeSnapshot`, Radar/Discovery state, Watchlists/workspaces, full-snapshot SSE, provider direct paths, identity/session and persistence schemas.
 
-Build required native artifacts from the certified immutable RC.
+Golden vectors must distinguish known defects from intended behavior. Existing client/capability loss is prohibited unless an explicit decision approves removal and migration/rollback is clear.
 
-Required current platform truth:
-- macOS Apple Silicon — independent package/provenance lane;
-- Windows x64 — independent package/provenance lane.
+## 5. Provider and Data Health delivery
 
-Share safe immutable setup/evidence, but do not couple platform outcomes unnecessarily.
+Provider delivery conserves #80/#81/#82/#83/#78/#84 and the canonical provider matrix/SLO/fetch-path contracts.
 
-Each artifact records source/RC identity, package identity/hash and provenance needed by G14/G15.
+Prove applicable:
 
----
+- Smart Provider Router v2 remains sole general routing/admission owner;
+- SEC/EDGAR and other direct authorities remain protected;
+- Registry adapters self-register without duplicating Router/health/cache/persistence/subscription/lifecycle/state;
+- capability, entitlement, freshness, history, quota, cost and serving reason are truthful;
+- Settings/Maintenance/Data Health agree on configured/eligible/serving/fallback/recovery states;
+- delayed data is not represented as live;
+- outage/auth/rate-limit/stale/malformed/downgrade/recovery behavior is scoped and non-flapping;
+- provider agreement does not overstate independent corroboration;
+- corrected facts preserve revision/supersedes lineage;
+- rights coordinates remain distinct from credentials and technical reachability;
+- required consumers receive canonical routed state rather than page-specific fetches;
+- secrets never leak into clients, logs, telemetry, fixtures, artifacts or GitHub evidence.
 
-## 4. G14 — Actual Artifact Runtime Audit
+A provider Test button proves connectivity only, never implementation or Commercial/Public rights.
 
-Audit the **actual packaged artifact**, not merely source tests.
+## 6. Adaptive and AI delivery
 
-Verify applicable:
-- launch/run behavior;
-- runtime/release identity;
-- persistence/migration/restart behavior;
-- configuration;
-- critical user flows;
-- role/capability behavior;
-- data/freshness/degradation truth;
-- packaging integrity;
-- platform-specific behavior;
-- no execution capability.
+Learned production influence requires point-in-time outcomes, registered feature/model/policy versions, time-split evaluation, sample/uncertainty gates, shadow/champion-challenger comparison, drift/subgroup checks, explicit approval, bounded rollout and rollback thresholds.
 
-Platform runtime evidence is independent. One platform cannot inherit the other's platform-specific PASS.
+AI/LLM/agent delivery proves rights filtering, evidence-ID grounding, contradiction/uncertainty preservation, prompt-injection resistance, source isolation, audit and deterministic non-AI operation. LLM output cannot overwrite canonical prices, indicators, routing, rights, lifecycle or trade-plan geometry.
 
----
+SHADOW never silently becomes production.
 
-## 5. G15 — Release Assurance / Promotion
+## 7. Database, privacy and migration delivery
 
-G15 consumes the complete authoritative evidence graph:
-- immutable RC/source provenance;
-- G12 certification;
-- required G13/G14 platform results;
-- security/data-rights/reliability/performance closure where applicable;
-- rollback/reproducibility truth;
-- final release identity.
+Applicable delivery evidence includes:
 
-Promotion is allowed only when required evidence is complete and trustworthy.
+- expand/contract migration and backward/forward compatibility;
+- tenant-key/isolation/RLS disposition and cross-tenant denial;
+- transactional outbox/retry/idempotency and conflict/tombstone semantics;
+- indexed/bounded query and retention behavior;
+- restart, rollback and partial-outage reconciliation;
+- real managed backup, PITR, restore/failover and measured RPO/RTO when claimed;
+- privacy export/deactivation/deletion and backup-restore anti-resurrection;
+- security/audit retention separated from personal-data retention;
+- migration dry run against representative data and downgrade/old-client behavior.
 
-Generate final artifact/hash manifest only after final contents are immutable.
+Schema success on an empty local SQLite database is insufficient for hosted or upgrade claims.
 
----
+## 8. Cross-platform delivery
 
-## 6. User Delivery completion invariant
+Shared capability is complete only when every REQUIRED client is equivalent in domain meaning, authentication/roles, rights, freshness/provenance, intelligence conclusions and durable state.
 
-A Stable native release is `READY` when required permanent certified assets exist, but `DELIVERED` only when the user-facing handoff surfaces the required runnable assets and provenance/hash status.
+### macOS Apple Silicon
 
-Concise release status:
+- native artifact built from the certified source;
+- Developer ID signing, hardened runtime, notarization and stapling when public distribution is targeted;
+- installer/upgrade/rollback and local-data migration tested;
+- Keychain-backed credentials and redacted crash diagnostics;
+- actual packaged launch and critical workflows audited.
 
-**Code | G0–G12 | macOS G13/G14 | Windows G13/G14 | G15 | G16 | User Delivery**
+### Windows x64
 
-Routine recovery/delivery should require no manual user work except approved external blockers.
+- native artifact built from the certified source;
+- trusted Authenticode signing and installer/update strategy when public distribution is targeted;
+- install/upgrade/uninstall/rollback and data migration tested;
+- Windows credential-vault storage and redacted diagnostics;
+- actual packaged launch and critical workflows audited.
 
----
+### Web
 
-## 7. Delivery AIPLC
+- deployed versioned API/event schema, OIDC/session/CSRF/reauth and tenant isolation tested;
+- CSP, secure cookies/tokens, cache/privacy behavior and browser compatibility verified;
+- streaming reconnect/backpressure/stale-state behavior verified;
+- accessibility and critical user workflows tested against the deployed environment;
+- no provider secret reaches browser state.
 
-A meaningful packaging/runtime/delivery event runs a concise Delta AIPLC for the affected delivery responsibility.
+Desktop may keep encrypted authorized last-known data but must label offline/stale truth. Platform-specific mechanics may differ; domain decisions may not.
 
-Ask:
-- what actually failed or cost unnecessary work?
-- was it product, packaging, runtime, CI harness, infra, publishing, provenance or user-delivery logic?
-- what is the root cause?
-- what can be reused?
-- what prevention makes recurrence less likely?
-- can the fix remain platform/lane-scoped?
+## 9. G13–G16 delivery gates
 
-Every material delivery challenge produces:
-1. immediate fix/truthful disposition;
-2. reusable prevention.
+### G13 — Native Packaging & Provenance
 
-Do not rerun unrelated platforms/lanes merely to generate another report.
+Build all required artifacts from frozen source. Record source fingerprint, dependency lock/toolchain, SBOM/provenance, artifact identity and reproducibility inputs.
 
----
+### G14 — Actual Artifact Runtime Audit
 
-## 8. Role-aware delivery invariant
+Install/launch the real artifact or deploy the real candidate. Verify identity, configuration, auth, migration/persistence/restart, provider degradation/recovery, core intelligence, accessibility and No Execution. Never fabricate unavailable native/runtime evidence.
 
-Before G15 for affected scope, actual certified packages must prove:
-- authorized OWNER/SUPER_OWNER composition;
-- explicitly delegated ADMIN capability boundaries;
-- limited ADMIN restrictions;
-- USER/DEMO no implementation machinery/privileged payloads;
-- frontend/backend authorization agreement;
-- direct unauthorized route/API denial;
-- natural layout reflow after suppressed content;
-- role-invariant protected market logic.
+### G15 — Release Assurance & Promotion
 
-Use fresh + equivalence-bound inherited coverage from G9/G10/G12. Do not brute-force unchanged role×surface×viewport combinations again without a dependency reason.
+Confirm exact-artifact checks, signing/notarization, rollback, schema safeguards, release notes, support/runbooks, security/rights status and promotion authorization. Generate final hashes/manifests last. Commercial/Public activation remains separate.
 
----
+### G16 — Adaptive Retrospective & Handoff
 
-## 9. Functionality Utility delivery invariant
+Aggregate build AIPLC, CI failures, defects, platform/runtime evidence, provider utility/cost, data freshness, alert/intelligence outcomes, UX observations and operational incidents. Convert learning into canonical prevention, named future work or an evidence-backed rejection. Reconcile machine state and leave exactly one next action.
 
-A release is not delivery-complete if it ships working but unnecessary/unintegrated machinery.
+## 10. Commercial/Public boundary
 
-Certified evidence must show applicable changed functionality has:
-- purpose/consumer;
-- canonical owner;
-- reused/consolidated acquisition/computation where practical;
-- relevant correlation;
-- appropriate freshness/materiality/retention/governance;
-- one deep-evidence home with concise contextual reuse elsewhere;
-- justified user-facing prominence/tab placement;
-- obsolete/superseded paths retired or explicitly carried forward.
+Development Production Ready may prove technical security, persistence, provider-rights enforcement, cross-platform behavior, signing/update capability and operations. It does not grant provider redistribution rights, approve public-user legal/compliance, enable subscriptions or authorize commercial activation.
 
-G10 full coverage reconciliation remains the pre-freeze completeness boundary.
+Commercial/Public Ready requires external provider-specific rights evidence, public privacy/legal/support/compliance, commercial controls and an explicit Owner activation decision. Public-serving paths fail closed where required rights are absent or expired.
 
----
+## 11. Scale and operations acceptance
 
-## 10. Shared Symbol Intelligence delivery invariant
+Delivery evidence must match the promised scale:
 
-For releases affecting multi-user symbol demand, provider acquisition, Scanner/Radar, preparation/event processing, canonical state, AI synthesis or hosted scale, delivery evidence must prove:
-- equivalent canonical work is shared across compatible consumers;
-- per-user workspaces do not create duplicate market pipelines;
-- in-flight work coalesces where practical;
-- dynamic attention/backpressure protects high-value work;
-- private/tenant/rights/entitlement partitions remain isolated;
-- overlapping user cost scales primarily with unique canonical demand;
-- no unauthorized cross-user leakage.
+- around 100 users: lawful serving, user-scoped deltas, managed secrets, signed beta, privacy/support runbooks;
+- around 1,000 users: shared ingestion, tenant-normalized DB, outbox/workers, quotas/cost budgets and durable alert fanout;
+- around 10,000 users: measured partition/retention/queue/DB-hotspot behavior, SLO/error budgets, unbiased adaptive sampling and sustainable on-call ownership.
 
-Use the material subset of the shared-efficiency scorecard appropriate to the release. Full realistic overlapping-demand closure is mandatory at v18.5.
+Do not adopt Kafka, Kubernetes or microservices merely because a future count is large. Postgres + outbox + stateless API/workers remains the default until measurements justify more.
 
----
+## 12. Post-release verification and rollback
 
-## 11. v18.2 delivery closure
+After authorized promotion:
 
-v18.2 cannot promote based on governance documents alone.
+- verify published hashes/signatures and release identity;
+- perform bounded install/deploy smoke and health checks;
+- monitor crash, stale-data, provider, DB, queue, alert and migration health;
+- stop rollout or roll back on predefined thresholds;
+- preserve failed-candidate evidence without contaminating Stable;
+- record incidents and prevention through AIPLC/G16.
 
-Before promotion, prove applicable frozen-scope and current process-hardening obligations including:
-- capability-based ADMIN authorization;
-- Administration composition;
-- role/session/presence lifecycle behavior;
-- authoritative current Build State Ledger/checkpoint;
-- trusted Build Coordinator/evidence graph;
-- canonical naming/evidence state;
-- first v18.2 AIPLC and G10 coverage reconciliation.
+## 13. Delivery exit criteria
 
-Do not pull v18.3 PostgreSQL/web or unrelated source-changing consolidation work into frozen v18.2.
-
----
-
-## 12. G16 — Deep Adaptive Retrospective / Handoff
-
-G16 must:
-- verify Stable `main` / tag / release identity agreement;
-- record source/native artifact provenance;
-- archive checkpoints/evidence;
-- clean obsolete release branches/workflows/artifacts when safe;
-- seed the next approved release from exact Stable;
-- aggregate AIPLC findings;
-- record calls/reruns/provider/model work avoided where measurable;
-- record role/functionality/shared-processing closure;
-- convert recurring failures into reusable prevention;
-- remove redundant delivery lanes/checkpoints that added ceremony without assurance;
-- verify required user delivery was surfaced.
-
-No issue silently disappears.
-
----
-
-## 12A. Adaptive CI delivery control
-
-Delivery uses the same evidence planner, but release guardrails are deterministic:
-
-- G10 and G12 must be green for the exact immutable candidate before native packaging starts.
-- macOS Apple Silicon and Windows x64 package/audit lanes run in parallel only after shared cheaper prerequisites pass.
-- Native evidence is never waived to meet a dollar target. The $5 budget is a soft alert and planning input, not a release gate.
-- A failed platform reruns only that platform and any evidence genuinely invalidated by the fix; the other platform PASS is preserved when fingerprints remain equivalent.
-- G15 binds hashes, provenance, source commit, requirement ledger and native audit outputs.
-- Publication uploads the already-certified artifacts and performs no rebuild.
-- Development diagnostics use short retention; RC evidence uses bounded retention; certified artifacts, checksums and provenance live in the GitHub Release.
-- Workflow permissions are read-only except for the isolated publication job.
-- Every release run records selected/skipped lanes, reason, runtime/cost estimate, cache result, failure class, evidence reuse and invalidation for G16 analysis.
-- G16 must distinguish quality-producing spend from avoidable orchestration, record the prevention action and hand the next release an updated—but not silently self-modified—planner proposal.
-
-Delivery cannot pass while `CI-ADAPTIVE-18.5.1-001` is unresolved for the applicable slice or while required native/exact-artifact evidence is missing.
-
----
-
-## 12B. Independent-audit delivery contract
-
-Applies to: `AUDIT-18-UI-001`, `AUDIT-18-AI-001`, `AUDIT-18-AI-RIGHTS-001`, `AUDIT-18-PROVIDER-001`, `AUDIT-18-ARCH-001`, `AUDIT-18-CI-001`, `AUDIT-18-SECURITY-001`, `AUDIT-18-PROVENANCE-001`, `AUDIT-18-TRADER-001` and `AUDIT-18-QA-001`.
-
-Every v18.x delivery manifest must include the ten `AUDIT-18-*` records, their subfindings, release placement, source/test fingerprints and final/open status. The authoritative inventory is **295 rows** after audit integration.
-
-Delivery requirements:
-
-1. **UI/live runtime:** actual packaged macOS and Windows apps must dwell on Dashboard, Research and every desk while live/replayed SSE updates arrive; capture hover, focus, selected state, semantic scroll anchor, layout-shift/repaint observations and symbol mutation behavior.
-2. **AI:** ship a prompt/safety/schema/model/provider manifest, bounded-context proof, cache isolation/expiry proof, golden/injection eval summary, token/cost/latency telemetry and safe abstention behavior.
-3. **AI rights:** ship the provider×dataset AI-egress decision summary with secrets and contractual evidence redacted; blocked/unknown rights must remain blocked in the package.
-4. **Provider learning:** SHADOW comparisons must state sample size, dataset/session/regime, cost/calls, disagreement/truth limits, useful/missed/false evidence and non-production status. No paid-provider promotion occurs as an incidental release action.
-5. **Trader learning:** probability outputs, if any, require cutoff-safe calibration evidence and explicit distinction from setup scores; evidence-thesis logs cannot introduce positions, P&L, orders or execution.
-6. **Architecture:** package provenance identifies canonical owners and retired duplicates; refactors must preserve formulas, persisted profile compatibility, migration/rollback and cross-platform startup.
-7. **Security/supply chain:** include vulnerability/dependency results, SBOM, credential-storage migration evidence, HTTP/server fault tests, secret-scan result and any accepted risk with owner/expiry.
-8. **CI:** release evidence states which durable workflow selected each lane, why it ran/skipped, its fingerprint, runtime/cost/cache result and failure/retry class. A branch-trigger gap blocks delivery.
-9. **Provenance:** bind source commit, verified tag/attestation, artifact hashes, SBOM and G13/G14 results. Publication uploads certified artifacts without rebuilding.
-10. **Handoff:** G16 records every audit ID as final, explicitly future-placed or still blocking; it includes the maturity stage, next action, owner and invalidation conditions so a new chat never restarts from memory.
-
-No v18 final closure delivery may retain a reopened/not-implemented/revalidation audit row, an unresolved audit subfinding, unsigned/unattested future Stable provenance, or missing exact-package proof for affected macOS/Windows surfaces.
-
----
-
-## 13. 10/10 Delivery acceptance
-
-Delivery Process is 10/10 only when:
-1. exact immutable source/artifact identity controls evidence;
-2. independent platform PASS is preserved safely;
-3. failures rerun the smallest affected lane;
-4. metadata changes do not trigger unnecessary native/full certification;
-5. actual packaged runtime is audited;
-6. role/security/data truth survives packaging;
-7. user delivery is explicit;
-8. AIPLC produces prevention, not just retries;
-9. G16 leaves reproducible provenance and a clean next-release seed;
-10. no promotion status is inferred or inflated without durable evidence.
-
-## 14. Portable G16 delivery handoff
-
-G16 delivery is incomplete until GitHub alone can onboard a newly authorized ChatGPT/Codex, Claude or human maintainer. Update `handoff/CURRENT.md` with delivered artifacts/hashes, actual residuals and exactly one next action; update the Build State Ledger after the candidate commit; and verify both root assistant adapters still point to the same vendor-neutral portability contract.
-
-Do not make ChatGPT Library, Claude Projects, a local Mac, email, chat history or a temporary AI workspace the only location of required source, evidence or continuation instructions. Those may be mirrors, never delivery authority.
-
----
-
-## 15. Canonical release workflow, publication and G16 hygiene contract
-
-Delivery must use the permanent `.github/workflows/release.yml` orchestration. A release-specific delivery workflow is not a normal release artifact.
-
-### 15.1 One release workflow, parameterized by evidence identity
-
-`release.yml` accepts the immutable candidate/release inputs and owns the G11–G16 dependency graph:
-
-**G11 immutable candidate → G12 certification → G13/G14 macOS + Windows in parallel → G15 assurance → no-rebuild publication → G16 delivery/handoff checks.**
-
-Version, candidate SHA, source fingerprint, build ID, target platform, resume gate/lane and publication intent are inputs. Do not create per-release `native-delivery`, `native-retry`, `native-monitor`, `certification` or `publish-stable` workflows.
-
-### 15.2 Delivery retry semantics
-
-- transient runner/network/provider failure → rerun the failed job on the same release workflow and immutable candidate;
-- platform-specific harness failure → fix shared platform tooling, add prevention test and rerun only that platform lane;
-- platform-specific product/package failure → correct source/package owner, invalidate only dependent evidence and run the same `release.yml` lane for the new valid candidate;
-- independent platform PASS stays reusable if exact identity/evidence requirements remain equivalent;
-- G15 does not rerun until both required platform evidence graphs are valid;
-- publication never rebuilds or repackages certified artifacts.
-
-A one-off workflow may be used only as explicitly approved migration tooling for changing the permanent CI architecture itself; it must carry deletion/retirement criteria before it is merged and cannot become the default response to a failed release lane.
-
-### 15.3 Stable archival model
-
-Permanent release history is stored as:
-
-- immutable Stable tag;
-- GitHub Release;
-- certified native artifacts;
-- hashes/checksum manifest;
-- provenance/attestation/evidence;
-- Git history and release-scoped evidence records.
-
-Long-lived RC, retry, certification, promotion or Stable branches are not the archival model.
-
-### 15.4 G16 delivery cleanup is mandatory
-
-G16 cannot close until repository delivery hygiene has an explicit disposition:
-
-1. verify final Stable tag/release and package hashes;
-2. inventory release-created/temporary branches and workflows;
-3. preserve unique unmerged evidence/content where required;
-4. delete obsolete merged RC/retry/certification/promotion branches when safe;
-5. delete obsolete release-specific workflow files from the active branch when safe;
-6. confirm certified artifacts/evidence remain durable in the GitHub Release/history;
-7. record any branch/workflow intentionally retained, owner, reason and removal condition;
-8. report pre/post active workflow and branch counts;
-9. verify the next release starts from the canonical Stable baseline with the three-workflow CI surface only.
-
-Known clutter is not silently carried forward as “history.” Git history and immutable Releases provide history; active workflow/branch surfaces are operational machinery and must remain intentionally small.
-
-### 15.5 Delivery learning closes only through prevention
-
-For repeated build/delivery failures, G16 documentation alone is insufficient. Delivery must point to the canonical workflow/tool/test change that prevents recurrence, or to an evidence-backed `NO_IMPLEMENTATION_CHANGE_REQUIRED` conclusion.
-
-This is the permanent feedback loop:
-
-**failure → classification → root cause → canonical fix → regression test → same-lane rerun → preserved independent evidence → G15 → no-rebuild publication → G16 cleanup/learning → improved next release.**
-
-This section strengthens the existing Adaptive CI delivery control and repository-structure contracts without changing G0–G16.
-
----
-
-## 16. v18.8 audit-derived 10/10 delivery hardening
-
-### 16.1 Stable publication is not continuity closure
-
-After the immutable Stable tag and GitHub Release publish successfully, delivery must atomically converge the durable continuity layer before G16 closes:
-
-- build checkpoint;
-- release-evidence checkpoint;
-- release-scoped Stable evidence manifest;
-- `handoff/CURRENT.md`;
-- CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process;
-- exactly one next release/action.
-
-The actual GitHub Release/tag remains higher authority than stale metadata. Stale continuity metadata must be corrected without rebuilding already-certified binaries when source/package/test identity is unchanged.
-
-### 16.2 G11 publication-feasibility assurance
-
-Before G12/native spend, G11 must prove:
-
-- canonical release version/build ID is internally coherent;
-- required release certification scaffold exists for that version;
-- predecessor/baseline semantics are valid;
-- target Stable tag is absent or idempotently points to the same already-published immutable candidate;
-- a conflicting existing Stable tag fails immediately.
-
-The publication job repeats the immutable-tag collision check. The early check saves compute; the late check protects against race/state changes.
-
-### 16.3 Delivery truth for market evidence time
-
-Actual packages must preserve the distinction between provider evidence time and local retrieval/observation time. Missing provider evidence time cannot display or feed decision logic as freshly observed “now.” Where freshness is required and evidence time is unavailable, package behavior must be truthful UNKNOWN/degraded/ABSTAIN according to the consumer contract.
-
-### 16.4 v18.8.1 renderer/test delivery migration
-
-Renderer/test modularization is acceptable only when actual browser/native evidence proves behavior equivalence for migrated capabilities. Do not deliver a mass filename cleanup without capability ownership, regression lineage and preservation of unique historical contracts.
-
-### 16.5 10/10 delivery score additions
-
-G15/G16 must additionally report:
-
-- Release State Coherence: PASS;
-- target Stable tag preflight: PASS before G12;
-- publication-time immutable collision guard: PASS;
-- continuity artifacts agree with the actual published Stable;
-- no false-freshness fallback in affected market-data paths;
-- discovery-universe contract explicit for affected Scanner/Radar paths;
-- CI work avoided by cheap-first failure detection/evidence reuse;
-- no required evidence removed to achieve the savings.
-
-These are strengthened responsibilities inside existing G11/G15/G16, not new top-level gates.
-
----
-
-## 17. Zero-miss and TradeInsight full-capability delivery
-
-### 17.1 Zero-miss delivery proof
-
-For `ADAPT-RECON-001`, `ADAPT-UX-RESEARCH-001`, `ADAPT-SYMBOL-001`, `ADAPT-READINESS-001`, `ADAPT-FRESHNESS-001` and `ADAPT-RESEARCH-002`, delivery evidence must distinguish freshly proven unchanged behavior, newly fixed behavior, and explicit approved future placement. Historical PASS/source markers alone are insufficient. Affected user-facing behavior requires appropriate browser/runtime evidence and actual macOS Apple Silicon + Windows x64 package proof before the responsible release claims closure.
-
-v18.10 is the final zero-gap verification point, not a holding area for known gaps. No applicable conserved requirement or post-ledger Adaptive requirement may reach v18 closure as missing, unowned, unexplained or supported only by generic reconciliation wording.
-
-### 17.2 TradeInsight full-capability delivery proof
-
-For v18.9.0 `ADAPT-TRADEINSIGHT-001`, delivery must include a capability inventory for the actual configured TradeInsight beta surface and a disposition for every discovered capability: `USE`, `CORROBORATE`, `FALLBACK`, `STORE_FOR_HISTORY`, `FUTURE`, or `NOT_USEFUL`.
-
-Every capability used by DE.PULSE must ship with explicit Smart Provider Router v2 ownership, consumer/purpose, authority, rights/entitlement, evidence-time/freshness, budget/rate-limit, cache/retention, disagreement/degradation behavior, Market Mode disposition and SHADOW status. Congressional Trading Intelligence, SEC Form 4 enrichment secondary to direct SEC, and historical OHLCV fallback/backfill are guaranteed minimum roles; additional useful beta capabilities are included when discovery proves purpose and lawful access.
-
-Package/runtime proof must show full capability does not create indiscriminate API traffic: canonical evidence is reused, calls are purpose-driven and bounded, TradeInsight outage/rate-limit failure does not broadly degrade unrelated consumers, and no provider-to-UI silo exists. Any production influence requires `SHADOW → VALIDATED → APPROVED → PRODUCTION` evidence and rollback.
-
-v18.9.1 delivery proves the wider provider pool can consume measured capability health/freshness/latency/disagreement/headroom/rights/cost/usefulness without changing deterministic market truth. v18.10 proves zero orphan materially useful provider capability or duplicate routing owner. v19/v20 carry mature provider/data infrastructure and adaptive usefulness/outcome learning.
+Delivery closes only when source, tests, actual artifacts/deployment, migrations, security, data truth, rights state, platforms, observability, rollback and user workflow evidence agree on the same candidate. Maturity labels remain evidence-backed, and `handoff/CURRENT.md` plus machine state identify the exact next action.

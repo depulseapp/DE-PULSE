@@ -1,29 +1,18 @@
-# CURRENT Adaptive Delivery Process
+# CURRENT Adaptive Delivery Process — Status Projection
 
-**Canonical machine state:** `governance/current-state.json`  
-**Certified Stable:** `v18.10.0` — immutable  
-**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001`  
-**Completed post-v18 audit:** #145 / PR #146 — **PASS**  
-**Future hosted umbrella:** #66 — `PLANNED_UNSTARTED`; v19 G1 is permitted but not started.
+**Status:** COMPATIBILITY PROJECTION / NOT AN INDEPENDENT DELIVERY PROCESS  
+**Canonical delivery process:** `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`  
+**Machine status:** `governance/current-state.json`  
+**Human continuation:** `handoff/CURRENT.md`
 
-v18.10.0 delivery remains authoritative and unchanged: **canonical Fast exact-head PASS**, **Qualified exact-head PASS**, canonical Release G11–G16, macOS Apple Silicon + Windows x64 native evidence, G15 provenance/SBOM and no-rebuild publication.
+Current projected identity:
 
-## Rebaselined delivery rules
+- Certified Stable: `v18.10.0`
+- Active work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`
+- Active issue / PR: #148 / PR #149
+- Active branch: `adapt-hosted-trust-foundation-001`
+- Closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
 
-- Keep the three canonical workflow families: CI Fast, CI Qualified and Release. Do not create version-specific retry/certification/promotion workflow families.
-- A `main` push may run continuity and branch hygiene, but those jobs are not a second PR Fast. Documentation/run naming should make that distinction explicit.
-- Minimize candidate-SHA amplification by batching coherent changes. Never reuse Fast/Qualified evidence after the candidate changes.
-- Frozen v18 T1–T10 are a conserved historical baseline. Do not let every future major version append another permanently unconditional historical gate chain; deeper historical assurance is impact-triggered while baseline conservation remains fail closed.
-- `HOST-001..072` are traceability requirements. Delivery groups them into coherent implementation/release bands; row labels do not require individual release runs.
-- Hosted Web is a real v19 deployment/runtime target, not inferred from renderer browser qualification. Hosted release evidence must eventually include deploy identity, migration compatibility, tenant isolation, secret/service trust, rollback/recovery and production SLO evidence.
-- PostgreSQL hosted activation remains blocked until tenant/account schema and authorization isolation, recovery/PITR, migration strategy, privacy lifecycle and adverse cross-tenant evidence pass.
-- Cross-platform parity means Mac + Windows + Web share the same account/session/device/RBAC/entitlement/domain semantics. Backend authorization is always authoritative.
-- Security delivery evidence includes negative tenant/cache/fan-out/stream-revocation/secret/mixed-client scenarios, not only happy-path authentication.
-- Point-in-time/revision truth and decision-outcome calibration are part of future trader-quality delivery evidence where affected.
-- Repository `main` protection should be enabled when plan capabilities support canonical required statuses; internal release provenance remains mandatory regardless.
+Stable `v18.10.0` remains immutable. Delivery/release rules and audit closure requirements live only in the canonical delivery process; supporting contracts are indexed by `adaptive-governance/README.md`.
 
-Permanent product boundaries remain Smart Provider Router v2 sole general routing/admission authority, direct SEC/EDGAR filing/Form 4 authority, canonical freshness/degradation/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session ownership, U.S. Equities Processing with GLD/SLV/USO actionable exceptions, and No Execution.
-
-## Exactly one next action
-
-Reserve and scope the first coherent v19 G1 **Hosted Trust Foundation** work slice; do not begin product implementation until its exact requirement/owner/evidence mapping is frozen.
+Do not add delivery rules or a next action here. Read the machine state/closure ledger/handoff for exact current execution.

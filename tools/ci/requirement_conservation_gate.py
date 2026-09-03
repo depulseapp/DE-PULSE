@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -13,6 +14,10 @@ LEDGER = PROGRAM / "requirement-conservation.json"
 PLAN = PROGRAM / "V19_ZERO_MISS_PLAN.md"
 CURRENT = ROOT / "governance" / "current-state.json"
 ROADMAP = ROOT / "governance" / "ROADMAP.md"
+HOST012_RECOVERY_GATE = ROOT / "tools" / "ci" / "host012_managed_recovery_evidence_gate.py"
+HOST012_RECOVERY_SELF_TEST = ROOT / "tools" / "ci" / "host012_managed_recovery_evidence_self_test.py"
+HOST012_NEON_OPERATOR = ROOT / "tools" / "ci" / "host012_neon_recovery_operator.py"
+HOST012_NEON_OPERATOR_SELF_TEST = ROOT / "tools" / "ci" / "host012_neon_recovery_operator_self_test.py"
 
 EXPECTED_IDS = [f"HOST-{n:03d}" for n in range(1, 73)]
 REQUIRED_RULES = (
@@ -34,6 +39,34 @@ CLOSED = {"COMPLETE", "COMPLETED", "CLOSED", "VERIFIED"}
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def run_host012_recovery_self_test(errors: list[str]) -> None:
+    owners = (
+        HOST012_RECOVERY_GATE,
+        HOST012_RECOVERY_SELF_TEST,
+        HOST012_NEON_OPERATOR,
+        HOST012_NEON_OPERATOR_SELF_TEST,
+    )
+    missing = [path for path in owners if not path.is_file()]
+    for path in missing:
+        errors.append(f"HOST-012 managed-recovery evidence owner missing: {path.relative_to(ROOT)}")
+    if missing:
+        return
+    for self_test, label in (
+        (HOST012_RECOVERY_SELF_TEST, "managed-recovery evidence"),
+        (HOST012_NEON_OPERATOR_SELF_TEST, "Neon recovery operator"),
+    ):
+        completed = subprocess.run(
+            [sys.executable, str(self_test)],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if completed.returncode != 0:
+            detail = (completed.stdout + "\n" + completed.stderr).strip()
+            errors.append(f"HOST-012 {label} self-test failed" + (f": {detail}" if detail else ""))
 
 
 def main() -> int:
@@ -132,12 +165,16 @@ def main() -> int:
         if marker not in roadmap_text:
             errors.append(f"canonical roadmap lost v19 conservation marker: {marker}")
 
+    run_host012_recovery_self_test(errors)
+
     print("V19 REQUIREMENT CONSERVATION")
     print(f"rows: {len(rows)} / expected 72")
     print(f"first/last: {ids[0] if ids else '-'} / {ids[-1] if ids else '-'}")
     print(f"program reserved: {rules.get('productProgramReserved')}")
     print("source-overlap before G1: REQUIRED")
     print("band zero-gap closure before next band: REQUIRED")
+    print("HOST-012 managed-recovery evidence validator self-test: REQUIRED")
+    print("HOST-012 Neon recovery operator zero-network self-test: REQUIRED")
     if errors:
         print("V19 REQUIREMENT CONSERVATION GATE: FAIL", file=sys.stderr)
         for error in errors:

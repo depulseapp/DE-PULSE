@@ -158,6 +158,9 @@ func (p *PersistenceManager) ExportArchiveFile(ctx context.Context, path string)
 			archive.SourceStoreSchema = stats.SchemaVersion
 		}
 	}
+	if _, err := EvidenceAsKnownAt(archive.Evidence, 1<<63-1); err != nil {
+		return PersistenceArchive{}, fmt.Errorf("archive temporal evidence validation: %w", err)
+	}
 	if err := writePersistenceArchiveFile(path, archive); err != nil {
 		return PersistenceArchive{}, err
 	}
@@ -180,6 +183,18 @@ func (p *PersistenceManager) RestoreArchiveFile(ctx context.Context, path, mode 
 	if err != nil {
 		return PersistenceArchive{}, err
 	}
+	if _, err := EvidenceAsKnownAt(archive.Evidence, 1<<63-1); err != nil {
+		return PersistenceArchive{}, fmt.Errorf("restore temporal evidence validation: %w", err)
+	}
+	currentIdentity := IdentityPersistentState{}
+	if normalizedMode == persistenceRestoreModeReplace {
+		currentIdentity, err = p.backend.LoadIdentityState(ctx)
+		if err != nil {
+			p.recordPersistenceFailure(err)
+			return PersistenceArchive{}, fmt.Errorf("load current deletion tombstones before replace restore: %w", err)
+		}
+	}
+	archive = enforceArchiveAccountDeletionPrivacy(archive, currentIdentity)
 	if err := backend.RestorePersistenceArchive(ctx, archive, normalizedMode); err != nil {
 		p.recordPersistenceFailure(err)
 		return PersistenceArchive{}, err

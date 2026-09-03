@@ -48,6 +48,8 @@ def main() -> int:
         "actions/upload-artifact",
         "actions/download-artifact",
         "actions/attest-build-provenance",
+        "azure/login",
+        "hashicorp/setup-terraform",
     }
     if set(actions) != expected_actions:
         errors.append(f"dependency lock Action set drift: {sorted(actions)}")
@@ -62,7 +64,7 @@ def main() -> int:
 
     allowed_write = {
         ".github/workflows/ci-fast.yml": {"statuses": 1, "contents": 1},
-        ".github/workflows/ci-qualified.yml": {"statuses": 1},
+        ".github/workflows/ci-qualified.yml": {"statuses": 1, "id-token": 1},
         ".github/workflows/release.yml": {"contents": 1, "id-token": 1, "attestations": 1},
     }
     forbidden_permissions = set(lock.get("permission_policy", {}).get("forbidden_in_scoped_workflows", []))
@@ -118,6 +120,23 @@ def main() -> int:
             if forbidden in text:
                 errors.append(f"{relative} contains forbidden permission: {forbidden}")
 
+    qualified_text = (ROOT / ".github" / "workflows" / "ci-qualified.yml").read_text(encoding="utf-8")
+    qualified_oidc_required = (
+        "host013_azure_confirmation:",
+        "HOST013_AZURE_AKS_OPERATOR_DRILL",
+        "name: HOST-013/014 Azure AKS trust operator drill",
+        "id-token: write",
+        "azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43",
+        "python3 tools/ci/host013_azure_operator.py",
+        "--environment dev",
+    )
+    for token in qualified_oidc_required:
+        if token not in qualified_text:
+            errors.append(f"Qualified Azure OIDC least-privilege contract missing: {token}")
+    for forbidden in ("AZURE_CLIENT_SECRET", "ARM_CLIENT_SECRET"):
+        if forbidden in qualified_text:
+            errors.append(f"Qualified Azure OIDC contract contains forbidden secret marker: {forbidden}")
+
     release_text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
     provenance_required = (
         "actions/attest-build-provenance@",
@@ -163,6 +182,7 @@ def main() -> int:
     print("Fast/Qualified/Release third-party Actions immutable-SHA pinned: PASS")
     print("Qualified/Release Playwright exact-version requirements + safe pip cache: PASS")
     print("scoped least-privilege permission contract: PASS")
+    print("Qualified Azure OIDC exception is explicit, manual-only and host013-job scoped: PASS")
     print("Release provenance OIDC/attestation exception is explicit and publish-job scoped: PASS")
     print("Release workflow Action/browser reproducibility deferral closed in v18.7.0: PASS")
     return 0

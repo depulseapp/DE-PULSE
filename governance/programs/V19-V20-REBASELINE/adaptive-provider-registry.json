@@ -1,0 +1,105 @@
+{
+  "schema": "DE.PULSE-ADAPTIVE-PROVIDER-REGISTRY-REBASELINE-1",
+  "status": "APPROVED_FUTURE_SCOPE",
+  "stableBaseline": "v18.10.0",
+  "activeVersion": "v19.0.0",
+  "activeScopeUnchanged": true,
+  "primaryImplementationVersion": "v19.1.0",
+  "primaryIssue": 153,
+  "permanentContract": "adaptive-governance/ADAPTIVE_PROVIDER_REGISTRY_CONTRACT.md",
+  "rebaselineAddendum": "governance/V19_V20_PROVIDER_REGISTRY_REBASELINE.md",
+  "architecture": {
+    "providerSpecificBoundary": "ADAPTER_ONLY",
+    "registry": "ADAPTIVE_PROVIDER_REGISTRY",
+    "routingAuthority": "SMART_PROVIDER_ROUTER_V2",
+    "dataHealthAuthority": "CANONICAL_DATA_HEALTH",
+    "subscriptionAuthority": "DYNAMIC_MULTI_FEED_SUBSCRIPTION_MANAGER",
+    "lifecycle": ["SHADOW", "VALIDATED", "APPROVED", "PRODUCTION"],
+    "automaticLifecyclePromotion": false,
+    "directAuthoritiesPreserved": true,
+    "providerSpecificConsumerRoutingAllowed": false
+  },
+  "automaticBehavior": [
+    "ADAPTER_SELF_REGISTRATION",
+    "CONFIGURATION_PRESENCE_DISCOVERY",
+    "CAPABILITY_PROBING",
+    "EFFECTIVE_ENTITLEMENT_DISCOVERY_WHERE_OBSERVABLE",
+    "FRESHNESS_HISTORY_QUOTA_DISCOVERY_WHERE_OBSERVABLE",
+    "HEALTH_LATENCY_HEADROOM_OBSERVATION",
+    "ROUTER_ELIGIBILITY_RECALCULATION",
+    "RUNTIME_FALLBACK_DEMOTION_COOLDOWN_RECOVERY",
+    "SUBSCRIPTION_PLAN_CHANGE_REPROBE",
+    "DEPENDENT_CONSUMER_REEVALUATION"
+  ],
+  "governedOnly": [
+    "LIFECYCLE_AUTHORITY_PROMOTION",
+    "DIRECT_AUTHORITY_REPLACEMENT",
+    "PUBLIC_COMMERCIAL_PROVIDER_RIGHTS_ACTIVATION",
+    "PROTECTED_DETERMINISTIC_LOGIC_CHANGE",
+    "PRODUCT_BOUNDARY_EXPANSION"
+  ],
+  "firstAdopter": {
+    "providerId": "MARKETDATA",
+    "vendor": "marketdata.app",
+    "secretEnvFallback": "MARKETDATA_TOKEN",
+    "auth": "BEARER_HEADER",
+    "initialLifecycle": "SHADOW",
+    "settingsPattern": "TRADEINSIGHT_DERIVED_GENERIC_PROVIDER_SECRET_UX",
+    "effectiveCapabilityOverPlanName": true,
+    "subscriptionChangeRequiresCodeRelease": false,
+    "currentVendorSemanticsAuditDate": "2026-08-26",
+    "currentVendorSemantics": {
+      "http200Success": true,
+      "http203Success": true,
+      "trialDataClass": "DELAYED",
+      "traderTrialDailyCredits": 100000,
+      "trialHistoricalDepthNonAAPL": "1_YEAR",
+      "paidTraderMayProvideRealtimeStocks": true,
+      "paidTraderMayProvideRealtimeOptions": true
+    }
+  },
+  "crossIntegrationRequired": [
+    "DASHBOARD_TICKER",
+    "DAY_SWING_LONG_DESKS",
+    "TRADEABILITY_READINESS",
+    "MARKET_INTELLIGENCE_REGIME_CONTRIBUTION",
+    "RESEARCH",
+    "DISCOVERY_OPPORTUNITY_RADAR",
+    "GLOBAL_SYMBOLS_WATCHLIST",
+    "PREMARKET_MARKET_OPEN_PREP",
+    "CATALYST_RAPID_MOVE_VOLUME_VOLATILITY_ALERTS",
+    "FUNDAMENTALS_HISTORY_INTRADAY",
+    "OPTIONS_WHERE_SUPPORTED",
+    "DATA_HEALTH_MAINTENANCE",
+    "CACHE_PERSISTENCE_RECONCILIATION",
+    "FUTURE_OUTCOME_LEARNING_PROVIDER_UTILITY"
+  ],
+  "versionPropagation": {
+    "v19.1.0": [
+      "REGISTRY_RUNTIME",
+      "STANDARD_ADAPTER_MANIFEST",
+      "MARKETDATA_ADAPTER",
+      "GENERIC_PROVIDER_SETTINGS_METADATA",
+      "MARKETDATA_SECRET_CONFIG_TEST_CLEAR",
+      "ENTITLEMENT_REPROBE",
+      "ROUTER_CROSS_INTEGRATION"
+    ],
+    "v19.3.0": [
+      "CROSS_PLATFORM_ROLE_AWARE_PROVIDER_SETTINGS_PRESENTATION"
+    ],
+    "v19.6.1": [
+      "PROVIDER_RELIABILITY_COVERAGE_ECONOMICS_READINESS_SCORECARDS"
+    ],
+    "v20.5.0": [
+      "BOUNDED_ADAPTIVE_PROVIDER_UTILITY_COST_PRIORS_WITH_ROUTER_AUTHORITY_PRESERVED"
+    ]
+  },
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "NO_EXECUTION",
+    "DIRECT_SEC_EDGAR_AUTHORITY",
+    "POINT_IN_TIME_NO_LOOKAHEAD_BEFORE_LEARNING",
+    "NO_PARALLEL_ROUTER_OR_DATA_HEALTH_OR_CACHE_OR_SUBSCRIPTION_OWNER"
+  ]
+}

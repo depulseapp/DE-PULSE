@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Fail-closed active work-slice closure-ledger validation.
 
-Blocking gaps normally require VERIFIED status. Two narrowly governed special
-bindings exist for #70: the factual GitHub-plan external-control waiver and the
-post-run immutable final-qualification evidence binding. Neither mechanism may
-be generalized to hide ordinary implementation gaps.
+Blocking gaps normally require VERIFIED status. Narrowly governed special
+bindings exist only for explicitly enumerated work-slice/gap pairs: the #70
+GitHub-plan external-control waiver, the #70 post-run immutable final-
+qualification binding, and the #148 Azure Free Trial managed-AKS quota waiver.
+No mechanism here may be generalized to hide ordinary implementation gaps.
 """
 from __future__ import annotations
 
@@ -20,6 +21,9 @@ STATE_PATH = ROOT / "governance" / "current-state.json"
 ALLOWED_STATUSES = {"OPEN", "IMPLEMENTED_UNVERIFIED", "BLOCKED_EXTERNAL", "VERIFIED"}
 CLOSED_WORK_SLICE_STATES = {"READY_FOR_CLOSURE", "COMPLETE", "COMPLETED", "CLOSED", "DELIVERED"}
 WAIVABLE_EXTERNAL_GAPS = {("ADAPT-CI-CONVERGENCE-001", "MAIN-PROTECTION-RULESET")}
+AZURE_DEVELOPMENT_WAIVABLE_GAPS = {
+    ("ADAPT-HOSTED-TRUST-FOUNDATION-001", "HOST-013-014-ENVIRONMENT-SERVICE-TRUST")
+}
 FINAL_EVIDENCE_BINDABLE_GAPS = {("ADAPT-CI-CONVERGENCE-001", "FINAL-QUALIFIED")}
 REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS = {
     "PR_FIRST_DEVELOPMENT",
@@ -29,6 +33,15 @@ REQUIRED_MAIN_PROTECTION_COMPENSATING_CONTROLS = {
     "NO_FORCE_PUSH_POLICY",
     "CANONICAL_RELEASE_G11_G16",
     "EXACT_SHA_FINGERPRINT_PROVENANCE",
+}
+REQUIRED_AZURE_DEVELOPMENT_COMPENSATING_CONTROLS = {
+    "REQUIREMENT_REMAINS_UNVERIFIED",
+    "NO_ARCHITECTURE_SECURITY_WEAKENING",
+    "REPOSITORY_HARNESS_REMAINS_FAIL_CLOSED",
+    "NO_COMMERCIAL_PUBLIC_ACTIVATION",
+    "VISIBLE_HOST023_CARRY_FORWARD",
+    "REVISIT_ON_ELIGIBLE_CAPACITY",
+    "EXACT_REPOSITORY_EVIDENCE_PRESERVED",
 }
 REQUIRED_FINAL_EVIDENCE_OWNERS = {
     "CI_HARNESS",
@@ -84,19 +97,27 @@ def projected_active_work(state: dict[str, Any]) -> tuple[dict[str, Any], str]:
     return (active if isinstance(active, dict) else {}), "WORK_SLICE"
 
 
-def validate_external_waiver(work_slice_id: str, issue: object, work: dict[str, Any], gap: dict[str, Any], errors: list[str]) -> bool:
-    gid = str(gap.get("id", "")).strip()
-    if (work_slice_id, gid) not in WAIVABLE_EXTERNAL_GAPS:
-        errors.append(f"{gid}: external waiver is not permitted for this work slice/gap")
-        return False
+def registered_waiver_path(work: dict[str, Any], gid: str, errors: list[str]) -> tuple[str, Path | None]:
     mapping = work.get("externalControlWaivers", {})
     waiver_rel = str(mapping.get(gid, "")).strip() if isinstance(mapping, dict) else ""
     if not waiver_rel:
         errors.append(f"{gid}: BLOCKED_EXTERNAL requires a registered waiver path")
-        return False
+        return "", None
     waiver_path = ROOT / waiver_rel
     if not waiver_path.is_file():
         errors.append(f"{gid}: registered waiver file missing: {waiver_rel}")
+        return waiver_rel, None
+    return waiver_rel, waiver_path
+
+
+def validate_external_waiver(work_slice_id: str, issue: object, work: dict[str, Any], gap: dict[str, Any], errors: list[str]) -> bool:
+    """Validate the historical #70 GitHub-plan enforcement waiver only."""
+    gid = str(gap.get("id", "")).strip()
+    if (work_slice_id, gid) not in WAIVABLE_EXTERNAL_GAPS:
+        errors.append(f"{gid}: GitHub-plan external waiver is not permitted for this work slice/gap")
+        return False
+    _waiver_rel, waiver_path = registered_waiver_path(work, gid, errors)
+    if waiver_path is None:
         return False
     start = len(errors)
     waiver = load(waiver_path)
@@ -139,6 +160,130 @@ def validate_external_waiver(work_slice_id: str, issue: object, work: dict[str, 
         errors.append(f"{gid}: missing required compensating controls: {', '.join(missing)}")
     if not nonempty_strings(waiver.get("revalidationTriggers")) or not str(waiver.get("retirementCondition", "")).strip():
         errors.append(f"{gid}: waiver revalidation/retirement contract missing")
+    return len(errors) == start
+
+
+def validate_azure_development_external_waiver(
+    work_slice_id: str,
+    issue: object,
+    work: dict[str, Any],
+    gap: dict[str, Any],
+    state: dict[str, Any],
+    errors: list[str],
+) -> bool:
+    """Validate only the named #148 Azure Free Trial managed-AKS quota residual."""
+    gid = str(gap.get("id", "")).strip()
+    if (work_slice_id, gid) not in AZURE_DEVELOPMENT_WAIVABLE_GAPS:
+        errors.append(f"{gid}: Azure Development external waiver is not permitted for this work slice/gap")
+        return False
+    waiver_rel, waiver_path = registered_waiver_path(work, gid, errors)
+    if waiver_path is None:
+        return False
+    start = len(errors)
+    waiver = load(waiver_path)
+    checks = (
+        (waiver.get("schema") == "DE.PULSE-DEVELOPMENT-EXTERNAL-BLOCKER-WAIVER-1", "unsupported Azure Development waiver schema"),
+        (waiver.get("status") == "APPROVED", "Azure Development waiver status must be APPROVED"),
+        (waiver.get("id") == "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01", "Azure Development waiver id mismatch"),
+        (waiver.get("workSliceId") == work_slice_id, "Azure Development waiver workSliceId mismatch"),
+        (waiver.get("issue") == issue, "Azure Development waiver issue mismatch"),
+        (waiver.get("gapId") == gid, "Azure Development waiver gapId mismatch"),
+        (waiver.get("scope") == "AZURE_FREE_TRIAL_MANAGED_AKS_VCPU_QUOTA_ONLY", "Azure Development waiver scope mismatch"),
+        (waiver.get("readinessTier") == "DEVELOPMENT_PRODUCTION_READY", "Azure Development waiver readiness tier mismatch"),
+        (waiver.get("requirementsRemainUnverified") is True, "Azure Development waiver must keep requirements unverified"),
+        (waiver.get("developmentDependencyAdvancementOnly") is True, "Azure Development waiver must be dependency-advancement only"),
+        (waiver.get("noArchitectureOrSecurityWeakening") is True, "Azure Development waiver must prohibit architecture/security weakening"),
+        (waiver.get("commercialPublicActivationAllowed") is False, "Azure Development waiver must prohibit Commercial/Public activation"),
+        (waiver.get("paidUpgradeRequiredByGovernance") is False, "Azure Development waiver must not require paid upgrade"),
+        (waiver.get("noProductBehaviorChange") is True, "Azure Development waiver must assert noProductBehaviorChange=true"),
+        (waiver.get("noReleaseEvidenceInvalidation") is True, "Azure Development waiver must preserve release evidence"),
+    )
+    for ok, message in checks:
+        if not ok:
+            errors.append(f"{gid}: {message}")
+
+    actual = waiver.get("actualState", {})
+    if (
+        not isinstance(actual, dict)
+        or actual.get("provider") != "Azure"
+        or actual.get("subscriptionClass") != "FREE_TRIAL"
+        or actual.get("region") != "canadacentral"
+        or actual.get("regionalVcpuUsage") != 4
+        or actual.get("regionalVcpuLimit") != 4
+        or actual.get("regionalVcpuRemaining") != 0
+        or actual.get("additionalVcpuRequired") != 2
+        or actual.get("quotaAdjustmentAvailableWithoutPaidUpgrade") is not False
+        or actual.get("targetSystemPoolNodes") != 3
+        or actual.get("targetNodeVmSize") != "Standard_DC2s_v3"
+        or actual.get("repositoryFastRun") != 33562863732
+        or actual.get("realAzureQualifiedRun") != 33563399097
+        or actual.get("azureFailureCode") != "ErrCode_InsufficientVCPUQuota"
+    ):
+        errors.append(f"{gid}: factual Azure Free Trial quota state changed or is incomplete")
+    candidate = str(actual.get("latestRepositoryHeadBeforeWaiver", "")) if isinstance(actual, dict) else ""
+    if candidate != "475ef25d51360093a558f9b28024c89b75e547f5":
+        errors.append(f"{gid}: exact repository evidence head mismatch")
+    if "0 add, 1 change, 0 destroy" not in str(actual.get("terraformPlan", "")) or "2 -> 3" not in str(actual.get("terraformPlan", "")):
+        errors.append(f"{gid}: Terraform quota-triggering plan evidence is incomplete")
+
+    limitation = waiver.get("limitation", {})
+    if (
+        not isinstance(limitation, dict)
+        or limitation.get("provider") != "Azure"
+        or limitation.get("category") != "FREE_TRIAL_REGIONAL_VCPU_QUOTA"
+        or limitation.get("additionalCapacityAvailableWithoutPaidUpgrade") is not False
+        or not str(limitation.get("detail", "")).strip()
+    ):
+        errors.append(f"{gid}: Azure Free Trial limitation contract invalid")
+    decision = waiver.get("ownerDecision", {})
+    if (
+        not isinstance(decision, dict)
+        or decision.get("approved") is not True
+        or decision.get("paidUpgradeDecision") != "DECLINED"
+        or decision.get("scopeLimited") is not True
+        or not str(decision.get("decisionRecordedAt", "")).strip()
+    ):
+        errors.append(f"{gid}: explicit Azure owner decision contract invalid")
+    risk = waiver.get("riskAcceptance", {})
+    if (
+        not isinstance(risk, dict)
+        or risk.get("acceptedForDevelopmentDependencyAdvancement") is not True
+        or not nonempty_strings(risk.get("residualRisks"))
+    ):
+        errors.append(f"{gid}: Azure residual risk acceptance invalid")
+
+    controls = waiver.get("compensatingControls", [])
+    ids: set[str] = set()
+    if isinstance(controls, list):
+        for item in controls:
+            if isinstance(item, dict) and str(item.get("id", "")).strip():
+                cid = str(item["id"]).strip()
+                ids.add(cid)
+                if item.get("mandatory") is not True or not str(item.get("detail", "")).strip():
+                    errors.append(f"{gid}: compensating control {cid} must remain mandatory and documented")
+    missing = sorted(REQUIRED_AZURE_DEVELOPMENT_COMPENSATING_CONTROLS - ids)
+    if missing:
+        errors.append(f"{gid}: missing required Azure compensating controls: {', '.join(missing)}")
+    if not nonempty_strings(waiver.get("revalidationTriggers")) or not str(waiver.get("retirementCondition", "")).strip():
+        errors.append(f"{gid}: Azure waiver revalidation/retirement contract missing")
+
+    process_active = state.get("activeWorkSlice", {})
+    projected = process_active.get("externalControlWaivers", []) if isinstance(process_active, dict) else []
+    matching = [
+        row for row in projected
+        if isinstance(row, dict) and str(row.get("id", "")).strip() == str(waiver.get("id", "")).strip()
+    ] if isinstance(projected, list) else []
+    if len(matching) != 1:
+        errors.append(f"{gid}: canonical current-state must project exactly one matching Azure residual")
+    else:
+        row = matching[0]
+        if row.get("gapId") != gid or row.get("status") != "ACTIVE_RESIDUAL":
+            errors.append(f"{gid}: current-state Azure residual gap/status mismatch")
+        projected_path = str(row.get("path", "")).strip()
+        if projected_path != waiver_rel:
+            errors.append(f"{gid}: current-state Azure residual path must point to the validated waiver artifact")
+        if row.get("doesNotVerifyRequirements") is not True or row.get("architectureWeakeningAuthorized") is not False or row.get("blocksDependencyAdvancement") is not False or row.get("eligibleAsNamedHost023Residual") is not True or row.get("commercialPublicActivationAllowed") is not False:
+            errors.append(f"{gid}: current-state Azure residual safety projection is incomplete")
     return len(errors) == start
 
 
@@ -245,8 +390,16 @@ def validate(require_closed: bool) -> tuple[list[str], Counter[str], str, set[st
             errors.append(f"{gid}: evidence must be an array")
         if status == "VERIFIED" and not nonempty_strings(evidence):
             errors.append(f"{gid}: VERIFIED requires evidence")
-        if status == "BLOCKED_EXTERNAL" and validate_external_waiver(work_slice_id, active.get("issue"), work, gap, errors):
-            waived.add(gid)
+        if status == "BLOCKED_EXTERNAL":
+            key = (work_slice_id, gid)
+            if key in WAIVABLE_EXTERNAL_GAPS:
+                if validate_external_waiver(work_slice_id, active.get("issue"), work, gap, errors):
+                    waived.add(gid)
+            elif key in AZURE_DEVELOPMENT_WAIVABLE_GAPS:
+                if validate_azure_development_external_waiver(work_slice_id, active.get("issue"), work, gap, state, errors):
+                    waived.add(gid)
+            else:
+                errors.append(f"{gid}: BLOCKED_EXTERNAL has no narrowly authorized waiver validator")
         if gid == "FINAL-QUALIFIED" and status != "VERIFIED" and validate_final_qualification_binding(work_slice_id, active.get("issue"), work, gap, errors):
             bound.add(gid)
     if work_slice_id == "ADAPT-CI-CONVERGENCE-001":

@@ -1,0 +1,86 @@
+variable "subscription_id" {
+  description = "Azure subscription hosting the non-production DE.PULSE environment."
+  type        = string
+  sensitive   = true
+}
+
+variable "tenant_id" {
+  description = "Microsoft Entra tenant id."
+  type        = string
+  sensitive   = true
+}
+
+variable "environment" {
+  description = "Canonical hosted environment."
+  type        = string
+  validation {
+    condition     = contains(["dev", "test", "stage", "prod"], var.environment)
+    error_message = "environment must be one of dev, test, stage, prod"
+  }
+}
+
+variable "location" {
+  description = "Azure region."
+  type        = string
+  default     = "canadacentral"
+}
+
+variable "vnet_cidr" {
+  description = "Environment-isolated VNet CIDR."
+  type        = string
+  default     = "10.40.0.0/16"
+}
+
+variable "aks_subnet_cidr" {
+  description = "AKS subnet CIDR."
+  type        = string
+  default     = "10.40.0.0/20"
+}
+
+variable "kubernetes_version" {
+  description = "AKS Kubernetes version. Null lets Azure choose the current supported default."
+  type        = string
+  default     = null
+}
+
+variable "istio_revisions" {
+  description = "Azure-supported AKS Istio add-on revisions. Resolve against az aks mesh get-revisions for the selected region/version before live apply."
+  type        = list(string)
+  default     = []
+  validation {
+    condition     = length(var.istio_revisions) <= 2 && alltrue([for r in var.istio_revisions : can(regex("^asm-[0-9]+-[0-9]+$", r))])
+    error_message = "istio_revisions must contain at most two Azure AKS asm-X-Y revisions"
+  }
+}
+
+variable "node_vm_size" {
+  description = "Non-production node size."
+  type        = string
+  default     = "Standard_DC2s_v3"
+}
+
+variable "node_count" {
+  description = "Managed-Istio development system-pool baseline. Real HOST-013 verification proved two nodes insufficient during an Istiod rolling update before external ingress materialization, so dev keeps three nodes for rollout/surge headroom."
+  type        = number
+  default     = 3
+  validation {
+    condition     = var.node_count >= 2 && var.node_count <= 3
+    error_message = "non-production system node_count must remain between 2 and 3"
+  }
+}
+
+variable "private_cluster_enabled" {
+  description = "Keep AKS API server private. Must remain true for governed deployment."
+  type        = bool
+  default     = true
+  validation {
+    condition     = var.private_cluster_enabled
+    error_message = "DE.PULSE hosted trust baseline requires private_cluster_enabled=true"
+  }
+}
+
+variable "tags" {
+  description = "Additional resource tags."
+  type        = map(string)
+  default     = {}
+}

@@ -17,6 +17,7 @@ concurrency:
 
 env:
   GO_VERSION: '1.26.6'
+  GOVULNCHECK_VERSION: 'v1.1.4'
   NODE_VERSION: '24'
   PYTHON_VERSION: '3.13'
   PYTHONDONTWRITEBYTECODE: '1'
@@ -90,11 +91,34 @@ jobs:
         run: python3 tools/release/release_identity.py --verify
       - name: Python syntax
         run: python3 -m compileall -q tools/ci tools/release tools/release/source_fingerprint.py
+      - name: HOST-020 hosted deployment admission
+        run: python3 tools/ci/hosted_deployment_admission_self_test.py
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
-        if: ${{ steps.impact.outputs.go_required == 'true' }}
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
+      - name: HOST-019 live Go advisory scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          go install "golang.org/x/vuln/cmd/govulncheck@${GOVULNCHECK_VERSION}"
+          {
+            echo "source_sha=${{ github.event.pull_request.head.sha || github.sha }}"
+            echo "go_version=$(go version)"
+            echo "scanner=golang.org/x/vuln/cmd/govulncheck@${GOVULNCHECK_VERSION}"
+            echo "database=https://vuln.go.dev"
+          } > govulncheck-metadata.txt
+          govulncheck -db https://vuln.go.dev ./... 2>&1 | tee govulncheck.txt
+      - name: Retain HOST-019 advisory evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST019-govulncheck-${{ github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            govulncheck-metadata.txt
+            govulncheck.txt
+          if-no-files-found: error
+          retention-days: 30
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         with:
@@ -118,6 +142,9 @@ jobs:
       - name: Go full unit/package suite
         if: ${{ steps.impact.outputs.go_required == 'true' }}
         run: go test -count=1 ./...
+      - name: PostgreSQL tagged compile
+        if: ${{ steps.impact.outputs.go_required == 'true' }}
+        run: go test -tags postgres -run '^$' ./...
       - name: Renderer JavaScript syntax
         if: ${{ steps.impact.outputs.node_required == 'true' }}
         shell: bash
@@ -178,6 +205,9 @@ jobs:
             echo '- v19 requirement conservation: PASS'
             echo '- v18 T10 future-proof/zero-gap/portability assurance: PASS'
             echo '- Git-object provenance: PASS'
+            echo '- HOST-019 live govulncheck advisory scan: PASS (fail-closed)'
+            echo '- HOST-020 source/SBOM/advisory/provenance/environment admission: PASS (fail-closed)'
+            echo '- PostgreSQL tagged compile: PASS when Go lane is required; no live DB/PITR claim'
             echo '- exact-head status: DE.PULSE/fast-head'
             echo '- release dispatch: NOT PERMITTED from CI Fast'
           } >> "$GITHUB_STEP_SUMMARY"

@@ -15,14 +15,15 @@ Use the following hierarchy whenever DE.PULSE scope or a prior decision is quest
 3. **`governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md`** — permanent GitHub-backed, vendor/account-independent resume and handoff contract.
 4. **`governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`** — canonical carry-forward + governance-to-implementation contract for previously approved/certified capabilities, ownership/RBAC/platform rules, active release obligations, unresolved defect continuity, and future-loss prevention.
 5. **`governance/ADAPTIVE-OPERATING-CONTRACT.md`** — canonical permanent engineering/build/release/delivery contract.
-6. **`governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`** — permanent checkpoint-based CI/CD execution contract across Adaptive Roadmap, Adaptive Build Plan, Adaptive Build Process and Adaptive Delivery Process; optimizes execution timing without reducing evidence or release quality.
-7. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical 10/10 Adaptive Data Reliability & Graceful Degradation Intelligence (ADR-GDI) contract across roadmap/build/delivery/runtime reliability.
-8. **`governance/ROADMAP.md`** — canonical placement and sequencing of approved future work.
-9. **`governance/DECISION-LOG.md` plus approved material decision records under `governance/DECISION-*.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
-10. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
-11. **`handoff/CURRENT.md` plus G16/release evidence** — the one current human continuation report and what actually happened in the release.
-12. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
-13. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
+6. **Full-product audit rebaseline and machine registers** — `governance/PRODUCT_AUDIT_REBASELINE_2026_08_27.md`, `governance/PRODUCT_AUDIT_COVERAGE_2026_08_27.md`, and the finding/coverage/5×5 JSON under `governance/programs/V19-V20-REBASELINE/`; these conserve the audit without claiming implementation.
+7. **Canonical adaptive narratives** — `governance/ROADMAP.md`, `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`, `adaptive-governance/ADAPTIVE_BUILD_PROCESS.md`, and `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`; their disposition index is `adaptive-governance/README.md`.
+8. **`governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`** — permanent checkpoint-based CI/CD execution contract across the four adaptive layers; optimizes execution timing without reducing evidence or release quality.
+9. **`governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md`** — canonical Adaptive Data Reliability & Graceful Degradation Intelligence contract across roadmap/build/delivery/runtime reliability.
+10. **`governance/DECISION-LOG.md` plus approved material decision records under `governance/DECISION-*.md`** — append-only history of approved, superseded, rejected, or deferred material decisions.
+11. **Current execution state** — live GitHub PR/head/check/artifact evidence, `governance/current-state.json`, the active closure ledger, and `handoff/CURRENT.md`; these own exact progress and the one next action, not permanent scope.
+12. **`release/<version>/G1-IMMUTABLE-SCOPE.md`** — immutable scope snapshot for one specific release after G1.
+13. **Historical certified Stable traceability / Major Closure evidence** — inherited implementation truth that must not silently vanish during governance compression or refactoring.
+14. Chat memory or recollection — continuity aid only; never override the canonical GitHub records above.
 
 A governance document never proves a feature exists in code. A release/code artifact never silently changes approved product intent. Absence from a newer condensed summary does not by itself retire an approved or certified capability.
 
@@ -40,9 +41,12 @@ Read/search at minimum:
 - `governance/AI-ASSISTANT-PORTABILITY-CONTRACT.md` when resuming, changing assistant/account, or producing a handoff;
 - `governance/CONTINUITY-IMPLEMENTATION-CONTRACT.md`;
 - `governance/ADAPTIVE-OPERATING-CONTRACT.md`;
+- `adaptive-governance/README.md` and its single-authority map;
+- `governance/PRODUCT_AUDIT_REBASELINE_2026_08_27.md` plus the finding register when audit scope is relevant;
 - `governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md` when build/CI/CD/checkpoint/cost/qualification/release execution is relevant;
 - `governance/ADAPTIVE-DATA-RELIABILITY-CONTRACT.md` when reliability, data freshness, provider/runtime/database pressure, degraded-state semantics, backpressure or recovery is relevant;
 - `governance/ROADMAP.md`;
+- `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`, `adaptive-governance/ADAPTIVE_BUILD_PROCESS.md`, and `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md` when planning or executing a build;
 - `governance/DECISION-LOG.md` and applicable `governance/DECISION-*.md` material decision records.
 
 When release-specific, also inspect the current `release/<version>/G1-IMMUTABLE-SCOPE.md`, active branch implementation evidence, latest G16/handoff, relevant qualification checkpoint, and relevant inherited Stable traceability.
@@ -94,6 +98,8 @@ G10/G12/G14/G16 must be able to trace applicable requirements through source, te
 Handoffs are release continuation records, not the master product contract. They may summarize only what was relevant to that release.
 
 Permanent decisions belong in `governance/` and are referenced by future handoffs rather than repeatedly copied in full.
+
+`adaptive-governance/CURRENT_ADAPTIVE_*.md` files are compatibility/status projections only. They must not contain an independent roadmap, build plan, process, delivery contract, gap ledger or next action. Update exact execution state in `governance/current-state.json`, the active closure ledger and `handoff/CURRENT.md`; update durable intent in the single canonical narrative named by `adaptive-governance/README.md`.
 
 Historical handoffs and certified traceability remain evidence sources for detecting an older approved/certified capability that was accidentally omitted from newer condensed governance.
 

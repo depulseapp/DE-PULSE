@@ -957,7 +957,8 @@ func (e *Engine) persistRapidMoveEvent(ev RapidMoveEvent, firstDecision bool) {
 	}}}
 	if firstDecision {
 		evidenceID := ev.ID + ":evidence"
-		batch.Evidence = append(batch.Evidence, EvidenceRecord{ID: evidenceID, Symbol: ev.Symbol, Kind: "rapid-move-event", ObservedAt: rapidMoveEventAnchorMs(ev), Source: "canonical-live-pipeline", Provenance: rapidMovePolicyVersion, FreshnessState: "POINT_IN_TIME", Payload: raw})
+		anchor := rapidMoveEventAnchorMs(ev)
+		batch.Evidence = append(batch.Evidence, EvidenceRecord{ID: evidenceID, Symbol: ev.Symbol, Kind: "rapid-move-event", SourceAt: anchor, ObservedAt: ev.DetectedAt, IngestedAt: ev.DetectedAt, KnownAt: ev.DetectedAt, EffectiveFrom: anchor, RevisionID: evidenceID, AmendmentState: "ORIGINAL", Source: "canonical-live-pipeline", Provenance: rapidMovePolicyVersion, FreshnessState: "POINT_IN_TIME", RightsEvidenceRef: "internal:canonical-live-pipeline", RetentionClass: "DECISION_LINEAGE", Payload: raw})
 		batch.Decisions = append(batch.Decisions, DecisionLineageRecord{ID: ev.ID + ":decision", Symbol: ev.Symbol, Horizon: "INTRADAY", EvidenceID: evidenceID, DecisionKind: "rapid-move-materiality", DecisionValue: ev.State, FormulaVersion: rapidMovePolicyVersion, CreatedAt: ev.DetectedAt, Payload: raw})
 	}
 	if ev.State == "RESOLVED" && ev.Outcome20mPct != nil {

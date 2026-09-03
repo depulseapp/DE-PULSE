@@ -1,0 +1,42 @@
+{
+  "schema": "DE.PULSE-HOSTED-DESIRED-STATE-1",
+  "version": "v1",
+  "environments": {
+    "dev": {
+      "isolationId": "depulse-dev",
+      "serviceIdentity": "depulse-web-dev",
+      "ingressPolicy": "managed-edge:https:443->mesh-mtls:8080",
+      "egressPolicy": "default-deny:canonical-external-host-allowlist:https-wss:443",
+      "networkPolicy": "isolated-namespace:default-deny",
+      "tlsPolicy": "edge-min-tls1.2:internal-mtls-required",
+      "internalMTLS": true
+    },
+    "test": {
+      "isolationId": "depulse-test",
+      "serviceIdentity": "depulse-web-test",
+      "ingressPolicy": "managed-edge:https:443->mesh-mtls:8080",
+      "egressPolicy": "default-deny:canonical-external-host-allowlist:https-wss:443",
+      "networkPolicy": "isolated-namespace:default-deny",
+      "tlsPolicy": "edge-min-tls1.2:internal-mtls-required",
+      "internalMTLS": true
+    },
+    "stage": {
+      "isolationId": "depulse-stage",
+      "serviceIdentity": "depulse-web-stage",
+      "ingressPolicy": "managed-edge:https:443->mesh-mtls:8080",
+      "egressPolicy": "default-deny:canonical-external-host-allowlist:https-wss:443",
+      "networkPolicy": "isolated-namespace:default-deny",
+      "tlsPolicy": "edge-min-tls1.2:internal-mtls-required",
+      "internalMTLS": true
+    },
+    "prod": {
+      "isolationId": "depulse-prod",
+      "serviceIdentity": "depulse-web-prod",
+      "ingressPolicy": "managed-edge:https:443->mesh-mtls:8080",
+      "egressPolicy": "default-deny:canonical-external-host-allowlist:https-wss:443",
+      "networkPolicy": "isolated-namespace:default-deny",
+      "tlsPolicy": "edge-min-tls1.2:internal-mtls-required",
+      "internalMTLS": true
+    }
+  }
+}

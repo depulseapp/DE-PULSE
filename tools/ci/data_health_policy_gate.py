@@ -18,23 +18,23 @@ POLICY_PATH = ROOT / "governance/policies/data_health_policy.json"
 MATRIX_PATH = ROOT / "governance/data-health/provider-capability-matrix.json"
 SLO_PATH = ROOT / "governance/data-health/data-health-slo.json"
 FETCH_PATH = ROOT / "governance/data-health/provider-fetch-paths.json"
-ADAPTIVE_CURRENT_CONTRACTS = {
-    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_ROADMAP.md": (
-        "#80", "#81", "#82", "#83", "#78", "#84",
-        "Smart Provider Router v2", "PARTIAL COVERAGE", "DATA DEGRADED",
+ADAPTIVE_CANONICAL_CONTRACTS = {
+    ROOT / "governance/ROADMAP.md": (
+        "Smart Provider Router v2", "No Execution",
+        "Development Production Ready", "Commercial/Public Ready",
     ),
-    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PLAN.md": (
+    ROOT / "adaptive-governance/ADAPTIVE_BUILD_PLAN.md": (
         "provider-capability-matrix.json", "data-health-slo.json",
-        "provider-fetch-paths.json", "Adaptive Roadmap", "Build Plan",
-        "Build Process", "Delivery Process",
+        "provider-fetch-paths.json", "SymbolIntelligenceSnapshot",
+        "Opportunity Lifecycle", "Watchlist",
     ),
-    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_BUILD_PROCESS.md": (
+    ROOT / "adaptive-governance/ADAPTIVE_BUILD_PROCESS.md": (
         "Smart Provider Router v2", "fail closed", "canonical freshness",
-        "#81/#82/#83/#78/#84",
+        "#80/#81/#82/#83/#78/#84",
     ),
-    ROOT / "adaptive-governance/CURRENT_ADAPTIVE_DELIVERY_PROCESS.md": (
-        "canonical Fast exact-head PASS", "Qualified exact-head PASS",
-        "SEC/EDGAR", "No Execution",
+    ROOT / "adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md": (
+        "#80/#81/#82/#83/#78/#84", "SEC/EDGAR",
+        "No Execution", "Commercial/Public",
     ),
 }
 
@@ -284,15 +284,15 @@ def validate_existing_policy(errors: list[str]) -> None:
 
 
 def validate_adaptive_current_contracts(errors: list[str]) -> None:
-    for path, tokens in ADAPTIVE_CURRENT_CONTRACTS.items():
+    for path, tokens in ADAPTIVE_CANONICAL_CONTRACTS.items():
         if not path.is_file():
-            errors.append(f"missing CURRENT Adaptive Data Health contract: {path.relative_to(ROOT)}")
+            errors.append(f"missing canonical Adaptive Data Health contract: {path.relative_to(ROOT)}")
             continue
         text = path.read_text(encoding="utf-8")
         for token in tokens:
             if token not in text:
                 errors.append(
-                    f"CURRENT Adaptive Data Health contract drift in {path.relative_to(ROOT)}: missing {token!r}"
+                    f"canonical Adaptive Data Health contract drift in {path.relative_to(ROOT)}: missing {token!r}"
                 )
 
 
@@ -336,7 +336,7 @@ def main() -> int:
         return 2
     print("provider/capability classification: PASS")
     print("Data Health SLO/degradation/recovery contract: PASS")
-    print("CURRENT Adaptive Roadmap/Build Plan/Build Process/Delivery Process: PASS")
+    print("canonical Adaptive Roadmap/Build Plan/Build Process/Delivery Process: PASS")
     print("runtime external-host recurrence protection: PASS")
     print("DE.PULSE Adaptive Data Health: PASS")
     return 0

@@ -1,0 +1,49 @@
+{
+  "schema": "DE.PULSE-HOSTED-POSTGRES-POLICY-1",
+  "version": "v1",
+  "rlsDisposition": "application-authorization-canonical-identity",
+  "migrationStrategy": "expand-contract",
+  "rollbackPolicy": "forward-fix-or-tested-restore",
+  "environments": {
+    "dev": {
+      "schema": "depulse_dev",
+      "maxOpenConnections": 16,
+      "haRequired": false,
+      "backupEncryptionRequired": true,
+      "pitrRequired": false,
+      "maxRPO": "24h",
+      "maxRTO": "8h",
+      "restoreDrillMaxAge": "2160h"
+    },
+    "test": {
+      "schema": "depulse_test",
+      "maxOpenConnections": 24,
+      "haRequired": false,
+      "backupEncryptionRequired": true,
+      "pitrRequired": true,
+      "maxRPO": "12h",
+      "maxRTO": "6h",
+      "restoreDrillMaxAge": "720h"
+    },
+    "stage": {
+      "schema": "depulse_stage",
+      "maxOpenConnections": 48,
+      "haRequired": true,
+      "backupEncryptionRequired": true,
+      "pitrRequired": true,
+      "maxRPO": "1h",
+      "maxRTO": "2h",
+      "restoreDrillMaxAge": "720h"
+    },
+    "prod": {
+      "schema": "depulse_prod",
+      "maxOpenConnections": 64,
+      "haRequired": true,
+      "backupEncryptionRequired": true,
+      "pitrRequired": true,
+      "maxRPO": "15m",
+      "maxRTO": "1h",
+      "restoreDrillMaxAge": "720h"
+    }
+  }
+}

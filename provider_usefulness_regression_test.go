@@ -220,7 +220,7 @@ func TestProviderTelemetryUIIsPrivilegedAndRouterIndependent(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(ui)
-	for _, token := range []string{"SUPER_OWNER", "OWNER", "ADMIN", "Transport reliability", "Semantic Evidence", "successPct", "p50LatencyMs", "p95LatencyMs", "ADVISORY ONLY", "no routing effect"} {
+	for _, token := range []string{"SUPER_OWNER", "OWNER", "ADMIN", "Transport reliability", "Operational Scorecard", "transport UNKNOWN", "Semantic Evidence", "successPct", "p50LatencyMs", "p95LatencyMs", "OBSERVABILITY ONLY", "ADVISORY ONLY", "no routing effect"} {
 		if !strings.Contains(text, token) {
 			t.Fatalf("provider telemetry UI missing %q", token)
 		}
@@ -245,11 +245,49 @@ func TestProviderTelemetryUIIsPrivilegedAndRouterIndependent(t *testing.T) {
 	if strings.Contains(string(router), "ProviderUsefulness") || strings.Contains(string(router), "providerUsefulness") {
 		t.Fatal("semantic usefulness telemetry must not feed Smart Provider Router v2 ordering")
 	}
+	if strings.Contains(string(router), "ProviderOperationalScorecard") || strings.Contains(string(router), "providerScorecard") {
+		t.Fatal("operational scorecard projection must not feed Smart Provider Router v2 ordering")
+	}
 	runtimeOwner, err := os.ReadFile("provider_usefulness_runtime.go")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !strings.Contains(string(runtimeOwner), "buildProviderReconciliation") {
 		t.Fatal("semantic usefulness must derive from canonical reconciliation truth")
+	}
+}
+
+func TestProviderOperationalScorecardsPreserveMeasuredAndUnknownTruth(t *testing.T) {
+	agreement := 80.0
+	registrations := []ProviderRegistration{
+		{Name: "Measured", CostClass: "Contract tier", Configured: func(Settings, Secrets) bool { return true }, Routes: []ProviderDatasetContract{{Dataset: "Quotes", Capability: "Quotes"}}},
+		{Name: "Unknown", CostClass: "Provider dependent", Configured: func(Settings, Secrets) bool { return true }, Routes: []ProviderDatasetContract{{Dataset: "Fundamentals", Capability: "Fundamentals"}}},
+	}
+	router := ProviderRouterSnapshot{Routes: []ProviderRouteState{
+		{Dataset: "Quotes", Serving: "Measured", Route: []ProviderRouteHop{{Provider: "Measured", Configured: true, Health: "AVAILABLE", Circuit: "CLOSED", Attempts: 10, LastSuccess: 100}}},
+		{Dataset: "Fundamentals", Route: []ProviderRouteHop{{Provider: "Unknown", Configured: true, Health: "AVAILABLE", Circuit: "CLOSED"}}},
+	}}
+	rows := buildProviderOperationalScorecards(registrations, Settings{}, Secrets{}, router,
+		[]FreshnessDiagnostic{{Dataset: "Quotes", Provider: "Measured", State: "LIVE"}},
+		[]ProviderRequestDiagnostics{{Provider: "Measured", Successes: 9, Errors: 1, SuccessPct: 90, P50LatencyMs: 25, P95LatencyMs: 75, BudgetPerMinute: 30, BudgetRemaining: 20}},
+		[]ProviderUsefulnessDiagnostic{{Provider: "Measured", State: "OBSERVING", CrossSourceSamples: 10, AgreementPct: &agreement, RoutingImpact: "ADVISORY_ONLY"}},
+		[]LiveSubscriptionBudgetDiagnostics{{Provider: "Measured stream", Capacity: 20, Available: 7}}, 123)
+	byProvider := map[string]ProviderOperationalScorecard{}
+	for _, row := range rows {
+		byProvider[row.Provider] = row
+	}
+	measured := byProvider["Measured"]
+	if measured.TransportMeasurementState != "MEASURED" || measured.SuccessPct == nil || *measured.SuccessPct != 90 || measured.P50LatencyMs == nil || *measured.P50LatencyMs != 25 || measured.P95LatencyMs == nil || *measured.P95LatencyMs != 75 {
+		t.Fatalf("measured transport truth missing: %+v", measured)
+	}
+	if measured.FreshnessMeasurementState != "MEASURED" || measured.HeadroomMeasurementState != "MEASURED" || measured.RequestBudgetRemaining == nil || *measured.RequestBudgetRemaining != 20 || measured.LiveSubscriptionAvailable == nil || *measured.LiveSubscriptionAvailable != 7 {
+		t.Fatalf("measured freshness/headroom truth missing: %+v", measured)
+	}
+	if measured.AgreementPct == nil || *measured.AgreementPct != 80 || measured.RoutingImpact != "OBSERVABILITY_ONLY" || measured.ObservedCostUSD != nil || measured.CostMeasurementState != "DECLARED_CLASS_ONLY" {
+		t.Fatalf("semantic/cost truth must remain advisory and non-invented: %+v", measured)
+	}
+	unknown := byProvider["Unknown"]
+	if unknown.TransportMeasurementState != "UNKNOWN" || unknown.FreshnessMeasurementState != "UNKNOWN" || unknown.HeadroomMeasurementState != "UNKNOWN" || unknown.SuccessPct != nil || unknown.P50LatencyMs != nil || unknown.AgreementPct != nil || unknown.ObservedCostUSD != nil {
+		t.Fatalf("unmeasured metrics must remain explicitly unknown: %+v", unknown)
 	}
 }

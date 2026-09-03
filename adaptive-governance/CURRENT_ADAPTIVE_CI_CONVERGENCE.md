@@ -1,15 +1,22 @@
-# CURRENT Adaptive CI Convergence
+# CURRENT Adaptive CI Convergence — Status Projection
 
-**Canonical machine state:** `governance/current-state.json`  
-**Certified Stable:** `v18.10.0`  
-**Completed final-v18 program:** #113 / `ADAPT-V18-FINAL-CLOSURE-10-10-001` on `adapt-v18-final-closure-10-10-001`  
-**Final-v18 ledger:** `governance/work-slices/ADAPT-V18-FINAL-CLOSURE-10-10-001/closure.json`  
-**Retained process-control authority (historical COMPLETE):** #107 / `ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001` / `adapt-provider-professional-closure-001` / `governance/work-slices/ADAPT-PROVIDER-PROFESSIONAL-CLOSURE-001/closure.json`.
+**Status:** COMPATIBILITY PROJECTION / NOT AN INDEPENDENT CI PLAN  
+**Canonical CI contracts:** `governance/CI-EFFICIENCY-CONTRACT.md`, `governance/ADAPTIVE-CI-QUALIFICATION-CONTRACT.md`, `adaptive-governance/ADAPTIVE_CI_OPERATING_CONTRACT.md`  
+**Machine status:** `governance/current-state.json`  
+**Human continuation:** `handoff/CURRENT.md`
 
-Exactly three routine workflows remain canonical: `ci-fast.yml`, `ci-qualified.yml`, and `release.yml`. v18.10.0 passed the complete G0–G16 chain. T10 permanently binds the 180-row effective v18 regression inventory, retired-test equivalence, GitHub-only portability, and the `HOST-001..HOST-072` conservation gate into the existing CI control plane.
+Current projected identity:
 
-GitHub-hosted artifact attestation remains mandatory where GitHub supports repository attestations. For this user-owned private repository GitHub does not support the hosted attestation API, so release publication truthfully uses mandatory G15 exact-hash provenance, promotion verification and SBOM instead; public/supported repositories still fail closed on hosted-attestation failure.
+- Certified Stable: `v18.10.0`
+- Active work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`
+- Active issue / PR: #148 / PR #149
+- Active branch: `adapt-hosted-trust-foundation-001`
+- Closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
+- Active external residual: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`
+- Closure gap: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`
+- Residual waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`
+- Supporting Azure checkpoint: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-checkpoint-2026-08-28.json`
 
-## Exactly one next action
+The Azure residual is BLOCKED_EXTERNAL / UNVERIFIED external infrastructure evidence and does not block HOST-015+ Development work while the scope-limited waiver validates; it is not a Qualified PASS or Commercial/Public activation proof.
 
-Use the existing CI owners to execute the #66 source-overlap/residual audit; do not add another workflow family or start v19 until the audit passes.
+Fast, Qualified and Release status is read from live GitHub on the exact head. Do not add a next action or duplicate workflow policy here.

@@ -1,6 +1,6 @@
 {
   "schema": "DE.PULSE-CI-DEPENDENCY-LOCK-1",
-  "updated_at": "2026-08-22",
+  "updated_at": "2026-09-03",
   "scope": {
     "immutable_action_pin_workflows": [
       ".github/workflows/ci-fast.yml",
@@ -36,6 +36,14 @@
     "actions/attest-build-provenance": {
       "label": "v4.2.2",
       "sha": "4d101475d8b20a2381f78447822ac1eab6504dd8"
+    },
+    "azure/login": {
+      "label": "v3.0.0",
+      "sha": "532459ea530d8321f2fb9bb10d1e0bcf23869a43"
+    },
+    "hashicorp/setup-terraform": {
+      "label": "v4.0.1",
+      "sha": "dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     }
   },
   "browser": {
@@ -44,12 +52,91 @@
     "cache": "setup-python pip cache keyed by browser-requirements.txt",
     "system_browser": "Google Chrome supplied by ubuntu-24.04 runner through CHROME_BIN"
   },
+  "go_supply_chain": {
+    "schema": "DE.PULSE-GO-SUPPLY-CHAIN-1",
+    "module_file": "go.mod",
+    "approved_source_prefixes": [
+      "github.com/jackc/",
+      "golang.org/x/"
+    ],
+    "approved_licenses": [
+      "MIT",
+      "BSD-3-Clause"
+    ],
+    "advisory": {
+      "scanner": "golang.org/x/vuln/cmd/govulncheck",
+      "version": "v1.1.4",
+      "database": "https://vuln.go.dev",
+      "policy": "fail-closed on scanner/database error or reachable vulnerability"
+    },
+    "components": {
+      "github.com/jackc/pgx/v5": {
+        "version": "v5.7.6",
+        "direct": true,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgx",
+        "revoked": false
+      },
+      "github.com/jackc/pgpassfile": {
+        "version": "v1.0.0",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgpassfile",
+        "revoked": false
+      },
+      "github.com/jackc/pgservicefile": {
+        "version": "v0.0.0-20240606120523-5a60cdf6a761",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/pgservicefile",
+        "revoked": false
+      },
+      "github.com/jackc/puddle/v2": {
+        "version": "v2.2.2",
+        "direct": false,
+        "license": "MIT",
+        "source": "https://github.com/jackc/puddle",
+        "revoked": false
+      },
+      "golang.org/x/crypto": {
+        "version": "v0.37.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/crypto",
+        "revoked": false
+      },
+      "golang.org/x/sync": {
+        "version": "v0.13.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/sync",
+        "revoked": false
+      },
+      "golang.org/x/text": {
+        "version": "v0.24.0",
+        "direct": false,
+        "license": "BSD-3-Clause",
+        "source": "https://go.googlesource.com/text",
+        "revoked": false
+      }
+    },
+    "deployment_admission": {
+      "requires_exact_source_sha": true,
+      "requires_immutable_artifact_digest": true,
+      "requires_source_bound_spdx": true,
+      "requires_supported_provenance_attestation": true,
+      "requires_successful_advisory_scan": true,
+      "requires_target_environment": true,
+      "revoked_component_blocks_admission": true
+    }
+  },
   "permission_policy": {
     "default": "contents: read",
     "allowed_write_permissions": {
       "ci-fast.yml:fast": ["statuses: write"],
       "ci-fast.yml:branch-hygiene": ["contents: write"],
       "ci-qualified.yml:evidence": ["statuses: write"],
+      "ci-qualified.yml:host013-azure-trust": ["id-token: write"],
       "release.yml:publish": ["contents: write", "id-token: write", "attestations: write"]
     },
     "forbidden_in_scoped_workflows": [
@@ -60,6 +147,7 @@
       "security-events: write",
       "write-all"
     ],
-    "release_provenance_exception": "release.yml publish may use id-token: write and attestations: write only to create signed provenance attestations for the exact same-run certified runnable artifacts; all other jobs retain read-only defaults unless separately enumerated above."
+    "release_provenance_exception": "release.yml publish may use id-token: write and attestations: write only to create signed provenance attestations for the exact same-run certified runnable artifacts; all other jobs retain read-only defaults unless separately enumerated above.",
+    "qualified_azure_oidc_exception": "ci-qualified.yml host013-azure-trust may use id-token: write only when the explicit manual HOST013_AZURE_AKS_OPERATOR_DRILL confirmation is present, solely for GitHub OIDC federation to the non-production Azure deployment identity; no client secret is permitted and ordinary Qualified jobs remain read-only except evidence status publication."
   }
 }

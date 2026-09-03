@@ -1,0 +1,170 @@
+{
+  "schema": "DE.PULSE-HOST013-014-AZURE-CHECKPOINT-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "issue": 148,
+  "pullRequest": 149,
+  "branch": "adapt-hosted-trust-foundation-001",
+  "requirements": ["HOST-013", "HOST-014"],
+  "readinessTier": "DEVELOPMENT_PRODUCTION_READY",
+  "status": "IMPLEMENTED_UNVERIFIED_EXTERNAL_BLOCKER_ACCEPTED_FOR_DEVELOPMENT_ADVANCEMENT",
+  "selectedSubstrate": {
+    "provider": "Azure",
+    "service": "AKS",
+    "defaultRegion": "canadacentral",
+    "serviceMesh": "Microsoft-managed Istio add-on",
+    "portablePolicyOwner": "tools/hosted/render_kubernetes_trust.py"
+  },
+  "canonicalOwners": {
+    "environmentDesiredState": "internal/hostedenv/desired_state_v1.json",
+    "externalEgress": "governance/hosted-infrastructure/external-egress-v1.json",
+    "azureInfrastructure": "governance/hosted-infrastructure/azure/",
+    "azureOperator": "tools/ci/host013_azure_operator.py",
+    "azureConfigurationIdentityEvidence": "tools/ci/host013_azure_live_evidence.py",
+    "azureTrafficEvidence": "tools/ci/host013_azure_traffic_probe.py",
+    "qualifiedWorkflow": ".github/workflows/ci-qualified.yml",
+    "repositoryGate": "tools/ci/hosted_infrastructure_contract_gate.py",
+    "azureRepositoryGate": "tools/ci/azure_hosted_infrastructure_gate.py",
+    "workflowPolicyGate": "tools/ci/workflow_policy.py"
+  },
+  "implementedControls": [
+    "unique dev/test/stage/prod canonical environment isolation and service identities",
+    "private AKS control plane",
+    "local AKS accounts disabled",
+    "user-assigned AKS control-plane identity",
+    "dedicated workload managed identity and federated Kubernetes service-account binding",
+    "OIDC issuer and Azure Workload Identity",
+    "Kubernetes RBAC and Azure Policy",
+    "Azure network policy",
+    "BYO VNet Network Contributor role scoped to the environment VNet",
+    "Microsoft-managed Istio with governed asm-X-Y revision selection",
+    "AKS managed-Istio revision namespace labeling instead of self-managed istio-injection conventions",
+    "AKS external Istio ingress gateway enabled and internal gateway disabled",
+    "AKS managed ingress namespace and selector conventions",
+    "strict internal mTLS policy",
+    "managed-ingress-only Istio authorization policy",
+    "Istio REGISTRY_ONLY outbound mode",
+    "canonical DNS external-host ServiceEntry",
+    "default-deny external egress inventory with production-source recurrence scanning",
+    "Azure Workload Identity OAuth endpoint explicitly governed in the canonical egress inventory",
+    "Azure Key Vault Secrets Provider integration hook without application secret values",
+    "AzureRM remote Terraform state using OIDC and Microsoft Entra data-plane authentication",
+    "GitHub-to-Azure federated identity bootstrap/deployment separation",
+    "existing CI Qualified manual-only Azure operator wiring with id-token write permission",
+    "pinned azure/login and hashicorp/setup-terraform actions covered by dependency lock/reproducibility policy",
+    "dev-only exact-head Azure operator acknowledgement",
+    "private-cluster live inspection through az aks command invoke",
+    "secret-free Azure configuration/identity evidence collector",
+    "digest-pinned ephemeral real-AKS positive/adverse trust traffic probe",
+    "edge TLS 1.2 positive and TLS 1.1 adverse probe",
+    "managed ingress to strict-mTLS workload positive probe",
+    "cross-environment direct-ingress adverse probe",
+    "canonical allowed egress positive probe",
+    "unregistered HTTPS egress adverse probe",
+    "real Azure Workload Identity projected-token and OAuth token-exchange probe without retaining bearer material",
+    "ephemeral probe TLS credential and Kubernetes resource cleanup",
+    "mandatory post-verification terraform plan -detailed-exitcode zero-drift proof",
+    "workload identity client/principal/subject outputs for live evidence binding",
+    "temporary cluster-scoped Azure Kubernetes Service RBAC Cluster Admin verification assignment with fail-closed removal verification",
+    "managed Istio rollout convergence and external ingress readiness diagnostics",
+    "three-node system-pool target for supported managed-Istio rollout capacity"
+  ],
+  "repositoryImplementationHead": {
+    "candidateSha": "475ef25d51360093a558f9b28024c89b75e547f5",
+    "workflow": "DE.PULSE | CI Fast",
+    "runNumber": 1391,
+    "runId": 33562863732,
+    "conclusion": "SUCCESS",
+    "evidenceMeaning": "Exact-head repository implementation and hardened Azure verification harness passed Fast, including managed-Istio rollout convergence, managed external ingress readiness, temporary AKS verification RBAC cleanup, configuration/identity and traffic/adverse evidence contracts, conservation gates, Python syntax, Go suite and PostgreSQL tagged compile. This remains repository evidence and does not verify live AKS service trust."
+  },
+  "realAzureAttemptEvidence": [
+    {
+      "qualifiedRunNumber": 244,
+      "runId": 33560870545,
+      "candidateSha": "4273bf4d20df28d2d064f6db4fe029988cdf37aa",
+      "result": "FAIL",
+      "meaning": "Real Azure evidence exposed managed-Istio rollout CPU pressure and absent managed external ingress realization on the two-node system pool. Failure evidence was retained and temporary verification RBAC cleanup succeeded."
+    },
+    {
+      "qualifiedRunNumber": 245,
+      "runId": 33563399097,
+      "candidateSha": "475ef25d51360093a558f9b28024c89b75e547f5",
+      "result": "FAIL_EXTERNAL_QUOTA",
+      "meaning": "Terraform correctly planned only the AKS system-pool scale from two to three Standard_DC2s_v3 nodes (0 add, 1 change, 0 destroy), but Azure rejected apply with ErrCode_InsufficientVCPUQuota: Canada Central regional vCPU quota had 0 remaining and the additional node required 2 vCPUs. The subscription is an Azure Free Trial and the portal reports it is ineligible for quota adjustment unless upgraded to a paid subscription."
+    }
+  ],
+  "externalBlockerDisposition": {
+    "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+    "classification": "ALLOWED_DEVELOPMENT_TIER_EXTERNAL_BLOCKER",
+    "provider": "Azure",
+    "subscriptionConstraint": "FREE_TRIAL_QUOTA_NOT_ADJUSTABLE_WITHOUT_PAID_UPGRADE",
+    "region": "canadacentral",
+    "observedRegionalVcpuUsage": 4,
+    "observedRegionalVcpuLimit": 4,
+    "additionalVcpuRequiredForDeclaredThreeNodeTarget": 2,
+    "userPaidUpgradeRequired": false,
+    "architectureOrSecurityWeakeningAuthorized": false,
+    "requirementsVerifiedByThisDisposition": false,
+    "blocksDependencyBandAdvancement": false,
+    "eligibleAsNamedHost023DevelopmentResidual": true,
+    "blocksCommercialOrPublicActivation": true,
+    "revisitTrigger": "A no-cost eligible subscription/quota or later authorized paid environment becomes available for the exact live AKS verification drill.",
+    "rationale": "Development should not require the owner to purchase Azure quota solely to produce external managed-infrastructure evidence. Repository implementation remains fail-closed and the real failures are retained. The missing live proof stays explicit instead of weakening Istio, TLS, network, identity, cleanup or drift requirements to fit the free tier."
+  },
+  "zeroMissFindingsResolved": [
+    {
+      "finding": "Qualified Azure operator wiring was missing from the older checkpoint",
+      "resolution": "Existing ci-qualified.yml owns manual-only OIDC HOST-013/014 operator execution; no fourth workflow."
+    },
+    {
+      "finding": "Portable renderer used self-managed Istio injection/ingress conventions against AKS managed Istio",
+      "resolution": "Added explicit aks-managed render profile with asm-X-Y revision label, aks-istio-ingress selector/namespace and Azure workload identity service-account annotation; repository gates reject convention leakage."
+    },
+    {
+      "finding": "Workload managed identity/federated credential existed but canonical service account was not bound to its client ID",
+      "resolution": "Terraform outputs bind the exact workload identity client/subject into AKS-managed manifests and live evidence validates Azure FIC issuer/audience/subject plus service-account annotation."
+    },
+    {
+      "finding": "Live evidence only inspected AKS configuration and did not execute planned positive/adverse traffic behavior",
+      "resolution": "Added dev-only digest-pinned ephemeral traffic probe and made operator PASS depend on TLS, managed ingress/mTLS, direct-ingress denial, allowed/unregistered egress and real workload-identity token exchange evidence."
+    },
+    {
+      "finding": "Azure Workload Identity token endpoint was absent from canonical egress governance",
+      "resolution": "login.microsoftonline.com is an explicit HTTPS runtime dependency in external-egress-v1.json; wildcard/broad HTTPS authority remains prohibited."
+    },
+    {
+      "finding": "Managed Istio readiness could accept a transient endpoint while rollout was incomplete",
+      "resolution": "Readiness now requires full istiod deployment convergence and consecutive stable passes, with ReplicaSet/node/event diagnostics."
+    },
+    {
+      "finding": "Managed external ingress existence/readiness was not separately gated",
+      "resolution": "Operator now reconciles the supported AKS external ingress gateway and requires stable service/443/load-balancer-IP/endpoint/ready-pod evidence before trust manifests or traffic probes."
+    }
+  ],
+  "knownHostedResiduals": [
+    "HOST-013..014 real managed-AKS trust verification remains UNVERIFIED because the Azure Free Trial subscription is fixed at 4/4 Canada Central regional vCPUs and cannot increase quota without a paid upgrade; the declared three-node managed-Istio target requires 2 additional vCPUs.",
+    "The accepted Development-tier external blocker permits progression to HOST-015+ but does not convert HOST-013..014 to VERIFIED and does not authorize Commercial/Public activation.",
+    "The legacy PBOC macro calendar source still contains a plaintext HTTP URL and remains runtimeAllowed=false; hosted runtime must not authorize HTTP. Migrate it to verified HTTPS or retire that source before relying on PBOC hosted retrieval.",
+    "If an eligible no-cost or later authorized environment becomes available, rerun the exact live configuration/identity/traffic/cleanup/drift evidence chain without weakening controls."
+  ],
+  "zeroMissRepositoryAudit": {
+    "qualifiedAzureOperatorWired": true,
+    "fourthWorkflowCreated": false,
+    "longLivedAzureClientSecretRequired": false,
+    "workflowDependencyPinsGoverned": true,
+    "canonicalExternalEgressInventoryBound": true,
+    "aksManagedIstioConventionsBound": true,
+    "workloadIdentityBindingImplemented": true,
+    "liveConfigurationIdentityEvidenceExecutable": true,
+    "livePositiveAdverseTrafficEvidenceExecutable": true,
+    "postVerificationDriftEvidenceExecutable": true,
+    "realManagedEnvironmentEvidencePresent": false,
+    "knownRepositoryImplementationMissCount": 0,
+    "remainingExternalVerificationBlockerCount": 1,
+    "externalBlockerExplicitlyGoverned": true,
+    "dependencyAdvancementAllowed": true
+  },
+  "closureBoundary": "HOST-013..014 remains IMPLEMENTED_UNVERIFIED until the existing manual CI Qualified Azure operator passes on a sufficiently resourced isolated non-production AKS environment and proves the full configuration/identity/traffic/cleanup/zero-drift chain. The named Azure Free Trial vCPU quota constraint is accepted as a Development-tier external blocker for dependency-band advancement and may be carried explicitly into HOST-023 under the existing named-external-blocker rule. It must never be represented as live AKS verification, and Commercial/Public activation remains blocked until applicable managed-environment evidence is actually completed.",
+  "nextDependencyBand": "HOST-015..016 — PostgreSQL tenancy/recovery",
+  "commercialPublicActivationImplied": false,
+  "mergeReleaseOrV191Authorized": false
+}

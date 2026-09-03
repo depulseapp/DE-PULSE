@@ -29,45 +29,116 @@ const (
 	UserDisabled UserStatus = "DISABLED"
 )
 
+type TenantStatus string
+
+const (
+	TenantActive   TenantStatus = "ACTIVE"
+	TenantDisabled TenantStatus = "DISABLED"
+	localTenantID               = "local-default"
+)
+
+type DeviceStatus string
+
+const (
+	DeviceActive  DeviceStatus = "ACTIVE"
+	DeviceRevoked DeviceStatus = "REVOKED"
+	DeviceLost    DeviceStatus = "LOST"
+)
+
+type TenantRecord struct {
+	ID        string       `json:"id"`
+	Name      string       `json:"name,omitempty"`
+	Status    TenantStatus `json:"status"`
+	CreatedAt int64        `json:"createdAt"`
+	UpdatedAt int64        `json:"updatedAt"`
+}
+
+type DeviceRecord struct {
+	ID              string       `json:"id"`
+	TenantID        string       `json:"tenantId"`
+	UserID          string       `json:"userId"`
+	Label           string       `json:"label,omitempty"`
+	FingerprintHash string       `json:"fingerprintHash"`
+	Status          DeviceStatus `json:"status"`
+	CreatedAt       int64        `json:"createdAt"`
+	LastSeenAt      int64        `json:"lastSeenAt"`
+	RevokedAt       int64        `json:"revokedAt,omitempty"`
+}
+
 type UserRecord struct {
-	ID              string     `json:"id"`
-	Username        string     `json:"username"`
-	DisplayName     string     `json:"displayName,omitempty"`
-	Role            UserRole   `json:"role"`
-	Status          UserStatus `json:"status"`
-	PasswordHash    string     `json:"passwordHash,omitempty"`
-	MustSetPassword bool       `json:"mustSetPassword,omitempty"`
-	CreatedAt       int64      `json:"createdAt"`
-	UpdatedAt       int64      `json:"updatedAt"`
-	LastLoginAt     int64      `json:"lastLoginAt,omitempty"`
+	ID              string                      `json:"id"`
+	TenantID        string                      `json:"tenantId,omitempty"`
+	Username        string                      `json:"username"`
+	DisplayName     string                      `json:"displayName,omitempty"`
+	Role            UserRole                    `json:"role"`
+	Status          UserStatus                  `json:"status"`
+	PasswordHash    string                      `json:"passwordHash,omitempty"`
+	MustSetPassword bool                        `json:"mustSetPassword,omitempty"`
+	MFACredentials  []HostedMFACredentialRecord `json:"mfaCredentials,omitempty"`
+	CreatedAt       int64                       `json:"createdAt"`
+	UpdatedAt       int64                       `json:"updatedAt"`
+	LastLoginAt     int64                       `json:"lastLoginAt,omitempty"`
 }
 
 type SessionRecord struct {
-	ID                string `json:"id"`
-	TokenHash         string `json:"tokenHash"`
-	UserID            string `json:"userId"`
-	CreatedAt         int64  `json:"createdAt"`
-	AuthenticatedAt   int64  `json:"authenticatedAt,omitempty"`
-	LastSeenAt        int64  `json:"lastSeenAt"`
-	IdleExpiresAt     int64  `json:"idleExpiresAt"`
-	AbsoluteExpiresAt int64  `json:"absoluteExpiresAt"`
-	RevokedAt         int64  `json:"revokedAt,omitempty"`
-	RotatedFrom       string `json:"rotatedFrom,omitempty"`
+	ID                string                    `json:"id"`
+	TokenHash         string                    `json:"tokenHash"`
+	TenantID          string                    `json:"tenantId,omitempty"`
+	UserID            string                    `json:"userId"`
+	DeviceID          string                    `json:"deviceId,omitempty"`
+	CreatedAt         int64                     `json:"createdAt"`
+	AuthenticatedAt   int64                     `json:"authenticatedAt,omitempty"`
+	MFAVerifiedAt     int64                     `json:"mfaVerifiedAt,omitempty"`
+	MFAChallenge      *HostedMFAChallengeRecord `json:"mfaChallenge,omitempty"`
+	LastSeenAt        int64                     `json:"lastSeenAt"`
+	IdleExpiresAt     int64                     `json:"idleExpiresAt"`
+	AbsoluteExpiresAt int64                     `json:"absoluteExpiresAt"`
+	RevokedAt         int64                     `json:"revokedAt,omitempty"`
+	RotatedFrom       string                    `json:"rotatedFrom,omitempty"`
+}
+
+type IdentitySecurityEventType string
+
+const (
+	IdentitySecurityDeviceRegistered  IdentitySecurityEventType = "DEVICE_REGISTERED"
+	IdentitySecurityDeviceBound       IdentitySecurityEventType = "DEVICE_BOUND"
+	IdentitySecurityDeviceStale       IdentitySecurityEventType = "DEVICE_STALE"
+	IdentitySecurityDeviceLost        IdentitySecurityEventType = "DEVICE_LOST"
+	IdentitySecurityDeviceRevoked     IdentitySecurityEventType = "DEVICE_REVOKED"
+	IdentitySecurityDeviceReactivated IdentitySecurityEventType = "DEVICE_REACTIVATED"
+	IdentitySecuritySessionRevoked    IdentitySecurityEventType = "SESSION_REVOKED"
+	maxIdentitySecurityEvents                                   = 512
+)
+
+type IdentitySecurityEvent struct {
+	ID        string                    `json:"id"`
+	TenantID  string                    `json:"tenantId"`
+	UserID    string                    `json:"userId,omitempty"`
+	DeviceID  string                    `json:"deviceId,omitempty"`
+	SessionID string                    `json:"sessionId,omitempty"`
+	Type      IdentitySecurityEventType `json:"type"`
+	CreatedAt int64                     `json:"createdAt"`
 }
 
 type IdentityPersistentState struct {
-	Version   int             `json:"version"`
-	Users     []UserRecord    `json:"users"`
-	Sessions  []SessionRecord `json:"sessions"`
-	UpdatedAt int64           `json:"updatedAt"`
+	Version             int                        `json:"version"`
+	Tenants             []TenantRecord             `json:"tenants,omitempty"`
+	Users               []UserRecord               `json:"users"`
+	Devices             []DeviceRecord             `json:"devices,omitempty"`
+	Sessions            []SessionRecord            `json:"sessions"`
+	SecurityEvents      []IdentitySecurityEvent    `json:"securityEvents,omitempty"`
+	ProductEntitlements []TenantProductEntitlement `json:"productEntitlements,omitempty"`
+	UpdatedAt           int64                      `json:"updatedAt"`
 }
 
 type Principal struct {
+	TenantID    string   `json:"tenantId,omitempty"`
 	UserID      string   `json:"userId"`
 	Username    string   `json:"username"`
 	DisplayName string   `json:"displayName,omitempty"`
 	Role        UserRole `json:"role"`
 	SessionID   string   `json:"sessionId"`
+	DeviceID    string   `json:"deviceId,omitempty"`
 }
 
 type identityContextKey struct{}
@@ -123,6 +194,14 @@ func roleRank(r UserRole) int {
 
 func roleAtLeast(actual, required UserRole) bool { return roleRank(actual) >= roleRank(required) }
 
+func normalizedTenantID(value string) string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return localTenantID
+	}
+	return value
+}
+
 const (
 	defaultSessionIdleTTL     = 2 * time.Hour
 	defaultSessionAbsoluteTTL = 24 * time.Hour
@@ -133,12 +212,29 @@ const (
 )
 
 type IdentityService struct {
-	mu          sync.Mutex
-	persistence *PersistenceManager
-	state       IdentityPersistentState
-	now         func() time.Time
-	idleTTL     time.Duration
-	absoluteTTL time.Duration
+	mu                sync.Mutex
+	persistence       *PersistenceManager
+	state             IdentityPersistentState
+	persistedDevices  []DeviceRecord
+	persistedSessions []SessionRecord
+	now               func() time.Time
+	idleTTL           time.Duration
+	absoluteTTL       time.Duration
+}
+
+func cloneDeviceRecords(in []DeviceRecord) []DeviceRecord {
+	return append([]DeviceRecord(nil), in...)
+}
+
+func cloneSessionRecords(in []SessionRecord) []SessionRecord {
+	out := append([]SessionRecord(nil), in...)
+	for i := range out {
+		if in[i].MFAChallenge != nil {
+			challenge := *in[i].MFAChallenge
+			out[i].MFAChallenge = &challenge
+		}
+	}
+	return out
 }
 
 func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {
@@ -154,10 +250,57 @@ func NewIdentityService(p *PersistenceManager) (*IdentityService, error) {
 		st.Version = 1
 	}
 	s.state = st
+	s.persistedDevices = cloneDeviceRecords(st.Devices)
+	s.persistedSessions = cloneSessionRecords(st.Sessions)
+	if s.normalizeHostedIdentityState() {
+		if err := s.persistLocked(); err != nil {
+			return nil, fmt.Errorf("persist identity tenant migration: %w", err)
+		}
+	}
+	if err := s.ensureHostedProductEntitlements(); err != nil {
+		return nil, fmt.Errorf("persist identity product entitlement migration: %w", err)
+	}
 	if err := s.ensureBootstrapOwnerLocked(); err != nil {
 		return nil, err
 	}
 	return s, nil
+}
+
+func (s *IdentityService) normalizeHostedIdentityState() bool {
+	changed := false
+	now := s.now().UnixMilli()
+	localTenantFound := false
+	for i := range s.state.Tenants {
+		if s.state.Tenants[i].ID == localTenantID {
+			localTenantFound = true
+			if s.state.Tenants[i].Status == "" {
+				s.state.Tenants[i].Status = TenantActive
+				changed = true
+			}
+		}
+	}
+	if !localTenantFound {
+		s.state.Tenants = append(s.state.Tenants, TenantRecord{ID: localTenantID, Name: "Local", Status: TenantActive, CreatedAt: now, UpdatedAt: now})
+		changed = true
+	}
+	userTenant := make(map[string]string, len(s.state.Users))
+	for i := range s.state.Users {
+		tenantID := normalizedTenantID(s.state.Users[i].TenantID)
+		if s.state.Users[i].TenantID != tenantID {
+			s.state.Users[i].TenantID = tenantID
+			changed = true
+		}
+		userTenant[s.state.Users[i].ID] = tenantID
+	}
+	for i := range s.state.Sessions {
+		tenantID := strings.TrimSpace(s.state.Sessions[i].TenantID)
+		if tenantID == "" {
+			tenantID = normalizedTenantID(userTenant[s.state.Sessions[i].UserID])
+			s.state.Sessions[i].TenantID = tenantID
+			changed = true
+		}
+	}
+	return changed
 }
 
 func (s *IdentityService) ensureBootstrapOwnerLocked() error {
@@ -170,16 +313,107 @@ func (s *IdentityService) ensureBootstrapOwnerLocked() error {
 	}
 	now := s.now().UnixMilli()
 	s.state.Users = append(s.state.Users, UserRecord{
-		ID: bootstrapOwnerID, Username: "owner", DisplayName: "Local Owner", Role: RoleOwner,
+		ID: bootstrapOwnerID, TenantID: localTenantID, Username: "owner", DisplayName: "Local Owner", Role: RoleOwner,
 		Status: UserActive, MustSetPassword: true, CreatedAt: now, UpdatedAt: now,
 	})
 	return s.persistLocked()
 }
 
+func (s *IdentityService) appendIdentitySecurityEventLocked(eventType IdentitySecurityEventType, tenantID, userID, deviceID, sessionID string, createdAt int64) {
+	s.state.SecurityEvents = append(s.state.SecurityEvents, IdentitySecurityEvent{
+		ID:        randomID("aud"),
+		TenantID:  normalizedTenantID(tenantID),
+		UserID:    strings.TrimSpace(userID),
+		DeviceID:  strings.TrimSpace(deviceID),
+		SessionID: strings.TrimSpace(sessionID),
+		Type:      eventType,
+		CreatedAt: createdAt,
+	})
+	if len(s.state.SecurityEvents) > maxIdentitySecurityEvents {
+		start := len(s.state.SecurityEvents) - maxIdentitySecurityEvents
+		trimmed := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents[start:]...)
+		s.state.SecurityEvents = trimmed
+	}
+}
+
+func (s *IdentityService) deriveIdentitySecurityEventsLocked(createdAt int64) {
+	previousDevices := make(map[string]DeviceRecord, len(s.persistedDevices))
+	for _, device := range s.persistedDevices {
+		previousDevices[device.ID] = device
+	}
+	for _, current := range s.state.Devices {
+		previous, found := previousDevices[current.ID]
+		if !found {
+			s.appendIdentitySecurityEventLocked(IdentitySecurityDeviceRegistered, current.TenantID, current.UserID, current.ID, "", createdAt)
+			continue
+		}
+		if current.Status == previous.Status {
+			continue
+		}
+		eventType := IdentitySecurityEventType("")
+		switch current.Status {
+		case DeviceStale:
+			eventType = IdentitySecurityDeviceStale
+		case DeviceLost:
+			eventType = IdentitySecurityDeviceLost
+		case DeviceRevoked:
+			eventType = IdentitySecurityDeviceRevoked
+		case DeviceActive:
+			eventType = IdentitySecurityDeviceReactivated
+		}
+		if eventType != "" {
+			s.appendIdentitySecurityEventLocked(eventType, current.TenantID, current.UserID, current.ID, "", createdAt)
+		}
+	}
+
+	previousSessions := make(map[string]SessionRecord, len(s.persistedSessions))
+	for _, session := range s.persistedSessions {
+		previousSessions[session.ID] = session
+	}
+	for _, current := range s.state.Sessions {
+		previous, found := previousSessions[current.ID]
+		if !found {
+			continue
+		}
+		if strings.TrimSpace(current.DeviceID) != "" && current.DeviceID != previous.DeviceID {
+			s.appendIdentitySecurityEventLocked(IdentitySecurityDeviceBound, current.TenantID, current.UserID, current.DeviceID, current.ID, createdAt)
+		}
+		if previous.RevokedAt == 0 && current.RevokedAt > 0 {
+			s.appendIdentitySecurityEventLocked(IdentitySecuritySessionRevoked, current.TenantID, current.UserID, current.DeviceID, current.ID, createdAt)
+		}
+	}
+}
+
 func (s *IdentityService) persistLocked() error {
+	previousEvents := append([]IdentitySecurityEvent(nil), s.state.SecurityEvents...)
+	now := s.now().UnixMilli()
+	s.deriveIdentitySecurityEventsLocked(now)
 	s.state.Version = 1
-	s.state.UpdatedAt = s.now().UnixMilli()
-	return s.persistence.SaveIdentityState(context.Background(), s.state)
+	s.state.UpdatedAt = now
+	if err := s.persistence.SaveIdentityState(context.Background(), s.state); err != nil {
+		s.state.SecurityEvents = previousEvents
+		return err
+	}
+	s.persistedDevices = cloneDeviceRecords(s.state.Devices)
+	s.persistedSessions = cloneSessionRecords(s.state.Sessions)
+	return nil
+}
+
+func (s *IdentityService) adminSecurityEvents(actor Principal) ([]IdentitySecurityEvent, error) {
+	if !roleAtLeast(actor.Role, RoleAdmin) {
+		return nil, errors.New("insufficient authority")
+	}
+	tenantID := normalizedTenantID(actor.TenantID)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	out := make([]IdentitySecurityEvent, 0, len(s.state.SecurityEvents))
+	for i := len(s.state.SecurityEvents) - 1; i >= 0; i-- {
+		event := s.state.SecurityEvents[i]
+		if normalizedTenantID(event.TenantID) == tenantID {
+			out = append(out, event)
+		}
+	}
+	return out, nil
 }
 
 func (s *IdentityService) ownerNeedsPassword() bool {
@@ -351,11 +585,18 @@ func (s *IdentityService) createSessionLocked(u UserRecord, rotatedFrom string) 
 }
 
 func (s *IdentityService) createSessionWithSecurityLocked(u UserRecord, rotatedFrom string, authenticatedAt, absoluteExpiresAt int64) (string, Principal, error) {
+	return s.createSessionWithHostedSecurityLocked(u, rotatedFrom, authenticatedAt, absoluteExpiresAt, "", 0)
+}
+
+func (s *IdentityService) createSessionWithHostedSecurityLocked(u UserRecord, rotatedFrom string, authenticatedAt, absoluteExpiresAt int64, deviceID string, mfaVerifiedAt int64) (string, Principal, error) {
 	raw := randomID("ses") + randomID("")
 	now := s.now()
 	nowMillis := now.UnixMilli()
 	if authenticatedAt <= 0 || authenticatedAt > nowMillis {
 		authenticatedAt = nowMillis
+	}
+	if mfaVerifiedAt < 0 || mfaVerifiedAt > nowMillis {
+		mfaVerifiedAt = 0
 	}
 	if absoluteExpiresAt <= nowMillis {
 		return "", Principal{}, errors.New("session lifetime exhausted")
@@ -376,12 +617,13 @@ func (s *IdentityService) createSessionWithSecurityLocked(u UserRecord, rotatedF
 	if idleExpiresAt > absoluteExpiresAt {
 		idleExpiresAt = absoluteExpiresAt
 	}
-	rec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), UserID: u.ID, CreatedAt: nowMillis, AuthenticatedAt: authenticatedAt, LastSeenAt: nowMillis, IdleExpiresAt: idleExpiresAt, AbsoluteExpiresAt: absoluteExpiresAt, RotatedFrom: rotatedFrom}
+	tenantID := normalizedTenantID(u.TenantID)
+	rec := SessionRecord{ID: randomID("sid"), TokenHash: sessionTokenHash(raw), TenantID: tenantID, UserID: u.ID, DeviceID: strings.TrimSpace(deviceID), CreatedAt: nowMillis, AuthenticatedAt: authenticatedAt, MFAVerifiedAt: mfaVerifiedAt, LastSeenAt: nowMillis, IdleExpiresAt: idleExpiresAt, AbsoluteExpiresAt: absoluteExpiresAt, RotatedFrom: rotatedFrom}
 	s.state.Sessions = append(s.state.Sessions, rec)
 	if err := s.persistLocked(); err != nil {
 		return "", Principal{}, err
 	}
-	return raw, Principal{UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID}, nil
+	return raw, Principal{TenantID: tenantID, UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID, DeviceID: rec.DeviceID}, nil
 }
 
 func (s *IdentityService) resolve(token string, touch bool) (Principal, error) {
@@ -416,6 +658,10 @@ func (s *IdentityService) resolve(token string, touch bool) (Principal, error) {
 	if u == nil || u.Status != UserActive || !validRole(u.Role) {
 		return Principal{}, errors.New("inactive principal")
 	}
+	tenantID := normalizedTenantID(u.TenantID)
+	if normalizedTenantID(rec.TenantID) != tenantID {
+		return Principal{}, errors.New("session tenant mismatch")
+	}
 	if touch {
 		// Sliding idle expiry never exceeds absolute expiry and is persisted only when a minute elapsed.
 		if now-rec.LastSeenAt >= int64(time.Minute/time.Millisecond) {
@@ -428,7 +674,7 @@ func (s *IdentityService) resolve(token string, touch bool) (Principal, error) {
 			_ = s.persistLocked()
 		}
 	}
-	return Principal{UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID}, nil
+	return Principal{TenantID: tenantID, UserID: u.ID, Username: u.Username, DisplayName: u.DisplayName, Role: u.Role, SessionID: rec.ID, DeviceID: rec.DeviceID}, nil
 }
 
 func (s *IdentityService) revokeToken(token string) error {
@@ -473,12 +719,16 @@ func (s *IdentityService) rotate(token string) (string, Principal, error) {
 	oldID := ""
 	authenticatedAt := int64(0)
 	absoluteExpiresAt := int64(0)
+	deviceID := ""
+	mfaVerifiedAt := int64(0)
 	for i := range s.state.Sessions {
 		rec := &s.state.Sessions[i]
 		if subtle.ConstantTimeCompare([]byte(rec.TokenHash), []byte(oldHash)) == 1 && rec.RevokedAt == 0 {
 			oldID = rec.ID
 			authenticatedAt = sessionAuthenticationTime(*rec)
 			absoluteExpiresAt = rec.AbsoluteExpiresAt
+			deviceID = rec.DeviceID
+			mfaVerifiedAt = rec.MFAVerifiedAt
 			if absoluteExpiresAt <= now {
 				return "", Principal{}, errors.New("expired session")
 			}
@@ -489,7 +739,7 @@ func (s *IdentityService) rotate(token string) (string, Principal, error) {
 	if oldID == "" {
 		return "", Principal{}, errors.New("invalid session")
 	}
-	return s.createSessionWithSecurityLocked(u, oldID, authenticatedAt, absoluteExpiresAt)
+	return s.createSessionWithHostedSecurityLocked(u, oldID, authenticatedAt, absoluteExpiresAt, deviceID, mfaVerifiedAt)
 }
 
 func (s *IdentityService) sessionRecentlyAuthenticated(sessionID string, maxAge time.Duration) bool {

@@ -85,6 +85,8 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "python3 tools/ci/post_stable_continuity_gate.py",
             "python3 tools/ci/stable_evidence_gate.py",
             "tools/ci/branch_hygiene.py --apply",
+            "name: PostgreSQL tagged compile",
+            "go test -tags postgres -run '^$' ./...",
             "node tests/renderer/surface_consolidation_test.js",
             "node tests/renderer/documentation_access_test.js",
             "DE.PULSE/fast-head",
@@ -101,10 +103,10 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return 1
 
     if require_tokens(
-        "CI Qualified Planner v3/exact-head/dependency/native evidence contract",
+        "CI Qualified Planner v3/exact-head/dependency/native/recovery/Azure evidence contract",
         qualified,
         (
-            "types: [ready_for_review]",
+            "types: [opened, synchronize, reopened, ready_for_review]",
             "workflow_dispatch:",
             "workflow_call:",
             "base_sha:",
@@ -120,6 +122,12 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "db_integration_required: ${{ steps.resolve.outputs.db_integration_required }}",
             "native_macos_required: ${{ steps.resolve.outputs.native_macos_required }}",
             "native_windows_required: ${{ steps.resolve.outputs.native_windows_required }}",
+            "name: Require exact-head Fast before qualification",
+            "name: Await matching successful Fast run",
+            "DE.PULSE/fast-head",
+            "actions: read",
+            "statuses: read",
+            "needs: fast-gate",
             "if: ${{ needs.context.outputs.backend_required == 'true' }}",
             "if: ${{ needs.context.outputs.renderer_required == 'true' }}",
             "if: ${{ needs.context.outputs.chrome_required == 'true' }}",
@@ -132,7 +140,32 @@ def canonical_workflow_contract(workflows: Path) -> int:
             "name: Qualified Windows native runtime rehearsal",
             "tools/release/native_windows.ps1",
             "name: Qualified persistence / DB integration",
+            "name: HOST-016 physical PostgreSQL streaming failover",
+            "python3 tools/ci/host016_postgres_ha_drill.py",
+            "DE-PULSE-HOST016-Postgres-HA-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
+            "postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
             "name: Qualified security / data-rights contracts",
+            "host012_recovery_confirmation:",
+            "HOST012_MANAGED_PITR_OPERATOR_DRILL",
+            "inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && inputs.host013_azure_confirmation != 'HOST013_AZURE_AKS_OPERATOR_DRILL'",
+            "name: HOST-012 managed Neon PITR operator drill",
+            "if: ${{ github.event_name == 'workflow_dispatch' && inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}",
+            "NEON_API_KEY: ${{ secrets.NEON_API_KEY }}",
+            "python3 tools/ci/host012_neon_recovery_operator.py",
+            "--confirm-source-mutation",
+            "--confirm-pitr-restore",
+            "DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
+            "include-hidden-files: true",
+            "host013_azure_confirmation:",
+            "HOST013_AZURE_AKS_OPERATOR_DRILL",
+            "name: HOST-013/014 Azure AKS trust operator drill",
+            "if: ${{ github.event_name == 'workflow_dispatch' && inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}",
+            "id-token: write",
+            "azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43",
+            "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+            "python3 tools/ci/host013_azure_operator.py",
+            "--environment dev",
+            "DE-PULSE-HOST013-Azure-${{ github.run_id }}-${{ needs.context.outputs.sha }}",
             "Require Planner v3 selected jobs to pass",
             "needs.context.outputs.selected_jobs",
             "actions: read",
@@ -144,12 +177,12 @@ def canonical_workflow_contract(workflows: Path) -> int:
         ),
         (
             "paths:",
-            "types: [opened",
-            "types: [synchronize",
             "types: [closed",
             "browser: [chromium, webkit]",
             "playwright install --with-deps firefox",
             "run: python3 tools/ci/webkit_targeted_test.py",
+            "AZURE_CLIENT_SECRET",
+            "ARM_CLIENT_SECRET",
         ),
     ) != 0:
         return 1
@@ -224,11 +257,14 @@ def canonical_workflow_contract(workflows: Path) -> int:
         return fail("branch hygiene squash/stable-line contract missing", missing)
 
     print("CI Fast single-event exact-head development contract: PASS")
+    print("CI Fast PostgreSQL tagged compile/no-live-evidence boundary: PASS")
     print("CI Qualified Planner v3 deterministic job selection: PASS")
     print("Qualified trustworthy merge-base/manual target binding: PASS")
     print("Chrome + WebKit browser evidence ownership: PASS")
     print("macOS + Windows native rehearsal ownership separation: PASS")
     print("Qualified DB + security/data-rights dependency evidence: PASS")
+    print("Qualified HOST-012 managed-recovery manual-only/concurrency-safe wiring: PASS")
+    print("Qualified HOST-013/014 Azure OIDC operator manual-only/dev-only/concurrency-safe wiring: PASS")
     print("Qualified telemetry/evidence retention contract: PASS")
     print("Release exact G10-head status / merged-candidate evidence binding: PASS")
     print("Release canonical version-neutral G12 executor/manifest: PASS")

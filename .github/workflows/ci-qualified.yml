@@ -2,7 +2,7 @@ name: DE.PULSE | CI Qualified
 
 on:
   pull_request:
-    types: [ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       candidate_sha:
@@ -30,6 +30,27 @@ on:
           - renderer
           - browser
           - ci-harness
+      host012_recovery_confirmation:
+        description: Type HOST012_MANAGED_PITR_OPERATOR_DRILL to run the destructive non-production Neon recovery drill
+        required: false
+        type: string
+      host012_neon_project_id:
+        description: Existing non-production Neon project ID for the HOST-012 drill
+        required: false
+        type: string
+      host012_neon_source_branch_id:
+        description: Existing non-production Neon source branch ID for the HOST-012 drill
+        required: false
+        type: string
+      host012_cleanup_restored_branch:
+        description: Delete the restored Neon branch after successful validation; failures always retain it for inspection
+        required: false
+        default: true
+        type: boolean
+      host013_azure_confirmation:
+        description: Type HOST013_AZURE_AKS_OPERATOR_DRILL to provision/verify the isolated non-production Azure AKS trust environment
+        required: false
+        type: string
   workflow_call:
     inputs:
       candidate_sha:
@@ -52,18 +73,72 @@ permissions:
   contents: read
 
 concurrency:
-  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}
-  cancel-in-progress: true
+  group: depulse-ci-qualified-${{ github.event.pull_request.number || github.ref }}-${{ inputs.lane || 'adaptive' }}-${{ (inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' || inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL') && github.run_id || 'replaceable' }}
+  cancel-in-progress: ${{ inputs.host012_recovery_confirmation != 'HOST012_MANAGED_PITR_OPERATOR_DRILL' && inputs.host013_azure_confirmation != 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}
 
 env:
   GO_VERSION: '1.26.6'
   NODE_VERSION: '24'
   PYTHON_VERSION: '3.13'
+  TERRAFORM_VERSION: '1.13.5'
   PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
+  fast-gate:
+    name: Require exact-head Fast before qualification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      actions: read
+      contents: read
+      statuses: read
+    steps:
+      - name: Await matching successful Fast run
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          terminal_failures='failure cancelled timed_out action_required stale'
+          for attempt in $(seq 1 120); do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/statuses?per_page=100" \
+              --jq '[.[] | select(.context == "DE.PULSE/fast-head")][0].state // ""')"
+            if [ "$state" = success ]; then
+              echo "PASS: exact-head Fast status found for $HEAD_SHA"
+              exit 0
+            fi
+
+            run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?event=pull_request&head_sha=$HEAD_SHA&per_page=100" \
+              --jq '[.workflow_runs[] | select(.name == "DE.PULSE | CI Fast")][0] | [.status // "", .conclusion // ""] | @tsv')"
+            run_status="${run%%$'\t'*}"
+            run_conclusion="${run#*$'\t'}"
+            if [ "$run_status" = completed ]; then
+              if [ "$run_conclusion" = success ]; then
+                echo "ERROR: Fast completed successfully without the required exact-head status" >&2
+                exit 1
+              fi
+              case " $terminal_failures " in
+                *" $run_conclusion "*)
+                  echo "ERROR: exact-head Fast concluded $run_conclusion" >&2
+                  exit 1
+                  ;;
+              esac
+            fi
+            echo "Waiting for exact-head Fast ($attempt/120): status=${run_status:-not-started} conclusion=${run_conclusion:-pending}"
+            sleep 10
+          done
+          echo "ERROR: timed out waiting for exact-head Fast on $HEAD_SHA" >&2
+          exit 1
+
+      - name: Preserve explicit operator and reusable entry points
+        if: ${{ github.event_name != 'pull_request' }}
+        run: echo 'Exact-head identity is resolved by the workflow inputs for this governed entry point.'
+
   context:
     name: Resolve qualification identity and Planner v3 impact
+    needs: fast-gate
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
@@ -229,7 +304,23 @@ jobs:
     needs: [context, ci-harness]
     if: ${{ needs.context.outputs.db_integration_required == 'true' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+        env:
+          POSTGRES_DB: depulse_test
+          POSTGRES_USER: depulse_ci
+          POSTGRES_PASSWORD: depulse-ci-ephemeral-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U depulse_ci -d depulse_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      DEPULSE_TEST_POSTGRES_URL: postgresql://depulse_ci:depulse-ci-ephemeral-only@127.0.0.1:5432/depulse_test?sslmode=disable
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -241,6 +332,37 @@ jobs:
           cache: true
       - name: Persistence-focused regression
         run: go test -count=1 ./... -run 'Test.*(SQLite|Persistence|Migration|Canonical|Cache)'
+      - name: HOST-015/016 live PostgreSQL tenant and recovery integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -tags postgres -count=1 -v . -run '^TestHOST0(15|16)Postgres' | tee host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresTenantPersistenceSurvivesRestart' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresRejectsCrossTenantWorkspaceRow' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST015PostgresExpandMigratesLegacyIdentityAndWorkspace' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST016PostgresTenantArchiveRecoveryAndRollback' host015-016-postgres-test.log
+          grep -q '^--- PASS: TestHOST016PostgresLegacyMigrationFailureRollsBackAuthority' host015-016-postgres-test.log
+      - name: HOST-016 physical PostgreSQL streaming failover
+        shell: bash
+        env:
+          DEPULSE_CANDIDATE_SHA: ${{ needs.context.outputs.sha }}
+          DEPULSE_POSTGRES_IMAGE: postgres:17.6-bookworm@sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3
+        run: |
+          set -euo pipefail
+          python3 tools/ci/host016_postgres_ha_drill.py \
+            --candidate-sha "$DEPULSE_CANDIDATE_SHA" \
+            --database-url "$DEPULSE_TEST_POSTGRES_URL" \
+            --postgres-image "$DEPULSE_POSTGRES_IMAGE" \
+            --output-dir .depulse-host016-postgres-ha
+      - name: Retain secret-free HOST-016 PostgreSQL HA evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST016-Postgres-HA-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host016-postgres-ha/*.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
 
   security-rights:
     name: Qualified security / data-rights contracts
@@ -450,6 +572,135 @@ jobs:
           path: ${{ runner.temp }}/depulse-qualified-native-windows/G13-G14-Windows-x64.json
           if-no-files-found: error
           retention-days: 14
+
+  host012-neon-recovery:
+    name: HOST-012 managed Neon PITR operator drill
+    needs: [context, ci-harness]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.host012_recovery_confirmation == 'HOST012_MANAGED_PITR_OPERATOR_DRILL' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - name: Execute real managed Neon PITR anti-resurrection drill
+        shell: bash
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          HOST012_PROJECT_ID: ${{ inputs.host012_neon_project_id }}
+          HOST012_SOURCE_BRANCH_ID: ${{ inputs.host012_neon_source_branch_id }}
+          HOST012_CLEANUP: ${{ inputs.host012_cleanup_restored_branch }}
+        run: |
+          set -euo pipefail
+          test -n "${NEON_API_KEY:-}" || { echo 'ERROR: repository secret NEON_API_KEY is required' >&2; exit 2; }
+          test -n "${HOST012_PROJECT_ID:-}" || { echo 'ERROR: host012_neon_project_id is required' >&2; exit 2; }
+          test -n "${HOST012_SOURCE_BRANCH_ID:-}" || { echo 'ERROR: host012_neon_source_branch_id is required' >&2; exit 2; }
+          args=(
+            python3 tools/ci/host012_neon_recovery_operator.py
+            --project-id "$HOST012_PROJECT_ID"
+            --source-branch-id "$HOST012_SOURCE_BRANCH_ID"
+            --environment-class stage
+            --output-dir .depulse-host012-neon
+            --confirm-source-mutation
+            --confirm-pitr-restore
+          )
+          if [ "${HOST012_CLEANUP:-true}" = true ]; then
+            args+=(--delete-restored-branch-after-validation)
+          fi
+          "${args[@]}"
+      - name: Retain secret-free HOST-012 managed recovery evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST012-Neon-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host012-neon/**
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
+
+  host013-azure-trust:
+    name: HOST-013/014 Azure AKS trust operator drill
+    needs: [context, ci-harness]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.host013_azure_confirmation == 'HOST013_AZURE_AKS_OPERATOR_DRILL' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Validate non-secret Azure OIDC/state identifiers
+        shell: bash
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_STATE_RESOURCE_GROUP: ${{ vars.AZURE_STATE_RESOURCE_GROUP }}
+          AZURE_STATE_STORAGE_ACCOUNT: ${{ vars.AZURE_STATE_STORAGE_ACCOUNT }}
+          AZURE_STATE_CONTAINER: ${{ vars.AZURE_STATE_CONTAINER }}
+        run: |
+          set -euo pipefail
+          for name in AZURE_CLIENT_ID AZURE_TENANT_ID AZURE_SUBSCRIPTION_ID AZURE_STATE_RESOURCE_GROUP AZURE_STATE_STORAGE_ACCOUNT AZURE_STATE_CONTAINER; do
+            test -n "${!name:-}" || { echo "ERROR: repository/environment variable $name is required" >&2; exit 2; }
+          done
+      - name: Azure OIDC login
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Setup pinned Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - name: Execute governed Azure AKS trust operator
+        shell: bash
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_STATE_RESOURCE_GROUP: ${{ vars.AZURE_STATE_RESOURCE_GROUP }}
+          AZURE_STATE_STORAGE_ACCOUNT: ${{ vars.AZURE_STATE_STORAGE_ACCOUNT }}
+          AZURE_STATE_CONTAINER: ${{ vars.AZURE_STATE_CONTAINER }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ needs.context.outputs.sha }}'
+          python3 tools/ci/host013_azure_operator.py \
+            --confirmation HOST013_AZURE_AKS_OPERATOR_DRILL \
+            --candidate-sha '${{ needs.context.outputs.sha }}' \
+            --client-id "$AZURE_CLIENT_ID" \
+            --tenant-id "$AZURE_TENANT_ID" \
+            --subscription-id "$AZURE_SUBSCRIPTION_ID" \
+            --state-resource-group "$AZURE_STATE_RESOURCE_GROUP" \
+            --state-storage-account "$AZURE_STATE_STORAGE_ACCOUNT" \
+            --state-container "$AZURE_STATE_CONTAINER" \
+            --environment dev \
+            --location canadacentral \
+            --evidence-dir .depulse-host013-azure
+      - name: Retain secret-free HOST-013/014 Azure evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: DE-PULSE-HOST013-Azure-${{ github.run_id }}-${{ needs.context.outputs.sha }}
+          path: .depulse-host013-azure/*.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
 
   evidence:
     name: Qualified evidence summary

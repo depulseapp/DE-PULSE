@@ -12,7 +12,7 @@ Before planning, editing or claiming status:
 4. Read `handoff/CURRENT.md`.
 5. Inspect the actual GitHub default branch, active branch, open PR, current HEAD, latest Stable tag/release, checks and artifacts.
 6. Read `release_identity.json`, `.depulse-certification/resume/build-checkpoint.json` and `.depulse-certification/resume/release-evidence-checkpoint.json`.
-7. Read `governance/ROADMAP.md`, `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`, `ADAPTIVE_BUILD_PROCESS.md` and `ADAPTIVE_DELIVERY_PROCESS.md`.
+7. Read `adaptive-governance/README.md`, `governance/ROADMAP.md`, `adaptive-governance/ADAPTIVE_BUILD_PLAN.md`, `adaptive-governance/ADAPTIVE_BUILD_PROCESS.md` and `adaptive-governance/ADAPTIVE_DELIVERY_PROCESS.md`. When audit scope is relevant, also read `governance/PRODUCT_AUDIT_REBASELINE_2026_08_27.md` and its linked machine registers.
 8. Run or inspect `python3 tools/ci/adaptive_resume_gate.py` and `python3 tools/ci/workflow_policy.py`.
 9. Reconcile disagreements and resume from the last trustworthy PASS / earliest required G0–G16 gate.
 

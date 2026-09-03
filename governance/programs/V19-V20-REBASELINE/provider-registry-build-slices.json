@@ -1,0 +1,136 @@
+{
+  "schema": "DE.PULSE-PROVIDER-REGISTRY-BUILD-SLICES-1",
+  "status": "APPROVED_FUTURE_BUILD_PLAN",
+  "version": "v19.1.0",
+  "primaryIssue": 153,
+  "principle": "SMALLEST_SAFE_COHERENT_PACKETS_WITHOUT_REQUIREMENT_SIZED_BRANCHES_OR_RELEASES",
+  "branchingRule": "ONE_V19_1_BRANCH_AND_PR_WHEN_V19_1_STARTS",
+  "ciRule": "FOCUSED_LOCAL_AND_UNIT_EVIDENCE_PER_PACKET; EXACT_HEAD_FAST_AT_COHERENT_CHECKPOINTS; QUALIFIED_ONLY_AT_MATERIAL_RISK_BOUNDARIES_AND_G10",
+  "packets": [
+    {
+      "id": "APR-01",
+      "name": "Registry foundation",
+      "scope": [
+        "source-overlap audit against existing Router/Data Health/secrets/cache/subscription/telemetry/state owners",
+        "standard provider adapter manifest/schema",
+        "Adaptive Provider Registry owner",
+        "adapter self-registration",
+        "unsupported/unconfigured capability truth",
+        "unit/contract tests"
+      ],
+      "excludes": ["MarketData network calls", "consumer cross-integration", "lifecycle promotion"],
+      "dependsOn": []
+    },
+    {
+      "id": "APR-02",
+      "name": "Generic provider credential UX",
+      "scope": [
+        "metadata-driven Data Providers Settings contract",
+        "canonical secret-reference metadata",
+        "preserve/replace/clear/redaction semantics",
+        "shared provider-test integration",
+        "Market Data provider card metadata",
+        "MARKETDATA_TOKEN environment fallback",
+        "secret leakage regressions"
+      ],
+      "excludes": ["provider-specific credential store", "hosted ordinary-user raw key exposure"],
+      "dependsOn": ["APR-01"]
+    },
+    {
+      "id": "APR-03",
+      "name": "Market Data adapter and transport truth",
+      "scope": [
+        "Bearer-header authentication",
+        "Market Data normalized adapter operations",
+        "deterministic fixtures",
+        "HTTP 200 and 203 success handling",
+        "401/403/429/5xx/timeout/malformed/schema-drift handling",
+        "delayed-vs-live freshness truth",
+        "initial provider-capability/fetch-path classification"
+      ],
+      "excludes": ["hard-coded paid-plan routing", "automatic lifecycle promotion"],
+      "dependsOn": ["APR-01", "APR-02"]
+    },
+    {
+      "id": "APR-04",
+      "name": "Entitlement-aware Router eligibility",
+      "scope": [
+        "effective capability/entitlement probing where observable",
+        "history/freshness/quota/headroom observations",
+        "trial/free/paid change reprobe",
+        "Router candidate eligibility recalculation",
+        "capability-scoped fallback/demotion/cooldown/recovery",
+        "trial-to-free and delayed-to-live adverse/regression scenarios",
+        "no code release required solely for provider account-tier change"
+      ],
+      "excludes": ["paid means primary", "rights inference from entitlement", "automatic SHADOW-to-PRODUCTION promotion"],
+      "dependsOn": ["APR-03"]
+    },
+    {
+      "id": "APR-05",
+      "name": "Canonical cross-integration and diagnostics",
+      "scope": [
+        "REQUIRED/CONDITIONAL/NOT_USEFUL consumer matrix",
+        "canonical state reuse across applicable Research/Discovery/Desks/Prep/Market Intelligence/alerts/history/options consumers",
+        "Data Health integration",
+        "Maintenance configured-vs-eligible-vs-serving-vs-fallback truth",
+        "cache/persistence/reconciliation reuse",
+        "duplicate-fetch/subscription prevention",
+        "dependent consumer re-evaluation after recovery/new evidence"
+      ],
+      "excludes": ["page-specific provider fetches", "parallel Data Health or diagnostics truth model"],
+      "dependsOn": ["APR-04"]
+    },
+    {
+      "id": "APR-06",
+      "name": "Adaptive evidence and provider-registry closure",
+      "scope": [
+        "SHADOW provider usefulness evidence",
+        "freshness/latency/error/quota/cache/fallback/recovery/utility telemetry",
+        "promotion recommendation evidence without automatic promotion",
+        "point-in-time provider usefulness hooks for later Outcome Learning",
+        "existing-provider adoption audit under issue 153",
+        "Mac/Windows/Web applicability reconciliation",
+        "exact-head Fast and impact-selected Qualified/G10 evidence for the coherent v19.1 candidate"
+      ],
+      "excludes": ["v20 learned production influence", "new Router", "new provider lifecycle owner"],
+      "dependsOn": ["APR-05"]
+    }
+  ],
+  "efficientCheckpoints": [
+    {
+      "after": ["APR-01", "APR-02"],
+      "evidence": "focused tests plus exact-head Fast when coherent"
+    },
+    {
+      "after": ["APR-03", "APR-04"],
+      "evidence": "provider/router focused tests plus exact-head Fast"
+    },
+    {
+      "after": ["APR-05", "APR-06"],
+      "evidence": "cross-integration/adverse tests, exact-head Fast, impact-selected Qualified at G10"
+    }
+  ],
+  "parallelism": {
+    "allowed": [
+      "deterministic fixtures can be prepared alongside Settings metadata after APR-01 contract freeze",
+      "cross-integration disposition audit can be prepared while APR-04 tests run",
+      "documentation/machine maps can advance with matching source evidence"
+    ],
+    "forbidden": [
+      "parallel competing Registry or Router implementations",
+      "independent provider-specific consumer integrations",
+      "live provider test fan-out that wastes quota or duplicates evidence"
+    ]
+  },
+  "protectedBoundaries": [
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_AUTHORITY",
+    "CANONICAL_DATA_HEALTH",
+    "NO_AUTOMATIC_PROVIDER_AUTHORITY_PROMOTION",
+    "DIRECT_SEC_EDGAR_AUTHORITY",
+    "US_EQUITIES_PROCESSING",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "NO_EXECUTION",
+    "POINT_IN_TIME_NO_LOOKAHEAD_BEFORE_ADAPTIVE_LEARNING"
+  ]
+}

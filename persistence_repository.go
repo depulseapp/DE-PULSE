@@ -30,14 +30,27 @@ type PersistenceBackend interface {
 }
 
 type EvidenceRecord struct {
-	ID             string          `json:"id"`
-	Symbol         string          `json:"symbol,omitempty"`
-	Kind           string          `json:"kind"`
-	ObservedAt     int64           `json:"observedAt"`
-	Source         string          `json:"source,omitempty"`
-	Provenance     string          `json:"provenance,omitempty"`
-	FreshnessState string          `json:"freshnessState,omitempty"`
-	Payload        json.RawMessage `json:"payload"`
+	ID                string          `json:"id"`
+	Symbol            string          `json:"symbol,omitempty"`
+	Kind              string          `json:"kind"`
+	TemporalSchema    string          `json:"temporalSchema,omitempty"`
+	SourceAt          int64           `json:"sourceAt,omitempty"`
+	ObservedAt        int64           `json:"observedAt"`
+	IngestedAt        int64           `json:"ingestedAt,omitempty"`
+	KnownAt           int64           `json:"knownAt,omitempty"`
+	EffectiveFrom     int64           `json:"effectiveFrom,omitempty"`
+	EffectiveTo       int64           `json:"effectiveTo,omitempty"`
+	ReportPeriod      string          `json:"reportPeriod,omitempty"`
+	RevisionID        string          `json:"revisionId,omitempty"`
+	SupersedesID      string          `json:"supersedesId,omitempty"`
+	AmendmentState    string          `json:"amendmentState,omitempty"`
+	Source            string          `json:"source,omitempty"`
+	Provenance        string          `json:"provenance,omitempty"`
+	FreshnessState    string          `json:"freshnessState,omitempty"`
+	RightsState       string          `json:"rightsState,omitempty"`
+	RightsEvidenceRef string          `json:"rightsEvidenceRef,omitempty"`
+	RetentionClass    string          `json:"retentionClass,omitempty"`
+	Payload           json.RawMessage `json:"payload"`
 }
 
 type DecisionLineageRecord struct {

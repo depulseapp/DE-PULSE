@@ -1,6 +1,10 @@
 package main
 
-import "strings"
+import (
+	"sort"
+	"strings"
+	"time"
+)
 
 // runtimeAllowedSymbolsLocked returns the symbols a user may see in raw,
 // symbol-keyed runtime payloads. Always-on market context is shared globally;
@@ -68,6 +72,10 @@ func filterRuntimeSymbols(items []string, allowed map[string]bool) []string {
 }
 
 func (a *Application) runtimeSnapshotForUserFrom(userID string, snap RuntimeSnapshot) RuntimeSnapshot {
+	// Public-production provider-rights enforcement precedes the existing per-user
+	// privacy filter. Development/pre-public hosted runtimes remain audit-only and
+	// preserve the canonical shared engine payload.
+	snap = enforceHostedRuntimeRightsSnapshot(snap)
 	a.mu.RLock()
 	allowed := a.runtimeAllowedSymbolsLocked(userID)
 	a.mu.RUnlock()
@@ -180,7 +188,7 @@ func (e *Engine) SnapshotForUser(userID string) RuntimeSnapshot {
 	if e == nil {
 		return RuntimeSnapshot{}
 	}
-	snap := e.Snapshot()
+	snap := enforceHostedRuntimeRightsSnapshot(e.Snapshot())
 	if e.app == nil || e.app.workspaces == nil {
 		return snap
 	}
@@ -194,7 +202,7 @@ func (a *Application) broadcastRuntime() {
 	if a == nil || a.hub == nil || a.engine == nil {
 		return
 	}
-	snap := a.engine.Snapshot()
+	snap := enforceHostedRuntimeRightsSnapshot(a.engine.Snapshot())
 	a.mu.RLock()
 	ids := make([]string, 0, len(a.workspaces))
 	for userID := range a.workspaces {
@@ -232,6 +240,9 @@ func (a *Application) symbolAllowedForUser(userID, symbol string) bool {
 }
 
 func (a *Application) broadcastSymbolEvent(symbol string, payload any) {
+	if !hostedQuoteServingAllowedForSymbol(a, symbol) {
+		return
+	}
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(payload)
@@ -282,6 +293,7 @@ func filterFilingItemsForAllowed(items []FilingItem, allowed map[string]bool) []
 }
 
 func (a *Application) broadcastNews(items []NewsItem) {
+	items = hostedNewsItemsForServing(items)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(map[string]any{"type": "news", "news": items})
@@ -296,6 +308,7 @@ func (a *Application) broadcastNews(items []NewsItem) {
 }
 
 func (a *Application) broadcastEarnings(items []EarningsItem) {
+	items = hostedEarningsItemsForServing(items)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		a.hub.Broadcast(map[string]any{"type": "earnings", "earnings": items})
@@ -310,6 +323,8 @@ func (a *Application) broadcastEarnings(items []EarningsItem) {
 }
 
 func (a *Application) broadcastFilings(items []FilingItem, intelligence map[string]SECIntelligenceSummary) {
+	items = hostedFilingItemsForServing(items)
+	intelligence = hostedSECIntelligenceForServing(intelligence)
 	ids, workspaceMode := a.workspaceBroadcastUsers()
 	if !workspaceMode {
 		payload := map[string]any{"type": "filings", "filings": items}
@@ -329,4 +344,192 @@ func (a *Application) broadcastFilings(items []FilingItem, intelligence map[stri
 		}
 		a.hub.BroadcastUser(userID, payload)
 	}
+}
+
+func hostedSECServingAllowed(now time.Time) bool {
+	return hostedProviderRightsAllowed("SEC EDGAR", providerHostedUseProductionServing, now)
+}
+
+func hostedSECDerivedServingAllowed(now time.Time) bool {
+	return hostedSECServingAllowed(now) && hostedProviderRightsAllowed("SEC EDGAR", providerHostedUseAI, now)
+}
+
+func hostedRightsFilteredOptions(options map[string]OptionsContext, now time.Time) map[string]OptionsContext {
+	if !providerRightsEnforcementActive() {
+		return options
+	}
+	out := make(map[string]OptionsContext, len(options))
+	for symbol, item := range options {
+		provider := strings.TrimSpace(item.Provider)
+		if provider != "" && hostedProviderRightsAllowed(provider, providerHostedUseProductionServing, now) {
+			out[symbol] = item
+		}
+	}
+	return out
+}
+
+func hostedRightsBlockedProviders(router ProviderRouterSnapshot) []string {
+	if !providerRightsEnforcementActive() {
+		return nil
+	}
+	seen := map[string]bool{}
+	for _, route := range router.Routes {
+		for _, hop := range route.Route {
+			if hop.Configured && strings.EqualFold(hop.Health, "RIGHTS BLOCKED") {
+				seen[hop.Provider] = true
+			}
+		}
+	}
+	out := make([]string, 0, len(seen))
+	for provider := range seen {
+		out = append(out, provider)
+	}
+	sort.Strings(out)
+	return out
+}
+
+// enforceHostedRuntimeRightsSnapshot is the final shared-data public-serving
+// guard. Development and pre-public hosted runtimes remain audit-only and return
+// the canonical snapshot unchanged. Once PUBLIC_PRODUCTION is explicitly
+// activated, provider-attributed data are admitted only while current rights
+// evidence remains valid; legacy source-unbound collections fail closed until
+// canonical provenance work can bind them (HOST-022).
+func enforceHostedRuntimeRightsSnapshot(snap RuntimeSnapshot) RuntimeSnapshot {
+	if !providerRightsEnforcementActive() {
+		return snap
+	}
+	now := time.Now()
+	out := snap
+	out.Health = clone(snap.Health)
+	if out.Health == nil {
+		out.Health = map[string]string{}
+	}
+
+	out.Quotes = hostedRightsFilterQuotes(snap.Quotes, now)
+	out.History = nil
+	out.Bars = nil
+	out.Fundamentals = nil
+	out.News = nil
+	out.Earnings = nil
+	out.Global = GlobalMarketContext{}
+	out.MacroMetrics = nil
+	out.MacroEvents = nil
+	out.EventMode = EventModeState{}
+	out.EventReactions = nil
+	out.Options = hostedRightsFilteredOptions(snap.Options, now)
+
+	if hostedSECServingAllowed(now) {
+		out.Filings = snap.Filings
+		out.CorporateActions = snap.CorporateActions
+	} else {
+		out.Filings = nil
+		out.CorporateActions = nil
+	}
+	if hostedSECDerivedServingAllowed(now) {
+		out.SECIntelligence = snap.SECIntelligence
+	} else {
+		out.SECIntelligence = nil
+	}
+
+	out.Scanner = ScannerState{}
+	out.SignalValidation = SignalValidationState{}
+	out.ValidationLearning = ValidationLearningSnapshot{}
+	out.Preparations = nil
+	out.Liquidity = nil
+	out.Intelligence = nil
+	out.SymbolIntelligence = nil
+	out.CatalystReactions = nil
+	out.MarketOpenFlags = nil
+	out.MarketOpenCheckpoint = MarketOpenCheckpoint{}
+	out.MarketActivity = MarketActivityState{}
+	out.LiveCoverage = nil
+	out.RapidMove = RapidMoveState{}
+	out.ProviderReconciliation = nil
+	out.ResearchPackage = ResearchPackageTruth{}
+	out.EvidenceSnapshot = EvidenceSnapshot{}
+	out.CorporateActionTruth = CorporateActionTruth{}
+	out.MarketIntelligence = MarketIntelligenceSnapshot{}
+	out.EventIntelligence = EventIntelligenceSnapshot{}
+	out.AlternativeIntelligence = ContextAlternativeIntelligenceSnapshot{}
+	out.AdaptiveDataPolicy = AdaptiveDataPolicyState{}
+	out.ShadowControl = ShadowControlState{}
+
+	if !hostedProviderRightsAllowed("Finnhub", providerHostedUseProductionServing, now) {
+		out.Feed.WebSocketConnected = false
+		out.Feed.SubscribedSymbols = nil
+		out.Feed.LastTradeAt = 0
+		out.Feed.LastTradeSymbol = ""
+	}
+	if !hostedProviderRightsAllowed("Alpaca", providerHostedUseProductionServing, now) {
+		out.Feed.AlpacaWebSocketConnected = false
+		out.Feed.AlpacaSubscribedSymbols = nil
+		out.Feed.LastAlpacaStreamAt = 0
+		out.Feed.LastAlpacaStreamSymbol = ""
+		out.Feed.LastAlpacaAt = 0
+		out.Feed.LastAlpacaSymbol = ""
+	}
+	out.Feed.LiveSymbols = uniqueLiveSubscriptionCount(boolSliceToMap(out.Feed.SubscribedSymbols), boolSliceToMap(out.Feed.AlpacaSubscribedSymbols))
+
+	blocked := hostedRightsBlockedProviders(out.ProviderRouter)
+	removedQuotes := len(out.Quotes) < len(snap.Quotes)
+	if len(blocked) > 0 || removedQuotes {
+		out.Health["provider-rights"] = "BLOCKED · public production serving denied for unapproved/expired provider data"
+		if out.Status == "running" {
+			out.Status = "degraded"
+		}
+		out.Message = "Public-production provider rights are blocking unapproved market-data serving."
+	} else {
+		out.Health["provider-rights"] = "READY · public-production provider-rights serving guard active"
+	}
+	return out
+}
+
+func boolSliceToMap(values []string) map[string]bool {
+	out := make(map[string]bool, len(values))
+	for _, value := range values {
+		out[value] = true
+	}
+	return out
+}
+
+func hostedQuoteServingAllowedForSymbol(a *Application, symbol string) bool {
+	if !providerRightsEnforcementActive() {
+		return true
+	}
+	if a == nil || a.engine == nil {
+		return false
+	}
+	symbol = normalizeSymbol(symbol)
+	a.engine.mu.RLock()
+	q, ok := a.engine.quotes[symbol]
+	a.engine.mu.RUnlock()
+	return ok && providerQuoteHostedRightsAllowed(q, providerHostedUseProductionServing, time.Now())
+}
+
+func hostedNewsItemsForServing(items []NewsItem) []NewsItem {
+	if !providerRightsEnforcementActive() {
+		return items
+	}
+	return nil
+}
+
+func hostedEarningsItemsForServing(items []EarningsItem) []EarningsItem {
+	if !providerRightsEnforcementActive() {
+		return items
+	}
+	return nil
+}
+
+func hostedFilingItemsForServing(items []FilingItem) []FilingItem {
+	if !providerRightsEnforcementActive() || hostedSECServingAllowed(time.Now()) {
+		return items
+	}
+	return nil
+}
+
+func hostedSECIntelligenceForServing(items map[string]SECIntelligenceSummary) map[string]SECIntelligenceSummary {
+	if !providerRightsEnforcementActive() || hostedSECDerivedServingAllowed(time.Now()) {
+		return items
+	}
+	return nil
 }

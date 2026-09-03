@@ -1,0 +1,75 @@
+{
+  "schema": "DE.PULSE-HOSTED-TRUST-DEPENDENCY-CHECKPOINT-1",
+  "workSliceId": "ADAPT-HOSTED-TRUST-FOUNDATION-001",
+  "issue": 148,
+  "pullRequest": 149,
+  "readinessTarget": "DEVELOPMENT_PRODUCTION_READY",
+  "stableAuthority": "v18.10.0",
+  "host010012": {
+    "status": "VERIFIED",
+    "candidateSha": "f357a1852640bf88aae69936d6593b63d9fd155d",
+    "qualifiedRunId": 33154312937,
+    "qualifiedRunNumber": 232,
+    "event": "workflow_dispatch",
+    "managedRecoveryJobId": 98793433332,
+    "managedRecoveryArtifactId": 9678997463,
+    "managedRecoveryArtifact": "DE-PULSE-HOST012-Neon-33154312937-f357a1852640bf88aae69936d6593b63d9fd155d",
+    "managedRecoveryArtifactDigest": "sha256:15cddb9d278a9c469659c864cdb216d8d04cf348cbf2c3c00855bd29071e85f0",
+    "evidenceSchema": "DE.PULSE-HOST012-MANAGED-RECOVERY-EVIDENCE-1",
+    "evidenceValidation": "PASS",
+    "privacyAssertions": {
+      "restoredFromPointBeforeDeletion": true,
+      "tombstoneReplayCompleted": true,
+      "deletedUsersResurrected": 0,
+      "liveDeletedProfiles": 0,
+      "personalWorkspaceRowsForDeletedUsers": 0,
+      "activeDevicesForDeletedUsers": 0,
+      "activeSessionsForDeletedUsers": 0,
+      "restartVerified": true,
+      "canonicalHealthCheckPassed": true
+    },
+    "recovery": {
+      "measuredRPOSeconds": 7.753,
+      "rpoTargetSeconds": 300.0,
+      "measuredRTOSeconds": 13.926746,
+      "rtoTargetSeconds": 900.0
+    },
+    "note": "This closes the HOST-010..012 Development privacy-lifecycle dependency. It does not by itself close the broader HOST-015..016 database-tenancy/HA/failover obligations."
+  },
+  "host013014": {
+    "status": "IMPLEMENTED_UNVERIFIED",
+    "implementationCheckpointSha": "bc3875ed0ff52d3fc18a2cc3938ed1834c8a4690",
+    "canonicalPolicyOwner": "internal/hostedenv/desired_state_v1.json + internal/hostedenv/contract.go",
+    "infrastructureProjectionOwner": "tools/hosted/render_kubernetes_trust.py",
+    "repositoryGate": "tools/ci/hosted_infrastructure_contract_gate.py via tools/ci/source_health_architecture_gate.py",
+    "documentation": "governance/hosted-infrastructure/README.md",
+    "implementedControls": [
+      "unique dev/test/stage/prod namespace projection from canonical isolationId",
+      "unique Kubernetes ServiceAccount projection from canonical serviceIdentity",
+      "default-deny namespace ingress and egress",
+      "managed mesh ingress restricted to application port 8080",
+      "DNS-only service-discovery egress plus transport port 443",
+      "Istio outbound REGISTRY_ONLY",
+      "explicit concrete external-host ServiceEntry registration",
+      "strict internal mTLS through PeerAuthentication STRICT",
+      "managed ingress principal AuthorizationPolicy",
+      "canonical desired-state version/SHA binding on rendered resources",
+      "fail-closed empty/wildcard/IP/URL egress-host inventory handling"
+    ],
+    "remainingVerification": [
+      "select/provision a real managed Kubernetes/service-mesh hosting target",
+      "apply rendered controls in a non-production DE.PULSE environment",
+      "prove managed workload/service identity rather than only Kubernetes naming",
+      "prove external ingress TLS minimum and certificate lifecycle at the managed edge",
+      "prove internal mTLS enforcement with positive and adverse traffic",
+      "prove default-deny and explicit egress allowlist with positive and denied destinations",
+      "prove environment isolation and cross-environment denial",
+      "prove live desired-state drift detection/remediation evidence",
+      "retain secret-free operator evidence and exact-head CI"
+    ],
+    "closureRule": "Repository IaC and regression gates are necessary but not sufficient for VERIFIED. HOST-013..014 remains incomplete until real managed-environment enforcement/drift evidence passes."
+  },
+  "nextDependencyBand": "HOST-013..014",
+  "v19_1Allowed": false,
+  "mergeReleaseAllowed": false
+}
