@@ -12,6 +12,7 @@
 
 ## v19.0 Hosted Trust & Identity Foundation
 
+- Canonical machine state: `governance/current-state.json`.
 - Work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`.
 - Issue: #148.
 - PR: #149.
@@ -30,7 +31,7 @@ The v19.0 technical bands are closed for Development as follows:
 - **HOST-004..007 VERIFIED** — tenant/account isolation, capability-scoped RBAC, device/session lifecycle and production-wired Ed25519 MFA-class proof. #164 remains open only for later v19.3 client/UX parity unless a new core security defect appears.
 - **HOST-008..009 VERIFIED** — product entitlement/quota remains separate from RBAC/provider rights and fails closed before protected projection.
 - **HOST-010..012 VERIFIED** — privacy lifecycle plus real Neon PITR recovery, deletion replay, anti-resurrection, RPO 7.753s and RTO 13.926746s.
-- **HOST-013..014 BLOCKED_EXTERNAL / UNVERIFIED** — this is the one named Development residual. Canonical waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`. Azure Free Trial Canada Central quota was 4/4 with 0 vCPU remaining and 2 additional vCPU required for the governed 2->3 AKS system-pool scale. The waiver never verifies live AKS readiness, never weakens architecture/security, never requires paid upgrade, and never authorizes Commercial/Public activation.
+- **HOST-013..014 BLOCKED_EXTERNAL / UNVERIFIED** — single named Development residual. Residual ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`; gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`; canonical waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`. Azure Free Trial Canada Central quota was 4/4 with 0 vCPU remaining and 2 additional vCPU required for the governed 2->3 AKS system-pool scale. The waiver never verifies live AKS readiness, never weakens architecture/security, never requires paid upgrade, and never authorizes Commercial/Public activation.
 - **HOST-015..016 VERIFIED** — tenant-owned/scoped PostgreSQL state plus real physical streaming failover. Qualified #252 / run `33683891569` proved primary outage, standby promotion, application reconnection through the same DSN and preservation of tenant/workspace/privacy state. This does not claim managed-provider automatic production endpoint failover.
 - **HOST-017..018 VERIFIED** — immutable Key Vault object-version references, CSI workload mount, rotation/rollback, missing/revoked fail-closed behavior, generation-only health and no raw hosted-secret persistence in ordinary product state.
 - **HOST-019..020 VERIFIED** — governed dependency inventory, source-bound SPDX SBOM, live fail-closed `govulncheck`, and deployment admission bound to source SHA, immutable artifact digest, SBOM, advisory/provenance evidence and target environment.
@@ -44,12 +45,16 @@ The implementation head immediately before closure reconciliation was `7a4aa46ef
 
 Closure reconciliation changes governance/handoff files, so those runs are not the final merge authority. Before merging PR #149:
 
-1. Fetch the live PR #149 head after this handoff commit.
+1. Fetch the live PR #149 head after the final reconciliation commit.
 2. Require **Fast and Qualified both PASS on that identical final head**.
 3. Mark the Draft PR ready only after those exact-head checks pass.
 4. Merge with `expected_head_sha` equal to that verified final head.
 5. Do **not** create or publish a v19.0 release/tag/build from this closure.
 6. Close #148 only after the expected-head merge succeeds.
+
+## Exactly one next action
+
+**HOST-023 final Development closure:** certify the live PR #149 head with canonical exact-head Fast and Qualified, then perform only the expected-head merge/issue-closure sequence above. Until that merge succeeds, v19.1/#153 remains blocked and this work slice remains active.
 
 ## Next governed transition
 
