@@ -39,6 +39,7 @@ func (b *postgresPersistenceBackend) Capabilities() []string {
 		"canonical-quotes",
 		"quote-history",
 		"evidence-records",
+		"point-in-time-evidence",
 		"decision-lineage",
 		"outcome-history",
 		"derived-feature-store",
@@ -439,8 +440,13 @@ func (b *postgresPersistenceBackend) SaveIntelligence(ctx context.Context, batch
 		if r.ID == "" || r.Kind == "" {
 			continue
 		}
+		var storagePayload []byte
+		r, storagePayload, err = evidenceTemporalStoragePayload(r, started.UnixMilli())
+		if err != nil {
+			return written, err
+		}
 		if _, err = tx.ExecContext(ctx, `INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json)
-VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb) ON CONFLICT(evidence_id) DO NOTHING`, r.ID, normalizeSymbol(r.Symbol), r.Kind, r.ObservedAt, r.Source, r.Provenance, r.FreshnessState, string(payloadOrEmpty(r.Payload))); err != nil {
+VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb) ON CONFLICT(evidence_id) DO NOTHING`, r.ID, normalizeSymbol(r.Symbol), r.Kind, r.ObservedAt, r.Source, r.Provenance, r.FreshnessState, string(storagePayload)); err != nil {
 			return written, err
 		}
 		written++
@@ -737,7 +743,11 @@ func (b *postgresPersistenceBackend) ExportPersistenceArchive(ctx context.Contex
 			return PersistenceArchive{}, err
 		}
 		r.Symbol = normalizeSymbol(r.Symbol)
-		r.Payload = append(json.RawMessage(nil), raw...)
+		r, err = evidenceRecordFromStorage(r, append(json.RawMessage(nil), raw...))
+		if err != nil {
+			rows.Close()
+			return PersistenceArchive{}, err
+		}
 		archive.Evidence = append(archive.Evidence, r)
 	}
 	if err := rows.Err(); err != nil {
@@ -877,6 +887,15 @@ func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Conte
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
 		return errors.New("unsupported persistence archive schema")
 	}
+	evidencePayloads := make([][]byte, len(archive.Evidence))
+	for i, record := range archive.Evidence {
+		normalized, raw, normalizeErr := evidenceTemporalStoragePayload(record, archive.ExportedAt)
+		if normalizeErr != nil {
+			return fmt.Errorf("restore evidence %q: %w", record.ID, normalizeErr)
+		}
+		archive.Evidence[i] = normalized
+		evidencePayloads[i] = raw
+	}
 	var tenantPartitions map[string]IdentityPersistentState
 	workspaceOwners := map[string]string{}
 	if b.tenantScopedArchive {
@@ -949,8 +968,8 @@ func (b *postgresPersistenceBackend) RestorePersistenceArchive(ctx context.Conte
 			return err
 		}
 	}
-	for _, r := range archive.Evidence {
-		if _, err := tx.ExecContext(ctx, `INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES($1,$2,$3,$4,$5,$6,$7,$8)`, r.ID, normalizeSymbol(r.Symbol), r.Kind, r.ObservedAt, r.Source, r.Provenance, r.FreshnessState, payloadOrEmpty(r.Payload)); err != nil {
+	for i, r := range archive.Evidence {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES($1,$2,$3,$4,$5,$6,$7,$8)`, r.ID, normalizeSymbol(r.Symbol), r.Kind, r.ObservedAt, r.Source, r.Provenance, r.FreshnessState, evidencePayloads[i]); err != nil {
 			return err
 		}
 	}

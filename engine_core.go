@@ -134,6 +134,7 @@ func (e *Engine) Snapshot() RuntimeSnapshot {
 	shadowControl := buildShadowControlState(clone(e.scanner), time.Now())
 	preparations := preparationsWithMarketTradeability(clone(e.preparations), marketIntelligence.Tradeability, time.Now())
 	runtimeLoad := clone(e.runtimeLoad)
+	runtimeLoad.ProviderScorecards = buildProviderOperationalScorecards(providerRegistrations(), settings, secrets, providerRouter, freshness, runtimeLoad.ProviderRequests, runtimeLoad.ProviderUsefulness, runtimeLoad.LiveSubscriptions, now)
 	rawDegradation := deriveRuntimeDegradation(e.status, e.mode, feed, freshness, providerRouter, runtimeLoad)
 	degradation := rawDegradation
 	if e.runtimeSLOTracker != nil {

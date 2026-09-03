@@ -7,7 +7,233 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 )
+
+const evidenceTemporalEnvelopeSchema = "DE.PULSE-EVIDENCE-TEMPORAL-1"
+
+type evidenceTemporalStorageMetadata struct {
+	TemporalSchema    string `json:"temporalSchema"`
+	SourceAt          int64  `json:"sourceAt"`
+	IngestedAt        int64  `json:"ingestedAt"`
+	KnownAt           int64  `json:"knownAt"`
+	EffectiveFrom     int64  `json:"effectiveFrom"`
+	EffectiveTo       int64  `json:"effectiveTo,omitempty"`
+	ReportPeriod      string `json:"reportPeriod,omitempty"`
+	RevisionID        string `json:"revisionId"`
+	SupersedesID      string `json:"supersedesId,omitempty"`
+	AmendmentState    string `json:"amendmentState"`
+	RightsState       string `json:"rightsState"`
+	RightsEvidenceRef string `json:"rightsEvidenceRef,omitempty"`
+	RetentionClass    string `json:"retentionClass"`
+}
+
+type evidenceTemporalStorageEnvelope struct {
+	Schema   string                          `json:"_depulseSchema"`
+	Temporal evidenceTemporalStorageMetadata `json:"temporal"`
+	Payload  json.RawMessage                 `json:"payload"`
+}
+
+func normalizeEvidenceTemporalRecord(record EvidenceRecord, fallbackKnownAt int64) (EvidenceRecord, error) {
+	record.ID = strings.TrimSpace(record.ID)
+	record.Kind = strings.TrimSpace(record.Kind)
+	record.Symbol = normalizeSymbol(record.Symbol)
+	if record.ID == "" || record.Kind == "" {
+		return record, fmt.Errorf("evidence id and kind are required")
+	}
+	if fallbackKnownAt <= 0 {
+		fallbackKnownAt = time.Now().UnixMilli()
+	}
+	for name, value := range map[string]int64{
+		"sourceAt": record.SourceAt, "observedAt": record.ObservedAt, "ingestedAt": record.IngestedAt,
+		"knownAt": record.KnownAt, "effectiveFrom": record.EffectiveFrom, "effectiveTo": record.EffectiveTo,
+	} {
+		if value < 0 {
+			return record, fmt.Errorf("evidence %s cannot be negative", name)
+		}
+	}
+	if record.ObservedAt == 0 {
+		record.ObservedAt = record.IngestedAt
+	}
+	if record.ObservedAt == 0 {
+		record.ObservedAt = fallbackKnownAt
+	}
+	if record.IngestedAt == 0 {
+		record.IngestedAt = record.ObservedAt
+	}
+	if record.KnownAt == 0 {
+		record.KnownAt = maxInt64(record.ObservedAt, record.IngestedAt)
+	}
+	if record.SourceAt == 0 {
+		record.SourceAt = record.ObservedAt
+	}
+	if record.EffectiveFrom == 0 {
+		record.EffectiveFrom = record.SourceAt
+	}
+	if record.KnownAt < record.ObservedAt || record.KnownAt < record.IngestedAt {
+		return record, fmt.Errorf("evidence knownAt must not precede observation or ingestion")
+	}
+	const maxSourceClockSkewMs = int64(30 * time.Second / time.Millisecond)
+	if record.SourceAt > record.KnownAt+maxSourceClockSkewMs {
+		return record, fmt.Errorf("evidence sourceAt is materially in the future of knownAt")
+	}
+	if record.EffectiveTo > 0 && record.EffectiveTo <= record.EffectiveFrom {
+		return record, fmt.Errorf("evidence effectiveTo must follow effectiveFrom")
+	}
+	record.RevisionID = strings.TrimSpace(record.RevisionID)
+	if record.RevisionID == "" {
+		record.RevisionID = record.ID
+	}
+	record.SupersedesID = strings.TrimSpace(record.SupersedesID)
+	if record.SupersedesID == record.ID {
+		return record, fmt.Errorf("evidence cannot supersede itself")
+	}
+	record.AmendmentState = strings.ToUpper(strings.TrimSpace(record.AmendmentState))
+	if record.AmendmentState == "" {
+		if record.SupersedesID == "" {
+			record.AmendmentState = "ORIGINAL"
+		} else {
+			record.AmendmentState = "REVISION"
+		}
+	}
+	allowedAmendment := map[string]bool{"ORIGINAL": true, "REVISION": true, "AMENDMENT": true, "CORRECTION": true, "RESTATEMENT": true, "NOT_INFERRED_NO_VENDOR_ID": true, "UNKNOWN": true}
+	if !allowedAmendment[record.AmendmentState] {
+		return record, fmt.Errorf("unsupported evidence amendment state %q", record.AmendmentState)
+	}
+	if record.SupersedesID != "" && record.AmendmentState == "ORIGINAL" {
+		return record, fmt.Errorf("original evidence cannot declare a superseded record")
+	}
+	record.RightsEvidenceRef = strings.TrimSpace(record.RightsEvidenceRef)
+	if record.RightsEvidenceRef == "" {
+		record.RightsState = "UNBOUND"
+	} else {
+		record.RightsState = "BOUND"
+	}
+	record.RetentionClass = strings.ToUpper(strings.TrimSpace(record.RetentionClass))
+	if record.RetentionClass == "" {
+		record.RetentionClass = "UNSPECIFIED"
+	}
+	record.TemporalSchema = evidenceTemporalEnvelopeSchema
+	if !json.Valid(payloadOrEmpty(record.Payload)) {
+		return record, fmt.Errorf("evidence payload is not valid JSON")
+	}
+	record.Payload = append(json.RawMessage(nil), payloadOrEmpty(record.Payload)...)
+	return record, nil
+}
+
+func evidenceTemporalStoragePayload(record EvidenceRecord, fallbackKnownAt int64) (EvidenceRecord, []byte, error) {
+	record, err := normalizeEvidenceTemporalRecord(record, fallbackKnownAt)
+	if err != nil {
+		return record, nil, err
+	}
+	envelope := evidenceTemporalStorageEnvelope{
+		Schema: evidenceTemporalEnvelopeSchema,
+		Temporal: evidenceTemporalStorageMetadata{
+			TemporalSchema: record.TemporalSchema, SourceAt: record.SourceAt, IngestedAt: record.IngestedAt,
+			KnownAt: record.KnownAt, EffectiveFrom: record.EffectiveFrom, EffectiveTo: record.EffectiveTo,
+			ReportPeriod: record.ReportPeriod, RevisionID: record.RevisionID, SupersedesID: record.SupersedesID,
+			AmendmentState: record.AmendmentState, RightsState: record.RightsState,
+			RightsEvidenceRef: record.RightsEvidenceRef, RetentionClass: record.RetentionClass,
+		},
+		Payload: record.Payload,
+	}
+	raw, err := json.Marshal(envelope)
+	if err != nil {
+		return record, nil, err
+	}
+	return record, raw, nil
+}
+
+func evidenceRecordFromStorage(record EvidenceRecord, raw json.RawMessage) (EvidenceRecord, error) {
+	var envelope evidenceTemporalStorageEnvelope
+	if json.Unmarshal(raw, &envelope) == nil && envelope.Schema == evidenceTemporalEnvelopeSchema {
+		record.TemporalSchema = envelope.Temporal.TemporalSchema
+		record.SourceAt = envelope.Temporal.SourceAt
+		record.IngestedAt = envelope.Temporal.IngestedAt
+		record.KnownAt = envelope.Temporal.KnownAt
+		record.EffectiveFrom = envelope.Temporal.EffectiveFrom
+		record.EffectiveTo = envelope.Temporal.EffectiveTo
+		record.ReportPeriod = envelope.Temporal.ReportPeriod
+		record.RevisionID = envelope.Temporal.RevisionID
+		record.SupersedesID = envelope.Temporal.SupersedesID
+		record.AmendmentState = envelope.Temporal.AmendmentState
+		record.RightsState = envelope.Temporal.RightsState
+		record.RightsEvidenceRef = envelope.Temporal.RightsEvidenceRef
+		record.RetentionClass = envelope.Temporal.RetentionClass
+		record.Payload = append(json.RawMessage(nil), envelope.Payload...)
+		return normalizeEvidenceTemporalRecord(record, record.ObservedAt)
+	}
+	record.Payload = append(json.RawMessage(nil), raw...)
+	return normalizeEvidenceTemporalRecord(record, record.ObservedAt)
+}
+
+// EvidencePointInTime reconstructs the evidence knowable at knownAt. When
+// effectiveAt is non-zero it also evaluates the valid/effective-time interval.
+// A revision only supersedes an older record after that revision itself was
+// knowable, which prevents later corrections from leaking into earlier replay.
+func EvidencePointInTime(records []EvidenceRecord, knownAt, effectiveAt int64) ([]EvidenceRecord, error) {
+	if knownAt <= 0 {
+		return nil, fmt.Errorf("point-in-time knownAt cutoff is required")
+	}
+	all := make(map[string]EvidenceRecord, len(records))
+	eligible := make(map[string]EvidenceRecord, len(records))
+	for _, candidate := range records {
+		record, err := normalizeEvidenceTemporalRecord(candidate, candidate.ObservedAt)
+		if err != nil {
+			return nil, fmt.Errorf("evidence %q: %w", candidate.ID, err)
+		}
+		if _, exists := all[record.ID]; exists {
+			return nil, fmt.Errorf("duplicate evidence id %q", record.ID)
+		}
+		all[record.ID] = record
+		if record.KnownAt > knownAt {
+			continue
+		}
+		if effectiveAt > 0 && (record.EffectiveFrom > effectiveAt || (record.EffectiveTo > 0 && effectiveAt >= record.EffectiveTo)) {
+			continue
+		}
+		eligible[record.ID] = record
+	}
+	for id := range all {
+		seen := map[string]bool{id: true}
+		current := all[id]
+		for current.SupersedesID != "" {
+			if seen[current.SupersedesID] {
+				return nil, fmt.Errorf("evidence revision cycle involving %q", current.SupersedesID)
+			}
+			seen[current.SupersedesID] = true
+			next, ok := all[current.SupersedesID]
+			if !ok {
+				break
+			}
+			current = next
+		}
+	}
+	superseded := map[string]bool{}
+	for _, record := range eligible {
+		if record.SupersedesID != "" {
+			if _, present := eligible[record.SupersedesID]; present {
+				superseded[record.SupersedesID] = true
+			}
+		}
+	}
+	out := make([]EvidenceRecord, 0, len(eligible))
+	for id, record := range eligible {
+		if !superseded[id] {
+			out = append(out, record)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		left := out[i].Symbol + "|" + out[i].Kind + "|" + fmt.Sprintf("%020d", out[i].EffectiveFrom) + "|" + out[i].RevisionID + "|" + out[i].ID
+		right := out[j].Symbol + "|" + out[j].Kind + "|" + fmt.Sprintf("%020d", out[j].EffectiveFrom) + "|" + out[j].RevisionID + "|" + out[j].ID
+		return left < right
+	})
+	return out, nil
+}
+
+func EvidenceAsKnownAt(records []EvidenceRecord, knownAt int64) ([]EvidenceRecord, error) {
+	return EvidencePointInTime(records, knownAt, 0)
+}
 
 // signalSnapshotPersistenceBatch turns the already-existing frozen validation
 // snapshot into the v17 evidence -> decision -> outcome learning path. This
@@ -90,6 +316,8 @@ func signalSnapshotPersistenceBatch(s SignalSnapshot) PersistenceIntelligenceBat
 	batch := PersistenceIntelligenceBatch{
 		Evidence: []EvidenceRecord{{
 			ID: evidenceID, Symbol: s.Symbol, Kind: "frozen-signal-evidence", ObservedAt: s.Timestamp,
+			SourceAt: s.Timestamp, IngestedAt: s.Timestamp, KnownAt: s.Timestamp, EffectiveFrom: s.Timestamp,
+			RevisionID: evidenceID, AmendmentState: "ORIGINAL", RightsEvidenceRef: "internal:canonical-signal-validation", RetentionClass: "DECISION_LINEAGE",
 			Source: "canonical-signal-validation", Provenance: s.FormulaVersion, FreshnessState: "FROZEN",
 			Payload: evidenceRaw,
 		}},

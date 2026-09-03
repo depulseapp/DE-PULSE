@@ -34,6 +34,241 @@ type ProviderUsefulnessDiagnostic struct {
 	LastObservedAt      int64    `json:"lastObservedAt,omitempty"`
 }
 
+// ProviderOperationalScorecard is a read-only composition of measurements
+// already owned by Smart Router v2, Data Freshness, provider transport
+// telemetry, live-subscription budgets, provider rights and semantic
+// usefulness. It is deliberately not an input to routing. Pointer-valued
+// metrics preserve the distinction between a measured zero and no evidence.
+type ProviderOperationalScorecard struct {
+	Provider                    string   `json:"provider"`
+	State                       string   `json:"state"`
+	Configured                  bool     `json:"configured"`
+	Capabilities                []string `json:"capabilities,omitempty"`
+	CoverageDatasets            []string `json:"coverageDatasets,omitempty"`
+	ServingDatasets             []string `json:"servingDatasets,omitempty"`
+	HealthMeasurementState      string   `json:"healthMeasurementState"`
+	HealthStates                []string `json:"healthStates,omitempty"`
+	FreshnessMeasurementState   string   `json:"freshnessMeasurementState"`
+	FreshnessStates             []string `json:"freshnessStates,omitempty"`
+	TransportMeasurementState   string   `json:"transportMeasurementState"`
+	CompletedRequests           int64    `json:"completedRequests"`
+	SuccessPct                  *float64 `json:"successPct,omitempty"`
+	P50LatencyMs                *int64   `json:"p50LatencyMs,omitempty"`
+	P95LatencyMs                *int64   `json:"p95LatencyMs,omitempty"`
+	RateLimited                 int64    `json:"rateLimited"`
+	HeadroomMeasurementState    string   `json:"headroomMeasurementState"`
+	RequestBudgetRemaining      *int     `json:"requestBudgetRemaining,omitempty"`
+	LiveSubscriptionAvailable   *int     `json:"liveSubscriptionAvailable,omitempty"`
+	RightsMeasurementState      string   `json:"rightsMeasurementState"`
+	RightsReviewState           string   `json:"rightsReviewState"`
+	RightsEvidenceBound         bool     `json:"rightsEvidenceBound"`
+	CommercialReadinessState    string   `json:"commercialReadinessState"`
+	CostClass                   string   `json:"costClass"`
+	CostMeasurementState        string   `json:"costMeasurementState"`
+	ObservedCostUSD             *float64 `json:"observedCostUsd,omitempty"`
+	UsefulnessMeasurementState  string   `json:"usefulnessMeasurementState"`
+	CrossSourceSamples          int64    `json:"crossSourceSamples"`
+	AgreementPct                *float64 `json:"agreementPct,omitempty"`
+	RoutingImpact               string   `json:"routingImpact"`
+	UpdatedAt                   int64    `json:"updatedAt"`
+}
+
+type providerOperationalScorecardBuilder struct {
+	row          ProviderOperationalScorecard
+	healthSeen   bool
+	freshSeen    bool
+	transportSeen bool
+	headroomSeen bool
+	degraded     bool
+}
+
+func providerScorecardSameProvider(left, right string) bool {
+	left = providerKey(left)
+	right = providerKey(right)
+	return left != "" && right != "" && (left == right || strings.HasPrefix(left, right+"-") || strings.HasPrefix(right, left+"-"))
+}
+
+func providerScorecardAppendUnique(values []string, value string) []string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return values
+	}
+	for _, existing := range values {
+		if strings.EqualFold(existing, value) {
+			return values
+		}
+	}
+	return append(values, value)
+}
+
+func providerScorecardInt64Pointer(value int64) *int64 { v := value; return &v }
+func providerScorecardIntPointer(value int) *int       { v := value; return &v }
+func providerScorecardFloatPointer(value float64) *float64 { v := value; return &v }
+
+// buildProviderOperationalScorecards never scores or orders providers. It only
+// projects canonical measurements and explicit unknowns for privileged
+// operational consumers.
+func buildProviderOperationalScorecards(registrations []ProviderRegistration, settings Settings, secrets Secrets, router ProviderRouterSnapshot, freshness []FreshnessDiagnostic, requests []ProviderRequestDiagnostics, usefulness []ProviderUsefulnessDiagnostic, subscriptions []LiveSubscriptionBudgetDiagnostics, now int64) []ProviderOperationalScorecard {
+	builders := map[string]*providerOperationalScorecardBuilder{}
+	ensure := func(provider string) *providerOperationalScorecardBuilder {
+		key := providerKey(provider)
+		if key == "" {
+			return nil
+		}
+		if builders[key] == nil {
+			rights := providerDataRightsMetadata(provider)
+			rightsState := "UNBOUND"
+			if rights.EvidenceBound {
+				rightsState = "BOUND"
+			}
+			builders[key] = &providerOperationalScorecardBuilder{row: ProviderOperationalScorecard{
+				Provider: provider, State: "UNOBSERVED", HealthMeasurementState: "UNKNOWN",
+				FreshnessMeasurementState: "UNKNOWN", TransportMeasurementState: "UNKNOWN",
+				HeadroomMeasurementState: "UNKNOWN", RightsMeasurementState: rightsState,
+				RightsReviewState: defaultString(rights.ReviewState, "UNKNOWN"), RightsEvidenceBound: rights.EvidenceBound,
+				CommercialReadinessState: defaultString(rights.CommercialReadiness.State, "UNKNOWN"),
+				CostClass: providerCostFromRegistration(provider), CostMeasurementState: "DECLARED_CLASS_ONLY",
+				UsefulnessMeasurementState: "UNKNOWN", RoutingImpact: "OBSERVABILITY_ONLY", UpdatedAt: now,
+			}}
+		}
+		return builders[key]
+	}
+
+	for _, registration := range registrations {
+		builder := ensure(registration.Name)
+		if builder == nil {
+			continue
+		}
+		builder.row.Configured = registration.Configured != nil && registration.Configured(settings, secrets)
+		builder.row.CostClass = defaultString(registration.CostClass, builder.row.CostClass)
+		for _, route := range registration.Routes {
+			builder.row.Capabilities = providerScorecardAppendUnique(builder.row.Capabilities, route.Capability)
+			builder.row.CoverageDatasets = providerScorecardAppendUnique(builder.row.CoverageDatasets, route.Dataset)
+		}
+		for _, diagnostic := range registration.Diagnostics {
+			builder.row.Capabilities = providerScorecardAppendUnique(builder.row.Capabilities, diagnostic.Capability)
+		}
+	}
+
+	for _, route := range router.Routes {
+		for _, hop := range route.Route {
+			builder := ensure(hop.Provider)
+			if builder == nil {
+				continue
+			}
+			builder.row.Configured = builder.row.Configured || hop.Configured
+			builder.row.CoverageDatasets = providerScorecardAppendUnique(builder.row.CoverageDatasets, route.Dataset)
+			builder.row.HealthStates = providerScorecardAppendUnique(builder.row.HealthStates, route.Dataset+": "+defaultString(hop.Health, "UNKNOWN"))
+			if strings.EqualFold(route.Serving, hop.Provider) {
+				builder.row.ServingDatasets = providerScorecardAppendUnique(builder.row.ServingDatasets, route.Dataset)
+			}
+			if hop.Attempts > 0 || hop.LastSuccess > 0 || hop.LastFailure > 0 {
+				builder.healthSeen = true
+				builder.row.HealthMeasurementState = "MEASURED"
+			} else if builder.row.HealthMeasurementState == "UNKNOWN" && hop.Configured {
+				builder.row.HealthMeasurementState = "DECLARED_ONLY"
+			}
+			health := strings.ToUpper(strings.TrimSpace(hop.Health + " " + hop.Circuit))
+			if strings.Contains(health, "DEGRADED") || strings.Contains(health, "ERROR") || strings.Contains(health, "OPEN") || strings.Contains(health, "RATE LIMITED") || strings.Contains(health, "BLOCKED") {
+				builder.degraded = true
+			}
+		}
+	}
+
+	for _, diagnostic := range freshness {
+		for _, builder := range builders {
+			if !providerScorecardSameProvider(builder.row.Provider, diagnostic.Provider) {
+				continue
+			}
+			builder.freshSeen = true
+			builder.row.FreshnessMeasurementState = "MEASURED"
+			builder.row.FreshnessStates = providerScorecardAppendUnique(builder.row.FreshnessStates, diagnostic.Dataset+": "+defaultString(diagnostic.State, "UNKNOWN"))
+			state := strings.ToUpper(strings.TrimSpace(diagnostic.State))
+			if state == "STALE" || state == "ERROR" || state == "UNAVAILABLE" {
+				builder.degraded = true
+			}
+		}
+	}
+
+	for _, request := range requests {
+		builder := ensure(request.Provider)
+		if builder == nil {
+			continue
+		}
+		completed := request.Successes + request.Errors
+		builder.row.CompletedRequests = completed
+		builder.row.RateLimited = request.RateLimited
+		if completed > 0 {
+			builder.transportSeen = true
+			builder.row.TransportMeasurementState = "MEASURED"
+			builder.row.SuccessPct = providerScorecardFloatPointer(request.SuccessPct)
+			builder.row.P50LatencyMs = providerScorecardInt64Pointer(request.P50LatencyMs)
+			builder.row.P95LatencyMs = providerScorecardInt64Pointer(request.P95LatencyMs)
+		}
+		if request.BudgetPerMinute > 0 {
+			builder.headroomSeen = true
+			builder.row.HeadroomMeasurementState = "MEASURED"
+			builder.row.RequestBudgetRemaining = providerScorecardIntPointer(request.BudgetRemaining)
+		}
+		if request.RateLimited > 0 || request.Errors > request.Successes {
+			builder.degraded = true
+		}
+	}
+
+	for _, subscription := range subscriptions {
+		for _, builder := range builders {
+			if !providerScorecardSameProvider(builder.row.Provider, subscription.Provider) {
+				continue
+			}
+			builder.headroomSeen = true
+			builder.row.HeadroomMeasurementState = "MEASURED"
+			builder.row.LiveSubscriptionAvailable = providerScorecardIntPointer(subscription.Available)
+			if subscription.Saturated {
+				builder.degraded = true
+			}
+		}
+	}
+
+	for _, diagnostic := range usefulness {
+		builder := ensure(diagnostic.Provider)
+		if builder == nil {
+			continue
+		}
+		builder.row.UsefulnessMeasurementState = defaultString(diagnostic.State, "UNKNOWN")
+		builder.row.CrossSourceSamples = diagnostic.CrossSourceSamples
+		if diagnostic.AgreementPct != nil {
+			builder.row.AgreementPct = providerScorecardFloatPointer(*diagnostic.AgreementPct)
+		}
+	}
+
+	out := make([]ProviderOperationalScorecard, 0, len(builders))
+	for _, builder := range builders {
+		sort.Strings(builder.row.Capabilities)
+		sort.Strings(builder.row.CoverageDatasets)
+		sort.Strings(builder.row.ServingDatasets)
+		sort.Strings(builder.row.HealthStates)
+		sort.Strings(builder.row.FreshnessStates)
+		measured := 0
+		for _, present := range []bool{builder.healthSeen, builder.freshSeen, builder.transportSeen, builder.headroomSeen, builder.row.AgreementPct != nil} {
+			if present {
+				measured++
+			}
+		}
+		if measured > 0 {
+			builder.row.State = "PARTIAL"
+		}
+		if measured == 5 {
+			builder.row.State = "MEASURED"
+		}
+		if builder.degraded {
+			builder.row.State = "DEGRADED"
+		}
+		out = append(out, builder.row)
+	}
+	sort.Slice(out, func(i, j int) bool { return strings.ToUpper(out[i].Provider) < strings.ToUpper(out[j].Provider) })
+	return out
+}
+
 type providerUsefulnessAggregate struct {
 	EligibleSamples     int64 `json:"eligibleSamples"`
 	CrossSourceSamples  int64 `json:"crossSourceSamples"`

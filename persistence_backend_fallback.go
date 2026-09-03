@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"sort"
 	"sync"
+	"time"
 )
 
 type filePersistenceBackend struct {
@@ -34,7 +35,7 @@ func newLocalPersistenceBackend(configDir string) PersistenceBackend {
 }
 func (b *filePersistenceBackend) Name() string { return "file-fallback" }
 func (b *filePersistenceBackend) Capabilities() []string {
-	return []string{"global-symbol-registry", "canonical-quotes", "evidence-records", "decision-lineage", "outcome-history", "derived-feature-store", "user-workspaces"}
+	return []string{"global-symbol-registry", "canonical-quotes", "evidence-records", "point-in-time-evidence", "decision-lineage", "outcome-history", "derived-feature-store", "user-workspaces"}
 }
 func (b *filePersistenceBackend) Init(context.Context) error {
 	b.mu.Lock()
@@ -126,8 +127,20 @@ func (b *filePersistenceBackend) SaveQuotes(_ context.Context, quotes map[string
 func (b *filePersistenceBackend) SaveIntelligence(_ context.Context, batch PersistenceIntelligenceBatch) (int, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
+	normalizedEvidence := make([]EvidenceRecord, 0, len(batch.Evidence))
+	fallbackKnownAt := time.Now().UnixMilli()
+	for _, record := range batch.Evidence {
+		if record.ID == "" || record.Kind == "" {
+			continue
+		}
+		normalized, err := normalizeEvidenceTemporalRecord(record, fallbackKnownAt)
+		if err != nil {
+			return 0, err
+		}
+		normalizedEvidence = append(normalizedEvidence, normalized)
+	}
 	written := 0
-	for _, r := range batch.Evidence {
+	for _, r := range normalizedEvidence {
 		if r.ID != "" {
 			if _, exists := b.data.Evidence[r.ID]; !exists {
 				b.data.Evidence[r.ID] = r
@@ -300,6 +313,13 @@ func (b *filePersistenceBackend) RestorePersistenceArchive(ctx context.Context, 
 	}
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
 		return errors.New("unsupported persistence archive schema")
+	}
+	for i, record := range archive.Evidence {
+		normalized, err := normalizeEvidenceTemporalRecord(record, archive.ExportedAt)
+		if err != nil {
+			return err
+		}
+		archive.Evidence[i] = normalized
 	}
 	nonEmpty := len(b.data.Symbols)+len(b.data.Quotes)+len(b.data.Evidence)+len(b.data.Decisions)+len(b.data.Outcomes)+len(b.data.Features)+len(b.data.Workspaces) > 0 || b.data.Identity.Version != 0 || len(b.data.Identity.Users) > 0 || len(b.data.Identity.Sessions) > 0
 	if mode == persistenceRestoreModeEmpty && nonEmpty {

@@ -20,9 +20,13 @@ let semanticCards=[];
 const document={
   createElement(tag){return new El(tag)},
   querySelector(sel){return sel==='.performance-observability .maintenance-health-grid'?grid:null},
-  querySelectorAll(sel){return sel==='.provider-usefulness-card'?semanticCards.filter(x=>!x.removed):[]}
+  querySelectorAll(sel){
+    if(sel==='.provider-usefulness-card')return semanticCards.filter(x=>x.className==='provider-usefulness-card'&&!x.removed);
+    if(sel==='.provider-scorecard-card')return semanticCards.filter(x=>x.className==='provider-scorecard-card'&&!x.removed);
+    return [];
+  }
 };
-const context={console,globalThis:null,window:{addEventListener(){}},document,requestAnimationFrame(fn){fn()},afterRender(){},authPrincipal:{role:'ADMIN'},runtime:{runtimeLoad:{providerRequests:[{provider:'Finnhub',requestsLastMinute:7,inFlight:1,successes:9,errors:1,successPct:90,p50LatencyMs:35,p95LatencyMs:90,averageLatencyMs:44,rateLimited:1,peakInFlight:2}],providerUsefulness:[{provider:'Finnhub',state:'OBSERVING',agreementPct:80,eligibleSamples:10,crossSourceSamples:8,agreementSamples:6,conflictSamples:2,singleSourceSamples:2,canonicalSelections:7,excludedSamples:1}]}}};
+const context={console,globalThis:null,window:{addEventListener(){}},document,requestAnimationFrame(fn){fn()},afterRender(){},authPrincipal:{role:'ADMIN'},runtime:{runtimeLoad:{providerRequests:[{provider:'Finnhub',requestsLastMinute:7,inFlight:1,successes:9,errors:1,successPct:90,p50LatencyMs:35,p95LatencyMs:90,averageLatencyMs:44,rateLimited:1,peakInFlight:2}],providerUsefulness:[{provider:'Finnhub',state:'OBSERVING',agreementPct:80,eligibleSamples:10,crossSourceSamples:8,agreementSamples:6,conflictSamples:2,singleSourceSamples:2,canonicalSelections:7,excludedSamples:1}],providerScorecards:[{provider:'Finnhub',state:'PARTIAL',healthMeasurementState:'MEASURED',freshnessMeasurementState:'MEASURED',freshnessStates:['Quotes: LIVE'],transportMeasurementState:'MEASURED',successPct:90,p50LatencyMs:35,p95LatencyMs:90,requestBudgetRemaining:21,rightsMeasurementState:'UNBOUND',rightsReviewState:'UNREVIEWED',costMeasurementState:'DECLARED_CLASS_ONLY',costClass:'Free tier',usefulnessMeasurementState:'OBSERVING',agreementPct:80},{provider:'SEC',state:'UNOBSERVED',healthMeasurementState:'UNKNOWN',freshnessMeasurementState:'UNKNOWN',transportMeasurementState:'UNKNOWN',rightsMeasurementState:'UNBOUND',rightsReviewState:'UNREVIEWED',costMeasurementState:'DECLARED_CLASS_ONLY',costClass:'Public'}]}}};
 context.globalThis=context;
 const originalCreate=document.createElement.bind(document);
 document.createElement=(tag)=>{const e=originalCreate(tag);if(tag==='div')semanticCards.push(e);return e};
@@ -33,6 +37,13 @@ const reqCard=grid.children[0];
 assert.equal(reqCard.dataset.providerTransportReliability,'true');
 assert(reqCard.querySelector('b').textContent.includes('7/min'));
 assert(reqCard.querySelector('small').textContent.includes('Transport reliability'));
+const scorecard=grid.children.find(x=>x.className==='provider-scorecard-card'&&x.dataset.providerScorecard==='Finnhub');
+assert(scorecard,'privileged role must receive composite provider scorecard');
+assert(scorecard.querySelector('small').textContent.includes('Quotes: LIVE'));
+assert(scorecard.querySelector('small').textContent.includes('OBSERVABILITY ONLY'));
+const unknown=grid.children.find(x=>x.className==='provider-scorecard-card'&&x.dataset.providerScorecard==='SEC');
+assert(unknown.querySelector('small').textContent.includes('transport UNKNOWN'));
+assert(!unknown.querySelector('small').textContent.includes('p50 0ms'));
 const semantic=grid.children.find(x=>x.className==='provider-usefulness-card');
 assert(semantic,'privileged role must receive semantic usefulness card');
 assert(semantic.querySelector('b').textContent.includes('80.0% cross-source agreement'));
@@ -42,4 +53,5 @@ assert(semantic.querySelector('small').textContent.includes('no routing effect')
 context.authPrincipal={role:'USER'};
 vm.runInContext('afterRender()',context);
 assert(semantic.removed,'non-privileged role must remove provider usefulness projection');
+assert(scorecard.removed,'non-privileged role must remove provider operational scorecard');
 console.log('Provider telemetry/usefulness privileged surface functional regression PASS');

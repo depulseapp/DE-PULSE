@@ -450,6 +450,7 @@ func (b *sqlitePersistenceBackend) SaveIntelligence(ctx context.Context, batch P
 		}
 	}()
 	written := 0
+	fallbackKnownAt := time.Now().UnixMilli()
 
 	evidenceStmt, err := prepare(b.db, `INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json)
 VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(evidence_id) DO NOTHING`)
@@ -464,6 +465,10 @@ VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(evidence_id) DO NOTHING`)
 		if r.ID == "" || r.Kind == "" {
 			continue
 		}
+		r, storagePayload, normalizeErr := evidenceTemporalStoragePayload(r, fallbackKnownAt)
+		if normalizeErr != nil {
+			return written, normalizeErr
+		}
 		C.sqlite3_reset(evidenceStmt)
 		C.sqlite3_clear_bindings(evidenceStmt)
 		bindText(evidenceStmt, 1, r.ID)
@@ -473,7 +478,7 @@ VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(evidence_id) DO NOTHING`)
 		bindText(evidenceStmt, 5, r.Source)
 		bindText(evidenceStmt, 6, r.Provenance)
 		bindText(evidenceStmt, 7, r.FreshnessState)
-		bindBlob(evidenceStmt, 8, payloadOrEmpty(r.Payload))
+		bindBlob(evidenceStmt, 8, storagePayload)
 		if rc := C.sqlite3_step(evidenceStmt); rc != C.SQLITE_DONE {
 			return written, b.sqliteErr()
 		}
@@ -897,7 +902,11 @@ func (b *sqlitePersistenceBackend) ExportPersistenceArchive(ctx context.Context)
 		return PersistenceArchive{}, err
 	}
 	if err := query(`SELECT evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json FROM evidence_records ORDER BY evidence_id`, func(stmt *C.sqlite3_stmt) error {
-		archive.Evidence = append(archive.Evidence, EvidenceRecord{ID: text(stmt, 0), Symbol: normalizeSymbol(text(stmt, 1)), Kind: text(stmt, 2), ObservedAt: int64(C.sqlite3_column_int64(stmt, 3)), Source: text(stmt, 4), Provenance: text(stmt, 5), FreshnessState: text(stmt, 6), Payload: append(json.RawMessage(nil), blob(stmt, 7)...)})
+		record, err := evidenceRecordFromStorage(EvidenceRecord{ID: text(stmt, 0), Symbol: normalizeSymbol(text(stmt, 1)), Kind: text(stmt, 2), ObservedAt: int64(C.sqlite3_column_int64(stmt, 3)), Source: text(stmt, 4), Provenance: text(stmt, 5), FreshnessState: text(stmt, 6)}, append(json.RawMessage(nil), blob(stmt, 7)...))
+		if err != nil {
+			return err
+		}
+		archive.Evidence = append(archive.Evidence, record)
 		return nil
 	}); err != nil {
 		return PersistenceArchive{}, err
@@ -950,6 +959,15 @@ func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context
 	}
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
 		return errors.New("unsupported persistence archive schema")
+	}
+	evidencePayloads := make([][]byte, len(archive.Evidence))
+	for i, record := range archive.Evidence {
+		normalized, raw, err := evidenceTemporalStoragePayload(record, archive.ExportedAt)
+		if err != nil {
+			return fmt.Errorf("restore evidence %q: %w", record.ID, err)
+		}
+		archive.Evidence[i] = normalized
+		evidencePayloads[i] = raw
 	}
 	queries := []string{`SELECT COUNT(*) FROM symbol_registry`, `SELECT COUNT(*) FROM canonical_quotes`, `SELECT COUNT(*) FROM quote_history`, `SELECT COUNT(*) FROM evidence_records`, `SELECT COUNT(*) FROM decision_lineage`, `SELECT COUNT(*) FROM outcome_history`, `SELECT COUNT(*) FROM derived_features`, `SELECT COUNT(*) FROM identity_state`, `SELECT COUNT(*) FROM user_workspaces`}
 	var rows int64
@@ -1060,7 +1078,7 @@ func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context
 		bindText(stmt, 5, r.Source)
 		bindText(stmt, 6, r.Provenance)
 		bindText(stmt, 7, r.FreshnessState)
-		bindBlob(stmt, 8, payloadOrEmpty(r.Payload))
+		bindBlob(stmt, 8, evidencePayloads[i])
 	}); err != nil {
 		return err
 	}

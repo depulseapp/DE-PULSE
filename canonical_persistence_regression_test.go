@@ -204,6 +204,66 @@ func TestV170PersistentIntelligenceRepositoryFoundation(t *testing.T) {
 	}
 }
 
+func TestHOST022PointInTimeRevisionReplayPreventsLookahead(t *testing.T) {
+	records := []EvidenceRecord{
+		{ID: "original", Symbol: "NVDA", Kind: "fundamental", SourceAt: 50, ObservedAt: 100, IngestedAt: 100, KnownAt: 100, EffectiveFrom: 40, ReportPeriod: "2026-Q1", RevisionID: "rev-1", AmendmentState: "ORIGINAL", Source: "provider", Provenance: "fixture", RightsEvidenceRef: "rights:v1", RetentionClass: "RESEARCH_EVIDENCE", Payload: json.RawMessage(`{"value":1}`)},
+		{ID: "revision", Symbol: "NVDA", Kind: "fundamental", SourceAt: 150, ObservedAt: 200, IngestedAt: 200, KnownAt: 200, EffectiveFrom: 40, ReportPeriod: "2026-Q1", RevisionID: "rev-2", SupersedesID: "original", AmendmentState: "RESTATEMENT", Source: "provider", Provenance: "fixture", RightsEvidenceRef: "rights:v2", RetentionClass: "RESEARCH_EVIDENCE", Payload: json.RawMessage(`{"value":2}`)},
+		{ID: "future-effective", Symbol: "MSFT", Kind: "corporate-action", SourceAt: 90, ObservedAt: 110, IngestedAt: 110, KnownAt: 110, EffectiveFrom: 500, RevisionID: "future-1", AmendmentState: "ORIGINAL", Source: "provider", Payload: json.RawMessage(`{"split":2}`)},
+	}
+	early, err := EvidenceAsKnownAt(records, 150)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(early) != 2 || early[0].ID != "future-effective" || early[1].ID != "original" {
+		t.Fatalf("later revision leaked backward or knowable future-effective evidence disappeared: %+v", early)
+	}
+	late, err := EvidenceAsKnownAt(records, 250)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(late) != 2 || late[0].ID != "future-effective" || late[1].ID != "revision" || string(late[1].Payload) != `{"value":2}` {
+		t.Fatalf("eligible revision did not supersede original: %+v", late)
+	}
+	effective, err := EvidencePointInTime(records, 250, 100)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(effective) != 1 || effective[0].ID != "revision" {
+		t.Fatalf("valid-time cutoff did not remain distinct from known-time cutoff: %+v", effective)
+	}
+	if late[1].RightsState != "BOUND" || late[1].RightsEvidenceRef != "rights:v2" || late[1].RetentionClass != "RESEARCH_EVIDENCE" || late[1].TemporalSchema != evidenceTemporalEnvelopeSchema {
+		t.Fatalf("rights, retention or temporal provenance detached during replay: %+v", late[1])
+	}
+}
+
+func TestHOST022TemporalEvidenceFailsClosedOnFutureTimeAndRevisionCycle(t *testing.T) {
+	if _, err := EvidenceAsKnownAt([]EvidenceRecord{{ID: "future", Kind: "test", SourceAt: 100000, ObservedAt: 100, IngestedAt: 100, KnownAt: 100, Payload: json.RawMessage(`{}`)}}, 200); err == nil {
+		t.Fatal("materially future source timestamp must fail closed")
+	}
+	cycle := []EvidenceRecord{
+		{ID: "a", Kind: "test", ObservedAt: 100, SupersedesID: "b", AmendmentState: "REVISION", Payload: json.RawMessage(`{}`)},
+		{ID: "b", Kind: "test", ObservedAt: 100, SupersedesID: "a", AmendmentState: "REVISION", Payload: json.RawMessage(`{}`)},
+	}
+	if _, err := EvidenceAsKnownAt(cycle, 200); err == nil {
+		t.Fatal("revision cycle must fail closed")
+	}
+}
+
+func TestHOST022TemporalStorageEnvelopeRoundTripPreservesDomainPayload(t *testing.T) {
+	record := EvidenceRecord{ID: "rev", Symbol: "nvda", Kind: "filing", SourceAt: 100, ObservedAt: 120, IngestedAt: 125, KnownAt: 125, EffectiveFrom: 80, ReportPeriod: "2026-Q1", RevisionID: "r2", SupersedesID: "old", AmendmentState: "AMENDMENT", RightsEvidenceRef: "rights:sha256", RetentionClass: "REGULATORY_EVIDENCE", Payload: json.RawMessage(`{"reported":42}`)}
+	normalized, stored, err := evidenceTemporalStoragePayload(record, 125)
+	if err != nil {
+		t.Fatal(err)
+	}
+	decoded, err := evidenceRecordFromStorage(EvidenceRecord{ID: normalized.ID, Symbol: normalized.Symbol, Kind: normalized.Kind, ObservedAt: normalized.ObservedAt}, stored)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if decoded.KnownAt != 125 || decoded.SourceAt != 100 || decoded.SupersedesID != "old" || decoded.AmendmentState != "AMENDMENT" || decoded.RightsState != "BOUND" || string(decoded.Payload) != `{"reported":42}` {
+		t.Fatalf("temporal envelope round-trip changed truth: %+v payload=%s", decoded, decoded.Payload)
+	}
+}
+
 func TestV170ProviderTelemetryAndAdaptiveDegradationReasonCodes(t *testing.T) {
 	pt := NewProviderTelemetry()
 	done := pt.begin("Finnhub")

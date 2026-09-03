@@ -248,6 +248,9 @@ func TestV183PersistenceArchiveIntegrityAndRestoreSafety(t *testing.T) {
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion || archive.SourceBackend == "" || len(archive.Symbols) != 1 || len(archive.CanonicalQuotes) != 1 || len(archive.Evidence) != 1 || len(archive.Decisions) != 1 || len(archive.Outcomes) != 1 || len(archive.Features) != 1 || !archive.HasIdentity || len(archive.UserWorkspaces) != 1 {
 		t.Fatalf("archive omitted canonical state: %+v", archive)
 	}
+	if evidence := archive.Evidence[0]; evidence.TemporalSchema != evidenceTemporalEnvelopeSchema || evidence.SourceAt == 0 || evidence.IngestedAt == 0 || evidence.KnownAt == 0 || evidence.EffectiveFrom == 0 || evidence.RevisionID != evidence.ID || evidence.AmendmentState != "ORIGINAL" || evidence.RightsState != "UNBOUND" || evidence.RetentionClass != "UNSPECIFIED" || string(evidence.Payload) != `{"price":201}` {
+		t.Fatalf("archive omitted or invented temporal evidence truth: %+v payload=%s", evidence, evidence.Payload)
+	}
 	if archive.SourceBackend == "sqlite" && len(archive.QuoteHistory) < 2 {
 		t.Fatalf("sqlite archive lost quote history: %+v", archive.QuoteHistory)
 	}
@@ -270,6 +273,9 @@ func TestV183PersistenceArchiveIntegrityAndRestoreSafety(t *testing.T) {
 	}
 	if len(restored.Symbols) != len(archive.Symbols) || len(restored.CanonicalQuotes) != len(archive.CanonicalQuotes) || len(restored.Evidence) != len(archive.Evidence) || len(restored.Decisions) != len(archive.Decisions) || len(restored.Outcomes) != len(archive.Outcomes) || len(restored.Features) != len(archive.Features) || !restored.HasIdentity || len(restored.UserWorkspaces) != len(archive.UserWorkspaces) {
 		t.Fatalf("restore parity failure: source=%+v restored=%+v", archive, restored)
+	}
+	if restored.Evidence[0].KnownAt != archive.Evidence[0].KnownAt || restored.Evidence[0].RevisionID != archive.Evidence[0].RevisionID || string(restored.Evidence[0].Payload) != string(archive.Evidence[0].Payload) {
+		t.Fatalf("restore detached temporal metadata from domain payload: source=%+v restored=%+v", archive.Evidence[0], restored.Evidence[0])
 	}
 	if _, err := target.RestoreArchiveFile(context.Background(), path, persistenceRestoreModeEmpty); err == nil {
 		t.Fatal("empty-only restore must reject a non-empty target")

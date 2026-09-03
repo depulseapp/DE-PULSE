@@ -233,6 +233,8 @@ func tradeInsightFetchCongressAtObserved(ctx context.Context, client *http.Clien
 
 func tradeInsightCongressEvidenceRecords(rows []tradeInsightCongressEvidence, result tradeInsightCongressFetchResult) []EvidenceRecord {
 	records := make([]EvidenceRecord, 0, len(rows))
+	observedAt := time.Now().UTC().UnixMilli()
+	rights := providerDataRightsMetadata(tradeInsightProviderName)
 	for _, row := range rows {
 		filedAt, err := time.Parse("2006-01-02", row.FilingDate)
 		if err != nil {
@@ -249,14 +251,27 @@ func tradeInsightCongressEvidenceRecords(rows []tradeInsightCongressEvidence, re
 		if err != nil {
 			continue
 		}
+		effectiveAt := filedAt.UTC().UnixMilli()
+		if tradedAt, tradedErr := time.Parse("2006-01-02", row.TradedDate); tradedErr == nil {
+			effectiveAt = tradedAt.UTC().UnixMilli()
+		}
 		records = append(records, EvidenceRecord{
 			ID:             row.ID,
 			Symbol:         row.Ticker,
 			Kind:           "congressional-trade-disclosure",
 			Source:         tradeInsightProviderName,
-			ObservedAt:     filedAt.UTC().UnixMilli(),
+			SourceAt:       filedAt.UTC().UnixMilli(),
+			ObservedAt:     observedAt,
+			IngestedAt:     observedAt,
+			KnownAt:        observedAt,
+			EffectiveFrom:  effectiveAt,
+			ReportPeriod:   row.TradedDate,
+			RevisionID:     row.ID,
+			AmendmentState: row.AmendmentState,
 			FreshnessState: "SHADOW",
 			Provenance:     "TradeInsight /congress/v1/trades · normalized · SHADOW",
+			RightsEvidenceRef: rights.EvidenceRef,
+			RetentionClass: "RESEARCH_EVIDENCE",
 			Payload:        payload,
 		})
 	}

@@ -312,6 +312,9 @@ func TestV183PostgresSQLiteArchiveMigratesWithoutLineageLoss(t *testing.T) {
 	if len(restored.Symbols) != len(archive.Symbols) || len(restored.CanonicalQuotes) != len(archive.CanonicalQuotes) || len(restored.QuoteHistory) != len(archive.QuoteHistory) || len(restored.Evidence) != len(archive.Evidence) || len(restored.Decisions) != len(archive.Decisions) || len(restored.Outcomes) != len(archive.Outcomes) || len(restored.Features) != len(archive.Features) || !restored.HasIdentity || len(restored.UserWorkspaces) != len(archive.UserWorkspaces) {
 		t.Fatalf("SQLite to PostgreSQL lineage parity failed: source=%+v target=%+v", archive, restored)
 	}
+	if restored.Evidence[0].KnownAt != archive.Evidence[0].KnownAt || restored.Evidence[0].RevisionID != archive.Evidence[0].RevisionID || restored.Evidence[0].TemporalSchema != evidenceTemporalEnvelopeSchema || string(restored.Evidence[0].Payload) != string(archive.Evidence[0].Payload) {
+		t.Fatalf("SQLite to PostgreSQL temporal evidence parity failed: source=%+v target=%+v", archive.Evidence[0], restored.Evidence[0])
+	}
 	if restored.Identity.Users[0].PasswordHash != archive.Identity.Users[0].PasswordHash || restored.Identity.Sessions[0].TokenHash != archive.Identity.Sessions[0].TokenHash {
 		t.Fatal("identity credential/session hash continuity was not preserved")
 	}

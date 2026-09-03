@@ -462,6 +462,7 @@ func (b *sqlitePersistenceBackend) SaveIntelligence(ctx context.Context, batch P
 	var q strings.Builder
 	q.WriteString("BEGIN IMMEDIATE;")
 	written := 0
+	fallbackKnownAt := time.Now().UnixMilli()
 	for _, r := range batch.Evidence {
 		if err := ctx.Err(); err != nil {
 			return written, err
@@ -469,7 +470,11 @@ func (b *sqlitePersistenceBackend) SaveIntelligence(ctx context.Context, batch P
 		if r.ID == "" || r.Kind == "" {
 			continue
 		}
-		vals := []string{sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Kind), sqlInt64(r.ObservedAt), sqlText(r.Source), sqlText(r.Provenance), sqlText(r.FreshnessState), sqlBlob(payloadOrEmpty(r.Payload))}
+		r, storagePayload, normalizeErr := evidenceTemporalStoragePayload(r, fallbackKnownAt)
+		if normalizeErr != nil {
+			return written, normalizeErr
+		}
+		vals := []string{sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Kind), sqlInt64(r.ObservedAt), sqlText(r.Source), sqlText(r.Provenance), sqlText(r.FreshnessState), sqlBlob(storagePayload)}
 		q.WriteString("INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES(" + strings.Join(vals, ",") + ") ON CONFLICT(evidence_id) DO NOTHING;")
 		written++
 	}
@@ -801,7 +806,11 @@ func (b *sqlitePersistenceBackend) ExportPersistenceArchive(ctx context.Context)
 		return PersistenceArchive{}, err
 	}
 	if err := query(`SELECT evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json FROM evidence_records ORDER BY evidence_id`, func(stmt uintptr) error {
-		archive.Evidence = append(archive.Evidence, EvidenceRecord{ID: winSQLiteText(stmt, 0), Symbol: normalizeSymbol(winSQLiteText(stmt, 1)), Kind: winSQLiteText(stmt, 2), ObservedAt: winSQLiteInt64(stmt, 3), Source: winSQLiteText(stmt, 4), Provenance: winSQLiteText(stmt, 5), FreshnessState: winSQLiteText(stmt, 6), Payload: append(json.RawMessage(nil), winSQLiteBlob(stmt, 7)...)})
+		record, err := evidenceRecordFromStorage(EvidenceRecord{ID: winSQLiteText(stmt, 0), Symbol: normalizeSymbol(winSQLiteText(stmt, 1)), Kind: winSQLiteText(stmt, 2), ObservedAt: winSQLiteInt64(stmt, 3), Source: winSQLiteText(stmt, 4), Provenance: winSQLiteText(stmt, 5), FreshnessState: winSQLiteText(stmt, 6)}, append(json.RawMessage(nil), winSQLiteBlob(stmt, 7)...))
+		if err != nil {
+			return err
+		}
+		archive.Evidence = append(archive.Evidence, record)
 		return nil
 	}); err != nil {
 		return PersistenceArchive{}, err
@@ -855,6 +864,15 @@ func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context
 	if archive.SchemaVersion != persistenceArchiveSchemaVersion {
 		return errors.New("unsupported persistence archive schema")
 	}
+	evidencePayloads := make([][]byte, len(archive.Evidence))
+	for i, record := range archive.Evidence {
+		normalized, raw, err := evidenceTemporalStoragePayload(record, archive.ExportedAt)
+		if err != nil {
+			return fmt.Errorf("restore evidence %q: %w", record.ID, err)
+		}
+		archive.Evidence[i] = normalized
+		evidencePayloads[i] = raw
+	}
 	queries := []string{`SELECT COUNT(*) FROM symbol_registry`, `SELECT COUNT(*) FROM canonical_quotes`, `SELECT COUNT(*) FROM quote_history`, `SELECT COUNT(*) FROM evidence_records`, `SELECT COUNT(*) FROM decision_lineage`, `SELECT COUNT(*) FROM outcome_history`, `SELECT COUNT(*) FROM derived_features`, `SELECT COUNT(*) FROM identity_state`, `SELECT COUNT(*) FROM user_workspaces`}
 	var rows int64
 	for _, q := range queries {
@@ -903,8 +921,8 @@ func (b *sqlitePersistenceBackend) RestorePersistenceArchive(ctx context.Context
 			return err
 		}
 	}
-	for _, r := range archive.Evidence {
-		q := fmt.Sprintf(`INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Kind), sqlInt64(r.ObservedAt), sqlText(r.Source), sqlText(r.Provenance), sqlText(r.FreshnessState), sqlBlob(payloadOrEmpty(r.Payload)))
+	for i, r := range archive.Evidence {
+		q := fmt.Sprintf(`INSERT INTO evidence_records(evidence_id,symbol,evidence_kind,observed_at_ms,source,provenance,freshness_state,payload_json) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)`, sqlText(r.ID), sqlText(normalizeSymbol(r.Symbol)), sqlText(r.Kind), sqlInt64(r.ObservedAt), sqlText(r.Source), sqlText(r.Provenance), sqlText(r.FreshnessState), sqlBlob(evidencePayloads[i]))
 		if err := b.exec(q); err != nil {
 			return err
 		}
