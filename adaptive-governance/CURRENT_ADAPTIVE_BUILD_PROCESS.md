@@ -8,11 +8,12 @@
 Current projected identity:
 
 - Certified Stable: `v18.10.0`
-- Active work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`
-- Active issue / PR: #148 / PR #149
-- Active branch: `adapt-hosted-trust-foundation-001`
-- Closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`
+- Active version: `v19.1.0` Development
+- Active work slice: `ADAPT-V19-1-CANONICAL-FOUNDATION-001`
+- Primary active issue: #153
+- Active branch: `v19.1.0-development`
+- Closure ledger: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/closure.json`
 
-The audit-rebaselined execution contract and G0–G16 responsibilities live only in the canonical process. Supporting contracts are indexed by `adaptive-governance/README.md`.
+Execution remains G0–G16, REUSE/CONSOLIDATE/REFACTOR/DELETE-before-ADD, with characterization before canonical authority movement and exact-head evidence at coherent checkpoints. The HOST-013/014 Azure residual remains UNVERIFIED.
 
 Do not add process rules or a next action here. Read the machine state/closure ledger/handoff to resume.
