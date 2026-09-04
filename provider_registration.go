@@ -439,14 +439,14 @@ type AdaptiveProviderDiagnosticManifest struct {
 // canonical ProviderRegistration descriptor. Configuration is represented only
 // as presence/absence; secrets are never copied into this projection.
 type AdaptiveProviderManifest struct {
-	ProviderID      string                                `json:"providerId"`
-	Name            string                                `json:"name"`
-	ContractVersion string                                `json:"contractVersion"`
-	Configured      bool                                  `json:"configured"`
-	Configuration   string                                `json:"configuration"`
-	QuotaLabel      string                                `json:"quotaLabel,omitempty"`
-	CostClass       string                                `json:"costClass,omitempty"`
-	Routable        bool                                  `json:"routable"`
+	ProviderID      string                               `json:"providerId"`
+	Name            string                               `json:"name"`
+	ContractVersion string                               `json:"contractVersion"`
+	Configured      bool                                 `json:"configured"`
+	Configuration   string                               `json:"configuration"`
+	QuotaLabel      string                               `json:"quotaLabel,omitempty"`
+	CostClass       string                               `json:"costClass,omitempty"`
+	Routable        bool                                 `json:"routable"`
 	Routes          []AdaptiveProviderRouteManifest      `json:"routes,omitempty"`
 	Diagnostics     []AdaptiveProviderDiagnosticManifest `json:"diagnostics,omitempty"`
 }
