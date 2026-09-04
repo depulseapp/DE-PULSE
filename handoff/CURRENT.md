@@ -56,14 +56,17 @@ HOST-013/014 remains **BLOCKED_EXTERNAL / UNVERIFIED** after v19.0 closure.
 - Registry configuration truth remains bounded to registration/configuration/lifecycle projection. Smart Provider Router v2 remains the sole general routing/admission/selection authority.
 - SEC EDGAR direct authority, SEC/CBOE corroborative roles and yfinance fallback role remain explicit; no runtime evidence can silently promote lifecycle or rights authority.
 
-### APR-02 implementation candidate — qualification pending
+### APR-02 verified checkpoint
 
 - The generic `provider-credential-v19.1.0` metadata projection reuses canonical `Secrets` fields and exposes only redacted configured/source/hint state plus Settings placement metadata.
 - Market Data is the first metadata-rendered Settings adopter. Blank input preserves, non-empty input replaces through the canonical Secrets owner, and explicit removal remains owned by `/api/settings/clear-secret`.
 - Credential metadata/replacement routes now sit behind canonical ADMIN authentication; replacement and clear require recent authentication. The unsafe outer HTTP interception path was removed.
 - `/api/provider/test` recognizes Market Data without falling through to Finnhub. It truthfully reports configured-but-unverified `PENDING` without a network request until APR-03 supplies the Bearer transport.
 - Desktop/headless `MARKETDATA_TOKEN` fallback is redacted. Hosted Market Data uses the existing managed-mounted secret lifecycle and renders a zero-key/server-managed card.
-- Focused renderer, redaction, hosted-boundary, workflow-policy and release-identity evidence passes locally. APR-02 remains `IMPLEMENTED_UNVERIFIED` until exact-head GitHub Fast and impact-selected Qualified evidence is attached.
+- Exact implementation source: `d6d9ee7f05bf25947b85d18e7db95a0d7a6363d7`.
+- Fast #1475 / run `33920557675`: PASS on that exact source head, including gofmt, go vet, full Go suite, PostgreSQL-tagged compile, renderer contracts and governance/security gates.
+- Qualified #297 / run `33920557671`: PASS on the identical source head, including full Go suite, race detector, randomized package order, security/data-rights, renderer, primary Chrome and primary WebKit lanes. Non-selected native/DB/live-host lanes remain unclaimed.
+- `APR-02`: VERIFIED. No APR-03 transport/capability/lifecycle claim is implied.
 
 ## v19.1 frozen architecture direction
 
@@ -99,13 +102,13 @@ The closure ledger additionally conserves:
 
 ## Exactly one next action
 
-**APR-02 — Exact-head qualification:** commit and push the coherent generic credential implementation candidate, require exact-head Fast plus impact-selected Qualified, attach those run IDs to the closure ledger, and only then advance the recorded next dependency to APR-03.
+**APR-03 — Market Data adapter and transport truth:** implement Bearer-header transport; deterministic HTTP 200/203, 401/403/429/5xx/timeout/malformed/schema-drift fixtures; delayed-versus-live normalization; and initial SHADOW-only registration. Do not infer plan names, auto-promote lifecycle/authority, or bypass Smart Provider Router v2.
 
 ## Resume rule
 
 1. Fetch live `main`, the `v19.1.0-development` head, Draft PR #172 and Actions before writing.
 2. Read `governance/current-state.json`, the v19.1 work-slice/G1/closure files and this handoff; GitHub source/evidence outranks chat memory.
-3. Continue only the current dependency (`APR-02`) until its executable evidence supports a closure-ledger status change.
+3. Continue only the current dependency (`APR-03`) until its executable evidence supports a closure-ledger status change.
 4. Run focused tests while editing; run exact-head Fast at coherent checkpoints and impact-selected Qualified at material risk boundaries/G10.
 5. Never treat the HOST-013/014 residual as verification or Commercial/Public authorization.
 6. Keep `v18.10.0` Stable immutable and do not create a v19.1 release/tag from ordinary Development work.

@@ -52,7 +52,7 @@
     },
     {
       "id": "APR-02",
-      "status": "IMPLEMENTED_UNVERIFIED",
+      "status": "VERIFIED",
       "blocksIssueClosure": true,
       "owner": "Generic provider credential UX and canonical secret owner",
       "implementationPaths": ["app_model.go", "provider_entitlement_refresh.go", "http_api.go", "runtime_environment.go", "renderer/renderer.js", "tools/hosted/render_managed_secrets.py", "provider_credentials_regression_test.go", "hosted_managed_secrets_regression_test.go", "tests/renderer/renderer_logic_test.js"],
@@ -65,7 +65,9 @@
         "Market Data is the first metadata-rendered Settings card, uses canonical Secrets.MarketData plus MARKETDATA_TOKEN desktop/headless fallback, and uses the shared /api/provider/test path. Until APR-03 transport exists, that path reports configured-but-unverified PENDING and explicitly makes no network request.",
         "Hosted Market Data credentials load through the existing immutable managed-mounted secret lifecycle, project as managed-mounted/editable=false, and reject product-API mutation or clear operations.",
         "provider_credentials_regression_test.go covers route authentication, replacement, redaction, canonical clear ownership, fallback scope and fail-closed unknown provider tests; hosted_managed_secrets_regression_test.go covers mounted Market Data loading and hosted mutation denial; tests/renderer/renderer_logic_test.js covers metadata rendering and zero-key hosted UI.",
-        "Focused local evidence: all tests/renderer/*.js PASS; managed Market Data alias render PASS; workflow policy, release identity, source-health and executable closure/requirement guards PASS where locally runnable. Exact-head GitHub Fast/Qualified evidence is not yet attached, so APR-02 remains IMPLEMENTED_UNVERIFIED."
+        "Focused local evidence: all tests/renderer/*.js PASS; managed Market Data alias render PASS; workflow policy, release identity, source-health and executable closure/requirement guards PASS where locally runnable.",
+        "Exact implementation source head d6d9ee7f05bf25947b85d18e7db95a0d7a6363d7 passed Fast #1475 / run 33920557675, including gofmt, go vet, full Go suite, PostgreSQL tagged compile, renderer contracts and governance/security gates.",
+        "Qualified #297 / run 33920557671 passed on the identical source head, including full Go suite, race detector, randomized package order, security/data-rights, renderer, primary Chrome and primary WebKit lanes. Non-selected native/DB/live-host lanes remain unclaimed."
       ]
     },
     {

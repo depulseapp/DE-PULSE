@@ -37,8 +37,8 @@
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
     "targetScope": "v19.1.0 characterized server domain, versioned canonical intelligence contracts, generic Adaptive Provider Registry foundation, Market Data first adopter, canonical global symbol/provider processing and required cross-integration",
-    "nextDependencyBand": "APR-02 exact-head qualification: implementation now uses the canonical Settings/Secrets owners, metadata-driven Market Data credential UI, canonical clear-secret ownership, shared provider-test semantics and MARKETDATA_TOKEN fallback; keep IMPLEMENTED_UNVERIFIED until exact-head Fast and impact-selected Qualified pass",
-    "nextDependencyBandId": "APR-02",
+    "nextDependencyBand": "APR-03 Market Data adapter and transport truth: implement Bearer-header transport, deterministic HTTP 200/203 and failure/schema fixtures, delayed-versus-live truth and SHADOW-only registration without plan-name routing assumptions or automatic lifecycle promotion",
+    "nextDependencyBandId": "APR-03",
     "zeroMissAuditState": "V19_1_ACTIVE_ALL_CLOSURE_ROWS_FAIL_CLOSED_UNTIL_EXECUTABLE_EVIDENCE"
   },
   "latestCompletedWorkSlice": {
@@ -280,7 +280,7 @@
     "postClosureSourceOverlapAuditQualifiedRunId": 32925800749,
     "postClosureSourceOverlapAuditMergeSha": "f5364888fad81114d1372d0d6d4975b282f83874",
     "v19G1Permission": "G1_PASSED_BUILDING",
-    "v19_1G1Permission": "G1_VERIFIED_APR_02_ACTIVE"
+    "v19_1G1Permission": "G1_VERIFIED_APR_03_ACTIVE"
   },
   "carriedExternalResiduals": [
     {
