@@ -37,8 +37,8 @@
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
     "targetScope": "v19.1.0 characterized server domain, versioned canonical intelligence contracts, generic Adaptive Provider Registry foundation, Market Data first adopter, canonical global symbol/provider processing and required cross-integration",
-    "nextDependencyBand": "APR-01 Registry foundation: complete executable source-overlap characterization and extend the existing #95 provider registration/capability owner into the generic Adaptive Provider Registry without creating a second Router, Data Health, cache, subscription, lifecycle or canonical-state owner",
-    "nextDependencyBandId": "APR-01",
+    "nextDependencyBand": "APR-02 Generic provider credential UX: extend the existing canonical Settings/Secrets owners with metadata-driven provider credential handling, preserve/replace/clear/redaction semantics, the shared provider-test path and MARKETDATA_TOKEN fallback without creating a provider-specific secret store or renderer exposure",
+    "nextDependencyBandId": "APR-02",
     "zeroMissAuditState": "V19_1_ACTIVE_ALL_CLOSURE_ROWS_FAIL_CLOSED_UNTIL_EXECUTABLE_EVIDENCE"
   },
   "latestCompletedWorkSlice": {
@@ -280,7 +280,7 @@
     "postClosureSourceOverlapAuditQualifiedRunId": 32925800749,
     "postClosureSourceOverlapAuditMergeSha": "f5364888fad81114d1372d0d6d4975b282f83874",
     "v19G1Permission": "G1_PASSED_BUILDING",
-    "v19_1G1Permission": "G1_FROZEN_APR_01_ACTIVE"
+    "v19_1G1Permission": "G1_VERIFIED_APR_02_ACTIVE"
   },
   "carriedExternalResiduals": [
     {
