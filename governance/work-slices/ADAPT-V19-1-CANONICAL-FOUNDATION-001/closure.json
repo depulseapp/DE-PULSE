@@ -8,13 +8,19 @@
   "gaps": [
     {
       "id": "V19.1-G1-SOURCE-OVERLAP",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "blocksIssueClosure": true,
       "owner": "Canonical architecture/source-overlap audit",
       "implementationPaths": ["provider_registration.go", "provider_router.go", "smart_router_v2.go", "provider_capabilities.go", "governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json"],
       "evidenceRequired": ["executable/source inventory of existing canonical owners", "REUSE/CONSOLIDATE/REFACTOR/DELETE-before-ADD disposition", "no duplicate routing/health/cache/subscription/state owner proof"],
       "closureCondition": "Existing owners and overlap are source-proven and the implementation plan extends or consolidates them without a parallel subsystem.",
-      "evidence": []
+      "evidence": [
+        "Exact-head source audit on 5d33e424a3b4fca914769b4200392df45ab7c8c7 confirms provider_registration.go remains the single provider-onboarding descriptor and routeChainsFromProviderRegistrations derives registration-backed route membership rather than introducing a second provider map.",
+        "APR-01 was folded into the existing provider_registration.go/provider_registration_regression_test.go owners after canonical root-layout policy rejected temporary new root files; no parallel Registry store survived.",
+        "Adaptive Provider Registry is a computed read-only projection. Smart Provider Router v2 remains sole routing/admission/selection owner; existing Data Health/freshness, cache/persistence/reconciliation, Dynamic Multi-Feed Subscription Manager, lifecycle and canonical-state owners were not replaced.",
+        "Fast #1461 / run 33847621149 PASS on exact head 5d33e424a3b4fca914769b4200392df45ab7c8c7, including canonical workflow policy and recursive source-health ownership checks.",
+        "Qualified #283 / run 33847621182 PASS on the identical exact head, including backend full suite, race detector, randomized package order and security/data-rights contracts."
+      ]
     },
     {
       "id": "V19.1-CANONICAL-CONTRACTS-GOLDEN-VECTORS",
@@ -28,13 +34,21 @@
     },
     {
       "id": "APR-01",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "blocksIssueClosure": true,
       "owner": "Adaptive Provider Registry foundation",
       "implementationPaths": ["provider_registration.go", "provider_entitlement_refresh.go", "provider_capabilities.go", "smart_router_v2.go"],
       "evidenceRequired": ["standard provider manifest/registration contract", "adapter self-registration", "unsupported/unconfigured capability truth", "unit/contract regressions proving Registry is not a Router"],
       "closureCondition": "The existing #95 registration owner is extended into the generic Registry foundation and Smart Provider Router v2 remains sole routing authority.",
-      "evidence": []
+      "evidence": [
+        "Exact source head 5d33e424a3b4fca914769b4200392df45ab7c8c7 extends existing providerRegistrations() with adaptive-provider-registry-v19.1.0 read-only manifests/snapshot rather than creating a second registration or routing subsystem.",
+        "Registry configuration truth is bounded to unsupported/not-configured/REGISTERED/REGISTERED_NOT_PRODUCTION and cannot report Router selection, provider health or automatic lifecycle promotion.",
+        "Authority projection preserves SEC EDGAR DIRECT_AUTHORITY, SEC/CBOE CORROBORATIVE and yfinance FALLBACK dispositions while ordinary production routes remain ROUTABLE; Smart Provider Router v2 remains the executable general routing authority.",
+        "Provider entitlement/configuration refresh consumes the computed Registry snapshot and manual revalidation cross-checks registered route configuration before reopening existing Router evidence, providing real production consumers without a new state owner.",
+        "provider_registration_regression_test.go covers bounded pre-Router capability truth, fail-closed non-production lifecycle, explicit authority classes, secret non-disclosure, projection of every canonical registration and generic registration without parallel provider maps.",
+        "Fast #1461 / run 33847621149 PASS on exact head 5d33e424a3b4fca914769b4200392df45ab7c8c7, including gofmt, go vet, full Go suite, source-health and governance conservation.",
+        "Qualified #283 / run 33847621182 PASS on the identical source head, including full Go suite, race detector, randomized package order, CI-contract and security/data-rights lanes."
+      ]
     },
     {
       "id": "APR-02",
