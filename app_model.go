@@ -40,6 +40,7 @@ type Secrets struct {
 	EIA          string `json:"eia"`
 	TwelveData   string `json:"twelveData"`
 	Marketaux    string `json:"marketaux,omitempty"`
+	MarketData   string `json:"marketData,omitempty"`
 	// Legacy only: retained so an older secrets.json can be read without data loss.
 	OpenAI string `json:"openai,omitempty"`
 }
