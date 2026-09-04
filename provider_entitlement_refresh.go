@@ -278,8 +278,8 @@ func providerCredentialContracts() []ProviderCredentialCardContract {
 			Fields: []ProviderCredentialFieldContract{{
 				FieldID: "token", Label: "API Token", SecretReference: "secrets.marketData", Required: true,
 				EnvironmentFallback: marketDataTokenEnv,
-				stored: func(s Secrets) string { return s.MarketData },
-				replace: func(s *Secrets, v string) { s.MarketData = v },
+				stored:              func(s Secrets) string { return s.MarketData },
+				replace:             func(s *Secrets, v string) { s.MarketData = v },
 			}},
 		},
 	}
