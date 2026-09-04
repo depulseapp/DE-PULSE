@@ -37,7 +37,7 @@
     "productAuditFindingRegister": "governance/programs/V19-V20-REBASELINE/product-audit-finding-register.json",
     "productAuditMaturityTarget": "governance/programs/V19-V20-REBASELINE/product-audit-5x5-target.json",
     "targetScope": "v19.1.0 characterized server domain, versioned canonical intelligence contracts, generic Adaptive Provider Registry foundation, Market Data first adopter, canonical global symbol/provider processing and required cross-integration",
-    "nextDependencyBand": "APR-02 Generic provider credential UX: extend the existing canonical Settings/Secrets owners with metadata-driven provider credential handling, preserve/replace/clear/redaction semantics, the shared provider-test path and MARKETDATA_TOKEN fallback without creating a provider-specific secret store or renderer exposure",
+    "nextDependencyBand": "APR-02 exact-head qualification: implementation now uses the canonical Settings/Secrets owners, metadata-driven Market Data credential UI, canonical clear-secret ownership, shared provider-test semantics and MARKETDATA_TOKEN fallback; keep IMPLEMENTED_UNVERIFIED until exact-head Fast and impact-selected Qualified pass",
     "nextDependencyBandId": "APR-02",
     "zeroMissAuditState": "V19_1_ACTIVE_ALL_CLOSURE_ROWS_FAIL_CLOSED_UNTIL_EXECUTABLE_EVIDENCE"
   },

@@ -151,6 +151,7 @@ var hostedManagedSecretFiles = []hostedManagedSecretFile{
 	{logicalName: "eia", fileName: "eia"},
 	{logicalName: "twelvedata", fileName: "twelvedata"},
 	{logicalName: "marketaux", fileName: "marketaux"},
+	{logicalName: "marketdata", fileName: "marketdata"},
 }
 
 var hostedManagedSecretAudit sync.Map
@@ -239,6 +240,8 @@ func assignHostedManagedSecret(secrets *Secrets, logicalName, value string) {
 		secrets.TwelveData = value
 	case "marketaux":
 		secrets.Marketaux = value
+	case "marketdata":
+		secrets.MarketData = value
 	}
 }
 
@@ -365,6 +368,10 @@ func hostedManagedSecretBoundary(next http.Handler) http.Handler {
 		}
 		if r.URL.Path == "/api/settings/clear-secret" {
 			writeError(w, http.StatusConflict, "Hosted credentials are managed by the server secret lifecycle and cannot be cleared through product state.")
+			return
+		}
+		if r.URL.Path == providerCredentialMutationPath {
+			writeError(w, http.StatusConflict, "Hosted credentials are managed by the server secret lifecycle and cannot be changed through product state.")
 			return
 		}
 		if (r.URL.Path == "/api/settings/save" || r.URL.Path == "/api/provider/test") && hostedRequestCarriesInlineSecret(r) {

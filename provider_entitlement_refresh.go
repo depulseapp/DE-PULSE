@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -190,14 +189,16 @@ type ProviderCredentialFieldContract struct {
 // credential-bearing provider. Routing, lifecycle admission, health, freshness,
 // rights and serving-provider selection remain outside this contract.
 type ProviderCredentialCardContract struct {
-	ProviderID   string
-	ProviderName string
-	DisplayName  string
-	Description  string
-	Transport    string
-	Lifecycle    string
-	TestProvider string
-	Fields       []ProviderCredentialFieldContract
+	ProviderID      string
+	ProviderName    string
+	DisplayName     string
+	Description     string
+	Transport       string
+	Lifecycle       string
+	TestProvider    string
+	SettingsSection string
+	SettingsOrder   int
+	Fields          []ProviderCredentialFieldContract
 }
 
 type ProviderCredentialFieldState struct {
@@ -220,6 +221,9 @@ type ProviderCredentialCardState struct {
 	Transport       string                         `json:"transport,omitempty"`
 	Lifecycle       string                         `json:"lifecycle,omitempty"`
 	TestProvider    string                         `json:"testProvider"`
+	SettingsSection string                         `json:"settingsSection,omitempty"`
+	SettingsOrder   int                            `json:"settingsOrder,omitempty"`
+	Editable        bool                           `json:"editable"`
 	Configured      bool                           `json:"configured"`
 	Configuration   string                         `json:"configuration"`
 	Fields          []ProviderCredentialFieldState `json:"fields"`
@@ -273,8 +277,8 @@ func providerCredentialContracts() []ProviderCredentialCardContract {
 		}},
 		{
 			ProviderID: providerKey(marketDataProviderName), ProviderName: marketDataProviderName,
-			DisplayName: "Market Data · Validation Provider", Description: "SHADOW-first Market Data credential contract. Transport and capability truth are implemented in APR-03.",
-			Transport: "Bearer", Lifecycle: "SHADOW", TestProvider: "marketdata",
+			DisplayName: "Market Data · Validation Provider", Description: "SHADOW-first credential contract. Connectivity remains unverified until transport validation is available.",
+			Transport: "Bearer", Lifecycle: "SHADOW", TestProvider: "marketdata", SettingsSection: "global-data", SettingsOrder: 60,
 			Fields: []ProviderCredentialFieldContract{{
 				FieldID: "token", Label: "API Token", SecretReference: "secrets.marketData", Required: true,
 				EnvironmentFallback: marketDataTokenEnv,
@@ -333,6 +337,7 @@ func providerCredentialCardState(contract ProviderCredentialCardContract, settin
 		ContractVersion: providerCredentialContractVersion,
 		ProviderID:      contract.ProviderID, ProviderName: contract.ProviderName, DisplayName: contract.DisplayName,
 		Description: contract.Description, Transport: contract.Transport, Lifecycle: contract.Lifecycle, TestProvider: contract.TestProvider,
+		SettingsSection: contract.SettingsSection, SettingsOrder: contract.SettingsOrder, Editable: !isHostedRuntime(),
 		Configuration: providerCapabilityNotConfigured,
 	}
 	allRequired := true
@@ -407,56 +412,67 @@ func applyProviderCredentialMutation(secrets *Secrets, mutation ProviderCredenti
 	}
 }
 
-// providerCredentialBoundary exposes only metadata/redacted state and canonical
-// credential mutation. It intentionally sits in front of the existing routes so
-// future provider cards can use one backend contract without adding a second
-// Settings or secret store. Hosted mutation remains fail-closed/server-managed.
-func providerCredentialBoundary(app *Application, next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if app == nil {
-			next.ServeHTTP(w, r)
-			return
+func clearProviderCredential(secrets *Secrets, provider string) error {
+	if secrets == nil {
+		return fmt.Errorf("credential clear requires canonical Secrets owner")
+	}
+	contract, ok := providerCredentialContract(provider)
+	if !ok {
+		return fmt.Errorf("unknown provider credential contract: %s", strings.TrimSpace(provider))
+	}
+	for _, field := range contract.Fields {
+		if field.replace == nil {
+			return fmt.Errorf("%s persistent credential slot is not active yet", contract.ProviderName)
 		}
-		switch {
-		case r.URL.Path == providerCredentialStatePath && r.Method == http.MethodGet:
-			app.mu.Lock()
-			state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
-			app.mu.Unlock()
-			w.Header().Set("Content-Type", "application/json")
-			if err := json.NewEncoder(w).Encode(map[string]any{"providers": state}); err != nil {
-				http.Error(w, "unable to encode provider credential state", http.StatusInternalServerError)
-			}
-			return
-		case r.URL.Path == providerCredentialMutationPath && r.Method == http.MethodPost:
-			if isHostedRuntime() {
-				http.Error(w, "hosted provider credentials are server-managed", http.StatusConflict)
-				return
-			}
-			var mutation ProviderCredentialMutation
-			decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 64<<10))
-			decoder.DisallowUnknownFields()
-			if err := decoder.Decode(&mutation); err != nil {
-				http.Error(w, "invalid provider credential mutation", http.StatusBadRequest)
-				return
-			}
-			app.mu.Lock()
-			err := applyProviderCredentialMutation(&app.secrets, mutation)
-			if err == nil {
-				err = app.saveLocked()
-			}
-			state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
-			app.mu.Unlock()
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-			w.Header().Set("Content-Type", "application/json")
-			if err := json.NewEncoder(w).Encode(map[string]any{"providers": state}); err != nil {
-				http.Error(w, "unable to encode provider credential state", http.StatusInternalServerError)
-			}
-			return
-		default:
-			next.ServeHTTP(w, r)
-		}
-	})
+		field.replace(secrets, "")
+	}
+	return nil
+}
+
+// handleProviderCredentialState is deliberately registered inside routes(),
+// behind the canonical admin authentication boundary. Only metadata and
+// redacted configuration state are returned.
+func (app *Application) handleProviderCredentialState(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeError(w, http.StatusMethodNotAllowed, "Method not allowed")
+		return
+	}
+	app.mu.RLock()
+	state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
+	app.mu.RUnlock()
+	writeJSON(w, http.StatusOK, map[string]any{"providers": state})
+}
+
+// handleProviderCredentialMutation implements preserve/replace through the
+// canonical Secrets owner. Explicit removal stays owned by
+// /api/settings/clear-secret so Settings never gains a competing clear path.
+func (app *Application) handleProviderCredentialMutation(w http.ResponseWriter, r *http.Request) {
+	if isHostedRuntime() {
+		writeError(w, http.StatusConflict, "Hosted provider credentials are server-managed.")
+		return
+	}
+	var mutation ProviderCredentialMutation
+	if decodeJSON(r, &mutation) != nil {
+		writeError(w, http.StatusBadRequest, "Invalid provider credential mutation")
+		return
+	}
+	if strings.EqualFold(strings.TrimSpace(mutation.Action), providerCredentialClear) {
+		writeError(w, http.StatusBadRequest, "Use the canonical clear-secret operation to remove provider credentials.")
+		return
+	}
+	app.mu.Lock()
+	if err := applyProviderCredentialMutation(&app.secrets, mutation); err != nil {
+		app.mu.Unlock()
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	if err := app.saveLocked(); err != nil {
+		app.mu.Unlock()
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
+	app.mu.Unlock()
+	app.broadcastSharedState()
+	writeJSON(w, http.StatusOK, map[string]any{"providers": state})
 }

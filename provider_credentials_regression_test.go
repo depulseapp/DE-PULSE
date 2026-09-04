@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 )
@@ -34,6 +36,9 @@ func TestProviderCredentialContractsAreUniqueAndMarketDataMetadataIsGoverned(t *
 	}
 	if marketData.Lifecycle != "SHADOW" || marketData.Transport != "Bearer" || marketData.TestProvider != "marketdata" {
 		t.Fatalf("Market Data credential metadata drift: %+v", marketData)
+	}
+	if marketData.SettingsSection != "global-data" || marketData.SettingsOrder <= 0 {
+		t.Fatalf("Market Data Settings placement metadata drift: %+v", marketData)
 	}
 	if len(marketData.Fields) != 1 || marketData.Fields[0].FieldID != "token" || marketData.Fields[0].EnvironmentFallback != marketDataTokenEnv {
 		t.Fatalf("Market Data token contract drift: %+v", marketData.Fields)
@@ -163,5 +168,78 @@ func TestMarketDataPersistentMutationUsesCanonicalSlotAndRedactedProjection(t *t
 	}
 	if secrets.MarketData != "" {
 		t.Fatalf("Market Data clear did not clear canonical slot: %q", secrets.MarketData)
+	}
+}
+
+func localProviderCredentialRequest(method, path, body, sessionKey string) *http.Request {
+	req := httptest.NewRequest(method, path, strings.NewReader(body))
+	req.AddCookie(&http.Cookie{Name: "pmt_session", Value: sessionKey})
+	if method == http.MethodPost {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	return req
+}
+
+func TestProviderCredentialRoutesRequireCanonicalAdminBoundaryAndNeverLeak(t *testing.T) {
+	t.Setenv(runtimeModeEnv, "desktop")
+	app := newTestApplication(t)
+	handler := app.routes()
+
+	blocked := httptest.NewRecorder()
+	handler.ServeHTTP(blocked, httptest.NewRequest(http.MethodGet, providerCredentialStatePath, nil))
+	if blocked.Code != http.StatusForbidden {
+		t.Fatalf("credential metadata escaped local authentication boundary: code=%d body=%s", blocked.Code, blocked.Body.String())
+	}
+
+	stateResponse := httptest.NewRecorder()
+	handler.ServeHTTP(stateResponse, localProviderCredentialRequest(http.MethodGet, providerCredentialStatePath, "", app.sessionKey))
+	if stateResponse.Code != http.StatusOK || !strings.Contains(stateResponse.Body.String(), marketDataTokenEnv) {
+		t.Fatalf("authenticated redacted metadata unavailable: code=%d body=%s", stateResponse.Code, stateResponse.Body.String())
+	}
+
+	raw := "route-fixture-marketdata-token"
+	mutation := `{"provider":"market-data","fieldId":"token","action":"REPLACE","value":"` + raw + `"}`
+	mutated := httptest.NewRecorder()
+	handler.ServeHTTP(mutated, localProviderCredentialRequest(http.MethodPost, providerCredentialMutationPath, mutation, app.sessionKey))
+	if mutated.Code != http.StatusOK || app.secrets.MarketData != raw {
+		t.Fatalf("authenticated credential replacement failed: code=%d secrets=%+v body=%s", mutated.Code, app.secrets, mutated.Body.String())
+	}
+	if strings.Contains(mutated.Body.String(), raw) {
+		t.Fatalf("credential mutation response leaked raw secret: %s", mutated.Body.String())
+	}
+
+	duplicateClear := httptest.NewRecorder()
+	handler.ServeHTTP(duplicateClear, localProviderCredentialRequest(http.MethodPost, providerCredentialMutationPath, `{"provider":"market-data","fieldId":"token","action":"CLEAR"}`, app.sessionKey))
+	if duplicateClear.Code != http.StatusBadRequest || app.secrets.MarketData != raw {
+		t.Fatalf("generic mutation route became a competing clear owner: code=%d secret=%q body=%s", duplicateClear.Code, app.secrets.MarketData, duplicateClear.Body.String())
+	}
+
+	cleared := httptest.NewRecorder()
+	handler.ServeHTTP(cleared, localProviderCredentialRequest(http.MethodPost, "/api/settings/clear-secret", `{"name":"market-data"}`, app.sessionKey))
+	if cleared.Code != http.StatusOK || app.secrets.MarketData != "" {
+		t.Fatalf("canonical clear-secret owner did not clear Market Data: code=%d secret=%q body=%s", cleared.Code, app.secrets.MarketData, cleared.Body.String())
+	}
+}
+
+func TestMarketDataSharedProviderTestIsTruthfulAndUnknownNeverFallsThrough(t *testing.T) {
+	t.Setenv(runtimeModeEnv, "desktop")
+	t.Setenv(marketDataTokenEnv, "")
+	app := newTestApplication(t)
+	app.secrets.MarketData = "provider-test-marketdata-token"
+	handler := app.routes()
+
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, localProviderCredentialRequest(http.MethodPost, "/api/provider/test", `{"provider":"marketdata"}`, app.sessionKey))
+	if response.Code != http.StatusOK || !strings.Contains(response.Body.String(), `"status":"pending"`) || !strings.Contains(response.Body.String(), "No network request was made") {
+		t.Fatalf("Market Data test must report configured-but-unverified truth: code=%d body=%s", response.Code, response.Body.String())
+	}
+	if strings.Contains(response.Body.String(), app.secrets.MarketData) {
+		t.Fatalf("Market Data test leaked raw token: %s", response.Body.String())
+	}
+
+	unknown := httptest.NewRecorder()
+	handler.ServeHTTP(unknown, localProviderCredentialRequest(http.MethodPost, "/api/provider/test", `{"provider":"not-a-provider"}`, app.sessionKey))
+	if unknown.Code != http.StatusBadRequest || !strings.Contains(unknown.Body.String(), "Unsupported provider test") {
+		t.Fatalf("unknown provider test fell through instead of failing closed: code=%d body=%s", unknown.Code, unknown.Body.String())
 	}
 }

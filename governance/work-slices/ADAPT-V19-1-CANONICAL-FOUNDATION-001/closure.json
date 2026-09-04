@@ -52,13 +52,21 @@
     },
     {
       "id": "APR-02",
-      "status": "OPEN",
+      "status": "IMPLEMENTED_UNVERIFIED",
       "blocksIssueClosure": true,
       "owner": "Generic provider credential UX and canonical secret owner",
-      "implementationPaths": ["provider_registration.go", "provider_capabilities.go", "data_engine_handlers.go"],
+      "implementationPaths": ["app_model.go", "provider_entitlement_refresh.go", "http_api.go", "runtime_environment.go", "renderer/renderer.js", "tools/hosted/render_managed_secrets.py", "provider_credentials_regression_test.go", "hosted_managed_secrets_regression_test.go", "tests/renderer/renderer_logic_test.js"],
       "evidenceRequired": ["metadata-driven provider Settings contract", "preserve/replace/clear/redaction tests", "shared provider-test path", "MARKETDATA_TOKEN fallback without secret leakage"],
       "closureCondition": "Provider credentials use the existing canonical secret/settings owners with generic metadata and no provider-specific credential store or renderer secret exposure.",
-      "evidence": []
+      "evidence": [
+        "The provider-credential-v19.1.0 metadata projection reuses canonical Secrets fields and adds Settings placement, redacted configured/source/hint state, desktop/headless environment fallback metadata, and hosted editability without returning raw credentials.",
+        "GET /api/provider-credentials and POST /api/provider-credentials/mutate are registered inside the canonical ADMIN authentication boundary; replacement also requires recent authentication. The former outer HTTP boundary that bypassed route auth was removed.",
+        "Blank generic Settings inputs issue no mutation and therefore preserve stored values; non-empty inputs use REPLACE; CLEAR is rejected on the generic mutation route and Market Data removal uses the existing /api/settings/clear-secret owner.",
+        "Market Data is the first metadata-rendered Settings card, uses canonical Secrets.MarketData plus MARKETDATA_TOKEN desktop/headless fallback, and uses the shared /api/provider/test path. Until APR-03 transport exists, that path reports configured-but-unverified PENDING and explicitly makes no network request.",
+        "Hosted Market Data credentials load through the existing immutable managed-mounted secret lifecycle, project as managed-mounted/editable=false, and reject product-API mutation or clear operations.",
+        "provider_credentials_regression_test.go covers route authentication, replacement, redaction, canonical clear ownership, fallback scope and fail-closed unknown provider tests; hosted_managed_secrets_regression_test.go covers mounted Market Data loading and hosted mutation denial; tests/renderer/renderer_logic_test.js covers metadata rendering and zero-key hosted UI.",
+        "Focused local evidence: all tests/renderer/*.js PASS; managed Market Data alias render PASS; workflow policy, release identity, source-health and executable closure/requirement guards PASS where locally runnable. Exact-head GitHub Fast/Qualified evidence is not yet attached, so APR-02 remains IMPLEMENTED_UNVERIFIED."
+      ]
     },
     {
       "id": "APR-03",

@@ -1,0 +1,17 @@
+DE.PULSE v18.10.0 — Final v18 Closure
+Build: v18.10.0-stable-20260825
+Release channel: STABLE
+
+Certified scope:
+- Complete T1–T10 future-proof v18 assurance with durable regression ownership.
+- Exact-source and exact-artifact provenance preserved through the canonical no-rebuild release path.
+- Actual macOS Apple Silicon and Windows x64 packaged lifecycle and upgrade evidence.
+- GitHub-portable handoff, recovery, and release evidence.
+
+Protected invariants:
+- Deterministic Day/Swing/Long formulas remain v14.3.7-compatible.
+- Smart Provider Router v2 remains the sole general provider-routing owner.
+- U.S. Equities Processing Boundary and the permanent No Execution Boundary remain enforced.
+- Direct SEC/EDGAR remains authoritative for governed filing evidence.
+
+Certification state: published Stable through canonical G11–G16 evidence; v19 work does not modify this immutable release.

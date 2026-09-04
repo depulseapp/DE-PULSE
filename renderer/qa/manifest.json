@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "version": "18.10.0",
+      "date": "2026-08-25",
+      "status": "STABLE",
+      "summary": "Final v18 closure: exhaustive T1-T10 assurance, real macOS Apple Silicon and Windows x64 packaged lifecycle and upgrade certification, immutable source/artifact provenance, durable regression ownership, GitHub-portable handoff, and preserved No Execution, provider-routing, and data-truth boundaries.",
+      "file": "v18.10.0.txt",
+      "buildId": "v18.10.0-stable-20260825",
+      "checkpoint": "release/v18.10.0/certification-manifest.json"
+    },
+    {
       "version": "18.6.0",
       "date": "2026-08-18",
       "status": "STABLE",

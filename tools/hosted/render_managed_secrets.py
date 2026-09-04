@@ -31,6 +31,7 @@ SECRET_ALIASES = (
     "eia",
     "twelvedata",
     "marketaux",
+    "marketdata",
 )
 
 

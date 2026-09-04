@@ -146,6 +146,28 @@ func TestHostedManagedSecretsResolveRotateRollbackAndRevoke(t *testing.T) {
 	}
 }
 
+func TestHostedManagedSecretsLoadMarketDataThroughCanonicalMountedSlot(t *testing.T) {
+	t.Setenv(runtimeModeEnv, "hosted")
+	dir := t.TempDir()
+	t.Setenv(hostedManagedSecretsDirEnv, dir)
+	configureHostedManagedSecretContract(t, "marketdata", strings.Repeat("a", 64))
+	writeManagedSecretFixture(t, dir, "marketdata", "fixture-marketdata-mounted-token")
+
+	secrets, health := readHostedManagedSecrets()
+	if health.Status != "ready" || secrets.MarketData != "fixture-marketdata-mounted-token" {
+		t.Fatalf("Market Data managed-mounted secret did not reach canonical slot: health=%+v secrets=%+v", health, secrets)
+	}
+	contract, ok := providerCredentialContract(marketDataProviderName)
+	if !ok {
+		t.Fatal("Market Data credential contract missing")
+	}
+	state := providerCredentialCardState(contract, defaultState().Settings, secrets)
+	data, _ := json.Marshal(state)
+	if state.Editable || state.Fields[0].Source != providerCredentialSourceManagedMounted || strings.Contains(string(data), secrets.MarketData) {
+		t.Fatalf("hosted Market Data projection must be zero-key and redacted: %s", data)
+	}
+}
+
 func TestHostedManagedSecretsRequireExplicitProjectionContract(t *testing.T) {
 	t.Setenv(runtimeModeEnv, "hosted")
 	dir := t.TempDir()
@@ -243,6 +265,14 @@ func TestHostedManagedSecretHTTPBoundaryRejectsRawCredentialMutationAndGatesRead
 	handler.ServeHTTP(resp, req)
 	if resp.Code != http.StatusConflict || called {
 		t.Fatalf("hosted clear-secret must be managed externally")
+	}
+
+	called = false
+	req = httptest.NewRequest(http.MethodPost, providerCredentialMutationPath, strings.NewReader("{\"provider\":\"market-data\",\"fieldId\":\"token\",\"action\":\"REPLACE\",\"value\":\"fixture-inline\"}"))
+	resp = httptest.NewRecorder()
+	handler.ServeHTTP(resp, req)
+	if resp.Code != http.StatusConflict || called {
+		t.Fatalf("hosted generic credential mutation must be managed externally")
 	}
 
 	called = false

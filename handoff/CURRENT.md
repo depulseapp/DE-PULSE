@@ -56,6 +56,15 @@ HOST-013/014 remains **BLOCKED_EXTERNAL / UNVERIFIED** after v19.0 closure.
 - Registry configuration truth remains bounded to registration/configuration/lifecycle projection. Smart Provider Router v2 remains the sole general routing/admission/selection authority.
 - SEC EDGAR direct authority, SEC/CBOE corroborative roles and yfinance fallback role remain explicit; no runtime evidence can silently promote lifecycle or rights authority.
 
+### APR-02 implementation candidate — qualification pending
+
+- The generic `provider-credential-v19.1.0` metadata projection reuses canonical `Secrets` fields and exposes only redacted configured/source/hint state plus Settings placement metadata.
+- Market Data is the first metadata-rendered Settings adopter. Blank input preserves, non-empty input replaces through the canonical Secrets owner, and explicit removal remains owned by `/api/settings/clear-secret`.
+- Credential metadata/replacement routes now sit behind canonical ADMIN authentication; replacement and clear require recent authentication. The unsafe outer HTTP interception path was removed.
+- `/api/provider/test` recognizes Market Data without falling through to Finnhub. It truthfully reports configured-but-unverified `PENDING` without a network request until APR-03 supplies the Bearer transport.
+- Desktop/headless `MARKETDATA_TOKEN` fallback is redacted. Hosted Market Data uses the existing managed-mounted secret lifecycle and renders a zero-key/server-managed card.
+- Focused renderer, redaction, hosted-boundary, workflow-policy and release-identity evidence passes locally. APR-02 remains `IMPLEMENTED_UNVERIFIED` until exact-head GitHub Fast and impact-selected Qualified evidence is attached.
+
 ## v19.1 frozen architecture direction
 
 The release combines two dependency-correct foundations rather than treating #153 as the whole release:
@@ -90,7 +99,7 @@ The closure ledger additionally conserves:
 
 ## Exactly one next action
 
-**APR-02 — Generic provider credential UX:** extend the existing canonical Settings/Secrets persistence and provider-capability surfaces with metadata-driven credential handling. Prove preserve/replace/clear/redaction semantics, reuse the shared provider-test/revalidation path, support the governed `MARKETDATA_TOKEN` fallback without secret leakage, and do not create a provider-specific credential store or renderer-visible secret truth.
+**APR-02 — Exact-head qualification:** commit and push the coherent generic credential implementation candidate, require exact-head Fast plus impact-selected Qualified, attach those run IDs to the closure ledger, and only then advance the recorded next dependency to APR-03.
 
 ## Resume rule
 
