@@ -39,12 +39,22 @@ HOST-013/014 remains **BLOCKED_EXTERNAL / UNVERIFIED** after v19.0 closure.
 - Primary issue: #153.
 - Conserved related issues: #150, #151, #154, #155, #160, #167, #170.
 - Branch: `v19.1.0-development`.
+- Draft PR: #172, keep Draft/open/unmerged until whole-version G10 closure.
 - Baseline main SHA: `ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796`.
 - Work-slice contract: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/work-slice.json`.
 - G1 scope: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json`.
 - Canonical closure ledger: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/closure.json`.
 - Provider build sequence: APR-01 → APR-02 → APR-03 → APR-04 → APR-05 → APR-06, then whole-version G10 exact-head reconciliation.
-- Draft PR is created only after this transition state is coherent; once created, GitHub PR/head/check state outranks any copied PR metadata here.
+
+### APR-01 verified checkpoint
+
+- `V19.1-G1-SOURCE-OVERLAP`: VERIFIED with executable REUSE/EXTEND evidence.
+- `APR-01`: VERIFIED; the existing #95 provider registration owner is extended into the read-only Adaptive Provider Registry foundation with no second Router or canonical state owner.
+- Qualified source checkpoint: `5d33e424a3b4fca914769b4200392df45ab7c8c7`.
+- Fast #1461 / run `33847621149`: PASS on that exact source head.
+- Qualified #283 / run `33847621182`: PASS on the identical source head, including backend full suite, race detector, randomized package order and security/data-rights lanes.
+- Registry configuration truth remains bounded to registration/configuration/lifecycle projection. Smart Provider Router v2 remains the sole general routing/admission/selection authority.
+- SEC EDGAR direct authority, SEC/CBOE corroborative roles and yfinance fallback role remain explicit; no runtime evidence can silently promote lifecycle or rights authority.
 
 ## v19.1 frozen architecture direction
 
@@ -80,13 +90,13 @@ The closure ledger additionally conserves:
 
 ## Exactly one next action
 
-**APR-01 — Registry foundation:** complete the executable source-overlap characterization against the existing #95 provider registration/capability owner, Smart Provider Router v2, Data Health/freshness, canonical state/cache/persistence, Dynamic Multi-Feed Subscription Manager and symbol-processing owners; then extend that existing registration owner into the generic Adaptive Provider Registry with unit/contract proof that no second Router or parallel canonical subsystem was created.
+**APR-02 — Generic provider credential UX:** extend the existing canonical Settings/Secrets persistence and provider-capability surfaces with metadata-driven credential handling. Prove preserve/replace/clear/redaction semantics, reuse the shared provider-test/revalidation path, support the governed `MARKETDATA_TOKEN` fallback without secret leakage, and do not create a provider-specific credential store or renderer-visible secret truth.
 
 ## Resume rule
 
-1. Fetch live `main`, the `v19.1.0-development` head, Draft PR state once present, issue #153 and Actions before writing.
+1. Fetch live `main`, the `v19.1.0-development` head, Draft PR #172 and Actions before writing.
 2. Read `governance/current-state.json`, the v19.1 work-slice/G1/closure files and this handoff; GitHub source/evidence outranks chat memory.
-3. Continue only the current dependency (`APR-01`) until its executable evidence supports a closure-ledger status change.
+3. Continue only the current dependency (`APR-02`) until its executable evidence supports a closure-ledger status change.
 4. Run focused tests while editing; run exact-head Fast at coherent checkpoints and impact-selected Qualified at material risk boundaries/G10.
 5. Never treat the HOST-013/014 residual as verification or Commercial/Public authorization.
 6. Keep `v18.10.0` Stable immutable and do not create a v19.1 release/tag from ordinary Development work.
