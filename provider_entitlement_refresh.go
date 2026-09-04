@@ -156,8 +156,8 @@ func (e *providerConfigurationError) Error() string { return e.message }
 
 const (
 	providerCredentialContractVersion = "provider-credential-v19.1.0"
-	marketDataProviderName             = "Market Data"
-	marketDataTokenEnv                 = "MARKETDATA_TOKEN"
+	marketDataProviderName            = "Market Data"
+	marketDataTokenEnv                = "MARKETDATA_TOKEN"
 
 	providerCredentialPreserve = "PRESERVE"
 	providerCredentialReplace  = "REPLACE"
@@ -182,8 +182,8 @@ type ProviderCredentialFieldContract struct {
 	SecretReference     string
 	Required            bool
 	EnvironmentFallback string
-	stored               func(Secrets) string
-	replace              func(*Secrets, string)
+	stored              func(Secrets) string
+	replace             func(*Secrets, string)
 }
 
 // ProviderCredentialCardContract is the reusable Settings contract for a
@@ -329,7 +329,7 @@ func providerCredentialFieldState(field ProviderCredentialFieldContract, secrets
 func providerCredentialCardState(contract ProviderCredentialCardContract, settings Settings, secrets Secrets) ProviderCredentialCardState {
 	state := ProviderCredentialCardState{
 		ContractVersion: providerCredentialContractVersion,
-		ProviderID: contract.ProviderID, ProviderName: contract.ProviderName, DisplayName: contract.DisplayName,
+		ProviderID:      contract.ProviderID, ProviderName: contract.ProviderName, DisplayName: contract.DisplayName,
 		Description: contract.Description, Transport: contract.Transport, Lifecycle: contract.Lifecycle, TestProvider: contract.TestProvider,
 		Configuration: providerCapabilityNotConfigured,
 	}
