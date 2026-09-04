@@ -8,75 +8,107 @@
 - Stable candidate SHA: `584e9e0ce91ec08e08cfd52c7cf60392ab74dd12`.
 - Stable source fingerprint: `0adbd70aeb9a016b0e4ded93538cfb75d616494980c11d7d781cffa31b1e6037`.
 - Stable build ID: `v18.10.0-stable-20260825`.
+- Canonical machine state: `governance/current-state.json`.
 - Do not rebuild, republish, overwrite or reinterpret v18.10.0 from v19 work.
 
-## v19.0 Hosted Trust & Identity Foundation
+## Completed v19.0 Development closure
 
-- Canonical machine state: `governance/current-state.json`.
-- Work slice: `ADAPT-HOSTED-TRUST-FOUNDATION-001`.
-- Issue: #148.
-- PR: #149.
-- Branch: `adapt-hosted-trust-foundation-001`.
-- Target: **DEVELOPMENT_PRODUCTION_READY** only.
-- Canonical closure ledger: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/closure.json`.
-- Work-slice contract: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/work-slice.json`.
-- G1 scope: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/g1-scope.json`.
-- GitHub objects and executable evidence outrank this handoff. Always fetch the live PR head and Actions before writing or merging.
+- Work slice `ADAPT-HOSTED-TRUST-FOUNDATION-001` / issue #148 / PR #149 is COMPLETE for Development.
+- Final source candidate: `de0d3f165f66935ee0ef4b638f7dc7c1840710fc`.
+- Exact-head Fast #1449 / run `33810591291`: PASS.
+- Exact-head Qualified #271 / run `33810591277`: PASS on the identical source head.
+- Expected-head merge: `ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796`.
+- Issue #148 is closed.
+- No v19.0 tag, Stable release, publication or Commercial/Public activation was created.
 
-## Closure truth
+### Carried hosted residual
 
-The v19.0 technical bands are closed for Development as follows:
+HOST-013/014 remains **BLOCKED_EXTERNAL / UNVERIFIED** after v19.0 closure.
 
-- **HOST-001..003 VERIFIED** — provider-rights provenance/control plane; Development remains audit-only and configured-provider capable. Actual provider-specific public/commercial approval is a separate later activation gate.
-- **HOST-004..007 VERIFIED** — tenant/account isolation, capability-scoped RBAC, device/session lifecycle and production-wired Ed25519 MFA-class proof. #164 remains open only for later v19.3 client/UX parity unless a new core security defect appears.
-- **HOST-008..009 VERIFIED** — product entitlement/quota remains separate from RBAC/provider rights and fails closed before protected projection.
-- **HOST-010..012 VERIFIED** — privacy lifecycle plus real Neon PITR recovery, deletion replay, anti-resurrection, RPO 7.753s and RTO 13.926746s.
-- **HOST-013..014 BLOCKED_EXTERNAL / UNVERIFIED** — single named Development residual. Residual ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`; gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`; canonical waiver: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`. Azure Free Trial Canada Central quota was 4/4 with 0 vCPU remaining and 2 additional vCPU required for the governed 2->3 AKS system-pool scale. The waiver never verifies live AKS readiness, never weakens architecture/security, never requires paid upgrade, and never authorizes Commercial/Public activation.
-- **HOST-015..016 VERIFIED** — tenant-owned/scoped PostgreSQL state plus real physical streaming failover. Qualified #252 / run `33683891569` proved primary outage, standby promotion, application reconnection through the same DSN and preservation of tenant/workspace/privacy state. This does not claim managed-provider automatic production endpoint failover.
-- **HOST-017..018 VERIFIED** — immutable Key Vault object-version references, CSI workload mount, rotation/rollback, missing/revoked fail-closed behavior, generation-only health and no raw hosted-secret persistence in ordinary product state.
-- **HOST-019..020 VERIFIED** — governed dependency inventory, source-bound SPDX SBOM, live fail-closed `govulncheck`, and deployment admission bound to source SHA, immutable artifact digest, SBOM, advisory/provenance evidence and target environment.
-- **HOST-021 VERIFIED** — measured provider/Data Health scorecards preserve unknowns and are `OBSERVABILITY_ONLY`; they do not become a second router or automatically promote providers.
-- **HOST-022 VERIFIED** — canonical known/effective/revision-time evidence and point-in-time replay prevent later revisions/future evidence from leaking backward into historical decisions.
-- **HOST-023 VERIFIED FOR DEVELOPMENT** — zero unexplained applicable technical gaps; the named HOST-013/014 Azure quota residual remains visibly UNVERIFIED. Commercial/Public activation remains separately gated.
+- Residual ID: `HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01`.
+- Gap ID: `HOST-013-014-ENVIRONMENT-SERVICE-TRUST`.
+- Evidence/waiver path: `governance/work-slices/ADAPT-HOSTED-TRUST-FOUNDATION-001/host013-014-azure-free-trial-quota-waiver.json`.
+- The Azure Free Trial Canada Central quota evidence remains 4/4 vCPU used, 0 remaining, 2 additional required for the governed AKS 2→3 system-pool scale.
+- This residual never verifies live managed-AKS trust readiness, never weakens architecture/security, never requires a paid upgrade merely to erase it, and never authorizes Commercial/Public activation.
+- It does not block governed v19.1 Development dependency advancement and is not a v19.1 closure-gap waiver.
 
-## Final v19.0 merge gate
+## Active v19.1 Development work
 
-The implementation head immediately before closure reconciliation was `7a4aa46ef90114b4ed1d3c518dffba028711b10b`; Fast #1441 / run `33807784888` and Qualified #263 / run `33807784865` both passed on that exact head.
+- Version target: `v19.1.0 — Canonical Intelligence & Provider Foundation`.
+- Active work slice: `ADAPT-V19-1-CANONICAL-FOUNDATION-001`.
+- Primary issue: #153.
+- Conserved related issues: #150, #151, #154, #155, #160, #167, #170.
+- Branch: `v19.1.0-development`.
+- Draft PR: #172, keep Draft/open/unmerged until whole-version G10 closure.
+- Baseline main SHA: `ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796`.
+- Work-slice contract: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/work-slice.json`.
+- G1 scope: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json`.
+- Canonical closure ledger: `governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/closure.json`.
+- Provider build sequence: APR-01 → APR-02 → APR-03 → APR-04 → APR-05 → APR-06, then whole-version G10 exact-head reconciliation.
 
-Closure reconciliation changes governance/handoff files, so those runs are not the final merge authority. Before merging PR #149:
+### APR-01 verified checkpoint
 
-1. Fetch the live PR #149 head after the final reconciliation commit.
-2. Require **Fast and Qualified both PASS on that identical final head**.
-3. Mark the Draft PR ready only after those exact-head checks pass.
-4. Merge with `expected_head_sha` equal to that verified final head.
-5. Do **not** create or publish a v19.0 release/tag/build from this closure.
-6. Close #148 only after the expected-head merge succeeds.
+- `V19.1-G1-SOURCE-OVERLAP`: VERIFIED with executable REUSE/EXTEND evidence.
+- `APR-01`: VERIFIED; the existing #95 provider registration owner is extended into the read-only Adaptive Provider Registry foundation with no second Router or canonical state owner.
+- Qualified source checkpoint: `5d33e424a3b4fca914769b4200392df45ab7c8c7`.
+- Fast #1461 / run `33847621149`: PASS on that exact source head.
+- Qualified #283 / run `33847621182`: PASS on the identical source head, including backend full suite, race detector, randomized package order and security/data-rights lanes.
+- Registry configuration truth remains bounded to registration/configuration/lifecycle projection. Smart Provider Router v2 remains the sole general routing/admission/selection authority.
+- SEC EDGAR direct authority, SEC/CBOE corroborative roles and yfinance fallback role remain explicit; no runtime evidence can silently promote lifecycle or rights authority.
+
+### APR-02 verified checkpoint
+
+- The generic `provider-credential-v19.1.0` metadata projection reuses canonical `Secrets` fields and exposes only redacted configured/source/hint state plus Settings placement metadata.
+- Market Data is the first metadata-rendered Settings adopter. Blank input preserves, non-empty input replaces through the canonical Secrets owner, and explicit removal remains owned by `/api/settings/clear-secret`.
+- Credential metadata/replacement routes now sit behind canonical ADMIN authentication; replacement and clear require recent authentication. The unsafe outer HTTP interception path was removed.
+- `/api/provider/test` recognizes Market Data without falling through to Finnhub. It truthfully reports configured-but-unverified `PENDING` without a network request until APR-03 supplies the Bearer transport.
+- Desktop/headless `MARKETDATA_TOKEN` fallback is redacted. Hosted Market Data uses the existing managed-mounted secret lifecycle and renders a zero-key/server-managed card.
+- Exact implementation source: `d6d9ee7f05bf25947b85d18e7db95a0d7a6363d7`.
+- Fast #1475 / run `33920557675`: PASS on that exact source head, including gofmt, go vet, full Go suite, PostgreSQL-tagged compile, renderer contracts and governance/security gates.
+- Qualified #297 / run `33920557671`: PASS on the identical source head, including full Go suite, race detector, randomized package order, security/data-rights, renderer, primary Chrome and primary WebKit lanes. Non-selected native/DB/live-host lanes remain unclaimed.
+- `APR-02`: VERIFIED. No APR-03 transport/capability/lifecycle claim is implied.
+
+## v19.1 frozen architecture direction
+
+The release combines two dependency-correct foundations rather than treating #153 as the whole release:
+
+1. **Canonical intelligence characterization/contracts** — characterize current decision behavior first, then consolidate versioned server-side `Observation`, `Evidence`, `SymbolIntelligenceSnapshot`, `Transition` and `DecisionBrief` truth with source/observed time, provenance, provider/rights/freshness, UNKNOWN/withheld and point-in-time/no-lookahead semantics.
+2. **Generic provider foundation** — extend the completed #95 provider registration/capability owner into the Adaptive Provider Registry; do not replace it. Market Data is the first new standards-compliant adopter. Registry projects registration/capability/entitlement truth; Smart Provider Router v2 remains the sole general routing/admission/selection authority.
+
+The closure ledger additionally conserves:
+
+- #150 canonical source→Router→Data Health→canonical state→consumer traceability and precise degraded/partial-coverage reasons;
+- #151 one global ticker/capability processing path, no Desk/page duplicate cost, plus reserved SPY/QQQ live priority;
+- #154 capability-specific recovery → canonical refresh → dependent consumer re-evaluation;
+- #155 Maintenance values sourced from canonical runtime truth, including truthful success/failure/event semantics;
+- #160 Data Engine integration freshness while preserving the approved current visual design except proven defects;
+- #167 v19.1 global symbol identity/processing foundation so user membership never duplicates upstream symbol processing;
+- #170 explicit cross-integration and bounded Market Regime contribution dispositions instead of isolated feature truth.
+
+## Permanent boundaries
+
+- U.S. Equities Processing only; GLD/SLV/USO remain approved actionable tradable exceptions.
+- No Execution.
+- Smart Provider Router v2 is the sole general routing/admission/selection owner.
+- Adaptive Provider Registry is a registration/capability/entitlement projection, not another Router.
+- Direct SEC/EDGAR remains governed filing/Form 4 authority.
+- Existing Data Health/freshness, cache, persistence, reconciliation, canonical state, telemetry, lifecycle and Dynamic Multi-Feed Subscription Manager owners remain canonical.
+- Consumers request capabilities and consume canonical state; no provider-name-specific page/Desk/user routing.
+- Provider lifecycle remains governed; runtime suppression/demotion/cooldown/recovery is allowed, automatic lifecycle/authority promotion is not.
+- An API key, successful authentication or paid plan never implies legal/public/commercial provider rights.
+- Point-in-time/no-lookahead truth precedes adaptive learning.
+- No duplicate canonical owner or parallel provider/health/cache/subscription/intelligence subsystem.
+- No v19.1 release/tag/publication until an explicitly governed release closure later authorizes it.
 
 ## Exactly one next action
 
-**HOST-023 final Development closure:** certify the live PR #149 head with canonical exact-head Fast and Qualified, then perform only the expected-head merge/issue-closure sequence above. Until that merge succeeds, v19.1/#153 remains blocked and this work slice remains active.
-
-## Next governed transition
-
-Only after the v19.0 expected-head merge and #148 closure may v19.1 begin. The next roadmap target is #153 / Adaptive Provider Registry & Market Data work. At that transition, re-fetch live `main`, #153 and the current roadmap/build-plan authority before creating the v19.1 branch/PR; do not reuse the v19.0 branch.
-
-The v19.1 transition must preserve these permanent boundaries:
-
-- U.S. Equities Processing only; GLD/SLV/USO remain actionable tradable exceptions.
-- No Execution.
-- Smart Provider Router v2 remains the sole general routing/admission owner.
-- Adaptive Provider Registry may register/project capabilities but never becomes a second Router.
-- Direct SEC/EDGAR remains the governed filing/Form 4 authority.
-- Extend canonical Data Health/freshness/cache/persistence/subscription/telemetry/reconciliation/lifecycle/identity/session owners; never create parallel canonical owners.
-- No hidden automatic provider lifecycle/authority promotion.
-- Point-in-time/no-lookahead truth precedes adaptive learning.
-- Development provider-rights mode remains audit-only; Commercial/Public enforcement/authorization is separate.
-- Preserve the named HOST-013/014 Azure residual until real eligible managed-AKS evidence is later available.
-- Keep v18.10.0 Stable immutable.
+**APR-03 — Market Data adapter and transport truth:** implement Bearer-header transport; deterministic HTTP 200/203, 401/403/429/5xx/timeout/malformed/schema-drift fixtures; delayed-versus-live normalization; and initial SHADOW-only registration. Do not infer plan names, auto-promote lifecycle/authority, or bypass Smart Provider Router v2.
 
 ## Resume rule
 
-1. Fetch live `main`, PR #149/head, issue #148 and Actions first.
-2. If PR #149 is not yet merged, require exact-head Fast + Qualified and perform only the expected-head v19.0 merge/issue closure sequence above.
-3. If PR #149 is already merged and #148 is closed, re-fetch #153 and the current roadmap/build-plan/current-state authority, then begin the governed v19.1 transition on a new v19.1 branch/PR.
-4. Never treat the HOST-013/014 waiver as live infrastructure proof or public/commercial authorization.
+1. Fetch live `main`, the `v19.1.0-development` head, Draft PR #172 and Actions before writing.
+2. Read `governance/current-state.json`, the v19.1 work-slice/G1/closure files and this handoff; GitHub source/evidence outranks chat memory.
+3. Continue only the current dependency (`APR-03`) until its executable evidence supports a closure-ledger status change.
+4. Run focused tests while editing; run exact-head Fast at coherent checkpoints and impact-selected Qualified at material risk boundaries/G10.
+5. Never treat the HOST-013/014 residual as verification or Commercial/Public authorization.
+6. Keep `v18.10.0` Stable immutable and do not create a v19.1 release/tag from ordinary Development work.

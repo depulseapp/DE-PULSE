@@ -37,6 +37,8 @@ func (a *Application) routes() http.Handler {
 	mux.HandleFunc("/api/settings/save", a.requireRole(RoleAdmin, a.requireRecentAuthentication(postOnly(a.handleSettingsSave))))
 	mux.HandleFunc("/api/settings/ai-provider", a.requireRole(RoleAdmin, postOnly(a.handleAIProviderSelect)))
 	mux.HandleFunc("/api/settings/clear-secret", a.requireRole(RoleAdmin, a.requireRecentAuthentication(postOnly(a.handleClearSecret))))
+	mux.HandleFunc(providerCredentialStatePath, a.requireRole(RoleAdmin, a.handleProviderCredentialState))
+	mux.HandleFunc(providerCredentialMutationPath, a.requireRole(RoleAdmin, a.requireRecentAuthentication(postOnly(a.handleProviderCredentialMutation))))
 	mux.HandleFunc("/api/provider/test", a.requireRole(RoleAdmin, postOnly(a.handleProviderTest)))
 	mux.HandleFunc("/api/cache/clear", a.requireRole(RoleAdmin, postOnly(a.handleCacheClear)))
 	mux.HandleFunc("/api/cache/refresh", a.auth(postOnly(a.handleCacheRefresh)))
@@ -451,32 +453,16 @@ func (a *Application) handleClearSecret(w http.ResponseWriter, r *http.Request) 
 	}
 	userID := requestUserID(r.Context())
 	a.mu.Lock()
-	switch in.Name {
-	case "finnhub":
-		a.secrets.Finnhub = ""
-	case "tradeinsight":
-		a.secrets.TradeInsight = ""
-	case "alpaca":
-		a.secrets.AlpacaKey = ""
-		a.secrets.AlpacaSecret = ""
-	case "groq":
-		a.secrets.Groq = ""
-	case "openrouter":
-		a.secrets.OpenRouter = ""
-	case "gemini":
-		a.secrets.Gemini = ""
-	case "fred":
-		a.secrets.FRED = ""
-	case "bls":
-		a.secrets.BLS = ""
-	case "eia":
-		a.secrets.EIA = ""
-	case "twelvedata":
-		a.secrets.TwelveData = ""
-	case "marketaux":
-		a.secrets.Marketaux = ""
+	if err := clearProviderCredential(&a.secrets, in.Name); err != nil {
+		a.mu.Unlock()
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
-	_ = a.saveLocked()
+	if err := a.saveLocked(); err != nil {
+		a.mu.Unlock()
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 	state := a.publicStateLockedForUser(userID)
 	a.mu.Unlock()
 	a.broadcastSharedState()
@@ -515,6 +501,7 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	eia := a.secrets.EIA
 	twelve := a.secrets.TwelveData
 	marketaux := a.secrets.Marketaux
+	providerSecrets := a.secrets
 	settings := a.state.Settings
 	a.mu.RUnlock()
 	if v := cleanCredential(in.FinnhubKey); v != "" {
@@ -578,10 +565,17 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 		result = testTwelveDataProvider(ctx, twelve)
 	case "marketaux":
 		result = testMarketauxProvider(ctx, marketaux)
+	case "marketdata":
+		contract, _ := providerCredentialContract(marketDataProviderName)
+		value, _ := providerCredentialEffectiveValue(contract.Fields[0], providerSecrets)
+		result = testMarketDataCredential(value)
 	case "options":
 		result = testOptionsProvider(ctx, ak, as, settings.OptionsDataMode)
-	default:
+	case "finnhub":
 		result = testFinnhub(ctx, fk)
+	default:
+		writeError(w, http.StatusBadRequest, "Unsupported provider test")
+		return
 	}
 	a.mu.Lock()
 	if a.state.ProviderStatus == nil {
@@ -592,6 +586,18 @@ func (a *Application) handleProviderTest(w http.ResponseWriter, r *http.Request)
 	a.mu.Unlock()
 	a.broadcastSharedState()
 	writeJSON(w, 200, result)
+}
+func testMarketDataCredential(token string) ProviderTestResult {
+	r := ProviderTestResult{Provider: "marketdata", CheckedAt: time.Now().UTC().Format(time.RFC3339)}
+	if cleanCredential(token) == "" {
+		r.Status = "missing"
+		r.Message = "Enter a Market Data API token."
+		return r
+	}
+	r.Status = "pending"
+	r.Message = "Credential configured; transport validation is not available until APR-03."
+	r.Details = []string{"No network request was made", "Lifecycle remains SHADOW"}
+	return r
 }
 func testFinnhub(ctx context.Context, key string) ProviderTestResult {
 	r := ProviderTestResult{Provider: "finnhub", CheckedAt: time.Now().UTC().Format(time.RFC3339)}

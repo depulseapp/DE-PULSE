@@ -1,0 +1,194 @@
+{
+  "schema": "DE.PULSE-WORK-SLICE-CLOSURE-1",
+  "workSliceId": "ADAPT-V19-1-CANONICAL-FOUNDATION-001",
+  "issue": 153,
+  "branch": "v19.1.0-development",
+  "allGapsMustBeVerified": true,
+  "closurePolicy": "v19.1 remains open until every blocking row is VERIFIED with executable/source evidence and the coherent final source head passes exact-head Fast plus impact-selected Qualified at G10. Documentation alone cannot close a row. The carried HOST-013/014 Azure residual remains outside this v19.1 waiver ledger and does not become verified by v19.1 work.",
+  "gaps": [
+    {
+      "id": "V19.1-G1-SOURCE-OVERLAP",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Canonical architecture/source-overlap audit",
+      "implementationPaths": ["provider_registration.go", "provider_router.go", "smart_router_v2.go", "provider_capabilities.go", "governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json"],
+      "evidenceRequired": ["executable/source inventory of existing canonical owners", "REUSE/CONSOLIDATE/REFACTOR/DELETE-before-ADD disposition", "no duplicate routing/health/cache/subscription/state owner proof"],
+      "closureCondition": "Existing owners and overlap are source-proven and the implementation plan extends or consolidates them without a parallel subsystem.",
+      "evidence": [
+        "Exact-head source audit on 5d33e424a3b4fca914769b4200392df45ab7c8c7 confirms provider_registration.go remains the single provider-onboarding descriptor and routeChainsFromProviderRegistrations derives registration-backed route membership rather than introducing a second provider map.",
+        "APR-01 was folded into the existing provider_registration.go/provider_registration_regression_test.go owners after canonical root-layout policy rejected temporary new root files; no parallel Registry store survived.",
+        "Adaptive Provider Registry is a computed read-only projection. Smart Provider Router v2 remains sole routing/admission/selection owner; existing Data Health/freshness, cache/persistence/reconciliation, Dynamic Multi-Feed Subscription Manager, lifecycle and canonical-state owners were not replaced.",
+        "Fast #1461 / run 33847621149 PASS on exact head 5d33e424a3b4fca914769b4200392df45ab7c8c7, including canonical workflow policy and recursive source-health ownership checks.",
+        "Qualified #283 / run 33847621182 PASS on the identical exact head, including backend full suite, race detector, randomized package order and security/data-rights contracts."
+      ]
+    },
+    {
+      "id": "V19.1-CANONICAL-CONTRACTS-GOLDEN-VECTORS",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical intelligence/domain contract",
+      "implementationPaths": ["renderer/renderer.js", "governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json"],
+      "evidenceRequired": ["golden characterization vectors", "versioned Observation/Evidence/SymbolIntelligenceSnapshot/Transition/DecisionBrief contracts", "point-in-time/provenance/freshness/unknown semantics tests", "compatibility/shadow evidence where authority moves"],
+      "closureCondition": "Current behavior is characterized before migration and canonical intelligence contracts are source-owned, versioned and regression protected without duplicated feature truth.",
+      "evidence": []
+    },
+    {
+      "id": "APR-01",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Adaptive Provider Registry foundation",
+      "implementationPaths": ["provider_registration.go", "provider_entitlement_refresh.go", "provider_capabilities.go", "smart_router_v2.go"],
+      "evidenceRequired": ["standard provider manifest/registration contract", "adapter self-registration", "unsupported/unconfigured capability truth", "unit/contract regressions proving Registry is not a Router"],
+      "closureCondition": "The existing #95 registration owner is extended into the generic Registry foundation and Smart Provider Router v2 remains sole routing authority.",
+      "evidence": [
+        "Exact source head 5d33e424a3b4fca914769b4200392df45ab7c8c7 extends existing providerRegistrations() with adaptive-provider-registry-v19.1.0 read-only manifests/snapshot rather than creating a second registration or routing subsystem.",
+        "Registry configuration truth is bounded to unsupported/not-configured/REGISTERED/REGISTERED_NOT_PRODUCTION and cannot report Router selection, provider health or automatic lifecycle promotion.",
+        "Authority projection preserves SEC EDGAR DIRECT_AUTHORITY, SEC/CBOE CORROBORATIVE and yfinance FALLBACK dispositions while ordinary production routes remain ROUTABLE; Smart Provider Router v2 remains the executable general routing authority.",
+        "Provider entitlement/configuration refresh consumes the computed Registry snapshot and manual revalidation cross-checks registered route configuration before reopening existing Router evidence, providing real production consumers without a new state owner.",
+        "provider_registration_regression_test.go covers bounded pre-Router capability truth, fail-closed non-production lifecycle, explicit authority classes, secret non-disclosure, projection of every canonical registration and generic registration without parallel provider maps.",
+        "Fast #1461 / run 33847621149 PASS on exact head 5d33e424a3b4fca914769b4200392df45ab7c8c7, including gofmt, go vet, full Go suite, source-health and governance conservation.",
+        "Qualified #283 / run 33847621182 PASS on the identical source head, including full Go suite, race detector, randomized package order, CI-contract and security/data-rights lanes."
+      ]
+    },
+    {
+      "id": "APR-02",
+      "status": "VERIFIED",
+      "blocksIssueClosure": true,
+      "owner": "Generic provider credential UX and canonical secret owner",
+      "implementationPaths": ["app_model.go", "provider_entitlement_refresh.go", "http_api.go", "runtime_environment.go", "renderer/renderer.js", "tools/hosted/render_managed_secrets.py", "provider_credentials_regression_test.go", "hosted_managed_secrets_regression_test.go", "tests/renderer/renderer_logic_test.js"],
+      "evidenceRequired": ["metadata-driven provider Settings contract", "preserve/replace/clear/redaction tests", "shared provider-test path", "MARKETDATA_TOKEN fallback without secret leakage"],
+      "closureCondition": "Provider credentials use the existing canonical secret/settings owners with generic metadata and no provider-specific credential store or renderer secret exposure.",
+      "evidence": [
+        "The provider-credential-v19.1.0 metadata projection reuses canonical Secrets fields and adds Settings placement, redacted configured/source/hint state, desktop/headless environment fallback metadata, and hosted editability without returning raw credentials.",
+        "GET /api/provider-credentials and POST /api/provider-credentials/mutate are registered inside the canonical ADMIN authentication boundary; replacement also requires recent authentication. The former outer HTTP boundary that bypassed route auth was removed.",
+        "Blank generic Settings inputs issue no mutation and therefore preserve stored values; non-empty inputs use REPLACE; CLEAR is rejected on the generic mutation route and Market Data removal uses the existing /api/settings/clear-secret owner.",
+        "Market Data is the first metadata-rendered Settings card, uses canonical Secrets.MarketData plus MARKETDATA_TOKEN desktop/headless fallback, and uses the shared /api/provider/test path. Until APR-03 transport exists, that path reports configured-but-unverified PENDING and explicitly makes no network request.",
+        "Hosted Market Data credentials load through the existing immutable managed-mounted secret lifecycle, project as managed-mounted/editable=false, and reject product-API mutation or clear operations.",
+        "provider_credentials_regression_test.go covers route authentication, replacement, redaction, canonical clear ownership, fallback scope and fail-closed unknown provider tests; hosted_managed_secrets_regression_test.go covers mounted Market Data loading and hosted mutation denial; tests/renderer/renderer_logic_test.js covers metadata rendering and zero-key hosted UI.",
+        "Focused local evidence: all tests/renderer/*.js PASS; managed Market Data alias render PASS; workflow policy, release identity, source-health and executable closure/requirement guards PASS where locally runnable.",
+        "Exact implementation source head d6d9ee7f05bf25947b85d18e7db95a0d7a6363d7 passed Fast #1475 / run 33920557675, including gofmt, go vet, full Go suite, PostgreSQL tagged compile, renderer contracts and governance/security gates.",
+        "Qualified #297 / run 33920557671 passed on the identical source head, including full Go suite, race detector, randomized package order, security/data-rights, renderer, primary Chrome and primary WebKit lanes. Non-selected native/DB/live-host lanes remain unclaimed."
+      ]
+    },
+    {
+      "id": "APR-03",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Market Data adapter and transport truth",
+      "implementationPaths": ["provider_registration.go", "provider_router.go", "provider_capabilities.go"],
+      "evidenceRequired": ["Bearer-header transport implementation", "HTTP 200/203 success fixtures", "401/403/429/5xx/timeout/malformed/schema-drift fixtures", "delayed-vs-live truth tests", "initial SHADOW lifecycle evidence"],
+      "closureCondition": "Market Data is a standards-compliant Registry adopter whose transport and delayed/live semantics are truthfully normalized without plan-name routing assumptions.",
+      "evidence": []
+    },
+    {
+      "id": "APR-04",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Entitlement-aware Smart Provider Router v2 eligibility",
+      "implementationPaths": ["provider_entitlement_refresh.go", "provider_router.go", "smart_router_v2.go", "provider_capabilities.go"],
+      "evidenceRequired": ["effective capability/entitlement probe tests", "freshness/history/quota/headroom observations", "trial/free/paid reprobe scenarios", "capability-scoped fallback/demotion/cooldown/recovery", "no automatic lifecycle promotion proof"],
+      "closureCondition": "Technical eligibility can change from observed entitlement/capability state without provider-plan-specific code while rights/lifecycle authority remains governed and explicit.",
+      "evidence": []
+    },
+    {
+      "id": "APR-05",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical provider cross-integration and diagnostics",
+      "implementationPaths": ["provider_router.go", "smart_router_v2.go", "data_engine_handlers.go", "governance/data-health/provider-capability-matrix.json", "governance/data-health/provider-fetch-paths.json"],
+      "evidenceRequired": ["consumer REQUIRED/CONDITIONAL/NOT_USEFUL map", "canonical state reuse proof", "Data Health/Maintenance configured-eligible-serving-fallback truth", "duplicate fetch/subscription prevention", "recovery dependent-consumer re-evaluation"],
+      "closureCondition": "Applicable consumers use shared canonical routed state and diagnostics agree with Router/Data Health/cache/persistence/subscription owners without parallel truth.",
+      "evidence": []
+    },
+    {
+      "id": "APR-06",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Provider evidence and existing-provider adoption audit",
+      "implementationPaths": ["provider_registration.go", "provider_router.go", "smart_router_v2.go", "governance/data-health/provider-capability-matrix.json"],
+      "evidenceRequired": ["existing provider/authority adoption audit", "freshness/latency/error/quota/cache/fallback/recovery/utility telemetry", "promotion recommendations without automatic promotion", "Mac/Windows/Web applicability reconciliation"],
+      "closureCondition": "All existing provider and direct-authority classes have an executable Registry/Router/authority disposition and adaptive evidence remains bounded by lifecycle/rights governance.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-150-DATA-PATH-TRACEABILITY",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical data-path and degradation diagnostics",
+      "implementationPaths": ["provider_router.go", "smart_router_v2.go", "governance/data-health/provider-fetch-paths.json", "data_engine_handlers.go"],
+      "evidenceRequired": ["source-to-consumer traceability for material datasets", "precise stale/missing/recovery/rejection diagnostics", "SPY/QQQ/VIX plus breadth scenario regression"],
+      "closureCondition": "PARTIAL COVERAGE/DATA DEGRADED states are source-explainable and contradictory availability claims are eliminated or governed by explicit distinct evidence contracts.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-151-GLOBAL-TICKER-SPY-QQQ",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical global ticker processing and shared subscriptions",
+      "implementationPaths": ["provider_router.go", "smart_router_v2.go", "provider_capabilities.go"],
+      "evidenceRequired": ["one ticker/capability fetch-subscription reused by multiple consumers", "multi-Desk deduplication", "SPY/QQQ reserved live priority", "reconnect/failover no-duplicate proof"],
+      "closureCondition": "Ticker processing is global rather than Desk/page-specific and SPY/QQQ retain governed session-independent live priority without stale-as-live presentation.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-154-RECOVERY-REEVALUATION",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Capability recovery and canonical consumer reconciliation",
+      "implementationPaths": ["provider_router.go", "smart_router_v2.go", "provider_entitlement_refresh.go", "data_engine_handlers.go"],
+      "evidenceRequired": ["failure-to-recovery executable path", "canonical freshness/state refresh", "dependent consumer invalidation/re-evaluation", "partial recovery and no false degradation clearing tests"],
+      "closureCondition": "Eligible recovery is capability-specific, refreshes canonical state, and automatically re-evaluates affected consumers without duplicate routing/health/cache/subscription owners.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-155-MAINTENANCE-TRUTH",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Maintenance canonical operational truth",
+      "implementationPaths": ["provider_router.go", "provider_capabilities.go", "data_engine_handlers.go", "renderer/renderer.js"],
+      "evidenceRequired": ["field-to-canonical-owner audit", "success/failure/event semantic separation", "capability-specific active/fallback/ranking truth", "cross-page consistency regressions"],
+      "closureCondition": "Maintenance is a concise projection of canonical runtime state; success is never rendered as failure and no Maintenance-only truth subsystem exists.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-160-DATA-ENGINE-FRESHNESS",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Data Engine canonical integration freshness",
+      "implementationPaths": ["data_engine_handlers.go", "renderer/renderer.js", "provider_router.go", "provider_capabilities.go"],
+      "evidenceRequired": ["Data Engine value/section owner audit", "Router/Data Health/freshness integration", "duplicate-processing absence", "approved visual-design preservation regressions"],
+      "closureCondition": "Data Engine consumes the latest canonical architecture and shared evidence while preserving its approved visual design except demonstrated defect fixes.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-167-GLOBAL-SYMBOL-FOUNDATION",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical global symbol identity and processing ownership",
+      "implementationPaths": ["provider_registration.go", "provider_capabilities.go", "governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json"],
+      "evidenceRequired": ["current symbol/master-symbol ownership gap analysis", "global symbol versus user membership contract", "deduplicated processing design", "priority/retention lifecycle v19.1 foundation", "SPY/QQQ/system-pin precedence"],
+      "closureCondition": "v19.1 establishes the canonical symbol-processing/identity foundation needed to prevent users/Desks/pages from duplicating upstream work, with later tenant/lifecycle depth truthfully dispositioned where scheduled.",
+      "evidence": []
+    },
+    {
+      "id": "ISSUE-170-CROSS-INTEGRATION-MATRIX",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "Canonical intelligence cross-integration governance",
+      "implementationPaths": ["governance/programs/V19-V20-REBASELINE/cross-integration-matrix.json", "governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/g1-scope.json"],
+      "evidenceRequired": ["consumer integration dispositions", "Market Regime contribution YES/NO/CONDITIONAL rows", "bounded evidence schema/freshness/contradiction rules", "no isolated feature truth proof"],
+      "closureCondition": "Every v19.1 capability has explicit upstream/downstream and synthesis dispositions; specialized evidence reaches canonical consumers without creating another Market Regime or feature-specific conclusion owner.",
+      "evidence": []
+    },
+    {
+      "id": "V19.1-G10-EXACT-HEAD-CLOSURE",
+      "status": "OPEN",
+      "blocksIssueClosure": true,
+      "owner": "v19.1 G10 reconciliation and CI evidence",
+      "implementationPaths": ["governance/work-slices/ADAPT-V19-1-CANONICAL-FOUNDATION-001/closure.json", "handoff/CURRENT.md"],
+      "evidenceRequired": ["all prior ledger rows VERIFIED", "exact-head DE.PULSE/fast-head success", "impact-selected DE.PULSE/qualified-head success on identical source SHA", "zero-miss reconciliation before v19.2"],
+      "closureCondition": "The final unchanged v19.1 Development head has complete zero-miss evidence and exact-head Fast plus risk-based Qualified; no release/tag is implied.",
+      "evidence": []
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "DE.PULSE-G1-SCOPE-1",
+  "workSliceId": "ADAPT-V19-1-CANONICAL-FOUNDATION-001",
+  "issue": 153,
+  "version": "v19.1.0",
+  "branch": "v19.1.0-development",
+  "status": "FROZEN_FOR_IMPLEMENTATION",
+  "frozenAgainstMainSha": "ddf41a7cc5ab6dff7a7b8d4f230b1dad12be3796",
+  "certifiedStable": "v18.10.0",
+  "certifiedStableCandidateSha": "584e9e0ce91ec08e08cfd52c7cf60392ab74dd12",
+  "primaryIssue": 153,
+  "relatedIssues": [150, 151, 154, 155, 160, 167, 170],
+  "priorCompletedOwner": {
+    "workSliceId": "ADAPT-PROVIDER-ONBOARDING-001",
+    "issue": 95,
+    "disposition": "EXTEND_NOT_REPLACE",
+    "ownedPaths": [
+      "provider_registration.go",
+      "provider_entitlement_refresh.go",
+      "provider_router.go",
+      "smart_router_v2.go",
+      "provider_capabilities.go"
+    ]
+  },
+  "sourceOverlap": [
+    {
+      "scope": "Adaptive Provider Registry",
+      "disposition": "EXTEND_EXISTING_OWNER",
+      "canonicalOwner": "provider registration plus capability/entitlement projection created under #95",
+      "forbidden": "parallel registry/router/health/cache/subscription/lifecycle state system"
+    },
+    {
+      "scope": "Smart Provider Router v2",
+      "disposition": "EXTEND_EXISTING_OWNER",
+      "canonicalOwner": "existing Smart Provider Router v2",
+      "forbidden": "second router or provider-name-specific consumer routing"
+    },
+    {
+      "scope": "Data Health and freshness",
+      "disposition": "EXTEND_EXISTING_OWNER",
+      "canonicalOwner": "existing Data Health/freshness contracts and matrices",
+      "forbidden": "provider-specific or Maintenance-only health truth"
+    },
+    {
+      "scope": "Global ticker and symbol processing",
+      "disposition": "CONSOLIDATE_EXISTING_PROCESSING",
+      "canonicalOwner": "one global symbol/capability processing and shared subscription path",
+      "forbidden": "Desk/page/user-specific duplicate fetch or subscription stacks"
+    },
+    {
+      "scope": "Canonical intelligence contracts",
+      "disposition": "CHARACTERIZE_THEN_CONSOLIDATE",
+      "canonicalOwner": "server-side canonical domain/state owner behind existing RuntimeSnapshot consumers",
+      "forbidden": "renderer or feature-specific duplicate scoring/evidence truth"
+    },
+    {
+      "scope": "Maintenance and Data Engine diagnostics",
+      "disposition": "CONSUME_CANONICAL_OWNER",
+      "canonicalOwner": "Router/Data Health/cache/persistence/subscription/runtime state",
+      "forbidden": "parallel diagnostics model or broad Data Engine redesign"
+    }
+  ],
+  "dependencyOrder": [
+    "CHARACTERIZATION_AND_CANONICAL_CONTRACT_BASELINE",
+    "APR-01",
+    "APR-02",
+    "APR-03",
+    "APR-04",
+    "APR-05",
+    "APR-06",
+    "G10_EXACT_HEAD_RECONCILIATION"
+  ],
+  "providerPackets": {
+    "APR-01": "Registry foundation by extending #95 provider registration",
+    "APR-02": "Generic provider credential UX using canonical secret owner",
+    "APR-03": "Market Data adapter and transport truth",
+    "APR-04": "Entitlement-aware Router eligibility and capability-scoped recovery",
+    "APR-05": "Canonical cross-integration and diagnostics",
+    "APR-06": "Adaptive provider evidence and existing-provider adoption audit"
+  },
+  "issueConservation": {
+    "150": "end-to-end canonical data-path traceability and precise degraded/partial-coverage reasons",
+    "151": "global ticker/capability deduplication plus SPY/QQQ reserved live priority",
+    "153": "Adaptive Provider Registry plus Smart Provider Router v2 cross-integration and Market Data first adopter",
+    "154": "capability-specific recovery through canonical refresh and dependent consumer re-evaluation",
+    "155": "Maintenance truthfulness/usefulness from canonical runtime owners",
+    "160": "Data Engine integration freshness while preserving approved UI",
+    "167": "v19.1 global symbol processing/identity foundation; user membership must not duplicate upstream processing",
+    "170": "explicit cross-integration and bounded Market Regime contribution dispositions"
+  },
+  "canonicalIntelligenceContracts": [
+    "Observation",
+    "Evidence",
+    "SymbolIntelligenceSnapshot",
+    "Transition",
+    "DecisionBrief"
+  ],
+  "characterizationRequirements": [
+    "golden vectors for current renderer/server decision behavior before authority movement",
+    "explicit source-time/observed-time/provenance/provider/rights/freshness/unknown semantics",
+    "point-in-time and revision/no-lookahead behavior",
+    "compatibility/shadow comparison for migrated consumers",
+    "intentional defect fixes separated from characterization"
+  ],
+  "crossIntegrationDispositionRequiredFor": [
+    "Market Regime/Market Intelligence",
+    "Tradeability/Readiness",
+    "Discovery/Opportunity Radar",
+    "Watchlist/Global Symbols",
+    "Research",
+    "Day/Swing/Long Desks",
+    "Pre-Market/Market Open Prep",
+    "Catalyst/Rapid Move/Volume-Volatility Alerts",
+    "Data Health/Maintenance",
+    "future Outcome/Pattern Learning",
+    "adaptive processing priority"
+  ],
+  "protectedBoundaries": [
+    "US_EQUITIES_PROCESSING",
+    "GLD_SLV_USO_ACTIONABLE_EXCEPTIONS",
+    "NO_EXECUTION",
+    "SMART_PROVIDER_ROUTER_V2_SOLE_GENERAL_ROUTING_OWNER",
+    "DIRECT_SEC_EDGAR_AUTHORITY",
+    "NO_AUTOMATIC_LIFECYCLE_OR_AUTHORITY_PROMOTION",
+    "NO_PROVIDER_RIGHTS_INFERENCE",
+    "POINT_IN_TIME_NO_LOOKAHEAD_BEFORE_LEARNING",
+    "NO_DUPLICATE_CANONICAL_OWNER"
+  ],
+  "carriedResidual": {
+    "id": "HOST013-AZURE-FREE-TRIAL-VCPU-QUOTA-2026-09-01",
+    "status": "UNVERIFIED_CARRIED_RESIDUAL",
+    "scope": "v19.0 hosted environment trust only; not a v19.1 closure-gap waiver",
+    "commercialPublicActivationAllowed": false
+  },
+  "nextDependency": "APR-01",
+  "nextDependencyRule": "Extend the existing #95 provider registration/capability owner into the Registry foundation only after source-overlap characterization; do not add a parallel provider subsystem."
+}
