@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"sort"
 	"strings"
@@ -165,6 +167,9 @@ const (
 	providerCredentialSourceEnvironment    = "environment"
 	providerCredentialSourceManagedMounted = "managed-mounted"
 	providerCredentialSourceUnconfigured   = "unconfigured"
+
+	providerCredentialStatePath    = "/api/provider-credentials"
+	providerCredentialMutationPath = "/api/provider-credentials/mutate"
 )
 
 // ProviderCredentialFieldContract is metadata only. It identifies the existing
@@ -398,4 +403,58 @@ func applyProviderCredentialMutation(secrets *Secrets, mutation ProviderCredenti
 	default:
 		return fmt.Errorf("unsupported credential mutation action: %s", mutation.Action)
 	}
+}
+
+// providerCredentialBoundary exposes only metadata/redacted state and canonical
+// credential mutation. It intentionally sits in front of the existing routes so
+// future provider cards can use one backend contract without adding a second
+// Settings or secret store. Hosted mutation remains fail-closed/server-managed.
+func providerCredentialBoundary(app *Application, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app == nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		switch {
+		case r.URL.Path == providerCredentialStatePath && r.Method == http.MethodGet:
+			app.mu.Lock()
+			state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
+			app.mu.Unlock()
+			w.Header().Set("Content-Type", "application/json")
+			if err := json.NewEncoder(w).Encode(map[string]any{"providers": state}); err != nil {
+				http.Error(w, "unable to encode provider credential state", http.StatusInternalServerError)
+			}
+			return
+		case r.URL.Path == providerCredentialMutationPath && r.Method == http.MethodPost:
+			if isHostedRuntime() {
+				http.Error(w, "hosted provider credentials are server-managed", http.StatusConflict)
+				return
+			}
+			var mutation ProviderCredentialMutation
+			decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 64<<10))
+			decoder.DisallowUnknownFields()
+			if err := decoder.Decode(&mutation); err != nil {
+				http.Error(w, "invalid provider credential mutation", http.StatusBadRequest)
+				return
+			}
+			app.mu.Lock()
+			err := applyProviderCredentialMutation(&app.secrets, mutation)
+			if err == nil {
+				err = app.saveLocked()
+			}
+			state := providerCredentialStateSnapshot(app.state.Settings, app.secrets)
+			app.mu.Unlock()
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			if err := json.NewEncoder(w).Encode(map[string]any{"providers": state}); err != nil {
+				http.Error(w, "unable to encode provider credential state", http.StatusInternalServerError)
+			}
+			return
+		default:
+			next.ServeHTTP(w, r)
+		}
+	})
 }
