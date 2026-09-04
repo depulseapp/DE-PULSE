@@ -196,7 +196,7 @@ func providerRegistrations() []ProviderRegistration {
 					for k := range direct {
 						if strings.HasPrefix(k, "fx_") {
 							return "AVAILABLE"
-					}
+						}
 					}
 					return capabilityStatusFromHealth(true, health["global-direct"])
 				}},
@@ -286,7 +286,7 @@ func providerRegistrations() []ProviderRegistration {
 			Diagnostics: []ProviderCapabilityDiagnosticRegistration{
 				{Capability: "Petroleum / natural gas / energy state", Detail: "Official energy release context.", Uses: []string{"Market Regime", "Research", "Swing", "Long"}, Status: func(_ Settings, s Secrets, health map[string]string, _ map[string]SymbolIntelligence, _ map[string]GlobalDriver) string {
 					return capabilityStatusFromHealth(has(s.EIA), health["eia-actuals"])
-			}},
+				}},
 			}},
 	}
 }
@@ -439,15 +439,15 @@ type AdaptiveProviderDiagnosticManifest struct {
 // canonical ProviderRegistration descriptor. Configuration is represented only
 // as presence/absence; secrets are never copied into this projection.
 type AdaptiveProviderManifest struct {
-	ProviderID      string                               `json:"providerId"`
-	Name            string                               `json:"name"`
-	ContractVersion string                               `json:"contractVersion"`
-	Configured      bool                                 `json:"configured"`
-	Configuration   string                               `json:"configuration"`
-	QuotaLabel      string                               `json:"quotaLabel,omitempty"`
-	CostClass       string                               `json:"costClass,omitempty"`
-	Routable        bool                                 `json:"routable"`
-	Routes          []AdaptiveProviderRouteManifest     `json:"routes,omitempty"`
+	ProviderID      string                                `json:"providerId"`
+	Name            string                                `json:"name"`
+	ContractVersion string                                `json:"contractVersion"`
+	Configured      bool                                  `json:"configured"`
+	Configuration   string                                `json:"configuration"`
+	QuotaLabel      string                                `json:"quotaLabel,omitempty"`
+	CostClass       string                                `json:"costClass,omitempty"`
+	Routable        bool                                  `json:"routable"`
+	Routes          []AdaptiveProviderRouteManifest      `json:"routes,omitempty"`
 	Diagnostics     []AdaptiveProviderDiagnosticManifest `json:"diagnostics,omitempty"`
 }
 
