@@ -41,6 +41,9 @@ func TestProviderCredentialContractsAreUniqueAndMarketDataMetadataIsGoverned(t *
 	if marketData.Fields[0].SecretReference != "secrets.marketData" {
 		t.Fatalf("Market Data must point at the canonical Secrets owner, got %q", marketData.Fields[0].SecretReference)
 	}
+	if marketData.Fields[0].stored == nil || marketData.Fields[0].replace == nil {
+		t.Fatal("Market Data credential contract must use the canonical Secrets.MarketData slot")
+	}
 }
 
 func TestProviderCredentialMutationPreserveReplaceAndClearUseCanonicalSecrets(t *testing.T) {
@@ -79,13 +82,13 @@ func TestProviderCredentialBlankReplaceFailsClosedWithoutErasingSecret(t *testin
 func TestProviderCredentialPublicProjectionNeverContainsRawSecret(t *testing.T) {
 	t.Setenv(runtimeModeEnv, "desktop")
 	raw := "super-secret-provider-token"
-	states := providerCredentialStateSnapshot(defaultState().Settings, Secrets{Finnhub: raw, AlpacaKey: "alpaca-key-secret", AlpacaSecret: "alpaca-secret-secret"})
+	states := providerCredentialStateSnapshot(defaultState().Settings, Secrets{Finnhub: raw, AlpacaKey: "alpaca-key-secret", AlpacaSecret: "alpaca-secret-secret", MarketData: "market-data-secret"})
 	data, err := json.Marshal(states)
 	if err != nil {
 		t.Fatal(err)
 	}
 	text := string(data)
-	for _, secret := range []string{raw, "alpaca-key-secret", "alpaca-secret-secret"} {
+	for _, secret := range []string{raw, "alpaca-key-secret", "alpaca-secret-secret", "market-data-secret"} {
 		if strings.Contains(text, secret) {
 			t.Fatalf("raw secret leaked through credential projection: %s", text)
 		}
@@ -131,12 +134,34 @@ func TestProviderCredentialHostedStoredValueIsManagedMountedAndRedacted(t *testi
 	}
 }
 
-func TestMarketDataPersistentMutationFailsClosedUntilCanonicalSlotExists(t *testing.T) {
-	secrets := Secrets{}
-	for _, action := range []string{providerCredentialReplace, providerCredentialClear} {
-		mutation := ProviderCredentialMutation{Provider: marketDataProviderName, FieldID: "token", Action: action, Value: "fixture"}
-		if err := applyProviderCredentialMutation(&secrets, mutation); err == nil {
-			t.Fatalf("Market Data %s must fail closed until canonical Secrets slot is active", action)
-		}
+func TestMarketDataPersistentMutationUsesCanonicalSlotAndRedactedProjection(t *testing.T) {
+	t.Setenv(runtimeModeEnv, "desktop")
+	secrets := Secrets{MarketData: "old-marketdata-token"}
+	if err := applyProviderCredentialMutation(&secrets, ProviderCredentialMutation{Provider: marketDataProviderName, FieldID: "token", Action: providerCredentialPreserve}); err != nil {
+		t.Fatal(err)
+	}
+	if secrets.MarketData != "old-marketdata-token" {
+		t.Fatalf("Market Data preserve changed canonical slot: %q", secrets.MarketData)
+	}
+	if err := applyProviderCredentialMutation(&secrets, ProviderCredentialMutation{Provider: marketDataProviderName, FieldID: "token", Action: providerCredentialReplace, Value: "  new-marketdata-token\n"}); err != nil {
+		t.Fatal(err)
+	}
+	if secrets.MarketData != "new-marketdata-token" {
+		t.Fatalf("Market Data replace did not write canonical slot: %q", secrets.MarketData)
+	}
+	contract, _ := providerCredentialContract(marketDataProviderName)
+	state := providerCredentialCardState(contract, defaultState().Settings, secrets)
+	if !state.Configured || len(state.Fields) != 1 || state.Fields[0].Source != providerCredentialSourceStored {
+		t.Fatalf("Market Data stored credential not projected truthfully: %+v", state)
+	}
+	data, _ := json.Marshal(state)
+	if strings.Contains(string(data), secrets.MarketData) {
+		t.Fatalf("Market Data raw token leaked through credential projection: %s", data)
+	}
+	if err := applyProviderCredentialMutation(&secrets, ProviderCredentialMutation{Provider: marketDataProviderName, FieldID: "token", Action: providerCredentialClear}); err != nil {
+		t.Fatal(err)
+	}
+	if secrets.MarketData != "" {
+		t.Fatalf("Market Data clear did not clear canonical slot: %q", secrets.MarketData)
 	}
 }
